@@ -66,6 +66,10 @@ const equalityValidator = (input: string, editorMode: string) => {
     if (/\.[0-9]/.test(input)) {
         errors.push('Please convert decimal numbers to fractions.');
     }
+    if (/[A-Zbd-z](?!a|arc)(sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
+        // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+        return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
+    }
     return errors;
 };
 

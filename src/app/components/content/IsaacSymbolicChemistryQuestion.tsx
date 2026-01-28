@@ -1,10 +1,9 @@
-import React, {ChangeEvent, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
 import {
     ifKeyIsEnter,
-    isDefined,
     jsonHelper,
     sanitiseInequalityState,
     siteSpecific,
@@ -13,47 +12,59 @@ import {
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
+import { Button, InputGroup, UncontrolledTooltip } from "reactstrap";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import { v4 as uuid_v4 } from "uuid";
-import { Inequality, makeInequality } from "inequality";
-import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
+import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { initialiseInequality, InputState, SymbolicTextInput } from "./IsaacSymbolicQuestion";
+import { initialiseInequality, InputState, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
-interface ChildrenMap {
-    children: {[key: string]: ChildrenMap}
-}
-
-function countChildren(root: ChildrenMap) {
-    let q = [root];
-    let count = 1;
-    while (q.length > 0) {
-        const e = q.shift();
-        if (!e) continue;
-
-        const c = Object.keys(e.children).length;
-        if (c > 0) {
-            count = count + c;
-            q = q.concat(Object.values(e.children));
+const symbolicInputValidator = (input: string, mayRequireStateSymbols?: boolean) => {
+    const openRoundBracketsCount = input.split("(").length - 1;
+    const closeRoundBracketsCount = input.split(")").length - 1;
+    const openSquareBracketsCount = input.split("[").length - 1;
+    const closeSquareBracketsCount = input.split("]").length - 1;
+    const openCurlyBracketsCount = input.split("{").length - 1;
+    const closeCurlyBracketsCount = input.split("}").length - 1;
+    const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
+    const badCharacters = new RegExp(regexStr);
+    const errors = [];
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = [];
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char);
+                }
+            }
         }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
     }
-    return count;
-}
 
-function isError(p: ParsingError | any[]): p is ParsingError {
-    return p.hasOwnProperty("error");
-}
+    if (openRoundBracketsCount !== closeRoundBracketsCount
+        || openSquareBracketsCount !== closeSquareBracketsCount
+        || openCurlyBracketsCount !== closeCurlyBracketsCount) {
+        // Rather than a long message about which brackets need closing
+        errors.push('You are missing some brackets.');
+    }
+    if (/\.[0-9]/.test(input)) {
+        errors.push('Please convert decimal numbers to fractions.');
+    }
+    if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
+        errors.push('This question does not require state symbols.');
+    }
+    return errors;
+};
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
-
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
     const userPreferences = useAppSelector(selectors.user.preferences);
-
     const [modalVisible, setModalVisible] = useState(false);
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
@@ -67,44 +78,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const hasMetaSymbols = doc.availableSymbols ? doc.availableSymbols.length > 0 && !doc.availableSymbols.every(
         symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim())
     ) : false;
-
-    const symbolicInputValidator = (input: string) => {
-        const openRoundBracketsCount = input.split("(").length - 1;
-        const closeRoundBracketsCount = input.split(")").length - 1;
-        const openSquareBracketsCount = input.split("[").length - 1;
-        const closeSquareBracketsCount = input.split("]").length - 1;
-        const openCurlyBracketsCount = input.split("{").length - 1;
-        const closeCurlyBracketsCount = input.split("}").length - 1;
-        const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
-        const badCharacters = new RegExp(regexStr);
-        const errors = [];
-        if (badCharacters.test(input)) {
-            const usedBadChars: string[] = [];
-            for(let i = 0; i < input.length; i++) {
-                const char = input.charAt(i);
-                if (badCharacters.test(char)) {
-                    if (!usedBadChars.includes(char)) {
-                        usedBadChars.push(char);
-                    }
-                }
-            }
-            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-        }
-
-        if (openRoundBracketsCount !== closeRoundBracketsCount
-           || openSquareBracketsCount !== closeSquareBracketsCount
-           || openCurlyBracketsCount !== closeCurlyBracketsCount) {
-            // Rather than a long message about which brackets need closing
-            errors.push('You are missing some brackets.');
-        }
-        if (/\.[0-9]/.test(input)) {
-            errors.push('Please convert decimal numbers to fractions.');
-        }
-        if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && hasMetaSymbols && !doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol))) {
-            errors.push('This question does not require state symbols.');
-        }
-        return errors;
-    };
 
     function currentAttemptMhchemExpression(): string {
         return (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
@@ -145,16 +118,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
-    const closeModalAndReturnToScrollPosition = useCallback(function(previousYPosition: number) {
-        return function() {
-            document.body.style.overflow = "initial";
-            setModalVisible(false);
-            if (isDefined(previousYPosition)) {
-                window.scrollTo(0, previousYPosition);
-            }
-        };
-    }(window.scrollY), [modalVisible]);
-
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
     const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
 
@@ -181,6 +144,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
         .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
+
+    const mayRequireStateSymbols = !hasMetaSymbols || doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol));
 
     return (
         <div className="symbolic-question">
@@ -228,7 +193,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                             : null}
                     </>
                 </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
+                <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, mayRequireStateSymbols)} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
@@ -236,7 +201,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+                onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
             />
             {modalVisible && <InequalityModal

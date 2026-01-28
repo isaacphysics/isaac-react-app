@@ -91,11 +91,11 @@ export const symbolicInputValidator = (input: string) => {
     const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
     if (invTrig != null) {
         const trigFunction = invTrig[2];
-        if(invTrig[4] === 'h') {
-            errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction +"'.");
+        if (invTrig[4] === 'h') {
+            errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
         }
         else {
-            errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction +"'.");
+            errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
         }
     }
     if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
