@@ -18,7 +18,7 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { countChildren, isError } from "./IsaacSymbolicQuestion";
+import { countChildren, isError, TooltipContents } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -50,16 +50,6 @@ export const symbolicLogicInputValidator = (input: string) => {
     }
     return errors;
 };
-
-const TooltipContents = () => <>
-    Here are some examples of expressions you can type:<br />
-    <br />
-    A and (B or not C)<br />
-    A &amp; (B | !C)<br />
-    True &amp; ~(False + Q)<br />
-    1 . ~(0 + Q)<br />
-    As you type, the box above will preview the result.
-</>;
 
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
@@ -222,7 +212,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                         <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
                     )}
                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
-                        <TooltipContents />
+                        <TooltipContents editorMode="logic"/>
                     </UncontrolledTooltip>
                 </>
             </InputGroup>

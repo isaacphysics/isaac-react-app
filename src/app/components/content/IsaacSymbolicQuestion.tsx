@@ -238,16 +238,21 @@ export const SymbolicTextInput = ({editorMode, inputState, setInputState, textIn
     return <Input type="text" onChange={updateEquation} value={textInput} placeholder="Type your formula here"/>;
 };
 
-const TooltipContents = () => <>
-    Here are some examples of expressions you can type:<br />
-    <br />
-    a*x^2 + b x + c<br />
-    (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
-    1/2 mv**2<br />
-    log(x_a, 2) == log(x_a) / log(2)<br />
-    <br />
-    As you type, the box below will preview the result.
-</>;
+export const TooltipContents = ({editorMode}: {editorMode: "maths" | "chemistry" | "nuclear" | "logic"}) => {
+    const example: React.ReactNode = 
+        editorMode === "maths" ? <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>
+            : editorMode === "chemistry" ? <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>
+                : editorMode === "nuclear" ? <>  {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>
+                    : <> A and (B or not C) <br/> A &amp; (B | !C) <br/> True &amp; ~(False + Q) <br/> 1 . ~(0 + Q) <br/></>;
+
+    return <>
+        Here are some examples of expressions you can type:<br />
+        <br />
+        {example}
+        <br />
+        As you type, the box below will preview the result.
+    </>;
+};
 
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);

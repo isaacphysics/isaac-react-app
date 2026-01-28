@@ -18,7 +18,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, TooltipContents, useModalWithScroll } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -59,23 +59,6 @@ const symbolicInputValidator = (input: string, mayRequireStateSymbols?: boolean)
     }
     return errors;
 };
-
-const TooltipContents = ({nuclear}: {nuclear?: boolean}) => nuclear
-    ? <>
-        Here are some examples of expressions you can type:<br />
-        {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
-        {"^{0}_{-1}e"}<br />
-        {"\\gammaray"}<br />
-        As you type, the box above will preview the result.
-    </>
-    : <>
-        Here are some examples of expressions you can type:<br />
-        H2O<br />
-        2 H2 + O2 -&gt; 2 H2O<br />
-        CH3(CH2)3CH3<br />
-        {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
-        As you type, the box above will preview the result.
-    </>;
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
@@ -195,7 +178,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     )}
                     {!modalVisible ? 
                         <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
-                            <TooltipContents nuclear={doc.isNuclear} />
+                            <TooltipContents editorMode={doc.isNuclear ? "nuclear" : "chemistry"} />
                         </UncontrolledTooltip>
                         : null}
                 </>

@@ -10,6 +10,7 @@ import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequal
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
+import { TooltipContents } from "../content/IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -286,29 +287,7 @@ const Equality = () => {
                                     <i id={"inequality-help"} className="icon icon-info icon-sm h-100 ms-3" />
                                 )}
                                 <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
-                                    Here are some examples of expressions you can type:<br />
-                                    {editorMode === 'maths' && <> <br />
-                                        a*x^2 + b x + c <br />
-                                        (-b ± sqrt(b**2 - 4ac)) / (2a) <br />
-                                        1/2 mv**2 <br />
-                                        log(x_a, 2) == log(x_a) / log(2) <br />
-                                        <br /> </>}
-                                    {editorMode === 'chemistry' && <>
-                                        H2O<br />
-                                        2 H2 + O2 -&gt; 2 H2O<br />
-                                        CH3(CH2)3CH3<br />
-                                        {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br /> </>}
-                                    {editorMode === 'nuclear' && <>
-                                        {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
-                                        {"^{0}_{-1}e"}<br />
-                                        {"\\gammaray"}<br /> </>}
-                                    {editorMode === 'logic' && <>
-                                        <br />
-                                        A AND (B XOR NOT C)<br />
-                                        A &amp; (B ^ !C)<br />
-                                        T &amp; ~(F + A)<br />
-                                        1 . ~(0 + A)<br /> </>}
-                                    As you type, the box below will preview the result.
+                                    <TooltipContents editorMode={editorMode} />
                                 </UncontrolledTooltip>
                             </>
                         </InputGroup>
