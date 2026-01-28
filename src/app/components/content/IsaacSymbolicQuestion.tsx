@@ -105,6 +105,10 @@ export const symbolicInputValidator = (input: string) => {
     return errors;
 };
 
+// The parser retuns a complex structure that isn't fully typed, but we still want to label its use
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type InequalitySymbol = any;
+
 export type InequalityState = {
     result?: {
         tex?: string;
@@ -113,9 +117,7 @@ export type InequalityState = {
         mhchem?: string;
         uniqueSymbols?: string;
     };
-    // The parser retuns a complex structure that isn't fully typed
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    symbols?: any[];
+    symbols?: InequalitySymbol[];
     textEntry?: boolean;
     userInput?: string;
 };
@@ -197,7 +199,7 @@ interface SymbolicTextInputProps {
     setInputState: React.Dispatch<React.SetStateAction<InputState>>;
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
-    initialEditorSymbols: React.MutableRefObject<any>;
+    initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
     dispatchSetCurrentAttempt: (attempt: {type: 'formula'; value: string; pythonExpression?: string; mhchemExpression?: string}) => void;
     sketchRef: React.MutableRefObject<Inequality | null | undefined>;
 }
@@ -236,6 +238,17 @@ export const SymbolicTextInput = ({editorMode, inputState, setInputState, textIn
     return <Input type="text" onChange={updateEquation} value={textInput} placeholder="Type your formula here"/>;
 };
 
+const TooltipContents = () => <>
+    Here are some examples of expressions you can type:<br />
+    <br />
+    a*x^2 + b x + c<br />
+    (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
+    1/2 mv**2<br />
+    log(x_a, 2) == log(x_a) / log(2)<br />
+    <br />
+    As you type, the box below will preview the result.
+</>;
+
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = (currentAttempt && currentAttempt.value)
@@ -246,7 +259,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const [modalVisible, setModalVisible] = useState(false);
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
+    const editorSeed: InequalitySymbol[] = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
@@ -258,7 +271,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             // Otherwise this causes the response to reset on reload removing the banner
             dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
         }
-        initialEditorSymbols.current = state.symbols;
+        initialEditorSymbols.current = state.symbols ?? [];
     };
 
     useEffect(() => {
@@ -275,6 +288,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
+
     useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
         
@@ -285,68 +299,55 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
-    return (
-        <div className="symbolic-question">
-            <div className="question-content">
-                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
-                    {doc.children}
-                </IsaacContentValueOrChildren>
-            </div>
-            {/* TODO Accessibility */}
-            {modalVisible && <Suspense fallback={<div>Loading...</div>}>
-                <InequalityModal
-                    close={closeModalAndReturnToScrollPosition}
-                    onEditorStateChange={updateState}
-                    availableSymbols={doc.availableSymbols}
-                    initialEditorSymbols={initialEditorSymbols.current}
-                    editorSeed={editorSeed}
-                    editorMode="maths"
-                    questionDoc={doc}
-                />
-            </Suspense>}
-            {!readonly && <div className="eqn-editor-input">
-                <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <InputGroup className="my-2 separate-input-group">
-                    <SymbolicTextInput
-                        editorMode="maths"
-                        inputState={inputState}
-                        setInputState={setInputState}
-                        textInput={textInput}
-                        setTextInput={setTextInput}
-                        initialEditorSymbols={initialEditorSymbols}
-                        dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
-                        sketchRef={sketchRef}
-                    />
-                    <>
-                        {siteSpecific(
-                            <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                            <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                        )}
-                        <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
-                            Here are some examples of expressions you can type:<br />
-                            <br />
-                            a*x^2 + b x + c<br />
-                            (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
-                            1/2 mv**2<br />
-                            log(x_a, 2) == log(x_a) / log(2)<br />
-                            <br />
-                            As you type, the box below will preview the result.
-                        </UncontrolledTooltip>
-                    </>
-                </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
-                {symbolList && <div className="eqn-editor-symbols">
-                    The following symbols may be useful: <pre>{symbolList}</pre>
-                </div>}
-            </div>}
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            <div
-                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
-                dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
-                    previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
-            />
+    return <div className="symbolic-question">
+        <div className="question-content">
+            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                {doc.children}
+            </IsaacContentValueOrChildren>
         </div>
-    );
+        {/* TODO Accessibility */}
+        {modalVisible && <Suspense fallback={<div>Loading...</div>}>
+            <InequalityModal
+                close={closeModalAndReturnToScrollPosition}
+                onEditorStateChange={updateState}
+                availableSymbols={doc.availableSymbols}
+                initialEditorSymbols={initialEditorSymbols.current}
+                editorSeed={editorSeed}
+                editorMode="maths"
+                questionDoc={doc}
+            />
+        </Suspense>}
+        {!readonly && <div className="eqn-editor-input">
+            <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+            <InputGroup className="my-2 separate-input-group">
+                <SymbolicTextInput
+                    editorMode="maths" inputState={inputState} setInputState={setInputState}
+                    textInput={textInput} setTextInput={setTextInput} initialEditorSymbols={initialEditorSymbols}
+                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef}
+                />
+                <>
+                    {siteSpecific(
+                        <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                        <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
+                    )}
+                    <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                        <TooltipContents/>
+                    </UncontrolledTooltip>
+                </>
+            </InputGroup>
+            <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
+            {symbolList && <div className="eqn-editor-symbols">
+                The following symbols may be useful: <pre>{symbolList}</pre>
+            </div>}
+        </div>}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <div
+            role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+            onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
+            dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
+                previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
+        />
+    </div>;
+    
 };
 export default IsaacSymbolicQuestion;

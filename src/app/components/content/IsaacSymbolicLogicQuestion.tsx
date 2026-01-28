@@ -22,8 +22,6 @@ import { countChildren, isError } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
-// Magic starts here
-
 // TODO: Create a more modular version of this to use across files
 export const symbolicLogicInputValidator = (input: string) => {
     const openBracketsCount = input.split('(').length - 1;
@@ -52,6 +50,16 @@ export const symbolicLogicInputValidator = (input: string) => {
     }
     return errors;
 };
+
+const TooltipContents = () => <>
+    Here are some examples of expressions you can type:<br />
+    <br />
+    A and (B or not C)<br />
+    A &amp; (B | !C)<br />
+    True &amp; ~(False + Q)<br />
+    1 . ~(0 + Q)<br />
+    As you type, the box above will preview the result.
+</>;
 
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
@@ -179,58 +187,50 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
     const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
-    return (
-        <div className="symbolic-question">
-            <div className="question-content">
-                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
-                    {doc.children}
-                </IsaacContentValueOrChildren>
-            </div>
-            {/* TODO Accessibility */}
-            <div
-                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
-            />
-            {modalVisible && <InequalityModal
-                close={closeModalAndReturnToScrollPosition}
-                onEditorStateChange={(state: any) => {
-                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" });
-                    initialEditorSymbols.current = state.symbols;
-                }}
-                availableSymbols={doc.availableSymbols}
-                initialEditorSymbols={initialEditorSymbols.current}
-                editorSeed={editorSeed}
-                editorMode='logic'
-                logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
-                questionDoc={doc}
-            />}
-            {!readonly && <div className="eqn-editor-input">
-                <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput} placeholder="or type your expression here"/>
-                    <>
-                        {siteSpecific(
-                            <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>,
-                            <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                        )}
-                        <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
-                            Here are some examples of expressions you can type:<br />
-                            <br />
-                            A and (B or not C)<br />
-                            A &amp; (B | !C)<br />
-                            True &amp; ~(False + Q)<br />
-                            1 . ~(0 + Q)<br />
-                            As you type, the box above will preview the result.
-                        </UncontrolledTooltip>
-                    </>
-                </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
-                {symbolList && <div className="eqn-editor-symbols">
-                    The following symbols may be useful: <pre>{symbolList}</pre>
-                </div>}
-            </div>}
+    return <div className="symbolic-question">
+        <div className="question-content">
+            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                {doc.children}
+            </IsaacContentValueOrChildren>
         </div>
-    );
+        {/* TODO Accessibility */}
+        <div
+            role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+            onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
+        />
+        {modalVisible && <InequalityModal
+            close={closeModalAndReturnToScrollPosition}
+            onEditorStateChange={(state: any) => {
+                dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" });
+                initialEditorSymbols.current = state.symbols;
+            }}
+            availableSymbols={doc.availableSymbols}
+            initialEditorSymbols={initialEditorSymbols.current}
+            editorSeed={editorSeed}
+            editorMode='logic'
+            logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
+            questionDoc={doc}
+        />}
+        {!readonly && <div className="eqn-editor-input">
+            <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+            <InputGroup className="my-2 separate-input-group">
+                <Input type="text" onChange={updateEquation} value={textInput} placeholder="or type your expression here"/>
+                <>
+                    {siteSpecific(
+                        <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>,
+                        <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
+                    )}
+                    <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                        <TooltipContents />
+                    </UncontrolledTooltip>
+                </>
+            </InputGroup>
+            <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
+            {symbolList && <div className="eqn-editor-symbols">
+                The following symbols may be useful: <pre>{symbolList}</pre>
+            </div>}
+        </div>}
+    </div>;
 };
 export default IsaacSymbolicLogicQuestion;

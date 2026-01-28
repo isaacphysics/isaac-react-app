@@ -60,6 +60,23 @@ const symbolicInputValidator = (input: string, mayRequireStateSymbols?: boolean)
     return errors;
 };
 
+const TooltipContents = (nuclear?: boolean) => nuclear
+    ? <>
+        Here are some examples of expressions you can type:<br />
+        {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
+        {"^{0}_{-1}e"}<br />
+        {"\\gammaray"}<br />
+        As you type, the box above will preview the result.
+    </>
+    : <>
+        Here are some examples of expressions you can type:<br />
+        H2O<br />
+        2 H2 + O2 -&gt; 2 H2O<br />
+        CH3(CH2)3CH3<br />
+        {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
+        As you type, the box above will preview the result.
+    </>;
+
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
     const userPreferences = useAppSelector(selectors.user.preferences);
@@ -147,76 +164,55 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const mayRequireStateSymbols = !hasMetaSymbols || doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol));
 
-    return (
-        <div className="symbolic-question">
-            <div className="question-content">
-                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
-                    {doc.children}
-                </IsaacContentValueOrChildren>
-            </div>
-            {showTextEntry && <div className="eqn-editor-input">
-                <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <InputGroup className="my-2 separate-input-group">
-                    <SymbolicTextInput
-                        editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
-                        inputState={inputState}
-                        setInputState={setInputState}
-                        textInput={textInput}
-                        setTextInput={setTextInput}
-                        initialEditorSymbols={initialEditorSymbols}
-                        dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
-                        sketchRef={sketchRef}
-                    />
-                    <>
-                        {siteSpecific(
-                            <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                            <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                        )}
-                        {!modalVisible ? 
-                            (doc.isNuclear
-                                ? <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
-                                    Here are some examples of expressions you can type:<br />
-                                    {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
-                                    {"^{0}_{-1}e"}<br />
-                                    {"\\gammaray"}<br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>
-                                : <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
-                                    Here are some examples of expressions you can type:<br />
-                                    H2O<br />
-                                    2 H2 + O2 -&gt; 2 H2O<br />
-                                    CH3(CH2)3CH3<br />
-                                    {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>
-                            )
-                            : null}
-                    </>
-                </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, mayRequireStateSymbols)} />
-                {symbolList && <div className="eqn-editor-symbols">
-                    The following symbols may be useful: <pre>{symbolList}</pre>
-                </div>}
-            </div>}
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            <div
-                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
-            />
-            {modalVisible && <InequalityModal
-                close={closeModalAndReturnToScrollPosition}
-                onEditorStateChange={(state: any) => {
-                    dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
-                    initialEditorSymbols.current = state.symbols;
-                }}
-                availableSymbols={modifiedAvailableSymbols}
-                initialEditorSymbols={initialEditorSymbols.current}
-                editorSeed={editorSeed}
-                editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
-                questionDoc={doc}
-            />}
+    return <div className="symbolic-question">
+        <div className="question-content">
+            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                {doc.children}
+            </IsaacContentValueOrChildren>
         </div>
-    );
+        {showTextEntry && <div className="eqn-editor-input">
+            <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+            <InputGroup className="my-2 separate-input-group">
+                <SymbolicTextInput
+                    editorMode={doc.isNuclear ? "nuclear" : "chemistry"} inputState={inputState} setInputState={setInputState}
+                    textInput={textInput} setTextInput={setTextInput} initialEditorSymbols={initialEditorSymbols}
+                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef}
+                />
+                <>
+                    {siteSpecific(
+                        <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                        <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
+                    )}
+                    {!modalVisible ? 
+                        <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
+                            <TooltipContents nuclear={doc.isNuclear} />
+                        </UncontrolledTooltip>
+                        : null}
+                </>
+            </InputGroup>
+            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, mayRequireStateSymbols)} />
+            {symbolList && <div className="eqn-editor-symbols">
+                The following symbols may be useful: <pre>{symbolList}</pre>
+            </div>}
+        </div>}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <div
+            role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+            onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
+            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
+        />
+        {modalVisible && <InequalityModal
+            close={closeModalAndReturnToScrollPosition}
+            onEditorStateChange={(state: any) => {
+                dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
+                initialEditorSymbols.current = state.symbols;
+            }}
+            availableSymbols={modifiedAvailableSymbols}
+            initialEditorSymbols={initialEditorSymbols.current}
+            editorSeed={editorSeed}
+            editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
+            questionDoc={doc}
+        />}
+    </div>
 };
 export default IsaacSymbolicChemistryQuestion;
