@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'reactstrap';
 import classNames from 'classnames';
-import { interstitialCookieSlice, useAppDispatch } from '../../state';
+import { ANVIL_COOKIE, cookieConsentSlice, DESMOS_COOKIE, GEOGEBRA_COOKIE, useAppDispatch, YOUTUBE_COOKIE } from '../../state';
 import { SOCIAL_LINKS, useUserConsent } from '../../services';
 import { IsaacVideo } from '../content/IsaacVideo';
 
@@ -18,11 +18,6 @@ export interface InterstitialCookieHandlerProps {
 }
 
 export const InterstitialCookieHandler = (props: InterstitialCookieHandlerProps) => {    
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-        dispatch(interstitialCookieSlice.actions.setDefault());
-    }, []);
-
     return props.accepted ? <>{props.afterAccepted}</> : <>{props.beforeAccepted}</>;
 };
 
@@ -35,7 +30,7 @@ export const HomepageYoutubeCookieHandler = () => {
     const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
-        accepted={userConsent.cookieConsent?.youtubeCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.youtubeCookiesAccepted ?? false}
         beforeAccepted={<div className="homepage-video">
             <div className="position-relative">
                 <div className="youtube-fade" />
@@ -55,7 +50,7 @@ export const HomepageYoutubeCookieHandler = () => {
                     </div>
                 </div>
                 <button className={`youtube-play w-100 h-100 p-0 m-0 ${videoActive ? "selected" : ""}`} type="button" onClick={() => {
-                    dispatch(interstitialCookieSlice.actions.acceptYoutubeCookies());
+                    dispatch(cookieConsentSlice.actions.acceptCookie(YOUTUBE_COOKIE));
                     setAutoplay(true);
                 }} onFocus={() => setVideoActive(true)} onBlur={() => setVideoActive(false)}>
                 </button>
@@ -74,13 +69,13 @@ export const YoutubeCookieHandler = ({afterAcceptedElement} : {afterAcceptedElem
     const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
-        accepted={userConsent.cookieConsent?.youtubeCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.youtubeCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
             <h3>Allow YouTube content?</h3>
             {youtubeCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button className="" onClick={() => {
-                    dispatch(interstitialCookieSlice.actions.acceptYoutubeCookies());
+                    dispatch(cookieConsentSlice.actions.acceptCookie(YOUTUBE_COOKIE));
                 }}>Accept</Button>
             </div>
         </div>}
@@ -93,13 +88,13 @@ export const AnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElemen
     const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
-        accepted={userConsent.cookieConsent?.anvilCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.anvilCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
             <h3>Allow Anvil content?</h3>
             {anvilCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
-                    dispatch(interstitialCookieSlice.actions.acceptAnvilCookies());
+                    dispatch(cookieConsentSlice.actions.acceptCookie(ANVIL_COOKIE));
                 }}>Accept</Button>
             </div>
         </div>}
@@ -112,13 +107,13 @@ export const DesmosCookieHandler = ({afterAcceptedElement} : {afterAcceptedEleme
     const userConsent = useUserConsent();
     
     return <InterstitialCookieHandler
-        accepted={userConsent.cookieConsent?.desmosCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.desmosCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
             <h3>Allow Desmos content?</h3>
             {desmosCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
-                    dispatch(interstitialCookieSlice.actions.acceptDesmosCookies());
+                    dispatch(cookieConsentSlice.actions.acceptCookie(DESMOS_COOKIE));
                 }}>Accept</Button>
             </div>
         </div>}
@@ -131,13 +126,13 @@ export const GeogebraCookieHandler = ({afterAcceptedElement, onAccepted} : {afte
     const userConsent = useUserConsent();
     
     return <InterstitialCookieHandler
-        accepted={userConsent.cookieConsent?.geogebraCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.geogebraCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
             <h3>Allow GeoGebra content?</h3>
             {geogebraCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
-                    dispatch(interstitialCookieSlice.actions.acceptGeogebraCookies());
+                    dispatch(cookieConsentSlice.actions.acceptCookie(GEOGEBRA_COOKIE));
                     onAccepted?.();
                 }}>Accept</Button>
             </div>

@@ -124,7 +124,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     return <div>
         <div className="no-print content-value text-center">
             { embedSrc ?
-                <div className={classNames("content-video-container", {"ratio-16x9" : userConsent.cookieConsent?.youtubeCookieAccepted ?? false})}>
+                <div className={classNames("content-video-container", {"ratio-16x9" : userConsent.cookieConsent?.youtubeCookiesAccepted ?? false})}>
                     <YoutubeCookieHandler afterAcceptedElement={
                         <iframe ref={videoRef} className="mw-100" title={altTextToUse} src={embedSrc} allowFullScreen/>
                     } />

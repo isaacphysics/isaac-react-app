@@ -1,8 +1,8 @@
-import { InterstitialCookieState } from '../state';
+import { CookieConsentState } from '../state';
 import { AppState, useAppSelector } from '../state';
 
 interface UseUserConsentReturnType {
-    cookieConsent: InterstitialCookieState;
+    cookieConsent: CookieConsentState;
     openAIConsent: boolean;
 }
 
