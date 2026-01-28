@@ -1,10 +1,9 @@
-import {renderTestEnvironment} from "../testUtils";
+import {renderTestEnvironment, setUrl} from "../testUtils";
 import {handlerThatReturns} from "../../mocks/handlers";
 import {API_PATH, isPhy} from "../../app/services";
 import {http} from "msw";
-import {act, screen} from "@testing-library/react";
+import {screen} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {history} from "../../app/services";
 
 
 async function enterAndConfirmPassword(password: string) {
@@ -40,7 +39,7 @@ async function assertSuccessToastShown(assert: boolean) {
 describe('PasswordResetHandler', () => {
     it("should allow submission when token and password are valid and password confirmed", async () => {
         // Arrange
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: 'ANONYMOUS',
             extraEndpoints: [
                 http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({
@@ -56,9 +55,7 @@ describe('PasswordResetHandler', () => {
 
         // Act
         // Navigate to reset page
-        act(() => {
-            history.push("resetpassword/some_valid_token");
-        });
+        await setUrl({ pathname: "resetpassword/some_valid_token" });
 
         // Enter and confirm new password, then submit
         await enterAndConfirmPassword("validnewpassword");
@@ -74,7 +71,7 @@ describe('PasswordResetHandler', () => {
 
     it("should disable submit button and prevent submission when token is invalid", async () => {
         // Arrange
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: 'ANONYMOUS',
             extraEndpoints: [
                 http.get(API_PATH + '/users/resetpassword/some_invalid_token', handlerThatReturns(
@@ -93,9 +90,7 @@ describe('PasswordResetHandler', () => {
 
         // Act
         // Navigate to reset page
-        act(() => {
-            history.push("resetpassword/some_invalid_token");
-        });
+        await setUrl({ pathname: "resetpassword/some_invalid_token" });
 
         // Enter and confirm new password, then attempt to submit (even though we expect the button to be disabled)
         await enterAndConfirmPassword("validnewpassword");
@@ -111,7 +106,7 @@ describe('PasswordResetHandler', () => {
 
     it("should show invalid password feedback if password is invalid", async () => {
         // Arrange
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: 'ANONYMOUS',
             extraEndpoints: [
                 http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({
@@ -123,9 +118,7 @@ describe('PasswordResetHandler', () => {
 
         // Act
         // Navigate to reset page
-        act(() => {
-            history.push("resetpassword/some_valid_token");
-        });
+        await setUrl({ pathname: "resetpassword/some_valid_token" });
 
         // Enter new password, then attempt to submit
         const passwordInput = await screen.findByLabelText("New password");
@@ -149,7 +142,7 @@ describe('PasswordResetHandler', () => {
 
     if(isPhy) {
         it("should show password confirmation feedback if passwords do not match", async () => {
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 role: 'ANONYMOUS',
                 extraEndpoints: [
                     http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({
@@ -161,9 +154,7 @@ describe('PasswordResetHandler', () => {
 
             // Act
             // Navigate to reset page
-            act(() => {
-                history.push("resetpassword/some_valid_token");
-            });
+            await setUrl({ pathname: "resetpassword/some_valid_token" });
 
             // Enter new password, then attempt to submit
             const passwordInput = await screen.findByLabelText("New password");

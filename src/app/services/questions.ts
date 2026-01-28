@@ -1,7 +1,7 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 import { InequalityState } from "../components/content/IsaacSymbolicQuestion";
@@ -184,7 +184,7 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
 
         const attempt = dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
 
-        if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+        if (isLoggedIn(currentUser) && !isTeacherPending(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
             dispatch(saveGameboard({
                 boardId: currentGameboard.id,
                 user: currentUser,

@@ -1,4 +1,4 @@
-import {UserRole} from "../IsaacApiTypes";
+import {RegisteredUserDTO, UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
@@ -14,7 +14,6 @@ import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} f
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
-import { history } from "../app/services";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -28,9 +27,9 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
 };
 
-interface RenderTestEnvironmentOptions {
+export interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
-    modifyUser?: (u: typeof mockUser) => typeof mockUser;
+    modifyUser?: <T extends typeof mockUser | RegisteredUserDTO>(u: T) => T;
     sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
@@ -46,9 +45,9 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
+export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
-    history.replace({ pathname: '/', search: '' });
+    await setUrl({pathname: "/"});
     resetStore();
     server.resetHandlers();
     if (role || modifyUser) {
@@ -81,7 +80,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
         server.use(...extraEndpoints);
     }
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
-        store.dispatch(requestCurrentUser());
+        await store.dispatch(requestCurrentUser());
     }
     render(<Provider store={store}>
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
@@ -203,17 +202,20 @@ export const enterInput = async (placeholder: string, input: string) => {
     await userEvent.type(textBox, input);
 };
 
-export const waitForLoaded = () => waitFor(() => {
-    expect(screen.queryAllByText("Loading...")).toHaveLength(0);
-    expect(screen.queryAllByText("Searching...")).toHaveLength(0);
-});
+export const waitForLoaded = async () => {
+    await waitFor(async () => {
+        expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+        expect(screen.queryAllByText("Searching...")).toHaveLength(0);
+        await new Promise(process.nextTick);
+    });
+};
 
 export const expectUrl = (text: string) => waitFor(() => {
-    expect(history.location.pathname).toBe(text);
+    expect(location.pathname).toBe(text);
 });
 
 export const expectUrlParams = (text: SearchString | '') => waitFor(() => {
-    expect(history.location.search).toBe(text);
+    expect(location.search).toBe(text);
 });
 
 export const withSizedWindow = async (width: number, height: number, cb: () => void) => {
@@ -239,14 +241,15 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 
 export type PathString = `/${string}`;
 export type SearchString = `?${string}`;
-export const setUrl = async (location: { pathname: PathString, search?: SearchString}) => {
-    if (location.pathname.includes('?')) {
-        throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
-    }
-    return await act(async () => history.push(location));
+export const setUrl = async (location: Partial<URL>) => {
+    await act(async () => {
+        // push a new state, then go to it
+        history.pushState({}, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);
+        fireEvent(window, new PopStateEvent('popstate'));
+    });
 };
 
-export const goBack = () => history.goBack();
+export const goBack = () => history.back();
 
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {

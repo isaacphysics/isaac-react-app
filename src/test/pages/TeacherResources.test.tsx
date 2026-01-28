@@ -9,7 +9,7 @@ describe('Teacher Resources page', () => {
         it('has no such page', () => {});
     } else {
         const renderTeacherResources = async (role: UserRole | "ANONYMOUS" = 'TEACHER') => {
-            renderTestEnvironment({ role });
+            await renderTestEnvironment({ role });
             await setUrl({ pathname: '/teachers' });
         };
 

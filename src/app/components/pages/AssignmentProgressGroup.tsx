@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../state';
 import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../IsaacAppTypes';
 import {
@@ -18,7 +18,7 @@ import {
     useDeviceSize
 } from '../../services';
 import {RegisteredUserDTO} from '../../../IsaacApiTypes';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {Spacer} from '../elements/Spacer';
 import {formatDate} from '../elements/DateString';
 import {Badge, Button, Card, CardBody, Col, Container, Input, Label, Row} from 'reactstrap';
@@ -92,11 +92,18 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     const {groupBoardAssignments, groupQuizAssignments, isFetching} = useGroupAssignments(user, group?.id, assignmentOrder);
     const {data: groupMembers} = useGetGroupMembersQuery(isDefined(group?.id) ? group.id : skipToken);
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
+    const location = useLocation();
 
     const [searchText, setSearchText] = useState("");
     const [activeTab, setActiveTab] = useHistoryState<"assignments" | "tests">("markbookTab", "assignments");
 
-    const deviceSize = useDeviceSize();
+    useEffect(() => {
+        const hash = location.hash.replace("#", "");
+        if (hash === "assignments" || hash === "tests") {
+            setActiveTab(hash);
+        }
+    }, [location.hash, setActiveTab]);
 
     const assignmentLikeListing = activeTab === "assignments" ? groupBoardAssignments : groupQuizAssignments;
 

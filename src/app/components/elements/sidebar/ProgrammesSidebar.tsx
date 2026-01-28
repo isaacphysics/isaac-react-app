@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { IsaacProgrammeDTO } from "../cards/ProgrammeCard";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
@@ -9,7 +9,8 @@ interface ProgrammesSidebarProps extends ContentSidebarProps {
 }
 
 export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     return <ContentSidebar buttonTitle="Explore programmes" {...rest}>
         <div className="section-divider"/>
@@ -23,7 +24,7 @@ export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps)
                         checked={false}
                         onClick={() => {
                             if (programme.id) {
-                                history.replace({pathname: history.location.pathname, hash: `${programme.id.slice(programme.id.indexOf("_") + 1)}`});
+                                void navigate({pathname: location.pathname, hash: `${programme.id.slice(programme.id.indexOf("_") + 1)}`}, {replace: true});
                                 document.getElementById(programme.id.slice(programme.id.indexOf("_") + 1))?.scrollIntoView({behavior: "smooth"});
                             }
                         }}

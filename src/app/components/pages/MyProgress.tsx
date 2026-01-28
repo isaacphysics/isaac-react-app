@@ -21,7 +21,7 @@ import {
     siteSpecific,
     useDeviceSize
 } from "../../services";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { PotentialUser } from "../../../IsaacAppTypes";
 import { Unauthorised } from "./Unauthorised";
 import { AggregateQuestionStats } from "../elements/panels/AggregateQuestionStats";
@@ -63,13 +63,13 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     }
 );
 
-interface MyProgressProps extends RouteComponentProps<{userIdOfInterest: string}> {
+interface MyProgressProps {
     user: PotentialUser;
 }
-const MyProgress = withRouter((props: MyProgressProps) => {
-    const { user, match } = props;
-    const { userIdOfInterest } = match.params;
-    const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
+
+const MyProgress = ({user}: MyProgressProps) => {
+    const { userIdOfInterest = "" } = useParams();
+    const viewingOwnData = userIdOfInterest === "" || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
@@ -199,5 +199,5 @@ const MyProgress = withRouter((props: MyProgressProps) => {
             </CardBody>
         </Card>
     </Container>;
-});
+};
 export default MyProgress;

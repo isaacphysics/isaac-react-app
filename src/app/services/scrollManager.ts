@@ -1,5 +1,4 @@
-import {decorate, isDefined} from "./";
-import { Action } from "history";
+import {decorate, isDefined, PATHS} from "./";
 
 const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: string, reducedMotion: boolean): boolean => {
     const prevPathnameParts = prevPathname?.split("/") || [];
@@ -19,20 +18,25 @@ const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: 
         return true;
     }
 
+    if (pathnameParts[1] === PATHS.GAMEBOARD.slice(1)) {
+        // since we usually don't scroll if there is a hash, but gameboards use the hash to find what to show, scroll to top here
+        safeScrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
+        return true;
+    }
+
     return false;
 };
 
-export const scrollTopOnPageLoad = (reducedMotion: boolean) => (previousPathname: string | undefined, pathname: string, action: Action) => {
-    if (["PUSH", "REPLACE"].includes(action)) {
-            
-        if (hasPageGroupSpecificScroll(previousPathname, pathname, reducedMotion)) {
-            return;
-        }
-        
-        (window as any).followedAtLeastOneSoftLink = true;
-
-        safeScrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
+export const scrollTopOnPageLoad = (reducedMotion: boolean) => (previousPathname: string | undefined, pathname: string) => {
+    if (hasPageGroupSpecificScroll(previousPathname, pathname, reducedMotion)) {
+        return;
     }
+    
+    (window as any).followedAtLeastOneSoftLink = true;
+
+    if (window.location.hash) return;
+
+    safeScrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
 };
 
 export function scrollVerticallyIntoView(element: Element, offset = 0): void {

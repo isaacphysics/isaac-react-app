@@ -31,9 +31,8 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
                     continue;
                 }
 
-                const contextIndex = index + dropRegionContext.zoneIds.size;
-                dropZones[i].setAttribute("id", `drop-region-${contextIndex}-${safeQuestionId}`);
-                dropIds.push({divId: dropZones[i].id, zoneId: `${contextIndex}`, width, height});
+                dropZones[i].setAttribute("id", `drop-region-${index}-${safeQuestionId}`);
+                dropIds.push({divId: dropZones[i].id, zoneId: `${index}`, width, height});
                 break;
             }
             case "isaacDragAndDropQuestion": {

@@ -8,7 +8,7 @@ describe("Site search", () => {
     const searchHandler = jest.fn();
 
     const renderSiteSearch = async (params?: `?${string}`) => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             extraEndpoints: [
                 http.get(API_PATH + "/search", searchHandler),
             ]

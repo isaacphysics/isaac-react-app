@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector, useSearchRequestQuery} from "../../state";
 import {
     Card,
@@ -34,9 +33,9 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { History } from "history";
 import debounce from "lodash/debounce";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { useLocation, useNavigate } from "react-router";
 
 interface Item<T> {
     value: T;
@@ -61,14 +60,11 @@ const selectStyle: StylesConfig<Item<SearchableDocumentType>, true, GroupBase<It
     menuPortal: base => ({ ...base, zIndex: 19 })
 };
 
-function updateSearchUrl(history: History<unknown>, queryState: Nullable<string>, filtersState: Item<SearchableDocumentType>[]) {
-    pushSearchToHistory(history, queryState || "", filtersState.map(deitemise));
-}
-
 // Interacting with the page's filters change the query parameters.
 // Whenever the query parameters change we send a search request to the API.
-export const Search = withRouter((props: RouteComponentProps) => {
-    const {location, history} = props;
+export const Search = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const user = useAppSelector(selectors.user.orNull);
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     
@@ -87,9 +83,9 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const onUpdate = useMemo(() => {
         return debounce((query: Nullable<string>, filters: Item<SearchableDocumentType>[]) => {
             setSearchQuery(query ? {query, types: filters.map(deitemise).join(",")} : skipToken);
-            updateSearchUrl(history, query, filters);
+            pushSearchToHistory(navigate, query || "", filters.map(deitemise));
         }, 500, {leading: true, trailing: true});
-    }, [history]);
+    }, [navigate]);
 
     useEffect(() => {
         onUpdate(queryState, filtersState);
@@ -157,4 +153,4 @@ export const Search = withRouter((props: RouteComponentProps) => {
             </Card>
         </Container>
     );
-});
+};
