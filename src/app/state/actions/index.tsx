@@ -597,7 +597,7 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
 
 // Hard redirect (refreshes page)
 export const redirectTo = (path: string) => {
-    window.location.href = window.location.origin + path;
+    window.location.href = path;
 };
 
 export const registerPageChange = (path: string) => {

@@ -1,7 +1,8 @@
-import {navigateToMyAccount, renderTestEnvironment} from "../testUtils";
+import {navigateToMyAccount, renderTestEnvironment, setUrl} from "../testUtils";
 import {NOW, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
 import {redirectTo} from "../../app/state";
 import * as Actions from "../../app/state/actions";
+import { screen } from "@testing-library/dom";
 
 
 describe("SessionExpired", () => {
@@ -10,7 +11,9 @@ describe("SessionExpired", () => {
         //  Annoyingly, the hard-redirect we use is not implemented in JSDOM/RTL, so we need to mock it out.
         jest.spyOn(Actions, "redirectTo");
         // @ts-ignore
-        redirectTo.mockImplementation(() => true);
+        redirectTo.mockImplementation(async (path) => {
+            await setUrl({pathname: path});
+        });
 
         //  Set the session expiry to be now
         await renderTestEnvironment({role: "STUDENT", sessionExpires: new Date(NOW).toUTCString()});
@@ -25,7 +28,7 @@ describe("SessionExpired", () => {
         // Assert
         //  Check we were redirected to the login page. Ideally we'd check the page itself, but this is the best we can
         //  do for the reasons described above.
-        expect(redirectTo).toHaveBeenLastCalledWith("/error_expired");
+        expect(redirectTo).toHaveBeenLastCalledWith(window.location.origin + "/error_expired");
 
         // Teardown
         // @ts-ignore
@@ -36,7 +39,9 @@ describe("SessionExpired", () => {
         // Arrange
         jest.spyOn(Actions, "redirectTo");
         // @ts-ignore
-        redirectTo.mockImplementation(() => true);
+        redirectTo.mockImplementation(async (path) => {
+            await setUrl({pathname: path});
+        });
 
         //  Set the session expiry to in the future
         await renderTestEnvironment({role: "STUDENT", sessionExpires: new Date(SOME_FIXED_FUTURE_DATE).toUTCString()});
@@ -51,6 +56,30 @@ describe("SessionExpired", () => {
         // Assert
         //  We should still be where we were.
         expect(window.location.pathname).toEqual("/account");
-        expect(redirectTo).not.toHaveBeenLastCalledWith("/error_expired");
+        expect(redirectTo).not.toHaveBeenLastCalledWith(window.location.origin + "/error_expired");
+
+        // @ts-ignore
+        redirectTo.mockRestore();
+    });
+
+    it("should restore correct url with 'continue' button", async () => {
+        jest.spyOn(Actions, "redirectTo");
+        // @ts-ignore
+        redirectTo.mockImplementation(async (path) => {
+            await setUrl({pathname: path});
+        });
+
+        await renderTestEnvironment({role: "STUDENT", sessionExpires: new Date(NOW).toUTCString()});
+        await navigateToMyAccount();
+        await setUrl({pathname: "/account", search: "?some=param"});
+
+        await new Promise((r) => setTimeout(r, 1500));
+
+        const continueLink = screen.getByRole("link", {name: "Continue"});
+        
+        expect(continueLink.getAttribute("href")).toEqual(window.location.origin + "/account?some=param");
+
+        // @ts-ignore
+        redirectTo.mockRestore();
     });
 });
