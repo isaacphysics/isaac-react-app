@@ -33,12 +33,16 @@ function removeRTKProperties(state: AppState) {
 
 describe("root reducer", () => {
 
+    // TODO why is this a requirement?? non-api-related initial states *can* be set on load...
+    // JB I'm leaving this test here as it's a good default to have, and we should follow this in most cases.
+    // Any exceptions must have thought put into them as to whether the initial state really is immediately calculable on page load.
     it("has null as the initial state value for every property", () => {
         const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
-
         Object.entries(actualInitialState).map(([reducerName, actualInitialValue]) => {
             if (reducerName === "adminUserSeach") {
                 expect(actualInitialValue).toHaveLength(0);
+            } else if (reducerName === "cookieConsent") {
+                expect(Object.values(actualInitialValue as object).every(v => v === false)).toBe(true);
             } else {
                 expect(actualInitialValue).toBe(null);
             }
