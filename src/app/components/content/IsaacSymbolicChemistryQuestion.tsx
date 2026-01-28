@@ -18,7 +18,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { initialiseInequality, InputState, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -60,7 +60,7 @@ const symbolicInputValidator = (input: string, mayRequireStateSymbols?: boolean)
     return errors;
 };
 
-const TooltipContents = (nuclear?: boolean) => nuclear
+const TooltipContents = ({nuclear}: {nuclear?: boolean}) => nuclear
     ? <>
         Here are some examples of expressions you can type:<br />
         {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
@@ -87,7 +87,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
 
-    let currentAttemptValue: any | undefined;
+    let currentAttemptValue: InequalityState | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
@@ -106,7 +106,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         valid: true
     }));
 
-    const updateState = (state: any) => {
+    const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
         const mhchemExpression = newState?.result?.mhchem || "";
         if (state.userInput !== "" || modalVisible) {
@@ -140,8 +140,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
+
     useLayoutEffect(() => {
-        if (readonly) return; // as the ref won't be defined
+        if (!showTextEntry) return; // as the ref won't be defined
         
         initialiseInequality(doc.isNuclear ? "nuclear" : "chemistry", hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,6 +171,15 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
+        {modalVisible && <InequalityModal
+            close={closeModalAndReturnToScrollPosition}
+            onEditorStateChange={updateState}
+            availableSymbols={modifiedAvailableSymbols}
+            initialEditorSymbols={initialEditorSymbols.current}
+            editorSeed={editorSeed}
+            editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
+            questionDoc={doc}
+        />}
         {showTextEntry && <div className="eqn-editor-input">
             <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
             <InputGroup className="my-2 separate-input-group">
@@ -201,18 +211,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
         />
-        {modalVisible && <InequalityModal
-            close={closeModalAndReturnToScrollPosition}
-            onEditorStateChange={(state: any) => {
-                dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
-                initialEditorSymbols.current = state.symbols;
-            }}
-            availableSymbols={modifiedAvailableSymbols}
-            initialEditorSymbols={initialEditorSymbols.current}
-            editorSeed={editorSeed}
-            editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
-            questionDoc={doc}
-        />}
-    </div>
+    </div>;
 };
 export default IsaacSymbolicChemistryQuestion;
