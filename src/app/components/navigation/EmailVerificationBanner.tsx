@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import {
+    EMAIL_VERIFICATION_WARNINGS_DISABLED,
     selectors,
     useAppSelector,
+    useCookie,
     useRequestEmailVerificationMutation
 } from "../../state";
 import {Link} from "react-router-dom";
@@ -10,22 +12,22 @@ import {SITE_TITLE_SHORT, siteSpecific, WEBMASTER_EMAIL} from "../../services";
 
 export const EmailVerificationBanner = () => {
     const [hidden, setHidden] = useState(false);
+    const [isHiddenViaCookie] = useCookie(EMAIL_VERIFICATION_WARNINGS_DISABLED);
     const user = useAppSelector(selectors.user.orNull);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
-    const show = user?.loggedIn && status != "VERIFIED" && !hidden;
+    const show = user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie;
 
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     function clickVerify() {
         if (user?.loggedIn && user.email) {
-            sendVerificationEmail({email: user.email});
+            void sendVerificationEmail({email: user.email});
         }
         setHidden(true);
     }
 
-    return show ? <div className="banner d-print-none" id="email-status-banner">
+    return show && <div className="banner d-print-none" id="email-status-banner">
         <Container className="py-3">
-
-            <Row style={{alignItems: "center"}}>
+            <Row className="align-items-center">
                 <Col xs={12} sm={2} md={1}>
                     <h3 className="text-center">
                         <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/icons/info.svg" style={{height: "1.5rem"}}
@@ -35,13 +37,16 @@ export const EmailVerificationBanner = () => {
                 </Col>
                 {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
                     <Col xs={12} sm={10} md={8}>
-                        <small>Your email address is not verified - please find our email in your inbox and follow the
-                            verification link. You can <Button color="link primary-font-link" onClick={clickVerify} id="email-verification-request">
-                            request a new verification email</Button> if necessary. To change your account email,
-                            go to <Link to="/account">My account</Link>.
+                        <small>
+                            Your email address is not verified - please find our email in your inbox and follow the
+                            verification link. You can{" "}
+                            <Button color="link primary-font-link" onClick={clickVerify} id="email-verification-request">
+                                request a new verification email
+                            </Button>{" "}
+                            if necessary. To change your account email, go to <Link to="/account">My account</Link>.
                         </small>
                     </Col>
-                    <Col xs={12} md={3} className="text-center">
+                    <Col xs={12} md={3} className="d-flex flex-column align-items-center text-center">
                         <Button
                             color={siteSpecific("keyline", "solid")} className="mt-3 mb-2 d-block d-md-inline-block banner-button"
                             onClick={() => setHidden(true)} id="email-verification-snooze"
@@ -62,5 +67,5 @@ export const EmailVerificationBanner = () => {
                 }
             </Row>
         </Container>
-    </div> : null;
+    </div>;
 };
