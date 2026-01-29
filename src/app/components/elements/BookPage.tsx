@@ -41,50 +41,6 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             </div>
         </>}
 
-        <ListView
-            type="gameboard"
-            items={convertToALVIGameboards([
-                {
-                    "id": "ab10bb88-a234-4381-af86-43ec0be9e30a",
-                    "title": "board with deprecated content",
-                    "contents": [
-                        {
-                            "id": "charges_in_a_square_res1617_n",
-                            "contentType": "isaacQuestionPage",
-                            "title": "Charges in a Square",
-                            "tags": [
-                                "nofilter",
-                                "electric",
-                                "physics",
-                                "fields"
-                            ],
-                            "creationContext": {},
-                            "questionPartStates": [],
-                            "deprecated": true
-                        }
-                    ],
-                    "creationDate": new Date(1769441474060),
-                    "gameFilter": {
-                        "subjects": [
-                            "physics"
-                        ],
-                        "fields": [],
-                        "topics": [],
-                        "levels": [],
-                        "concepts": [],
-                    },
-                    "ownerUserId": 9,
-                    "tags": [],
-                    "creationMethod": "BUILDER",
-                    "percentageAttempted": 0,
-                    "percentageCorrect": 0,
-                    "lastVisited": new Date(1769441474173),
-                    "startedQuestion": false,
-                    "savedToCurrentUser": true
-                }
-            ] as GameboardDTO[])}
-        />
-
         {hasResources && <>
             <h4 className="mb-3" id="resources">Resources</h4>
             {!!page.relatedContent?.length && <>
