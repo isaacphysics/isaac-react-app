@@ -143,7 +143,7 @@ export function UserContextAccountInput({
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const isAllContexts = userContexts.some(uc => uc.stage === STAGE.ALL && (isPhy || uc.examBoard === EXAM_BOARD.ALL)) ||
-        !getFilteredStageOptions({byUserContexts: userContexts}).length;
+        !getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length;
 
     return <WithLinkableSetting id={"account-context"} className={className}>
         <div className="mb-2">
