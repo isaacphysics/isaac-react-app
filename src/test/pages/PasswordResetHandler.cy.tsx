@@ -3,7 +3,7 @@ import {ResetPasswordHandler} from "../../app/components/handlers/PasswordResetH
 
 it('Password reset page should have no visual regressions', () => {
     // Arrange & Act
-    cy.mountWithStoreAndRouter(<ResetPasswordHandler />, ["/resetpassword?token=some-token"]);
+    cy.mountWithStoreAndRouter(<ResetPasswordHandler />, ["/resetpassword"], {pathname: "/resetpassword", search: "?token=some-token"});
 
     // Assert
     cy.matchImage();
