@@ -28,15 +28,15 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacReorderQuestion": "Reorder",
     "isaacParsonsQuestion": "Parsons",
     "isaacNumericQuestion": "Numeric",
-    "isaacSymbolicQuestion": "Symbolic",
+    "isaacSymbolicQuestion": "Algebraic",
     "isaacSymbolicChemistryQuestion": "Symbolic chemistry",
-    "isaacStringMatchQuestion": "String match",
+    "isaacStringMatchQuestion": "Text entry",
     "isaacRegexMatchQuestion": "Regex match",
     "isaacFreeTextQuestion": "Free text",
     "isaacLLMFreeTextQuestion": "LLM-marked free text",
     "isaacSymbolicLogicQuestion": "Boolean logic",
     "isaacGraphSketcherQuestion": "Graph sketcher",
-    "isaacClozeQuestion": "Cloze drag and drop",
+    "isaacClozeQuestion": "Drag and drop",
     "isaacCoordinateQuestion": "Coordinate",
     "default": "Multiple choice"
 };
