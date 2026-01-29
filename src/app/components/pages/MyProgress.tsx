@@ -140,7 +140,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                                 const correct = groupedTypes.reduce((sum, type) => sum + (progress?.correctByType?.[type] || 0), 0);
                                 const attempts = groupedTypes.reduce((sum, type) => sum + (progress?.attemptsByType?.[type] || 0), 0);
                                 const percentage = safePercentage(correct, attempts);
-                                return <Col key={qType} lg={4} className="mt-2 type-progress-bar">
+                                return percentage && <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
                                         {HUMAN_QUESTION_TYPES[qType]} questions
                                     </div>
