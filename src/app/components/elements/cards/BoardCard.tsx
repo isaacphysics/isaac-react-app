@@ -221,7 +221,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                     {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
                     <br/>
-                    <SupersededDeprecatedBoardContentWarning gameboard={board} />
+                    {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board} />}
                 </td>
                 {stagesAndDifficultiesTD}
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
@@ -295,7 +295,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
                             Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
                         </p>}
-                        <SupersededDeprecatedBoardContentWarning gameboard={board} />
+                        {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board} />}
                     </Col>
                 </Row>
             </GameboardCard>,
