@@ -17,6 +17,7 @@ import {
     ISAAC_BOOKS_BY_TAG,
     isPhy,
     isTeacherOrAbove,
+    PROGRESS_QUESTION_TYPE_MAP,
     safePercentage,
     siteSpecific,
     useDeviceSize
@@ -37,8 +38,7 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
-            "isaacClozeQuestion", "isaacReorderQuestion", "isaacItemQuestion", "isaacStringMatchQuestion",
-            "isaacRegexMatchQuestion", "isaacGraphSketcherQuestion", "isaacCoordinateQuestion"
+            "isaacClozeQuestion", "isaacReorderQuestion", "isaacStringMatchQuestion", "isaacGraphSketcherQuestion", "isaacCoordinateQuestion"
         ],
         questionCountByBookTag: {
             "phys_book_step_up": 432,
@@ -55,9 +55,8 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     // Computer science
     {
         questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion",
-            "isaacReorderQuestion", "isaacRegexMatchQuestion"
+            "isaacMultiChoiceQuestion", "isaacParsonsQuestion", "isaacNumericQuestion", "isaacStringMatchQuestion",
+            "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion", "isaacReorderQuestion"
         ],
         questionCountByBookTag: {},
     }
@@ -137,8 +136,9 @@ const MyProgress = ({user}: MyProgressProps) => {
                         <h4>Question parts correct by type</h4>
                         <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
-                                const correct = progress?.correctByType?.[qType] || null;
-                                const attempts = progress?.attemptsByType?.[qType] || null;
+                                const groupedTypes = PROGRESS_QUESTION_TYPE_MAP[qType] || [qType];
+                                const correct = groupedTypes.reduce((sum, type) => sum + (progress?.correctByType?.[type] || 0), 0);
+                                const attempts = groupedTypes.reduce((sum, type) => sum + (progress?.attemptsByType?.[type] || 0), 0);
                                 const percentage = safePercentage(correct, attempts);
                                 return <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>

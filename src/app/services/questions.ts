@@ -64,6 +64,11 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
 
 export const RESTRICTED_QUESTION_TYPES = ["isaacLLMFreeTextQuestion"];
 
+export const PROGRESS_QUESTION_TYPE_MAP : {[key: string]: string[]} = {
+    "isaacStringMatchQuestion": ["isaacStringMatchQuestion", "isaacRegexMatchQuestion", "isaacFreeTextQuestion"],
+    "isaacMultiChoiceQuestion": ["isaacMultiChoiceQuestion", "isaacItemQuestion"],
+}
+
 export function isQuestion(doc: ContentDTO) {
     return doc.type ? doc.type in QUESTION_TYPES : false;
 }
