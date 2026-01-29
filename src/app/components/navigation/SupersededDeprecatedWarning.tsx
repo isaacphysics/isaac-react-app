@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import {GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {ISAAC_BOOKS_BY_TAG, isAQuestionLikeDoc, isStudent, isTutorOrAbove, PATHS, siteSpecific} from "../../services";
+import {ISAAC_BOOKS_BY_TAG, isAQuestionLikeDoc, isStudent, isTeacherOrAbove, isTutorOrAbove, PATHS, siteSpecific} from "../../services";
 import { UncontrolledTooltip, Alert, Button, AlertProps } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router";
@@ -15,6 +15,7 @@ interface SupersededOrDeprecatedContentWarningProps extends AlertProps {
 // a warning banner to be used on / around gameboards that contain superseded or deprecated content
 export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDeprecatedContentWarningProps) => {
     const {gameboard, hideFullDetails, ...rest} = props;
+    const user = useAppSelector(selectors.user.orNull);
 
     const containsSuperseded = useMemo(() => {
         return Array.from(gameboard?.contents || []).some(content => content.supersededBy);
@@ -26,7 +27,7 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
 
     const isBookBoard = Object.keys(ISAAC_BOOKS_BY_TAG).some(tag => gameboard?.tags?.includes(tag));
 
-    return (containsSuperseded || containsDeprecated) && <Alert {...rest} color="warning" className={classNames("mt-2 d-flex", props.className)}>
+    return (containsSuperseded || containsDeprecated) && isTutorOrAbove(user) && <Alert {...rest} color="warning" className={classNames("mt-2 d-flex", props.className)}>
         <i className="icon icon-warning icon-color-alert icon-sm me-3" />
         <div>
             <h5>{containsDeprecated ? "Deprecated content" : "Superseded content"}</h5>
