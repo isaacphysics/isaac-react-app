@@ -144,7 +144,6 @@ export function UserContextAccountInput({
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContextStages = [...new Set(userContexts.map(uc => uc.stage))];
     const isAllStages = userContextStages.includes(STAGE.ALL) || userContextStages.length === getFilteredStageOptions({hideFurtherA: true}).length;
-    console.log("userContextStages:", userContextStages);
 
     return <WithLinkableSetting id={"account-context"} className={className}>
         <div className="mb-2">
