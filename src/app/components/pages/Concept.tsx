@@ -12,7 +12,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {Markup} from "../elements/markup";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
-import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
+import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
@@ -98,7 +98,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                             <Row className="concept-content-container">
                                 <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
-                                    <SupersededDeprecatedWarningBanner doc={doc} />
+                                    <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
                                     {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 

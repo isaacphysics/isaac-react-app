@@ -54,6 +54,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         tags={item.tags}
         supersededBy={item.supersededBy}
+        deprecated={item.deprecated}
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
         status={item.state}
