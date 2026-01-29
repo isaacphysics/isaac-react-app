@@ -193,14 +193,16 @@ export interface InputState {
     valid: boolean;
 }
 
+export type EditorMode = "maths" | "chemistry" | "nuclear" | "logic";
+
 interface SymbolicTextInputProps {
-    editorMode: "maths" | "chemistry" | "nuclear" | "logic";
+    editorMode: EditorMode;
     inputState: InputState;
     setInputState: React.Dispatch<React.SetStateAction<InputState>>;
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
     initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
-    dispatchSetCurrentAttempt: (attempt: {type: 'formula'; value: string; pythonExpression?: string; mhchemExpression?: string}) => void;
+    dispatchSetCurrentAttempt: (attempt: {type: 'formula' | 'logicFormula' | 'chemicalFormula'; value: string; pythonExpression?: string; mhchemExpression?: string}) => void;
     sketchRef: React.MutableRefObject<Inequality | null | undefined>;
 }
 
@@ -221,7 +223,10 @@ export const SymbolicTextInput = ({editorMode, inputState, setInputState, textIn
         if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
-                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), ...(["maths", "logic"].includes(editorMode) ? {pythonExpression: ""} : {mhchemExpression: ""})}); // and here
+                dispatchSetCurrentAttempt({ 
+                    type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
+                    value: JSON.stringify(sanitiseInequalityState(state)), 
+                    ...(["maths", "logic"].includes(editorMode) ? {pythonExpression: ""} : {mhchemExpression: ""})});
                 initialEditorSymbols.current = [];
             } else if (parsedExpression.length === 1) {
                 // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
@@ -238,7 +243,7 @@ export const SymbolicTextInput = ({editorMode, inputState, setInputState, textIn
     return <Input type="text" onChange={updateEquation} value={textInput} placeholder="Type your formula here"/>;
 };
 
-export const TooltipContents = ({editorMode}: {editorMode: "maths" | "chemistry" | "nuclear" | "logic"}) => {
+export const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
     const example: React.ReactNode = 
         editorMode === "maths" ? <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>
             : editorMode === "chemistry" ? <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>
