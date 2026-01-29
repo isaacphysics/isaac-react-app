@@ -142,7 +142,8 @@ export function UserContextAccountInput({
 }: UserContextAccountInputProps) {
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL;
+    const userContextStages = [...new Set(userContexts.map(uc => uc.stage))];
+    const isAllStages = userContextStages.includes(STAGE.ALL) || userContextStages.length === getFilteredStageOptions({hideFurtherA: true}).length;
 
     return <WithLinkableSetting id={"account-context"} className={className}>
         <div className="mb-2">
@@ -191,16 +192,14 @@ export function UserContextAccountInput({
                 />
             </FormGroup>
             }
-            {isAda && <>
-                {tutorOrAbove &&
-                    <Col lg={6} className="p-0 pe-4 pe-lg-0">
-                        <Button color="keyline" className="mb-3 px-2 w-100"
-                            onClick={() => setUserContexts([...userContexts, {}])}
-                            disabled={!validateUserContexts(userContexts)}>
-                            Add more content
-                        </Button>
-                    </Col>}
-            </>}
+            {isAda && tutorOrAbove && !isAllStages &&
+                <Col lg={6} className="p-0 pe-4 pe-lg-0">
+                    <Button color="keyline" className="mb-3 px-2 w-100"
+                        onClick={() => setUserContexts([...userContexts, {}])}
+                        disabled={!validateUserContexts(userContexts)}>
+                        Add more content
+                    </Button>
+                </Col>}
             {isPhy && tutorOrAbove && validateUserContexts(userContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
                     aria-label="Add stage"
