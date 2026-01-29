@@ -144,6 +144,7 @@ export function UserContextAccountInput({
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContextStages = [...new Set(userContexts.map(uc => uc.stage))];
     const isAllStages = userContextStages.includes(STAGE.ALL) || userContextStages.length === getFilteredStageOptions({hideFurtherA: true}).length;
+    console.log("userContextStages:", userContextStages);
 
     return <WithLinkableSetting id={"account-context"} className={className}>
         <div className="mb-2">
@@ -195,7 +196,11 @@ export function UserContextAccountInput({
             {isAda && tutorOrAbove && !isAllStages &&
                 <Col lg={6} className="p-0 pe-4 pe-lg-0">
                     <Button color="keyline" className="mb-3 px-2 w-100"
-                        onClick={() => setUserContexts([...userContexts, {}])}
+                        onClick={() => {
+                            const newStage = getFilteredStageOptions({byUserContexts: userContexts})[0]?.value as STAGE;
+                            const newExamBoard = getFilteredExamBoardOptions({byStages: [newStage || STAGE.ALL], byUserContexts: userContexts})[0]?.value as EXAM_BOARD;
+                            setUserContexts([...userContexts, {stage: newStage, examBoard: newExamBoard}]);
+                        }}
                         disabled={!validateUserContexts(userContexts)}>
                         Add more content
                     </Button>
