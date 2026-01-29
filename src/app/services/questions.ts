@@ -69,6 +69,12 @@ export const PROGRESS_QUESTION_TYPE_MAP : {[key: string]: string[]} = {
     "isaacMultiChoiceQuestion": ["isaacMultiChoiceQuestion", "isaacItemQuestion"],
 }
 
+export const BASE_PROGRESS_QUESTION_TYPES = [
+    "isaacMultiChoiceQuestion",
+    "isaacNumericQuestion",
+    "isaacSymbolicQuestion",
+]
+
 export function isQuestion(doc: ContentDTO) {
     return doc.type ? doc.type in QUESTION_TYPES : false;
 }

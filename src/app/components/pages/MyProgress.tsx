@@ -11,6 +11,7 @@ import {
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import {
+    BASE_PROGRESS_QUESTION_TYPES,
     below,
     BookHiddenState,
     HUMAN_QUESTION_TYPES,
@@ -140,7 +141,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                                 const correct = groupedTypes.reduce((sum, type) => sum + (progress?.correctByType?.[type] || 0), 0);
                                 const attempts = groupedTypes.reduce((sum, type) => sum + (progress?.attemptsByType?.[type] || 0), 0);
                                 const percentage = safePercentage(correct, attempts);
-                                return percentage && <Col key={qType} lg={4} className="mt-2 type-progress-bar">
+                                return (BASE_PROGRESS_QUESTION_TYPES.includes(qType) || percentage) && <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
                                         {HUMAN_QUESTION_TYPES[qType]} questions
                                     </div>
