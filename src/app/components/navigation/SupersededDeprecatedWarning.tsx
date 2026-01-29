@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import {GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {ISAAC_BOOKS_BY_TAG, isAQuestionLikeDoc, isStudent, isTeacherOrAbove, isTutorOrAbove, PATHS, siteSpecific} from "../../services";
+import {ISAAC_BOOKS_BY_TAG, isAQuestionLikeDoc, isStudent, isTutorOrAbove, PATHS, siteSpecific} from "../../services";
 import { UncontrolledTooltip, Alert, Button, AlertProps } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router";
