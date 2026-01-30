@@ -147,7 +147,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                                     </div>
                                     <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
-                                            {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                            {percentage == null ? "None attempted" : `${correct} of ${attempts}`}
                                         </ProgressBar>
                                     </div>
                                 </Col>;
