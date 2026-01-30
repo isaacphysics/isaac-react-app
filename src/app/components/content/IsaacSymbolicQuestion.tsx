@@ -29,6 +29,7 @@ import QuestionInputValidation from "../elements/inputs/QuestionInputValidation"
 import {Button, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
 import { EditorMode } from "../elements/modals/inequality/constants";
 import classNames from "classnames";
+import { Loading } from "../handlers/IsaacSpinner";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -260,9 +261,7 @@ export const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
 
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
-    const currentAttemptValue: InequalityState | undefined = (currentAttempt && currentAttempt.value)
-        ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) 
-        : undefined;
+    const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
     const [inputState, setInputState] = useState<InputState>({pythonExpression: currentAttemptPythonExpression(currentAttemptValue), userInput: ''});
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
@@ -315,7 +314,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </IsaacContentValueOrChildren>
         </div>
         {/* TODO Accessibility */}
-        {modalVisible && <Suspense fallback={<div>Loading...</div>}>
+        {modalVisible && <Suspense fallback={<Loading/>}>
             <InequalityModal
                 editorMode="maths" initialEditorSymbols={initialEditorSymbols.current}
                 availableSymbols={doc.availableSymbols} editorSeed={editorSeed} questionDoc={doc}

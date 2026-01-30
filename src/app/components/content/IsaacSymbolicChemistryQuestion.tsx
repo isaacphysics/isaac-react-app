@@ -1,4 +1,4 @@
-import React, {lazy, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -20,6 +20,7 @@ import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, TooltipContents, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
+import { Loading } from "../handlers/IsaacSpinner";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -117,18 +118,19 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
     const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
+    const editorMode = doc.isNuclear ? "nuclear" : "chemistry";
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
 
+
     useLayoutEffect(() => {
         if (!showTextEntry) return; // as the ref won't be defined
         
-        initialiseInequality(doc.isNuclear ? "nuclear" : "chemistry", hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
+        initialiseInequality(editorMode, hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
-
-    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
     // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
     const modifiedAvailableSymbols = doc.availableSymbols ? [...doc.availableSymbols] : [];
@@ -140,7 +142,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
     let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
-    symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
+    symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')
         .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
 
     const mayRequireStateSymbols = !hasMetaSymbols || doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol));
@@ -151,20 +153,18 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        {modalVisible && <InequalityModal
-            close={closeModalAndReturnToScrollPosition}
-            onEditorStateChange={updateState}
-            availableSymbols={modifiedAvailableSymbols}
-            initialEditorSymbols={initialEditorSymbols.current}
-            editorSeed={editorSeed}
-            editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
-            questionDoc={doc}
-        />}
+        {modalVisible && <Suspense fallback={<Loading/>}>
+            <InequalityModal
+                editorMode={editorMode} initialEditorSymbols={initialEditorSymbols.current}
+                availableSymbols={modifiedAvailableSymbols} editorSeed={editorSeed} questionDoc={doc}
+                onEditorStateChange={updateState} close={closeModalAndReturnToScrollPosition}
+            />
+        </Suspense>}
         {showTextEntry && <div className="eqn-editor-input">
             <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
             <InputGroup className="my-2 separate-input-group">
                 <SymbolicTextInput
-                    editorMode={doc.isNuclear ? "nuclear" : "chemistry"} inputState={inputState} setInputState={setInputState}
+                    editorMode={editorMode} inputState={inputState} setInputState={setInputState}
                     textInput={textInput} setTextInput={setTextInput} initialEditorSymbols={initialEditorSymbols}
                     dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef}
                 />
@@ -175,7 +175,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     )} 
                     {!modalVisible ? 
                         <UncontrolledTooltip target={helpTooltipId} className="spaced-tooltip" placement="top" autohide={false}>
-                            <TooltipContents editorMode={doc.isNuclear ? "nuclear" : "chemistry"} />
+                            <TooltipContents editorMode={editorMode} />
                         </UncontrolledTooltip>
                         : null}
                 </>

@@ -1,4 +1,4 @@
-import React, {lazy, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -18,6 +18,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, TooltipContents, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
+import { Loading } from "../handlers/IsaacSpinner";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -118,16 +119,14 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             </IsaacContentValueOrChildren>
         </div>
         {/* TODO Accessibility */}
-        {modalVisible && <InequalityModal
-            close={closeModalAndReturnToScrollPosition}
-            onEditorStateChange={updateState}
-            availableSymbols={doc.availableSymbols}
-            initialEditorSymbols={initialEditorSymbols.current}
-            editorSeed={editorSeed}
-            editorMode='logic'
-            logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
-            questionDoc={doc}
-        />}
+        {modalVisible && <Suspense fallback={<Loading/>}>
+            <InequalityModal
+                editorMode="logic" logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
+                initialEditorSymbols={initialEditorSymbols.current} availableSymbols={doc.availableSymbols}
+                editorSeed={editorSeed} questionDoc={doc} onEditorStateChange={updateState}
+                close={closeModalAndReturnToScrollPosition}
+            />
+        </Suspense>}
         {!readonly && <div className="eqn-editor-input">
             <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
             <InputGroup className="my-2 separate-input-group">

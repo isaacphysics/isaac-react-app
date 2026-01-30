@@ -1,4 +1,4 @@
-import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
 import {Button, Col, Container, Input, InputGroup, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
@@ -13,6 +13,7 @@ import QuestionInputValidation from "../elements/inputs/QuestionInputValidation"
 import { InequalityState, initialiseInequality, InputState, isError, SymbolicTextInput, TooltipContents, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
+import { Loading } from "../handlers/IsaacSpinner";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -199,27 +200,27 @@ const Equality = () => {
                             onClick={openModal} onKeyDown={ifKeyIsEnter(() => openModal())}
                             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${allowTextInput ? 'or c' : 'C'}lick here to enter a formula</small>` }}
                         />
-                        {modalVisible && <InequalityModal
-                            close={closeModalAndReturnToScrollPosition}
-                            onEditorStateChange={(state: InequalityState) => {
-                                updateState(state);
-                                dispatchSetCurrentAttempt(["maths", "logic"].includes(editorMode) ? {
-                                    type: 'logicFormula',
-                                    value: JSON.stringify(state),
-                                    pythonExpression: (state && state.result && state.result.python) || ""
-                                } : { 
-                                    type: 'chemicalFormula', 
-                                    value: JSON.stringify(state), 
-                                    mhchemExpression: (state && state.result && state.result.mhchem) || "" 
-                                });
-                                setTextInput(["maths", "logic"].includes(editorMode) ? (state?.result?.python || '') : (state?.result?.mhchem || ''));
-                                initialEditorSymbols.current = state.symbols ?? [];
-                            }}
-                            availableSymbols={availableSymbols || []}
-                            initialEditorSymbols={initialEditorSymbols.current}
-                            editorMode={editorMode}
-                            logicSyntax={editorSyntax}
-                        />}
+                        {modalVisible && <Suspense fallback={<Loading/>}>
+                            <InequalityModal
+                                editorMode={editorMode} logicSyntax={editorSyntax}
+                                initialEditorSymbols={initialEditorSymbols.current} availableSymbols={availableSymbols || []}
+                                onEditorStateChange={(state: InequalityState) => {
+                                    updateState(state);
+                                    dispatchSetCurrentAttempt(["maths", "logic"].includes(editorMode) ? {
+                                        type: 'logicFormula',
+                                        value: JSON.stringify(state),
+                                        pythonExpression: (state && state.result && state.result.python) || ""
+                                    } : { 
+                                        type: 'chemicalFormula', 
+                                        value: JSON.stringify(state), 
+                                        mhchemExpression: (state && state.result && state.result.mhchem) || "" 
+                                    });
+                                    setTextInput(["maths", "logic"].includes(editorMode) ? (state?.result?.python || '') : (state?.result?.mhchem || ''));
+                                    initialEditorSymbols.current = state.symbols ?? [];
+                                }}
+                                close={closeModalAndReturnToScrollPosition}
+                            />
+                        </Suspense>}
                     </div>
                 </Col>
             </Row>
