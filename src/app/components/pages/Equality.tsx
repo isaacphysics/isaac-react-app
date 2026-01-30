@@ -84,14 +84,13 @@ const Equality = () => {
     const [editorSyntax, setEditorSyntax] = useState<LogicSyntax>('logic');
     const [textInput, setTextInput] = useState('');
     const user = useAppSelector(selectors.user.orNull);
-    // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
 
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-    const [inputState, setInputState] = useState<InputState>(() => ({pythonExpression: '', userInput: '', valid: true}));
+    const [inputState, setInputState] = useState<InputState>({pythonExpression: '', userInput: ''});
 
     function updateState(state: InequalityState) {
         if (["maths", "logic"].includes(editorMode)) {
@@ -120,18 +119,13 @@ const Equality = () => {
         }
     };
 
-    useEffect(() => {
-        if (sketchRef.current) {
-            sketchRef.current.logicSyntax = editorSyntax;
-        }
-    }, [editorSyntax]);
-
     useLayoutEffect(() => {
         if (!allowTextInput) return; // as the ref won't be defined
         
         initialiseInequality(editorMode, hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
+
     /*** End of text based input stuff */
 
     const availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
@@ -168,7 +162,11 @@ const Equality = () => {
                     </div>
                     {(editorMode === 'logic') && <div className="mt-4">
                         <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
-                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEditorSyntax(e.target.value as LogicSyntax); }}> {/* _updateEquation(textInput); } }> */}
+                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e) => { 
+                            setEditorSyntax(e.target.value as LogicSyntax);
+                            if (sketchRef.current) sketchRef.current.logicSyntax = editorSyntax;
+                            /* _updateEquation(textInput); } }> */
+                        }}> 
                             <option value="logic">Boolean Logic</option>
                             <option value="binary">Digital Electronics</option>
                         </Input>
@@ -204,6 +202,7 @@ const Equality = () => {
                         {modalVisible && <InequalityModal
                             close={closeModalAndReturnToScrollPosition}
                             onEditorStateChange={(state: InequalityState) => {
+                                updateState(state);
                                 dispatchSetCurrentAttempt(["maths", "logic"].includes(editorMode) ? {
                                     type: 'logicFormula',
                                     value: JSON.stringify(state),

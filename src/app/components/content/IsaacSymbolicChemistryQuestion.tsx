@@ -84,11 +84,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         return (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
     }
 
-    const [inputState, setInputState] = useState<InputState>(() => ({
-        mhchemExpression: '',
-        userInput: '',
-        valid: true
-    }));
+    const [inputState, setInputState] = useState<InputState>({ mhchemExpression: '', userInput: ''});
 
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
@@ -174,11 +170,11 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 />
                 <>
                     {siteSpecific(
-                        <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                        <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
                         <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                    )}
+                    )} 
                     {!modalVisible ? 
-                        <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
+                        <UncontrolledTooltip target={helpTooltipId} className="spaced-tooltip" placement="top" autohide={false}>
                             <TooltipContents editorMode={doc.isNuclear ? "nuclear" : "chemistry"} />
                         </UncontrolledTooltip>
                         : null}

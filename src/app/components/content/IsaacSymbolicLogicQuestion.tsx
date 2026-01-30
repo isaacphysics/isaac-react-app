@@ -51,7 +51,7 @@ export const symbolicLogicInputValidator = (input: string) => {
 };
 
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
+    const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
     const [modalVisible, setModalVisible] = useState(false);
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,7 +66,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
     }
 
-    const [inputState, setInputState] = useState<InputState>(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
+    const [inputState, setInputState] = useState<InputState>(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: ''}));
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
@@ -138,10 +138,10 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 />
                 <>
                     {siteSpecific(
-                        <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>,
+                        <Button id={helpTooltipId} type="button" className="eqn-editor-help">?</Button>,
                         <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
                     )}
-                    <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                    <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
                         <TooltipContents editorMode="logic"/>
                     </UncontrolledTooltip>
                 </>
