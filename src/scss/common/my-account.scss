@@ -111,14 +111,11 @@
   }
 
   .search-toggler-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+    @include svg-color(url('/assets/cs/icons/search.svg'), $white, 1.5rem, 1.5rem);
     margin: 15px;
     float: right;
     background-color: #333;
     vertical-align: middle;
-    background-image: url('/assets/cs/icons/search-white.svg');
-    background-repeat: no-repeat;
   }
 
   .connections-search {
@@ -167,10 +164,6 @@
 }
 .reconnect-teacher {
   float: right;
-}
-
-.membership-status-help-button {
-  left: 25px;
 }
 
 .my-groups-table-section {

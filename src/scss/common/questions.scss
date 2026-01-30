@@ -121,6 +121,24 @@ $inline-feedback-padding: 2px;
   }
 }
 
+figure .inline-container {
+  display: flex;
+  height: 100%;
+}
+
+.figure-region-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 35%;
+  font-family: $secondary-font;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--subject-color-700);
+  width: $figure-drop-zone-placeholder-size;
+  height: $figure-drop-zone-placeholder-size;
+}
+
 .inline-container {
   display: inline-flex;
   border-radius: $border-radius-lg;
@@ -248,6 +266,12 @@ $inline-feedback-padding: 2px;
 
     &:not(.is-valid):not(.is-invalid):not(.is-unanswered) {
       border: $gray-136 solid 1px;
+    }
+
+    > span {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     > div {
@@ -589,6 +613,23 @@ p > .katex, .katex-display {
   }
 }
 
+.question-tag-indicator {
+    position: relative;
+    display: flex;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+
+    &.small {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+
 // Could be used to display draggables when using drop zones in text or code (if we got rid of the purple blocks)
 //.cloze-item & .minimal {
 //  text-decoration: underline dashed $secondary;
@@ -634,7 +675,7 @@ p > .katex, .katex-display {
       color: inherit;
       min-width: 176px;
       flex-basis: 100%;
-      @media (max-width: 576px) {
+      @media (max-width: 768px) {
         min-width: 0;
       }
       &:hover {

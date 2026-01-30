@@ -79,6 +79,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSp
         [STAGE.SCOTLAND_ADVANCED_HIGHER]: "Discover our free Advanced Higher computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.CORE]: "Discover our free Core computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.ADVANCED]: "Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.",
+        [STAGE.POST_18]: "Discover our free Post-18 computer science topics and questions. Learn or revise for your exams with us today.", // Not used, but needed for typing
     })[stageTab];
 
     const examBoardTabs = Object.keys(FILTERED_EXAM_BOARDS_BY_STAGE).reduce((acc: {[stage: string]: React.JSX.Element}, stage) => ({

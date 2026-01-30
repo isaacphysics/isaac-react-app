@@ -192,6 +192,8 @@ $in-progress-fill: $cs-in-progress;
 $failed-fill: $cs-failed;
 $fully-attempted-fill: $cs-perfect; // Ada don't use these colours, but given ticks are used in place reusing $cs-perfect would make sense
 
+/* constants */
+$figure-drop-zone-placeholder-size: 24px;
 
 // fonts
 $primary-font: "poppins", sans-serif;
@@ -250,8 +252,8 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Bootstrap
 
 // functions and variables are imported first to provide functions and !default values
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables"; 
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables"; 
 
 // any overrides to Bootstrap variables must appear here
 
@@ -345,20 +347,20 @@ $warning-bg-subtle: #fffef3;
 $warning-border-subtle: #fffeee;
 
 // all Bootstrap overrides must appear before this
-@import "~bootstrap/scss/maps";
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/utilities";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
 @import "../common/bootstrap-contents";
-// See https://getbootstrap.com/docs/5.3/customize/sass/#importing; using Option A ("@import "~bootstrap/scss/bootstrap";") is not feasible as we need the default overrides above.
-// Instead, import contents of ~bootstrap/scss/bootstrap.scss manually *without the utilities imports*.
+// See https://getbootstrap.com/docs/5.3/customize/sass/#importing; using Option A ("@import "bootstrap/scss/bootstrap";") is not feasible as we need the default overrides above.
+// Instead, import contents of bootstrap/scss/bootstrap.scss manually *without the utilities imports*.
 
 // Node module imports
 
-@import "~katex/dist/katex.min.css";
-@import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
-@import "~billboard.js/dist/theme/insight.css";
-@import "~highlight.js/styles/a11y-light.css";
-@import "~leaflet/dist/leaflet.css";
+@import "katex/dist/katex.min.css";
+@import "bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
+@import "billboard.js/dist/theme/insight.css";
+@import "highlight.js/styles/a11y-light.css";
+@import "leaflet/dist/leaflet.css";
 
 @import "../common/isaac";
 
@@ -401,6 +403,7 @@ $warning-border-subtle: #fffeee;
 @import "../common/scroll";
 @import "checkbox";
 @import "../common/toggle";
+@import "../common/tooltip";
 @import "button";
 @import "logo";
 @import "featured-profile";

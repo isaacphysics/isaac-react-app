@@ -76,7 +76,6 @@ $question-font-size: 1.125rem;
 $question-font-weight: 600;
 
 // forms
-$border-color: black;
 
 $enable-negative-margins: true;
 
@@ -228,6 +227,9 @@ $isaac-color-palettes: (
   )
 );
 
+/* constants */
+$figure-drop-zone-placeholder-size: 24px;
+
 /* fonts */
 // TODO: the mapping from Figma to CSS font weights is not precise, cross-check these against designs when more pages are ready
 $typography-font-weights-headings-bold: 700;
@@ -242,8 +244,8 @@ $typography-font-weights-text-semibold: 600;
 // Bootstrap
 
 // functions and variables are imported first to provide functions and !default values
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 
 // any overrides to Bootstrap variables must appear here
 
@@ -303,7 +305,7 @@ $container-max-widths: (
 
 $enable-negative-margins: true;
 
-$border-color: #dee2e6;
+$border-color: $color-neutral-200;
 $border-width: 1px;
 $border-color-translucent: rgba(0, 0, 0, 0.1);
 
@@ -329,7 +331,7 @@ $tooltip-max-width: 370px;
 
 $badge-font-weight: $font-weight-medium;
 
-@import "~bootstrap/scss/maps";
+@import "bootstrap/scss/maps";
 
 $custom-colors-text: (
     physics: $phy_purple,
@@ -355,18 +357,18 @@ $theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-su
 $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
 
 // all Bootstrap overrides must appear before this
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/utilities";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
 @import "../common/bootstrap-contents";
-// See https://getbootstrap.com/docs/5.3/customize/sass/#importing; using Option A ("@import "~bootstrap/scss/bootstrap";") is not feasible as we need the default overrides above.
-// Instead, import contents of ~bootstrap/scss/bootstrap.scss manually *without the utilities imports*.
+// See https://getbootstrap.com/docs/5.3/customize/sass/#importing; using Option A ("@import "bootstrap/scss/bootstrap";") is not feasible as we need the default overrides above.
+// Instead, import contents of bootstrap/scss/bootstrap.scss manually *without the utilities imports*.
 
 // Node module imports
 
-@import "~katex/dist/katex.min.css";
-@import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
-@import "~billboard.js/dist/theme/insight.css";
-@import "~leaflet/dist/leaflet.css";
+@import "katex/dist/katex.min.css";
+@import "bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
+@import "billboard.js/dist/theme/insight.css";
+@import "leaflet/dist/leaflet.css";
 
 @import "../common/isaac";
 

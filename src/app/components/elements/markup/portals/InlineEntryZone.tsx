@@ -32,12 +32,13 @@ export interface InlineEntryZoneProps<T> extends InputProps {
 export interface InlineEntryZoneBaseProps {
     inlineSpanId: string, 
     className: string, 
-    widthPx?: number,
-    heightPx?: number,
+    width?: string, // since this is used for both in-text and in-figure inline zones, which use different units (px / %), assume that it has the correct unit appended already
+    minWidth?: string,
+    height?: string, // height is not intended to be dynamic, so no split between minHeight and height
     root: HTMLElement
 }
 
-const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, heightPx, root}: InlineEntryZoneBaseProps) => {
+const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, width, minWidth, height, root}: InlineEntryZoneBaseProps) => {
     
     const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
@@ -52,7 +53,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
     const [isSelectedFeedback, setIsSelectedFeedback] = useState<boolean>(false);
 
     const [correctness, setCorrectness] = useState<QuestionCorrectness>("NOT_SUBMITTED");
-    const [modified, setModified] = useState(false);
+    const [modified, setModified] = useState((questionId && inlineContext?.modifiedQuestionIds.includes(questionId)) || false);
 
     // TODO: separate out from inline questions, this is entirely independent
     const isUnanswered = useCallback((questionType?: string, questionDTO?: AppQuestionDTO): boolean => {  
@@ -68,14 +69,13 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
     }, []);  
 
     useEffect(() => {
-        setModified(questionId && inlineContext?.modifiedQuestionIds.includes(questionId) || false);
-    }, [inlineContext?.modifiedQuestionIds, questionId]);
-
-    useEffect(() => {
         // remove the question from the list of modified questions if it has been validated
-        if (inlineContext && questionDTO?.validationResponse) {
+        if (questionId && inlineContext && questionDTO?.validationResponse && inlineContext.modifiedQuestionIds.includes(questionId)) {
             inlineContext.setModifiedQuestionIds((m : string[]) => m.filter((e : string) => e !== questionId));
+            setModified(false);
         }
+    // only want to run this on validation change (i.e. questionDTO?.validationResponse update). questionId is harmless, but anything in inlineContext will cause looping
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionDTO?.validationResponse, questionId]);
 
     useEffect(() => {
@@ -84,7 +84,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
             inlineContext.setIsModifiedSinceLastSubmission(m => m || modified);
             inlineContext.setFeedbackIndex(undefined);
         }
-    }, [modified]);
+    }, [modified, questionId]);
     
     useEffect(() => {  
         // after submitting the region (which only touches modified entry zones), if the user has not answered this question, mark it as "NOT_ANSWERED".  
@@ -157,7 +157,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacNumericQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -169,7 +169,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -181,7 +181,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacMultiChoiceQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -193,7 +193,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacRegexMatchQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}

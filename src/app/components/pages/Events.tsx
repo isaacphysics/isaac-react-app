@@ -2,7 +2,7 @@ import React, {useEffect, useMemo} from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {selectors, useAppSelector, useLazyGetEventsQuery} from "../../state";
 import queryString from "query-string";
-import {RouteComponentProps, useHistory, withRouter} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {
@@ -18,7 +18,8 @@ import {
 import {RenderNothing} from "../elements/RenderNothing";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { Container, Row, Button, Form, Input, Label, Col } from "reactstrap";
-import { EventsSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { EventsSidebar } from "../elements/sidebar/EventsSidebar";
 
 export interface EventsPageQueryParams {
     show_booked_only?: boolean;
@@ -30,7 +31,8 @@ export interface EventsPageQueryParams {
 
 const EVENTS_PER_PAGE = 6;
 
-export const Events = withRouter(({location}: RouteComponentProps) => {
+export const Events = () => {
+    const location = useLocation();
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const user = useAppSelector(selectors.user.orNull);
@@ -62,7 +64,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
 
     const AdaEventFilters = () => {
         // Dropdown filters for Ada - these are radio buttons in the sidebar for phy
-        const history = useHistory();
+        const navigate = useNavigate();
         const reverseEventsMap = Object.entries(EventStageMap).reduce((acc, [key, value]) => {
             return {...acc, [value]: key};
         }, {} as {[key: string]: string});
@@ -75,7 +77,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                         query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
                         query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
                         query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
-                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                        void navigate({pathname: location.pathname, search: queryString.stringify(query as any)});
                     }}>
                         {/* Tutors are considered students w.r.t. events currently, so cannot see teacher-only events */}
                         {Object.entries(EventStatusFilter)
@@ -89,7 +91,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                     <Input id="event-type-filter" className="ms-3" type="select" value={typeFilter} onChange={e => {
                         const selectedType = e.target.value as EventTypeFilter;
                         query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
-                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                        void navigate({pathname: location.pathname, search: queryString.stringify(query as any)});
                     }}>
                         {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                             <option key={typeValue} value={typeValue}>{typeLabel}</option>
@@ -100,7 +102,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                         onChange={e => {
                             const selectedStage = e.target.value as STAGE;
                             query.show_stage_only = selectedStage !== STAGE.ALL ? selectedStage : undefined;
-                            history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                            void navigate({pathname: location.pathname, search: queryString.stringify(query as any)});
                         }}>
                         {Object.entries(EventStageMap).map(([label, value]) =>
                             <option key={value} value={value}>{label}</option>
@@ -116,7 +118,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
             <TitleAndBreadcrumb
                 currentPageTitle={"Events"}
                 help={pageHelp}
-                icon={{type: "hex", icon: "icon-events"}}
+                icon={{type: "icon", icon: "icon-events"}}
             />
             <SidebarLayout>
                 <EventsSidebar/>
@@ -163,4 +165,4 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
             </SidebarLayout>
         </Container>
     </div>;
-});
+};

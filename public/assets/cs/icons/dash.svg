@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-    viewBox="0 0 768 768" style="enable-background:new 0 0 768 768;" xml:space="preserve">
-<style id="style2" type="text/css">
-	.st0{fill:#FFFFFF;}
-</style>
-	<circle id="circle4" r="384" cy="384" cx="384" />
-	<rect id="rect8" height="100" width="256" class="st0" y="334" x="256" />
+<svg width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <circle cy="7.9999986" cx="7.9999986" r="7.9999986" />
+  <rect height="2.083333" width="5.3333325" y="6.9583321" x="5.3333325" fill="#ffffff"/>
 </svg>

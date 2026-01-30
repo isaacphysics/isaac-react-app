@@ -1,7 +1,7 @@
 @import "../common/assignment-progress";
 
 $table-selected-background: rgb(223, 237, 255);
-$table-selected-border: 2px solid rgb(75, 157, 252);
+$table-selected-border: rgb(75, 157, 252);
 
 .assignment-progress-gameboard .gameboard-header > *:first-child:before {
   background: $secondary;
@@ -20,10 +20,9 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
 
 .progress-table {
   .selected {
-    border-left: $table-selected-border;
-    border-right: $table-selected-border;
     background: $table-selected-background;
     background-clip: padding-box;
+    box-shadow: inset 1px 0 $table-selected-border, inset -1px 0 $table-selected-border;
   }
 
   .progress-table-question-link {
@@ -39,8 +38,6 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
   }
 
   background-color: $gray-103;
-  // :is(thead, tfoot) tr :is(td, th) {
-  // }
 
   tbody tr:nth-of-type(even) {
     background: $gray-103;
@@ -66,18 +63,20 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
       background: $table-selected-background;
       background-clip: padding-box;
     }
-    
-    thead tr:first-of-type th:not(.selected) {
-      border-bottom: $table-selected-border;
+
+    // This must be a box-shadow rather than a border so that it scrolls with the sticky table content
+    .progress-table-question-header {
+      box-shadow: 0 1px $table-selected-border, 0 -1px $table-selected-border;
     }
 
-    tbody tr:first-of-type td:not(.selected), tbody tr:first-of-type th {
-      border-top: $table-selected-border;
+    // Horizontally sticky headers appear above the question-header's box-shadow so we need dedicated inset shadows for these headers
+    thead th.student-name {
+      box-shadow: inset 0 -1px $table-selected-border;
     }
-
-    thead:has(tr:first-of-type .selected:last-of-type) tr:nth-of-type(2) th {
-      // apply a selected border over the last column if selected
-      border-right: $table-selected-border;
+    thead th.correct-attempted-header {
+      @include respond-above(lg) {
+        box-shadow: inset 0 -1px $table-selected-border;
+      }
     }
   }
 }

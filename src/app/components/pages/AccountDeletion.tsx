@@ -48,7 +48,7 @@ export const AccountDeletion = () => {
     return <Container className="pb-7">
         <TitleAndBreadcrumb 
             currentPageTitle={"Account deletion"} className="mb-4"
-            icon={{"type": "hex", "icon": "icon-account"}}
+            icon={{"type": "icon", "icon": "icon-account"}}
         />
         {!user ? <p>You must be logged in to delete your account.</p> :
             isTutorOrAbove(user) ? <p>Only student accounts can be deleted automatically. Please <Link to="/contact?preset=accountDeletion">contact us</Link> to request account deletion.</p> : 

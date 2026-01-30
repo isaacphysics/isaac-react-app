@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Container} from "reactstrap";
-import {ContentControlledSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
 import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, useContextFromContentObjectTags} from "../../services";
-import {useHistory} from "react-router";
+import {useLocation, useParams} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -13,13 +13,11 @@ import {IsaacContentValueOrChildren} from "../content/IsaacContentValueOrChildre
 import {ContentDTO} from "../../../IsaacApiTypes";
 import { PageMetadata } from "./PageMetadata";
 import { WithFigureNumbering } from "./WithFigureNumbering";
+import { ContentControlledSidebar } from "./sidebar/ContentControlledSidebar";
 
-interface BookProps {
-    match: { params: { bookId: string } };
-}
+export const Book = () => {
 
-export const Book = ({match: {params: {bookId}}}: BookProps) => {
-
+    const { bookId } = useParams();
     const [pageId, setPageId] = useState<string | undefined>(undefined);
 
     const bookIndexPageQuery = useGetBookIndexPageQuery({id: `book_${bookId}`});
@@ -27,12 +25,12 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
     const { data: book } = bookIndexPageQuery;
 
-    const history = useHistory();
+    const location = useLocation();
 
     const pageContext = useContextFromContentObjectTags(book);
 
     useEffect(() => {
-        const section = history.location.pathname.split("/")[3];
+        const section = location.pathname.split("/")[3];
 
         if (!book?.id || !section) {
             setPageId(undefined);
@@ -41,12 +39,12 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
         const fragmentId = book?.id + BOOK_DETAIL_ID_SEPARATOR + section;
         setPageId(fragmentId);
-    }, [book?.id, history.location.pathname]);
+    }, [book?.id, location.pathname]);
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb
             currentPageTitle={pageId === undefined ? "Book" : book?.title ?? "Book"}
-            icon={{type: "hex", icon: "icon-book"}}
+            icon={{type: "icon", icon: "icon-book"}}
             intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
         />
         <SidebarLayout>

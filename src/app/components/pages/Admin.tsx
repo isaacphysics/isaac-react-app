@@ -57,7 +57,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     return <Container id="admin-page">
         <TitleAndBreadcrumb
             currentPageTitle={`${SITE_TITLE_SHORT} administration`} breadcrumbTitleOverride="Admin tools"
-            icon={{"type": "hex", "icon": "icon-account"}}
+            icon={{"type": "icon", "icon": "icon-account"}}
         />
 
         <div className="py-4">

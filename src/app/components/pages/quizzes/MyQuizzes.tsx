@@ -3,7 +3,7 @@ import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
-import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -40,13 +40,14 @@ import { TrLink } from "../../elements/tables/TableLinks";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
-import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
-import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { HexIcon } from "../../elements/svg/HexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 
-export interface QuizzesPageProps extends RouteComponentProps {
+export interface QuizzesPageProps {
     user: RegisteredUserDTO;
 }
 
@@ -121,7 +122,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                     <Col className="d-flex flex-column align-items-start col-sm-8">
                         <div className="d-flex align-items-center">
                             <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
-                                <PhyHexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
+                                <HexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
                                 <h4>{quiz.title || quiz.id}</h4>
@@ -188,7 +189,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                 <col className={"col-md-2"}/>
                 <col className={"col-md-1"}/>
             </colgroup>
-            <thead className="card-header">
+            <thead className="my-quizzes-table-header">
                 <tr>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set by</SortItemHeader>
@@ -239,7 +240,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                 <col className={"col-md-2"}/>
                 <col className={"col-md-1"}/>
             </colgroup>
-            <thead className="card-header">
+            <thead className="my-quizzes-table-header">
                 <tr>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Start Date</SortItemHeader>
@@ -348,9 +349,12 @@ export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusF
     </div>;
 };
 
-const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
+export const MyQuizzes = ({user}: QuizzesPageProps) => {
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [displayMode, setDisplayMode] = useState<"table" | "cards">("table");
     const [boardOrder, setBoardOrder] = useState<QuizzesBoardOrder>(QuizzesBoardOrder.dueDate);
@@ -404,14 +408,13 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         ({...acc, [anchor]: index + 1}), {} as Record<string, number>
     );
 
-    const history = useHistory();
     const [tabOverride, setTabOverride] = useState<number | undefined>(anchorMap[location.hash as keyof typeof anchorMap]);
 
     useEffect(() => {
         if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
             setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
         }
-    }, [anchorMap]);
+    }, [anchorMap, location.hash]);
 
     // +!! converts a string to 0 if null or empty and 1 otherwise
     const filterCount = +!!quizTitleFilter + +!!quizCreatorFilter + quizStatusFilter.length;
@@ -421,7 +424,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         <Label className="w-100 d-flex flex-column align-items-center mb-0">
             <span className="text-nowrap">
                 Filters
-                {<FilterCount count={filterCount ?? 0} widthPx={siteSpecific(25, 20)} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
+                {<FilterCount count={filterCount ?? 0} widthPx={20} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
             </span>
             <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown d-flex justify-content-center align-items-center", {"selected": showFilters})}
                 onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"
@@ -455,7 +458,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     }</span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         <SidebarLayout>
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}
@@ -466,7 +469,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                     <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
                 </PageMetadata>
                 <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
-                    history.replace({...history.location, hash: tabAnchors[index - 1]});
+                    void navigate({...location, hash: tabAnchors[index - 1]}, {replace: true});
                     setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
                 }}>
                     {{
@@ -478,10 +481,12 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                                 <div className="d-flex flex-column">
                                     {tabTopContent}
                                     {displayMode === "table" ? <Card>
-                                        <AssignedQuizTable
-                                            quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                            emptyMessage={emptyAssignedMessage}
-                                        />
+                                        <CardBody>
+                                            <AssignedQuizTable
+                                                quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                                emptyMessage={emptyAssignedMessage}
+                                            />
+                                        </CardBody>
                                     </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
                                 </div>
                             </ShowLoading>,
@@ -493,10 +498,12 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                                 <div className="d-flex flex-column">
                                     {tabTopContent}
                                     {displayMode === "table" ? <Card>
-                                        <PracticeQuizTable
-                                            quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                            emptyMessage={emptyPracticeMessage}
-                                        />
+                                        <CardBody>
+                                            <PracticeQuizTable
+                                                quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                                emptyMessage={emptyPracticeMessage}
+                                            />
+                                        </CardBody>
                                     </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
                                 </div>
                             </ShowLoading>,
@@ -506,5 +513,3 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         </SidebarLayout>
     </Container>;
 };
-
-export const MyQuizzes = withRouter(MyQuizzesPageComponent);

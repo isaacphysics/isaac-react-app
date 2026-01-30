@@ -1,11 +1,8 @@
 import React, {lazy} from "react";
-import {TrackedRoute} from "../../navigation/TrackedRoute";
 import {AllTopics} from "../../pages/AllTopics";
-import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Topic} from "../../pages/Topic";
-import {Redirect} from "react-router";
+import {Navigate, Route} from "react-router";
 import {EXAM_BOARD, isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove, STAGE} from "../../../services";
-import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import {News} from "../../pages/News";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
@@ -37,6 +34,9 @@ import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 import {StudentChallenges} from "../../pages/StudentChallenges";
 import { QuizView } from "../../pages/quizzes/QuizView";
 import {Overview} from "../../pages/Overview";
+import { TeacherMentoring } from "../../pages/TeacherMentoring";
+import { RequireAuth } from "../../navigation/UserAuthentication";
+import { Generic } from "../../pages/Generic";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -45,94 +45,90 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
-    <TrackedRoute key={key++} exact path="/dashboard" ifUser={isTeacherOrAbove} component={Overview} />,
-    <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
-    <TrackedRoute key={key++} exact path="/register/role" component={RegistrationRoleSelect} />,
-    <TrackedRoute key={key++} exact path="/register/student/age" component={RegistrationAgeCheck} />,
-    <TrackedRoute key={key++} exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />,
-    <TrackedRoute key={key++} exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />,
-    <TrackedRoute key={key++} exact path="/register/teacher/details" component={RegistrationSetDetails} componentProps={{'role': 'TEACHER'}} />,
-    <TrackedRoute key={key++} exact path="/verifyemail" component={RegistrationVerifyEmail} />,
-    <TrackedRoute key={key++} exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />,
-    <TrackedRoute key={key++} exact path="/register/preferences" ifUser={isLoggedIn} component={RegistrationSetPreferences} />,
-    <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
+    <Route key={key++} path="/dashboard" element={<RequireAuth auth={isTeacherOrAbove} element={<Overview />} />} />,
+    <Route key={key++} path="/register" element={<RegistrationStart />} />,
+    <Route key={key++} path="/register/role" element={<RegistrationRoleSelect />} />,
+    <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
+    <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
+    <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
+    <Route key={key++} path="/register/teacher/details" element={<RegistrationSetDetails userRole="TEACHER" />} />,
+    <Route key={key++} path="/verifyemail" element={<RegistrationVerifyEmail />} />,
+    <Route key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
+    <Route key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,
+    <Route key={key++} path="/register/success" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSuccess />} />} />,
 
 
     // Student and teacher resources
-    <TrackedRoute key={key++} exact path="/students" component={StudentResources} />,
-    <TrackedRoute key={key++} exact path="/teachers" component={TeacherResources} />,
+    <Route key={key++} path="/students" element={<StudentResources />} />,
+    <Route key={key++} path="/teachers" element={<TeacherResources />} />,
 
     // Assignments
-    <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
-    <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
+    <Route key={key++} path="/assignment_progress" element={<Navigate to="/my_markbook" replace />} />,
+    <Route key={key++} path="/assignment_progress/:assignmentId" element={<Navigate to="/my_markbook/:assignmentId" replace />} />,
 
     // Teacher test pages
-    <TrackedRoute key={key++} exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />,
+    <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
     // Student test pages
-    <TrackedRoute key={key++} exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
+    <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,
 
-    <TrackedRoute key={key++} exact path="/practice_tests" ifUser={isLoggedIn} component={PracticeQuizzes} />,
-
+    <Route key={key++} path="/practice_tests" element={<RequireAuth auth={isLoggedIn} element={<PracticeQuizzes />} />} />,
     // Quiz (test) pages
-    <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,
-    <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacherOrAbove} component={QuizTeacherFeedback} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId/feedback" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizTeacherFeedback user={authUser} />} />} />,
     // Tutors can preview tests iff the test is student only
-    <TrackedRoute key={key++} exact path="/test/preview/:quizId" ifUser={isTutorOrAbove} component={QuizPreview} />,
-    <TrackedRoute key={key++} exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
-    <TrackedRoute key={key++} exact path="/test/view/:quizId" ifUser={isLoggedIn} component={QuizView} />,
-
+    <Route key={key++} path="/test/preview/:quizId" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
+    <Route key={key++} path="/test/preview/:quizId/page/:page" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
+    <Route key={key++} path="/test/view/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizView user={authUser} />} />} />,
 
     // Topics and content
-    <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
-    <Redirect key={key++} from="/topics/projects_link_pseudo_project" to="/projects" />,
-    <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications}
-        componentProps={{title: "English qualifications"}} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC], title: "Welsh qualifications"}} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications_ada" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED], title: "Ada CS Curriculum"}} />,
-    <Redirect key={key++} from="/concepts/sqa_computing_science" to="/exam_specifications_scotland" />,
-    <TrackedRoute key={key++} exact path="/exam_specifications_scotland" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,
-            STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER], title: "Scottish qualifications"}} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
-    <TrackedRoute key={key++} exact path="/teaching_order" component={TeachingOrders}/>,
+    <Route key={key++} path="/topics" element={<AllTopics />} />,
+    <Route key={key++} path="/topics/projects_link_pseudo_project" element={<Navigate to="/projects" replace />} />,
+    <Route key={key++} path="/topics/:topicName" element={<Topic />} />,
+    <Route key={key++} path="/exam_specifications_england" element={<ExamSpecifications title="English qualifications" />} />,
+    <Route key={key++} path="/exam_specifications_wales" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.WJEC]} title="Welsh qualifications" />} />,
+    <Route key={key++} path="/exam_specifications_ada" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.ADA]} stageFilter={[STAGE.CORE, STAGE.ADVANCED]} title="Ada CS Curriculum" />} />,
+    <Route key={key++} path="/concepts/sqa_computing_science" element={<Navigate to="/exam_specifications_scotland" replace />} />,
+    <Route key={key++} path="/exam_specifications_scotland" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.SQA]} stageFilter={[STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]} title="Scottish qualifications" />} />,
+    <Route key={key++} path="/exam_specifications" element={<ExamSpecificationsDirectory />} />,
+    <Route key={key++} path="/teaching_order" element={<TeachingOrders />}/>,
 
     // Pod pages: news, projects, online courses
-    <TrackedRoute key={key++} exact path="/news" component={News} />,
-    <TrackedRoute key={key++} exact path="/projects" component={CSProjects} />,
-    <TrackedRoute key={key++} exact path="/pages/online_courses" component={OnlineCourses} />,
+    <Route key={key++} path="/news" element={<News />} />,
+    <Route key={key++} path="/projects" element={<CSProjects />} />,
+    <Route key={key++} path="/pages/online_courses" element={<OnlineCourses />} />,
 
     // Books: FIXME ADA are we going to include these?
-    // <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
-    // <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
+    // <Route key={key++} path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
+    // <Route key={key++} path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
 
     // Events
-    <TrackedRoute key={key++} exact path='/events' component={Events}/>,
-    <TrackedRoute key={key++} exact path='/events/:eventId' component={EventDetails}/>,
-    <TrackedRoute key={key++} exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />,
+    <Route key={key++} path='/events' element={<Events />}/>,
+    <Route key={key++} path='/events/:eventId' element={<EventDetails />}/>,
+    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<RedirectToEvent />} />} />,
 
     // Static pages:
-    <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
-    <StaticPageRoute key={key++} exact path="/safeguarding" pageId="events_safeguarding" />,
-    <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherAccountSelfUpgrade}/>,
+    <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us"} />} />,
+    <Route key={key++} path="/safeguarding" element={<Generic pageIdOverride={"events_safeguarding"} />} />,
+    <Route key={key++} path="/teacher_account_request" element={<RequireAuth auth={isLoggedIn} element={<TeacherAccountSelfUpgrade />} />} />,
 
-    // <StaticPageRoute key={key++} exact path="/student_rewards" pageId="student_rewards_programme" />,
-    // <StaticPageRoute key={key++} exact path="/teachcomputing" pageId="teach_computing" />,
+    // <Route key={key++} path="/student_rewards" element={<Generic pageIdOverride={"student_rewards_programme"} />} />,
+    // <Route key={key++} path="/teachcomputing" element={<Generic pageIdOverride={"teach_computing"} />} />,
 
-    // <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
+    // <Route key={key++} ifUser={isEventLeaderOrStaff} path="/events_toolkit" element={<Generic pageIdOverride={"fragments/event_leader_event_toolkit_fragment"} />} />,
 
-    // <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
-    <TrackedRoute key={key++} exact path="/equality" ifUser={isStaff} component={Equality} />,
+    // <Route key={key++} path="/coming_soon" element={<ComingSoon />} />,
+    <Route key={key++} path="/equality" element={<RequireAuth auth={isStaff} element={<Equality />} />} />,
 
-    <TrackedRoute key={key++} exact path={"/student_challenges"} component={StudentChallenges} />,
-    <Redirect key={key++} from={"/pages/student_challenges"} to={"/student_challenges"} />
+    <Route key={key++} path={"/student_challenges"} element={<StudentChallenges />} />,
+    <Route key={key++} path={"/pages/student_challenges"} element={<Navigate to={"/student_challenges"} replace />} />,
+
+    <Route key={key++} path="/teacher_mentoring" element={<TeacherMentoring />} />,
+    <Route key={key++} path={"/pages/teacher_mentoring_2025"} element={<Navigate to={"/teacher_mentoring"} replace />} />,
 ];

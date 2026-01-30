@@ -1,9 +1,9 @@
-export enum SITE {PHY = "physics", ADA = "ada"}
+export enum SITE {SCI = "sci", ADA = "ada"}
  
 export const SITE_SUBJECT = ISAAC_SITE as SITE;
 
 // Boolean representing if the current site is Isaac Physics
-export const isPhy = SITE_SUBJECT === SITE.PHY;
+export const isPhy = SITE_SUBJECT === SITE.SCI;
 
 // Boolean representing if the current site is Ada CS
 export const isAda = SITE_SUBJECT === SITE.ADA;

@@ -449,11 +449,11 @@ $failed-bg-size: 25%;
   }
 
   thead th {
-    border-bottom: 1px solid $gray-118;
+    box-shadow: inset 0 -1px 0 $gray-118;
   }
 
   tfoot th, tfoot td {
-    border-top: 1px solid $gray-118;
+    box-shadow: inset 0 1px 0 $gray-118;
   }
 
   @include respond-below(xs) {
@@ -462,27 +462,8 @@ $failed-bg-size: 25%;
     }
   }
 
-  .progress-table-header-footer button {
-    background: none;
-    border: none;
-    padding: 0;
-    margin-left: 0.5rem;
+  .progress-table-header-footer .sortable-item-header .sort {
     font-size: 10px;
-    z-index: 1;
-    line-height: initial;
-
-    span {
-      opacity: 0.3;
-      display: block;
-    }
-  }
-
-  .progress-table-header-footer .reverse .arrow {
-    transform: rotate(180deg);
-  }
-
-  .progress-table-header-footer .sorted .arrow {
-    opacity: 1;
   }
 
   td, th {
@@ -500,14 +481,22 @@ $failed-bg-size: 25%;
   }
 
   --student-name-width: 16rem;
-  --correct-attempted-width: 7rem;
+  --correct-attempted-width: 9rem;
+
+  &:has(thead tr th.narrow-header) {
+    --correct-attempted-width: 7rem;
+  }
 
   @include respond-below(md) {
     --student-name-width: 12rem;
-    --correct-attempted-width: 6rem;
+
+    &:has(thead tr th.narrow-header) {
+      --correct-attempted-width: 6rem;
+    }
   }
 
   @include respond-below(sm) {
+    --correct-attempted-width: 8rem;
     --student-name-width: 8rem;
   }
 
@@ -523,6 +512,7 @@ $failed-bg-size: 25%;
     }
     width: var(--correct-attempted-width);
     min-width: var(--correct-attempted-width);
+    max-width: var(--correct-attempted-width);
   }
 
   .sticky-ca-col {

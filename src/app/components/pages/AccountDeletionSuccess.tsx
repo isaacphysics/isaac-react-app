@@ -1,12 +1,14 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
-import {history, siteSpecific} from "../../services";
+import {siteSpecific} from "../../services";
+import { useNavigate } from "react-router";
 
 
 export const AccountDeletionSuccess = () => {
+    const navigate = useNavigate();
     const returnToHomepage = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/");
+        void navigate("/");
     };
 
     return <Container className="text-center">

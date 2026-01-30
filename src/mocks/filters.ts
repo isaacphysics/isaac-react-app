@@ -79,7 +79,7 @@ export const toggleFilter = async (filter: Filter | Filter[]): Promise<void> => 
     } else {
         const regex = allowMatchesWithCount(filter);
         if (isPhy) {
-            await clickOn(regex, mainContainer());
+            await clickOn(regex, sidebarContainer());
         } else {
             await clickOn(regex);
             await clickOn("Apply filters");
@@ -133,7 +133,7 @@ export const expectPartialCheckBox = toExpectation((filter: Filter, state: Parti
     return expect(element).toHaveClass(state);
 });
 
-const mainContainer = () => screen.findByTestId('main');
+const sidebarContainer = () => screen.findByTestId('sidebar');
 
 const findFilter = (label: string) => {
     const regexp = allowMatchesWithCount(label);

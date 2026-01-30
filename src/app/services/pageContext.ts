@@ -88,18 +88,21 @@ export function determinePageContextFromPreviousPageContext(userContexts: readon
     if (previousContext?.stage && doc?.audience?.some(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).filter(isDefined).some(s => previousContext.stage?.includes(s)))) {
         newContext.stage = previousContext.stage;
     }
-    // if we have changed stage...
-    else if (userContexts && doc?.audience) {
-        // ...if there is exactly one match between the user's registered contexts and the audience stage(s), use that stage
-        const newStages = userContexts.map(c => c.stage).filter(s => doc.audience?.flatMap(a => a.stage).includes(s));
-        if (newStages.length === 1 && newStages[0]) {
-            newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[newStages[0]]) ? [STAGE_TO_LEARNING_STAGE[newStages[0]] as LearningStage] : undefined;
-        }
 
-        // ...if the user has no registered context for that stage, if the question has only one stage, switch to that stage)
+    // if we have changed stage...
+    else if (doc?.audience) {
+        // ...if the question has only one stage, switch to that stage
         const stages = doc.audience.flatMap(a => a.stage).filter(isDefined).filter((v, i, a) => a.indexOf(v) === i);
         if (stages.length === 1) {
             newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[stages[0]]) ? [STAGE_TO_LEARNING_STAGE[stages[0]] as LearningStage] : undefined;
+        } 
+        
+        // ...if there is exactly one match between the user's registered contexts and the audience stage(s), use that stage
+        else if (userContexts) {
+            const stageMatches = userContexts.map(c => c.stage).filter(s => s && stages.includes(s));
+            if (stageMatches.length === 1 && stageMatches[0]) {
+                newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[stageMatches[0]]) ? [STAGE_TO_LEARNING_STAGE[stageMatches[0]] as LearningStage] : undefined;
+            }
         }
     }
     // otherwise we cannot infer a single stage to show (user not logged in OR no registered context for a question with multiple valid stages
@@ -181,13 +184,17 @@ function isValidIsaacStage(stage?: string): stage is LearningStage {
     return typeof stage === "string" && LearningStages.includes(stage as LearningStage);
 }
 
-function determinePageContextFromUrl(url: string): PageContextState {
+function determinePageContextFromUrl(url: string): NonNullable<PageContextState> {
     const [subject, stage] = url.split("/").filter(Boolean);
 
     return {
         subject: isValidIsaacSubject(subject) ? subject : undefined,
         stage: isValidIsaacStage(stage) ? [stage] : [],
-    } as PageContextState;
+    } as NonNullable<PageContextState>;
+}
+
+function isDistinctUrlContext(urlContext: PageContextState, reduxContext: PageContextState): boolean {
+    return urlContext?.subject !== reduxContext?.subject || urlContext?.stage?.join(",") !== reduxContext?.stage?.join(",");
 }
 
 /**
@@ -196,16 +203,18 @@ function determinePageContextFromUrl(url: string): PageContextState {
  * If you want to get the current page context from redux rather than the URL, use `useAppSelector(selectors.pageContext.context)` instead.
  * @returns The current page context.
  */
-export function useUrlPageTheme(): PageContextState {
+export function useUrlPageTheme(): NonNullable<PageContextState> {
     const location = useLocation();
     const dispatch = useAppDispatch();
 
     // urlPageTheme mirrors the redux state, but without delay; this is never stale, but redux might be for a couple of renders
-    const [urlPageTheme, setUrlPageTheme] = useState<PageContextState | undefined>(undefined);
+    const [urlPageTheme, setUrlPageTheme] = useState<NonNullable<PageContextState>>(determinePageContextFromUrl(location.pathname));
 
     useEffect(() => {
         const urlContext = determinePageContextFromUrl(location.pathname);
-        setUrlPageTheme(urlContext);
+        // only update local state if an actual value has changed, not just because this is a different object
+        setUrlPageTheme(pt => isDistinctUrlContext(urlContext, pt) ? urlContext : pt);
+
         dispatch(pageContextSlice.actions.updatePageContext({
             subject: urlContext?.subject, 
             stage: urlContext?.stage,
@@ -213,7 +222,7 @@ export function useUrlPageTheme(): PageContextState {
         }));
 
         return () => {
-            setUrlPageTheme(undefined);
+            setUrlPageTheme({stage: undefined, subject: undefined});
             dispatch(pageContextSlice.actions.updatePageContext({
                 subject: undefined,
                 stage: undefined,

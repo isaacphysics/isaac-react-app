@@ -18,13 +18,14 @@ import {
 } from "../../../state";
 import sortBy from "lodash/sortBy";
 import {
-    history,
+    below,
     isAda,
     isDefined,
     isTeacherOrAbove,
     PATHS,
     SITE_TITLE_SHORT,
-    siteSpecific
+    siteSpecific,
+    useDeviceSize
 } from "../../../services";
 import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
 import {Button} from "reactstrap";
@@ -38,6 +39,7 @@ import {useDispatch} from "react-redux";
 import {ReadonlyClipboardInput} from "../inputs/ReadonlyClipboardInput";
 import { Spacer } from "../Spacer";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { useNavigate } from "react-router";
 
 // Avoid loading the (large) QRCode library unless necessary:
 const GroupQRPanel = lazy(() => import("../panels/GroupQRPanel").catch(() => ({default: () => <i>Failed to load QR code panel.</i>})));
@@ -122,36 +124,44 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
         />
     </div>;
 };
+
+const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boolean, group: AppGroup, user: RegisteredUserDTO}) => {
+    const navigate = useNavigate();
+
+    return <Row key={0} className="w-100">
+        <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            <Button block color="primary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+                store.dispatch(closeActiveModal());
+                void navigate(PATHS.SET_ASSIGNMENTS);
+            }}>
+                Set an assignment
+            </Button>
+        </Col>
+        {/* Only teachers are allowed to add additional managers to a group. */}
+        {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            <Button outline block color="secondary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+                void store.dispatch(closeActiveModal());
+                void store.dispatch(showGroupManagersModal({group, user}));
+            }}>
+                Add group managers
+            </Button>
+        </Col>}
+    </Row>;
+};
+
 export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean, backToCreateGroup?: () => void) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: firstTime ? "Group created" : "Invite users",
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
-        <Row key={0} className="w-100">
-            <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="primary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
-                    store.dispatch(closeActiveModal());
-                    history.push(PATHS.SET_ASSIGNMENTS);
-                }}>
-                    Set an assignment
-                </Button>
-            </Col>
-            {/* Only teachers are allowed to add additional managers to a group. */}
-            {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button outline block color="secondary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
-                    store.dispatch(closeActiveModal());
-                    store.dispatch(showGroupManagersModal({group, user}));
-                }}>
-                    Add group managers
-                </Button>
-            </Col>}
-        </Row>
+        <GroupInvitationModalButtons key={0} firstTime={firstTime} group={group} user={user} />
     ],
     bodyContainerClassName: "mb-0 pb-0"
 });
 
 const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {groupId: number, archived: boolean, userIsOwner: boolean, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
     const {data: groups} = useGetGroupsQuery(archived);
     const group = groups?.find(g => g.id === groupId);
     const [addGroupManager] = useAddGroupManagerMutation();
@@ -281,21 +291,22 @@ Are you sure you want to promote this manager to group owner?\n
                     {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
                         Make owner
                     </Button>}
-                    {(userIsOwner || user?.id === manager.id) && <Button className="d-none d-lg-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
-                        onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
-                    >
-                        Remove
-                    </Button>}
+                    {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && !(userIsOwner && below["md"](deviceSize)) &&
+                        <Button className="d-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
+                            onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
+                        >
+                            Remove
+                        </Button>}
 
-                    <UncontrolledDropdown className="d-inline d-lg-none ms-2">
+                    {userIsOwner && <UncontrolledDropdown className="d-inline d-lg-none ms-2">
                         <DropdownToggle caret className="d-flex align-items-center">
                             Actions
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>
-                            <DropdownItem onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}>Remove</DropdownItem>
+                            <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>Remove</DropdownItem>
                         </DropdownMenu>
-                    </UncontrolledDropdown>
+                    </UncontrolledDropdown>}
                 </li>
             )}
         </ul>
@@ -315,8 +326,8 @@ Are you sure you want to promote this manager to group owner?\n
                         <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
                         <li>Remove group members</li>
                         <li>Archive and rename the group</li>
+                        <li>Add or remove other managers</li>
                     </ul>
-                    Additional managers cannot add or remove other managers. <br/>
                     Un-tick the above box if you would like to remove these additional privileges.
                 </>
                 : <>
@@ -325,12 +336,13 @@ Are you sure you want to promote this manager to group owner?\n
                         <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
                         <li>Remove group members</li>
                         <li>Archive and rename the group</li>
+                        <li>Add or remove other managers</li>
                     </ul>
                 </>
             }
         </Alert>}
 
-        {userIsOwner && <>
+        {(userIsOwner || group.additionalManagerPrivileges) && <>
             <h4 className="mt-3">Add additional managers</h4>
             <p>Enter the email of another {SITE_TITLE_SHORT} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>

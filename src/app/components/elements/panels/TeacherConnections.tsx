@@ -14,9 +14,7 @@ import {
 } from "../../../state";
 import {
     extractTeacherName,
-    history,
     isAda,
-    isFirstLoginInPersistence,
     isLoggedIn,
     isPhy,
     isStudent,
@@ -83,14 +81,14 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     <Spacer />
                 </> :
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
-                    {isAda && <span className="icon-group-white" />}
+                    {isAda && <span className="icon-group-white mx-2" />}
                     {title}
                 </h4>
             }</>
             :
             <>
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
-                    {isAda && <span className="icon-group-white" />}
+                    {isAda && <span className="icon-group-white mx-2" />}
                     {title}
                 </h4>
                 <Spacer />
@@ -115,9 +113,6 @@ export const authenticateWithTokenAfterPrompt = async (userId: number, token: st
     else if (!(sanitisedToken && sanitisedToken.length >= 6 && sanitisedToken.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(sanitisedToken))) {
         dispatch(showErrorToast("Invalid group code", "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers."));
         return;
-    }
-    else if (isPhy && isFirstLoginInPersistence()) {
-        history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
     }
     else {
         const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
@@ -182,18 +177,23 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         }
     }
 
+    const SectionHeading = siteSpecific("h4", "h3");
+
     return <MyAccountTab
         leftColumn={<>
             <h3>Connect to your teacher</h3>
             <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_teacher_connections_teacher" : "help_toptext_teacher_connections_student"} ifNotFound={RenderNothing} />
         </>}
         rightColumn={<>
-            <h3>
-                <span className={classNames({"h4": isPhy})}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help")} /></span>
+            <SectionHeading>
+                <span>
+                    Teacher connection code
+                    <i id="teacher-connections-title" className={classNames("icon icon-info icon-inline-sm ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
+                </span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {SITE_TITLE_SHORT} assignment progress.
                 </UncontrolledTooltip>
-            </h3>
+            </SectionHeading>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
             <div data-testid="teacher-connect-form">
                 <InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
@@ -226,7 +226,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 return <React.Fragment key={teacherAuthorisation.id}>
                                     <li style={style} className="py-2">
                                         <div className="d-inline-flex connections-fixed-length-container">
-                                            {isAda && <span className="icon-person-active" />}
+                                            {isAda && <span className="icon-person-active mx-2"/>}
                                             <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
                                                 {extractTeacherName(teacherAuthorisation)}
                                             </span>
@@ -256,13 +256,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </div>
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
-                <h3>
-                    <span className={classNames({"h4": isPhy})}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help")} /></span>
+                <SectionHeading>
+                    <span>Your student connections
+                        <i id="student-connections-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
+                    </span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {SITE_TITLE_SHORT} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
                     </UncontrolledTooltip>
-                </h3>
+                </SectionHeading>
                 <p>
                     You can invite students to share their {SITE_TITLE_SHORT} data with you through the {" "}
                     <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
@@ -281,7 +283,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                     }
                                     return <li key={student.id} style={style} className="py-2">
                                         <div className="d-inline-flex connections-fixed-length-container">
-                                            {isAda && <span className="icon-person-active" />}
+                                            {isAda && <span className="icon-person-active mx-2"/>}
                                             <span id={`student-authorisation-${student.id}`} className="connections-fixed-length-text">
                                                 {student.givenName} {student.familyName}
                                             </span>
@@ -319,7 +321,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <h3>
                 <span className={classNames({"h4": isPhy})}>
                     Your group memberships
-                    <i id="group-memberships-title" className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help")} />
+                    <i id="group-memberships-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </span>
                 <UncontrolledTooltip placement="bottom" target="group-memberships-title">
                     These are the groups you are currently a member of.
@@ -375,7 +377,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Leave
                                                     </Button>
                                                     {isPhy && <>
-                                                        <i id={`leave-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help membership-status-help-button")} />
+                                                        <i id={`leave-group-action-${membership.group.id}`} className="ms-2 icon icon-info icon-inline-sm icon-color-grey" />
                                                         <UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
@@ -391,7 +393,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Rejoin
                                                     </Button>
                                                     {isPhy && <>
-                                                        <i id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help membership-status-help-button")} />
+                                                        <i id={`rejoin-group-action-${membership.group.id}`} className="ms-2 icon icon-info icon-inline-sm icon-color-grey" />
                                                         <UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >

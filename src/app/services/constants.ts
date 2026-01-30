@@ -6,12 +6,14 @@ import {BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences}
 import {
     AuthenticationProvider,
     BookingStatus,
+    CompletionState,
     ContentDTO,
     Difficulty,
     ExamBoard,
     IsaacFastTrackQuestionPageDTO,
     IsaacQuestionPageDTO,
     ItemDTO,
+    QuestionPartState,
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
@@ -68,9 +70,9 @@ export const { trackPageview, trackEvent } = Plausible(
 
 export const SOCIAL_LINKS = siteSpecific(
     {
-        youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
-        bluesky: {name: "Bluesky", href: "https://bsky.app/profile/isaacphysics.org"},
-        linkedin: {name: "LinkedIn", href: "https://www.linkedin.com/company/isaac-physics"}
+        youtube: {name: "YouTube", href: "https://www.youtube.com/@isaac-science"},
+        bluesky: {name: "Bluesky", href: "https://bsky.app/profile/isaacscience.org"},
+        linkedin: {name: "LinkedIn", href: "https://www.linkedin.com/company/isaac-science"}
     },
     {
         facebook: {name: "Facebook", href: "https://www.facebook.com/RaspberryPiFoundation"},
@@ -190,10 +192,6 @@ export enum ACTION_TYPE {
     QUESTION_UNLOCK = "QUESTION_UNLOCK",
     QUESTION_SET_CURRENT_ATTEMPT = "QUESTION_SET_CURRENT_ATTEMPT",
 
-    QUESTION_SEARCH_REQUEST = "QUESTION_SEARCH_REQUEST",
-    QUESTION_SEARCH_RESPONSE_SUCCESS = "QUESTION_SEARCH_RESPONSE_SUCCESS",
-    QUESTION_SEARCH_RESPONSE_FAILURE = "QUESTION_SEARCH_RESPONSE_FAILURE",
-
     MY_QUESTION_ANSWERS_BY_DATE_REQUEST = "MY_QUESTION_ANSWERS_BY_DATE_REQUEST",
     MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS = "MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS",
     MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE = "MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE",
@@ -213,9 +211,6 @@ export enum ACTION_TYPE {
     TOPIC_REQUEST = "TOPIC_REQUEST",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
     TOPIC_RESPONSE_FAILURE = "TOPIC_RESPONSE_FAILURE",
-
-    SEARCH_REQUEST = "SEARCH_REQUEST",
-    SEARCH_RESPONSE_SUCCESS = "SEARCH_RESPONSE_SUCCESS",
 
     TOASTS_SHOW = "TOASTS_SHOW",
     TOASTS_HIDE = "TOASTS_HIDE",
@@ -277,11 +272,12 @@ export enum STAGE {
     SCOTLAND_ADVANCED_HIGHER = "scotland_advanced_higher",
     CORE = "core",
     ADVANCED = "advanced",
+    POST_18 = "post_18",
     ALL = "all",
 }
 export const STAGE_NULL_OPTIONS = [STAGE.ALL];
 export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY] as const;
-export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED] as const;
+export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18] as const;
 export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_PHY, STAGES_CS), STAGE.ALL];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7_and_8: "Year\u00A07&8",
@@ -295,6 +291,7 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     scotland_advanced_higher: "Adv Higher",
     core: "Core",
     advanced: "Advanced",
+    post_18: "Post-18",
     all: "All stages",
 };
 
@@ -330,6 +327,7 @@ export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: Exam
     scotland_advanced_higher: [EXAM_BOARD.SQA],
     core: [EXAM_BOARD.ADA],
     advanced: [EXAM_BOARD.ADA],
+    post_18: [EXAM_BOARD.ADA],
 };
 
 export const EXAM_BOARD_NULL_OPTIONS = [EXAM_BOARD.ALL];
@@ -470,13 +468,14 @@ export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefin
     scotland_advanced_higher: "a_level",
     core: "gcse",
     advanced: "a_level",
+    post_18: "university",
 };
 
 export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
     "11_14": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9],
     gcse: [STAGE.GCSE, STAGE.SCOTLAND_NATIONAL_5, STAGE.CORE],
     a_level: [STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.ADVANCED],
-    university: [STAGE.UNIVERSITY],
+    university: [STAGE.UNIVERSITY, STAGE.POST_18],
 };
 
 export const HUMAN_STAGES: {[key: string]: string} = {
@@ -497,6 +496,29 @@ export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) 
     acc[stage.valueOf() as LEARNING_STAGE] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as readonly LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as Exclude<SUBJECTS, SUBJECTS.CS>[];
     return acc;
 }, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
+
+export const QUESTION_STATUS_TO_ICON: {[key in CompletionState]: string} = {
+    [CompletionState.ALL_CORRECT]: "icon-correct",
+    [CompletionState.ALL_ATTEMPTED]: siteSpecific("icon-attempted", "icon-in-progress"),
+    [CompletionState.ALL_INCORRECT]: siteSpecific("icon-attempted", "icon-incorrect"),
+    [CompletionState.IN_PROGRESS]: "icon-in-progress",
+    [CompletionState.NOT_ATTEMPTED]: "icon-not-started"
+};
+
+export const QUESTION_PART_STATUS_TO_ICON: {[key in QuestionPartState]: string} = {
+    // Note: These are currently unused for Ada
+    "CORRECT": "icon-correct",
+    "INCORRECT": "icon-incorrect",
+    "NOT_ATTEMPTED": "icon-not-started"
+};
+
+export const HUMAN_STATUS: {[key in CompletionState]: string} = {
+    [CompletionState.ALL_CORRECT]: siteSpecific("All correct", "Correct"),
+    [CompletionState.ALL_ATTEMPTED]: siteSpecific("All attempted", "Attempted"),
+    [CompletionState.ALL_INCORRECT]: siteSpecific("All incorrect", "Incorrect"),
+    [CompletionState.IN_PROGRESS]: "In progress",
+    [CompletionState.NOT_ATTEMPTED]: "Not started"
+};
 
 type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_14" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
 export enum BookHiddenState {
@@ -623,7 +645,8 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
-    'ft_further_stage2_2018',
+    'ft_further_stage2_2018', 'ft_core_2018_r1', 'ft_mech_year2_2018_r1',
+    'ft_further_stage1_2018_r1' , 'ft_further_stage2_2018_r1'
 ];
 
 export enum TAG_ID {
@@ -1262,11 +1285,14 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?\]/g;
 export const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
 export const NULL_CLOZE_ITEM: ItemDTO = {
     type: "item",
     id: NULL_CLOZE_ITEM_ID
 };
+
+export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
 
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]

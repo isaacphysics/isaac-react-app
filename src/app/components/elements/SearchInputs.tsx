@@ -1,8 +1,7 @@
-import React, {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from "react";
 import {Button, Form, Input, InputGroup, InputProps, Label} from "reactstrap";
-import {ifKeyIsEnter, pushSearchToHistory, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
+import {ifKeyIsEnter, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
 import classNames from "classnames";
-import { useHistory, useLocation } from "react-router";
 
 interface SearchInputProps {
     setSearchText: (s: string) => void;
@@ -19,26 +18,34 @@ interface SearchInputProps {
 
 // HOC pattern for making different flavour search bars
 function withSearch(Component: React.FC<SearchInputProps>) {
-    const SearchComponent = ({className, inline, onSearch, initialValue}: {className?: string; inline?: boolean; onSearch?: (searchText: string) => void; initialValue?: string}) => {
+    const SearchComponent = ({className, inline, onSearch, initialValue, clearOnSearch}: {className?: string; inline?: boolean; onSearch?: (searchText: string) => void; initialValue?: string, clearOnSearch?: boolean}) => {
         const [searchText, setSearchText] = useState(initialValue ?? "");
         const searchInputRef = useRef<HTMLInputElement>(null);
 
-        const history = useHistory();
-        function doSearch(e: FormEvent<HTMLFormElement>) {
-            e.preventDefault();
-            if (searchText === "") {
+        const doSearch = useCallback((text: string) => {
+            if (text === "") {
                 if (searchInputRef.current) searchInputRef.current.focus();
             } else {
-                onSearch?.(searchText);
-                pushSearchToHistory(history, searchText, []);
+                onSearch?.(encodeURIComponent(text));
+                if (clearOnSearch) setSearchText("");
             }
-        }
+        }, [onSearch, clearOnSearch]);
 
-        // Clear this search field on location (i.e. search query) change - user should use the main search bar
-        const location = useLocation();
-        useEffect(() => { if (location.pathname === "/search") { setSearchText(initialValue ?? ""); }}, [location]);
+        useEffect(() => {
+            // If the initial value changes, update the search text - allows the search input to reflect URL changes
+            if (initialValue !== undefined) {
+                setSearchText(initialValue);
+            }
+        }, [initialValue]);
 
-        return <Form onSubmit={doSearch} className={classNames(className, {"form-inline" : inline})}>
+        return <Form 
+            className={classNames(className, {"form-inline" : inline})}
+            data-testid="search-form"
+            onSubmit={(e) => {
+                e.preventDefault();
+                doSearch(searchText);
+            }}
+        >
             <div className='form-group search--main-group'>
                 <Component inputProps={{
                     maxLength: SEARCH_CHAR_LENGTH_LIMIT,
@@ -113,8 +120,8 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
                 id="header-search" {...inputProps}
                 value={searchText} onChange={setSearchTextAsValue}
             />
-            <button>
-                <img src={"/assets/cs/icons/search-jet.svg"} alt={"search icon"}/>
+            <button className="d-flex align-items-center justify-content-center">
+                <i className="icon icon-search icon-color-jet"/>
             </button>
         </InputGroup>
     </>;

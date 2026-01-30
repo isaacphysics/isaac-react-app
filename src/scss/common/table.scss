@@ -25,3 +25,34 @@
     padding: 0;
   }
 }
+
+.sortable-item-header {
+  cursor: pointer;
+  .sort {
+    background: none;
+    position: relative;
+    right: -3px;
+    top: 1px;
+    font-size: 9px;
+
+    .arrow {
+      opacity: 0.3;
+      display: block;
+    }
+  }
+
+  &.sorted .arrow {
+    opacity: 1;
+  }
+
+  &.reverse .arrow {
+    transform: rotate(180deg);
+  }
+}
+
+.my-quizzes-table thead.my-quizzes-table-header, .my-gameboard-table thead.my-gameboard-table-header {
+  th {
+    border-top: none;
+    white-space: nowrap;
+  }
+}

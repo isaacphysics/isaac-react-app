@@ -66,7 +66,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
+    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; authResponse: ApiTypes.AuthenticationResponseDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS}
@@ -90,6 +90,7 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
+    | {type: ACTION_TYPE.USER_SESSION_EXPIRED}
 
     | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST}
     | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS; groupMemberships: GroupMembershipDetailDTO[]}
@@ -118,10 +119,6 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
-    | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questionResults: ApiTypes.SearchResultsWrapper<ApiTypes.ContentSummaryDTO>, searchId?: string}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; myAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
@@ -141,9 +138,6 @@ export type Action =
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
-    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
 
     | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
     | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
@@ -199,10 +193,6 @@ export interface ShortcutResponse extends ContentSummaryDTO {
     hash?: string;
 }
 
-export interface UserBetaFeaturePreferences {
-    SCHEDULE_ASSIGNMENTS?: boolean;
-}
-
 export type UserEmailPreferences = {
     NEWS_AND_UPDATES?: boolean;
     ASSIGNMENTS?: boolean;
@@ -237,6 +227,7 @@ export interface BooleanNotation {
 
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
+    CHEM_TEXT_ENTRY?: boolean;
 }
 
 export interface AccessibilitySettings {
@@ -250,7 +241,6 @@ export interface UserConsent {
 }
 
 export interface UserPreferencesDTO {
-    BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
@@ -441,15 +431,25 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
-export const ClozeDropRegionContext = React.createContext<{
-    register: (id: string, index: number) => void,
-    onSelect: (item: Immutable<ClozeItemDTO>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => void,
-    questionPartId: string, readonly: boolean,
-    inlineDropValueMap: {[p: string]: ClozeItemDTO},
+
+export const DragAndDropRegionContext = React.createContext<(
+    {
+        questionType: "isaacDragAndDropQuestion",
+        register: (divId: string, zoneId: string) => void,
+    } | {
+        questionType: "isaacClozeQuestion",
+        register: (divId: string, zoneId: number) => void,
+    }
+) & {
+    onSelect: (item: Immutable<ReplaceableItem>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => void,
+    questionPartId: string, 
+    readonly: boolean,
+    inlineDropValueMap: {[p: string]: ReplaceableItem},
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean,
-    nonSelectedItems: Immutable<ClozeItemDTO>[]
-    allItems: Immutable<ClozeItemDTO>[]
+    nonSelectedItems: Immutable<ReplaceableItem>[],
+    allItems: Immutable<ReplaceableItem>[],
+    zoneIds: Set<string>,
 } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
@@ -751,7 +751,8 @@ export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
 
 export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];
 
-export interface ClozeItemDTO extends ItemDTO {
+export interface ReplaceableItem extends ItemDTO {
+    // can be either a cloze (ItemDTO) or dnd (DndItemDTO) under the hood
     replacementId?: string;
 }
 

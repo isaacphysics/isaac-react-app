@@ -81,16 +81,16 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         return <div className={classNames(`d-flex flex-column px-0 context-picker-container no-print ${className}`, {"w-100 mt-2": isAda})}>
             <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-md-2": isAda})}>
                 {/* Stage Selector */}
-                <div className={classNames("form-group w-100 d-flex justify-content-end m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
+                <div className={classNames("form-group w-100 d-flex justify-content-end align-items-center m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
                     {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
-                        <button className={classNames("icon-reset", siteSpecific("mb-1", "mt-2"))} aria-label={"Reset viewing context"} onClick={() => {
+                        <button className="icon-reset mb-1" aria-label={"Reset viewing context"} onClick={() => {
                             dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
                             dispatch(transientUserContextSlice.actions.setStage(undefined));
                         }}/>
                     }
                     <Input
-                        className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"mb-2 me-1": isAda})}
+                        className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"me-1": isAda})}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={currentStages.length === 1 ? currentStages : stagesString(currentStages)}
@@ -128,7 +128,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             {/* Exam Board Selector */}
                             {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                             <Input
-                                className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ms-2`}
+                                className={`flex-grow-1 d-inline-block ps-2 pe-0 ms-2`}
                                 type="select" id="uc-exam-board-select"
                                 aria-label={hideLabels ? "Exam Board" : undefined}
                                 value={userContext.contexts[0].examBoard}
@@ -145,17 +145,15 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         </>
                     }
 
-                    <div className="mt-2 ms-1">
-                        <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey mx-1", "icon-help mx-1")}/>
-                        <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
-                            You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
-                            &nbsp;content.&nbsp;
-                            {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard, currentStages.length > 1)}&nbsp;
-                            {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?
-                                "Log in or sign up to save your viewing preferences." : ""
-                            }
-                        </UncontrolledTooltip>
-                    </div>
+                    <i id={`viewing-context-explanation`} className={classNames("icon icon-info icon-sm ms-3 me-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
+                    <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
+                        You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
+                        &nbsp;content.&nbsp;
+                        {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard, currentStages.length > 1)}&nbsp;
+                        {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?
+                            "Log in or sign up to save your viewing preferences." : ""
+                        }
+                    </UncontrolledTooltip>
                 </div>
             </div>
         </div>;

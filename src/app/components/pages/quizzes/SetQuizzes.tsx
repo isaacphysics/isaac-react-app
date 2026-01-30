@@ -1,13 +1,13 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {
-    showQuizSettingModal,
     useAppDispatch,
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
     useCancelQuizAssignmentMutation,
-    useUpdateQuizAssignmentMutation
+    useUpdateQuizAssignmentMutation,
+    openActiveModal
 } from "../../../state";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
@@ -38,14 +38,17 @@ import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
 import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
-import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown, Label } from "reactstrap";
+import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";
-import { MainContent, ManageQuizzesSidebar, SetQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
-import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { HexIcon } from "../../elements/svg/HexIcon";
 import { AffixButton } from "../../elements/AffixButton";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
+import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
+import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
 
-interface SetQuizzesPageProps extends RouteComponentProps {
+interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
 }
 
@@ -167,7 +170,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                 <>
                     <Row className="w-100 ms-0 d-flex flex-row">
                         <Col className="d-flex align-items-center col-7 col-sm-8 col-md-6">
-                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>
+                            <HexIcon icon={{name: "icon-tests", size: "lg"}} subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>
 
                             <span className="manage-quiz-title me-3">{quizTitle}</span>
                         </Col>
@@ -175,7 +178,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             <AffixButton size="sm" affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }} className="me-3"
                                 onClick={(e) => {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                    assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                    assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
                                     e.stopPropagation();}}>
                                 Set test
                             </AffixButton>
@@ -204,7 +207,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                             onClick={(e) => {
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
                                 e.stopPropagation();
                             }}
                         >
@@ -287,7 +290,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     </>;
 }
 
-const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
+export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
@@ -386,7 +389,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
                 ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} hideButton />
@@ -422,7 +425,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                     </div>
                                                 </Col>
                                                 <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
-                                                    <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
+                                                    <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))}>
                                                         Set test
                                                     </Button>
                                                 </Col>
@@ -437,7 +440,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                             Actions
                                                         </DropdownToggle>
                                                         <DropdownMenu>
-                                                            <DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
+                                                            <DropdownItem onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))} style={{zIndex: '1'}}>
                                                                 Set test
                                                             </DropdownItem>
                                                             <DropdownItem divider />
@@ -552,5 +555,3 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         </SidebarLayout>
     </Container>;
 };
-
-export const SetQuizzes = withRouter(SetQuizzesPageComponent);

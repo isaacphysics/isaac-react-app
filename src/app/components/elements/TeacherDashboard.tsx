@@ -101,6 +101,9 @@ const MyIsaacPanel = () => {
                 <Link to="/groups" className='d-block panel-my-isaac-link'>
                     Manage groups
                 </Link>
+                <Link to="/question_deck_builder" className='d-block panel-my-isaac-link'>
+                    Create a question deck
+                </Link>
                 <Link to="/set_assignments" className='d-block panel-my-isaac-link'>
                     Set assignments
                 </Link>

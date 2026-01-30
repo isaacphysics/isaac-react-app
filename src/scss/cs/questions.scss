@@ -9,7 +9,7 @@
 .action-buttons-popup-container {
   position: absolute;
   height: 100%;
-  right: 30px;
+  right: 27px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -77,6 +77,19 @@
   }
 }
 
+.question-tag-indicator {
+    &.cross-topic { background-color: $pink-700; }  
+    &.llm { background-color: $cyan-700;}
+
+    color: $cs-jet;
+    border: 1px solid $cs-silver;
+
+    &.small {
+        border: 1px solid $cs-silver !important;
+        font-weight: 600 !important;
+    }
+}
+
 // Validation response
 .validation-response-panel {
   text-align: left;
@@ -90,7 +103,6 @@
     @include media-breakpoint-down(md) {
       margin-left: -1rem;
       margin-right: -1rem;
-      margin-bottom: -1rem;
     }
   }
   &.correct {

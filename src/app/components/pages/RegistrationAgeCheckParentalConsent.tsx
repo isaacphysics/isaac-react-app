@@ -1,22 +1,25 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Container, Input, Label, Row} from "reactstrap";
-import {history, siteSpecific} from "../../services";
+import {siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import { Link } from "react-router-dom";
-import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
+import { Link, useNavigate } from "react-router-dom";
+import { SidebarLayout, MainContent } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 export const RegistrationAgeCheckParentalConsent = () => {
 
     const [parentalConsentCheckboxChecked, setParentalConsentCheckboxChecked] = React.useState<boolean>(false);
 
+    const navigate = useNavigate();
+
     const continueToDetails = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/student/details");
+        void navigate("/register/student/details");
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Additional information"} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={"Additional information"} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>
@@ -36,7 +39,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
                         {siteSpecific(<br/>, <hr/>)}
                         <Row className="justify-content-end">
                             <Col sm={3} className="d-flex justify-content-end">
-                                <Button className="mt-2 w-100" color="keyline" onClick={history.goBack}>Back</Button>
+                                <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>Back</Button>
                             </Col>
                             <Col sm={4} lg={3}>
                                 <Button className={classNames("mt-2 w-100")} color="solid" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>Continue</Button>

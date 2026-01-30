@@ -145,34 +145,30 @@ export function UserContextAccountInput({
     const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL;
 
     return <WithLinkableSetting id={"account-context"} className={className}>
-        <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
-            {siteSpecific(
-                <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
-                <span>Show me content for...</span>
-            )}
-        </Label>
-        {siteSpecific(
-            // Physics
-            <React.Fragment>
-                <i id={`show-me-content-${componentId}`} className="mx-2 icon icon-info icon-color-grey" />
-                <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
+        <div className="mb-2">
+            <Label htmlFor="user-context-selector" className={classNames("fw-bold mb-0", (required ? "form-required" : "form-optional"))}>
+                {siteSpecific(
+                    <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
+                    <span>Show me content for...</span>
+                )}
+            </Label>
+            <i id={`show-me-content-${componentId}`} className={classNames("icon icon-inline icon-info mx-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
+            <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
+                {siteSpecific(<>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
                     {"You will be able to change this preference on relevant pages."}<br />
                     {'If you prefer to see all content by default, select "All stages".'}
-                </UncontrolledTooltip>
-            </React.Fragment>,
-            // Computer science
-            <React.Fragment>
-                <span id={`show-me-content-${componentId}`} className="icon-help" />
-                <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
+                </>, 
+                <>
                     {/* This tooltip is very hard to reach */}
                     {tutorOrAbove ?
                         <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
                         <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
                     }
-                </UncontrolledTooltip>
-            </React.Fragment>
-        )}
+                </>)}
+            </UncontrolledTooltip>
+        </div>
+        
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
 
             {userContexts.length ? userContexts.map((userContext, index) => {

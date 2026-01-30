@@ -75,7 +75,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 </SidebarLayout>
             </>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
                     <p>{error}</p>

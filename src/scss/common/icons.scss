@@ -29,14 +29,6 @@ polygon.fill-secondary {
   fill: $secondary;
 }
 
-.dropzone-dropdown {
-  position: absolute;
-  align-self: center;
-  right: 5px;
-  @extend .icon-dropdown-180;
-  opacity: 0.3;
-}
-
 @mixin icon-dropdown($deg) {
   transform: rotate($deg);
   -webkit-transform: rotate($deg);
@@ -102,18 +94,6 @@ img[aria-disabled="true"] {
 
 .icon-search {
   @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-file {
-  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-person {
-  @include svg-icon('/assets/common/icons/person.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-school {
-  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-event-upcoming {
@@ -202,13 +182,18 @@ img[aria-disabled="true"] {
   --mask-size: 100%;
 }
 
+.icon-sm {
+  --icon-size: 20px;
+  --mask-size: 100%;
+}
+
 .icon-md {
   --icon-size: 24px;
   --mask-size: 100%;
 }
 
 .icon-lg {
-  --icon-size: 60px;
+  --icon-size: 60px; // 32px for cs
   --mask-size: initial;
 }
 
@@ -217,9 +202,15 @@ img[aria-disabled="true"] {
   --mask-size: initial;
 }
 
-.icon-inline { // intended for inline 16px icons
+.icon-inline {
   --icon-size: 1lh;
-  --mask-size: 83%;
+  --mask-size: 16px;
+  vertical-align: bottom;
+}
+
+.icon-inline-sm {
+  --icon-size: 1lh;
+  --mask-size: 20px;
   vertical-align: bottom;
 }
 

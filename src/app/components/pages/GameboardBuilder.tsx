@@ -35,7 +35,6 @@ import {
     EXAM_BOARD,
     GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
-    history,
     isAda,
     isDefined,
     isStaff,
@@ -50,7 +49,7 @@ import {
     TAG_ID,
     useUserViewingContext
 } from "../../services";
-import {useLocation} from "react-router-dom";
+import {useBlocker, useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import intersection from "lodash/intersection";
@@ -120,6 +119,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
     const [generateTemporaryGameboard] = useGenerateTemporaryGameboardMutation();
     const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = useCreateGameboardMutation();
+    const [dirty, setDirty] = useState(false);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<Item<string>[]>([]);
@@ -165,6 +165,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             return;
         }
 
+        setDirty(false);
+
         let wildcard = undefined;
         if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
             wildcard = wildcards.filter((wildcard) => wildcard.id === wildcardId)[0];
@@ -187,7 +189,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             subjects = Array.from(new Set(subjects));
         }
 
-        createGameboard({
+        void createGameboard({
             gameboard: {
                 id: gameboardURL ? gameboardURL : undefined,
                 title: gameboardTitle,
@@ -245,7 +247,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             if (!userContext.contexts.map(c => c.examBoard).includes(EXAM_BOARD.ALL)) {
                 params.examBoards = userContext.contexts[0].examBoard ?? "";
             }
-            generateTemporaryGameboard(params).then((gameboardResponse) => {
+            void generateTemporaryGameboard(params).then((gameboardResponse) => {
                 if (mutationSucceeded(gameboardResponse)) {
                     cloneGameboard(gameboardResponse.data);
                 } else {
@@ -253,13 +255,23 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 }
             });
         }
-    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.contexts[0]]);
+    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.contexts]);
+
+    const blocker = useBlocker(
+        useCallback(() => dirty, [dirty]),
+    );
+
     useEffect(() => {
-        return history.block(() => {
-            logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
-            dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
-        });
-    }, []);
+        if (blocker.state === "blocked") {
+            if (window.confirm("You have unsaved changes - are you sure you want to leave this page?")) {
+                logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
+                void dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
+                blocker.proceed?.();
+            } else {
+                blocker.reset?.();
+            }
+        }
+    }, [blocker, dispatch, eventLog]);
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
@@ -296,6 +308,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const canUndo = !!undoStack.length;
     const canRedo = !!redoStack.length;
 
+    useEffect(() => {
+        setDirty(canUndo);
+    }, [canUndo]);
+
     const undoButtonProps = {
         color: "keyline",
         "aria-label": "Undo last action",
@@ -322,7 +338,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder">
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         <PageMetadata helpModalId="help_modal_gameboard_builder" />
         <Card className="p-3 mt-4 mb-7">
             <CardBody>
@@ -337,7 +353,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Col>
                             <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">Title</Label>
                             <p className="d-block input-description mb-2">
-                               This will be visible to your students.
+                                This will be visible to your students.
                             </p>
                             <FormGroup>
                                 <Input id="gameboard-builder-name"
@@ -415,14 +431,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             </p>
                         </div>
                         <div className={"d-flex flex-row gap-2"}>
-                            {siteSpecific(
-                                <IconButton icon="icon-undo" className="icon-button-sm" {...undoButtonProps} disabled={!canUndo}/>,
-                                <Button className={"undo-icon btn-action outline"} {...undoButtonProps} disabled={!canUndo} />
-                            )}
-                            {siteSpecific(
-                                <IconButton icon="icon-redo" className="icon-button-sm" {...redoButtonProps} disabled={!canRedo}/>,
-                                <Button className={"redo-icon btn-action outline"} {...redoButtonProps} disabled={!canRedo} />
-                            )}
+                            <IconButton icon="icon-undo" className="icon-button-sm action-button outline" {...undoButtonProps} disabled={!canUndo}/>
+                            <IconButton icon="icon-redo" className="icon-button-sm action-button outline" {...redoButtonProps} disabled={!canRedo}/>
                         </div>
                     </div>
 
@@ -511,11 +521,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     }));
                                 }}
                             >
-                                    Add questions
-                                {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
-                                    className={"ms-2"} alt=""/>,
-                                <img className={"plus-icon"}
-                                    src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt=""/>)}
+                                Add questions <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-sm icon-add-circle"))}/>
                             </Button>
                         </ShowLoading>
                         <Button

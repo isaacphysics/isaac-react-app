@@ -12,14 +12,18 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {confirmThen, history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
+import {confirmThen, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import { MainContent, SidebarLayout, SignupSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
+import { useNavigate } from "react-router";
 
 type AgePermission = "denied" | "additional_info" | "allowed";
 
 export const RegistrationAgeCheck = () => {
+
+    const navigate = useNavigate();
 
     const [agePermission, setAgePermission] = useState<AgePermission | undefined>(undefined);
     const [submissionAttempted, setSubmissionAttempted] = useState<boolean>(false);
@@ -30,13 +34,13 @@ export const RegistrationAgeCheck = () => {
 
         switch (agePermission) {
             case "allowed":
-                history.push("/register/student/details");
+                void navigate("/register/student/details");
                 break;
             case "additional_info":
-                history.push("/register/student/additional_info");
+                void navigate("/register/student/additional_info");
                 break;
             case "denied":
-                history.push("/register/student/age_denied");
+                void navigate("/register/student/age_denied");
                 break;
         }
     };
@@ -44,11 +48,11 @@ export const RegistrationAgeCheck = () => {
     const goBack = () => {
         confirmThen(
             "Are you sure you want go back? Any information you have entered will be lost.",
-            () => history.push("/register"));
+            () => navigate("/register"));
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}} />
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>

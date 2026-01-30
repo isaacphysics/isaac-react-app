@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, SearchString, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
+import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, RenderTestEnvironmentOptions, SearchString, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import shuffle from "lodash/shuffle";
 import times from "lodash/times";
@@ -9,35 +9,22 @@ import { isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
-import { IsaacQuestionPageDTO } from "../../IsaacApiTypes";
+import { ContentSummaryDTO, SearchResultsWrapper } from "../../IsaacApiTypes";
 import { toggleFilter, PartialCheckboxState, Filter as F, expectPartialCheckBox } from "../../mocks/filters";
+import { buildMockQuestionFinderResults, buildMockQuestions } from "../../mocks/utils";
 
-type QuestionFinderResultsResponse = {
-    results: IsaacQuestionPageDTO[];
-    nextSearchOffset: number;
-    totalResults: number;
-};
-
-const buildMockQuestions = (n: number, questions: QuestionFinderResultsResponse): IsaacQuestionPageDTO[] => {
-    return Array(n).fill(null).map((_, i) => ({ ...questions.results[i % questions.results.length], id: `q${i}`, title: `Question ${i}: ${questions.results[i % questions.results.length].title}` }));
-};
-
-const buildMockQuestionFinderResults = <T extends IsaacQuestionPageDTO[]>(questions: T, start: number): QuestionFinderResultsResponse => ({
-    results: questions.slice(start, start + 31),
-    nextSearchOffset: start + 31,
-    totalResults: questions.length
-});
 
 describe("QuestionFinder", () => {
-    const questions = buildMockQuestions(40, mockQuestionFinderResults as QuestionFinderResultsResponse);
+    const questions = buildMockQuestions(40, mockQuestionFinderResults);
     const resultsResponse = buildMockQuestionFinderResults(questions, 0);
 
-    const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages as QuestionFinderResultsResponse);
+    const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages);
     const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
 
-    const renderQuestionFinderPage = async ({response, queryParams, context} : RenderParameters) => {
-        renderTestEnvironment({
-            extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)]
+    const renderQuestionFinderPage = async ({response, queryParams, context, ...opts} : RenderParameters) => {
+        await renderTestEnvironment({
+            extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)],
+            ...opts
         });
         await waitForLoaded();
         await setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
@@ -45,9 +32,66 @@ describe("QuestionFinder", () => {
     };
 
     it('should render results in alphabetical order', async () => {
-        await renderQuestionFinderPage({ response: () => resultsResponse });
-        await toggleFilter(F.GCSE);
+        await renderQuestionFinderPage({ response: () => resultsResponse, queryParams: '?stages=gcse' });
         await expectQuestions(questions.slice(0, 30));
+    });
+
+    it('should disable the shuffle button when there are no results', async () => {
+        await renderQuestionFinderPage({
+            response: () => buildMockQuestionFinderResults([], 0),
+            queryParams: '?stages=gcse'
+        });
+        expect(shuffleButton()).toBeDisabled();
+    });
+
+    it('should not show results on load when logged in without a registered context', async () => {
+        await renderQuestionFinderPage({
+            response: () => resultsResponse,
+            modifyUser: (user) => ({...user, role: "STUDENT"}),
+        });
+
+        const container = await screen.findByTestId("question-finder-results");
+        expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
+    });
+
+    it('should show results on load when logged in with a single registered context', async () => {
+        await renderQuestionFinderPage({
+            response: () => resultsResponse,
+            modifyUser: (user) => ({...user, role: "STUDENT", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}]}),
+        });
+
+        expect(await findQuestions()).toHaveLength(30);
+    });
+
+    if (isPhy) {
+        it('should show results on load when logged in with multiple registered contexts', async () => {
+            await renderQuestionFinderPage({
+                response: () => resultsResponse,
+                modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}, {"stage": "a_level", "examBoard": "aqa"}]}),
+            });
+            
+            expect(await findQuestions()).toHaveLength(30);
+        });
+    } else {
+        it('should not show results on load when logged in with multiple registered contexts', async () => {
+            await renderQuestionFinderPage({
+                response: () => resultsResponse,
+                modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}, {"stage": "a_level", "examBoard": "aqa"}]}),
+            });
+
+            const container = await screen.findByTestId("question-finder-results");
+            expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
+        });
+    }
+
+    it('should not show results on load when logged in with "ALL" as a registered context', async () => {
+        await renderQuestionFinderPage({
+            response: () => resultsResponse,
+            modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "all"}]}),
+        });
+
+        const container = await screen.findByTestId("question-finder-results");
+        expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
     });
 
     describe('Question shuffling', () => {
@@ -70,12 +114,9 @@ describe("QuestionFinder", () => {
         it('button should shuffle questions', async () => {
             await withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
-                await renderQuestionFinderPage({ response });
+                await renderQuestionFinderPage({ response, queryParams: '?stages=gcse' });
 
-                await toggleFilter(F.GCSE);
-                await expectQuestions(questions.slice(0, 30));
-
-                await clickOn("Shuffle");
+                await clickOn(shuffleButton());
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
         });
@@ -84,9 +125,9 @@ describe("QuestionFinder", () => {
             return withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
 
-                await renderQuestionFinderPage({ response });
-                await toggleFilter(F.GCSE);
-                await clickOn("Shuffle");
+                await renderQuestionFinderPage({ response, queryParams: '?stages=gcse' });
+
+                await clickOn(shuffleButton());
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
         });
@@ -132,16 +173,15 @@ describe("QuestionFinder", () => {
 
                 await renderQuestionFinderPage({ response: ({ randomSeed, startIndex }) => {
                     switch (randomSeed) {
-                        case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;;
+                        case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;
                         case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
                         default: throw new Error('Unexpected seed');
                     }
-                }});
-                await toggleFilter(F.GCSE);
+                }, queryParams: '?stages=gcse' });
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
-                await clickOn("Shuffle");
+                await clickOn(shuffleButton());
                 await expectQuestions(shuffledQuestions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
@@ -361,12 +401,20 @@ describe("QuestionFinder", () => {
                     context: { subject: "physics", stage: ["a_level"] },
                 });
 
+                await waitFor(async () => {
+                    const found = (await findQuestions()).map(getQuestionText);
+                    expect(found.length).toEqual(30);
+                });
+
                 await clickOn("Load more");
 
-                await waitFor(() => expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
-                    tags: "physics",
-                    stages: "a_level,further_a",
-                })));
+                await waitFor(() => {
+                    expect(getQuestionsWithMultipleStages).toHaveBeenCalledTimes(2);
+                    expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
+                        tags: "physics",
+                        stages: "a_level,further_a",
+                    }));
+                });
             });
 
             describe('fields and topics', () => {
@@ -417,13 +465,13 @@ describe("QuestionFinder", () => {
     });
 });
 
-type RenderParameters = {
+interface RenderParameters extends RenderTestEnvironmentOptions {
     response: (options: {
         tags: string | null;
         stages: string | null;
         randomSeed: string | null;
         startIndex: string | null;
-    }) => QuestionFinderResultsResponse;
+    }) => SearchResultsWrapper<ContentSummaryDTO>;
     queryParams?: SearchString;
     context?: NonNullable<PageContextState>;
 };
@@ -432,15 +480,16 @@ const findQuestions = () => screen.findByTestId("question-finder-results").then(
 
 const getQuestionText = (q: HTMLElement) => q.querySelector('.question-link-title > span')?.textContent;
 
-const expectQuestions = (expectedQuestions: IsaacQuestionPageDTO[]) => waitFor(async () => {
+const expectQuestions = (expectedQuestions: ContentSummaryDTO[]) => waitFor(async () => {
     const found = await findQuestions();
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
 }, { timeout: 5000 });
-
-const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
-    expect(found.querySelector('[data-testid="question-finder-results-header"]')?.textContent).toBe(content);
-});
+    
+const expectPageIndicator = async (content: string) => await waitFor(async () => {
+    const results = await screen.findByTestId("question-finder-results");
+    expect(results.querySelector('[data-testid="question-finder-results-header"]')?.textContent).toBe(content);
+}, { timeout: 5000 });
 
 const clearFilterTag = async (tagId: string) => {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
@@ -459,3 +508,5 @@ const queryFilters = () => {
 const isInput = (element: HTMLElement): element is HTMLInputElement => {
     return element.tagName.toLowerCase() === 'input';
 };
+
+const shuffleButton = () => screen.getByRole('button', { name: "Shuffle questions" });

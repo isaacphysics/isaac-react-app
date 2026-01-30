@@ -31,12 +31,13 @@ import {
 import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import {useHistory} from "react-router";
-import { GlossarySidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import {useLocation, useNavigate} from "react-router";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
+import { GlossarySidebar } from "../elements/sidebar/GlossarySidebar";
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -106,7 +107,8 @@ function processQueryString(query: ListParams<FilterParams>, pageContext?: PageC
     const stageItems = stagesByValue(arrayFromPossibleCsv((query.stages ?? []) as string[] | string), stagesOrdered.slice(0,-1));
 
     return {
-        queryStages: stageItems, querySubjects: subjectItems
+        queryStages: stageItems, 
+        querySubjects: subjectItems
     };
 }
 
@@ -146,7 +148,8 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
 
 export const Glossary = () => {
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
     const pageContext = useUrlPageTheme();
     const params = useQueryParams<FilterParams, false>(false);
     
@@ -167,7 +170,7 @@ export const Glossary = () => {
                 gt.value = value.charAt(0).toUpperCase() + value.slice(1);
                 return gt;
             }
-        )
+        ), (l, r) => !!(l && r && l.length === r.length)
     );
 
     const debouncedSearchHandler = useMemo(() =>
@@ -197,7 +200,7 @@ export const Glossary = () => {
             if (filterStages) params.stages = filterStages.join(',');
         }
         if (searchText) params.query = searchText;
-        history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state, hash: history.location.hash});
+        void navigate({...location, search: queryString.stringify(params, {encode: false})}, {state: location.state, replace: true});
     }, [filterSubject, filterStages, searchText, pageContext]);
 
     const searchTextFilteredTerms = useMemo(() => {
@@ -350,11 +353,15 @@ export const Glossary = () => {
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const thenRender = <div className="glossary-page">
+    if (!glossaryTerms) {
+        return <ShowLoading until={glossaryTerms} />;
+    }
+
+    return <div className="glossary-page">
         <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
                 currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
-                icon={{type: "hex", subject: pageContext?.subject, icon: "icon-tests"}}
+                icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
                 intermediateCrumbs={crumb ? [crumb] : []}
             />
             <MetaDescription description={metaDescription} />
@@ -437,6 +444,4 @@ export const Glossary = () => {
             </SidebarLayout>
         </Container>
     </div>;
-
-    return <ShowLoading until={glossaryTerms} thenRender={() => thenRender}/>;
 };

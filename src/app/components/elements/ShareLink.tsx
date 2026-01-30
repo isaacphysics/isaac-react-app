@@ -11,11 +11,12 @@ interface ShareLinkProps {
     clickAwayClose?: boolean; 
     outline?: boolean;
     className?: string;
+    innerClassName?: string;
     size?: "sm" | "md"; // "md" default (as used for PageMetadata buttons); "sm" aligns with regular .btn padding
     buttonProps?: Partial<IconButtonProps>;
 }
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, size, buttonProps}: ShareLinkProps) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, innerClassName, size, buttonProps}: ShareLinkProps) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
@@ -53,7 +54,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? siteSpecific(256, 192) : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
-    return <div ref={shareLinkDivRef} className={classNames(className, "position-relative share-link-icon", {"w-max-content d-inline-flex": isPhy})}>
+    return <div ref={shareLinkDivRef} className={classNames(className, "position-relative", {"w-max-content d-inline-flex": isPhy})}>
         <div className={`action-buttons-popup-container ${showShareLink ? "" : "d-none"} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
             <input type="text" readOnly ref={shareLink} value={shareUrl} onClick={(e) => e.preventDefault()} aria-label="Share URL" />
         </div>
@@ -62,19 +63,15 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
                 Duplicate and edit
             </a>
         </div>}
-        {siteSpecific(
-            <IconButton
-                icon="icon-share"
-                className={classNames("w-max-content h-max-content", {"icon-button-sm": size == "sm"})}
-                affixClassName="icon-color-black-hoverable"
-                aria-label="Share page" 
-                title="Share page"
-                color="tint"
-                data-bs-theme="neutral"
-                onClick={(e) => { e.preventDefault(); toggleShareLink(); }}
-                {...buttonProps}
-            />,
-            <button className={siteSpecific("btn-action", classNames("btn btn-solid", {"outline": outline}))} onClick={(e) => {e.preventDefault(); toggleShareLink();}} aria-label={buttonAriaLabel} />
-        )}
+        <IconButton
+            icon={{name: "icon-share icon-color-black-hoverable", color: outline ? "" : "white"}}
+            className={classNames(innerClassName, "w-max-content h-max-content action-button", {"icon-button-sm": size == "sm"})}
+            aria-label={buttonAriaLabel}
+            title="Share page"
+            color="tint"
+            data-bs-theme="neutral"
+            onClick={(e) => { e.preventDefault(); toggleShareLink(); }}
+            {...buttonProps}
+        />
     </div>;
 };

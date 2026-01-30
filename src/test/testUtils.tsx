@@ -1,4 +1,4 @@
-import {UserRole} from "../IsaacApiTypes";
+import {RegisteredUserDTO, UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
@@ -10,11 +10,10 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {fireEvent, screen, waitFor, within, act} from "@testing-library/react";
+import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
-import { history } from "../app/services";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -28,9 +27,9 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
 };
 
-interface RenderTestEnvironmentOptions {
+export interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
-    modifyUser?: (u: typeof mockUser) => typeof mockUser;
+    modifyUser?: <T extends typeof mockUser | RegisteredUserDTO>(u: T) => T;
     sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
@@ -46,13 +45,10 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
+export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
-    history.replace({ pathname: '/', search: '' });
-    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
-    store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
-    store.dispatch(isaacApi.util.resetApiState());
-    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
+    await setUrl({pathname: "/"});
+    resetStore();
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
@@ -84,7 +80,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
         server.use(...extraEndpoints);
     }
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
-        store.dispatch(requestCurrentUser());
+        await store.dispatch(requestCurrentUser());
     }
     render(<Provider store={store}>
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
@@ -99,6 +95,28 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     </Provider>);
 };
 
+export const renderTestHook = <Result, Props>(
+    render: (initialProps: Props) => Result,
+    { extraEndpoints }: { extraEndpoints?: HttpHandler[] } = {}
+): RenderHookResult<Result, Props> => {
+    resetStore();
+    server.resetHandlers();
+    if (extraEndpoints) {
+        server.use(...extraEndpoints);
+    }
+    
+    return renderHook(render, {
+        wrapper: ({children}) => <Provider store={store}>{children}</Provider>
+    });
+};
+
+export const resetStore = () => {
+    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
+    store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
+    store.dispatch(isaacApi.util.resetApiState());
+    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
+};
+
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
 export const followHeaderNavLink = async (menu: string, linkName: string) => {
     const header = await screen.findByTestId("header");
@@ -106,9 +124,13 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title
-    const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
-    if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
-    const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName});
+    const menuDropdownParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
+    if (!menuDropdownParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
+
+    const link = isPhy
+        ? await within(menuDropdownParent).findByRole("menuitem", {name: linkName})
+        : await within(menuDropdownParent).findByText(new RegExp(linkName, 'g'));
+
     await userEvent.click(link);
 };
 
@@ -154,12 +176,22 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickOn = async (text: string | RegExp, container?: Promise<HTMLElement>) => {
-    const [target] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
+export const clickOn = async (e: string | RegExp | HTMLElement, container?: Promise<HTMLElement>) => {
+    const target = await identify(e, container);
     if (target.hasAttribute('disabled')) {
         throw new Error(`Can't click on disabled button ${target.textContent}`);
     }
     await userEvent.click(target);
+};
+
+const identify = async (e: string | RegExp | HTMLElement, container?: Promise<HTMLElement>): Promise<HTMLElement> => {
+    if (e instanceof HTMLElement) {
+        return e;
+    } else if (container) {
+        return within(await container).getByText(e);
+    } else {
+        return screen.getByText(e);
+    }
 };
 
 export const enterInput = async (placeholder: string, input: string) => {
@@ -170,16 +202,20 @@ export const enterInput = async (placeholder: string, input: string) => {
     await userEvent.type(textBox, input);
 };
 
-export const waitForLoaded = () => waitFor(() => {
-    expect(screen.queryAllByText("Loading...")).toHaveLength(0);
-});
+export const waitForLoaded = async () => {
+    await waitFor(async () => {
+        expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+        expect(screen.queryAllByText("Searching...")).toHaveLength(0);
+        await new Promise(process.nextTick);
+    });
+};
 
 export const expectUrl = (text: string) => waitFor(() => {
-    expect(history.location.pathname).toBe(text);
+    expect(location.pathname).toBe(text);
 });
 
 export const expectUrlParams = (text: SearchString | '') => waitFor(() => {
-    expect(history.location.search).toBe(text);
+    expect(location.search).toBe(text);
 });
 
 export const withSizedWindow = async (width: number, height: number, cb: () => void) => {
@@ -205,14 +241,15 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 
 export type PathString = `/${string}`;
 export type SearchString = `?${string}`;
-export const setUrl = async (location: { pathname: PathString, search?: SearchString}) => {
-    if (location.pathname.includes('?')) {
-        throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
-    }
-    return await act(async () => history.push(location));
+export const setUrl = async (location: Partial<URL>) => {
+    await act(async () => {
+        // push a new state, then go to it
+        history.pushState({}, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);
+        fireEvent(window, new PopStateEvent('popstate'));
+    });
 };
 
-export const goBack = () => history.goBack();
+export const goBack = () => history.back();
 
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {
@@ -252,7 +289,8 @@ export const expectLinkWithEnabledBackwardsNavigation = async (text: string | un
     if (text === undefined) {
         throw new Error("Target text is undefined");
     }
-    await clickOn(text);
+    const container = isPhy ? screen.findByRole("link", { name: text}) : undefined;
+    await clickOn(text, container);
     await expectUrl(targetHref);
     goBack();
     await expectUrl(originalHref);

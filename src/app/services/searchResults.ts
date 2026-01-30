@@ -191,29 +191,29 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         id: "physics",
         title: "Isaac Physics",
         terms: ["physics", "isaac physics", "phy"],
-        summary: "Isaac Physics resources",
         url: "/physics",
+        tags: ["physics"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "maths",
         title: "Isaac Maths",
         terms: ["maths", "isaac maths", "math", "isaac math"],
-        summary: "Isaac Maths resources",
         url: "/maths",
+        tags: ["maths"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "chemistry",
         title: "Isaac Chemistry",
         terms: ["chemistry", "isaac chemistry", "chem"],
-        summary: "Isaac Chemistry resources",
         url: "/chemistry",
+        tags: ["chemistry"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "biology",
         title: "Isaac Biology",
         terms: ["biology", "isaac biology", "bio"],
-        summary: "Isaac Biology resources",
         url: "/biology",
+        tags: ["biology"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "computer_science",
@@ -244,7 +244,7 @@ const subjects = /(physics|maths|chemistry|biology)/;
 const stageAndSubject = new RegExp(`${stages.source} ${subjects.source}|${subjects.source} ${stages.source}`);
 
 export function shortcuts(term: string) {
-    const lterm = term.toLowerCase();
+    const lterm = decodeURIComponent(term).toLowerCase();
     const response = [];
     if (group.test(term)) {
         response.push({
@@ -263,8 +263,8 @@ export function shortcuts(term: string) {
             response.push({
                 id: `${learningStage} ${subject}`,
                 title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]}`,
-                summary: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} resources`,
                 url: `/${subject}/${learningStage}`,
+                tags: [subject],
                 type: SEARCH_RESULT_TYPE.SHORTCUT
             });
         }

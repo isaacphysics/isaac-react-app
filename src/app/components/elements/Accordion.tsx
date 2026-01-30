@@ -1,10 +1,9 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import React, {useEffect, useMemo, useRef} from "react";
+import {useLocation} from "react-router-dom";
 import {
     above,
     ALPHABET,
     audienceStyle,
-    below,
     calculateQuestionSetCompletionState,
     DOCUMENT_TYPE,
     isAda,
@@ -31,8 +30,9 @@ import { Spacer } from "./Spacer";
 import { CompletionState } from "../../../IsaacApiTypes";
 import { StatusDisplay } from "./list-groups/AbstractListViewItem";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
+import { useHistoryState } from "../../state/actions/history";
 
-interface AccordionsProps extends RouteComponentProps {
+interface AccordionsProps {
     id?: string;
     trustedTitle?: string;
     index?: number;
@@ -45,8 +45,9 @@ interface AccordionsProps extends RouteComponentProps {
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
+export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString}: AccordionsProps) => {
     const dispatch = useAppDispatch();
+    const location = useLocation();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const page = useAppSelector(selectors.doc.get);
 
@@ -54,13 +55,22 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     const isReducedMotion = useReducedMotion();
 
-    // Toggle
     const isFirst = index === 0;
     const openFirst = isAda || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
-    const [open, setOpen] = useState(disabled ? false : (startOpen === undefined ? (openFirst && isFirst) : startOpen));
-
+    const [open, setOpen, loadedFromHistory] = useHistoryState<boolean>(
+        `accordion-${id ?? "unknown"}-${index ?? "unknown"}`,
+        disabled 
+            ? false 
+            : startOpen ?? (openFirst && isFirst)
+    );
+    
     // If start open changes we need to update whether or not the accordion section should be open
-    useEffect(() => {if (startOpen !== undefined) {setOpen(startOpen);}}, [setOpen, startOpen]);
+    useEffect(() => {
+        if (startOpen !== undefined && !loadedFromHistory) {
+            setOpen(startOpen);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [startOpen, setOpen]);
 
     // Hash anchoring
     let anchorId: string | null = null;
@@ -72,8 +82,8 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     }
 
     useEffect(() => {
-        if (hash.includes("#")) {
-            const hashAnchor = hash.slice(1);
+        if (location.hash.includes("#")) {
+            const hashAnchor = location.hash.slice(1);
             const element = document.getElementById(hashAnchor);
             if (element) { // exists on page
                 if (hashAnchor === anchorId) {
@@ -84,7 +94,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }
             }
         }
-    }, [hash, anchorId]);
+    }, [location.hash, anchorId, setOpen]);
 
     function getPage() {
         if (page && page != NOT_FOUND) {
@@ -205,7 +215,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
-                    <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
+                    <span id={`disabled-tooltip-${componentId}`} className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                     <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
                         modifiers={[preventOverflow]}>
                         {disabled}
@@ -232,4 +242,4 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             </AccordionSectionContext.Provider>
         </Collapse>
     </div>;
-});
+};

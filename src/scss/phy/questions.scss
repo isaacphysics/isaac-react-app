@@ -66,6 +66,17 @@
   }
 }
 
+.question-tag-indicator {
+    background-color: $color-misc-llm;
+    color: $color-neutral-900;
+    border: 2px solid $color-neutral-900;
+
+    &.small {
+        border: 1px solid $color-neutral-900 !important;
+        font-weight: 600 !important;
+    }
+}
+
 .concept-content-container, .generic-content-container {
   .quick-question {
     .question-content, .content-value, .btn {
@@ -179,4 +190,8 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   > .tabbed-hints, > .question-component > .quick-question:first-child {
     padding: 0;
   }
+}
+
+.coordinate-input-separator, .coordinate-input > span {
+  font-size: 1.2rem;
 }

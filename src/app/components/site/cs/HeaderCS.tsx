@@ -19,6 +19,7 @@ import {
 } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
+import { useNavigate } from "react-router";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -28,6 +29,8 @@ export const HeaderCS = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+    const navigate = useNavigate();
 
     const closeWholeNavbar = () => {
         setIsOpen(false);
@@ -49,7 +52,10 @@ export const HeaderCS = () => {
 
             <MenuOpenContext.Provider value={{menuOpen: isOpen, setMenuOpen: setIsOpen}}>
                 <Collapse className={"search-collapse p-3 p-nav-0 me-nav-2 border-nav-0"} isOpen={isSearchOpen} navbar>
-                    <AdaHeaderSearch className={"ms-nav-2 d-nav-inline-block d-block"} onSearch={closeWholeNavbar} />
+                    <AdaHeaderSearch className={"ms-nav-2 d-nav-inline-block d-block"} onSearch={(s) => {
+                        void navigate(`/search?query=${encodeURIComponent(s)}`);
+                        closeWholeNavbar();
+                    }} clearOnSearch />
                 </Collapse>
                 <Collapse isOpen={isOpen} navbar>
                     <Nav navbar className={"w-100"}>
@@ -72,10 +78,9 @@ export const HeaderCS = () => {
 
                         <NavigationSection title="Teachers">
                             <LinkItem to="/teachers">Ada CS for teachers</LinkItem>
-                            <LinkItem to="/pages/revision_quizzes">Revision quizzes</LinkItem>
                             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             <LinkItem to="/pages/online_courses">Online courses</LinkItem>
-                            <LinkItem to="/pages/teacher_mentoring_2025">Mentoring programme</LinkItem>
+                            <LinkItem to="/teacher_mentoring">Mentoring programme</LinkItem>
                             <LinkItem to="/support/teacher">Support</LinkItem>
                         </NavigationSection>
 

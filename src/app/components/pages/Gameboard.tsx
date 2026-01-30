@@ -8,43 +8,49 @@ import {
     useGetGameboardByIdQuery,
     useGetMyAssignmentsQuery
 } from "../../state";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     convertGameboardItemToContentSummary,
+    getThemeFromTags,
     isAda,
     isDefined,
     isFound,
-    isNotPartiallyLoggedIn,
+    isTeacherPending,
     isPhy,
     isTutorOrAbove,
     PATHS,
     SEARCH_RESULT_TYPE,
     showWildcard,
-    siteSpecific,
+    siteSpecific
 } from "../../services";
-import {Redirect} from "react-router";
+import {Navigate, useLocation} from "react-router";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {GameboardSidebar, MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {PageMetadata} from "../elements/PageMetadata";
 import {ListView} from "../elements/list-groups/ListView";
+import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
+import { SupersededDeprecatedBoardContentWarning } from "../navigation/SupersededDeprecatedWarning";
 
-export const Gameboard = withRouter(({ location }) => {
+export const Gameboard = () => {
     const dispatch = useAppDispatch();
+    const location = useLocation();
     const gameboardId = location.hash ? location.hash.slice(1) : null;
     const gameboardQuery = useGetGameboardByIdQuery(gameboardId || skipToken);
     const { data: gameboard } = gameboardQuery;
     const user = useAppSelector(selectors.user.orNull);
-    const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
+    const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
     const displayQuestions = (gameboard?.wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
+    const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
+    const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -57,7 +63,7 @@ export const Gameboard = withRouter(({ location }) => {
         <TitleAndBreadcrumb
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
             currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
-            icon={{type: "hex", icon: "icon-error"}}
+            icon={{type: "icon", icon: "icon-error"}}
         />
         <h3 className="my-4">
             <small>
@@ -66,8 +72,8 @@ export const Gameboard = withRouter(({ location }) => {
         </h3>
     </>;
     return !gameboardId
-        ? <Redirect to={PATHS.QUESTION_FINDER} />
-        : <Container className="mb-7">
+        ? <Navigate to={PATHS.QUESTION_FINDER} />
+        : <Container className="mb-7" data-bs-theme={singleSubject}>
             <ShowLoadingQuery
                 query={gameboardQuery}
                 defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
@@ -75,15 +81,15 @@ export const Gameboard = withRouter(({ location }) => {
                 thenRender={(gameboard) => {
                     return <>
                         <TitleAndBreadcrumb
-                            currentPageTitle={siteSpecific("Question deck", gameboard && gameboard.title || "Filter Generated Quiz")} icon={{type: "hex", icon: "icon-question-deck"}}
+                            currentPageTitle={gameboard && gameboard.title || siteSpecific("Question deck", "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
                             intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
                         <SidebarLayout>
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
+                                <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                                 <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
-                                {/*  <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> */}
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
@@ -114,4 +120,4 @@ export const Gameboard = withRouter(({ location }) => {
                 }}
             />
         </Container>;
-});
+};

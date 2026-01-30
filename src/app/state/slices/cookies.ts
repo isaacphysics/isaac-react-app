@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 
 export const YOUTUBE_COOKIE = "youtubeCookiesAccepted";
 export const ANVIL_COOKIE = "anvilCookiesAccepted";
+export const DESMOS_COOKIE = "desmosCookiesAccepted";
+export const GEOGEBRA_COOKIE = "geogebraCookiesAccepted";
 
 const isCookieSet = (name: string) => {
     return Cookies.get(name) === "1";
@@ -15,13 +17,20 @@ const setCookie = (name: string) => {
 export type InterstitialCookieState = {
     youtubeCookieAccepted: boolean;
     anvilCookieAccepted: boolean;
+    desmosCookieAccepted: boolean;
+    geogebraCookieAccepted: boolean;
 } | null;
 
 export const interstitialCookieSlice = createSlice({
     name: 'interstitialCookie',
     initialState: null as InterstitialCookieState,
     reducers: {
-        setDefault: () => ({youtubeCookieAccepted: isCookieSet(YOUTUBE_COOKIE), anvilCookieAccepted: isCookieSet(ANVIL_COOKIE)}),
+        setDefault: () => ({
+            youtubeCookieAccepted: isCookieSet(YOUTUBE_COOKIE), 
+            anvilCookieAccepted: isCookieSet(ANVIL_COOKIE), 
+            desmosCookieAccepted: isCookieSet(DESMOS_COOKIE), 
+            geogebraCookieAccepted: isCookieSet(GEOGEBRA_COOKIE)
+        }),
         acceptYoutubeCookies: (state) => {
             if (state) state.youtubeCookieAccepted = true;
             setCookie(YOUTUBE_COOKIE);
@@ -29,6 +38,14 @@ export const interstitialCookieSlice = createSlice({
         acceptAnvilCookies: (state) => {
             if (state) state.anvilCookieAccepted = true;
             setCookie(ANVIL_COOKIE);
+        },
+        acceptDesmosCookies: (state) => {
+            if (state) state.desmosCookieAccepted = true;
+            setCookie(DESMOS_COOKIE);
+        },
+        acceptGeogebraCookies: (state) => {
+            if (state) state.geogebraCookieAccepted = true;
+            setCookie(GEOGEBRA_COOKIE);
         },
     },
 });

@@ -5,8 +5,7 @@ import {MyGameboards} from "../../app/components/pages/MyGameboards";
 
 describe("My Gameboards", () => {
     it('should have no visual regressions in table view', () => {
-        // @ts-ignore
-        cy.mountWithStoreAndRouter(<MyGameboards user={mockUser}/>, [PATHS.MY_GAMEBOARDS]);
+        cy.mountWithStoreAndRouter(<MyGameboards user={mockUser} />, [PATHS.MY_GAMEBOARDS]);
         if (isPhy) cy.openSidebar();
         cy.get('[data-testid="display-select"]').select("Table View");
         if (isPhy) cy.closeSidebar();
@@ -14,8 +13,7 @@ describe("My Gameboards", () => {
         cy.matchImage();
     });
     it('should have no visual regressions in card view', () => {
-        // @ts-ignore
-        cy.mountWithStoreAndRouter(<MyGameboards user={mockUser}/>, [PATHS.MY_GAMEBOARDS]);
+        cy.mountWithStoreAndRouter(<MyGameboards user={mockUser} />, [PATHS.MY_GAMEBOARDS]);
         if (isPhy) cy.openSidebar();
         cy.get('[data-testid="display-select"]').select("Card View");
         cy.get('[data-testid="limit-select"]').select("6");

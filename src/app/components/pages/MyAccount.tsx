@@ -1,20 +1,19 @@
-import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
-import {connect} from "react-redux";
+import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 import classnames from "classnames";
 import classNames from "classnames";
 import {Button, Container, Form, Input, Nav, NavItem, NavLink, TabContent, TabPane,} from "reactstrap";
-import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
+import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
-    AppState,
     closeActiveModal,
     getChosenUserAuthSettings,
     getRTKQueryErrorMessage,
     openActiveModal,
-    resetPassword,
+    selectors,
     showErrorToast,
     useAdminGetUserQuery,
     useAppDispatch,
+    useAppSelector,
     useUpdateCurrentMutation
 } from "../../state";
 import {
@@ -33,7 +32,6 @@ import {
     ACCOUNT_TABS,
     ACCOUNT_TABS_ALIASES,
     allRequiredInformationIsPresent,
-    history,
     ifKeyIsEnter,
     isAda,
     isDefined,
@@ -47,7 +45,7 @@ import {
     validatePassword
 } from "../../services";
 import queryString from "query-string";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useBlocker, useLocation} from "react-router-dom";
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -58,44 +56,17 @@ import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesIn
 import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
-import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
+import {MainContent, SidebarLayout} from '../elements/layout/SidebarLayout';
 import {Loading} from '../handlers/IsaacSpinner';
 import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySettings';
 import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
+import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
-// TODO: work out which of these `any`s can be specified
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const stateToProps = (state: AppState, props: any) => {
-    const {location: {search, hash}} = props;
-    const searchParams = queryString.parse(search);
-    return {
-        userAuthSettings: state?.userAuthSettings ?? null,
-        userPreferences: state?.userPreferences ?? null,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
-        hashAnchor: hash?.slice(1) ?? null,
-        authToken: searchParams?.authToken as string ?? null,
-        userOfInterest: searchParams?.userId as string ?? null
-    };
-};
-
-const dispatchToProps = {
-    resetPassword,
-    getChosenUserAuthSettings,
-};
-
 interface AccountPageProps {
     user: PotentialUser;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
-    getChosenUserAuthSettings: (userid: number) => void;
-    userPreferences: UserPreferencesDTO | null;
-    firstLogin: boolean;
-    hashAnchor: string | null;
-    authToken: string | null;
-    userOfInterest: string | null;
 }
 
 // The order of the first two arguments doesn't matter really, but sticking to it helps with debugging when something
@@ -139,8 +110,16 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
     }));
 };
 
-const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
+export const MyAccount = ({user}: AccountPageProps) => {
     const dispatch = useAppDispatch();
+    const location = useLocation();
+
+    const searchParams = queryString.parse(location.search);
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const userAuthSettings = useAppSelector(selectors.user.authSettings);
+    const hashAnchor = location.hash?.slice(1) ?? null;
+    const authToken = searchParams?.authToken as string ?? null;
+    const userOfInterest = searchParams?.userId as string ?? null;
 
     const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
@@ -155,13 +134,13 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
         if (userOfInterest) {
             getChosenUserAuthSettings(Number(userOfInterest));
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userOfInterest]);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
 
     // - Copy of user to store changes before saving
+    // TODO fix this type! what on earth is it? LoggedInValidationUser & {password: string} & ...?
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [userToUpdate, setUserToUpdate] = useState<any>(
         editingOtherUser && userToEdit ?
@@ -262,11 +241,20 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
     }
 
     const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
+
+    const blocker = useBlocker(
+        useCallback(() => accountInfoChanged && !isFirstLoginInPersistence() && !saving, [accountInfoChanged, saving]),
+    );
+
     useEffect(() => {
-        if (accountInfoChanged && !isFirstLoginInPersistence() && !saving) {
-            return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
+        if (blocker.state === "blocked") {
+            if (window.confirm("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?")) {
+                blocker.proceed?.();
+            } else {
+                blocker.reset?.();
+            }
         }
-    }, [accountInfoChanged, saving]);
+    }, [blocker]);
 
     // Handling teachers changing school
     useEffect(() => {
@@ -334,7 +322,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
     }, [activeTab]);
 
     return <Container id="account-page" className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-account"}} className="mb-3"/>
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
         {isAda && <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 {`Update your Ada Computer Science account, or `}
@@ -452,5 +440,3 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
         </ShowLoading>
     </Container>;
 };
-
-export const MyAccount = withRouter(connect(stateToProps, dispatchToProps)(AccountPageComponent));

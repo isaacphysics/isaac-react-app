@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
+import {unlinkUserFromGameboard, useAppDispatch} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {
     Button,
@@ -26,9 +26,10 @@ import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
-import { MainContent, MyGameboardsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
 import { useHistoryState } from "../../state/actions/history";
+import { MyGameboardsSidebar } from "../elements/sidebar/MyGameboardsSidebar";
 
 export interface GameboardsDisplaySettingsProps {
     boardView: BoardViews,
@@ -115,11 +116,9 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
     </div>;
 };
 
-export const MyGameboards = () => {
+export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
     //Redux state and dispatch
     const dispatch = useAppDispatch();
-    // We know the user is logged in to visit this page
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
     const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
@@ -135,8 +134,7 @@ export const MyGameboards = () => {
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(
-        siteSpecific(BoardViews.card, BoardViews.table),
-        BoardLimit.six
+        siteSpecific(BoardViews.card, BoardViews.table)
     );
 
     function confirmDeleteMultipleBoards() {
@@ -191,7 +189,7 @@ export const MyGameboards = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         <SidebarLayout>
             <MyGameboardsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}

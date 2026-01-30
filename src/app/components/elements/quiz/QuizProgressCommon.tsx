@@ -1,8 +1,8 @@
-import React, {useCallback, useContext, useMemo, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAda, isAuthorisedFullAccess, isPhy, siteSpecific, TODAY} from "../../../services";
-import {Link} from "react-router-dom";
+import {isAda, isAuthorisedFullAccess, isPhy, scrollVerticallyIntoView, siteSpecific, TODAY} from "../../../services";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
@@ -12,10 +12,10 @@ import classNames from "classnames";
 import { Markup } from "../markup";
 
 export const ICON = {
-    correct: <i className="icon-md icon-correct"/>,
-    incorrect: <i className="icon-md icon-incorrect"/>,
-    notAttempted: <i className="icon-md icon-not-attempted"/>,
-    partial: <i className={classNames("icon-md", siteSpecific("icon-in-progress", "icon-partial"))}/>,
+    correct: <i className={classNames("icon-md", siteSpecific("icon-correct", "icon-correctness-correct"))}/>,
+    incorrect: <i className={classNames("icon-md", siteSpecific("icon-incorrect", "icon-correctness-incorrect"))}/>,
+    notAttempted: <i className={classNames("icon-md", siteSpecific("icon-not-attempted", "icon-correctness-not-attempted"))}/>,
+    partial: <i className={classNames("icon-md", siteSpecific("icon-in-progress", "icon-correctness-partial"))}/>,
 };
 
 export const passMark = 0.75;
@@ -151,6 +151,9 @@ export function ResultsTable<Q extends QuestionType>({
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const [dropdownOpen, setDropdownOpen] = useState(progress?.map(() => false));
     const toggle = (index: number) => setDropdownOpen(dropdownOpen?.map((value, i) => i === index ? !value : value));
@@ -158,8 +161,9 @@ export function ResultsTable<Q extends QuestionType>({
     const [returnQuizToStudent, {isLoading: returningQuizToStudent}] = useReturnQuizToStudentMutation();
     const returnToStudent = (userId?: number) => {
         const confirm = () => {
-            returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
+            void returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
                 .then(() => dispatch(closeActiveModal()));
+            void navigate({...location, hash: `${userId}`});
         };
         dispatch(openActiveModal({
             closeAction: () => dispatch(closeActiveModal()),
@@ -180,6 +184,16 @@ export function ResultsTable<Q extends QuestionType>({
 
     const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
+
+    useEffect(() => {
+        // scroll to the student inside the table when the table reloads
+        const resetStudent = location.hash ? document.getElementById(location.hash.substring(1)) : null;
+        if (resetStudent && scrollContainerRef.current && resetStudent?.offsetTop !== undefined) {
+            scrollContainerRef.current.scrollTop = resetStudent.offsetTop - 64; // seems to scroll slightly too far; 64px offset to account
+            scrollVerticallyIntoView(scrollContainerRef.current);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(progress)]);
 
     function toggleSort(itemOrder: ProgressSortOrder) {
         setSortOrder(itemOrder);
@@ -223,9 +237,9 @@ export function ResultsTable<Q extends QuestionType>({
     ), [progress, reverseOrder, sortBySelectedSortOrder, sortOrder]);
 
 
-    const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
+    const tableHeaderFooter = <tr className="fw-bold">
         <SortItemHeader<ProgressSortOrder>
-            className="student-name sticky-left pointer-cursor ps-3 py-3"
+            className="student-name sticky-left ps-3 py-3"
             defaultOrder={"name"}
             reverseOrder={"name"}
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -237,7 +251,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
+                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy, "narrow-header": isAssignment || isAda})}
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -253,7 +267,7 @@ export function ResultsTable<Q extends QuestionType>({
                 )}
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
+                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy, "narrow-header": isAssignment || isAda})}
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -272,7 +286,7 @@ export function ResultsTable<Q extends QuestionType>({
         {isPhy && isAssignment && (
             pageSettings?.attemptedOrCorrect === "CORRECT"
                 ? <SortItemHeader<ProgressSortOrder>
-                    className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalPartPercentage"}
                     reverseOrder={"totalPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -288,7 +302,7 @@ export function ResultsTable<Q extends QuestionType>({
                     )}
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
-                    className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalAttemptedPartPercentage"}
                     reverseOrder={"totalAttemptedPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -312,7 +326,7 @@ export function ResultsTable<Q extends QuestionType>({
                 setOrder={toggleSort}
                 reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(index)}
-                className={classNames("pointer-cursor", {"selected": index === selectedQuestionIndex})}
+                className={classNames({"selected": index === selectedQuestionIndex})}
                 label={`Question ${index + 1}`}
                 key={index}
             >
@@ -349,12 +363,12 @@ export function ResultsTable<Q extends QuestionType>({
 
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 ? <>
-            <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
+            <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})} ref={scrollContainerRef}>
                 <table ref={tableRef} className="progress-table w-100">
-                    <thead className="sticky-top">
+                    <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
-                        {isPhy && selectedQuestionIndex !== undefined && <tr>
-                            <th className="py-2" colSpan={2 + questions.length}>
+                        {isPhy && selectedQuestionIndex !== undefined && <tr className="progress-table-question-header">
+                            <th className="py-2" colSpan={3 + questions.length}>
                                 <div className="progress-table-question-link">
                                     {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
@@ -375,7 +389,7 @@ export function ResultsTable<Q extends QuestionType>({
                         {sortedProgress.map((studentProgress, index) => {
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
                             const internalCellSpacing = isPhy && isAssignment ? "py-1" : "py-3";
-                            return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
+                            return <tr key={studentProgress.user?.id} id={`${studentProgress.user?.id}`} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
                                 <th className={`student-name sticky-left ps-2 ${internalCellSpacing} fw-bold`}>
                                     {fullAccess && pageSettings?.isTeacher ?
                                         (
@@ -553,62 +567,64 @@ export function ResultsTablePartBreakdown({
     return sortedProgress?.length
         ? <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
             <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
-                <thead className="progress-table-header-footer fw-bold">
-                    <SortItemHeader<ProgressSortOrder>
-                        className="student-name sticky-left ps-3 py-3"
-                        defaultOrder={"name"}
-                        reverseOrder={"name"}
-                        currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                        alignment={"start"}
-                    >
-                        Name
-                    </SortItemHeader>
-                    {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
-                        ? <SortItemHeader<ProgressSortOrder>
-                            className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
-                            defaultOrder={"totalQuestionPercentage"}
-                            reverseOrder={"totalQuestionPercentage"}
-                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                            label={"Total correct"}
-                        >
-                            {siteSpecific(
-                                <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
-                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
-                                </div>,
-                                "Correct"
-                            )}
-                        </SortItemHeader>
-                        : <SortItemHeader<ProgressSortOrder>
-                            className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
-                            defaultOrder={"totalAttemptedQuestionPercentage"}
-                            reverseOrder={"totalAttemptedQuestionPercentage"}
-                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                            label={"Total attempted"}
-                        >
-                            {siteSpecific(
-                                <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
-                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
-                                </div>,
-                                "Attempted"
-                            )}
-                        </SortItemHeader>
-                    )}
-                    {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
-                        // <th key={i} className="text-center">
+                <thead className="progress-table-header-footer sticky-top fw-bold">
+                    <tr>
                         <SortItemHeader<ProgressSortOrder>
-                            defaultOrder={i}
-                            reverseOrder={i}
-                            currentOrder={sortOrder}
-                            setOrder={toggleSort}
-                            reversed={reverseOrder}
-                            key={i}
+                            className="student-name sticky-left ps-3 py-3"
+                            defaultOrder={"name"}
+                            reverseOrder={"name"}
+                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                            alignment={"start"}
                         >
-                            Part {i + 1}
+                            Name
                         </SortItemHeader>
-                        // </th>
-                    )}
+                        {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
+                            ? <SortItemHeader<ProgressSortOrder>
+                                className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
+                                defaultOrder={"totalQuestionPercentage"}
+                                reverseOrder={"totalQuestionPercentage"}
+                                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                                label={"Total correct"}
+                            >
+                                {siteSpecific(
+                                    <div className="d-flex flex-column ps-3">
+                                        <span>Parts</span>
+                                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                    </div>,
+                                    "Correct"
+                                )}
+                            </SortItemHeader>
+                            : <SortItemHeader<ProgressSortOrder>
+                                className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
+                                defaultOrder={"totalAttemptedQuestionPercentage"}
+                                reverseOrder={"totalAttemptedQuestionPercentage"}
+                                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                                label={"Total attempted"}
+                            >
+                                {siteSpecific(
+                                    <div className="d-flex flex-column ps-3">
+                                        <span>Parts</span>
+                                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                    </div>,
+                                    "Attempted"
+                                )}
+                            </SortItemHeader>
+                        )}
+                        {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
+                            // <th key={i} className="text-center">
+                            <SortItemHeader<ProgressSortOrder>
+                                defaultOrder={i}
+                                reverseOrder={i}
+                                currentOrder={sortOrder}
+                                setOrder={toggleSort}
+                                reversed={reverseOrder}
+                                key={i}
+                            >
+                                Part {i + 1}
+                            </SortItemHeader>
+                            // </th>
+                        )}
+                    </tr>
                 </thead>
                 <tbody>
                     {sortedProgress.map((studentProgress, studentIndex) => (
@@ -626,7 +642,7 @@ export function ResultsTablePartBreakdown({
 
                             {/* total correct/attempted */}
                             {isPhy && studentProgress.questionPartResults && 
-                                <td className={classNames({"sticky-ca-col": isPhy})}>
+                                <th className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
                                         studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
                                             if (pageSettings?.attemptedOrCorrect === "CORRECT") {
@@ -638,7 +654,7 @@ export function ResultsTablePartBreakdown({
                                         studentProgress.questionPartResults[questionIndex].length,
                                         !!pageSettings?.formatAsPercentage
                                     )}
-                                </td>
+                                </th>
                             }
 
                             {/* main data */}

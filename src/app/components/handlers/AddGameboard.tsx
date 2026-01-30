@@ -1,24 +1,25 @@
 import React, {useEffect} from "react";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {saveGameboard, useAppDispatch} from "../../state";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {IsaacSpinner} from "./IsaacSpinner";
-import {history, siteSpecific} from "../../services";
+import {siteSpecific} from "../../services";
 import {Container} from "reactstrap";
 
 export const AddGameboard = ({user}: {user: PotentialUser}) => {
     const {gameboardId, gameboardTitle} = useParams<{gameboardId: string; gameboardTitle: string}>();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(saveGameboard({
-            boardId: gameboardId,
+        void dispatch(saveGameboard({
+            boardId: gameboardId ?? "",
             user,
             boardTitle: gameboardTitle ? decodeURIComponent(gameboardTitle) : undefined,
             redirectOnSuccess: true
         })).then(action => {
             if (saveGameboard.rejected.match(action)) {
-                history.goBack();
+                void navigate(-1);
             }
         });
     }, [dispatch, saveGameboard, gameboardId]);

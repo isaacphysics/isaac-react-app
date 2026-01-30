@@ -24,8 +24,9 @@ import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 import { StyledCheckbox } from "./inputs/StyledCheckbox";
 import { Markup } from "./markup";
-import { Button } from "reactstrap";
 import { QuestionPropertyTags } from "./ContentPropertyTags";
+import { IconButton } from "./AffixButton";
+import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -84,12 +85,7 @@ const GameboardBuilderRow = (
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
                     {isAda && provided
-                        ? <Button outline className="bin-icon-small d-inline-block outline"
-                            id={`gameboard-builder-include-${question.id}`}
-                            title="Remove question"
-                            aria-label="Remove question"
-                            type="button"
-                            onClick={handleCheckboxChange}/>
+                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={handleCheckboxChange}/>
                         : <StyledCheckbox
                             id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                             aria-label={!isSelected ? "Select question" : "Deselect question"}
@@ -116,10 +112,13 @@ const GameboardBuilderRow = (
                             </button>
                             <Spacer />
                         </div>
-                        <QuestionPropertyTags className="my-1" supersededBy={question.supersededBy} tags={question.tags} />
+                        <QuestionPropertyTags className="my-1" deprecated={question.deprecated} supersededBy={question.supersededBy} tags={question.tags} />
                         {question.subtitle && <>
                             <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
                         </>}
+                        {isAda && question.tags?.includes("cross_topic") && <div className="ms-n1 my-2 mb-lg-0">
+                            <CrossTopicQuestionIndicator small />
+                        </div>}
                         {question.tags?.includes("llm_question_page") && <div className="ms-n1 my-2 mb-lg-0">
                             <LLMFreeTextQuestionIndicator small />
                         </div>}

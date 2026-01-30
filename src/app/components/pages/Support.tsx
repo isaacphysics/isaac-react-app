@@ -1,17 +1,18 @@
 import React from "react";
-import {Col, Container, Row, TabContent, TabPane} from "reactstrap";
-import {Route, withRouter} from "react-router-dom";
+import {Container, TabContent, TabPane} from "reactstrap";
+import {Route} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Redirect, RouteComponentProps} from "react-router";
+import {Navigate, useNavigate, useParams} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, ifKeyIsEnter, isAda, isDefined, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, siteSpecific} from "../../services";
 import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";
-import { FAQSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
+import { FAQSidebar } from "../elements/sidebar/FAQSidebar";
 
 type SupportType = "student" | "teacher" | "tutor";
 
@@ -94,31 +95,34 @@ function supportPath(type?: string, category?: string) {
     return `/support/${type || "student"}/${category || "general"}`;
 }
 
-export const SupportPageComponent = ({match: {params: {type, category}}}: RouteComponentProps<Params>) => {
+export const Support = () => {
+
+    const { type, category } = useParams() as Params;
+    const navigate = useNavigate();
 
     if (type == undefined) {
-        return <Redirect to={supportPath()}/>;
+        return <Navigate to={supportPath()} replace />;
     }
 
     if (category == undefined) {
-        return <Redirect to={supportPath(type)} />;
+        return <Navigate to={supportPath(type)} replace />;
     }
 
     const section = support[type];
 
     if (section == undefined) {
-        return <Route component={NotFound} />;
+        return <Route element={<NotFound />} />;
     }
 
     const categoryNames = Object.keys(section.categories);
     const categoryIndex = siteSpecific(categoryNames.indexOf(category), categoryNames.indexOf(category) + 1);
 
     if (categoryIndex == -1) {
-        return <Route component={NotFound} />;
+        return <Route element={<NotFound />} />;
     }
 
     function activeTabChanged(tabIndex: number) {
-        history.push(supportPath(type, siteSpecific(categoryNames[tabIndex], categoryNames[tabIndex - 1])));
+        void navigate(supportPath(type, siteSpecific(categoryNames[tabIndex], categoryNames[tabIndex - 1])));
     }
 
     const metaDescriptionMap = siteSpecific(
@@ -134,7 +138,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     return <Container>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific(type[0].toUpperCase() + type.slice(1) + " FAQs", section.title)}
-            icon={{type: "hex", icon: "icon-finder"}}
+            icon={{type: "icon", icon: "icon-finder"}}
         />  {/* TODO replace this icon */}
         {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
         <SidebarLayout>
@@ -168,5 +172,3 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         </SidebarLayout>
     </Container>;
 };
-
-export const Support = withRouter(SupportPageComponent);

@@ -17,7 +17,7 @@ import {
     isDefined,
     isFullyDefinedContext,
     isFound,
-    isNotPartiallyLoggedIn,
+    isTeacherPending,
     isPhy,
     isSingleStageContext,
     makeAttemptAtTopicHistory,
@@ -50,7 +50,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {data: currentTopic} = useGetTopicQuery(topic || skipToken);
 
     const user = useAppSelector(selectors.user.orNull);
-    const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
+    const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const pageContext = useAppSelector(selectors.pageContext.context);
 

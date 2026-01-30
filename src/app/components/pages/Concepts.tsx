@@ -1,5 +1,5 @@
 import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Container} from "reactstrap";
 import queryString from "query-string";
@@ -7,7 +7,7 @@ import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWords
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import { ListView } from "../elements/list-groups/ListView";
-import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -16,6 +16,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 import { FilterSummary } from "./QuestionFinder";
+import { GenericConceptsListingSidebar, SubjectSpecificConceptsListingSidebar } from "../elements/sidebar/ConceptsListingSidebar";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -25,8 +26,9 @@ const subjectToTagMap = {
 };
 
 // This component is Isaac Physics only (currently)
-export const Concepts = withRouter((props: RouteComponentProps) => {
-    const {location, history} = props;
+export const Concepts = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
 
@@ -118,7 +120,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         if (e) {
             e.preventDefault();
         }
-        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
+        pushConceptsToHistory(navigate, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
 
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -145,12 +147,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             <TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
-                icon={{type: "hex", icon: "icon-concept"}}
+                icon={{type: "icon", icon: "icon-concept"}}
             />
             <SidebarLayout>
                 {pageContext?.subject 
-                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} hideButton /> 
-                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
+                    ? <SubjectSpecificConceptsListingSidebar {...sidebarProps} hideButton /> 
+                    : <GenericConceptsListingSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
                 }
                 <MainContent>
                     <PageMetadata noTitle showSidebarButton>
@@ -191,4 +193,4 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             </SidebarLayout>
         </Container>
     );
-});
+};

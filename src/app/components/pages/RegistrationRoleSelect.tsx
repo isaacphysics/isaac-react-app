@@ -1,23 +1,25 @@
 import React from "react";
 import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {history, SITE_TITLE} from "../../services";
+import {SITE_TITLE} from "../../services";
+import { useNavigate } from "react-router";
 
 
 export const RegistrationRoleSelect = () => {
+    const navigate = useNavigate();
 
     const teacherSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/teacher/details");
+        void navigate("/register/teacher/details");
     };
 
     const studentSignup = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/student/age");
+        void navigate("/register/student/age");
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <Card className="my-7">
             <CardBody>
                 <h2>Are you a student or a teacher?</h2>

@@ -7,7 +7,8 @@ import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
-import { GenericPageSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 
 export const News = () => {
     const [page, setPage] = React.useState(0);
@@ -32,7 +33,7 @@ export const News = () => {
         "Get all the latest news about Ada Computer Science, and read the stories of recent graduates who now have exciting careers in computer science.");
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("News", "Tips, tools & support")} icon={{type: "hex", icon: "icon-news"}} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("News", "Tips, tools & support")} icon={{type: "icon", icon: "icon-news"}} />
         <MetaDescription description={metaDescription} />
         <SidebarLayout>
             <GenericPageSidebar/>

@@ -11,7 +11,6 @@ import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs, isTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
-import {RouteComponentProps, withRouter} from "react-router-dom";
 import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
@@ -22,6 +21,9 @@ import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
 import InlineContextProvider from "../elements/InlineContextProvider";
+import { useLocation } from "react-router";
+import { DesmosEmbedding } from "./DesmosEmbedding";
+import { GeogebraEmbedding } from "./GeogebraEmbedding";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
@@ -35,14 +37,14 @@ const classBasedLayouts = {
     clearfix: "clearfix w-100"
 };
 
-export interface IsaacContentProps extends RouteComponentProps {
+export interface IsaacContentProps {
     doc: ContentDTO,
     contentIndex?: number
 }
 
-export const IsaacContent = withRouter((props: IsaacContentProps) => {
-    const {doc: {type, layout, encoding, value, children}, match} = props;
-    const keyedProps = {...props, key: props.doc.id};
+export const IsaacContent = (props: IsaacContentProps) => {
+    const {doc: {type, layout, encoding, value, children}} = props;
+    const location = useLocation();
     {/*
         Each IsaacContent is assumed to be independent, not sharing state with any other.
         However, React will reuse components if they are the same type, have the same key (or undefined), and exist in the same place in the DOM.
@@ -58,10 +60,10 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
     let tempSelectedComponent;
     if (isQuestion(props.doc)) {
         // FIXME: Someday someone will remove /quiz/ and this comment too.
-        if (match.path.startsWith("/quiz/") || match.path.startsWith("/test/")) {
-            tempSelectedComponent = <QuizQuestion {...keyedProps} />;
+        if (location.pathname?.startsWith("/quiz/") || location.pathname?.startsWith("/test/")) {
+            tempSelectedComponent = <QuizQuestion {...props} key={props.doc.id} />;
         } else {
-            tempSelectedComponent = <IsaacQuestion {...keyedProps} />;
+            tempSelectedComponent = <IsaacQuestion {...props} key={props.doc.id} />;
         }
 
         if (type === "isaacInlineRegion") {
@@ -71,29 +73,31 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         selectedComponent = <QuestionContext.Provider value={props.doc.id}>{tempSelectedComponent}</QuestionContext.Provider>;
     } else {
         switch (type) {
-            case "figure": selectedComponent = <IsaacFigure {...keyedProps} />; break;
-            case "image": selectedComponent = <IsaacImage {...keyedProps} />; break;
-            case "video": selectedComponent = <IsaacVideo {...keyedProps} />; break;
+            case "figure": selectedComponent = <IsaacFigure {...props} key={props.doc.id} />; break;
+            case "image": selectedComponent = <IsaacImage {...props} key={props.doc.id} />; break;
+            case "video": selectedComponent = <IsaacVideo {...props} key={props.doc.id} />; break;
             // IsaacCodeSnippet is lazy loaded, so wrap it in Suspense to prevent reload errors
-            case "codeSnippet": selectedComponent = <Suspense fallback={<div>Loading...</div>}> <IsaacCodeSnippet {...keyedProps} /> </Suspense>; break;
-            case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...keyedProps} />; break;
-            case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...keyedProps} />; break;
-            case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...keyedProps} />; break;
-            case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...keyedProps} />; break;
-            case "anvilApp": selectedComponent = <AnvilApp {...keyedProps} />; break;
-            case "isaacCard": selectedComponent = <IsaacCard {...keyedProps} />; break;
-            case "isaacCardDeck": selectedComponent = <IsaacCardDeck {...keyedProps} />; break;
-            case "codeTabs": selectedComponent = <IsaacCodeTabs {...keyedProps} />; break;
+            case "codeSnippet": selectedComponent = <Suspense fallback={<div>Loading...</div>}> <IsaacCodeSnippet {...props} key={props.doc.id} /> </Suspense>; break;
+            case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...props} key={props.doc.id} />; break;
+            case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} key={props.doc.id} />; break;
+            case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} key={props.doc.id} />; break;
+            case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} key={props.doc.id} />; break;
+            case "anvilApp": selectedComponent = <AnvilApp {...props} key={props.doc.id} />; break;
+            case "desmosEmbedding": selectedComponent = <DesmosEmbedding {...props} key={props.doc.id} />; break;
+            case "geogebraEmbedding": selectedComponent = <GeogebraEmbedding {...props} key={props.doc.id} />; break;
+            case "isaacCard": selectedComponent = <IsaacCard {...props} key={props.doc.id} />; break;
+            case "isaacCardDeck": selectedComponent = <IsaacCardDeck {...props} key={props.doc.id} />; break;
+            case "codeTabs": selectedComponent = <IsaacCodeTabs {...props} key={props.doc.id} />; break;
             default:
                 switch (layout) {
-                    case "tabs": selectedComponent = <IsaacTabs {...keyedProps} />; break;
-                    case isTabs(layout): selectedComponent = <IsaacTabs {...keyedProps} style={layout?.split('/')[1]} />; break;
-                    case "callout": selectedComponent = <IsaacCallout {...keyedProps} />; break;
-                    case "accordion": selectedComponent = <IsaacAccordion {...keyedProps} />; break;
-                    case "horizontal": selectedComponent = <IsaacHorizontal {...keyedProps} />; break;
+                    case "tabs": selectedComponent = <IsaacTabs {...props} key={props.doc.id} />; break;
+                    case isTabs(layout): selectedComponent = <IsaacTabs {...props} key={props.doc.id} style={layout?.split('/')[1]} />; break;
+                    case "callout": selectedComponent = <IsaacCallout {...props} key={props.doc.id} />; break;
+                    case "accordion": selectedComponent = <IsaacAccordion {...props} key={props.doc.id} />; break;
+                    case "horizontal": selectedComponent = <IsaacHorizontal {...props} key={props.doc.id} />; break;
                     case "clearfix": selectedComponent = <>&nbsp;</>; break;
                     default: selectedComponent =
-                        <IsaacContentValueOrChildren encoding={encoding} value={value}>
+                        <IsaacContentValueOrChildren encoding={encoding} value={value} key={props.doc.id} >
                             {children}
                         </IsaacContentValueOrChildren>;
                 }
@@ -108,4 +112,4 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
     } else {
         return selectedComponent;
     }
-});
+};

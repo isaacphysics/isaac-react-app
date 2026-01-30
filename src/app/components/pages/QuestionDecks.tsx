@@ -1,16 +1,16 @@
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { PageFragment } from "../elements/PageFragment";
 import { Loading } from "../handlers/IsaacSpinner";
 import { PageContextState } from "../../../IsaacAppTypes";
-import { MainContent, QuestionDecksSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ArrayElement, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
+import { QuestionDecksSidebar } from "../elements/sidebar/QuestionDecksSidebar";
 
-export const QuestionDecks = withRouter((props: RouteComponentProps) => {
+export const QuestionDecks = () => {
     const pageContext = useUrlPageTheme();
 
     const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
@@ -32,7 +32,7 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
         <TitleAndBreadcrumb
             currentPageTitle="Question decks by topic"
             icon={pageContext?.subject ? {
-                type: "hex",
+                type: "icon",
                 subject: pageContext.subject,
                 icon: "icon-finder"
             } : undefined}
@@ -45,4 +45,4 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
             </MainContent>
         </SidebarLayout>
     </Container>;
-});
+};

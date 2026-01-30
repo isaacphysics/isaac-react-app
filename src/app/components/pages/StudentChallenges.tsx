@@ -26,7 +26,7 @@ export const StudentChallenges = () => {
                             <IconCard
                                 card={{
                                     title: "The next challenge",
-                                    icon: {src: "/assets/cs/icons/event.svg"},
+                                    icon: {name: "icon-events", color: "tertiary"},
                                     bodyText: "There are no challenges running at the moment, but you're subscribed to " +
                                         "our mailing list and will be the first to know about the next one!",
                                 }}
@@ -36,7 +36,7 @@ export const StudentChallenges = () => {
                             <IconCard
                                 card={{
                                     title: "The next challenge",
-                                    icon: {src: "/assets/cs/icons/event.svg"},
+                                    icon: {name: "icon-events", color: "tertiary"},
                                     bodyText: "There are no challenges running at the moment. Update your communication" +
                                         " preferences to be the first to know about the next challenge.",
                                     clickUrl: "/account#notifications",

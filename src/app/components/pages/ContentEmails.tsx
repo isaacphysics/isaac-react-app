@@ -1,25 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {useSendProvidedEmailWithUserIdsMutation} from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import classnames from "classnames";
 import debounce from 'lodash/debounce';
 import {convert} from 'html-to-text';
 import {siteSpecific} from "../../services";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";
 import { Container, Card, CardTitle, CardBody, Label, Input, Button } from 'reactstrap';
-
-interface ContentEmailsProps {
-    location: {
-        state?: {
-            csvIDs?: number[];
-        };
-    };
-}
+import { useLocation } from 'react-router';
 
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
-const ContentEmails = (props: ContentEmailsProps) => {
-    const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
+const ContentEmails = () => {
+    const location = useLocation();
+    const [csvIDs, setCSVIDs] = useState(location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [emailSent, setEmailSent] = useState(false);
     const [emailSubject, setEmailSubject] = useState("");
@@ -50,7 +43,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
     const [sendProvidedEmailWithUserIds] = useSendProvidedEmailWithUserIdsMutation();
 
     return <Container id="admin-emails-page">
-        <TitleAndBreadcrumb currentPageTitle="Content email sending" icon={{type: "hex", icon: "icon-mail"}} />
+        <TitleAndBreadcrumb currentPageTitle="Content email sending" icon={{type: "icon", icon: "icon-mail"}} />
 
         <Card className="p-3 my-3">
             <CardTitle tag="h2">User selection</CardTitle>
@@ -162,7 +155,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
-                                        sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
+                                        void sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
                                     }
                                 }}
                             >Send emails</Button>

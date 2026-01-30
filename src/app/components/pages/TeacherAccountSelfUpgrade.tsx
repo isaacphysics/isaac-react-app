@@ -11,7 +11,7 @@ import {
     useRequestEmailVerificationMutation,
     useUpgradeToTeacherAccountMutation
 } from "../../state";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../elements/modals/AdaTeacherOnboardingModal";
 
 
@@ -21,7 +21,7 @@ export const TeacherAccountSelfUpgrade = () => {
     const [emailVerified] = useState(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     
     const requestVerificationEmail = () => {
@@ -36,7 +36,7 @@ export const TeacherAccountSelfUpgrade = () => {
         if (mutationSucceeded(response)) {
             await dispatch(requestCurrentUser()); // Refresh user details locally
             scheduleTeacherOnboardingModalForNextOverviewVisit();
-            history.push("/dashboard");
+            void navigate("/dashboard");
         }
     };
 

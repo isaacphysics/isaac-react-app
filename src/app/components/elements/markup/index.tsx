@@ -1,6 +1,6 @@
 import React from "react";
 import {useRenderKatex} from "./latexRendering";
-import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones, renderInlineQuestionPartZones} from "./markdownRendering";
+import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones, renderInlineQuestionPartZones, renderDndDropZones} from "./markdownRendering";
 // @ts-ignore
 import {utils} from "remarkable";
 import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
@@ -34,7 +34,8 @@ const TrustedMarkdown = ({markdown, className}: {markdown: string, renderParagra
 
     // This combines all of the above functions for markdown processing.
     const html = compose<string>(
-        renderClozeDropZones,              // ^
+        renderDndDropZones,                // ^
+        renderClozeDropZones,              // |
         renderInlineQuestionPartZones,     // |
         renderKatex,                       // |
         renderRemarkableMarkdown,          // | Remarkable markdown renderer, processes standard markdown syntax

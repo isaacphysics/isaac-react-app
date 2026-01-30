@@ -55,12 +55,12 @@ const CSTable = (props: GameboardsTableProps) => {
         boardOrder, setBoardOrder
     } = props;
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <SortItemHeader<AssignmentBoardOrder> colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             {siteSpecific("Question deck name", "Quiz name")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
-            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            Stages and Difficulties <i id={`difficulties-help`} className={classNames("icon icon-info icon-inline mx-1", siteSpecific("icon-color-grey", "icon-color-black"))} />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
@@ -102,7 +102,7 @@ const CSTable = (props: GameboardsTableProps) => {
     return <div className={siteSpecific("", "mb-7")}>
         <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
             <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})}>
-                <thead>
+                <thead className="my-gameboard-table-header">
                     {tableHeader}
                 </thead>
                 <tbody>

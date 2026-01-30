@@ -1,137 +1,191 @@
 @import "../common/icons";
 
-.has-tip {
-  cursor: help;
-}
-
-.icon-help {
-  display: inline-block;
-  cursor: help;
-  overflow: hidden;
-  width: 1.25rem;
-  height: 1.25rem;
-  background: url(/assets/common/icons/info.svg) no-repeat;
-  margin-bottom: -4px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.icon-help-q {
-  display: inline-block;
-  cursor: help;
-  overflow: hidden;
-  width: 1.5rem;
-  height: 1.5rem;
-  background: url(/assets/cs/icons/help.svg) no-repeat;
-  margin-right: 10px;
-}
-.icon-error {
-  display: inline-block;
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  background: url(/assets/cs/icons/error.svg) no-repeat;
-  margin-bottom: -6px;
-}
-.icon-person-active {
-  display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
-  background: url(/assets/cs/icons/person-pink.svg) no-repeat;
-  margin-bottom: -4px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-.icon-person-white {
-  display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
-  background: url(/assets/cs/icons/person-white.svg) no-repeat;
-  margin-bottom: -4px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-// TODO: fix instances of this
-// .icon-group {
-//   display: inline-block;
-//   overflow: hidden;
-//   width: 1.5rem;
-//   height: 1.25rem;
-//   background: url(/assets/cs/icons/group.svg) no-repeat;
-//   margin-left: 10px;
-//   margin-right: 10px;
-// }
-.icon-group-white {
-  display: inline-block;
-  overflow: hidden;
-  width: 1.5rem;
-  min-width: 1.5rem;
-  height: 1.25rem;
-  background: url(/assets/cs/icons/group-white.svg) no-repeat;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-.icon-group-table-person {
-  display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
-  background: url(/assets/cs/icons/person.svg) no-repeat;
-  background-size: contain;
-  margin-right: 10px;
-}
-.icon-lock {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  background: url(/assets/cs/icons/lock.svg) no-repeat;
-  margin-bottom: -4px;
-}
-.icon-feedback-tick {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background: url(/assets/cs/icons/tick-rp-green.svg) no-repeat;
-  margin-bottom: -5px;
-}
-.icon-feedback-sent-tick {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  background: url(/assets/cs/icons/feedback-sent-tick.svg) no-repeat;
-  margin-bottom: -7px;  
-}
-.icon-status {
-  width: 30px;
+// icon-lg is 60px on Sci, but we want a smaller size for CS to fit its ALVI size constraints
+.icon-lg {
+  --icon-size: 32px;
+  --mask-size: 100%;
 }
 
 // This class is used in a number of non-icon-related places on both sites
 .bg-grey, .bg-inline-question {
   background: $cs-silver;
 }
+
+.has-tip {
+  cursor: help;
+}
+
+.icon-status {
+  width: 30px;
+}
+
+.icon-error {
+  @include svg-icon-raw('/assets/cs/icons/error.svg', 24px, 24px);
+  margin-bottom: -6px;
+}
+
+.icon-group-table-person {
+  @include svg-icon('/assets/cs/icons/person.svg', 1.25rem, 1.25rem);
+  margin-right: 10px;
+}
+
+.icon-person-active {
+  @include svg-color(url('/assets/cs/icons/person.svg'), $dark-pink-300, 1.25rem, 1.25rem);
+}
+
+.icon-feedback-tick {
+  @include svg-icon-raw('/assets/cs/icons/tick-rp-green.svg', 20px, 20px);
+  margin-bottom: -5px;
+}
+
+.icon-feedback-sent-tick {
+  @include svg-icon-raw('/assets/cs/icons/feedback-sent-tick.svg', 24px, 24px);
+  margin-bottom: -7px; 
+}
+
+.icon-share {
+  @include svg-icon('/assets/cs/icons/share.svg', 20px, 20px, 100%);
+  margin-left: -1px;
+}
+
+.icon-print {
+  @include svg-icon('/assets/cs/icons/print.svg', 20px, 20px, 100%);
+}
+
+.icon-flag {
+  @include svg-icon('/assets/cs/icons/flag.svg', 18px, 18px, 100%);
+}
+
+.icon-external-link {
+  @include svg-color(url('/assets/cs/icons/external-link.svg'), $white, 18px, 18px, cover);
+}
+
+.icon-undo {
+  @include svg-icon('/assets/cs/icons/undo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-redo {
+  @include svg-icon('/assets/cs/icons/redo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-add-circle {
+  @include svg-icon('/assets/cs/icons/add-circle.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-bin {
+  @include svg-icon('/assets/cs/icons/bin.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-lock {
+  @include svg-icon('/assets/cs/icons/lock.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-help {
+  @include svg-icon('/assets/cs/icons/help.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-person-check {
+  @include svg-icon('/assets/cs/icons/person_check.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-search {
+  @include svg-icon('/assets/cs/icons/search.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-group {
   @include svg-icon('/assets/cs/icons/group.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-correct {
-  @include svg-icon-raw('/assets/common/icons/correctness-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-mail {
+  @include svg-icon('/assets/cs/icons/mail.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-incorrect {
-  @include svg-icon-raw('/assets/common/icons/correctness-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-done-all {
+  @include svg-icon('/assets/cs/icons/done_all.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-partial {
-  @include svg-icon-raw('/assets/common/icons/correctness-partial.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-settings {
+   @include svg-icon('/assets/cs/icons/settings.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-not-attempted {
-  @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-tune {
+  @include svg-icon('/assets/cs/icons/tune.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-location-on {
+  @include svg-icon('/assets/cs/icons/location-on.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-globe {
+  @include svg-icon('/assets/cs/icons/globe.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-tick {
   @include svg-icon('/assets/cs/icons/feedback-sent-tick.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-cross-topic {
+  @include svg-icon('/assets/cs/icons/cross-topic.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// AbstractListViewItem icons
+.icon-events {
+  @include svg-icon('/assets/cs/icons/event.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-concept {
+  @include svg-icon('/assets/cs/icons/lightbulb.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+.icon-lightbulb-empty {
+  @include svg-icon('/assets/cs/icons/lightbulb-empty.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-info {
+  @include svg-icon('/assets/cs/icons/info-empty.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+.icon-info-filled {
+  @include svg-icon('/assets/cs/icons/info-filled.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-topic {
+  @include svg-icon('/assets/cs/icons/topic.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// Correctness status icons (for markbook)
+.icon-correctness-correct {
+  @include svg-icon-raw('/assets/common/icons/correctness-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-correctness-incorrect {
+  @include svg-icon-raw('/assets/common/icons/correctness-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-correctness-partial {
+  @include svg-icon-raw('/assets/common/icons/correctness-partial.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-correctness-not-attempted {
+  @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// Status icons (for questions)
+.icon-correct {
+  @include svg-icon-raw('/assets/cs/icons/status-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-incorrect {
+  @include svg-icon-raw('/assets/cs/icons/status-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-in-progress {
+  @include svg-icon-raw('/assets/cs/icons/status-in-progress.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-not-started {
+  @include svg-icon-raw('/assets/cs/icons/status-not-started.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// Icon color overrides
 i.icon.icon-color-black {
   @include icon-color-override($cs-jet);
 }
@@ -143,3 +197,12 @@ i.icon.icon-color-muted {
 i.icon.icon-color-white {
   @include icon-color-override($cs-cultured);
 }
+
+i.icon.icon-color-cyan {
+  @include icon-color-override($cyan-100);
+}
+
+i.icon.icon-color-pink {
+  @include icon-color-override($dark-pink-300);
+}
+

@@ -53,7 +53,7 @@ import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppType
 import {BoardCard} from "../elements/cards/BoardCard";
 import {RenderNothing} from "../elements/RenderNothing";
 import {SortItemHeader} from "../elements/SortableItemHeader";
-import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
@@ -61,6 +61,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
 import { useHistoryState } from "../../state/actions/history";
+import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -96,7 +97,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())));
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
@@ -106,7 +107,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
                 Stages and Difficulties
-                <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2"/>
+                <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
@@ -124,8 +125,8 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
             <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
-                <Table className="mb-0">
-                    <thead>
+                <Table className="mb-0 my-gameboard-table">
+                    <thead className="my-gameboard-table-header">
                         {tableHeader}
                     </thead>
                     <tbody>
@@ -155,15 +156,15 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         groupsByGameboard, openAssignModal
     } = props;
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th>Groups</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
-            setOrder={setBoardOrder}>
+            setOrder={setBoardOrder} alignment="start">
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1"/>
+            Stages and Difficulties <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
@@ -209,7 +210,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </Row>
         <HorizontalScroller enabled={boards ? boards.boards.length > 6 : false}>
             <Table className="mt-3 my-gameboard-table">
-                <thead>
+                <thead className="my-gameboard-table-header">
                     {tableHeader}
                 </thead>
                 <tbody>
@@ -295,8 +296,9 @@ export const SetAssignments = () => {
         boardOrder, setBoardOrder,
         boardView, setBoardView,
         boardLimit, setBoardLimit,
-        boardTitleFilter, setBoardTitleFilter
-    } = useGameboards(isAda && above["lg"](deviceSize) ? BoardViews.table : BoardViews.card, BoardLimit.six);
+        boardTitleFilter, setBoardTitleFilter,
+        haveAllBoards
+    } = useGameboards(isAda && above["lg"](deviceSize) ? BoardViews.table : BoardViews.card);
 
     const isGroupsEmptyState = groups && groups.length === 0;
     const isBoardsEmptyState = boards && boards.boards?.length === 0;
@@ -373,9 +375,11 @@ export const SetAssignments = () => {
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))),
     [boards, user, boardTitleFilter, boardCreator, boardSubject]);
 
+    const sortDisabled = !haveAllBoards;
+
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
-            icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
+            icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
         />
         <SidebarLayout>
             <SetAssignmentsSidebar
@@ -385,8 +389,7 @@ export const SetAssignments = () => {
                 sortOrder={boardOrder} setSortOrder={setBoardOrder}
                 boardSubject={boardSubject} setBoardSubject={setBoardSubject}
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
-                sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
-                forceAllBoards={forceAllBoards}
+                sortDisabled={sortDisabled} forceAllBoards={forceAllBoards}
                 hideButton
             />
             <MainContent>
@@ -422,7 +425,7 @@ export const SetAssignments = () => {
                         <PromptBanner
                             card={{
                                 title: "You need a student group before you can assign a quiz to students.",
-                                icon: {src: "/assets/cs/icons/group.svg"},
+                                icon: "icon-group",
                                 bodyText: "",
                                 color: "yellow",
                                 buttons: {
@@ -478,11 +481,22 @@ export const SetAssignments = () => {
                                 </Col>
                                 <Col xs={6} lg={4}>
                                     <Label className="w-100">
-                                        Sort by <Input type="select" value={boardOrder}
-                                            onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
-                                            {Object.values(AssignmentBoardOrder).map(order => <option key={order}
-                                                value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
-                                        </Input>
+                                        Sort by 
+                                        <div className="d-flex gap-2 align-items-center">
+                                            <Input type="select" value={boardOrder} disabled={sortDisabled}
+                                                onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}
+                                            >
+                                                {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>
+                                                    {BOARD_ORDER_NAMES[order]}
+                                                </option>)}
+                                            </Input>
+                                            {sortDisabled && <>
+                                                <i id="sortHelpTooltip" className="icon icon-info icon-color-grey ms-2"/>
+                                                <UncontrolledTooltip placement="auto" autohide target="sortHelpTooltip">
+                                                    Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.
+                                                </UncontrolledTooltip>
+                                            </>}
+                                        </div>
                                     </Label>
                                 </Col>
                             </>}
