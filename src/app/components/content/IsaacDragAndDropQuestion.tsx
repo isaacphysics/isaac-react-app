@@ -1,16 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
-    ItemValidationResponseDTO,
     ContentDTO,
-    IsaacClozeQuestionDTO,
-    ItemChoiceDTO,
-    ItemDTO
+    ItemDTO,
+    DndChoiceDTO,
+    IsaacDragAndDropQuestionDTO,
+    DndValidationResponseDTO,
+    DndItemDTO
 } from "../../../IsaacApiTypes";
 import {
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
-    NULL_CLOZE_ITEM,
     NULL_CLOZE_ITEM_ID,
     below,
     isDefined,
@@ -48,7 +48,8 @@ const isDropZone = (item: {id: UniqueIdentifier} | null) => item?.id === CLOZE_I
 
 const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ReplaceableItem> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}|${uuid_v4()}`}) : undefined;
 const augmentNonSelectedItemWithReplacementID = (item: Immutable<ReplaceableItem>) => ({...item, replacementId: item.id});
-const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ItemDTO> | undefined)[]}) => (i: Immutable<ReplaceableItem> | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
+const augmentInlineItemWithDropZoneId = (idv: Immutable<ReplaceableItem> | undefined, dropZoneId: string) => isDefined(idv) ? ({...idv, type: "dndItem", dropZoneId}) : undefined;
+const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ReplaceableItem> | undefined)[]}) => (i: Immutable<ReplaceableItem> | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
 
 const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
 
@@ -132,10 +133,26 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
     }, [active]);
 };
 
-const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ItemValidationResponseDTO>) => {
+const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacDragAndDropQuestionDTO, DndValidationResponseDTO>) => {
     const deviceSize = useDeviceSize();
-    const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
+    const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<DndChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
+
+    const convertCurrentAttemptToMap = (attempt: (Immutable<DndItemDTO> | undefined)[]): Record<string, Immutable<ReplaceableItem>> => {
+        return attempt.reduce((map, item) => {
+            if (item && item.dropZoneId) {
+                map[item.dropZoneId] = item;
+            }
+            return map;
+        }, {} as Record<string, Immutable<ReplaceableItem>>);
+    };
+
+    const convertMapToCurrentAttempt = (map: Record<string, Immutable<ReplaceableItem> | undefined>): Immutable<DndItemDTO[]> => {
+        return Object.entries(map)
+            .map(([dropZoneId, item]) => augmentInlineItemWithDropZoneId(item, dropZoneId))
+            .filter(isDefined)
+            .map(({replacementId: _, ...item}) => item);
+    };
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -144,25 +161,25 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     const allItems = doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : [];
 
-    const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
+    const registeredDropRegionIDs = useRef<Map<string, string>>(new Map()).current;
 
-    const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ReplaceableItem> | undefined)[]>(() => currentAttempt?.items || []);
+    const [inlineDropValues, setInlineDropValues] = useState<Record<string, Immutable<ReplaceableItem> | undefined>>(() => currentAttempt?.items || {});
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const inlineDropValueMap = useMemo<{[p: string]: ReplaceableItem}>(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
     // Compute map used to highlight each inline drop-zone with whether it is correct or not
-    const itemsCorrect = validationResponse?.itemsCorrect;
+    const dropZonesCorrect = validationResponse?.dropZonesCorrect;
     const [dropZoneValidationMap, setDropZoneValidationMap] = useState<{[p: string]: {correct?: boolean, itemId?: string} | undefined}>({});
     useEffect(() => {
-        if (isDefined(itemsCorrect)) {
+        if (isDefined(dropZonesCorrect)) {
             // Tag each drop-zone validation with the id of the item currently in that zone. This means that we can
             // conditionally show the validation based on whether it still applies to whatever item is in that
             // drop-zone.
-            setDropZoneValidationMap(Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: {correct: itemsCorrect.at(i), itemId: inlineDropValueMap[dropId]?.id}}), {}));
+            setDropZoneValidationMap(Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: {correct: dropZonesCorrect[i], itemId: inlineDropValueMap[dropId]?.id}}), {}));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [itemsCorrect, inlineDropValueMap]);
+    }, [dropZonesCorrect, inlineDropValueMap]);
 
     // Manual management of which draggable item gets focus at the end of the drag. The new focus id is set in onDragEnd,
     // causing shouldGetFocus to be updated. shouldGetFocus is passed via the ClozeDropRegionContext to all draggable
@@ -191,7 +208,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     useEffect(function updateStateOnCurrentAttemptChange() {
         if (currentAttempt?.items) {
-            setInlineDropValues(currentAttempt.items.map(augmentInlineItemWithUniqueReplacementID));
+            setInlineDropValues(convertCurrentAttemptToMap(currentAttempt.items.map(augmentInlineItemWithUniqueReplacementID)));
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
             if (!withReplacement) {
@@ -204,7 +221,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     // this component, the inline drop values and non-selected items don't get updated. It's reasonable to assume that
     // if the doc ever updates in a context other than this issue, reinitialising these values would be a valid behaviour.
     useEffect(function updateStateOnDocChange() {
-        setInlineDropValues((currentAttempt?.items ?? []).map(augmentInlineItemWithUniqueReplacementID));
+        setInlineDropValues(convertCurrentAttemptToMap((currentAttempt?.items ?? []).map(augmentInlineItemWithUniqueReplacementID)));
         if (currentAttempt && !withReplacement) {
             setNonSelectedItems(doc.items ? [...doc.items].filter(itemNotNullAndNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) : []);
         } else {
@@ -214,12 +231,12 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [doc]);
 
-    const findItemById = (id: string) => nonSelectedItems.find(i => i.replacementId === id) ?? inlineDropValues.find(i => i && i.replacementId === id);
+    const findItemById = (id: string) => nonSelectedItems.find(i => i.replacementId === id) ?? Object.values(inlineDropValues).find(i => i && i.replacementId === id);
 
     const [usingKeyboard, setUsingKeyboard] = useState<boolean>(false);
 
     // Which item is being dragged currently, if any
-    const [activeItem, setActiveItem] = useState<Immutable<ReplaceableItem> | undefined>();
+    const [activeItem, setActiveItem] = useState<Immutable<DndItemDTO> | undefined>();
     const startItemDrag = (event: DragStartEvent) => {
         setActiveItem(findItemById(event.active.id as string));
     };
@@ -230,26 +247,19 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     useAutoScroll({active: isDefined(activeItem) && !usingKeyboard, acceleration: 5, interval: 5});
 
-    const registerInlineDropRegion = useCallback((dropRegionId: string, index: number) => {
-        if (!registeredDropRegionIDs.has(dropRegionId)) {
-            registeredDropRegionIDs.set(dropRegionId, index);
-            setInlineDropValues(idvs => [...idvs]); // This is messy, but it makes sure that the inlineDropValueMap is recomputed
+    const registerInlineDropRegion = useCallback((divId: string, zoneId: string) => {
+        if (!registeredDropRegionIDs.has(divId)) {
+            registeredDropRegionIDs.set(divId, zoneId);
+            setInlineDropValues(idvs => ({...idvs})); // This is messy, but it makes sure that the inlineDropValueMap is recomputed
         }
     }, [registeredDropRegionIDs, setInlineDropValues]);
 
-    const updateAttempt = (idvs: (Immutable<ReplaceableItem> | undefined)[]) => {
-        // Update attempt since an inline drop zone changed
-        const itemChoice: ItemChoiceDTO = {
-            type: "itemChoice",
-            items: Array(registeredDropRegionIDs.size).fill(null).map((_, i) => {
-                const item = idvs[i];
-                // If no item, return a "null item" to indicate a hole in the answer
-                if (!item) return NULL_CLOZE_ITEM;
-                const {replacementId: _replacementId, ...itemDto} = item;
-                return itemDto as ItemDTO;
-            })
+    const updateAttempt = (idvs: Record<string, Immutable<ReplaceableItem> | undefined>) => {
+        const dndChoice: DndChoiceDTO = {
+            type: "dndChoice",
+            items: idvs ? convertMapToCurrentAttempt(idvs) as DndItemDTO[] : [],
         };
-        dispatchSetCurrentAttempt(itemChoice);
+        dispatchSetCurrentAttempt(dndChoice);
     };
 
     // Run after a drag action ends
@@ -266,7 +276,16 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         const inlineDropIndex = (id : string) => registeredDropRegionIDs.get(id);
 
         let nsis = [...nonSelectedItems];
-        let idvs = [...inlineDropValues];
+        const idvs = ({...inlineDropValues});
+        // let idvs = inlineDropValues
+        // .reduce((acc, item, index) => {
+        //     if (isDndItem(item)) {
+        //         acc[item.dropZoneId ?? "unknown"] = item;
+        //     } else {
+        //         acc[index] = item;
+        //     }
+        //     return acc;
+        // }, {} as Record<string, Immutable<DndItemDTO> | undefined>);
 
         // The item that's being dragged, can be found immediately because replacement id is unique
         const item = findItemById(active.id as string);
@@ -288,9 +307,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 nsis = arraySwap(nsis, fromIndex, toIndex);
             } else {
                 // Take item from item section, considering duplication, and place into inline drop-zone
-                const toIndex = inlineDropIndex(over.id as string) ?? idvs.findIndex(i => i?.replacementId === over.id);
+                const toIndex = inlineDropIndex(over.id as string) ?? Object.entries(idvs).find(([_, i]) => i?.replacementId === over.id)?.[0];
                 // Cancel if error
-                if (toIndex === -1) return;
+                if (!toIndex) return;
                 // Otherwise remove from item section and add to drop-zone, swapping out the previous item if it exists
                 const dzItem = idvs[toIndex];
                 if (!withReplacement) {
@@ -306,8 +325,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             }
         } else {
             // Drag originated in a drop-zone
-            const fromIndex = idvs.indexOf(item);
-            if (fromIndex === -1) return; // shouldn't happen
+            const fromIndex = Object.entries(idvs).find(([_, i]) => i === item)?.[0];
+            if (!fromIndex) return; // shouldn't happen
             if (isToItemSection) {
                 // Drag is from drop-zone into item section - add in correct position handling duplicates
                 if (over?.id === CLOZE_ITEM_SECTION_ID) {
@@ -329,11 +348,15 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 updateAttempt(idvs);
             } else {
                 // Drag is between drop-zones, should check if it is back to the same drop-zone
-                const toIndex = inlineDropIndex(over.id as string) ?? idvs.findIndex(i => i?.replacementId === over.id);
+                const toIndex = inlineDropIndex(over.id as string) ?? Object.entries(idvs).find(([_, i]) => i?.replacementId === over.id)?.[0];
                 // Return to same drop zone if dragging to and from same one
-                if (toIndex === -1 || fromIndex === toIndex) return;
+                if (!toIndex || fromIndex === toIndex) return;
                 // Otherwise perform the swap!
-                idvs = arraySwap(idvs, fromIndex, toIndex);
+                // idvs = arraySwap(idvs, fromIndex, toIndex);
+                const temp = idvs[toIndex];
+                idvs[toIndex] = idvs[fromIndex];
+                idvs[fromIndex] = temp;
+                
                 newFocusId = idvs[toIndex]?.replacementId;
                 updateAttempt(idvs);
             }
@@ -350,15 +373,15 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     // On mobile screens we have a dropdown rather than a drag and drop
     // Keep the logic here and provide a onEvent function
-    const onDropdownSelect = useCallback((item: Immutable<ReplaceableItem>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => {
+    const onDropdownSelect = useCallback((item: Immutable<DndItemDTO>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => {
         const inlineDropIndex = (id : string) => registeredDropRegionIDs.get(id);
 
         const nsis = [...nonSelectedItems];
-        const idvs = [...inlineDropValues];
+        const idvs = ({...inlineDropValues});
 
-        const dropZoneIndex = inlineDropIndex(dropZoneId as string) ?? idvs.findIndex(i => i?.replacementId === dropZoneId);
+        const dropZoneIndex = inlineDropIndex(dropZoneId as string) ?? Object.entries(idvs).find(([_, i]) => i?.replacementId === dropZoneId)?.[0];
         // Cancel if error
-        if (dropZoneIndex === -1) return;
+        if (!dropZoneIndex) return;
         const previousItem = idvs[dropZoneIndex];
 
         if (!withReplacement && previousItem) {
@@ -477,8 +500,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     return <div className="question-content cloze-question" id={cssFriendlyQuestionPartId}>
         <DragAndDropRegionContext.Provider value={{
             questionPartId: cssFriendlyQuestionPartId,
+            questionType: "isaacDragAndDropQuestion",
             register: registerInlineDropRegion,
-            questionType: "isaacClozeQuestion",
             onSelect: onDropdownSelect,
             readonly: readonly ?? false,
             inlineDropValueMap,
@@ -517,4 +540,4 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         </DragAndDropRegionContext.Provider>
     </div>;
 };
-export default IsaacClozeQuestion;
+export default IsaacDragAndDropQuestion;

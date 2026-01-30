@@ -41,6 +41,7 @@ import {
     isPhy,
     userBookedReservedOrOnWaitingList, confirmThen,
     siteSpecific,
+    navigateComponentless,
 } from "../../services";
 import {AdditionalInformation, AugmentedEvent, PotentialUser} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -177,7 +178,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
 const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFormOpen, setBookingFormOpen}: EventBookingProps) => {
     function loginAndReturn() {
         persistence.save(KEY.AFTER_AUTH_PATH, pathname);
-        history.pushState(undefined, "", "/login");
+        void navigateComponentless("/login");
     }
 
     function stopBookingIfStudent() {

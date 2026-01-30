@@ -1,7 +1,7 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -18,6 +18,7 @@ const IsaacSymbolicQuestion = lazy(() => import("../components/content/IsaacSymb
 const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/IsaacSymbolicChemistryQuestion"));
 const IsaacGraphSketcherQuestion = lazy(() => import("../components/content/IsaacGraphSketcherQuestion"));
 const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQuestion"));
+const IsaacDragAndDropQuestion = lazy(() => import("../components/content/IsaacDragAndDropQuestion"));
 const IsaacCoordinateQuestion = lazy(() => import("../components/content/IsaacCoordinateQuestion"));
 const IsaacInlineRegion = lazy(() => import("../components/content/IsaacInlineRegion"));
 
@@ -27,14 +28,15 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacReorderQuestion": "Reorder",
     "isaacParsonsQuestion": "Parsons",
     "isaacNumericQuestion": "Numeric",
-    "isaacSymbolicQuestion": "Symbolic",
-    "isaacSymbolicChemistryQuestion": "Chemistry",
-    "isaacStringMatchQuestion": "String match",
+    "isaacSymbolicQuestion": "Algebraic",
+    "isaacSymbolicChemistryQuestion": "Symbolic chemistry",
+    "isaacStringMatchQuestion": "Text entry",
+    "isaacRegexMatchQuestion": "Regex match",
     "isaacFreeTextQuestion": "Free text",
     "isaacLLMFreeTextQuestion": "LLM-marked free text",
     "isaacSymbolicLogicQuestion": "Boolean logic",
-    "isaacGraphSketcherQuestion": "Graph Sketcher",
-    "isaacClozeQuestion": "Cloze drag and drop",
+    "isaacGraphSketcherQuestion": "Graph sketcher",
+    "isaacClozeQuestion": "Drag and drop",
     "isaacCoordinateQuestion": "Coordinate",
     "default": "Multiple choice"
 };
@@ -54,12 +56,18 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "isaacSymbolicLogicQuestion": IsaacSymbolicLogicQuestion,
     "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
     "isaacClozeQuestion": IsaacClozeQuestion,
+    "isaacDndQuestion": IsaacDragAndDropQuestion,
     "isaacCoordinateQuestion": IsaacCoordinateQuestion,
     "isaacInlineRegion": IsaacInlineRegion, // This exists in the question types list to wrap the inline questions into a single answerable component
     "default": IsaacMultiChoiceQuestion
 };
 
 export const RESTRICTED_QUESTION_TYPES = ["isaacLLMFreeTextQuestion"];
+
+export const PROGRESS_QUESTION_TYPE_MAP : {[key: string]: string[]} = {
+    "isaacStringMatchQuestion": ["isaacStringMatchQuestion", "isaacRegexMatchQuestion", "isaacFreeTextQuestion"],
+    "isaacMultiChoiceQuestion": ["isaacMultiChoiceQuestion", "isaacItemQuestion"],
+};
 
 export function isQuestion(doc: ContentDTO) {
     return doc.type ? doc.type in QUESTION_TYPES : false;
@@ -180,7 +188,7 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
 
         const attempt = dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
 
-        if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+        if (isLoggedIn(currentUser) && !isTeacherPending(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
             dispatch(saveGameboard({
                 boardId: currentGameboard.id,
                 user: currentUser,

@@ -145,10 +145,13 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
 
     const almost = !correct && (
-        (numCorrectInlineQuestions && numCorrectInlineQuestions > 0) ||                                                   // inline
+        (numCorrectInlineQuestions && numCorrectInlineQuestions > 0) ||                                       // inline
         (doc.type === "isaacClozeQuestion" && [true, false].every(
-            b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))                   // cloze (detailedFeedback only)
-        )
+            b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))       // cloze (detailedFeedback only)
+        ) ||
+        (doc.type === "isaacDndQuestion" &&
+            Object.values((validationResponse as ApiTypes.DndValidationResponseDTO)?.dropZonesCorrect || {})  // dnd (detailedFeedback only)
+                .includes(true))                                                                                               
     );
 
     // Determine Action Buttons

@@ -14,7 +14,7 @@ import {
     filterAssignmentsByStatus,
     isAda,
     isFound,
-    isNotPartiallyLoggedIn,
+    isTeacherPending,
     isOverdue,
     isPhy,
     partitionCompleteAndIncompleteQuizzes,
@@ -99,7 +99,7 @@ export function useAssignmentsCount() {
     const user = useAppSelector(selectors.user.orNull);
 
     // Only fetches assignments if the user is logged in (not including Ada partial logins), and refetch on login/logout, reconnect.
-    const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
+    const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     // We should add refetchOnFocus: true if we want to refetch on browser focus - hard to say if this is a good idea or not.
     const queryOptions = {refetchOnMountOrArgChange: true, refetchOnReconnect: true};
 

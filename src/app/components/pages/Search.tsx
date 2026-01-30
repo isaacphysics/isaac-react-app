@@ -35,7 +35,7 @@ import { ContentSummaryDTO } from "../../../IsaacApiTypes";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import debounce from "lodash/debounce";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { NavigateFunction, useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 interface Item<T> {
     value: T;
@@ -60,10 +60,6 @@ const selectStyle: StylesConfig<Item<SearchableDocumentType>, true, GroupBase<It
     menuPortal: base => ({ ...base, zIndex: 19 })
 };
 
-function updateSearchUrl(navigate: NavigateFunction, queryState: Nullable<string>, filtersState: Item<SearchableDocumentType>[]) {
-    pushSearchToHistory(navigate, queryState || "", filtersState.map(deitemise));
-}
-
 // Interacting with the page's filters change the query parameters.
 // Whenever the query parameters change we send a search request to the API.
 export const Search = () => {
@@ -87,7 +83,7 @@ export const Search = () => {
     const onUpdate = useMemo(() => {
         return debounce((query: Nullable<string>, filters: Item<SearchableDocumentType>[]) => {
             setSearchQuery(query ? {query, types: filters.map(deitemise).join(",")} : skipToken);
-            updateSearchUrl(navigate, query, filters);
+            pushSearchToHistory(navigate, query || "", filters.map(deitemise));
         }, 500, {leading: true, trailing: true});
     }, [navigate]);
 

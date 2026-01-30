@@ -4,7 +4,7 @@ import {TOTPSharedSecretDTO, UserContext} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
 import {PotentialUser, UserPreferencesDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {showToast} from "../../actions/popups";
-import {isFirstLoginInPersistence, isTeacherOrAbove, KEY, persistence} from "../../../services";
+import {isFirstLoginInPersistence, isTeacherOrAbove, KEY, navigateComponentless, persistence} from "../../../services";
 import {questionsApi} from "./questionsApi";
 import {continueToAfterAuthPath, requestCurrentUser} from "../../actions";
 
@@ -110,9 +110,9 @@ export const userApi = isaacApi.injectEndpoints({
 
                         if (isTeacherOrAbove(newUser)) {
                             // Redirect to email verification page
-                            history.pushState(undefined, "", '/verifyemail');
+                            void navigateComponentless('/verifyemail');
                         } else {
-                            history.pushState(undefined, "", '/register/connect');
+                            void navigateComponentless('/register/connect');
                         }
                     } catch {
                         // No-op - components may perform their own error handling using the hook
@@ -176,7 +176,7 @@ export const userApi = isaacApi.injectEndpoints({
                             }));
                         } else if (editingOtherUser) {
                             if (redirect) {
-                                history.pushState(undefined, "", '/');
+                                void navigateComponentless('/');
                             }
                             dispatch(showToast({
                                 title: "Account settings updated",

@@ -26,3 +26,12 @@ export function useHashState<T>(defaultState: T & string, typeGuard: TypeGuard<T
     }, [hash]);
     return [hashState, setHash];
 }
+
+// Try to avoid using if possible! prefer `const navigate = useNavigate()` inside a component, and use that instead.
+// Intended only for cases where this is not possible (e.g. RTK thunks)
+export const navigateComponentless = (to: string, options?: { replace?: boolean; state?: any }): Promise<void> | undefined => {
+    const navigate = (window as any).navigateComponentless;
+    if (typeof navigate === "function") {
+        return navigate(to, options);
+    }
+};

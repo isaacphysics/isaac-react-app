@@ -1,4 +1,4 @@
-import {UserRole} from "../IsaacApiTypes";
+import {RegisteredUserDTO, UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
@@ -27,9 +27,9 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
 };
 
-interface RenderTestEnvironmentOptions {
+export interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
-    modifyUser?: (u: typeof mockUser) => typeof mockUser;
+    modifyUser?: <T extends typeof mockUser | RegisteredUserDTO>(u: T) => T;
     sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
@@ -80,7 +80,7 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
         server.use(...extraEndpoints);
     }
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
-        store.dispatch(requestCurrentUser());
+        await store.dispatch(requestCurrentUser());
     }
     render(<Provider store={store}>
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}

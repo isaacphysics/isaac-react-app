@@ -83,6 +83,15 @@ export const useLoginLogic = () => {
 export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
     const dispatch = useAppDispatch();
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            window.requestAnimationFrame(() => {
+                inputRef.current?.focus();
+            });
+        }
+    }, []);
 
     return <>
         <h3 ref={ref} tabIndex={-1}>Two-Factor Authentication</h3>
@@ -91,6 +100,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
             <Label htmlFor="verification-code">Verification Code</Label>
             <Input
                 id="verification-code" type="text" name="verification-code" placeholder="Verification code"
+                innerRef={inputRef}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setMfaVerificationCode(e.target.value)
                 }

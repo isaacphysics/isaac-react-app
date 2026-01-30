@@ -3,7 +3,7 @@ import { LoggedInUser, PotentialUser } from "../../../IsaacAppTypes";
 import { selectors, useAppSelector } from "../../state";
 import {Immutable} from "immer";
 import { ShowLoading } from "../handlers/ShowLoading";
-import { isDefined, isNotPartiallyLoggedIn, isTeacherOrAbove, isTutorOrAbove, KEY, persistence, TEACHER_REQUEST_ROUTE } from "../../services";
+import { isDefined, isTeacherPending, isTeacherOrAbove, isTutorOrAbove, KEY, persistence, TEACHER_REQUEST_ROUTE } from "../../services";
 import { Navigate } from "react-router";
 import { Unauthorised } from "../pages/Unauthorised";
 
@@ -23,7 +23,7 @@ export const RequireAuth = ({auth, element}: RequireAuthProps) => {
         return <ShowLoading until={user} />;
     }
 
-    if (!isNotPartiallyLoggedIn(user) && auth.name) {
+    if (isTeacherPending(user) && auth.name) {
         return <Navigate to="/verifyemail" />;
     }
 
