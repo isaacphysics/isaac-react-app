@@ -11,7 +11,6 @@ import {
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import {
-    BASE_PROGRESS_QUESTION_TYPES,
     below,
     BookHiddenState,
     HUMAN_QUESTION_TYPES,
