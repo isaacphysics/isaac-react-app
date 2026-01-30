@@ -129,7 +129,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                             {zeroOrLess(event.placesAvailable) && <div>
                                 <strong className="text-danger">FULL</strong>
                                 {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
+                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings.</span>}
                             </div>}
                             {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
                             {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
@@ -138,7 +138,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                                     <u>Complete your registration below</u>.
                                 </Button>
                             </span></span>}
-                            {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
+                            {canBeAddedToWaitingList && <span className="ms-1">{formatAvailabilityMessage(event)}</span>}
                             {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
                                 <div className="text-muted fw-normal">
@@ -158,8 +158,8 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                         <Col>
                             <DateString>{event.bookingDeadline}</DateString>
                             {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                <div className="text-start">
-                                    The booking deadline for this event has passed.
+                                <div className="ms-1">
+                                    (The booking deadline for this event has passed.)
                                 </div>
                             }
                         </Col>
