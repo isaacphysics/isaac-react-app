@@ -1,22 +1,20 @@
 import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {Button, Col, Container, Input, InputGroup, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
-import {ifKeyIsEnter, isDefined, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
+import {ifKeyIsEnter, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useLocation} from "react-router";
 import {Inequality} from 'inequality';
-import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
+import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression} from 'inequality-grammar';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, SymbolicTextInput, TooltipContents } from "../content/IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, isError, SymbolicTextInput, TooltipContents, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
+import classNames from "classnames";
+import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
-
-function isError(p: ParsingError | any[]): p is ParsingError {
-    return p.hasOwnProperty("error");
-}
 
 const equalityValidator = (input: string, editorMode: string) => {
     const openBracketsCount = input.split('(').length - 1;
@@ -24,7 +22,7 @@ const equalityValidator = (input: string, editorMode: string) => {
     let regexStr;
     const errors = [];
 
-    let parsedExpression: ParsingError | any[];
+    let parsedExpression;
     if (editorMode === 'maths') {
         regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
         parsedExpression = parseMathsExpression(input);
@@ -80,8 +78,9 @@ const Equality = () => {
     const userPreferences = useAppSelector(selectors.user.preferences);
 
     const [modalVisible, setModalVisible] = useState(false);
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     const initialEditorSymbols = useRef<string[]>([]);
-    const [currentAttempt, dispatchSetCurrentAttempt] = useState<any>({type: 'formula', value: {}, pythonExpression: ''});
+    const [currentAttempt, dispatchSetCurrentAttempt] = useState<FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO>({type: 'formula', value: "", pythonExpression: ''});
     const [editorSyntax, setEditorSyntax] = useState<LogicSyntax>('logic');
     const [textInput, setTextInput] = useState('');
     const user = useAppSelector(selectors.user.orNull);
@@ -94,43 +93,23 @@ const Equality = () => {
     const sketchRef = useRef<Inequality | null | undefined>();
     const [inputState, setInputState] = useState<InputState>(() => ({pythonExpression: '', userInput: '', valid: true}));
 
-    interface ChildrenMap {
-        children: {[key: string]: ChildrenMap};
-    }
-
-    function countChildren(root: ChildrenMap) {
-        let q = [root];
-        let count = 1;
-        while (q.length > 0) {
-            const e = q.shift();
-            if (!e) continue;
-
-            const c = Object.keys(e.children).length;
-            if (c > 0) {
-                count = count + c;
-                q = q.concat(Object.values(e.children));
-            }
-        }
-        return count;
-    }
-
-    function updateState(state: any) {
+    function updateState(state: InequalityState) {
         if (["maths", "logic"].includes(editorMode)) {
             const newState = sanitiseInequalityState(state);
             const pythonExpression = newState?.result?.python || "";
-            const previousPythonExpression = currentAttempt.value?.result?.python || "";
+            const previousPythonExpression = currentAttempt.value || "";
             if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
                 dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(newState), pythonExpression });
             }
-            initialEditorSymbols.current = state.symbols;
+            initialEditorSymbols.current = state.symbols ?? [];
         } else {
             const newState = sanitiseInequalityState(state);
             const mhchemExpression = newState?.result?.mhchem || "";
-            const previousMhchemExpression = currentAttempt.value?.result?.mhchem || "";
+            const previousMhchemExpression = currentAttempt.value || "";
             if (!previousMhchemExpression || previousMhchemExpression !== mhchemExpression) {
                 dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression });
             }
-            initialEditorSymbols.current = state.symbols;
+            initialEditorSymbols.current = state.symbols ?? [];
         }
     }
 
@@ -161,15 +140,10 @@ const Equality = () => {
     if (currentAttempt && currentAttempt.value) {
         try {
             currentAttemptValue = JSON.parse(currentAttempt.value);
-        } catch(e) {
+        } catch {
             currentAttemptValue = { result: { tex: '' } };
         }
     }
-
-    const closeModal = () => {
-        document.body.style.overflow = "auto";
-        setModalVisible(false);
-    };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
     const allowTextInput = ['maths', 'logic'].includes(editorMode) || (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY && ['chemistry', 'nuclear'].includes(editorMode));
@@ -185,7 +159,7 @@ const Equality = () => {
                 <Col md={3} className="py-4 syntax-picker mode-picker">
                     <div>
                         <Label for="inequality-mode-select">Editor mode:</Label>
-                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode as string} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateEditor(e)}> 
+                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode} onChange={updateEditor}> 
                             <option value="maths">Maths</option>
                             <option value="chemistry">Chemistry</option>
                             <option value="nuclear">Nuclear Physics</option>
@@ -211,10 +185,10 @@ const Equality = () => {
                             />
                             <>
                                 {siteSpecific(
-                                    <Button type="button" className="eqn-editor-help d-flex align-items-center" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                                    <i id={"inequality-help"} className="icon icon-info icon-sm h-100 ms-3" />
+                                    <Button id="inequality-help" type="button" className="eqn-editor-help d-flex align-items-center" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                                    <i id="inequality-help" className="icon icon-info icon-sm h-100 ms-3" />
                                 )}
-                                <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
+                                <UncontrolledTooltip target='inequality-help' placement="top" autohide={false}>
                                     <TooltipContents editorMode={editorMode} />
                                 </UncontrolledTooltip>
                             </>
@@ -223,25 +197,24 @@ const Equality = () => {
                     </div>}
                     <div className="equality-page">
                         <div
-                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${!allowTextInput && 'mt-4'}`} tabIndex={0}
-                            onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                            role="button" className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "mt-4": !allowTextInput})} tabIndex={0}
+                            onClick={openModal} onKeyDown={ifKeyIsEnter(() => openModal())}
                             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${allowTextInput ? 'or c' : 'C'}lick here to enter a formula</small>` }}
                         />
                         {modalVisible && <InequalityModal
-                            close={closeModal}
+                            close={closeModalAndReturnToScrollPosition}
                             onEditorStateChange={(state: InequalityState) => {
                                 dispatchSetCurrentAttempt(["maths", "logic"].includes(editorMode) ? {
                                     type: 'logicFormula',
                                     value: JSON.stringify(state),
-                                    pythonExpression: (state && state.result && state.result.python) || "",
-                                    symbols: [],
+                                    pythonExpression: (state && state.result && state.result.python) || ""
                                 } : { 
                                     type: 'chemicalFormula', 
                                     value: JSON.stringify(state), 
                                     mhchemExpression: (state && state.result && state.result.mhchem) || "" 
                                 });
                                 setTextInput(["maths", "logic"].includes(editorMode) ? (state?.result?.python || '') : (state?.result?.mhchem || ''));
-                                initialEditorSymbols.current = state.symbols;
+                                initialEditorSymbols.current = state.symbols ?? [];
                             }}
                             availableSymbols={availableSymbols || []}
                             initialEditorSymbols={initialEditorSymbols.current}

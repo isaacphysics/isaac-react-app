@@ -27,6 +27,7 @@ import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import {Button, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
+import { EditorMode } from "../elements/modals/inequality/constants";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -193,8 +194,6 @@ export interface InputState {
     valid: boolean;
 }
 
-export type EditorMode = "maths" | "chemistry" | "nuclear" | "logic";
-
 interface SymbolicTextInputProps {
     editorMode: EditorMode;
     inputState: InputState;
@@ -341,7 +340,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                         <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
                     )}
                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
-                        <TooltipContents/>
+                        <TooltipContents editorMode="maths"/>
                     </UncontrolledTooltip>
                 </>
             </InputGroup>
@@ -352,7 +351,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         </div>}
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
-            role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+            role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded", {"empty": !previewText})} tabIndex={readonly ? undefined : 0}
             onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
             dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
                 previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
