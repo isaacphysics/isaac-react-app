@@ -5,12 +5,12 @@ import {ifKeyIsEnter, isDefined, isStaff, siteSpecific, sanitiseInequalityState}
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useLocation} from "react-router";
-import {Inequality, makeInequality} from 'inequality';
+import {Inequality} from 'inequality';
 import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { TooltipContents } from "../content/IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, SymbolicTextInput, TooltipContents } from "../content/IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -81,7 +81,7 @@ const Equality = () => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef<string[]>([]);
-    const [currentAttempt, setCurrentAttempt] = useState<any>({type: 'formula', value: {}, pythonExpression: ''});
+    const [currentAttempt, dispatchSetCurrentAttempt] = useState<any>({type: 'formula', value: {}, pythonExpression: ''});
     const [editorSyntax, setEditorSyntax] = useState<LogicSyntax>('logic');
     const [textInput, setTextInput] = useState('');
     const user = useAppSelector(selectors.user.orNull);
@@ -92,7 +92,7 @@ const Equality = () => {
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-    const [inputState, setInputState] = useState(() => ({pythonExpression: '', userInput: '', valid: true}));
+    const [inputState, setInputState] = useState<InputState>(() => ({pythonExpression: '', userInput: '', valid: true}));
 
     interface ChildrenMap {
         children: {[key: string]: ChildrenMap};
@@ -120,7 +120,7 @@ const Equality = () => {
             const pythonExpression = newState?.result?.python || "";
             const previousPythonExpression = currentAttempt.value?.result?.python || "";
             if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-                setCurrentAttempt({ type: 'formula', value: JSON.stringify(newState), pythonExpression });
+                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(newState), pythonExpression });
             }
             initialEditorSymbols.current = state.symbols;
         } else {
@@ -128,7 +128,7 @@ const Equality = () => {
             const mhchemExpression = newState?.result?.mhchem || "";
             const previousMhchemExpression = currentAttempt.value?.result?.mhchem || "";
             if (!previousMhchemExpression || previousMhchemExpression !== mhchemExpression) {
-                setCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression });
+                dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression });
             }
             initialEditorSymbols.current = state.symbols;
         }
@@ -141,47 +141,6 @@ const Equality = () => {
         }
     };
 
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        _updateEquation(e.target.value);
-    };
-
-    const _updateEquation = (input: string) => {
-        // const pycode = e.target.value;
-        setTextInput(input);
-        setInputState({...inputState, pythonExpression: input, userInput: textInput});
-
-        let parsedExpression: any[] | ParsingError | undefined;
-        if (editorMode === 'maths') {
-            parsedExpression = parseMathsExpression(input);
-        } else if (editorMode === 'logic') {
-            parsedExpression = parseBooleanExpression(input);
-        } else if (editorMode === 'chemistry') {
-            parsedExpression = parseInequalityChemistryExpression(input);
-        } else if (editorMode === 'nuclear') {
-            parsedExpression = parseInequalityNuclearExpression(input);
-        }
-
-        if (!isDefined(parsedExpression) || !(isError(parsedExpression) || (parsedExpression.length === 0 && input !== ''))) {
-            if (input === '') {
-                const state = {result: {tex: "", python: "", mathml: ""}};
-                setCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
-                initialEditorSymbols.current = [];
-            } else if (isDefined(parsedExpression) && parsedExpression.length === 1) {
-                // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
-                // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
-                if (sketchRef.current) {
-                    sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, input);
-                }
-            } else if (isDefined(parsedExpression)) {
-                if (sketchRef.current) {
-                    const sizes = parsedExpression.map(countChildren);
-                    const i = sizes.indexOf(Math.max.apply(null, sizes));
-                    sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
-                }
-            }
-        }
-    };
-
     useEffect(() => {
         if (sketchRef.current) {
             sketchRef.current.logicSyntax = editorSyntax;
@@ -190,49 +149,15 @@ const Equality = () => {
 
     useLayoutEffect(() => {
         if (!allowTextInput) return; // as the ref won't be defined
-
-        if (!isDefined(hiddenEditorRef.current)) {
-            throw new Error("Unable to initialise inequality; target element not found.");
-        }
-
-        const {sketch, p} = makeInequality(
-            hiddenEditorRef.current,
-            100,
-            0,
-            [],
-            {
-                editorMode: editorMode,
-                textEntry: true,
-                fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
-                fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
-            }
-        );
-        if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
-
-        sketch.log = { initialState: [], actions: [] };
-        sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => undefined;
-        sketch.isUserPrivileged = () => true;
-        sketch.onNotifySymbolDrag = () => undefined;
-        sketch.isTrashActive = () => false;
-
-        sketchRef.current = sketch;
-
-        return () => {
-            if (sketchRef.current) {
-                sketchRef.current.onNewEditorState = () => null;
-                sketchRef.current.onCloseMenus = () => null;
-                sketchRef.current.isTrashActive = () => false;
-                sketchRef.current = null;
-            }
-            p.remove();
-        };
+        
+        initialiseInequality(editorMode, hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
     /*** End of text based input stuff */
 
     const availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
 
-    let currentAttemptValue: any | undefined;
+    let currentAttemptValue: InequalityState | undefined;
     if (currentAttempt && currentAttempt.value) {
         try {
             currentAttemptValue = JSON.parse(currentAttempt.value);
@@ -269,7 +194,7 @@ const Equality = () => {
                     </div>
                     {(editorMode === 'logic') && <div className="mt-4">
                         <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
-                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEditorSyntax(e.target.value as LogicSyntax); _updateEquation(textInput); } }>
+                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEditorSyntax(e.target.value as LogicSyntax); }}> {/* _updateEquation(textInput); } }> */}
                             <option value="logic">Boolean Logic</option>
                             <option value="binary">Digital Electronics</option>
                         </Input>
@@ -279,8 +204,11 @@ const Equality = () => {
                     {allowTextInput && <div className="eqn-editor-input mt-md-4">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2 align-items-center">
-                            <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
-                                placeholder="Type your expression here"/>
+                            <SymbolicTextInput
+                                editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+                                textInput={textInput} setTextInput={setTextInput} initialEditorSymbols={initialEditorSymbols}
+                                dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef}
+                            />
                             <>
                                 {siteSpecific(
                                     <Button type="button" className="eqn-editor-help d-flex align-items-center" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
@@ -301,8 +229,8 @@ const Equality = () => {
                         />
                         {modalVisible && <InequalityModal
                             close={closeModal}
-                            onEditorStateChange={(state: any) => {
-                                setCurrentAttempt(["maths", "logic"].includes(editorMode) ? {
+                            onEditorStateChange={(state: InequalityState) => {
+                                dispatchSetCurrentAttempt(["maths", "logic"].includes(editorMode) ? {
                                     type: 'logicFormula',
                                     value: JSON.stringify(state),
                                     pythonExpression: (state && state.result && state.result.python) || "",

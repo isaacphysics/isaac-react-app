@@ -16,7 +16,7 @@ import {v4 as uuid_v4} from "uuid";
 import {Inequality} from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { initialiseInequality, InputState, SymbolicTextInput, TooltipContents, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, TooltipContents, useModalWithScroll } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -59,7 +59,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const [textInput, setTextInput] = useState('');
     const {preferredBooleanNotation} = useUserPreferences();
 
-    let currentAttemptValue: any | undefined = undefined;
+    let currentAttemptValue: InequalityState | undefined = undefined;
 
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
@@ -70,7 +70,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
-    const updateState = (state: any) => {
+    const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
         dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
@@ -92,6 +92,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         if (inputState.pythonExpression !== pythonExpression) {
             setInputState({...inputState, userInput: textInput, pythonExpression});
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
