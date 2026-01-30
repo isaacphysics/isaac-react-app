@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, SearchString, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
+import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, RenderTestEnvironmentOptions, SearchString, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import shuffle from "lodash/shuffle";
 import times from "lodash/times";
@@ -21,9 +21,10 @@ describe("QuestionFinder", () => {
     const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages);
     const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
 
-    const renderQuestionFinderPage = async ({response, queryParams, context} : RenderParameters) => {
+    const renderQuestionFinderPage = async ({response, queryParams, context, ...opts} : RenderParameters) => {
         await renderTestEnvironment({
-            extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)]
+            extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)],
+            ...opts
         });
         await waitForLoaded();
         await setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
@@ -31,8 +32,7 @@ describe("QuestionFinder", () => {
     };
 
     it('should render results in alphabetical order', async () => {
-        await renderQuestionFinderPage({ response: () => resultsResponse });
-        await toggleFilter(F.GCSE);
+        await renderQuestionFinderPage({ response: () => resultsResponse, queryParams: '?stages=gcse' });
         await expectQuestions(questions.slice(0, 30));
     });
 
@@ -42,6 +42,56 @@ describe("QuestionFinder", () => {
             queryParams: '?stages=gcse'
         });
         expect(shuffleButton()).toBeDisabled();
+    });
+
+    it('should not show results on load when logged in without a registered context', async () => {
+        await renderQuestionFinderPage({
+            response: () => resultsResponse,
+            modifyUser: (user) => ({...user, role: "STUDENT"}),
+        });
+
+        const container = await screen.findByTestId("question-finder-results");
+        expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
+    });
+
+    it('should show results on load when logged in with a single registered context', async () => {
+        await renderQuestionFinderPage({
+            response: () => resultsResponse,
+            modifyUser: (user) => ({...user, role: "STUDENT", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}]}),
+        });
+
+        expect(await findQuestions()).toHaveLength(30);
+    });
+
+    if (isPhy) {
+        it('should show results on load when logged in with multiple registered contexts', async () => {
+            await renderQuestionFinderPage({
+                response: () => resultsResponse,
+                modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}, {"stage": "a_level", "examBoard": "aqa"}]}),
+            });
+            
+            expect(await findQuestions()).toHaveLength(30);
+        });
+    } else {
+        it('should not show results on load when logged in with multiple registered contexts', async () => {
+            await renderQuestionFinderPage({
+                response: () => resultsResponse,
+                modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}, {"stage": "a_level", "examBoard": "aqa"}]}),
+            });
+
+            const container = await screen.findByTestId("question-finder-results");
+            expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
+        });
+    }
+
+    it('should not show results on load when logged in with "ALL" as a registered context', async () => {
+        await renderQuestionFinderPage({
+            response: () => resultsResponse,
+            modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "all"}]}),
+        });
+
+        const container = await screen.findByTestId("question-finder-results");
+        expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
     });
 
     describe('Question shuffling', () => {
@@ -127,8 +177,7 @@ describe("QuestionFinder", () => {
                         case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
                         default: throw new Error('Unexpected seed');
                     }
-                }});
-                await toggleFilter(F.GCSE);
+                }, queryParams: '?stages=gcse' });
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
@@ -416,7 +465,7 @@ describe("QuestionFinder", () => {
     });
 });
 
-type RenderParameters = {
+interface RenderParameters extends RenderTestEnvironmentOptions {
     response: (options: {
         tags: string | null;
         stages: string | null;

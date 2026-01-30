@@ -29,7 +29,7 @@ import {
     isAdminOrEventManager,
     isEventLeader,
     isLoggedIn,
-    isNotPartiallyLoggedIn,
+    isTeacherPending,
     isStaff,
     isTutorOrAbove,
     KEY,
@@ -139,7 +139,7 @@ const routes = createRoutesFromElements(
         }/>
         <Route path="/pages/:pageId" element={<Generic />} />
         <Route path="/concepts/:conceptId" element={<Concept />} />
-        <Route path="/questions/:questionId" element={<RequireAuth auth={isNotPartiallyLoggedIn} element={<Question />} />} />
+        <Route path="/questions/:questionId" element={<RequireAuth auth={(user) => !isTeacherPending(user)} element={<Question />} />} />
         <Route path="/glossary" element={<Glossary />} />
 
         <Route path={PATHS.GAMEBOARD} element={<Gameboard />} />
@@ -151,7 +151,7 @@ const routes = createRoutesFromElements(
         <Route path={PATHS.MY_ASSIGNMENTS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyAssignments user={authUser} />} />} />
         <Route path="/progress" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
         <Route path="/progress/:userIdOfInterest" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
-        <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={<MyGameboards />} />} />
+        <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
         <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
 
         {/* Teacher pages */}
@@ -207,6 +207,7 @@ const routes = createRoutesFromElements(
 );
 
 const router = createBrowserRouter(routes);
+(window as any).navigateComponentless = router.navigate;
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -228,7 +229,7 @@ export const IsaacApp = () => {
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
-        if (loggedInUserId && isNotPartiallyLoggedIn(user)) {
+        if (loggedInUserId && !isTeacherPending(user)) {
             void dispatch(requestNotifications());
             checkForWebSocket();
         }

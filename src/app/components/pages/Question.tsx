@@ -26,7 +26,7 @@ import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
-import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
+import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
@@ -81,10 +81,10 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                     <TitleAndBreadcrumb
                         currentPageTitle={generateQuestionTitle(doc)}
                         displayTitleOverride={siteSpecific("Question", undefined)}
-                        subTitle={siteSpecific(undefined, doc.subtitle)}
+                        subTitle={doc.subtitle}
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}
-                        audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
+                        audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
                         preview={preview} icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-question"}}
                     />
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
@@ -96,7 +96,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}>
+                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
                                 {isPhy && <QuestionMetaData 
                                     doc={doc} audienceViews={audienceViews} 
                                     allQuestionsCorrect={allQuestionsCorrect} 
@@ -109,7 +109,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
 
-                                    <SupersededDeprecatedWarningBanner doc={doc} />
+                                    <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
                                     {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 

@@ -70,8 +70,8 @@ export const { trackPageview, trackEvent } = Plausible(
 
 export const SOCIAL_LINKS = siteSpecific(
     {
-        youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
-        bluesky: {name: "Bluesky", href: "https://bsky.app/profile/isaacphysics.org"},
+        youtube: {name: "YouTube", href: "https://www.youtube.com/@isaac-science"},
+        bluesky: {name: "Bluesky", href: "https://bsky.app/profile/isaacscience.org"},
         linkedin: {name: "LinkedIn", href: "https://www.linkedin.com/company/isaac-science"}
     },
     {
@@ -645,7 +645,8 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
-    'ft_further_stage2_2018',
+    'ft_further_stage2_2018', 'ft_core_2018_r1', 'ft_mech_year2_2018_r1',
+    'ft_further_stage1_2018_r1' , 'ft_further_stage2_2018_r1'
 ];
 
 export enum TAG_ID {
@@ -1285,11 +1286,14 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?\]/g;
 export const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
 export const NULL_CLOZE_ITEM: ItemDTO = {
     type: "item",
     id: NULL_CLOZE_ITEM_ID
 };
+
+export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
 
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]

@@ -1,6 +1,6 @@
 import {isAda, isDefined} from "./";
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
-import {UserRole} from "../../IsaacApiTypes";
+import {AuthenticationResponseDTO, UserRole} from "../../IsaacApiTypes";
 import {Immutable} from "immer";
 
 export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immutable<LoggedInUser> {
@@ -51,19 +51,21 @@ export function isVerified(user?: {readonly role?: UserRole, readonly loggedIn?:
     return isDefined(user) && (user.emailVerificationStatus === "VERIFIED");
 }
 
-export function isTeacherAccountPending(user?: {readonly teacherAccountPending?: boolean} | null): user is LoggedInUser & {readonly teacherAccountPending: true} {
-    return isDefined(user) && user.teacherAccountPending === true;
+// this is not type guarded, nor used on the same types as the above checks; use isTeacherPending in most cases instead.
+// this checks whether a **login response** (which is usually a user, but may not be!) requires further verification.
+export function isTeacherAuthResponsePendingVerification(authResponse?: AuthenticationResponseDTO): boolean {
+    return !!(authResponse && ("EMAIL_VERIFICATION_REQUIRED" in authResponse || "teacherAccountPending" in authResponse && authResponse?.teacherAccountPending === true));
 }
 
 /*
-* Returns false if the client is in a "partially logged in" (AKA caveat login) state, and needs to do something else for
+* Returns true if the client is in a "teacher pending verification" (AKA caveat login) state, and needs to do something else for
 *  full functionality (e.g. email verification).
 *
 * Todo: For now this is specific to the Ada teacher flow. For Ada, teacher accounts where teacherAccountPending is true
 *  can only ever be partially logged-in.
 */
-export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly teacherAccountPending?: boolean, readonly EMAIL_VERIFICATION_REQUIRED?: boolean} | null): user is LoggedInUser { // TODO this type guard is questionable, as non-logged in users pass this check. it seems to only be used as a "fully logged in" check though.
-    return !(isAda && (isTeacherAccountPending(user) || user?.EMAIL_VERIFICATION_REQUIRED));
+export function isTeacherPending(user?: Immutable<PotentialUser> | null): user is LoggedInUser {
+    return isLoggedIn(user) && !!(isAda && isTeacherAuthResponsePendingVerification(user));
 }
 
 export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => boolean> = {

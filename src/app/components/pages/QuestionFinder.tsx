@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {AppState, useAppSelector, useSearchQuestionsQuery} from "../../state";
 import debounce from "lodash/debounce";
 import {
@@ -57,10 +57,11 @@ import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
-import { QuestionSearchQuery } from "../../../IsaacAppTypes";
+import { PageContextState, PotentialUser, QuestionSearchQuery } from "../../../IsaacAppTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { QuestionFinderSidebar } from "../elements/sidebar/QuestionFinderSidebar";
+import {Immutable} from "immer";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -121,6 +122,28 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
     }
 }
 
+const getSearchStagesFromAccountSettings = (user: Immutable<PotentialUser> | null | undefined, pageContext: NonNullable<PageContextState>) => {
+    if (isLoggedIn(user)) {
+        const userStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
+        const allStagesSelected = userStages?.some(stage => STAGE_NULL_OPTIONS.includes(stage));
+        if (!allStagesSelected && (isPhy ? !pageContext?.stage?.length : userStages.length === 1)) { // Ada only want to apply stages filter if there is only one
+            return userStages || [];
+        }
+    }
+    return [];
+};
+
+const getSearchExamBoardsFromAccountSettings = (user: Immutable<PotentialUser> | null | undefined) => {
+    if (isLoggedIn(user)) {
+        const userExamBoards = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
+        const allExamBoardsSelected = userExamBoards?.some(examBoard => EXAM_BOARD_NULL_OPTIONS.includes(examBoard));
+        if (!allExamBoardsSelected && isAda && userExamBoards.length === 1) { // Phy does not have exam boards
+            return userExamBoards || [];
+        }
+    }
+    return [];
+};
+
 export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
     if (!stage || stage.length === 0) return [];
     return LEARNING_STAGE_TO_STAGES[stage[0]].filter(s => (STAGES_PHY as readonly STAGE[]).includes(s));
@@ -164,11 +187,28 @@ export const QuestionFinder = () => {
         arrayFromPossibleCsv(params.topics),
         pageContext
     ));
+
+    const isSubjectSpecificQF = isPhy && isFullyDefinedContext(pageContext);
+
+    const initialSearchStages = useRef(params.stages 
+        ? arrayFromPossibleCsv(params.stages) as STAGE[] 
+        : isAda || isSubjectSpecificQF
+            ? getSearchStagesFromAccountSettings(user, pageContext)
+            : []
+    );
+    
+    const initialExamBoards = useRef(params.examBoards
+        ? arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
+        : isAda
+            ? getSearchExamBoardsFromAccountSettings(user)
+            : []
+    );
+    
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(pageContext.stage?.length ? pageStageToSearchStage(pageContext.stage) : arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
+    const [searchStages, setSearchStages] = useState<STAGE[]>(initialSearchStages.current);
+    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(initialExamBoards.current);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
-    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
@@ -177,25 +217,18 @@ export const QuestionFinder = () => {
 
     const [readingFromUrlParams, setReadingFromUrlParams] = useState(FILTER_PARAMS.some(p => params[p]));
 
-    useEffect(function populateFiltersFromAccountSettings() {
-        // on isaac, we should only do this if we are not on a subject-specific QF
-        if (isLoggedIn(user) && (!isPhy || (pageContext && !pageContext.subject))) {
-            const filtersHaveNotBeenSpecifiedByQueryParams = FILTER_PARAMS.every(p => !params[p]);
-            if (filtersHaveNotBeenSpecifiedByQueryParams) {
-                const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
-                const allStagesSelected = accountStages?.some(stage => STAGE_NULL_OPTIONS.includes(stage));
-                if (!allStagesSelected && (isPhy ? !pageContext?.stage?.length : accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
-                    setSearchStages(accountStages);
-                }
-                const examBoardStages = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
-                const allExamBoardsSelected = examBoardStages?.some(examBoard => EXAM_BOARD_NULL_OPTIONS.includes(examBoard));
-                if (isAda && !allExamBoardsSelected && examBoardStages.length === 1) { // Phy does not have exam boards
-                    setSearchExamBoards(examBoardStages);
-                }
-            }
+    useEffect(function updateFiltersFromAccountSettings() {
+        // if the user object was not present at page load (hard link), we can only infer account settings now.
+        // this (should!) only run if/when the user object updates (+on load), as all other dependencies are static values
+        const initialFiltersEmpty = initialSearchStages.current.length === 0 && initialExamBoards.current.length === 0;
+        if (!readingFromUrlParams && initialFiltersEmpty && !isSubjectSpecificQF && isLoggedIn(user)) {
+            const userStages = getSearchStagesFromAccountSettings(user, pageContext);
+            const userExamBoards = getSearchExamBoardsFromAccountSettings(user);
+
+            setSearchStages(userStages);
+            setSearchExamBoards(userExamBoards);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- we don't want this to re-run on params change.
-    }, [user, pageContext]);
+    }, [isSubjectSpecificQF, pageContext, readingFromUrlParams, user]);
 
     const choices = useMemo(() => {
         return updateTopicChoices(selections, pageContext, getAllowedTags(pageContext));
@@ -229,7 +262,7 @@ export const QuestionFinder = () => {
             const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
             if (hierarchySelections.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
                 SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => {
-                    if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.length === 0) {
+                    if (pageContext?.subject && !hierarchySelections[1][pageContext.subject]?.length) {
                         choiceTreeLeaves.push(tag);
                     } else if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.some((t: {value: TAG_ID}) => t.value === tag)) {
                         const index = choiceTreeLeaves.indexOf(pageContext?.subject as TAG_ID);
@@ -240,13 +273,15 @@ export const QuestionFinder = () => {
                 });
             }
 
+            const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
+
             setSearchParams({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: choiceTreeLeaves.join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
-                stages: stages.join(",") || undefined,
+                stages: filteredStages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
@@ -259,7 +294,7 @@ export const QuestionFinder = () => {
                 randomSeed
             });
         }, 250, { leading: true }),
-    [pageContext]);
+    [pageContext, searchStages]);
 
 
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
@@ -267,9 +302,9 @@ export const QuestionFinder = () => {
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
 
-        const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
+        debouncedSearch.cancel();
         debouncedSearch({
-            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages: filteredStages,
+            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
             searchDifficulties, selections, excludeBooks, searchStatuses, startIndex: 0, randomSeed
         });
 
@@ -309,9 +344,9 @@ export const QuestionFinder = () => {
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
 
         void navigate({...location, search: queryString.stringify(params, {encode: false})}, {state: location.state, replace: true});
-    }, [searchStages, pageContext.stage, pageContext?.subject, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, randomSeed, filteringByStatus, navigate, location]);
+    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, randomSeed, filteringByStatus, navigate, location]);
 
-    // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
+    // run one initial search on first render, then automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     useEffect(() => {
         searchAndUpdateURL();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -352,6 +387,10 @@ export const QuestionFinder = () => {
             searchAndUpdateURL();
         }
 
+        // TODO this also runs on first load, which for sci runs searchAndUpdateURL twice - not a problem for now, but not great
+        // would like to make this run *only on change* -- the 'proper' way is to put this in various onChange handlers, not use a useEffect
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {
@@ -378,7 +417,7 @@ export const QuestionFinder = () => {
             setRandomSeed(undefined);
             setSearchQuery(searchTerm);
         }, 500),
-    [setSearchQuery]);
+    []);
 
     const pageHelp = siteSpecific(<span>
         You can find a question by selecting the areas of interest, stage and difficulties.

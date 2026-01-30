@@ -50,7 +50,7 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
 
     return <div className="figure-panel">
         <figure>
-            <div className="text-center position-relative">
+            <div className="text-center position-relative p-3 pb-5">
                 <button className="figure-fullscreen" aria-label="Expand image" onClick={() => {
                     dispatch(openActiveModal(FigureModal({
                         path, 

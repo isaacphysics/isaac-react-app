@@ -424,7 +424,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
         <Label className="w-100 d-flex flex-column align-items-center mb-0">
             <span className="text-nowrap">
                 Filters
-                {<FilterCount count={filterCount ?? 0} widthPx={siteSpecific(25, 20)} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
+                {<FilterCount count={filterCount ?? 0} widthPx={20} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
             </span>
             <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown d-flex justify-content-center align-items-center", {"selected": showFilters})}
                 onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"

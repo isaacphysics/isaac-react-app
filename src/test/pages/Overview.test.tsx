@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { times } from "lodash";
+import times from "lodash/times";
 
 import { isPhy, KEY, persistence } from "../../app/services";
 import { type UserRole } from "../../IsaacApiTypes";

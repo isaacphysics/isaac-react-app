@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useState} from "react";
 import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Alert, Badge} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -41,6 +41,7 @@ import {
     isPhy,
     userBookedReservedOrOnWaitingList, confirmThen,
     siteSpecific,
+    navigateComponentless,
 } from "../../services";
 import {AdditionalInformation, AugmentedEvent, PotentialUser} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -177,7 +178,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
 const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFormOpen, setBookingFormOpen}: EventBookingProps) => {
     function loginAndReturn() {
         persistence.save(KEY.AFTER_AUTH_PATH, pathname);
-        history.pushState(undefined, "", "/login");
+        void navigateComponentless("/login");
     }
 
     function stopBookingIfStudent() {
@@ -308,18 +309,6 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
 };
 
 const ImageAndMap = ({event}: EventBookingProps) => {
-    // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
-    // There are various places online discussing this issue, but this one is a good starting point: https://github.com/Leaflet/Leaflet/issues/4968
-    // _______
-    // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
-    // ¯¯¯¯¯¯¯
-    const icon = useMemo(() => L.icon({
-        iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
-        iconUrl: require('leaflet/dist/images/marker-icon.png'),
-        shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-        iconAnchor: [12, 41]
-    }), []);
-
     return <div className="ms-3 mb-3 float-none float-md-end w-30">
         {isPhy && <div className={"d-none d-lg-block"}>
             {event.eventThumbnail && <div className="px-0 align-self-center">
@@ -338,7 +327,7 @@ const ImageAndMap = ({event}: EventBookingProps) => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                 />
-                <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
+                <Marker position={[event.location.latitude, event.location.longitude]}>
                     <Popup>
                         {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
                     </Popup>

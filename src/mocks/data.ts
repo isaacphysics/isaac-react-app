@@ -2269,6 +2269,11 @@ export const mockGameboards = {
     totalResults: 7
 };
 
+export const mockGameboardsShort = {
+    results: mockGameboards.results.slice(0, 6),
+    totalResults: 6,
+};
+
 export const mockRubrics = recordOf<string, DetailedQuizSummaryDTO>()({
     a_level_1d_motion_test: {
         id: "a_level_1d_motion_test",
@@ -2687,7 +2692,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         //scheduledStartDate: undefined,
-        _id: 37
     },
     {
         id: 38,
@@ -2953,7 +2957,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 38
     },
     {
         id: 40,
@@ -3084,7 +3087,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 40
     },
     {
         id: 45,
@@ -3536,7 +3538,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 45
     }
 ];
 
@@ -6318,9 +6319,6 @@ export const mockAssignmentsGroup6 = [
 ].filter(isDefined);
 
 export const mockUserPreferences = {
-    BETA_FEATURE: {
-        HIDE_QUESTION_ATTEMPTS: true
-    },
     EMAIL_PREFERENCE: {
         EVENTS: false,
         NEWS_AND_UPDATES: false,

@@ -4,7 +4,7 @@ import {
     useGetQuizAssignmentWithFeedbackQuery,
     useUpdateQuizAssignmentMutation
 } from "../../../state";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {
     AssignmentProgressDTO,
@@ -17,12 +17,12 @@ import {
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import {
-    extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
     isAuthorisedFullAccess,
     isPhy,
     isQuestion,
     nthHourOf,
+    PATHS,
     siteSpecific,
     TODAY,
     useAssignmentProgressAccessibilitySettings
@@ -39,6 +39,7 @@ import {
     Alert,
     Button,
     Card,
+    CardBody,
     Container,
     DropdownItem,
     DropdownMenu,
@@ -81,7 +82,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     const assignmentStartDate = quizAssignment?.scheduledStartDate ?? quizAssignment?.creationDate;
     const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
-    const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
+    const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test");
+    const pageTitle = `${quizTitle} ${(assignmentNotYetStarted ? `(starts ${formatDate(assignmentStartDate)})` : "results")}`;
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
@@ -92,8 +94,11 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     const [settingsVisible, setSettingsVisible] = useState(true);
 
+    const numStudentsSubmitted = quizAssignment?.userFeedback?.filter(p => p.feedback?.complete).length;
+    const numStudentsCompletedAll = quizAssignment?.userFeedback?.filter(p => p.feedback?.overallMark?.correct && p.feedback?.overallMark?.correct === quizAssignment.quiz?.total).length;
+
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "icon", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "icon", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>
         <ShowLoadingQuery
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
@@ -103,7 +108,43 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     <span>It will be released to your group on {formatDate(assignmentStartDate)}.</span>
                 </div>}
 
-                <div className="content-metadata-container d-flex flex-column flex-md-row">
+                <div className={classNames("d-flex align-items-center flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
+                    {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${quizAssignment.groupId}#tests`} className="d-flex align-items-center">
+                        <i className="icon icon-arrow-left me-2"/>
+                        Back to group assignments and tests
+                    </Link>}
+                    {isPhy && <Spacer/>}
+                    <div className="d-flex flex-column px-3 py-3 py-md-0 text-md-center justify-content-center">
+                        <Label for="feedbackMode" className="pe-1 mb-0 small">
+                            Student feedback mode:
+                        </Label>
+                        <UncontrolledButtonDropdown size="sm">
+                            <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={"sm"} disabled={isUpdatingQuiz}>
+                                {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
+                            </DropdownToggle>
+                            <DropdownMenu container={"root"} className="z-1050">
+                                {QuizFeedbackModes.map(mode =>
+                                    <DropdownItem key={mode}
+                                        onClick={() => setFeedbackMode(mode)}
+                                        active={mode === quizAssignment?.quizFeedbackMode}
+                                    >
+                                        {feedbackNames[mode]}
+                                    </DropdownItem>
+                                )}
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
+                    </div>
+                    <Button
+                        color={siteSpecific("solid", "keyline")} className="btn-md mt-1 text-nowrap"
+                        href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
+                        target="_blank"
+                    >
+                        Download CSV
+                        <i className="icon icon-download ms-2" color="white"/>
+                    </Button>
+                </div>
+
+                {/* <div className="content-metadata-container d-flex flex-column flex-md-row">
                     <div className="d-flex flex-column pb-3 pb-md-0 px-3 flex-grow-1 justify-content-center">
                         <span>
                             Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}
@@ -138,17 +179,34 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                             href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                             target="_blank"
                         >
-                            Export as CSV
+                            Download CSV
                         </Button>
                     </div>
-                </div>
+                </div> */}
+
+                <Card className="my-4">
+                    <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
+                        <div className="d-flex align-items-center flex-grow-1 fw-bold">
+                            <i className={classNames("icon me-2", quizAssignment.dueDate && quizAssignment.dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                            Due: {formatDate(quizAssignment.dueDate)}
+                        </div>
+                        <div className="d-flex align-items-center flex-grow-1 fw-bold">
+                            <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                            {numStudentsSubmitted} of {quizAssignment.userFeedback?.length} submitted their test
+                        </div>
+                        <div className="d-flex align-items-center flex-grow-1 fw-bold">
+                            <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                            {numStudentsCompletedAll} of {quizAssignment.userFeedback?.length} got full marks
+                        </div>
+                    </CardBody>
+                </Card>
 
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <Card className="p-4 my-3">
                             <div className={classNames("d-flex", {"mb-3": isPhy})}>
                                 {siteSpecific(
-                                    <h4>Group results</h4>,
+                                    <h4>Overview: {quizTitle}</h4>,
                                     <h3>Group results</h3>
                                 )}
                                 <Spacer />

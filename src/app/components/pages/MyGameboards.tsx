@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
+import {unlinkUserFromGameboard, useAppDispatch} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {
     Button,
@@ -116,11 +116,9 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
     </div>;
 };
 
-export const MyGameboards = () => {
+export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
     //Redux state and dispatch
     const dispatch = useAppDispatch();
-    // We know the user is logged in to visit this page
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
     const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
@@ -136,8 +134,7 @@ export const MyGameboards = () => {
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(
-        siteSpecific(BoardViews.card, BoardViews.table),
-        BoardLimit.six
+        siteSpecific(BoardViews.card, BoardViews.table)
     );
 
     function confirmDeleteMultipleBoards() {

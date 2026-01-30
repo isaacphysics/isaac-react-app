@@ -24,7 +24,6 @@ import {RegistrationSetDetails} from "../../pages/RegistrationSetDetails";
 import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
-import {RegistrationGroupInvite} from "../../pages/RegistrationGroupInvite";
 import {PracticeQuizzes} from "../../pages/quizzes/PracticeQuizzes";
 import {SubjectLandingPage} from "../../pages/SubjectLandingPage";
 import {QuestionFinder} from "../../pages/QuestionFinder";
@@ -79,7 +78,6 @@ export const RoutesPhy = [
     <Route key={key++} path="/register/student/additional_info" element={<RegistrationAgeCheckParentalConsent />} />,
     <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
     <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
-    <Route key={key++} path="/register/group_invitation" element={<RegistrationGroupInvite />} />,
     <Route key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
     <Route key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,
     <Route key={key++} path="/register/success" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSuccess />} />} />,

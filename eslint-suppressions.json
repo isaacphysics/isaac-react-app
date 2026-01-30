@@ -146,9 +146,6 @@
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
     }
   },
   "src/app/components/elements/AccountTypeMessage.tsx": {
@@ -184,11 +181,6 @@
   },
   "src/app/components/elements/EventBookingForm.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/app/components/elements/ExternalLink.tsx": {
-    "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
@@ -266,11 +258,6 @@
     },
     "jsx-a11y/no-static-element-interactions": {
       "count": 1
-    }
-  },
-  "src/app/components/elements/cards/AdaCard.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
     }
   },
   "src/app/components/elements/cards/BoardCard.tsx": {
@@ -389,7 +376,7 @@
       "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
-      "count": 7
+      "count": 6
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 1
@@ -543,18 +530,8 @@
       "count": 1
     }
   },
-  "src/app/components/elements/quiz/QuizAttemptFooter.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/app/components/elements/quiz/QuizContentsComponent.tsx": {
     "@stylistic/indent": {
-      "count": 1
-    }
-  },
-  "src/app/components/elements/quiz/QuizProgressCommon.tsx": {
-    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
@@ -577,9 +554,6 @@
     }
   },
   "src/app/components/handlers/AddGameboard.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "react-hooks/exhaustive-deps": {
       "count": 1
     }
@@ -610,11 +584,6 @@
       "count": 1
     }
   },
-  "src/app/components/handlers/ProviderCallbackHandler.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/app/components/handlers/ShowLoading.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -634,8 +603,8 @@
     }
   },
   "src/app/components/navigation/IsaacApp.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 3
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
     }
   },
   "src/app/components/navigation/ResearchNotificationBanner.tsx": {
@@ -726,18 +695,7 @@
       "count": 1
     }
   },
-  "src/app/components/pages/ContentEmails.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/app/components/pages/Equality.tsx": {
-    "@typescript-eslint/no-empty-object-type": {
-      "count": 2
-    },
     "@typescript-eslint/no-explicit-any": {
       "count": 7
     },
@@ -752,11 +710,8 @@
     "@typescript-eslint/no-floating-promises": {
       "count": 2
     },
-    "@typescript-eslint/no-require-imports": {
-      "count": 3
-    },
     "@typescript-eslint/no-unused-vars": {
-      "count": 3
+      "count": 2
     }
   },
   "src/app/components/pages/Events.tsx": {
@@ -785,10 +740,10 @@
       "count": 3
     },
     "@typescript-eslint/no-floating-promises": {
-      "count": 4
+      "count": 1
     },
     "react-hooks/exhaustive-deps": {
-      "count": 4
+      "count": 1
     }
   },
   "src/app/components/pages/Glossary.tsx": {
@@ -815,7 +770,7 @@
       "count": 3
     },
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 9
@@ -866,49 +821,12 @@
       "count": 1
     }
   },
-  "src/app/components/pages/QuestionDecks.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/app/components/pages/QuestionFinder.tsx": {
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    }
-  },
-  "src/app/components/pages/QuickQuizzes.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/app/components/pages/RegistrationGroupInvite.tsx": {
-    "@stylistic/indent": {
-      "count": 1
-    },
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    }
-  },
   "src/app/components/pages/RegistrationSetPreferences.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
-  "src/app/components/pages/RegistrationTeacherConnect.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/app/components/pages/RegistrationVerifyEmail.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
     "react-hooks/exhaustive-deps": {
       "count": 1
     }
@@ -929,7 +847,7 @@
   },
   "src/app/components/pages/SubjectOverviewPage.tsx": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 2
+      "count": 1
     }
   },
   "src/app/components/pages/TeacherOrTutorRequest.tsx": {
@@ -984,11 +902,6 @@
       "count": 1
     }
   },
-  "src/app/components/site/cs/RoutesCS.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/app/components/site/phy/HomepagePhy.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 5
@@ -1004,17 +917,12 @@
   },
   "src/app/components/site/phy/RoutesPhy.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 4
+      "count": 2
     }
   },
   "src/app/services/assignments.ts": {
     "@typescript-eslint/no-unused-expressions": {
       "count": 2
-    }
-  },
-  "src/app/services/fastTrack.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
     }
   },
   "src/app/services/gameboardBuilder.ts": {
@@ -1023,11 +931,8 @@
     }
   },
   "src/app/services/gameboards.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
     "react-hooks/exhaustive-deps": {
-      "count": 6
+      "count": 1
     }
   },
   "src/app/services/highlightJs.ts": {
@@ -1036,6 +941,9 @@
     }
   },
   "src/app/services/history.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
     "@typescript-eslint/no-unused-vars": {
       "count": 1
     },
@@ -1181,7 +1089,7 @@
   },
   "src/app/state/slices/api/gameboardApi.ts": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 2
+      "count": 1
     }
   },
   "src/app/state/slices/api/gameboards.ts": {
@@ -1207,7 +1115,7 @@
   },
   "src/app/state/slices/user.ts": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 4
     }
   },
   "src/mocks/data.ts": {
@@ -1271,16 +1179,6 @@
   "src/test/pages/MyAssignments.test.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/test/pages/SetAssignments.test.tsx": {
-    "semi": {
-      "count": 1
-    }
-  },
-  "src/test/pages/authorisationRedirects.test.ts": {
-    "@typescript-eslint/no-unused-expressions": {
-      "count": 2
     }
   },
   "src/test/state/actions.test.tsx": {

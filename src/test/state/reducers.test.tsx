@@ -1,4 +1,5 @@
-import {mapValues, union} from "lodash";
+import mapValues from "lodash/mapValues";
+import union from "lodash/union";
 import {questionDTOs, registeredUserDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services";
 import {Action, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
@@ -79,7 +80,7 @@ describe("user reducer", () => {
     });
 
     it("should always add a user on login response success", () => {
-        const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
+        const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: profWheeler};
         previousStates.map((previousState) => {
             const actualNextState = userSlice.reducer(previousState, addProfWheelerAction);
             expect(actualNextState).toEqual({...profWheeler, loggedIn: true});

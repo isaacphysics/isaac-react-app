@@ -226,7 +226,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     >
                         <span className="mb-1">Quick switch to</span>
                         <span className="d-flex align-items-center">
-                            <i className="icon icon-hexagon me-1" />
+                            <i className="icon icon-hexagon-bullet me-1" />
                             {`${HUMAN_STAGES[quickSwitcher.stage]} ${HUMAN_SUBJECTS[quickSwitcher.subject]}`}
                         </span>
                     </NavigationItem>
@@ -234,7 +234,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     }
                     {category.subcategories.map((subcategory, j) => {
                         return <NavigationItem key={i * keyBase + j} className="align-items-center" href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
-                            <i className="icon icon-hexagon me-1" />
+                            <i className="icon icon-hexagon-bullet me-1" />
                             <span>{subcategory.fullTitle}</span>
                         </NavigationItem>;
                     })}
@@ -252,7 +252,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                                 <ul className="plain-list">
                                     {category.subcategories.map((subcategory, j) => {
                                         return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject}>
-                                            <i className="icon icon-hexagon me-1" />
+                                            <i className="icon icon-hexagon-bullet me-1" />
                                             <span>{subcategory.fullTitle}</span>
                                         </NavigationItem>;
                                     })}
@@ -271,7 +271,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                         <ul className="plain-list">
                             {category.subcategories.map((subcategory, j) => {
                                 return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
-                                    <i className="icon icon-hexagon me-1"/>
+                                    <i className="icon icon-hexagon-bullet me-1"/>
                                     <span>{subcategory.fullTitle}</span>
                                 </NavigationItem>;
                             })}

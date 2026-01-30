@@ -15,7 +15,6 @@ import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
-import { placeholderIcon } from "../elements/PageTitle";
 import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 
@@ -197,7 +196,11 @@ export const SubjectLandingPage = () => {
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`,
                 width: "75px",
                 height: "75px",
-            } : placeholderIcon({width: "75px", height: "75px"})}
+            } : {
+                type: "placeholder",
+                width: "75px",
+                height: "75px"
+            }}
         />
 
         {pageContext && isSingleStageContext(pageContext) && <>

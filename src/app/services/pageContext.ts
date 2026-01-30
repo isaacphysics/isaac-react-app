@@ -88,18 +88,21 @@ export function determinePageContextFromPreviousPageContext(userContexts: readon
     if (previousContext?.stage && doc?.audience?.some(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).filter(isDefined).some(s => previousContext.stage?.includes(s)))) {
         newContext.stage = previousContext.stage;
     }
-    // if we have changed stage...
-    else if (userContexts && doc?.audience) {
-        // ...if there is exactly one match between the user's registered contexts and the audience stage(s), use that stage
-        const newStages = userContexts.map(c => c.stage).filter(s => doc.audience?.flatMap(a => a.stage).includes(s));
-        if (newStages.length === 1 && newStages[0]) {
-            newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[newStages[0]]) ? [STAGE_TO_LEARNING_STAGE[newStages[0]] as LearningStage] : undefined;
-        }
 
-        // ...if the user has no registered context for that stage, if the question has only one stage, switch to that stage)
+    // if we have changed stage...
+    else if (doc?.audience) {
+        // ...if the question has only one stage, switch to that stage
         const stages = doc.audience.flatMap(a => a.stage).filter(isDefined).filter((v, i, a) => a.indexOf(v) === i);
         if (stages.length === 1) {
             newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[stages[0]]) ? [STAGE_TO_LEARNING_STAGE[stages[0]] as LearningStage] : undefined;
+        } 
+        
+        // ...if there is exactly one match between the user's registered contexts and the audience stage(s), use that stage
+        else if (userContexts) {
+            const stageMatches = userContexts.map(c => c.stage).filter(s => s && stages.includes(s));
+            if (stageMatches.length === 1 && stageMatches[0]) {
+                newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[stageMatches[0]]) ? [STAGE_TO_LEARNING_STAGE[stageMatches[0]] as LearningStage] : undefined;
+            }
         }
     }
     // otherwise we cannot infer a single stage to show (user not logged in OR no registered context for a question with multiple valid stages
