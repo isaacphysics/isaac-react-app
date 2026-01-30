@@ -43,7 +43,6 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
 export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
     const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
-    const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
 
@@ -56,10 +55,6 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                 {hasExpired &&
                     <div className="event-pod-badge">
                         <Badge className="badge rounded-pill">EXPIRED</Badge>
-                    </div>}
-                {isVirtualEvent &&
-                    <div className="event-pod-badge align-self-end">
-                        <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
                     </div>}
                 {isTeacherEvent &&
                     <div className="event-pod-hex">
