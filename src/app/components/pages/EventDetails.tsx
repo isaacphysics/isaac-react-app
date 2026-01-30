@@ -353,6 +353,7 @@ const EventDetails = () => {
             const canMakeABooking = userCanMakeEventBooking(user, event) ?? false;
             const isVirtual = event.tags?.includes("virtual") ?? false;
             const hasExpired = event.hasExpired;
+            const bookingDeadlineSoon = event.bookingDeadline && event.isWithinBookingDeadline && (new Date(event.bookingDeadline).getTime() - Date.now()) < 604800000; // 1 week
 
             const eventBookingProps : EventBookingProps = {
                 user, event, eventId, pathname: location.pathname, isVirtual,
@@ -379,6 +380,9 @@ const EventDetails = () => {
                         {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
                             EXPIRED
                         </Badge>}
+                        {bookingDeadlineSoon && <span className="fs-6 warning-tag">
+                            Booking deadline soon!
+                        </span>}
                     </>}
                 >
                     <KeyEventInfo {...eventBookingProps} />

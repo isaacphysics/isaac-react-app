@@ -45,7 +45,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
 
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
-
+    const bookingDeadlineSoon = event.bookingDeadline && event.isWithinBookingDeadline && (new Date(event.bookingDeadline).getTime() - Date.now()) < 604800000; // 1 week
     const subject = getThemeFromTags(event.tags) !== "neutral" ? getThemeFromTags(event.tags) : "physics";
 
     return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
@@ -55,6 +55,12 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                 {hasExpired &&
                     <div className="event-pod-badge">
                         <Badge className="badge rounded-pill">EXPIRED</Badge>
+                    </div>}
+                {bookingDeadlineSoon &&
+                    <div className="event-pod-badge">
+                        {bookingDeadlineSoon && <span className="warning-tag px-2 py-1 fw-semibold">
+                            Booking deadline soon!
+                        </span>}
                     </div>}
                 {isTeacherEvent &&
                     <div className="event-pod-hex">
