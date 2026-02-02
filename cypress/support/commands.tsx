@@ -69,15 +69,14 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
         }
     </>));
 
-    void router.navigate(initialRoute || '/').then(() => {
-        mount(
-            <Provider store={store}>
-                <RouterProvider router={router} />
-            </Provider>,
-            mountOptions
-        );
-    });
-
+    void router.navigate(initialRoute || '/');
+    
+    mount(
+        <Provider store={store}>
+            <RouterProvider router={router} />
+        </Provider>,
+        mountOptions
+    );
 });
 
 import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
