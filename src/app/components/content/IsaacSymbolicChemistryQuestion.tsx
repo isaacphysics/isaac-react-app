@@ -1,4 +1,4 @@
-import React, {ChangeEvent, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
