@@ -367,7 +367,7 @@ const EventDetails = () => {
                 }
                 <PageMetadata 
                     doc={event}
-                    badges={<>
+                    badges={<div className="d-flex flex-wrap gap-2 mt-1">
                         <Badge color="primary" className="fs-6 rounded-pill">
                             {isTeacherEvent ? "Teacher event" : "Student event"}
                         </Badge>
@@ -377,7 +377,7 @@ const EventDetails = () => {
                         {bookingDeadlineSoon && <span className="fs-6 warning-tag">
                             Booking deadline soon!
                         </span>}
-                    </>}
+                    </div>}
                 >
                     <KeyEventInfo {...eventBookingProps} />
                 </PageMetadata>
