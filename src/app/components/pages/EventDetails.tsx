@@ -125,15 +125,15 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                                 {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
                                 {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings.</span>}
                             </div>}
-                            {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
-                            {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
+                            {event.userBookingStatus === "CONFIRMED" && <span className="ms-1"> - <span className="text-success">You are booked on this event!</span></span>}
+                            {event.userBookingStatus === 'RESERVED' && <span className="ms-1"> - <span className="text-success">
                                 You have been reserved a place on this event!
                                 <Button color="link text-success" onClick={openAndScrollToBookingForm}>
                                     <u>Complete your registration below</u>.
                                 </Button>
                             </span></span>}
-                            {canBeAddedToWaitingList && <span className="ms-1">{formatAvailabilityMessage(event)}</span>}
-                            {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
+                            {canBeAddedToWaitingList && <span className="ms-1"> - {formatAvailabilityMessage(event)}</span>}
+                            {event.userBookingStatus === "WAITING_LIST" && <span className="ms-1"> - {formatWaitingListBookingStatusMessage(event)}</span>}
                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
                                 <div className="text-muted fw-normal">
                                     {studentOnlyEventMessage(eventId)}
