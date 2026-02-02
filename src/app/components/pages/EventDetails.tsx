@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Alert, Badge} from "reactstrap";
-import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     openActiveModal,
@@ -50,7 +49,6 @@ import {EventBookingForm} from "../elements/EventBookingForm";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
-import * as L from "leaflet";
 import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -58,10 +56,6 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { MetadataContainer } from "../elements/panels/MetadataContainer";
 import { Immutable } from "immer";
 import classNames from "classnames";
-
-function formatDate(date: Date | number) {
-    return dayjs(date).format("YYYYMMDD[T]HHmmss");
-}
 
 interface EventBookingProps {
     user: Immutable<PotentialUser> | null;
