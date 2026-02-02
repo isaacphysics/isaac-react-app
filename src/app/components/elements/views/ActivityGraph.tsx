@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {areaSpline, bb} from "billboard.js";
+import {areaSpline, bb, zoom} from "billboard.js";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
 import {siteSpecific} from "../../../services";
@@ -47,7 +47,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                     max: maxDate
                 }
             },
-            zoom: {enabled: true},
+            zoom: {enabled: zoom()},
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
             bindto: "#activityGraph",
