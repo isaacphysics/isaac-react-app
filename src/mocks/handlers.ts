@@ -285,6 +285,12 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/users/resetpassword/:token", ({params}) => {
+        const {token} = params;
+        return HttpResponse.json({token}, {
+            status: 200,
+        });
+    }),
 ];
 
 // --- Extra handler builder functions ---
