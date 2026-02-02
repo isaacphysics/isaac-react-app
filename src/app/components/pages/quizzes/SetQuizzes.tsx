@@ -7,7 +7,7 @@ import {
     useUpdateQuizAssignmentMutation,
     openActiveModal
 } from "../../../state";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
@@ -48,7 +48,7 @@ import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
 import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
 
-interface SetQuizzesPageProps extends RouteComponentProps {
+interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
 }
 
@@ -290,7 +290,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     </>;
 }
 
-const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
+export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
@@ -555,5 +555,3 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         </SidebarLayout>
     </Container>;
 };
-
-export const SetQuizzes = withRouter(SetQuizzesPageComponent);

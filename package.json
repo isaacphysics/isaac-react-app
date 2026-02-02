@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "4.1.2-SNAPSHOT",
+  "version": "4.1.4-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -47,7 +47,7 @@
     "react-error-boundary": "^3.1.4",
     "react-helmet": "^6.1.0",
     "react-redux": "^7.2.9",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^7.12.0",
     "react-select": "^5.8.0",
     "react-window": "^1.8.10",
     "reactstrap": "^9.2.2",
@@ -83,7 +83,8 @@
     "start-ada-renderer": "vite --port 3001 --config config/vite.config.ada.renderer.ts",
     "build-phy-renderer": "vite build --config config/vite.config.sci.renderer.ts",
     "start-phy-renderer": "vite --port 3002 --config config/vite.config.sci.renderer.ts",
-    "build-renderer": "yarn run build-ada-renderer && yarn run build-phy-renderer"
+    "build-renderer": "yarn run build-ada-renderer && yarn run build-phy-renderer",
+    "deps:package-json-updates": "./package-updates.sh"
   },
   "browserslist": [
     ">0.2%",

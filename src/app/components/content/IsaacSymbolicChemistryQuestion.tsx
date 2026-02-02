@@ -5,7 +5,6 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     isDefined,
-    isStaff,
     jsonHelper,
     sanitiseInequalityState,
     siteSpecific,
@@ -19,7 +18,7 @@ import QuestionInputValidation from "../elements/inputs/QuestionInputValidation"
 import { v4 as uuid_v4 } from "uuid";
 import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
-import { AppState, selectors, useAppSelector } from "../../state";
+import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 import classNames from "classnames";
 

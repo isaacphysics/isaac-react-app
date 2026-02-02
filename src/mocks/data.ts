@@ -15,16 +15,16 @@ import {
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
-import {School} from "../IsaacAppTypes";
+import {LoggedInUser, School} from "../IsaacAppTypes";
 import {recordOf} from "./utils";
 
 export const mockUser = {
     givenName: "Test",
     familyName: "Admin",
     email: "test-admin@test.com",
-    dateOfBirth: 777777777777,
+    dateOfBirth: new Date(777777777777),
     gender: "MALE",
-    registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 100),
+    registrationDate: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 100)),
     role: "ADMIN" as UserRole,
     schoolOther: "N/A",
     countryCode: "GB-SCT",
@@ -34,14 +34,14 @@ export const mockUser = {
             examBoard: "all"
         }
     ],
-    registeredContextsLastConfirmed: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1),
+    registeredContextsLastConfirmed: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1)),
     firstLogin: false,
-    lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-    lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
+    lastUpdated: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1)),
+    lastSeen: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1)),
     emailVerificationStatus: "VERIFIED" as EmailVerificationStatus,
     loggedIn: true,
     id: 1 as const
-};
+} satisfies LoggedInUser;
 
 export const buildMockStudent = <T extends number>(id: T extends (typeof mockUser.id) ? `Student ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T) => {
     if (id === mockUser.id) throw Error("A mock student cannot have the same ID as the mockUser");
@@ -2692,7 +2692,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         //scheduledStartDate: undefined,
-        _id: 37
     },
     {
         id: 38,
@@ -2958,7 +2957,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 38
     },
     {
         id: 40,
@@ -3089,7 +3087,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 40
     },
     {
         id: 45,
@@ -3541,7 +3538,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 45
     }
 ];
 

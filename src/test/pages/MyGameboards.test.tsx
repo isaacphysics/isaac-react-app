@@ -9,8 +9,8 @@ import produce from "immer";
 
 describe("MyGameboards", () => {
 
-    const renderMyGameboards = (dataOverride?: object) => {
-        renderTestEnvironment({
+    const renderMyGameboards = async (dataOverride?: object) => {
+        await renderTestEnvironment({
             PageComponent: MyGameboards,
             initalRouteEntries: [PATHS.MY_GAMEBOARDS],
             extraEndpoints: [
@@ -42,7 +42,7 @@ describe("MyGameboards", () => {
     };
 
     it('should start in card view on phy and table view on Ada', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         await waitFor(() => {
             expect(screen.queryAllByText("Loading...")).toHaveLength(0);
         });
@@ -57,7 +57,7 @@ describe("MyGameboards", () => {
     });
 
     it('should show all of my gameboards in table view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         if (isPhy) {
             // Change view to "Table View" on phy
             const viewDropdown = await screen.findByLabelText("Set display mode");
@@ -88,7 +88,7 @@ describe("MyGameboards", () => {
     // }
 
     it('should filter gameboards by title in table view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         if (isPhy) {
             // Change view to "Table View" on phy
             const viewDropdown = await screen.findByLabelText("Set display mode");

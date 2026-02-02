@@ -15,8 +15,8 @@ const DATE_REGEX = siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX);
 
 describe("MyAssignments", () => {
 
-    const renderMyAssignments = (extraEndpoints?: HttpHandler[]) => {
-        renderTestEnvironment({
+    const renderMyAssignments = async (extraEndpoints?: HttpHandler[]) => {
+        await renderTestEnvironment({
             PageComponent: MyAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints
@@ -24,21 +24,21 @@ describe("MyAssignments", () => {
     };
 
     it('should show all assignments on render', async () => {
-        renderMyAssignments();
+        await renderMyAssignments();
         const assignments = await screen.findAllByTestId("my-assignment");
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
 
     if (isAda) {
         it('should render with "All" assignment filter selected by default', async () => {
-            renderMyAssignments();
+            await renderMyAssignments();
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
             expect(assignmentTypeFilter).toHaveValue("All");
         });
     }
     else {
         it('should render with "To do" assignment filter selected by default', async () => {
-            renderMyAssignments();
+            await renderMyAssignments();
             const sidebar = await screen.findByTestId("my-assignments-sidebar");
             const allFilter = within(sidebar).getByRole("checkbox", {name: `To do ${mockMyAssignments.length}`});
             expect(allFilter).toHaveProperty("checked", true);
@@ -46,7 +46,7 @@ describe("MyAssignments", () => {
     }
 
     it('should allow users to filter assignments on gameboard title', async () => {
-        renderMyAssignments();
+        await renderMyAssignments();
         const filter = await siteSpecific(() => screen.findByPlaceholderText(FILTER_LABEL_TEXT), () => screen.findByLabelText(FILTER_LABEL_TEXT))();
         await userEvent.type(filter, "Test Gameboard 3");
         // Only one assignment should be shown
@@ -58,7 +58,7 @@ describe("MyAssignments", () => {
     });
 
     it('should filter to only display "Overdue" assignments when that filter type is selected, this should not display any assignments', async () => {
-        renderMyAssignments();
+        await renderMyAssignments();
         if (isAda) {
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
             await userEvent.selectOptions(assignmentTypeFilter, "Overdue");
@@ -75,7 +75,7 @@ describe("MyAssignments", () => {
     });
 
     it('should contain assignments with undefined due date and older than a month when the "Older" assignments filter is selected', async () => {
-        renderMyAssignments([
+        await renderMyAssignments([
             http.get(API_PATH + "/assignments", () => {
                 const d = new Date();
                 d.setUTCDate(d.getUTCDate() - 1);
@@ -116,7 +116,7 @@ describe("MyAssignments", () => {
     });
 
     it('should show the scheduled start date as the "Assigned" date if it exists', async () => {
-        renderMyAssignments([
+        await renderMyAssignments([
             http.get(API_PATH + "/assignments", () => {
                 return HttpResponse.json([
                     {
@@ -154,7 +154,7 @@ describe("MyAssignments", () => {
     });
 
     it('should show the assignment creation date as the "Assigned" date if the scheduled start date does not exist', async () => {
-        renderMyAssignments([
+        await renderMyAssignments([
             http.get(API_PATH + "/assignments", () => {
                 return HttpResponse.json([
                     {
@@ -192,7 +192,7 @@ describe("MyAssignments", () => {
 
     it('should show the notes field for assignments with notes', async () => {
         // Arrange
-        renderMyAssignments();
+        await renderMyAssignments();
         await screen.findAllByTestId("my-assignment");
 
         // Act & Assert

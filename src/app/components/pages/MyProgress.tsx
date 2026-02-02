@@ -17,11 +17,12 @@ import {
     ISAAC_BOOKS_BY_TAG,
     isPhy,
     isTeacherOrAbove,
+    PROGRESS_QUESTION_TYPE_MAP,
     safePercentage,
     siteSpecific,
     useDeviceSize
 } from "../../services";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { PotentialUser } from "../../../IsaacAppTypes";
 import { Unauthorised } from "./Unauthorised";
 import { AggregateQuestionStats } from "../elements/panels/AggregateQuestionStats";
@@ -37,8 +38,7 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
-            "isaacClozeQuestion", "isaacReorderQuestion", "isaacItemQuestion", "isaacStringMatchQuestion",
-            "isaacRegexMatchQuestion", "isaacGraphSketcherQuestion", "isaacCoordinateQuestion"
+            "isaacClozeQuestion", "isaacReorderQuestion", "isaacStringMatchQuestion", "isaacGraphSketcherQuestion", "isaacCoordinateQuestion"
         ],
         questionCountByBookTag: {
             "phys_book_step_up": 432,
@@ -55,21 +55,20 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     // Computer science
     {
         questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion",
-            "isaacReorderQuestion", "isaacRegexMatchQuestion"
+            "isaacMultiChoiceQuestion", "isaacParsonsQuestion", "isaacNumericQuestion", "isaacStringMatchQuestion",
+            "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion", "isaacReorderQuestion"
         ],
         questionCountByBookTag: {},
     }
 );
 
-interface MyProgressProps extends RouteComponentProps<{userIdOfInterest: string}> {
+interface MyProgressProps {
     user: PotentialUser;
 }
-const MyProgress = withRouter((props: MyProgressProps) => {
-    const { user, match } = props;
-    const { userIdOfInterest } = match.params;
-    const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
+
+const MyProgress = ({user}: MyProgressProps) => {
+    const { userIdOfInterest = "" } = useParams();
+    const viewingOwnData = userIdOfInterest === "" || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
@@ -137,8 +136,9 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         <h4>Question parts correct by type</h4>
                         <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
-                                const correct = progress?.correctByType?.[qType] || null;
-                                const attempts = progress?.attemptsByType?.[qType] || null;
+                                const groupedTypes = PROGRESS_QUESTION_TYPE_MAP[qType] || [qType];
+                                const correct = groupedTypes.reduce((sum, type) => sum + (progress?.correctByType?.[type] || 0), 0);
+                                const attempts = groupedTypes.reduce((sum, type) => sum + (progress?.attemptsByType?.[type] || 0), 0);
                                 const percentage = safePercentage(correct, attempts);
                                 return <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
@@ -146,7 +146,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                     </div>
                                     <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
-                                            {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                            {percentage == null ? "None attempted" : `${correct} of ${attempts}`}
                                         </ProgressBar>
                                     </div>
                                 </Col>;
@@ -199,5 +199,5 @@ const MyProgress = withRouter((props: MyProgressProps) => {
             </CardBody>
         </Card>
     </Container>;
-});
+};
 export default MyProgress;

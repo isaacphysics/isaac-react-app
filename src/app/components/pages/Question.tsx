@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Col, Container, Row} from "reactstrap";
-import {match, RouteComponentProps, withRouter} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetQuestionQuery} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {
@@ -26,7 +26,7 @@ import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
-import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
+import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
@@ -41,14 +41,15 @@ import { QuestionMetaData } from "../elements/QuestionMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
-interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
+interface QuestionPageProps{
     questionIdOverride?: string;
-    match: match & { params: { questionId: string } };
     preview?: boolean;
 }
 
-export const Question = withRouter(({questionIdOverride, match, location, preview}: QuestionPageProps) => {
-    const questionId = questionIdOverride || match.params.questionId;
+export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
+    const location = useLocation();
+    const params = useParams();
+    const questionId = questionIdOverride || params.questionId || "";
     const questionQuery = useGetQuestionQuery(questionId);
     const {data: doc, isLoading} = questionQuery;
     const user = useAppSelector(selectors.user.orNull);
@@ -108,7 +109,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
 
-                                    <SupersededDeprecatedWarningBanner doc={doc} />
+                                    <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
                                     {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
@@ -145,4 +146,4 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
             </GameboardContext.Provider>;}
         }
     />;
-});
+};

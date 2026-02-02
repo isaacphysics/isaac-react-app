@@ -57,7 +57,7 @@ describe("My Account", () => {
             });
         });
 
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "STUDENT",
             extraEndpoints: [
                 http.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
@@ -158,7 +158,7 @@ describe("My Account", () => {
             });
         });
 
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "STUDENT",
             extraEndpoints: [
                 http.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),

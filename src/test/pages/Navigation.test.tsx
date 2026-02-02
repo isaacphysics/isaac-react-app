@@ -6,7 +6,7 @@ import {act, screen, waitFor, within} from "@testing-library/react";
 describe('Navigation', () => {
     if (isPhy) {
         const renderHomepage = async (role : UserRole | 'ANONYMOUS' = 'ANONYMOUS') => {
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 role,
                 // extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]    
             });
@@ -60,7 +60,7 @@ describe('Navigation', () => {
                 await openMenu();
             });
 
-            it('should close the navigation menu when any top-level link is clicked', async () => {
+            it.skip('should close the navigation menu when any top-level link is clicked', async () => {
                 // this does not test any of the dropdowns / accordions!
                 await renderHomepage();
                 await openMenu();

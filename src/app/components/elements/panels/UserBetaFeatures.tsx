@@ -1,6 +1,6 @@
 import React from "react";
 import { DisplaySettings, UserConsent } from "../../../../IsaacAppTypes";
-import { SITE_TITLE, isAda, isStaff, siteSpecific } from "../../../services";
+import { SITE_TITLE, isAda, isPhy, isStaff, siteSpecific } from "../../../services";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MyAccountTab } from "./MyAccountTab";
 import { Link } from "react-router-dom";
@@ -44,7 +44,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                 <p id="revision-helptext">{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
             </WithLinkableSetting>
 
-            <WithLinkableSetting id={"show-chem-text-entry"}>
+            {(isPhy || isStaff(user)) && <WithLinkableSetting id={"show-chem-text-entry"}>
                 <StyledCheckbox checked={displaySettings.CHEM_TEXT_ENTRY ?? false}
                     onChange={e => {
                         setDisplaySettings((oldDs) => ({...oldDs, CHEM_TEXT_ENTRY: e.target.checked}));
@@ -55,9 +55,9 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     aria-describedby="chem-text-entry-helptext"
                 />
                 <p id="chem-text-entry-helptext">{`This feature allows you to enter text-based answers (using mhchem chemical notation) for chemistry questions, as an alternative to the graphical equation editor.`}</p>
-            </WithLinkableSetting>
+            </WithLinkableSetting>}
 
-            {/* Temporarily staff-only until LLM-marked questions are properly configured (and won't work for staff immediately regardless) */}
+            {/* Enabled for staff on Isaac so they can test questions, but not being pursued further for now (these questions should not be published) */}
             {(isStaff(user) || isAda) && <>
                 <div className="pt-2"/>
                 <WithLinkableSetting id={"consent-to-openai-marking-feature"}>

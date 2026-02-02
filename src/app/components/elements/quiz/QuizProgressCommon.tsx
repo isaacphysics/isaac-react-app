@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} fr
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
 import {isAda, isAuthorisedFullAccess, isPhy, scrollVerticallyIntoView, siteSpecific, TODAY} from "../../../services";
-import {Link, useHistory} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
@@ -151,7 +151,8 @@ export function ResultsTable<Q extends QuestionType>({
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     const dispatch = useAppDispatch();
-    const history = useHistory(); // TODO replace with navigate when RR7!
+    const navigate = useNavigate();
+    const location = useLocation();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const [dropdownOpen, setDropdownOpen] = useState(progress?.map(() => false));
@@ -160,9 +161,9 @@ export function ResultsTable<Q extends QuestionType>({
     const [returnQuizToStudent, {isLoading: returningQuizToStudent}] = useReturnQuizToStudentMutation();
     const returnToStudent = (userId?: number) => {
         const confirm = () => {
-            history.replace({...history.location, hash: `${userId}`});
             void returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
                 .then(() => dispatch(closeActiveModal()));
+            void navigate({...location, hash: `${userId}`});
         };
         dispatch(openActiveModal({
             closeAction: () => dispatch(closeActiveModal()),
@@ -186,7 +187,7 @@ export function ResultsTable<Q extends QuestionType>({
 
     useEffect(() => {
         // scroll to the student inside the table when the table reloads
-        const resetStudent = history.location.hash ? document.getElementById(history.location.hash.substring(1)) : null;
+        const resetStudent = location.hash ? document.getElementById(location.hash.substring(1)) : null;
         if (resetStudent && scrollContainerRef.current && resetStudent?.offsetTop !== undefined) {
             scrollContainerRef.current.scrollTop = resetStudent.offsetTop - 64; // seems to scroll slightly too far; 64px offset to account
             scrollVerticallyIntoView(scrollContainerRef.current);

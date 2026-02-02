@@ -1,11 +1,10 @@
 import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter, isDefined, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {RouteComponentProps} from "react-router";
+import {useLocation} from "react-router";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
@@ -70,8 +69,10 @@ const equalityValidator = (input: string, editorMode: string) => {
     return errors;
 };
 
-const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
+const Equality = () => {
+    const location = useLocation();
     const queryParams = queryString.parse(location.search);
+    const userPreferences = useAppSelector(selectors.user.preferences);
 
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef<string[]>([]);
@@ -241,7 +242,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
-    const allowTextInput = editorMode === 'maths' || (isStaff(user) && ['chemistry', 'nuclear', 'logic'].includes(editorMode));
+    const allowTextInput = ['maths', 'logic'].includes(editorMode) || (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY && ['chemistry', 'nuclear'].includes(editorMode));
 
     return <div>
         <Container>
@@ -363,5 +364,5 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
             </Row>}
         </Container>
     </div>;
-});
+};
 export default Equality;

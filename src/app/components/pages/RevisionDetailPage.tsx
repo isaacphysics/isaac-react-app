@@ -11,14 +11,11 @@ import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChild
 import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledSidebar";
+import { useParams } from "react-router";
 
-interface RevisionProps {
-    match: { params: { pageId: string } };
-}
-
-export const RevisionPage = ({match: {params: {pageId}}}: RevisionProps) => {
-
-    const revisionPageQuery = useGetRevisionPageQuery({id: pageId});
+export const RevisionPage = () => {
+    const { pageId } = useParams();
+    const revisionPageQuery = useGetRevisionPageQuery({id: pageId ?? ""});
 
     return <Container data-bs-theme={getThemeFromTags(revisionPageQuery.data?.tags)}>
         <TitleAndBreadcrumb 

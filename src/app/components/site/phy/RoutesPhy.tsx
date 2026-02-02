@@ -1,7 +1,4 @@
 import React, {lazy} from "react";
-import {TrackedRoute} from "../../navigation/TrackedRoute";
-import StaticPageRoute from "../../navigation/StaticPageRoute";
-import {Redirect, RouteComponentProps} from "react-router";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
@@ -45,12 +42,15 @@ import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
 import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
 import { IsaacStats } from "../../pages/IsaacBirthdayStats";
 import { Programmes } from "../../pages/Programmes";
+import { RequireAuth } from "../../navigation/UserAuthentication";
+import { Navigate, Route } from "react-router";
+import { Generic } from "../../pages/Generic";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
-const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+const subjectStagePairPages : Record<string, React.ComponentType<any>> = {
     // at all valid paths matching `/:subject/:stage${string}`, render the given component
     "": SubjectLandingPage,
     "/questions": QuestionFinder,
@@ -63,7 +63,7 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 };
 
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
-const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+const old_books : Record<string, React.ComponentType<any>> = {
     "/books/pre_uni_maths": PreUniMaths,
     "/books/solve_physics_problems": SolvingPhysProblems,
     "/books/phys_book_yr9": PhysBookYrNine,
@@ -72,159 +72,158 @@ const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> |
 let key = 0;
 export const RoutesPhy = [
     // Registration
-    <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
-    <TrackedRoute key={key++} exact path="/verifyemail" component={EmailAlterHandler}/>,
-    <TrackedRoute key={key++} exact path="/register/student/age" component={RegistrationAgeCheck} />,
-    <TrackedRoute key={key++} exact path="/register/student/additional_info" component={RegistrationAgeCheckParentalConsent} />,
-    <TrackedRoute key={key++} exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />,
-    <TrackedRoute key={key++} exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />,
-    <TrackedRoute key={key++} exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />,
-    <TrackedRoute key={key++} exact path="/register/preferences" ifUser={isLoggedIn} component={RegistrationSetPreferences} />,
-    <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
+    <Route key={key++} path="/register" element={<RegistrationStart />} />,
+    <Route key={key++} path="/verifyemail" element={<EmailAlterHandler />}/>,
+    <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
+    <Route key={key++} path="/register/student/additional_info" element={<RegistrationAgeCheckParentalConsent />} />,
+    <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
+    <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
+    <Route key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
+    <Route key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,
+    <Route key={key++} path="/register/success" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSuccess />} />} />,
 
     // Assignments
-    <TrackedRoute key={key++} exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} />, // Currently in beta, not yet advertised or listed on navigation menus
+    <Route key={key++} path="/assignment_schedule" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentSchedule user={authUser} />} />} />,
 
     // Teacher test pages
-    <TrackedRoute key={key++} exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />,
-    <Redirect key={key++} from="/set_quizzes" to="/set_tests" />,
+    <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
+    <Route key={key++} path="/set_quizzes" element={<Navigate to="/set_tests" replace />} />,
     // Student test pages
-    <TrackedRoute key={key++} exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
-    <Redirect key={key++} from="/quizzes" to="/tests" />,
-    <TrackedRoute key={key++} exact path="/practice_tests" component={PracticeQuizzes} />,
+    <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,
+    <Route key={key++} path="/quizzes" element={<Navigate to="/tests" replace />} />,
+    <Route key={key++} path="/practice_tests" element={<PracticeQuizzes />} />,
 
     // Quiz (test) pages
-    <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,
-    <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
-    <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacherOrAbove} component={QuizTeacherFeedback} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId/feedback" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizTeacherFeedback user={authUser} />} />} />,
     // Tutors can preview tests iff the test is student only
-    <TrackedRoute key={key++} exact path="/test/preview/:quizId" ifUser={isTutorOrAbove} component={QuizPreview} />,
-    <TrackedRoute key={key++} exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
-    <TrackedRoute key={key++} exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
-    <TrackedRoute key={key++} exact path="/test/view/:quizId" ifUser={isLoggedIn} component={QuizView} />,
-
+    <Route key={key++} path="/test/preview/:quizId" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
+    <Route key={key++} path="/test/preview/:quizId/page/:page" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
+    <Route key={key++} path="/test/view/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizView user={authUser} />} />} />,
     // The order of these redirects matters to prevent substring replacement
-    <Redirect key={key++} from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />,
-    <Redirect key={key++} from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />,
-    <Redirect key={key++} from="/quiz/assignment/:quizAssignmentId"            to="/test/assignment/:quizAssignmentId" />,
-    <Redirect key={key++} from="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" />,
-    <Redirect key={key++} from="/quiz/attempt/feedback/:quizAssignmentId/:studentId" to="/test/attempt/feedback/:quizAssignmentId/:studentId" />,
-    <Redirect key={key++} from="/quiz/attempt/:quizAttemptId/feedback/:page"   to="/test/attempt/:quizAttemptId/feedback/:page" />,
-    <Redirect key={key++} from="/quiz/attempt/:quizAttemptId/feedback"         to="/test/attempt/:quizAttemptId/feedback" />,
-    <Redirect key={key++} from="/quiz/preview/:quizId/page/:page"              to="/test/preview/:quizId/page/:page" />,
-    <Redirect key={key++} from="/quiz/preview/:quizId"                         to="/test/preview/:quizId" />,
-    <Redirect key={key++} from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />,
-    <Redirect key={key++} from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />,
+    <Route key={key++} path="/quiz/assignment/:quizAssignmentId/feedback" element={<Navigate to="/test/assignment/:quizAssignmentId/feedback" replace />} />,
+    <Route key={key++} path="/quiz/assignment/:quizAssignmentId/page/:page" element={<Navigate to="/test/assignment/:quizAssignmentId/page/:page" replace />} />,
+    <Route key={key++} path="/quiz/assignment/:quizAssignmentId" element={<Navigate to="/test/assignment/:quizAssignmentId" replace />} />,
+    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<Navigate to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId" element={<Navigate to="/test/attempt/feedback/:quizAssignmentId/:studentId" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback/:page" element={<Navigate to="/test/attempt/:quizAttemptId/feedback/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback" element={<Navigate to="/test/attempt/:quizAttemptId/feedback" replace />} />,
+    <Route key={key++} path="/quiz/preview/:quizId/page/:page" element={<Navigate to="/test/preview/:quizId/page/:page" replace />} />,
+    <Route key={key++} path="/quiz/preview/:quizId" element={<Navigate to="/test/preview/:quizId" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizId/page/:page" element={<Navigate to="/test/attempt/:quizId/page/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizId" element={<Navigate to="/test/attempt/:quizId" replace />} />,
 
     // Books (old)
-    ...(Object.entries(old_books).map(([path, component]) => [
-        <TrackedRoute key={key++} exact path={path} component={component} />,
-        <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
+    ...(Object.entries(old_books).map(([path, Component]) => [
+        <Route key={key++} path={path} element={<Component />} />,
+        <Route key={key++} path={`${path}/:pageId`} element={<Component />} />,
     ]).flat()),
-    <Redirect key={key++} exact from="/books/physics_skills_14" to="/books/physics_skills_19" />,
+    <Route key={key++} path="/books/physics_skills_14" element={<Navigate to="/books/physics_skills_19" replace />} />,
 
     // Books (new)
-    <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
-    <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
-    <TrackedRoute key={key++} exact path={"/books"} component={BooksOverview} />,
+    <Route key={key++} path={"/books/:bookId"} element={<Book />} />,
+    <Route key={key++} path={"/books/:bookId/:pageId"} element={<Book />} />,
+    <Route key={key++} path={"/books"} element={<BooksOverview />} />,
 
     // Revision pages
-    // <TrackedRoute key={key++} exact path="/revision" component={SubjectLandingPage} />,
-    <TrackedRoute key={key++} exact path="/revision/:pageId" component={RevisionPage} />,
+    // <Route key={key++} path="/revision" element={<SubjectLandingPage />} />,
+    <Route key={key++} path="/revision/:pageId" element={<RevisionPage />} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
-    ...(Object.entries(subjectStagePairPages).map(([path, component]) => (
-        <TrackedRoute key={key++} exact path={Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
+    ...(Object.entries(subjectStagePairPages).flatMap(([path, Component]) => (
+        Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
             stages.forEach((stage) => {
-                acc.push(`/${subject}/${stage}${path}`);
+                const fullPath = `/${subject}/${stage}${path}`;
+                acc.push(<Route key={key++} path={fullPath} element={<Component />} />);
             });
             return acc;
-        }, [] as string[])} component={component} />
+        }, [] as React.ReactElement[])
     ))),
-
     // Subject overview landing pages
     ...(Object.keys(PHY_NAV_SUBJECTS).map((subject) => (
-        <TrackedRoute key={key++} exact path={`/${subject}`} component={SubjectOverviewPage} />
+        <Route key={key++} path={`/${subject}`} element={<SubjectOverviewPage />} />
     ))),
-    <TrackedRoute key={key++} exact path="/computer_science" component={AdaCSOverviewPage} />,
+    <Route key={key++} path="/computer_science" element={<AdaCSOverviewPage />} />,
 
     // Concepts List
-    <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
+    <Route key={key++} path="/concepts" element={<Concepts />} />,
 
     // Static pages
-    <StaticPageRoute key={key++} exact path="/about" pageId="about_us_index" />,
-    <StaticPageRoute key={key++} exact path="/apply_uni" />,
-    <StaticPageRoute key={key++} exact path="/publications" />,
-    <StaticPageRoute key={key++} exact path="/books" pageId="books_overview" />,
-    <StaticPageRoute key={key++} exact path="/solving_problems" />,
-    <StaticPageRoute key={key++} exact path="/extraordinary_problems" pageId="extraordinary_problems_index" />,
-    <StaticPageRoute key={key++} exact path="/challenge_problems" pageId="challenge_problems_index" />,
-    <StaticPageRoute key={key++} exact path="/bios" />,
-    <StaticPageRoute key={key++} exact path="/why_physics" />,
-    <StaticPageRoute key={key++} exact path="/fast_track_14" pageId="fast_track_14_index" />,
-    <StaticPageRoute key={key++} exact path="/prize_draws" />,
-    <StaticPageRoute key={key++} exact path="/spc" />,
-    <StaticPageRoute key={key++} exact path="/pre_made_gameboards" />,
-    <StaticPageRoute key={key++} exact path="/chemistry" pageId="chemistry_landing_page" />,
-    <StaticPageRoute key={key++} exact path="/survey" />,
-    <StaticPageRoute key={key++} exact path="/book/question" pageId="book_question" />,
-    <StaticPageRoute key={key++} exact path="/exam_uni_help" />,
-    <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
-    <StaticPageRoute key={key++} exact path="/gameboards/new" pageId="question_finder_redirect" />,
-    <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
-    <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
-    <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
-    <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
-    <TrackedRoute key={key++} exact path="/programmes" component={Programmes} />,
-    <TrackedRoute key={key++} exact path="/news" component={News} />,
-    <TrackedRoute key={key++} exact path="/isaac_11" component={IsaacStats} />,
+    <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us_index"} />} />,
+    <Route key={key++} path="/apply_uni" element={<Generic pageIdOverride={"apply_uni"} />} />,
+    <Route key={key++} path="/publications" element={<Generic pageIdOverride={"publications"} />} />,
+    <Route key={key++} path="/books" element={<Generic pageIdOverride={"books_overview"} />} />,
+    <Route key={key++} path="/solving_problems" element={<Generic pageIdOverride={"solving_problems"} />} />,
+    <Route key={key++} path="/extraordinary_problems" element={<Generic pageIdOverride={"extraordinary_problems_index"} />} />,
+    <Route key={key++} path="/challenge_problems" element={<Generic pageIdOverride={"challenge_problems_index"} />} />,
+    <Route key={key++} path="/bios" element={<Generic pageIdOverride={"bios"} />} />,
+    <Route key={key++} path="/why_physics" element={<Generic pageIdOverride={"why_physics"} />} />,
+    <Route key={key++} path="/fast_track_14" element={<Generic pageIdOverride={"fast_track_14_index"} />} />,
+    <Route key={key++} path="/prize_draws" element={<Generic pageIdOverride={"prize_draws"} />} />,
+    <Route key={key++} path="/spc" element={<Generic pageIdOverride={"spc"} />} />,
+    <Route key={key++} path="/pre_made_gameboards" element={<Generic pageIdOverride={"pre_made_gameboards"} />} />,
+    <Route key={key++} path="/chemistry" element={<Generic pageIdOverride={"chemistry_landing_page"} />} />,
+    <Route key={key++} path="/survey" element={<Generic pageIdOverride={"survey"} />} />,
+    <Route key={key++} path="/book/question" element={<Generic pageIdOverride={"book_question"} />} />,
+    <Route key={key++} path="/exam_uni_help" element={<Generic pageIdOverride={"exam_uni_help"} />} />,
+    <Route key={key++} path="/coronavirus" element={<Generic pageIdOverride={"2020_03_coronavirus"} />} />,
+    <Route key={key++} path="/gameboards/new" element={<Generic pageIdOverride={"question_finder_redirect"} />} />,
+    <Route key={key++} path="/teacher_features" element={<TeacherFeatures />}/>,
+    <Route key={key++} path="/tutor_features" element={<TutorFeatures />}/>,
+    <Route key={key++} path="/sketcher" element={<GraphSketcherPage />} />,
+    <Route key={key++} path="/teacher_account_request" element={<RequireAuth auth={isLoggedIn} element={<TeacherRequest />} />} />,
+    <Route key={key++} path="/programmes" element={<Programmes />} />,
+    <Route key={key++} path="/news" element={<News />} />,
+    <Route key={key++} path="/isaac_11" element={<IsaacStats />} />,
 
     // Legacy Routes
-    <Redirect key={key++} exact from="/mission" to="/about" />,
-    <Redirect key={key++} exact from="/boards" to={PATHS.MY_GAMEBOARDS} />,
-    <Redirect key={key++} exact from="/my_gameboards" to={PATHS.MY_GAMEBOARDS} />,
-    <Redirect key={key++} exact from="/game_builder" to={PATHS.GAMEBOARD_BUILDER} />,
-    <Redirect key={key++} exact from="/gameboard_builder" to={PATHS.GAMEBOARD_BUILDER} />,
-    <Redirect key={key++} exact from="/add_gameboard/:id" to={`${PATHS.ADD_GAMEBOARD}/:id`} />,
-    <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
-    <Redirect key={key++} exact from="/gameboards" to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} />,
-    <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
-    <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_19" />,
-    <Redirect key={key++} exact from="/book" to="/books/physics_skills_19" />,
-    <Redirect key={key++} exact from="/qmp" to="/books/quantum_mechanics_primer" />,
-    <Redirect key={key++} exact from="/solve_physics_problems" to="/books/solve_physics_problems" />,
-    <Redirect key={key++} exact from="/answers" to="/support/student/questions#answers" />,
-    <Redirect key={key++} exact from="/teachers" to="/support/teacher/general" />,
-    <Redirect key={key++} exact from="/tutors" to="/support/tutor/general" />,
-    <Redirect key={key++} exact from="/pages/isaac_embedded_schools" to="/support/teacher/partner#embedded_schools" />,
-    <Redirect key={key++} exact from="/pages/questions_spreadsheet" to="/support/teacher/suggestions#spreadsheet" />,
-    <Redirect key={key++} exact from="/11_14" to="/" />,
-    <Redirect key={key++} exact from="/gcse" to="/" />,
-    <Redirect key={key++} exact from="/alevel" to="/" />,
-    <Redirect key={key++} exact from="/s/:shortCode" to="/pages/problem_solving_qs" />,
-    <Redirect key={key++} exact from="/pages/boards_by_topic_bio" to="/biology/a_level/question_decks" />,
-    <Redirect key={key++} exact from="/pages/boards_by_topic_chem" to="/chemistry/a_level/question_decks" />,
-    <Redirect key={key++} exact from="/pages/maths_practice" to="/maths/a_level/question_decks" />,
-    <Redirect key={key++} exact from="/pages/pre_made_gameboards" to="/physics/a_level/question_decks" />,
+    <Route key={key++} path="/mission" element={<Navigate to="/about" replace />} />,
+    <Route key={key++} path="/boards" element={<Navigate to={PATHS.MY_GAMEBOARDS} replace />} />,
+    <Route key={key++} path="/my_gameboards" element={<Navigate to={PATHS.MY_GAMEBOARDS} replace />} />,
+    <Route key={key++} path="/game_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
+    <Route key={key++} path="/gameboard_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
+    <Route key={key++} path="/add_gameboard/:id" element={<Navigate to={`${PATHS.ADD_GAMEBOARD}/:id`} replace />} />,
+    <Route key={key++} path="/board/:id" element={<Navigate to={`${PATHS.GAMEBOARD}#:id`} replace />} />,
+    <Route key={key++} path="/gameboards" element={<Navigate to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} replace />} />,
+    <Route key={key++} path="/gcsebook" element={<Navigate to="/books/phys_book_gcse" replace />} />,
+    <Route key={key++} path="/physics_skills_14" element={<Navigate to="/books/physics_skills_19" replace />} />,
+    <Route key={key++} path="/book" element={<Navigate to="/books/physics_skills_19" replace />} />,
+    <Route key={key++} path="/qmp" element={<Navigate to="/books/quantum_mechanics_primer" replace />} />,
+    <Route key={key++} path="/solve_physics_problems" element={<Navigate to="/books/solve_physics_problems" replace />} />,
+    <Route key={key++} path="/answers" element={<Navigate to="/support/student/questions#answers" replace />} />,
+    <Route key={key++} path="/teachers" element={<Navigate to="/support/teacher/general" replace />} />,
+    <Route key={key++} path="/tutors" element={<Navigate to="/support/tutor/general" replace />} />,
+    <Route key={key++} path="/pages/isaac_embedded_schools" element={<Navigate to="/support/teacher/partner#embedded_schools" replace />} />,
+    <Route key={key++} path="/pages/questions_spreadsheet" element={<Navigate to="/support/teacher/suggestions#spreadsheet" replace />} />,
+    <Route key={key++} path="/11_14" element={<Navigate to="/" replace />} />,
+    <Route key={key++} path="/gcse" element={<Navigate to="/" replace />} />,
+    <Route key={key++} path="/alevel" element={<Navigate to="/" replace />} />,
+    <Route key={key++} path="/s/:shortCode" element={<Navigate to="/pages/problem_solving_qs" replace />} />,
+    <Route key={key++} path="/pages/boards_by_topic_bio" element={<Navigate to="/biology/a_level/question_decks" replace />} />,
+    <Route key={key++} path="/pages/boards_by_topic_chem" element={<Navigate to="/chemistry/a_level/question_decks" replace />} />,
+    <Route key={key++} path="/pages/maths_practice" element={<Navigate to="/maths/a_level/question_decks" replace />} />,
+    <Route key={key++} path="/pages/pre_made_gameboards" element={<Navigate to="/physics/a_level/question_decks" replace />} />,
 
     // Isaac Chemistry redirect
     // TODO: if chemistry is a separate site ever, should move to Chemistry routes.
-    <Redirect key={key++} exact from="/book16" to="/books/chemistry_16" />,
+    <Route key={key++} path="/book16" element={<Navigate to="/books/chemistry_16" replace />} />,
 
     // Teacher Pages
-    <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
-    <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
-    <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teacher_emails" pageId="fragments/teacher_emails_frag"/>,
+    <Route key={key++} path="/teachermentoring_gcse" element={<RequireAuth auth={isTeacherOrAbove} element={<Generic pageIdOverride={"fragments/teacher_mentoring_gcse_page_frag"} />} />} />,
+    <Route key={key++} path="/teachermentoring_alevel" element={<RequireAuth auth={isTeacherOrAbove} element={<Generic pageIdOverride={"fragments/teacher_mentoring_alevel_page_frag"} />} />} />,
+    <Route key={key++} path="/teacher_emails" element={<RequireAuth auth={isTeacherOrAbove} element={<Generic pageIdOverride={"fragments/teacher_emails_frag"} />} />} />,
 
     // Events
-    <TrackedRoute key={key++} exact path='/events' component={Events}/>,
-    <TrackedRoute key={key++} exact path='/events/:eventId' component={EventDetails}/>,
-    <TrackedRoute key={key++} exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />,
+    <Route key={key++} path='/events' element={<Events />}/>,
+    <Route key={key++} path='/events/:eventId' element={<EventDetails />}/>,
+    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<RedirectToEvent />} />} />,
 
-    <TrackedRoute key={key++} exact path="/equality" component={Equality} />,
+    <Route key={key++} path="/equality" element={<Equality />} />,
 ];
