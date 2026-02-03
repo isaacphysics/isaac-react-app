@@ -1,16 +1,16 @@
-import {useCallback, useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import {useGlossaryTermsInHtml} from "./GlossaryTerms";
 import {useAccessibleTablesInHtml} from "./Tables";
 import {useClozeDropRegionsInHtml} from "./renderClozeDropRegions";
 import { useInlineEntryZoneInHtml } from "./renderInlineEntryZone";
 
-export type PortalInHtmlHook = (html: string) => [string, (ref?: HTMLElement) => JSX.Element[]];
+export type PortalInHtmlHook = () => [(html: string, parentId?: string) => string, (ref?: HTMLElement) => JSX.Element[]];
 
 // These are the hooks that the Table component is allowed to use
 export const TABLE_COMPATIBLE_PORTAL_HOOKS: PortalInHtmlHook[] = [
-    useClozeDropRegionsInHtml,
-    useInlineEntryZoneInHtml,
-    useGlossaryTermsInHtml
+    // useClozeDropRegionsInHtml,
+    // useInlineEntryZoneInHtml,
+    // useGlossaryTermsInHtml
 ];
 
 // These hooks all follow the `PortalInHtmlHook` interface, which should be used as follows:
@@ -22,9 +22,9 @@ export const TABLE_COMPATIBLE_PORTAL_HOOKS: PortalInHtmlHook[] = [
 // Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
 export const PORTAL_HOOKS: PortalInHtmlHook[] = [
     useAccessibleTablesInHtml,
-    useClozeDropRegionsInHtml,
-    useInlineEntryZoneInHtml,
-    useGlossaryTermsInHtml
+    // useClozeDropRegionsInHtml,
+    // useInlineEntryZoneInHtml,
+    // useGlossaryTermsInHtml
 ];
 
 // This looks nasty since it calls other hooks in a loop, but as long as the same hooks are called in the same order each
@@ -32,18 +32,27 @@ export const PORTAL_HOOKS: PortalInHtmlHook[] = [
 // For this to be guaranteed, **the parameter `hookList` MUST STAY CONSTANT** (i.e. either use one of the `portalHooks` constants
 // above or define an array inline, but make sure that you don't modify the array at any point). Most use cases should only
 // need the predefined hooks below this.
-const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHook => function (html: string): [string, (ref?: HTMLElement) => JSX.Element[]] {
-    const renderFuncs: ((ref?: HTMLElement) => JSX.Element[])[] = [];
+const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHook => (): [(html: string, parentId?: string) => string, (ref?: HTMLElement) => JSX.Element[]] => {
+    const htmlFuncs = useRef<((html: string, parentId?: string) => string)[]>([]);
+    const portalFuncs = useRef<((ref?: HTMLElement) => JSX.Element[])[]>([]);
 
     hookList?.forEach(hook => {
-        const [modifiedHtml, func] = hook(html);
-        renderFuncs.push(func);
-        html = modifiedHtml;
+        const [htmlFunc, portalFunc] = hook();
+        htmlFuncs.current.push(htmlFunc);
+        portalFuncs.current.push(portalFunc);
     });
 
+    const htmlFunc = useCallback((html: string, parentId?: string): string => {
+        return htmlFuncs.current.reduce((modifiedHtml, func) => func(modifiedHtml, parentId), html);
+    }, []);
+
+    const portalFunc = useCallback((ref?: HTMLElement): JSX.Element[] => {
+        return portalFuncs.current.flatMap<JSX.Element>(func => func(ref));
+    }, []);
+
     return [
-        html,
-        ref => renderFuncs.flatMap<JSX.Element>(func => func(ref))
+        htmlFunc,
+        portalFunc
     ];
 };
 export const usePortalsInHtml = portalsInHtmlHookBuilder(PORTAL_HOOKS);

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import {useRenderKatex} from "./latexRendering";
 import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones, renderInlineQuestionPartZones, renderDndDropZones} from "./markdownRendering";
 // @ts-ignore
 import {utils} from "remarkable";
-import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
+import {usePortalsInHtml} from "./portals/utils";
 import {compose} from "redux";
 import {isDefined} from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
@@ -15,13 +15,37 @@ import { selectors, useAppSelector } from "../../../state";
 // html of that element (i.e. in this case `tooltips` are rendered next to `ElementType`, whose `dangerouslySetInnerHTML`
 // contains the `span`s that those `UncontrolledTooltip`s refer to).
 const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
-    const [htmlRef, updateHtmlRef] = useStatefulElementRef<HTMLDivElement>();
+    // const [htmlRef, updateHtmlRef] = useStatefulElementRef<HTMLDivElement>();
+    const htmlRef = useRef<HTMLDivElement>(null);
 
-    const [modifiedHtml, renderPortalElements] = usePortalsInHtml(html);
+    // attempt to determine a unique id for the parent container of this HTML.
+    // used so that if multiple separate TrustedHtml components have their own portal elements, they don't generate with the same ids.
+    const parentAccordion = htmlRef.current?.closest(".isaac-accordion");
+    const accordionIndex = parentAccordion?.parentElement
+        ? [...parentAccordion.parentElement.children].indexOf(parentAccordion)
+        : undefined;
+
+    const parentTab = htmlRef.current?.closest(".tab-content");
+    const tabIndex = parentTab?.parentElement
+        ? [...parentTab.parentElement.children].indexOf(parentTab)
+        : undefined;
+
+    const uniqueParentId = accordionIndex !== undefined
+        ? tabIndex !== undefined
+            ? `${accordionIndex}-${tabIndex}` 
+            : `${accordionIndex}` 
+        : tabIndex !== undefined
+            ? `t${tabIndex}` 
+            : "root";
+
+            
+    const [modifyHtml, renderPortalElements] = usePortalsInHtml();
+
+    const modifiedHtml = modifyHtml(html, uniqueParentId);
 
     return <>
-        <div ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
-        {renderPortalElements(htmlRef)}
+        <div ref={htmlRef} className={className} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
+        {htmlRef.current && modifiedHtml && renderPortalElements(htmlRef.current)}
     </>;
 };
 
