@@ -310,7 +310,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
                 className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText 
+                dangerouslySetInnerHTML={{ __html: previewText && doc.showInequalitySeed 
                     ? katex.renderToString(previewText) 
                     : (showTextEntry ? '<small>or click here to drag and drop your answer</small>' : '<small>Click to enter your answer</small>')
                 }}
