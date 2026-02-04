@@ -5,6 +5,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     isDefined,
+    isPhy,
     jsonHelper,
     sanitiseInequalityState,
     siteSpecific,
@@ -242,7 +243,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 <InputGroup className="my-2 separate-input-group">
                     <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
-                            placeholder="or type your formula here" className={classNames("h-100", {"text-body-tertiary": emptySubmission})}
+                            placeholder="or type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');

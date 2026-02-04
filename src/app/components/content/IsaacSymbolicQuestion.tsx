@@ -14,6 +14,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     isDefined,
+    isPhy,
     jsonHelper,
     parsePseudoSymbolicAvailableSymbols,
     sanitiseInequalityState,
@@ -264,7 +265,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 <InputGroup className="my-2 separate-input-group">
                     <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
-                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": emptySubmission})}
+                            placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');
@@ -302,8 +303,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
                 className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
-                    previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
+                dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<span>or click to replace your typed answer</span>" :
+                    previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
             />
         </div>
     );

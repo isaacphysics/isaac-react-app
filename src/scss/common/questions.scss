@@ -282,10 +282,10 @@ figure .inline-container {
 
 .symbolic-question, .equality-page {
   .eqn-editor-preview {
-    padding: 0.15em 0.6em;
+    padding: 0.25rem 1rem;
     cursor: default;
     &.empty {
-      color: $gray-500;
+      color: var(--bs-tertiary-color);
     }
   }
 

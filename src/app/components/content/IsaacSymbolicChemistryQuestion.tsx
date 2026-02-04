@@ -9,7 +9,8 @@ import {
     sanitiseInequalityState,
     siteSpecific,
     useCurrentQuestionAttempt,
-    parsePseudoSymbolicAvailableSymbols
+    parsePseudoSymbolicAvailableSymbols,
+    isPhy
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
@@ -267,7 +268,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 <InputGroup className="mt-2 separate-input-group">
                     <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput}
-                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": emptySubmission})}
+                            placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');
@@ -316,7 +317,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: previewText && (doc.showInequalitySeed || !emptySubmission)
                     ? katex.renderToString(previewText) 
-                    : (showTextEntry ? '<small>or click here to drag and drop your answer</small>' : '<small>Click to enter your answer</small>')
+                    : (showTextEntry ? '<span>or click here to drag and drop your answer</span>' : '<span>Click to enter your answer</span>')
                 }}
             />
             {modalVisible && <InequalityModal
