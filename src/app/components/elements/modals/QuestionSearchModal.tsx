@@ -56,7 +56,7 @@ const GameboardBuilderRow = lazy(() => importGameboardBuilderRow);
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
-    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
+    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 1080})}
 };
 
 interface QuestionSearchModalProps {
