@@ -4,16 +4,18 @@ import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const Unauthorised = () => {
-    const {pathname, state} = useLocation();
+    const {pathname, state} = useLocation<{overridePathname?: string}>();
     return <Container>
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle="Access denied" icon={{type: "icon", icon: "icon-error"}} />
             <h3 className="my-4">
-                {"You do not have authorisation to access the page: "}
+                <small>
+                    {"You do not have authorisation to access the page: "}
+                    <code>
+                        {(state && state.overridePathname) || pathname}
+                    </code>
+                </small>
             </h3>
-            <code>
-                {(state && state.overridePathname) || pathname}
-            </code>
         </div>
     </Container>;
 };

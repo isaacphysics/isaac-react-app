@@ -66,7 +66,9 @@ export const Gameboard = () => {
             icon={{type: "icon", icon: "icon-error"}}
         />
         <h3 className="my-4">
-            {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
+            <small>
+                {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
+            </small>
         </h3>
     </>;
     return !gameboardId

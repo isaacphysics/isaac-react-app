@@ -47,46 +47,47 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "icon", icon: "icon-error"}}/>
-            <h3 className="my-4">{`We're sorry, but an error has occurred in the ${SITE_TITLE_SHORT} app!`}</h3>
-            <p>
-                {"You may want to "}
-                <a
-                    role="button"
-                    tabIndex={0}
-                    href={window.location.href}
-                    onKeyPress={() => window.location.reload()}
-                    onClick={() => window.location.reload()}
-                >
-                    refresh this page and try again
-                </a>
-                {", "}
-                <Link to="/" onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()}>
-                    return to our homepage
-                </Link>
-                {", or "}
-                <Link
-                    to={`/contact?subject=App Error&message=${encodeURIComponent(plainTextUsefulInformation)}`}
-                    onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()}
-                >
-                    contact
-                </Link>
-                {" or "}
-                <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
-                {" us if this keeps happening."}
-            </p>
-
-            <Row className="mt-4 mb-7">
-                <Col>
-                    <div className="alert alert-info small overflow-auto">
-                        <h4>Useful information to include in your email</h4>
-                        <small>
-                            {Object.entries(usefulInformation).map(([key, value]) => (
-                                <p key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>
-                            ))}
-                        </small>
-                    </div>
-                </Col>
-            </Row>
+            <h3 className="my-4"><small>{`We're sorry, but an error has occurred in the ${SITE_TITLE_SHORT} app!`}</small></h3>
+            <h3>
+                <small>
+                    {"You may want to "}
+                    <a
+                        role="button"
+                        tabIndex={0}
+                        href={window.location.href}
+                        onKeyPress={() => window.location.reload()}
+                        onClick={() => window.location.reload()}
+                    >
+                        refresh this page and try again
+                    </a>
+                    {", "}
+                    <Link to="/" onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()}>
+                        return to our homepage
+                    </Link>
+                    {", or "}
+                    <Link
+                        to={`/contact?subject=App Error&message=${encodeURIComponent(plainTextUsefulInformation)}`}
+                        onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()}
+                    >
+                        contact
+                    </Link>
+                    {" or "}
+                    <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
+                    {" us if this keeps happening."}
+                </small>
+                <Row className="mt-4 mb-7">
+                    <Col>
+                        <div className="alert alert-info small overflow-auto">
+                            <h4>Useful information to include in your email</h4>
+                            <small>
+                                {Object.entries(usefulInformation).map(([key, value]) => (
+                                    <p key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>
+                                ))}
+                            </small>
+                        </div>
+                    </Col>
+                </Row>
+            </h3>
         </div>
     </Container>;
 };

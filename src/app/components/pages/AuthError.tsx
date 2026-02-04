@@ -12,7 +12,7 @@ export const AuthError = () => {
     return <Container role="region" aria-label="Authentication Error">
         <TitleAndBreadcrumb currentPageTitle="Authentication error" breadcrumbTitleOverride="Authentication error" icon={{type: "icon", icon: "icon-error"}}/>
         <Row className="pt-4">
-            <Col>
+            <Col md={{size: 8, offset: 2}}>
                 <ErrorMessage state={location.state}/>
             </Col>
         </Row>
