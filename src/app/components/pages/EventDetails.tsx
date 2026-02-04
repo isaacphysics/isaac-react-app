@@ -232,16 +232,14 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                         />
                         <div>
                             <p className="mb-3">
-                                <small>
-                                    By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
-                                    You are also giving them permission to set you pre-event work and view your progress.
-                                    You can manage access to your progress data in your <Link to="/account#teacherconnections" target="_blank">account settings</Link>.
-                                    <br/>
-                                    Your data will be processed in accordance with {SITE_TITLE}&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
-                                    <br/>
-                                    If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event.
-                                    You can enable this in your <Link to="/account#emailpreferences" target="_blank">account settings</Link>.
-                                </small>
+                                By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
+                                You are also giving them permission to set you pre-event work and view your progress.
+                                You can manage access to your progress data in your <Link to="/account#teacherconnections" target="_blank">account settings</Link>.
+                                <br/>
+                                Your data will be processed in accordance with {SITE_TITLE}&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
+                                <br/>
+                                If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event.
+                                You can enable this in your <Link to="/account#emailpreferences" target="_blank">account settings</Link>.
                             </p>
 
                             <div className="mt-4 mb-2 d-flex justify-content-center">
