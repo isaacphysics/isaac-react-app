@@ -59,11 +59,14 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
     const [textInput, setTextInput] = useState(initialSeedText);
-
+    const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;
 
     const hasMetaSymbols = doc.availableSymbols ? doc.availableSymbols.length > 0 && !doc.availableSymbols.every(
         symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim())
@@ -212,6 +215,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const updateEquation = (input: string) => {
         setTextInput(input);
+        setHasStartedEditing(true);
         setInputState({...inputState, mhchemExpression: input, userInput: textInput});
 
         const parsedExpression = doc.isNuclear ? parseInequalityNuclearExpression(input) : parseInequalityChemistryExpression(input);
@@ -247,8 +251,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
         .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
 
-    const muteAnswerText = !currentAttemptValue || !currentAttemptValue.result || (initialSeedText && textInput === initialSeedText);
-
     return (
         <div className="symbolic-question">
             <div className="question-content">
@@ -265,10 +267,12 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 <InputGroup className="mt-2 separate-input-group">
                     <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput}
-                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
+                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": emptySubmission})}
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');
+                            setHasStartedEditing(false);
+                            dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: "", mhchemExpression: "", frontEndValidation: false });
                             setTextInput(initialSeedText);
                         }}>
                             ↺
@@ -308,9 +312,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
-                className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
+                className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText && doc.showInequalitySeed 
+                dangerouslySetInnerHTML={{ __html: previewText && (doc.showInequalitySeed || !emptySubmission)
                     ? katex.renderToString(previewText) 
                     : (showTextEntry ? '<small>or click here to drag and drop your answer</small>' : '<small>Click to enter your answer</small>')
                 }}
