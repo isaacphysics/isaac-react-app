@@ -148,7 +148,7 @@ export const QuestionSearchModal = (
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
     },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
 
-    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions(questionsSort, creationContext)(
         questions.filter(question => {
             const qIsPublic = searchResultIsPublic(question, user);
             if (isBookSearch) return qIsPublic;
@@ -221,10 +221,7 @@ export const QuestionSearchModal = (
                         <Label htmlFor="question-search-book">Book</Label>
                         <StyledSelect
                             inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
-                            onChange={(e) => {
-                                selectOnChange(setSearchBook, true)(e);
-                                sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
-                            }}
+                            onChange={selectOnChange(setSearchBook, true)}
                             options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                         />
                     </div>}
