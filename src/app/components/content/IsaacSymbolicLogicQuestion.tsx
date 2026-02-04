@@ -222,7 +222,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
                 className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<small>Click to enter your expression</small>' }}
+                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>Click to enter your expression</span>' }}
             />
             {modalVisible && <InequalityModal
                 close={closeModalAndReturnToScrollPosition}
