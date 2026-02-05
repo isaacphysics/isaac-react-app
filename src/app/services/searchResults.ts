@@ -1,4 +1,4 @@
-import {HUMAN_STAGES, HUMAN_SUBJECTS, isValidStageSubjectPair, LEARNING_STAGE, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, Subjects, validQuestionDeckStageSubjectPairs} from "./";
+import {HUMAN_STAGES, HUMAN_SUBJECTS, isPhy, isValidStageSubjectPair, LEARNING_STAGE, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, Subjects, validQuestionDeckStageSubjectPairs} from "./";
 import {SearchShortcut} from "../../IsaacAppTypes";
 import {Stage} from "../../IsaacApiTypes";
 
@@ -328,7 +328,7 @@ export function shortcuts(term: string) {
             url: ("/account?authToken=" + term),
             type: SEARCH_RESULT_TYPE.SHORTCUT
         });
-    } else if (subjectDecksByTopic.test(lterm)) {
+    } else if (isPhy && subjectDecksByTopic.test(lterm)) {
         const subject = lterm.match(subjects)?.[0].toString();
         const stage = lterm.match(stages)?.[0].toString().replace(/[- ]/g, "_");
         const learningStage = STAGE_TO_LEARNING_STAGE[stage as Stage] as LEARNING_STAGE;
@@ -368,7 +368,7 @@ export function shortcuts(term: string) {
                 }
             }
         }
-    } else if (stageAndSubject.test(lterm)) {
+    } else if (isPhy && stageAndSubject.test(lterm)) {
         const subject = lterm.match(subjects)![0].toString();
         const stage = lterm.match(stages)![0].toString().replace(/[- ]/g, "_");
         const learningStage = STAGE_TO_LEARNING_STAGE[stage as Stage];
