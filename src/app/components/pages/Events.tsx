@@ -11,6 +11,7 @@ import {
     EventTypeFilter,
     STAGE,
     isAda,
+    isPhy,
     isTeacherOrAbove,
     siteSpecific,
     useDeviceSize,
@@ -120,7 +121,7 @@ export const Events = () => {
                 help={pageHelp}
                 icon={{type: "icon", icon: "icon-events"}}
             />
-            <SidebarLayout>
+            <SidebarLayout site={isPhy}>
                 <EventsSidebar/>
                 <MainContent>
                     {isAda && <AdaEventFilters/>}

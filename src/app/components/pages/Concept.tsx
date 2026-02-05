@@ -4,7 +4,7 @@ import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined} from "../../services";
+import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, isPhy} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -85,7 +85,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                         <MetaDescription description={doc.summary} />
                         <CanonicalHrefElement />
                     </>}
-                    <SidebarLayout>
+                    <SidebarLayout site={isPhy}>
                         {isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={doc.id}/>
                             : <ConceptSidebar relatedContent={doc.relatedContent}/>

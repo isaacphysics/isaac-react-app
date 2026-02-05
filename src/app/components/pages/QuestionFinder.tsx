@@ -470,7 +470,7 @@ export const QuestionFinder = () => {
             icon={{type: "icon", icon: "icon-finder"}}
         />
 
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <QuestionFinderSidebar
                 searchText={searchQuery} setSearchText={debouncedSearchHandler}
                 questionFinderFilterPanelProps={{

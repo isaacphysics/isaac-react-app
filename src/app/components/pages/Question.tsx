@@ -88,7 +88,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                         preview={preview} icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-question"}}
                     />
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
-                    <SidebarLayout>
+                    <SidebarLayout site={isPhy}>
                         {isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={questionId}/>
                             : <QuestionSidebar relatedContent={doc.relatedContent} />

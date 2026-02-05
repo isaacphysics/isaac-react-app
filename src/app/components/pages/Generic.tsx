@@ -98,7 +98,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                     icon={{type: "icon", icon: isNews ? "icon-news" : "icon-generic"}}
                 /> 
                 <MetaDescription description={doc.summary} />
-                <SidebarLayout>
+                <SidebarLayout site={isPhy}>
                     {sidebar}
                     <MainContent>
                         {/* on non-news generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 

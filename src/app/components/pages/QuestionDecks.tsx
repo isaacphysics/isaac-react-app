@@ -6,7 +6,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { Loading } from "../handlers/IsaacSpinner";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { ArrayElement, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../services";
+import { ArrayElement, isPhy, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
 import { QuestionDecksSidebar } from "../elements/sidebar/QuestionDecksSidebar";
 
@@ -37,7 +37,7 @@ export const QuestionDecks = () => {
                 icon: "icon-finder"
             } : undefined}
         />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} hideButton />
             <MainContent>
                 <PageMetadata showSidebarButton />

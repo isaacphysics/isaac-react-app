@@ -1,15 +1,23 @@
-import React, { useEffect } from "react";
-import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import React, { useContext, useEffect } from "react";
+import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Container } from "reactstrap";
 import classNames from "classnames";
-import { above, isAda, siteSpecific, useDeviceSize } from "../../../services";
+import { above, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { ContentSidebarContext } from "../../../../IsaacAppTypes";
+import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { SidebarButton } from "../SidebarButton";
 
-export const SidebarLayout = (props: RowProps) => {
-    const { className, ...rest } = props;
-    return siteSpecific(<Row {...rest} className={classNames("sidebar-layout", className)}/>, props.children);
+interface SidebarLayoutProps extends RowProps {
+    site?: boolean;
+}
+
+export const SidebarLayout = (props: SidebarLayoutProps) => {
+    const { className, site=true, ...rest } = props;
+    return site
+        ? <SidebarContext.Provider value={{sidebarPresent: true}}>
+            <div {...rest} className={classNames("d-flex flex-column flex-md-row sidebar-layout", className)}/>
+        </SidebarContext.Provider>
+        : props.children;
 };
 
 export const MainContent = (props: ColProps) => {
@@ -29,7 +37,9 @@ export type SidebarProps = ColProps
 export const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
     // the content in such a sidebar will collapse underneath the main content on smaller screens
-    if (isAda) return <></>;
+    
+    const sidebarContext = useContext(SidebarContext);
+    if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, ...rest } = props;
     return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
@@ -52,17 +62,23 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
 
     const pageTheme = useAppSelector(selectors.pageContext.subject);
 
-    if (isAda) return <></>;
+    const sidebarContext = useContext(SidebarContext);
+    if (!sidebarContext?.sidebarPresent) return <></>; 
+
+    const breakpoint = siteSpecific("lg", "md");
 
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
-    return <>
-        {above['lg'](deviceSize)
-            ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
-            : <>
+    return above[breakpoint](deviceSize)
+        ? siteSpecific(
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />,
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
+        )
+        : siteSpecific(
+            <>
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>}
-                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3"/>}
+                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3" />}
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
@@ -81,7 +97,46 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
+            </>,
+            <>
+                {/* I have kept the code for both around to allow RPF design to pick which they prefer – please delete the one they decide against! */}
+
+                {/* Ada attempt 1 – dropdown */}
+                {/* {!hideButton && <Container fluid className="w-100">
+                    <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
+                        <AccordionItem className="border">
+                            <AccordionHeader targetId="myAda">
+                                <span className="fw-bold">{buttonTitle}</span>
+                            </AccordionHeader>
+                            <AccordionBody accordionId="myAda" className="accordion-flush-body">
+                                <Col {...rest} className={classNames("flex-column", className)} />
+                            </AccordionBody>
+                        </AccordionItem>
+                    </Accordion>
+                </Container>} */}
+                
+                {/* Ada attempt 2 – offcanvas */}
+                {!hideButton && <Container fluid className="w-100">
+                    <SidebarButton buttonTitle={buttonTitle} className="my-3" />
+                </Container>}
+                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
+                    <OffcanvasHeader toggle={toggleMenu} close={
+                        <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
+                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
+                                affix: "icon-close",
+                                position: "suffix",
+                                type: "icon"
+                            }}>
+                                Close
+                            </AffixButton>
+                        </div>
+                    }/>
+                    <OffcanvasBody className="p-0">
+                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
+                            <Col {...rest} className={classNames("sidebar pt-0", className)} />
+                        </ContentSidebarContext.Provider>
+                    </OffcanvasBody>
+                </Offcanvas>
             </>
-        }
-    </>;
+        );
 };

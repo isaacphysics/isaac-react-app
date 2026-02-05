@@ -26,7 +26,7 @@ export const RegistrationStart = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <SignupSidebar activeTab={0}/>
             <MainContent>
                 <Card className="my-7">
