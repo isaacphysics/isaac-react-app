@@ -228,6 +228,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         terms: ["further maths", "further math", "further", "fm"],
         summary: "Question decks for pure topics in A Level Further Maths",
         url: "/maths/a_level/question_decks#further",
+        tags: ["maths"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "further_stats",
@@ -235,6 +236,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         terms: ["further maths", "further math", "further", "fm", "further stats", "stats", "statistics"],
         summary: "Question decks for statistics topics in A Level Further Maths",
         url: "/maths/a_level/question_decks#further_stats",
+        tags: ["maths"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "books",
@@ -249,6 +251,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         terms: ["pat", "esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
         url: "/physics/university/practice_tests",
+        tags: ["physics"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "maths_tests",
@@ -256,6 +259,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         terms: ["tmua", "esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
         url: "/maths/university/practice_tests",
+        tags: ["maths"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "chem_tests",
@@ -263,6 +267,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         terms: ["esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
         url: "/chemistry/university/practice_tests",
+        tags: ["chemistry"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "bio_tests",
@@ -270,6 +275,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         terms: ["esat"],
         summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
         url: "/biology/a_level/practice_tests",
+        tags: ["biology"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "tests",
