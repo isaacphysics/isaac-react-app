@@ -8,7 +8,7 @@ export enum FeatureFlag {
 const useFlags = () : Record<FeatureFlag, boolean> => {
     const { data: env } = useGetSegueEnvironmentQuery();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const isNonProd = env !== "PROD";
+    const isNonProd = env === "DEV";
 
     return {
         // [FeatureFlag.EXAMPLE_FEATURE]: isNonProd,
