@@ -365,6 +365,7 @@ export interface QuestionValidationResponseDTO {
     questionId?: string;
     answer?: ChoiceDTO;
     correct?: boolean;
+    marks?: number;
     explanation?: ContentDTO;
     dateAttempted?: Date;
 }
@@ -383,7 +384,6 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
 }
 
 export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
-    marksAwarded?: number;
     markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
 }
 
