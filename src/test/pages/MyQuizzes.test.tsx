@@ -1,5 +1,6 @@
+import userEvent from "@testing-library/user-event";
 import { MyQuizzes } from "../../app/components/pages/quizzes/MyQuizzes";
-import { PATHS } from "../../app/services";
+import { isPhy, PATHS } from "../../app/services";
 import { renderTestEnvironment, waitForLoaded } from "../testUtils";
 import {screen, waitFor, within} from "@testing-library/react";
 
@@ -42,10 +43,19 @@ describe("My Tests", () => {
     it("tests that are assigned and completed appear when the Completed filter is selected", async () => {
         await renderMyTests();
 
-        const completedFilter = await screen.findByLabelText("Complete");
-        completedFilter.click();
-        
         const tabs = await screen.findByTestId("active-tab-pane");
+
+        if (isPhy) {
+            const completedFilter = await screen.findByLabelText("Complete");
+            completedFilter.click();
+        } else {
+            const filtersMenu = await within(tabs).findByTestId("filter-dropdown");
+            filtersMenu.click();
+            const statusDropdown = await within(tabs).findByLabelText(/Filter by status/g);
+            await userEvent.click(statusDropdown);
+            await userEvent.click(screen.getByRole("option", {name: "Complete"}));
+        }
+        
         const quizzes = await within(tabs).findByTestId("assigned-quizzes");
         expect(quizzes.children).toHaveLength(3);
         expect(quizzes).toHaveTextContent("Test Quiz Assignment 1");
@@ -68,10 +78,19 @@ describe("My Tests", () => {
         await renderMyTests();
         await switchToPracticeTestsTab();
 
-        const completedFilter = await screen.findByLabelText("Complete");
-        completedFilter.click();
-        
         const tabs = await screen.findByTestId("active-tab-pane");
+
+        if (isPhy) {
+            const completedFilter = await screen.findByLabelText("Complete");
+            completedFilter.click();
+        } else {
+            const filtersMenu = await within(tabs).findByTestId("filter-dropdown");
+            filtersMenu.click();
+            const statusDropdown = await within(tabs).findByLabelText(/Filter by status/g);
+            await userEvent.click(statusDropdown);
+            await userEvent.click(screen.getByRole("option", {name: "Complete"}));
+        }
+        
         const quizzes = await within(tabs).findByTestId("practice-quizzes");
 
         expect(quizzes.children).toHaveLength(2);
