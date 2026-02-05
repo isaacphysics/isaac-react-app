@@ -22,6 +22,7 @@ import {
     mockLLMMarkedRegressionTestQuestion,
     mockLLMMarkedValidationResponse,
     mockSearchResults,
+    mockFreeAttempts,
     mockGameboards
 } from "./data";
 import {API_PATH} from "../app/services";
@@ -80,6 +81,11 @@ export const handlers = [
     }),
     http.get(API_PATH + "/quiz/assigned", () => {
         return HttpResponse.json([], {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/quiz/free_attempts", () => {
+        return HttpResponse.json(mockFreeAttempts, {
             status: 200,
         });
     }),
