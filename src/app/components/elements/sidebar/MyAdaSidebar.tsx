@@ -2,10 +2,10 @@ import React from "react";
 import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
-import { useHistory } from "react-router";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
 import { above, below, isStudent, isTeacherOrAbove, useDeviceSize } from "../../../services";
 import { Spacer } from "../Spacer";
+import { useLocation } from "react-router";
 
 interface MyAdaTab {
     title: string;
@@ -94,7 +94,7 @@ const AdaSidebarCollapser = ({collapsed, toggleSidebar, ...rest}: AdaSidebarColl
 
 
 export const MyAdaSidebar = (props: ContentSidebarProps) => {
-    const history = useHistory();
+    const location = useLocation();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
     const deviceSize = useDeviceSize();
@@ -113,7 +113,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                     if (tab.user === "ALL") return true;
                     return false;
                 }).map(([key, tab]) => {
-                    const isActive = history.location.pathname === tab.url;
+                    const isActive = location.pathname === tab.url;
                     return <StyledTabPicker
                         key={key}
                         id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
