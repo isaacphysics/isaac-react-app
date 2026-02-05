@@ -10,7 +10,7 @@ describe("IsaacApp", () => {
         });
     });
 
-    it('should show the users number of current assignments in the navigation menu (Physics only)', async () => {
+    it('should show the users number of current assignments in the navigation menu', async () => {
         await renderTestEnvironment();
         const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
         expect(myAssignmentsBadge.textContent).toContain("5");
