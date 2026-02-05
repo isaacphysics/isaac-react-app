@@ -1,7 +1,7 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -28,15 +28,15 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacReorderQuestion": "Reorder",
     "isaacParsonsQuestion": "Parsons",
     "isaacNumericQuestion": "Numeric",
-    "isaacSymbolicQuestion": "Symbolic",
+    "isaacSymbolicQuestion": "Algebraic",
     "isaacSymbolicChemistryQuestion": "Symbolic chemistry",
-    "isaacStringMatchQuestion": "String match",
+    "isaacStringMatchQuestion": "Text entry",
     "isaacRegexMatchQuestion": "Regex match",
     "isaacFreeTextQuestion": "Free text",
     "isaacLLMFreeTextQuestion": "LLM-marked free text",
     "isaacSymbolicLogicQuestion": "Boolean logic",
     "isaacGraphSketcherQuestion": "Graph sketcher",
-    "isaacClozeQuestion": "Cloze drag and drop",
+    "isaacClozeQuestion": "Drag and drop",
     "isaacCoordinateQuestion": "Coordinate",
     "default": "Multiple choice"
 };
@@ -63,6 +63,11 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
 };
 
 export const RESTRICTED_QUESTION_TYPES = ["isaacLLMFreeTextQuestion"];
+
+export const PROGRESS_QUESTION_TYPE_MAP : {[key: string]: string[]} = {
+    "isaacStringMatchQuestion": ["isaacStringMatchQuestion", "isaacRegexMatchQuestion", "isaacFreeTextQuestion"],
+    "isaacMultiChoiceQuestion": ["isaacMultiChoiceQuestion", "isaacItemQuestion"],
+};
 
 export function isQuestion(doc: ContentDTO) {
     return doc.type ? doc.type in QUESTION_TYPES : false;
@@ -183,7 +188,7 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
 
         const attempt = dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
 
-        if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+        if (isLoggedIn(currentUser) && !isTeacherPending(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
             dispatch(saveGameboard({
                 boardId: currentGameboard.id,
                 user: currentUser,

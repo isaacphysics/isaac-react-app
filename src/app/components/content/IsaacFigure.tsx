@@ -131,7 +131,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
                     `Figure\u00A0${figureNumbers[figId]}` : "Figure";
                 return <figure>
-                    <div className="w-100 d-flex flex-column justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
+                    <div className="w-100 d-flex flex-column align-items-center justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
                         <button className="figure-fullscreen" aria-label="Expand figure" type="button" onClick={() => {
                             dispatch(openActiveModal(FigureModal({
                                 path, 
@@ -142,9 +142,9 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                         }}>
                             <i className="icon icon-fullscreen icon-md" />
                         </button>
-                        <div className="position-relative w-fit-content align-self-center">
-                            {doc.figureRegions && contextType && path && (
-                                !isCondensed
+                        {(doc.figureRegions && contextType && path) 
+                            ? <div className="position-relative w-fit-content align-self-center">
+                                {!isCondensed
                                     ? generateFigureRegionObjects({
                                         figureRegions: doc.figureRegions, 
                                         contextType,
@@ -166,16 +166,22 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                             top: `calc(${region.top}% - (${regionHeight} * ${region.top/100}) + ((${regionHeight} - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`,
                                         })
                                     })
-                            )}
+                                }
 
-                            {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
-                            {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
-                        </div>
+                                {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
+                                {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
+                            </div>
+                            : <>
+                                {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
+                                {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
+                            </>
+                        }
+
                         {doc.figureRegions && contextType && path && (
                             isCondensed 
                                 ? <>
                                     <hr />
-                                    <div className="d-flex flex-column gap-2 mt-3">
+                                    <div className="d-flex flex-column w-100 gap-2 mt-3">
                                         {generateFigureRegionObjects({
                                             figureRegions: doc.figureRegions, 
                                             contextType,

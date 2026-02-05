@@ -1,5 +1,5 @@
 import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Container} from "reactstrap";
 import queryString from "query-string";
@@ -26,8 +26,9 @@ const subjectToTagMap = {
 };
 
 // This component is Isaac Physics only (currently)
-export const Concepts = withRouter((props: RouteComponentProps) => {
-    const {location, history} = props;
+export const Concepts = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
 
@@ -119,7 +120,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         if (e) {
             e.preventDefault();
         }
-        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
+        pushConceptsToHistory(navigate, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
 
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -192,4 +193,4 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             </SidebarLayout>
         </Container>
     );
-});
+};

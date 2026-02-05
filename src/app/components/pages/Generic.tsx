@@ -3,7 +3,7 @@ import {Col, Container, Row} from "reactstrap";
 import {ContentSummaryDTO, GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
 import {isAda, isPhy, useUrlHashValue} from "../../services";
-import {withRouter} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -28,7 +28,6 @@ import { GenericSidebarWithRelatedContent } from "../elements/sidebar/RelatedCon
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
-    match: {params: {pageId: string}};
 }
 
 // Used to decide whether a page should have huge gutters or not. Generic pages do by default, as most are textual,
@@ -56,8 +55,9 @@ const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: 
     return <GenericPageSidebar {...sidebarProps} />;
 };
 
-export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
-    const pageId = pageIdOverride || params.pageId;
+export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
+    const params = useParams();
+    const pageId = pageIdOverride || params.pageId || "";
 
     const pageQuery = useGetGenericPageQuery(pageId);
 
@@ -122,4 +122,4 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
             </Container>;
         }}
     />;
-});
+};

@@ -21,7 +21,7 @@ describe('pageRedirects', () => {
 
     redirectTestCases.filter(isCurrentSite).forEach(({ from, to, handlers }) => {
         it(`redirects ${from} to ${to}`, async () => {
-            renderTestEnvironment({ extraEndpoints: handlers });
+            await renderTestEnvironment({ extraEndpoints: handlers });
             await setUrl({ pathname: from });
             await expectUrl(to);
         });

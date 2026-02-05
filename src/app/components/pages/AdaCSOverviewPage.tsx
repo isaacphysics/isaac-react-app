@@ -1,5 +1,4 @@
 import React from "react";
-import {withRouter} from "react-router";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageMetadata} from "../elements/PageMetadata";
@@ -9,8 +8,7 @@ import { TextBlock } from "../elements/layout/TextBlock";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 
 
-export const AdaCSOverviewPage = withRouter(() => {
-
+export const AdaCSOverviewPage = () => {
     return <Container data-bs-theme={undefined} className="ada-overview-page">
         <TitleAndBreadcrumb
             currentPageTitle={"Computer Science"}
@@ -81,4 +79,4 @@ export const AdaCSOverviewPage = withRouter(() => {
 
         </div>
     </Container>;
-});
+};

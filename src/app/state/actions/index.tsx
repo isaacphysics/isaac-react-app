@@ -4,14 +4,14 @@ import {
     api,
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
-    history,
     isAda,
-    isNotPartiallyLoggedIn,
     isTeacherOrAbove,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     trackEvent,
+    isTeacherAuthResponsePendingVerification,
+    navigateComponentless,
 } from "../../services";
 import {
     Action,
@@ -28,6 +28,7 @@ import {
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
+    RegisteredUserDTO,
     TestCaseDTO,
     UserRole
 } from "../../../IsaacApiTypes";
@@ -47,6 +48,7 @@ import {
     store,
 } from "../index";
 import {Immutable} from "immer";
+import { NavigateFunction } from "react-router";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
@@ -163,7 +165,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
     try {
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         await dispatch(requestCurrentUser() as any);
         continueToAfterAuthPath(result.data);
@@ -189,7 +191,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
-        if (isNotPartiallyLoggedIn(currentUser.data)) {
+        if (!isTeacherAuthResponsePendingVerification(currentUser.data)) {
             await Promise.all([
                 dispatch(getUserAuthSettings() as any),
                 dispatch(getUserPreferences() as any)
@@ -277,24 +279,28 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
 
         if (result.status === 202) {
             // We haven't been fully authenticated, some additional action is required
-            if (result.data.MFA_REQUIRED) {
+            if ("MFA_REQUIRED" in result.data) {
                 // MFA is required for this user and user isn't logged in yet.
                 dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
                 return;
-            } else if (result.data.EMAIL_VERIFICATION_REQUIRED) {
+            } else if ("EMAIL_VERIFICATION_REQUIRED" in result.data) {
                 // Email verification is required for this user
-                history.push("/verifyemail");
+                void navigateComponentless("/verifyemail");
                 // A partial login is still "successful", though we are unable to request user preferences and auth settings
-                dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+                dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
                 // We can, however, request the current user. This lets us set the session expiry time.
                 dispatch(requestCurrentUser() as any);
                 return;
             }
         }
+
+        // otherwise, result.data is a valid user object
+        const user = result.data as RegisteredUserDTO;
+
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         dispatch(requestCurrentUser() as any);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        continueToAfterAuthPath(result.data);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
+        continueToAfterAuthPath(user);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -330,7 +336,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
     // TODO MT handle case when user is already logged in
 };
 
-export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigate: NavigateFunction, provider: AuthenticationProvider, parameters: string) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
@@ -339,7 +345,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: providerResponse.data});
         trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
@@ -355,7 +361,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         // They will see the required account information modal either way on registration.
         const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
-        history.push(nextPage || defaultNextPage);
+        await navigate(nextPage || defaultNextPage);
     } catch (error: any) {
         const providerErrors = fetchErrorFromParameters(parameters);
         trackEvent("sign_in_failure", { props: {
@@ -366,7 +372,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             isaacError: error?.response?.data?.responseCode || error?.code || 'unknown',
             isaacErrorDescription: error?.response?.data?.errorMessage || error?.message || 'unknown'
         }});
-        history.push("/auth_error", { errorMessage: extractMessage(error), provider, providerErrors });
+        await navigate("/auth_error", { state: { errorMessage: extractMessage(error), provider, providerErrors } });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         if (!extractMessage(error).startsWith("You do not use") && !providerErrors.errorDescription?.startsWith("AADSTS65004")) {
             dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
@@ -507,7 +513,7 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
         dispatch(logAction({
             type: "VIEW_SUPERSEDED_BY_QUESTION", questionId: page.id, supersededBy: page.supersededBy
         }) as any);
-        history.push(`/questions/${page.supersededBy}`);
+        void navigateComponentless(`/questions/${page.supersededBy}`);
     }
 };
 
@@ -528,7 +534,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
             dispatch(showToast({color: "success", title: "Test submitted", body: "Test submitted successfully", timeout: 3000}) as any);
-            history.push(generatePostQuizUrl(quizId));
+            void navigateComponentless(generatePostQuizUrl(quizId));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
@@ -544,7 +550,7 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
             <strong>A submission has already been recorded for this test by your account.</strong>
         </div>
     }) as any);
-    history.push(generatePostQuizUrl(quizId));
+    void navigateComponentless(generatePostQuizUrl(quizId));
 };
 
 // Question testing
@@ -575,7 +581,7 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 // SERVICE ACTIONS (w/o dispatch)
 
 export const changePage = (path: string) => {
-    history.push(path);
+    void navigateComponentless(path);
 };
 
 export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => {
@@ -586,12 +592,12 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
     } else if (user && isTeacherOrAbove(user) && isAda) {
         target = "/dashboard";
     }
-    history.push(target);
+    void navigateComponentless(target);
 };
 
 // Hard redirect (refreshes page)
 export const redirectTo = (path: string) => {
-    window.location.href = window.location.origin + path;
+    window.location.href = path;
 };
 
 export const registerPageChange = (path: string) => {

@@ -36,10 +36,10 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
                 <span>Subject & topics</span>
                 <div className="d-flex align-items-center">
                     <i className="icon icon-hexagon-bullet me-2"/>
-                    {getTags(doc.tags).map((tag, index, arr) => <>
+                    {getTags(doc.tags).map((tag, index, arr) => <React.Fragment key={tag.title}>
                         <span key={tag.title} className="text-theme">{tag.title}</span>
                         {index !== arr.length - 1 && <span className="mx-2">|</span>}
-                    </>)}
+                    </React.Fragment>)}
                 </div>
             </Col>
             <Col className="d-flex flex-column mw-max-content" id="metadata-status">
@@ -76,10 +76,10 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
             <div className="d-flex my-2">
                 <span className="me-2 fw-bold">Subject & topics:</span>
                 <div>
-                    {getTags(doc.tags).map((tag, index, arr) => <>
+                    {getTags(doc.tags).map((tag, index, arr) => <React.Fragment key={tag.title}>
                         <span key={tag.title}> {tag.title} </span>
                         {index !== arr.length - 1 && <span className="mx-1">|</span>}
-                    </>)}
+                    </React.Fragment>)}
                 </div>
                 <span className="ms-5 me-2 fw-bold">Stage & difficulty:</span>
                 <div>

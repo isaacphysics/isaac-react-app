@@ -1,5 +1,4 @@
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
@@ -11,7 +10,7 @@ import { ArrayElement, isPhy, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../ser
 import { PageMetadata } from "../elements/PageMetadata";
 import { QuestionDecksSidebar } from "../elements/sidebar/QuestionDecksSidebar";
 
-export const QuestionDecks = withRouter((props: RouteComponentProps) => {
+export const QuestionDecks = () => {
     const pageContext = useUrlPageTheme();
 
     const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
@@ -46,4 +45,4 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
             </MainContent>
         </SidebarLayout>
     </Container>;
-});
+};

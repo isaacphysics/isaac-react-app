@@ -35,7 +35,6 @@ import {
     EXAM_BOARD,
     GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
-    history,
     isAda,
     isDefined,
     isStaff,
@@ -50,7 +49,7 @@ import {
     TAG_ID,
     useUserViewingContext
 } from "../../services";
-import {useLocation} from "react-router-dom";
+import {useBlocker, useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import intersection from "lodash/intersection";
@@ -71,10 +70,14 @@ class GameboardBuilderQuestionsStack {
     setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
     selectedQuestionsStack: Map<string, ContentSummary>[];
 
-    constructor(props: {questionOrderStack: string[][];
+    constructor(
+        props: {
+            questionOrderStack: string[][];
             setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
             selectedQuestionsStack: Map<string, ContentSummary>[];
-            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>}) {
+            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
+        })
+    {
         this.questionOrderStack = props.questionOrderStack;
         this.setQuestionOrderStack = props.setQuestionOrderStack;
         this.selectedQuestionsStack = props.selectedQuestionsStack;
@@ -120,6 +123,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
     const [generateTemporaryGameboard] = useGenerateTemporaryGameboardMutation();
     const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = useCreateGameboardMutation();
+    const [dirty, setDirty] = useState(false);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<Item<string>[]>([]);
@@ -156,7 +160,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setWildcardId(undefined);
     };
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setSubmissionAttempted(true);
@@ -164,6 +168,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         if (!allInputIsValid) {
             return;
         }
+
+        setDirty(false);
 
         let wildcard = undefined;
         if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
@@ -187,7 +193,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             subjects = Array.from(new Set(subjects));
         }
 
-        createGameboard({
+        void createGameboard({
             gameboard: {
                 id: gameboardURL ? gameboardURL : undefined,
                 title: gameboardTitle,
@@ -213,13 +219,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         });
 
         logEvent(eventLog, "SAVE_GAMEBOARD", {});
-        dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
+        await dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
     };
 
     useEffect(() => {
         if (baseGameboard) {
             cloneGameboard(baseGameboard);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [baseGameboard]);
 
     const titleIsValid = gameboardTitle != "";
@@ -245,7 +252,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             if (!userContext.contexts.map(c => c.examBoard).includes(EXAM_BOARD.ALL)) {
                 params.examBoards = userContext.contexts[0].examBoard ?? "";
             }
-            generateTemporaryGameboard(params).then((gameboardResponse) => {
+            void generateTemporaryGameboard(params).then((gameboardResponse) => {
                 if (mutationSucceeded(gameboardResponse)) {
                     cloneGameboard(gameboardResponse.data);
                 } else {
@@ -253,13 +260,23 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 }
             });
         }
-    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.contexts[0]]);
+    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.contexts]);
+
+    const blocker = useBlocker(
+        useCallback(() => dirty, [dirty]),
+    );
+
     useEffect(() => {
-        return history.block(() => {
-            logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
-            dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
-        });
-    }, []);
+        if (blocker.state === "blocked") {
+            if (window.confirm("You have unsaved changes - are you sure you want to leave this page?")) {
+                logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
+                void dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
+                blocker.proceed?.();
+            } else {
+                blocker.reset?.();
+            }
+        }
+    }, [blocker, dispatch, eventLog]);
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
@@ -295,6 +312,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     });
     const canUndo = !!undoStack.length;
     const canRedo = !!redoStack.length;
+
+    useEffect(() => {
+        setDirty(canUndo);
+    }, [canUndo]);
 
     const undoButtonProps = {
         color: "keyline",

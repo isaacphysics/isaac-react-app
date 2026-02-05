@@ -9,7 +9,7 @@ import {http, HttpResponse} from "msw";
 describe("AssignmentProgress", () => {
 
     it("shows an accordion section for each active group", async () => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TUTOR",
         });
         await navigateToAssignmentProgress();
@@ -21,7 +21,7 @@ describe("AssignmentProgress", () => {
         const mockGroup = mockActiveGroups[0];
         const mockAssignments = mockAssignmentsGroup2;
         const mockTestAssignments = mockQuizAssignments.filter(q => q.groupId === mockGroup.id);
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -59,7 +59,7 @@ describe("AssignmentProgress", () => {
         const mockGroup = mockActiveGroups[0];
         const mockAssignments = mockAssignmentsGroup2;
         const mockTestAssignments = mockQuizAssignments.filter(q => q.groupId === mockGroup.id);
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -93,7 +93,7 @@ describe("AssignmentProgress", () => {
         // Arrange
         const mockData = "I'm a CSV";
 
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/assignments/assign/group/2/progress/download", ({request, params, cookies}) => {
@@ -128,7 +128,7 @@ describe("AssignmentProgress", () => {
         // Arrange
         const mockData = "I'm a CSV";
 
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/assignments/assign/2/progress/download", ({request, params, cookies}) => {
@@ -168,7 +168,7 @@ describe("AssignmentProgress", () => {
         // Arrange
         const mockData = "I'm a CSV";
 
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/quiz/group/2/download", ({request, params, cookies}) => {

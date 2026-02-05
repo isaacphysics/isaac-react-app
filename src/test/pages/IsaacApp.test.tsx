@@ -1,26 +1,26 @@
 import {screen, waitFor} from "@testing-library/react";
 import {renderTestEnvironment} from "../testUtils";
-import {history, isPhy} from "../../app/services";
+import {isPhy} from "../../app/services";
 
 describe("IsaacApp", () => {
 
     it('should open on the home page', async () => {
-        renderTestEnvironment();
+        await renderTestEnvironment();
         await waitFor(() => {
-            expect(history.location.pathname).toBe("/");
+            expect(window.location.pathname).toBe("/");
         });
     });
 
     // TODO implement test data and this test for CS
     isPhy && it('should show the users number of current assignments in the navigation menu (Physics only)', async () => {
-        renderTestEnvironment();
+        await renderTestEnvironment();
         const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
         expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
     });
 
     // TODO broken since we only show 3-4 news pods on the homepage
     // isAda && it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
-    //     renderTestEnvironment();
+    //     await renderTestEnvironment();
     //     const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
     //     const newsCarousel = await screen.findByTestId("news-pod-deck");
     //     const newsPods = await within(newsCarousel).findAllByTestId("news-pod");

@@ -374,7 +374,7 @@ export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO
 }
 
 export interface DndValidationResponseDTO extends QuestionValidationResponseDTO {
-    itemsCorrect?: Record<string, boolean>;
+    dropZonesCorrect?: Record<string, boolean>;
 }
 
 export interface InlineRegionValidationResponseDTO extends QuestionValidationResponseDTO {
@@ -399,7 +399,6 @@ export interface UserGroupDTO {
     additionalManagerPrivileges?: boolean;
     ownerSummary?: UserSummaryWithEmailAddressDTO;
     additionalManagers?: UserSummaryWithEmailAddressDTO[];
-    _id?: number;
 }
 
 export interface AnvilAppDTO extends ContentDTO {
@@ -692,13 +691,9 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     emailVerificationStatus?: EmailVerificationStatus;
     teacherAccountPending?: boolean;
     id?: number;
-    _id?: number;
 }
 
-export interface AuthenticationResponseDTO extends RegisteredUserDTO {
-    MFA_REQUIRED?: boolean;
-    EMAIL_VERIFICATION_REQUIRED?: boolean;
-}
+export type AuthenticationResponseDTO = Immutable<RegisteredUserDTO> | { MFA_REQUIRED?: boolean; } | { EMAIL_VERIFICATION_REQUIRED?: boolean; };
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
     linkedAccounts?: AuthenticationProvider[];
@@ -765,6 +760,7 @@ export interface GameboardItem {
     questionPartStates?: QuestionPartState[];
     boardId?: string;
     supersededBy?: string;
+    deprecated?: boolean;
 }
 
 export interface IsaacWildcard extends Content {

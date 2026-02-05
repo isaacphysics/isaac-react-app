@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { PageContextState } from "../../../../IsaacAppTypes";
 import { PHY_NAV_SUBJECTS, ArrayElement, LEARNING_STAGE, HUMAN_STAGES, HUMAN_SUBJECTS } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
@@ -13,7 +13,7 @@ interface QuestionDecksSidebarProps extends ContentSidebarProps {
 export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
     const { validStageSubjectPairs, context, ...rest } = props;
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const isValidStage = (stage: LEARNING_STAGE) => {
         return (validStageSubjectPairs[context.subject] as LEARNING_STAGE[]).includes(stage);
@@ -34,7 +34,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
                             checkboxTitle={HUMAN_STAGES[stage]}
                             checked={context.stage.includes(stage)}
                             disabled={!isValidStage(stage)}
-                            onClick={() => isValidStage(stage) && history.push(`/${context.subject}/${stage}/question_decks`)}
+                            onClick={() => isValidStage(stage) && navigate(`/${context.subject}/${stage}/question_decks`)}
                         />
                     </li>
                 )}
@@ -49,7 +49,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
                                 checkboxTitle={HUMAN_SUBJECTS[subject]}
                                 checked={context.subject === subject}
                                 disabled={!isValidSubject(stages)}
-                                onClick={() => isValidSubject(stages) && history.push(`/${subject}/${context.stage}/question_decks`)}
+                                onClick={() => isValidSubject(stages) && navigate(`/${subject}/${context.stage}/question_decks`)}
                             />
                         </li>
                     )

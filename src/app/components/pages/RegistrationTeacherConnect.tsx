@@ -14,7 +14,7 @@ import {
     Row
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {extractTeacherName, history, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
+import {extractTeacherName, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
 import {
     selectors,
     useAppDispatch,
@@ -23,12 +23,14 @@ import {
     useLazyGetTokenOwnerQuery
 } from "../../state";
 import { authenticateWithTokenAfterPrompt } from "../elements/panels/TeacherConnections";
+import { useNavigate } from "react-router";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export const RegistrationTeacherConnect = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const navigate = useNavigate();
 
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const [authenticationToken, setAuthenticationToken] = useState<string | undefined>("");
@@ -48,7 +50,7 @@ export const RegistrationTeacherConnect = () => {
 
     const continueToNext = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push(siteSpecific("/register/preferences", "/register/success"));
+        void navigate(siteSpecific("/register/preferences", "/register/success"));
     };
 
     useEffect(() => {

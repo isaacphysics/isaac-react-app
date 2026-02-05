@@ -169,17 +169,17 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
     const inlineDropValueMap = useMemo<{[p: string]: ReplaceableItem}>(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
     // Compute map used to highlight each inline drop-zone with whether it is correct or not
-    const itemsCorrect = validationResponse?.itemsCorrect;
+    const dropZonesCorrect = validationResponse?.dropZonesCorrect;
     const [dropZoneValidationMap, setDropZoneValidationMap] = useState<{[p: string]: {correct?: boolean, itemId?: string} | undefined}>({});
     useEffect(() => {
-        if (isDefined(itemsCorrect)) {
+        if (isDefined(dropZonesCorrect)) {
             // Tag each drop-zone validation with the id of the item currently in that zone. This means that we can
             // conditionally show the validation based on whether it still applies to whatever item is in that
             // drop-zone.
-            setDropZoneValidationMap(Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: {correct: itemsCorrect[i], itemId: inlineDropValueMap[dropId]?.id}}), {}));
+            setDropZoneValidationMap(Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: {correct: dropZonesCorrect[i], itemId: inlineDropValueMap[dropId]?.id}}), {}));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [itemsCorrect, inlineDropValueMap]);
+    }, [dropZonesCorrect, inlineDropValueMap]);
 
     // Manual management of which draggable item gets focus at the end of the drag. The new focus id is set in onDragEnd,
     // causing shouldGetFocus to be updated. shouldGetFocus is passed via the ClozeDropRegionContext to all draggable
