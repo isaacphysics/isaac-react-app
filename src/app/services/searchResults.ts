@@ -272,6 +272,13 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/biology/a_level/practice_tests",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
+        id: "tests",
+        title: "Practice tests",
+        terms: ["tests", "test", "practice tests", "practice test"],
+        summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
+        url: "/practice_tests",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
         id: "teacher_features",
         title: "Teacher features",
         terms: ["teacher", "teaching", "teachers", "teacher account", "teacher features"],
