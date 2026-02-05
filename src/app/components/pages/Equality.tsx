@@ -314,7 +314,7 @@ const Equality = () => {
                         <div
                             role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${!allowTextInput && 'mt-4'}`} tabIndex={0}
                             onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
-                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${allowTextInput ? 'or c' : 'C'}lick here to enter a formula</small>` }}
+                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<span>${allowTextInput ? 'or c' : 'C'}lick here to enter a formula</span>` }}
                         />
                         {modalVisible && <InequalityModal
                             close={closeModal}

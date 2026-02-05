@@ -242,6 +242,8 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 export type PathString = `/${string}`;
 export type SearchString = `?${string}`;
 export const setUrl = async (location: Partial<URL>) => {
+    // this act seems to be generating a lot of warnings for both being there and for not being there if you remove it. 
+    // seems like an RTL issue: https://github.com/testing-library/react-testing-library/issues/1413
     await act(async () => {
         // push a new state, then go to it
         history.pushState({}, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);
