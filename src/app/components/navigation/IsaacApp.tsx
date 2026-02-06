@@ -167,7 +167,7 @@ const routes = createRoutesFromElements(
         <Route path="/admin/usermanager" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminUserManager />} />} />
         <Route path="/admin/events" element={<RequireAuth auth={user => isAdminOrEventManager(user) || isEventLeader(user)} element={(authUser) => <EventManager user={authUser} />} />} />
         <Route path="/admin/stats" element={<RequireAuth auth={isStaff} element={<AdminStats />} />} />
-        <Route path="/admin/content_errors" element={<RequireAuth auth={user => isStaff(user)} element={<AdminContentErrors />} />} />
+        <Route path="/admin/content_errors" element={<RequireAuth auth={(user, env) => isStaff(user) || env === "DEV"} element={<AdminContentErrors />} />} />
         <Route path="/admin/emails" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminEmails />} />} />
         <Route path="/admin/direct_emails" element={<RequireAuth auth={isAdminOrEventManager} element={<ContentEmails />} />} />
         {/* Authentication */}

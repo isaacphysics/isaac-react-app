@@ -323,12 +323,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
 
     return <Container id="account-page" className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
-        {isAda && <h3 className="d-md-none text-center text-muted m-3">
+        {isAda && <p className="d-md-none text-center text-muted m-3">
             <small>
                 {`Update your Ada Computer Science account, or `}
                 <Link to="/logout" className="text-theme">Log out</Link>
             </small>
-        </h3>}
+        </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <SidebarLayout>

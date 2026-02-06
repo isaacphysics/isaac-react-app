@@ -1285,6 +1285,7 @@ export const PATHS = {
     }),
     // Common paths
     MANAGE_GROUPS: "/groups",
+    MY_TESTS: "/tests",
     TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
 };

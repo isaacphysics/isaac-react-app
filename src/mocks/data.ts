@@ -6192,7 +6192,85 @@ export const mockQuizAssignments = [
             startDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             completedDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
         }
+    },
+    {
+        id: 11,
+        quizId: "test-quiz-assignment-3",
+        quizSummary: {
+            id: "test-quiz-assignment-3",
+            title: "Test Quiz Assignment 3",
+            type: "isaacQuiz",
+            tags: [],
+            url: "/isaac-api/api/quiz/test-quiz-assignment-3",
+            visibleToStudents: false,
+            hiddenFromRoles: [
+                "TEACHER",
+                "STUDENT"
+            ]
+        },
+        groupId: 2,
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        quizFeedbackMode: "DETAILED_FEEDBACK",
     }
+];
+
+export const mockFreeAttempts = [
+    {
+        "id": 8,
+        "userId": 9,
+        "quizId": "test-free-attempt-1",
+        "quizSummary": {
+            "id": "test-free-attempt-1",
+            "title": "Practice Quiz 1",
+            "type": "isaacQuiz",
+            "tags": [],
+            "url": "/isaac-api/api/quiz/test-free-attempt-1",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ]
+                },
+                {
+                    "stage": [
+                        "university"
+                    ]
+                }
+            ],
+            "hiddenFromRoles": []
+        },
+        "startDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+    },
+    {
+        "id": 9,
+        "userId": 9,
+        "quizId": "test-free-attempt-2",
+        "quizSummary": {
+            "id": "test-free-attempt-2",
+            "title": "Practice Quiz 2",
+            "type": "isaacQuiz",
+            "tags": [],
+            "url": "/isaac-api/api/quiz/test-free-attempt-2",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ]
+                },
+                {
+                    "stage": [
+                        "university"
+                    ]
+                }
+            ],
+            "hiddenFromRoles": []
+        },
+        "startDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        "completedDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
+    },
 ];
 
 export const mockGroups = [
