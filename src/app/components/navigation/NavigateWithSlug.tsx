@@ -11,13 +11,13 @@ import { Navigate, NavigateProps, useParams } from "react-router";
  * 
  *  This will only work for from / to paths that:
  *  - have the same slugs (e.g. `/foo/:id/:otherId` to `/bar/:id/baz/:otherId`)
- *  - maintain the same url structure (will not support `/foo/:id` to `/bar#:id`; use a custom redirect for this)
  */ 
 export const NavigateWithSlug = (props: NavigateProps) => {
     const { to, ...rest } = props;
     const path = typeof to === "string" ? to : to.pathname || "";
     const params = useParams();
     const slugs = Object.entries(params).filter(([_, value]) => typeof value === "string") as [string, string][];
+    slugs.sort((a, b) => b[1].length - a[1].length); // Sort slugs by length in descending order to avoid partial replacements (e.g. :id and :id2)
     const targetPath = slugs.length ? slugs.reduce((acc, [key, slug]) => acc.replace(`:${key}`, slug), path) : path;
     const target = typeof to === "string" ? targetPath : { ...to, pathname: targetPath };
     return <Navigate to={target} {...rest} />;
