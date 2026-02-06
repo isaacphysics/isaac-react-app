@@ -43,6 +43,7 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
 export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
     const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
+    const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
     const bookingDeadlineSoon = event.bookingDeadline && event.isWithinBookingDeadline && (new Date(event.bookingDeadline).getTime() - Date.now()) < 604800000; // 1 week
@@ -53,12 +54,16 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
             <Link className="pod-img event-pod-img d-flex" to={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`} className={classNames({"expired": hasExpired})}/>
                 {hasExpired &&
-                    <div className="event-pod-badge">
+                    <div className="event-pod-badge align-self-end right">
                         <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
                     </div>}
+                {isVirtualEvent &&
+                    <div className="event-pod-badge align-self-end">
+                        <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
+                    </div>}
                 {bookingDeadlineSoon &&
-                    <div className="event-pod-badge">
-                        {bookingDeadlineSoon && <span className="warning-tag px-2 py-1 fw-semibold">
+                    <div className="event-pod-badge align-self-end right">
+                        {<span className="warning-tag px-2 fw-semibold">
                             Booking deadline soon!
                         </span>}
                     </div>}
