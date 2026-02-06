@@ -94,6 +94,10 @@ div:has(> .pod) {
     .event-pod-badge {
       position: absolute;
       margin: 3%;
+
+      &.right {
+        right: 3%;
+      }
     }
 
     .event-pod-hex {
