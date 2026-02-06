@@ -31,7 +31,7 @@ export const FeatureFlagProvider = ({ children }: { children: React.ReactNode })
  * @param flag The flag(s) to obtain the status of.
  * @returns The enabled status of the flag(s). If an array is provided, returns true if any of the flags are enabled.
  */
-export const useFeatureFlag = (flag: FeatureFlag | FeatureFlag[]) => {
+export const useFeatureFlag = (flag: FeatureFlag | FeatureFlag[]): boolean => {
     const allFlags = useContext(FeatureFlagContext);
     if (!allFlags || flag === undefined) return false;
     if (Array.isArray(flag)) {
