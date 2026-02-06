@@ -58,7 +58,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                         <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
                     </div>}
                 {isVirtualEvent &&
-                    <div className="event-pod-badge align-self-end">
+                    <div className={classNames("event-pod-badge align-self-end", {"expired": hasExpired})}>
                         <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
                     </div>}
                 {bookingDeadlineSoon &&
@@ -68,12 +68,12 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                         </span>}
                     </div>}
                 {isTeacherEvent &&
-                    <div className="event-pod-hex">
+                    <div className={classNames("event-pod-hex", {"expired": hasExpired})}>
                         <b>TEACHER EVENT</b>
                         <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
                     </div>}
                 {isStudentEvent &&
-                    <div className="event-pod-hex">
+                    <div className={classNames("event-pod-hex", {"expired": hasExpired})}>
                         <b>STUDENT EVENT</b>
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
