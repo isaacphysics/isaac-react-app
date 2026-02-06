@@ -110,15 +110,13 @@ export const UserProfile = (props: UserProfileProps) => {
                 required={true}
             />
             {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center border-muted my-4"/>)}
-            {isAda &&
-                <CountryInput
-                    userToUpdate={userToUpdate}
-                    setUserToUpdate={setUserToUpdate}
-                    countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
-                    submissionAttempted={submissionAttempted}
-                    required={true}
-                />
-            }
+            <CountryInput
+                userToUpdate={userToUpdate}
+                setUserToUpdate={setUserToUpdate}
+                countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
+                submissionAttempted={submissionAttempted}
+                required={isAda}
+            />
             <SchoolInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
