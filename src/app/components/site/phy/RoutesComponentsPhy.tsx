@@ -7,7 +7,7 @@ export const BoardIdRedirect = () => {
     return <Navigate to={`${PATHS.GAMEBOARD}#${id}`} replace />;
 };
 
-export const AddGameboardRedirect = () => {
-    const { id } = useParams();
-    return <Navigate to={`${PATHS.ADD_GAMEBOARD}/${id}`} replace />;
+export const RedirectToGameboard = () => {
+    const {gameboardId} = useParams();
+    return <Navigate to={`${PATHS.GAMEBOARD}#${gameboardId}`} />;
 };

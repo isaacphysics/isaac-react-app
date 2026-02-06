@@ -11,7 +11,6 @@ import {QuizPreview} from "../../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../../pages/quizzes/QuizDoFreeAttempt";
 import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
 import {Events} from "../../pages/Events";
-import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 import {TeacherRequest} from "../../pages/TeacherRequest";
 import {RegistrationStart} from "../../pages/RegistrationStart";
@@ -45,7 +44,8 @@ import { Programmes } from "../../pages/Programmes";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Navigate, Route } from "react-router";
 import { Generic } from "../../pages/Generic";
-import { AddGameboardRedirect, BoardIdRedirect } from "./RoutesComponentsPhy";
+import { BoardIdRedirect } from "./RoutesComponentsPhy";
+import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -109,17 +109,17 @@ export const RoutesPhy = [
     <Route key={key++} path="/test/attempt/:quizId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
     <Route key={key++} path="/test/view/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizView user={authUser} />} />} />,
     // The order of these redirects matters to prevent substring replacement
-    <Route key={key++} path="/quiz/assignment/:quizAssignmentId/feedback" element={<Navigate to="/test/assignment/:quizAssignmentId/feedback" replace />} />,
-    <Route key={key++} path="/quiz/assignment/:quizAssignmentId/page/:page" element={<Navigate to="/test/assignment/:quizAssignmentId/page/:page" replace />} />,
-    <Route key={key++} path="/quiz/assignment/:quizAssignmentId" element={<Navigate to="/test/assignment/:quizAssignmentId" replace />} />,
-    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<Navigate to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" replace />} />,
-    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId" element={<Navigate to="/test/attempt/feedback/:quizAssignmentId/:studentId" replace />} />,
-    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback/:page" element={<Navigate to="/test/attempt/:quizAttemptId/feedback/:page" replace />} />,
-    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback" element={<Navigate to="/test/attempt/:quizAttemptId/feedback" replace />} />,
-    <Route key={key++} path="/quiz/preview/:quizId/page/:page" element={<Navigate to="/test/preview/:quizId/page/:page" replace />} />,
-    <Route key={key++} path="/quiz/preview/:quizId" element={<Navigate to="/test/preview/:quizId" replace />} />,
-    <Route key={key++} path="/quiz/attempt/:quizId/page/:page" element={<Navigate to="/test/attempt/:quizId/page/:page" replace />} />,
-    <Route key={key++} path="/quiz/attempt/:quizId" element={<Navigate to="/test/attempt/:quizId" replace />} />,
+    <Route key={key++} path="/quiz/assignment/:quizAssignmentId/feedback" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId/feedback" replace />} />,
+    <Route key={key++} path="/quiz/assignment/:quizAssignmentId/page/:page" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId/page/:page" replace />} />,
+    <Route key={key++} path="/quiz/assignment/:quizAssignmentId" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId" replace />} />,
+    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback/:page" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback" replace />} />,
+    <Route key={key++} path="/quiz/preview/:quizId/page/:page" element={<NavigateWithSlug to="/test/preview/:quizId/page/:page" replace />} />,
+    <Route key={key++} path="/quiz/preview/:quizId" element={<NavigateWithSlug to="/test/preview/:quizId" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizId/page/:page" element={<NavigateWithSlug to="/test/attempt/:quizId/page/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizId" element={<NavigateWithSlug to="/test/attempt/:quizId" replace />} />,
 
     // Books (old)
     ...(Object.entries(old_books).map(([path, Component]) => [
@@ -190,7 +190,7 @@ export const RoutesPhy = [
     <Route key={key++} path="/my_gameboards" element={<Navigate to={PATHS.MY_GAMEBOARDS} replace />} />,
     <Route key={key++} path="/game_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
     <Route key={key++} path="/gameboard_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
-    <Route key={key++} path="/add_gameboard/:id" element={<AddGameboardRedirect />} />,
+    <Route key={key++} path="/add_gameboard/:id" element={<NavigateWithSlug to={`${PATHS.ADD_GAMEBOARD}/:id`} replace />} />,
     <Route key={key++} path="/board/:id" element={<BoardIdRedirect />} />,
     <Route key={key++} path="/gameboards" element={<Navigate to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} replace />} />,
     <Route key={key++} path="/gcsebook" element={<Navigate to="/books/phys_book_gcse" replace />} />,
@@ -224,7 +224,7 @@ export const RoutesPhy = [
     // Events
     <Route key={key++} path='/events' element={<Events />}/>,
     <Route key={key++} path='/events/:eventId' element={<EventDetails />}/>,
-    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<RedirectToEvent />} />} />,
+    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<NavigateWithSlug to="/events/:eventId" replace />} />} />,
 
     <Route key={key++} path="/equality" element={<Equality />} />,
 ];
