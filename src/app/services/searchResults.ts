@@ -11,6 +11,13 @@ const searchList: SearchShortcut[] = [
         url: "/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
+        id: "tests",
+        title: "My tests",
+        terms: ["tests", "test", "my tests", "my test"],
+        summary: "View your assigned tests.",
+        url: "/tests",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
         id: "join_group",
         title: "Teacher connections",
         terms: ["join group", "join class", "teacher connections", "teacher connection", "class code", "join a class",
