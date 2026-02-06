@@ -169,10 +169,10 @@ export const UserPassword = (
                         </p>
                     </React.Fragment>
             }
-            <React.Fragment>
+            {!editingOtherUser && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 {connectedAccounts.length > 0 && <FormGroup className="form-group">
-                    <h4>Linked {siteSpecific("Accounts", "accounts")}</h4>
+                    <h4>Linked accounts</h4>
                     <Col>
                         {connectedAccounts.map((provider) => {
                             return <React.Fragment key={provider}>{authButtonsMap[provider](true)}</React.Fragment>;
@@ -187,11 +187,11 @@ export const UserPassword = (
                         })}
                     </Col>
                 </FormGroup>}
-            </React.Fragment>
+            </React.Fragment>}
             <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 <FormGroup className="form-group">
-                    <h4>Log Out</h4>
+                    <h4>Log out</h4>
                     <p>
                         {"This button will log you out on all devices, including this one. " +
                         "You might want to do this if you forgot to log out on a shared device like a school computer."}
