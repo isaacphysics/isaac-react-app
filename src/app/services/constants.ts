@@ -17,7 +17,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -641,6 +641,14 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
         [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_chem_fragment",
     },
 };
+
+export const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
+    "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+    "chemistry": [LEARNING_STAGE.A_LEVEL],
+    "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+    "biology": [LEARNING_STAGE.A_LEVEL],
+};
+
 
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
