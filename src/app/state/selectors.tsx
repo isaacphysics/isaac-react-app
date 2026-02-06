@@ -1,5 +1,5 @@
 import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState} from "./index";
-import {NOT_FOUND} from "../services";
+import {NOT_FOUND, siteSpecific} from "../services";
 import { BEST_ATTEMPT_HIDDEN } from "../../IsaacApiTypes";
 
 export const selectors = {
@@ -65,7 +65,7 @@ export const selectors = {
     },
 
     sidebar: {
-        open: (state: AppState) => state?.sidebar?.open ?? false,
+        open: (state: AppState) => state?.sidebar?.open ?? siteSpecific(false, window.innerWidth >= 768 + 220), // ada: md + sidebar
     },
 
     teacher: {
