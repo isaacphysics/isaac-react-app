@@ -79,6 +79,7 @@ import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
 import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
+import { FeatureFlagProvider } from '../../services/featureFlag';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -88,7 +89,7 @@ const RootLayout = () => {
     const mainContentRef = useRef(null);
     const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
 
-    return <>
+    return <FeatureFlagProvider>
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
@@ -108,7 +109,7 @@ const RootLayout = () => {
         </main>
         <ScrollToTop mainContent={mainContentRef}/>
         <SiteSpecific.Footer />
-    </>;
+    </FeatureFlagProvider>;
 };
 
 // Render
