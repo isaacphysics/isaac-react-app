@@ -6,7 +6,7 @@ export enum FeatureFlag {
 }
 
 const useFlags = () : Record<FeatureFlag, boolean> => {
-    const { data: env,  } = useGetSegueEnvironmentQuery();
+    const { data: env } = useGetSegueEnvironmentQuery();
     const isNonProd = env === "DEV";
 
     return {

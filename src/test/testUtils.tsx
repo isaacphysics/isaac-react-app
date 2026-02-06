@@ -109,7 +109,11 @@ export const renderTestHook = <Result, Props>(
     }
     
     return renderHook(render, {
-        wrapper: ({children}) => <Provider store={store}>{children}</Provider>
+        wrapper: ({children}) => <Provider store={store}>
+            <FeatureFlagProvider>
+                {children}
+            </FeatureFlagProvider>
+        </Provider>
     });
 };
 
