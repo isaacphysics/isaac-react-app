@@ -172,14 +172,14 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                                     submissionAttempted={attemptedSignUp}
                                     required={true}
                                 />
-                                {isAda && <CountryInput
+                                <CountryInput
                                     className="my-4"
                                     userToUpdate={registrationUser}
                                     setUserToUpdate={setRegistrationUser}
                                     countryCodeValid={countryCodeIsValid}
                                     submissionAttempted={attemptedSignUp}
-                                    required={true}
-                                />}
+                                    required={isAda}
+                                />
                                 <hr className={classNames({"d-none": userRole == 'TEACHER'}, siteSpecific("section-divider", "my-4 text-center"))} />
                                 <SchoolInput
                                     className="my-4"
