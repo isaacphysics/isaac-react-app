@@ -14,6 +14,7 @@ import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} f
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
+import { FeatureFlagProvider } from "../app/services/featureFlag";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -83,15 +84,17 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
         await store.dispatch(requestCurrentUser());
     }
     render(<Provider store={store}>
-        {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
-        <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral">
-            {PageComponent
-                ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
-                    <PageComponent/>
-                </MemoryRouter>
-                : <IsaacApp/>
-            }
-        </div>
+        <FeatureFlagProvider>
+            {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
+            <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral">
+                {PageComponent
+                    ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
+                        <PageComponent/>
+                    </MemoryRouter>
+                    : <IsaacApp/>
+                }
+            </div>
+        </FeatureFlagProvider>
     </Provider>);
 };
 

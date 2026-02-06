@@ -2,16 +2,15 @@ import React, { createContext, ReactNode, useContext } from "react";
 import { useGetSegueEnvironmentQuery } from "../state";
 
 export enum FeatureFlag {
-    // EXAMPLE_FEATURE = "EXAMPLE_FEATURE",
+    TEST_FEATURE = "TEST_FEATURE",
 }
 
 const useFlags = () : Record<FeatureFlag, boolean> => {
-    const { data: env } = useGetSegueEnvironmentQuery();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { data: env,  } = useGetSegueEnvironmentQuery();
     const isNonProd = env === "DEV";
 
     return {
-        // [FeatureFlag.EXAMPLE_FEATURE]: isNonProd,
+        [FeatureFlag.TEST_FEATURE]: isNonProd,
     };
 };
 
@@ -43,7 +42,7 @@ export const useFeatureFlag = (flag: FeatureFlag | FeatureFlag[]): boolean => {
 
 interface FeatureFlagComponentProps {
     flag: FeatureFlag | FeatureFlag[];
-    children: React.ReactElement;
+    children?: React.ReactElement;
     onSet?: ReactNode;
     onUnset?: ReactNode;
 };
