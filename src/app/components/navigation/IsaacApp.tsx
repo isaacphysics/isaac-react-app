@@ -174,7 +174,8 @@ const routes = createRoutesFromElements(
         <Route path="/login" element={<LogIn />} />
         <Route path="/logout" element={<LogOutHandler />} />
         <Route path="/auth/:provider/callback" element={<ProviderCallbackHandler />} />
-        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} /> {/* historic route */}
         <Route path="/deleteaccount" element={<RequireAuth auth={isLoggedIn} element={<AccountDeletion />} />} />
         <Route path="/deleteaccount/success" element={<AccountDeletionSuccess />} />
 
