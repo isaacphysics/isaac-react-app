@@ -45,6 +45,7 @@ import { Programmes } from "../../pages/Programmes";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Navigate, Route } from "react-router";
 import { Generic } from "../../pages/Generic";
+import { AddGameboardRedirect, BoardIdRedirect } from "./RoutesComponentsPhy";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -189,8 +190,8 @@ export const RoutesPhy = [
     <Route key={key++} path="/my_gameboards" element={<Navigate to={PATHS.MY_GAMEBOARDS} replace />} />,
     <Route key={key++} path="/game_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
     <Route key={key++} path="/gameboard_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
-    <Route key={key++} path="/add_gameboard/:id" element={<Navigate to={`${PATHS.ADD_GAMEBOARD}/:id`} replace />} />,
-    <Route key={key++} path="/board/:id" element={<Navigate to={`${PATHS.GAMEBOARD}#:id`} replace />} />,
+    <Route key={key++} path="/add_gameboard/:id" element={<AddGameboardRedirect />} />,
+    <Route key={key++} path="/board/:id" element={<BoardIdRedirect />} />,
     <Route key={key++} path="/gameboards" element={<Navigate to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} replace />} />,
     <Route key={key++} path="/gcsebook" element={<Navigate to="/books/phys_book_gcse" replace />} />,
     <Route key={key++} path="/physics_skills_14" element={<Navigate to="/books/physics_skills_19" replace />} />,

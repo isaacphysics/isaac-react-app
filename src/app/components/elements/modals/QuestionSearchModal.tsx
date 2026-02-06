@@ -56,7 +56,7 @@ const GameboardBuilderRow = lazy(() => importGameboardBuilderRow);
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
-    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
+    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 1080})}
 };
 
 interface QuestionSearchModalProps {
@@ -84,6 +84,7 @@ export const QuestionSearchModal = (
     useEffect(function populateExamBoardFromUserContext() {
         const userExamBoard = userContext.contexts[0].examBoard as EXAM_BOARD;
         if (userContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userContext.contexts[0].examBoard]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);
@@ -148,7 +149,7 @@ export const QuestionSearchModal = (
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
     },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
 
-    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions(questionsSort, creationContext)(
         questions.filter(question => {
             const qIsPublic = searchResultIsPublic(question, user);
             if (isBookSearch) return qIsPublic;
@@ -195,7 +196,7 @@ export const QuestionSearchModal = (
     return <Row>
         <Col className="col-12 col-xl-3 mt-4">
             <Row>
-                <Col className={isPhy && !isBookSearch ? "col-12 col-lg-6 col-xl-12" : ""}>
+                <Col className={classNames({"col-12 col-lg-6 col-xl-12": isPhy && !isBookSearch})}>
                     {isAda && <CollapsibleList 
                         title={<span className="ms-n3">Topic</span>} 
                         expanded={listState.topics.state} 
@@ -221,14 +222,11 @@ export const QuestionSearchModal = (
                         <Label htmlFor="question-search-book">Book</Label>
                         <StyledSelect
                             inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
-                            onChange={(e) => {
-                                selectOnChange(setSearchBook, true)(e);
-                                sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
-                            }}
+                            onChange={selectOnChange(setSearchBook, true)}
                             options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                         />
                     </div>}
-                    <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
+                    <div className={classNames("mb-2", {"d-none": isBookSearch})}>
                         <Label htmlFor="question-search-stage">Stage</Label>
                         <StyledSelect
                             inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}

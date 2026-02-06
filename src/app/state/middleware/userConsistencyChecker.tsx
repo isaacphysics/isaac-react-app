@@ -101,7 +101,7 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
         // Redirect after action has been processed so that the notificationManager sees a logged-out user when deciding
         // whether to show the "required fields" modal and recording that in local storage.
         // TODO this might not be the case anymore since this is now a hard redirect now.
-        redirectTo(redirect);
+        redirectTo(window.location.origin + redirect);
     }
 
     return result;
