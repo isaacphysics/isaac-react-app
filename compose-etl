@@ -49,7 +49,7 @@ if [ -z $API_VERSION ]; then
 fi
 
 ETL_NAME=$SITE-etl-$API_VERSION
-ES_CONTAINER=$SUBJECT-elasticsearch-live
+ES_CONTAINER=$SITE-elasticsearch-v8-live
 
 # The content repo is named differently for both sites in a non-standard way:
 if [ "$SITE" == "ada" ]; then
@@ -59,7 +59,6 @@ elif [ "$SITE" == "phy" ]; then
 fi
 
 docker compose -p dc-$SITE-etl -f - $@ << EOF
-version: '2'
 services:
   $SITE-etl:
     container_name: $ETL_NAME
@@ -86,8 +85,8 @@ services:
         tag: $SITE-isaac-etl
 networks:
   default:
-    external:
-      name: isaac
+    name: isaac
+    external: true
 EOF
 
 exit 0
