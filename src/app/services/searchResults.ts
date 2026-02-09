@@ -325,6 +325,8 @@ const group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 const stages = /(year 9|gcse|a( |-)level|university)/;
 const subjects = /(physics|maths|chemistry|biology)/;
 const stageAndSubject = new RegExp(`${stages.source} ${subjects.source}|${subjects.source} ${stages.source}`);
+const boards = /board|deck|gameboard|question|topic/;
+const subjectAndBoard = new RegExp(`${subjects.source} ${boards.source}`);
 
 export function shortcuts(term: string) {
     const lterm = decodeURIComponent(term).toLowerCase();
@@ -360,6 +362,18 @@ export function shortcuts(term: string) {
                 title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} question decks by topic`,
                 summary: "Prepared question decks for use in classroom or homework.",
                 url: `/${subject}/${stage}/question_decks`,
+                tags: [subject],
+                type: SEARCH_RESULT_TYPE.SHORTCUT
+            });
+        }
+    } else if (isPhy && subjectAndBoard.test(lterm)) {
+        const subject = lterm.match(subjects)?.[0].toString();
+        if (subject) {
+            response.push({
+                id: `${subject}_decks`,
+                title: `${HUMAN_SUBJECTS[subject]} question decks by topic`,
+                summary: "Prepared question decks for use in classroom or homework.",
+                url: `/${subject}/a_level/question_decks`,
                 tags: [subject],
                 type: SEARCH_RESULT_TYPE.SHORTCUT
             });
