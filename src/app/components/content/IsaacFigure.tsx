@@ -191,7 +191,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                                 position: 'relative',
                                                 width: "10rem", // the usual "% of figure width" has no meaning here, so replace with a fixed width
                                                 minWidth: region.minWidth, 
-                                                height: contextType === 'dropRegion' ? "24px" : "34px",
+                                                height: contextType === 'dropRegion' ? "" : "34px",
                                             }),
                                             label: (_, index) => <div className="figure-region-placeholder">{ALPHABET[index % ALPHABET.length]}</div>,
                                         })}
