@@ -8,12 +8,14 @@ import {Button, Card, CardBody, CardFooter, Container, Form} from "reactstrap";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 
 
 export const ResetPasswordHandler = () => {
 
-    const {token} = useParams<{token: string}>();
+    const {token: oldStyleToken} = useParams<{token: string}>();
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token") ?? oldStyleToken;
     const [newPassword, setNewPassword] = useState("");
     const [passwordValid, setPasswordValid] = useState(true);
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -42,6 +44,12 @@ export const ResetPasswordHandler = () => {
                     <p className="alert-heading fw-bold">Unable to reset your password</p>
                     {tokenVerifyError ?
                         getRTKQueryErrorMessage(tokenVerifyError).message : getRTKQueryErrorMessage(passwordResetError).message}
+                </ExigentAlert>
+            }
+            {!token && 
+                <ExigentAlert color={"warning"}>
+                    <p className="alert-heading fw-bold">No reset token provided</p>
+                    <p>Please ensure you have clicked the link provided in your password reset email.</p>
                 </ExigentAlert>
             }
             <Form onSubmit={submit}>

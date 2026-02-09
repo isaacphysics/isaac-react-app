@@ -49,6 +49,7 @@ import {EventBookingForm} from "../elements/EventBookingForm";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
+import * as L from "leaflet";
 import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -56,6 +57,17 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { MetadataContainer } from "../elements/panels/MetadataContainer";
 import { Immutable } from "immer";
 import classNames from "classnames";
+
+// Fix for using the correct marker icon URLs in Leaflet when bundled with Vite - see https://cescobaz.com/2023/06/14/setup-leaflet-with-svelte-and-vite/
+import markerIconUrl from "leaflet/dist/images/marker-icon.png";
+import markerIconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
+
+L.Icon.Default.prototype.options.iconUrl = markerIconUrl;
+L.Icon.Default.prototype.options.iconRetinaUrl = markerIconRetinaUrl;
+L.Icon.Default.prototype.options.shadowUrl = markerShadowUrl;
+L.Icon.Default.imagePath = "";
+// --- 
 
 interface EventBookingProps {
     user: Immutable<PotentialUser> | null;
