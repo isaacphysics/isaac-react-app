@@ -79,7 +79,7 @@ describe('Feature flag service', () => {
             await waitFor(() => expect(result.current).toBe(true));
         });
 
-        it('flag is enabled when at least one of the flags are enabled', async () => {
+        it('flag is enabled when at least one of the flags is enabled', async () => {
             const { result } = renderTestHook(() => useFeatureFlag(["OTHER" as FeatureFlag, FeatureFlag.TEST_FEATURE]), {
                 extraEndpoints: setEnviornment("DEV")
             });
