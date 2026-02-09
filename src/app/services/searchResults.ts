@@ -1,4 +1,4 @@
-import {HUMAN_STAGES, HUMAN_SUBJECTS, isPhy, isValidStageSubjectPair, LEARNING_STAGE, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, Subjects, validQuestionDeckStageSubjectPairs} from "./";
+import {HUMAN_STAGES, HUMAN_SUBJECTS, isPhy, isValidStageSubjectPair, LearningStage, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, validQuestionDeckStageSubjectPairs} from "./";
 import {SearchShortcut} from "../../IsaacAppTypes";
 import {Stage} from "../../IsaacApiTypes";
 
@@ -326,9 +326,6 @@ const stages = /(year 9|gcse|a( |-)level|university)/;
 const subjects = /(physics|maths|chemistry|biology)/;
 const stageAndSubject = new RegExp(`${stages.source} ${subjects.source}|${subjects.source} ${stages.source}`);
 
-const decksByTopic = /(topic )?(question )?(decks|boards)( by topic)?/;
-const subjectDecksByTopic = new RegExp(`(${stageAndSubject} )?${decksByTopic.source}`);
-
 export function shortcuts(term: string) {
     const lterm = decodeURIComponent(term).toLowerCase();
     const response = [];
@@ -341,55 +338,28 @@ export function shortcuts(term: string) {
             url: ("/account?authToken=" + term),
             type: SEARCH_RESULT_TYPE.SHORTCUT
         });
-    } else if (isPhy && subjectDecksByTopic.test(lterm)) {
-        const subject = lterm.match(subjects)?.[0].toString();
-        const stage = lterm.match(stages)?.[0].toString().replace(/[- ]/g, "_");
-        const learningStage = STAGE_TO_LEARNING_STAGE[stage as Stage] as LEARNING_STAGE;
-        const isValidDecksContext = subject && learningStage && (validQuestionDeckStageSubjectPairs[subject as Subject] as LEARNING_STAGE[])?.includes(learningStage);
-        if (isValidDecksContext) {
-            response.push({
-                id: `${subject}_decks`,
-                title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} question decks by topic`,
-                summary: "Prepared question decks for use in classroom or homework.",
-                url: `/${subject}/${stage}/question_decks`,
-                tags: [subject],
-                type: SEARCH_RESULT_TYPE.SHORTCUT
-            });
-        } else if (subject) {
-            if ((validQuestionDeckStageSubjectPairs[subject as Subject] as LEARNING_STAGE[])?.includes(LEARNING_STAGE.A_LEVEL)) {
-                response.push({
-                    id: `${subject}_decks`,
-                    title: `${HUMAN_SUBJECTS[subject]} question decks by topic`,
-                    summary: "Prepared question decks for use in classroom or homework.",
-                    url: `/${subject}/a_level/question_decks`,
-                    tags: [subject],
-                    type: SEARCH_RESULT_TYPE.SHORTCUT
-                });
-            }
-        } else {
-            for (const subject of Subjects) {
-                // Default to A-Level since this exists for all subjects (but check that this is the case!)
-                if ((validQuestionDeckStageSubjectPairs[subject as Subject] as LEARNING_STAGE[])?.includes(LEARNING_STAGE.A_LEVEL)) {
-                    response.push({
-                        id: `${subject}_decks`,
-                        title: `${HUMAN_SUBJECTS[subject]} question decks by topic`,
-                        summary: "Prepared question decks for use in classroom or homework.",
-                        url: `/${subject}/a_level/question_decks`,
-                        tags: [subject],
-                        type: SEARCH_RESULT_TYPE.SHORTCUT
-                    });
-                }
-            }
-        }
     } else if (isPhy && stageAndSubject.test(lterm)) {
         const subject = lterm.match(subjects)![0].toString();
         const stage = lterm.match(stages)![0].toString().replace(/[- ]/g, "_");
         const learningStage = STAGE_TO_LEARNING_STAGE[stage as Stage];
+        // Subject/stage landing pages
         if (learningStage && isValidStageSubjectPair(subject as Subject, learningStage)) {
             response.push({
                 id: `${learningStage} ${subject}`,
                 title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]}`,
                 url: `/${subject}/${learningStage}`,
+                tags: [subject],
+                type: SEARCH_RESULT_TYPE.SHORTCUT
+            });
+        }
+        // Question decks by topic
+        const isValidDecksContext = learningStage && (validQuestionDeckStageSubjectPairs[subject as Subject] as LearningStage[])?.includes(learningStage);
+        if (isValidDecksContext) {
+            response.push({
+                id: `${subject}_${stage}_decks`,
+                title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} question decks by topic`,
+                summary: "Prepared question decks for use in classroom or homework.",
+                url: `/${subject}/${stage}/question_decks`,
                 tags: [subject],
                 type: SEARCH_RESULT_TYPE.SHORTCUT
             });
