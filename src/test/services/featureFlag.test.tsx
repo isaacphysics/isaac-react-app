@@ -9,7 +9,6 @@ import { HttpResponse } from "msw";
 describe('Feature flag service', () => {
     const setEnviornment = (segueEnvironment: string) => [
         http.get(API_PATH + "/info/segue_environment", () => {
-            console.log('returning env');
             return HttpResponse.json({segueEnvironment}, { status: 200 });
         }),
     ];
