@@ -18,7 +18,6 @@ const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
     const [htmlRef, updateHtmlRef] = useStatefulElementRef<HTMLDivElement>();
 
     const [modifiedHtml, renderPortalElements] = usePortalsInHtml(html);
-    console.log('rendering trusted html', html);
 
     return <>
         <div ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: modifiedHtml}} />

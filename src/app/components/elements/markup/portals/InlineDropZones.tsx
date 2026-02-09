@@ -157,15 +157,9 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     </Dropdown>;
 
     if (dropRegionContext && droppableTarget) {
-        const result = (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) ? dropdownZone : draggableDropZone;
-        if (!skipPortalling) {
-            return ReactDOM.createPortal(
-                result,
-                droppableTarget
-            );
-        } else {
-            return result;
-        }
+        const result = (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) 
+            ? dropdownZone : draggableDropZone;
+        return !skipPortalling ? ReactDOM.createPortal( result, droppableTarget ): result;
     }
     return null;
 }
