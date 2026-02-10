@@ -4397,7 +4397,7 @@ export const mockRegressionTestQuestions = {
                                 {
                                     "type": "figure",
                                     "encoding": "markdown",
-                                    "src": "figures/sketch_beta_quad_sketch.png",
+                                    "src": "figures/sketch_beta_quad_sketch.svg",
                                     "value": "test figure",
                                     "figureRegions": [
                                         {
@@ -4422,7 +4422,7 @@ export const mockRegressionTestQuestions = {
                                             "top": 35.5
                                         }
                                     ],
-                                    "condensedMaxWidth": "undefinedpx"
+                                    "condensedMaxWidth": "500px"
                                 }
                             ],
                             "items": [
