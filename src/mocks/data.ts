@@ -4339,6 +4339,116 @@ export const mockRegressionTestQuestions = {
                     ],
                     "published": true,
                     "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_drag_and_drop",
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "isaacDndQuestion",
+                            "encoding": "markdown",
+                            "id": "3d927959-a943-4c09-a39a-5fc406b14da1",
+                            "choices": [
+                                {
+                                    "encoding": "markdown",
+                                    "value": "",
+                                    "explanation": {
+                                        "type": "content",
+                                        "children": []
+                                    },
+                                    "type": "dndChoice",
+                                    "children": [],
+                                    "correct": true,
+                                    "items": [
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "A1",
+                                            "id": "eb00"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-0",
+                                            "id": "d39b"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F1",
+                                            "id": "afab"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-2",
+                                            "id": "9d81"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "answer": {
+                                "type": "content",
+                                "encoding": "markdown",
+                                "value": ""
+                            },
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "value": "This is a drag and drop question. This is a [drop-zone:A1]."
+                                },
+                                {
+                                    "type": "figure",
+                                    "encoding": "markdown",
+                                    "src": "figures/sketch_beta_quad_sketch.png",
+                                    "value": "test figure",
+                                    "figureRegions": [
+                                        {
+                                            "id": "F-0",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 50,
+                                            "top": 50
+                                        },
+                                        {
+                                            "id": "F1",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 18.8,
+                                            "top": 35.8
+                                        },
+                                        {
+                                            "id": "F-2",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 75.2,
+                                            "top": 35.5
+                                        }
+                                    ],
+                                    "condensedMaxWidth": "undefinedpx"
+                                }
+                            ],
+                            "items": [
+                                {
+                                    "type": "item",
+                                    "id": "eb00",
+                                    "value": "graph"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "d39b",
+                                    "value": "origin"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "9d81",
+                                    "value": "$x > 0$"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "afab",
+                                    "value": "$x < 0$"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
             "tags": []
