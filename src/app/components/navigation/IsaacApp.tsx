@@ -79,6 +79,7 @@ import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
+import { FeatureFlagProvider } from '../../services/featureFlag';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -88,7 +89,7 @@ const RootLayout = () => {
     const mainContentRef = useRef(null);
     const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
 
-    return <>
+    return <FeatureFlagProvider>
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
@@ -108,7 +109,7 @@ const RootLayout = () => {
         </main>
         <ScrollToTop mainContent={mainContentRef}/>
         <SiteSpecific.Footer />
-    </>;
+    </FeatureFlagProvider>;
 };
 
 // Render
@@ -174,7 +175,8 @@ const routes = createRoutesFromElements(
         <Route path="/login" element={<LogIn />} />
         <Route path="/logout" element={<LogOutHandler />} />
         <Route path="/auth/:provider/callback" element={<ProviderCallbackHandler />} />
-        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} /> {/* historic route */}
         <Route path="/deleteaccount" element={<RequireAuth auth={isLoggedIn} element={<AccountDeletion />} />} />
         <Route path="/deleteaccount/success" element={<AccountDeletionSuccess />} />
 
