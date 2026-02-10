@@ -54,7 +54,6 @@ import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {SetAssignments} from "../pages/SetAssignments";
-import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
 import {AdminEmails} from "../pages/AdminEmails";
@@ -79,6 +78,7 @@ import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
 import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
+import { NavigateWithSlug } from './NavigateWithSlug';
 import { FeatureFlagProvider } from '../../services/featureFlag';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
@@ -145,7 +145,7 @@ const routes = createRoutesFromElements(
 
         <Route path={PATHS.GAMEBOARD} element={<Gameboard />} />
         <Route path={PATHS.GAMEBOARD_BUILDER} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <GameboardBuilder user={authUser} />} />} />
-        <Route path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<RedirectToGameboard />} />} />
+        <Route path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<NavigateWithSlug to={`${PATHS.GAMEBOARD}#:gameboardId`} />} />} />
         <Route path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <AddGameboard user={authUser} />} />} />
 
         {/* Student pages */}
