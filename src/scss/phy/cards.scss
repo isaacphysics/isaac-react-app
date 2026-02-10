@@ -118,7 +118,11 @@ div:has(> .pod) {
   }
 
   .expired {
-    filter: grayscale(1);
+    > * {
+      &:not(.expired-badge) {
+        filter: grayscale(1);
+      }
+    }
   }
 
   .fixed-height {

@@ -51,14 +51,14 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
 
     return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
         {eventThumbnail &&
-            <Link className="pod-img event-pod-img d-flex" to={`/events/${id}`}>
-                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`} className={classNames({"expired": hasExpired})}/>
+            <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
+                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`}/>
                 {hasExpired &&
-                    <div className="event-pod-badge align-self-end right">
+                    <div className="event-pod-badge align-self-end right expired-badge">
                         <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
                     </div>}
                 {isVirtualEvent &&
-                    <div className={classNames("event-pod-badge align-self-end", {"expired": hasExpired})}>
+                    <div className="event-pod-badge align-self-end">
                         <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
                     </div>}
                 {bookingDeadlineSoon &&
@@ -68,12 +68,12 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                         </span>}
                     </div>}
                 {isTeacherEvent &&
-                    <div className={classNames("event-pod-hex", {"expired": hasExpired})}>
+                    <div className="event-pod-hex">
                         <b>TEACHER EVENT</b>
                         <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
                     </div>}
                 {isStudentEvent &&
-                    <div className={classNames("event-pod-hex", {"expired": hasExpired})}>
+                    <div className="event-pod-hex">
                         <b>STUDENT EVENT</b>
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
