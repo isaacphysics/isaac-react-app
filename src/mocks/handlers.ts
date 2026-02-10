@@ -215,6 +215,11 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/images/figures/sketch_beta_quad_sketch.png", async () => {
+        const imgUrl = new URL('./figures/sketch_beta_quad_sketch.png', import.meta.url).href;
+        const response = await fetch(imgUrl);
+        return HttpResponse.arrayBuffer(await response.arrayBuffer(), { headers: {'content-type': 'image/png'}});
+    }),
     http.get(API_PATH + "/pages/questions/_llm_marked_regression_test_", () => {
         return HttpResponse.json(mockLLMMarkedRegressionTestQuestion, {
             status: 200,
