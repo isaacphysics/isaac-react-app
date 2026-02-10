@@ -22,6 +22,7 @@ import {
     mockLLMMarkedRegressionTestQuestion,
     mockLLMMarkedValidationResponse,
     mockSearchResults,
+    mockFreeAttempts,
     mockGameboards
 } from "./data";
 import {API_PATH} from "../app/services";
@@ -80,6 +81,11 @@ export const handlers = [
     }),
     http.get(API_PATH + "/quiz/assigned", () => {
         return HttpResponse.json([], {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/quiz/free_attempts", () => {
+        return HttpResponse.json(mockFreeAttempts, {
             status: 200,
         });
     }),
@@ -282,6 +288,12 @@ export const handlers = [
             return acc;
         }, {});
         return HttpResponse.json(schools, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/users/resetpassword/:token", ({params}) => {
+        const {token} = params;
+        return HttpResponse.json({token}, {
             status: 200,
         });
     }),

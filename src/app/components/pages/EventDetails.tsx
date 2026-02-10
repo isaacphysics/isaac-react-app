@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Alert, Badge} from "reactstrap";
-import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     openActiveModal,
@@ -59,9 +58,16 @@ import { MetadataContainer } from "../elements/panels/MetadataContainer";
 import { Immutable } from "immer";
 import classNames from "classnames";
 
-function formatDate(date: Date | number) {
-    return dayjs(date).format("YYYYMMDD[T]HHmmss");
-}
+// Fix for using the correct marker icon URLs in Leaflet when bundled with Vite - see https://cescobaz.com/2023/06/14/setup-leaflet-with-svelte-and-vite/
+import markerIconUrl from "leaflet/dist/images/marker-icon.png";
+import markerIconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
+
+L.Icon.Default.prototype.options.iconUrl = markerIconUrl;
+L.Icon.Default.prototype.options.iconRetinaUrl = markerIconRetinaUrl;
+L.Icon.Default.prototype.options.shadowUrl = markerShadowUrl;
+L.Icon.Default.imagePath = "";
+// --- 
 
 interface EventBookingProps {
     user: Immutable<PotentialUser> | null;
@@ -129,17 +135,17 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                             {zeroOrLess(event.placesAvailable) && <div>
                                 <strong className="text-danger">FULL</strong>
                                 {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
+                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings.</span>}
                             </div>}
-                            {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
-                            {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
+                            {event.userBookingStatus === "CONFIRMED" && <span className="ms-1"> - <span className="text-success">You are booked on this event!</span></span>}
+                            {event.userBookingStatus === 'RESERVED' && <span className="ms-1"> - <span className="text-success">
                                 You have been reserved a place on this event!
                                 <Button color="link text-success" onClick={openAndScrollToBookingForm}>
                                     <u>Complete your registration below</u>.
                                 </Button>
                             </span></span>}
-                            {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
-                            {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
+                            {canBeAddedToWaitingList && <span className="ms-1"> - {formatAvailabilityMessage(event)}</span>}
+                            {event.userBookingStatus === "WAITING_LIST" && <span className="ms-1"> - {formatWaitingListBookingStatusMessage(event)}</span>}
                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
                                 <div className="text-muted fw-normal">
                                     {studentOnlyEventMessage(eventId)}
@@ -158,8 +164,8 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                         <Col>
                             <DateString>{event.bookingDeadline}</DateString>
                             {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                <div className="text-start">
-                                    The booking deadline for this event has passed.
+                                <div className="ms-1">
+                                    (The booking deadline for this event has passed.)
                                 </div>
                             }
                         </Col>
@@ -351,6 +357,7 @@ const EventDetails = () => {
             const canMakeABooking = userCanMakeEventBooking(user, event) ?? false;
             const isVirtual = event.tags?.includes("virtual") ?? false;
             const hasExpired = event.hasExpired;
+            const bookingDeadlineSoon = event.bookingDeadline && event.isWithinBookingDeadline && (new Date(event.bookingDeadline).getTime() - Date.now()) < 604800000; // 1 week
 
             const eventBookingProps : EventBookingProps = {
                 user, event, eventId, pathname: location.pathname, isVirtual,
@@ -377,6 +384,9 @@ const EventDetails = () => {
                         {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
                             EXPIRED
                         </Badge>}
+                        {bookingDeadlineSoon && <span className="fs-6 warning-tag">
+                            Booking deadline soon!
+                        </span>}
                     </>}
                 >
                     <KeyEventInfo {...eventBookingProps} />
