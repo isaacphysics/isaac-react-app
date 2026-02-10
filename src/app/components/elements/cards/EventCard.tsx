@@ -46,20 +46,26 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
-
+    const bookingDeadlineSoon = event.bookingDeadline && event.isWithinBookingDeadline && (new Date(event.bookingDeadline).getTime() - Date.now()) < 604800000; // 1 week
     const subject = getThemeFromTags(event.tags) !== "neutral" ? getThemeFromTags(event.tags) : "physics";
 
     return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
         {eventThumbnail &&
             <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
-                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`} />
+                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`}/>
                 {hasExpired &&
-                    <div className="event-pod-badge">
-                        <Badge className="badge rounded-pill">EXPIRED</Badge>
+                    <div className="event-pod-badge align-self-end right expired-badge">
+                        <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
                     </div>}
                 {isVirtualEvent &&
                     <div className="event-pod-badge align-self-end">
                         <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
+                    </div>}
+                {bookingDeadlineSoon &&
+                    <div className="event-pod-badge align-self-end right">
+                        {<span className="warning-tag px-2 fw-semibold">
+                            Booking deadline soon!
+                        </span>}
                     </div>}
                 {isTeacherEvent &&
                     <div className="event-pod-hex">
