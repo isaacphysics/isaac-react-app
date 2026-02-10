@@ -116,7 +116,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 params: {
                     start_index: startIndex,
                     limit,
-                    filter: eventOverviewFilter === EventOverviewFilter["All events"] ? undefined : eventOverviewFilter,
+                    filter: eventOverviewFilter
                 }
             }),
             transformResponse: (data: {results: EventOverview[], totalResults: number}) => ({eventOverviews: data.results, total: data.totalResults}),
