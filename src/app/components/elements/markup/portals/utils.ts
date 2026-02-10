@@ -36,7 +36,19 @@ const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHo
     const htmlFuncs = useRef<((html: string, parentId?: string) => string)[]>([]);
     const portalFuncs = useRef<((ref?: HTMLElement) => JSX.Element[])[]>([]);
 
+    /**
+     * @see htmlFuncs   is a set of functions that take in the raw editor HTML (e.g. markdown tables) and replace these areas with a blank div with a known id.
+     * @see portalFuncs is a set of functions that take in a ref of a parent to these blank divs, and returns a set of portal elements targeting the blank divs,
+     *                  replacing them with other content (e.g. React tables with shadows, expansion, etc).
+     */
+
+    htmlFuncs.current = [];
+    portalFuncs.current = [];
     hookList?.forEach(hook => {
+        // we would like this to only run once, to populate the above function lists. since it calls hooks, however, we can't put it inside a useEffect
+        // with empty deps. instead, we accept that this will run multiple times, but ensure that React ignores this; we do this by making htmlFuncs and
+        // portalFuncs refs (i.e. do not cause re-renders), and by resetting their values before running this loop. this way, any time these functions 
+        // are accessed, the results are the same – even if it's "changed" in the meantime.
         const [htmlFunc, portalFunc] = hook();
         htmlFuncs.current.push(htmlFunc);
         portalFuncs.current.push(portalFunc);

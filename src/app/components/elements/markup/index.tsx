@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import {useRenderKatex} from "./latexRendering";
 import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones, renderInlineQuestionPartZones, renderDndDropZones} from "./markdownRendering";
 // @ts-ignore
@@ -30,18 +30,19 @@ const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
         ? [...parentTab.parentElement.children].indexOf(parentTab)
         : undefined;
 
-    const uniqueParentId = accordionIndex !== undefined
-        ? tabIndex !== undefined
-            ? `${accordionIndex}-${tabIndex}` 
-            : `${accordionIndex}` 
-        : tabIndex !== undefined
-            ? `t${tabIndex}` 
-            : "root";
-
+    const uniqueParentId = htmlRef.current
+        ? accordionIndex !== undefined
+            ? tabIndex !== undefined
+                ? `${accordionIndex}-${tabIndex}` 
+                : `${accordionIndex}` 
+            : tabIndex !== undefined
+                ? `t${tabIndex}` 
+                : "root"
+        : undefined;
             
     const [modifyHtml, renderPortalElements] = usePortalsInHtml();
 
-    const modifiedHtml = modifyHtml(html, uniqueParentId);
+    const modifiedHtml = useMemo(() => uniqueParentId ? modifyHtml(html, uniqueParentId) : html, [html, uniqueParentId, modifyHtml]);
 
     return <>
         <div ref={htmlRef} className={className} dangerouslySetInnerHTML={{__html: modifiedHtml}} />

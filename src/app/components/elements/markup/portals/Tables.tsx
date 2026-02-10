@@ -1,4 +1,4 @@
-import React, {MouseEventHandler, useCallback, useContext, useState} from "react";
+import React, {MouseEventHandler, useCallback, useContext, useMemo, useState} from "react";
 import classNames from "classnames";
 import ReactDOM from "react-dom";
 import {above, isAda, isMobile, siteSpecific, useDeviceSize} from "../../../../services";
@@ -14,25 +14,16 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
 
     const tableHtml = `<table class="${classNames(classes, "table table-bordered w-100 bg-white m-0", siteSpecific("text-center", "text-start"))}">${html}</table>`;
     const [modifyHtml, renderPortalElements] = useTableCompatiblePortalsInHtml();
-
-    const modifiedHtml = modifyHtml(tableHtml, id);
+    const modifiedHtml = useMemo(() => modifyHtml(tableHtml, id), [tableHtml, id, modifyHtml]);
 
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();
     const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLElement>();
     const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "mb-4");
     const tableInnerClasses = classNames(innerClasses, {"overflow-auto": !classes.includes("topScrollable")});
     const tableOuterClasses = classNames(outerClasses, "isaac-table");
-
-    if (id === "0-0") {
-        console.log("attempting to create a table portal.", !!modifiedHtml, !!parentElement, id);
-        console.log(rootElement.cloneNode(true));
-        console.log(parentElement, document.getElementById(`table-${id}`));
-    }
     
     if (modifiedHtml && parentElement) {
-        if (id === "0-0") {
-            console.log(`creating a table portal at #table-${id}.`);
-        }
+        console.log(`creating a table portal at #table-${id}.`);
         return ReactDOM.createPortal(
             <div className={tableOuterClasses} ref={updateExpandRef}>
                 <div className={"position-relative"}>
@@ -119,6 +110,7 @@ export const useAccessibleTablesInHtml: PortalInHtmlHook = () => {
             // Only manage the `table` in React if it doesn't have another `table` as an ancestor - `table`s will always have at least
             // a `body` element as an ancestor.
             if (table.parentElement?.closest("table") === null) {
+                if (newInnerTableHtmls.some(t => t.id === `${parentId}-${i}`)) continue; // safeguard against duplicate table ids (if parent ids are not unique?)
                 // This table has no table ancestors, so set it up to manage it within React (so we can add shadows and expand them etc.)
                 newInnerTableHtmls.push({id: `${parentId}-${i}`, html: table.innerHTML, classes: tableCurrentClasses});
                 div.setAttribute("id", `table-${parentId}-${i}`);
