@@ -1,8 +1,9 @@
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useGlossaryTermsInHtml} from "./GlossaryTerms";
 import {useAccessibleTablesInHtml} from "./Tables";
 import {useClozeDropRegionsInHtml} from "./renderClozeDropRegions";
 import { useInlineEntryZoneInHtml } from "./renderInlineEntryZone";
+import { isEqual } from "lodash";
 
 export type PortalInHtmlHook = () => [(html: string, parentId?: string) => string, (ref?: HTMLElement) => JSX.Element[]];
 
@@ -34,33 +35,43 @@ export const PORTAL_HOOKS: PortalInHtmlHook[] = [
 // need the predefined hooks below this.
 const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHook => (): [(html: string, parentId?: string) => string, (ref?: HTMLElement) => JSX.Element[]] => {
     const htmlFuncs = useRef<((html: string, parentId?: string) => string)[]>([]);
-    const portalFuncs = useRef<((ref?: HTMLElement) => JSX.Element[])[]>([]);
+    const [portalFuncs, setPortalFuncs] = useState<((ref?: HTMLElement) => JSX.Element[])[]>([]);
 
     /**
      * @see htmlFuncs   is a set of functions that take in the raw editor HTML (e.g. markdown tables) and replace these areas with a blank div with a known id.
      * @see portalFuncs is a set of functions that take in a ref of a parent to these blank divs, and returns a set of portal elements targeting the blank divs,
      *                  replacing them with other content (e.g. React tables with shadows, expansion, etc).
+     * 
+     * htmlFuncs, once calculated once, will never change, since these are a static group of functions that modify a given HTML string. we can't
+     * do the usual e.g. put it inside a useEffect with empty deps, however, because it is the result of a hook (react/no-nested-hooks). instead, we
+     * populate it in the loop below, accept that this will run multiple times, but ensure that React ignores this by making them in a ref, 
+     * preventing re-renders.
+     *  
+     * portalFuncs, on the other hand, will change based on the last call to htmlFuncs. we need changes to this to trigger a recalculation of portalFunc,
+     * so that React renders portals with the correct target ids. as such, this is stored in state. a useEffect below updates portalFunc when this changes.
      */
 
     htmlFuncs.current = [];
-    portalFuncs.current = [];
+    const newPortalFuncs = [] as ((ref?: HTMLElement) => JSX.Element[])[];
     hookList?.forEach(hook => {
-        // we would like this to only run once, to populate the above function lists. since it calls hooks, however, we can't put it inside a useEffect
-        // with empty deps. instead, we accept that this will run multiple times, but ensure that React ignores this; we do this by making htmlFuncs and
-        // portalFuncs refs (i.e. do not cause re-renders), and by resetting their values before running this loop. this way, any time these functions 
-        // are accessed, the results are the same – even if it's "changed" in the meantime.
         const [htmlFunc, portalFunc] = hook();
         htmlFuncs.current.push(htmlFunc);
-        portalFuncs.current.push(portalFunc);
+        newPortalFuncs.push(portalFunc);
     });
 
+    if (!isEqual(newPortalFuncs, portalFuncs)) { // ignore reference inequality (guaranteed by construction – infinite re-render without) so long as the contents are the same
+        setPortalFuncs(newPortalFuncs);
+    }
+
     const htmlFunc = useCallback((html: string, parentId?: string): string => {
-        return htmlFuncs.current.reduce((modifiedHtml, func) => func(modifiedHtml, parentId), html);
+        const htmlFuncResult = htmlFuncs.current.reduce((modifiedHtml, func) => func(modifiedHtml, parentId), html);
+        return htmlFuncResult;
     }, []);
 
-    const portalFunc = useCallback((ref?: HTMLElement): JSX.Element[] => {
-        return portalFuncs.current.flatMap<JSX.Element>(func => func(ref));
-    }, []);
+    const [portalFunc, setPortalFunc] = useState<(ref?: HTMLElement) => JSX.Element[]>(() => () => []);
+    useEffect(() => {
+        setPortalFunc(() => (ref?: HTMLElement) => portalFuncs.flatMap(func => func(ref)));
+    }, [portalFuncs]);
 
     return [
         htmlFunc,
