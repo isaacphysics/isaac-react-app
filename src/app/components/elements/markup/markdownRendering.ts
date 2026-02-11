@@ -50,7 +50,7 @@ export const renderDndDropZones = (markdown: string) => {
         const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
         const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
         const dropId = `drop-region-${id}`;
-        return `<span data-index="${id}" id="${dropId}" style="min-width: ${minWidth}; min-height: ${minHeight}"></span>`;
+        return `<span data-index="${id}" id="${dropId}" style="min-width: ${minWidth}; min-height: ${minHeight}" class="d-inline-block"></span>`;
     });
 };
 
