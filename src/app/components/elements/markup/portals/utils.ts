@@ -3,7 +3,7 @@ import {useGlossaryTermsInHtml} from "./GlossaryTerms";
 import {useAccessibleTablesInHtml} from "./Tables";
 import {useClozeDropRegionsInHtml} from "./renderClozeDropRegions";
 import { useInlineEntryZoneInHtml } from "./renderInlineEntryZone";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 
 export type PortalInHtmlHook = () => [(html: string, parentId?: string) => string, (ref?: HTMLElement) => JSX.Element[]];
 
