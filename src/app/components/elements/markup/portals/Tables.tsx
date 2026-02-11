@@ -23,7 +23,6 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
     const tableOuterClasses = classNames(outerClasses, "isaac-table");
     
     if (modifiedHtml && parentElement) {
-        console.log(`creating a table portal at #table-${id}.`);
         return ReactDOM.createPortal(
             <div className={tableOuterClasses} ref={updateExpandRef}>
                 <div className={"position-relative"}>

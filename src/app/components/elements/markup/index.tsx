@@ -15,7 +15,6 @@ import { selectors, useAppSelector } from "../../../state";
 // html of that element (i.e. in this case `tooltips` are rendered next to `ElementType`, whose `dangerouslySetInnerHTML`
 // contains the `span`s that those `UncontrolledTooltip`s refer to).
 const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
-    // const [htmlRef, updateHtmlRef] = useStatefulElementRef<HTMLDivElement>();
     const htmlRef = useRef<HTMLDivElement>(null);
 
     // attempt to determine a unique id for the parent container of this HTML.
