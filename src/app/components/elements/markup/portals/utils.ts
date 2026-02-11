@@ -8,9 +8,9 @@ export type PortalInHtmlHook = () => [(html: string, parentId?: string) => strin
 
 // These are the hooks that the Table component is allowed to use
 export const TABLE_COMPATIBLE_PORTAL_HOOKS: PortalInHtmlHook[] = [
-    // useClozeDropRegionsInHtml,
-    // useInlineEntryZoneInHtml,
-    // useGlossaryTermsInHtml
+    useClozeDropRegionsInHtml,
+    useInlineEntryZoneInHtml,
+    useGlossaryTermsInHtml
 ];
 
 // These hooks all follow the `PortalInHtmlHook` interface, which should be used as follows:
@@ -22,9 +22,9 @@ export const TABLE_COMPATIBLE_PORTAL_HOOKS: PortalInHtmlHook[] = [
 // Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
 export const PORTAL_HOOKS: PortalInHtmlHook[] = [
     useAccessibleTablesInHtml,
-    // useClozeDropRegionsInHtml,
-    // useInlineEntryZoneInHtml,
-    // useGlossaryTermsInHtml
+    useClozeDropRegionsInHtml,
+    useInlineEntryZoneInHtml,
+    useGlossaryTermsInHtml
 ];
 
 // This looks nasty since it calls other hooks in a loop, but as long as the same hooks are called in the same order each
