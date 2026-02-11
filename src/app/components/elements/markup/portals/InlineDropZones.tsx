@@ -131,7 +131,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
                 {isDefined(isCorrect) && <div className={"feedback-box"}>
                     <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
                 </div>}
-                {!item && <i className={classNames("icon icon-chevron-down icon-dropdown-180 ms-auto me-n2", {"active": isOpen})} aria-hidden="true"/>}
+                {!item && <i className={classNames("icon icon-inline icon-chevron-down icon-dropdown-180 ms-auto me-n2", {"active": isOpen})} aria-hidden="true"/>}
             </div>
         </DropdownToggle>
         <DropdownMenu container={zoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>
