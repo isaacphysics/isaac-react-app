@@ -34,7 +34,7 @@ export const apiHelper = {
     determineImageUrl: (path: string) => {
         // Check if the image source is a fully qualified link (suggesting it is external to the Isaac site),
         // or else an asset link served by the APP, not the API.
-        if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1)) {
+        if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1) || (EDITOR_PREVIEW && path.indexOf("data:") > -1)) {
             return path;
         } else {
             return `${IMAGE_PATH}/${path}`;
