@@ -6,7 +6,6 @@ import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
     closeActiveModal,
-    getChosenUserAuthSettings,
     getRTKQueryErrorMessage,
     openActiveModal,
     selectors,
@@ -119,7 +118,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const hashAnchor = location.hash?.slice(1) ?? null;
     const authToken = searchParams?.authToken as string ?? null;
     const userOfInterest = searchParams?.userId as string ?? null;
-    
+
     const userPreferences = useAppSelector(selectors.user.preferences);
     const {data: userAuthSettings} = useGetUserAuthSettingsQuery(userOfInterest || undefined);
 
@@ -131,12 +130,6 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false};
     }, [adminUserToEdit]);
-
-    useEffect(() => {
-        if (userOfInterest) {
-            getChosenUserAuthSettings(Number(userOfInterest));
-        }
-    }, [userOfInterest]);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
