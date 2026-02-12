@@ -53,8 +53,7 @@ const renameIndexPlugin = (indexPath: string): Plugin => {
     };
 };
 
-export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env: Record<string, any>) => {
-    const isRenderer = env['isRenderer'] ?? false;
+export const generateConfig = (site: "sci" | "ada", renderer = false) => (env: Record<string, any>) => {
     // TODO: rename more phy => sci; bottleneck on router config
     const oldStyleSite = site === "sci" ? "phy" : "ada";
     const isBuild = env['command'] === 'build';
@@ -118,7 +117,7 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
         define: {
             REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
             ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
-            EDITOR_PREVIEW: JSON.stringify(isRenderer),
+            EDITOR_PREVIEW: JSON.stringify(renderer),
             ISAAC_SITE: JSON.stringify(site),
         }
     } satisfies UserConfig;
