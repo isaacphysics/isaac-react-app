@@ -13,7 +13,7 @@ import { MyAccountTab } from "./MyAccountTab";
 
 interface UserMFAProps {
     userToUpdate: RegisteredUserDTO;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | undefined;
     editingOtherUser: boolean;
 }
 

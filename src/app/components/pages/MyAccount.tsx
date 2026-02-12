@@ -14,6 +14,7 @@ import {
     useAdminGetUserQuery,
     useAppDispatch,
     useAppSelector,
+    useGetUserAuthSettingsQuery,
     useUpdateCurrentMutation
 } from "../../state";
 import {
@@ -115,11 +116,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const location = useLocation();
 
     const searchParams = queryString.parse(location.search);
-    const userPreferences = useAppSelector(selectors.user.preferences);
-    const userAuthSettings = useAppSelector(selectors.user.authSettings);
     const hashAnchor = location.hash?.slice(1) ?? null;
     const authToken = searchParams?.authToken as string ?? null;
     const userOfInterest = searchParams?.userId as string ?? null;
+    
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const {data: userAuthSettings} = useGetUserAuthSettingsQuery(userOfInterest || undefined);
 
     const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
