@@ -33,7 +33,8 @@ endpoint.interceptors.response.use((response) => {
 export const apiHelper = {
     determineImageUrl: (path: string) => {
         // Check if the image source is a fully qualified link (suggesting it is external to the Isaac site),
-        // or else an asset link served by the APP, not the API.
+        // or else an asset link served by the APP, not the API. On the preview renderer only, also allow "data:"
+        // in image sources, as the editor passes images to the renderer in a post message. 
         if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1) || (EDITOR_PREVIEW && path.indexOf("data:") > -1)) {
             return path;
         } else {
