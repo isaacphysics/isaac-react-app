@@ -272,6 +272,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');
+                            if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
                             setHasStartedEditing(false);
                             dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: "", mhchemExpression: "", frontEndValidation: false });
                             setTextInput(initialSeedText);

@@ -269,6 +269,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');
+                            if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
                             setHasStartedEditing(false);
                             dispatchSetCurrentAttempt({ type: 'formula', value: "", pythonExpression: "", frontEndValidation: false });
                             setTextInput(initialSeedText);
