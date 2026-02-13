@@ -141,9 +141,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     }, [currentAttempt, currentAttemptValue]);
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        // Only update the text-entry box if the graphical editor is visible
         const mhchemExpression = currentAttemptMhchemExpression();
-        if (modalVisible || textInput === '') {
+        if (modalVisible) {
             setTextInput(mhchemExpression);
         }
         if (inputState.mhchemExpression !== mhchemExpression) {
