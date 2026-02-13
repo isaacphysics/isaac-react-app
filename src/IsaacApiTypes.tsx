@@ -231,6 +231,7 @@ export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
 
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
     isNuclear?: boolean;
+    showInequalitySeed?: boolean;
 }
 
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
