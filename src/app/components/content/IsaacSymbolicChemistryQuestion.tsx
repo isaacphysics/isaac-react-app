@@ -59,7 +59,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
-    const [textInput, setTextInput] = useState(initialSeedText);
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalRecentlyOpened, setModalRecentlyOpened] = useState(currentAttempt ?? false);
     
@@ -67,6 +66,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
 
     const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;
 
