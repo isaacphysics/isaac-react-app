@@ -61,6 +61,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
     const [textInput, setTextInput] = useState(initialSeedText);
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    const [modalRecentlyOpened, setModalRecentlyOpened] = useState(currentAttempt ?? false);
     
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -163,7 +164,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const previewText = (currentAttemptValue && currentAttemptValue.result)
         ? currentAttemptValue.result.tex
         // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
-        : jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex;
+        : !modalRecentlyOpened
+            ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
+            : undefined;
         // hide seed?: undefined;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
@@ -237,6 +240,13 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         }
     };
 
+    const openInequality = () => {
+        if (!readonly) {
+            setModalVisible(true);
+            setModalRecentlyOpened(true);
+        }
+    };
+
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
     // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
@@ -276,6 +286,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                             setHasStartedEditing(false);
                             dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: "", mhchemExpression: "", frontEndValidation: false });
                             setTextInput(initialSeedText);
+                            setModalRecentlyOpened(false);
                         }}>
                             ↺
                         </button>}
@@ -315,7 +326,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             <div
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
                 className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+                onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
                 dangerouslySetInnerHTML={{ __html: previewText && (doc.showInequalitySeed || !emptySubmission)
                     ? katex.renderToString(previewText) 
                     : (showTextEntry ? '<span>or click here to drag and drop your answer</span>' : '<span>Click to enter your answer</span>')
