@@ -38,7 +38,7 @@ interface UserProfileProps {
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | undefined;
 }
 
 export const UserProfile = (props: UserProfileProps) => {
