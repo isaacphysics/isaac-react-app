@@ -57,10 +57,11 @@ interface InlineDropRegionProps {
     emptyWidth?: string; // the width of the drop zone **when empty** – when filled the content determines the width
     emptyHeight?: string; // as above for height
     rootElement?: HTMLElement;
+    skipPortalling?: boolean;
 }
 
 // Inline droppables rendered for each registered drop region
-function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement}: InlineDropRegionProps) {
+function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling}: InlineDropRegionProps) {
     const dropRegionContext = useContext(DragAndDropRegionContext);
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -156,10 +157,9 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement}:
     </Dropdown>;
 
     if (dropRegionContext && droppableTarget) {
-        return ReactDOM.createPortal(
-            (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) ? dropdownZone : draggableDropZone,
-            droppableTarget
-        );
+        const result = (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) 
+            ? dropdownZone : draggableDropZone;
+        return skipPortalling ? result : ReactDOM.createPortal(result, droppableTarget);
     }
     return null;
 }
