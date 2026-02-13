@@ -82,7 +82,7 @@ export const Search = () => {
     // Trigger update to query on state change
     const onUpdate = useMemo(() => {
         return debounce((query: Nullable<string>, filters: Item<SearchableDocumentType>[]) => {
-            setSearchQuery(query ? {query, types: filters.map(deitemise).join(",")} : skipToken);
+            setSearchQuery(query ? {query: decodeURIComponent(query), types: filters.map(deitemise).join(",")} : skipToken);
             pushSearchToHistory(navigate, query || "", filters.map(deitemise));
         }, 500, {leading: true, trailing: true});
     }, [navigate]);
