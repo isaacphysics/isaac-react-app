@@ -126,6 +126,19 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
         }
     }, [doc.condensedMaxWidth]);
 
+    const fullscreenButton = useCallback((figureString: string) => {
+        return <button className="figure-fullscreen" aria-label="Expand figure" type="button" onClick={() => {
+            dispatch(openActiveModal(FigureModal({
+                path, 
+                altText: doc.altText,
+                caption: <IsaacFigureCaption doc={doc} figId={figId} figureString={figureString} />,
+                toggle: () => dispatch(closeActiveModal())
+            })));
+        }}>
+            <i className="icon icon-fullscreen icon-md" />
+        </button>;
+    }, [dispatch, path, doc, figId]);
+
     return <div className="figure-panel">
         <FigureNumberingContext.Consumer>
             {figureNumbers => {
@@ -133,18 +146,9 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                     `Figure\u00A0${figureNumbers[figId]}` : "Figure";
                 return <figure>
                     <div className="w-100 d-flex flex-column align-items-center justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
-                        <button className="figure-fullscreen" aria-label="Expand figure" type="button" onClick={() => {
-                            dispatch(openActiveModal(FigureModal({
-                                path, 
-                                altText: doc.altText,
-                                caption: <IsaacFigureCaption doc={doc} figId={figId} figureString={figureString} />,
-                                toggle: () => dispatch(closeActiveModal())
-                            })));
-                        }}>
-                            <i className="icon icon-fullscreen icon-md" />
-                        </button>
-                        {(doc.figureRegions && contextType && path) 
+                        {(doc.figureRegions && contextType && path)
                             ? <div className="position-relative w-fit-content align-self-center">
+                                {fullscreenButton(figureString)}
                                 {!isCondensed
                                     ? generateFigureRegionObjects({
                                         figureRegions: doc.figureRegions, 
@@ -173,6 +177,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                 {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
                             </div>
                             : <>
+                                {fullscreenButton(figureString)}
                                 {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
                                 {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
                             </>
