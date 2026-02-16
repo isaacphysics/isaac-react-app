@@ -4,7 +4,7 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
+import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, SUBJECTS, useDeviceSize } from "../../services";
 import { AugmentedEvent, PageContextState, QuestionSearchQuery } from "../../../IsaacAppTypes";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -186,10 +186,12 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
 export const SubjectLandingPage = () => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
+    const title = (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.includes(STAGE.A_LEVEL))
+        ? "A Level Maths and Further Maths" : getHumanContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb
-            currentPageTitle={getHumanContext(pageContext)}
+            currentPageTitle={title}
             icon={pageContext?.subject ? {
                 type: "img",
                 subject: pageContext.subject,
