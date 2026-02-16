@@ -58,7 +58,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalRecentlyOpened, setModalRecentlyOpened] = useState(currentAttempt ?? false);
     
@@ -67,6 +66,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
     const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
 
     const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;

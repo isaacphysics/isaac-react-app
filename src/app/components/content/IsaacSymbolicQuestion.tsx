@@ -115,8 +115,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
-    const [textInput, setTextInput] = useState(initialSeedText);
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
 
     let currentAttemptValue: any | undefined = undefined;
@@ -129,6 +127,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]); 
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
 
     const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;
 
@@ -144,9 +145,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     };
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        // Only update the text-entry box if the graphical editor is visible
         const pythonExpression = currentAttemptPythonExpression();
-        if (modalVisible || textInput === '') {
+        if (modalVisible) {
             setTextInput(pythonExpression);
         }
         if (inputState.pythonExpression !== pythonExpression) {

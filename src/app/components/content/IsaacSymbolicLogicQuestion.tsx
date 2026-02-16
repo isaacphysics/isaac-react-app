@@ -84,9 +84,8 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const {preferredBooleanNotation} = useUserPreferences();
-    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
-    const [textInput, setTextInput] = useState(initialSeedText);
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    const [modalRecentlyOpened, setModalRecentlyOpened] = useState(currentAttempt ?? false);
 
     let currentAttemptValue: any | undefined = undefined;
 
@@ -98,6 +97,9 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
 
     const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;
 
@@ -115,9 +117,9 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, [currentAttempt, currentAttemptValue]);
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        // Only update the text-entry box if the graphical editor is visible
         const pythonExpression = currentAttemptPythonExpression();
-        if (modalVisible || textInput === '') {
+        if (modalVisible) {
             setTextInput(pythonExpression);
         }
         if (inputState.pythonExpression !== pythonExpression) {
@@ -137,7 +139,9 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
 
     const previewText = (currentAttemptValue && currentAttemptValue.result)
         ? currentAttemptValue.result.tex
-        : jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex;
+        : !modalRecentlyOpened
+            ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
+            : undefined;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
@@ -206,6 +210,13 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         }
     };
 
+    const openInequality = () => {
+        if (!readonly) {
+            setModalVisible(true);
+            setModalRecentlyOpened(true);
+        }
+    };
+
     const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
     const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
@@ -221,7 +232,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             <div
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
                 className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+                onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>Click to enter your expression</span>' }}
             />
             {modalVisible && <InequalityModal
@@ -250,6 +261,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                             if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
                             setHasStartedEditing(false);
                             setTextInput(initialSeedText);
+                            setModalRecentlyOpened(false);
                         }}>
                             ↺
                         </button>}
