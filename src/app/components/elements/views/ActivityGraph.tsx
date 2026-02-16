@@ -51,7 +51,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
             bindto: "#activityGraph",
-            padding: {top: 0, right: 30, bottom: 30, left: 30}  // Pad sides to avoid tick labels being truncated!
+            padding: {top: 0, right: 30, bottom: 30, left: 35}  // Pad sides to avoid tick labels being truncated!
         });
     }, [answeredQuestionsByDate, selectedDates]);
 
