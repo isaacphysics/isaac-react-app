@@ -240,7 +240,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
-        .replace('proton', '\\proton').replace('antineutrino', '\\antineutrino').replace('neutrino', '\\neutrino');
+        .replace('proton', '\\proton').replace('neutrino', '\\neutrino').replace('anti\\neutrino', '\\antineutrino');
 
     return (
         <div className="symbolic-question">
