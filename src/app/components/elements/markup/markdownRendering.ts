@@ -46,11 +46,11 @@ export const renderClozeDropZones = (markdown: string) => {
 };
 
 export const renderDndDropZones = (markdown: string) => {
-    return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch) => {
-        const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
-        const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
+    return markdown.replace(dndDropZoneRegex, (_match, id, _params, widthMatch, heightMatch) => {
+        const width = widthMatch ? widthMatch.slice("w-".length) : "100";
+        const height = heightMatch ? heightMatch.slice("h-".length) : "27";
         const dropId = `drop-region-${id}`;
-        return `<span data-index="${id}" id="${dropId}" style="min-width: ${minWidth}; min-height: ${minHeight}" class="d-inline-block"></span>`;
+        return `<span data-index="${id}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
     });
 };
 
