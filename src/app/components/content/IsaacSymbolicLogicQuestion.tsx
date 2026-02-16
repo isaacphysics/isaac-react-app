@@ -227,11 +227,12 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
+            {previewText && <i className="text-muted small">Click in either box below to edit your answer.</i>}
             {/* TODO Accessibility */}
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
-                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
+                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "mt-2": previewText, "text-body-tertiary": previewText && emptySubmission})} 
                 onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>Click to enter your expression</span>' }}
             />
@@ -250,7 +251,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             />}
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                {previewText && <i className="text-muted small">Click in either box below to edit your answer.</i>}
                 <InputGroup className="my-2 separate-input-group">
                     <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
