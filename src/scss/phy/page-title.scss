@@ -69,13 +69,14 @@
     }
 
     @include only-print {
-        .bread:has(+ h1#main-heading) {
-            + h1#main-heading {
+        // If there is a breadcrumb and a title, hide the title - otherwise hide the breadcrumb
+        .bread:has(+ .title-container) {
+            + .title-container {
                 display: none !important;
             }
         }
 
-        .bread:not(:has(+ h1#main-heading)) {
+        .bread:not(:has(+ .title-container)) {
             display: none !important;
         }
     }
