@@ -54,7 +54,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
     },
 
     myTests: {
-        title: "Tests to do",
+        title: "Tests",
         url: "/tests",
         icon: "icon-school",
         user: "STUDENT"
