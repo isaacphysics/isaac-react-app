@@ -65,7 +65,7 @@ export const selectors = {
     },
 
     sidebar: {
-        open: (state: AppState) => state?.sidebar?.open ?? siteSpecific(false, window.innerWidth >= 768 + 220), // ada: md + sidebar
+        open: (state: AppState) => state?.sidebar?.open ?? false,
     },
 
     teacher: {
