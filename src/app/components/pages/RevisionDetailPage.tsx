@@ -1,9 +1,7 @@
 import React from "react";
-import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getThemeFromTags } from "../../services/pageContext";
 import { useGetRevisionPageQuery } from "../../state/slices/api/revisionApi";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { LoadingPlaceholder, ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { IsaacRevisionDetailPageDTO, QuizSummaryDTO } from "../../../IsaacApiTypes";
 import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListView";
@@ -12,33 +10,37 @@ import { MetadataContainer, MetadataContainerLink } from "../elements/panels/Met
 import { PageMetadata } from "../elements/PageMetadata";
 import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledSidebar";
 import { useParams } from "react-router";
+import { PageContainer } from "../elements/layout/PageContainer";
+import { siteSpecific } from "../../services";
 
 export const RevisionPage = () => {
     const { pageId } = useParams();
     const revisionPageQuery = useGetRevisionPageQuery({id: pageId ?? ""});
 
-    return <Container data-bs-theme={getThemeFromTags(revisionPageQuery.data?.tags)}>
-        <TitleAndBreadcrumb 
-            currentPageTitle="Revision"
-            icon={{
-                type: "icon", 
-                icon: "icon-revision"
-            }}
-        />
+    return <PageContainer data-bs-theme={getThemeFromTags(revisionPageQuery.data?.tags)}
+        pageTitle={
+            <TitleAndBreadcrumb 
+                currentPageTitle="Revision"
+                icon={{
+                    type: "icon", 
+                    icon: "icon-revision"
+                }}
+            />
+        }
+        sidebar={siteSpecific(
+            <ContentControlledSidebar sidebar={revisionPageQuery.data?.sidebar} />,
+            undefined
+        )}
+    >
         <ShowLoadingQuery
             query={revisionPageQuery}
             defaultErrorTitle="Unable to load revision page."
             maintainOnRefetch // allows keeping sidebar content intact while refetching
             thenRender={(page, isStale) => {
-                return <SidebarLayout>
-                    <ContentControlledSidebar sidebar={revisionPageQuery.data?.sidebar} />
-                    <MainContent>
-                        {isStale ? <LoadingPlaceholder /> : <RevisionPageInternal page={page} />}
-                    </MainContent>
-                </SidebarLayout>;
+                return isStale ? <LoadingPlaceholder /> : <RevisionPageInternal page={page} />;
             }}
         />
-    </Container>;
+    </PageContainer>;
 };
 
 const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {

@@ -1,15 +1,23 @@
-import React, { useEffect } from "react";
-import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import React, { useContext, useEffect } from "react";
+import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader } from "reactstrap";
 import classNames from "classnames";
 import { above, isAda, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { ContentSidebarContext } from "../../../../IsaacAppTypes";
+import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { SidebarButton } from "../SidebarButton";
 
-export const SidebarLayout = (props: RowProps) => {
-    const { className, ...rest } = props;
-    return siteSpecific(<Row {...rest} className={classNames("sidebar-layout", className)}/>, props.children);
+interface SidebarLayoutProps extends RowProps {
+    show?: boolean;
+}
+
+export const SidebarLayout = (props: SidebarLayoutProps) => {
+    const { className, show=true, ...rest } = props;
+    return show
+        ? <SidebarContext.Provider value={{sidebarPresent: true}}>
+            <div {...rest} className={classNames("d-flex flex-column flex-md-row sidebar-layout", className)}/>
+        </SidebarContext.Provider>
+        : props.children;
 };
 
 export const MainContent = (props: ColProps) => {
@@ -29,7 +37,8 @@ export type SidebarProps = ColProps
 export const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
     // the content in such a sidebar will collapse underneath the main content on smaller screens
-    if (isAda) return <></>;
+    const sidebarContext = useContext(SidebarContext);
+    if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, ...rest } = props;
     return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
@@ -52,7 +61,8 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
 
     const pageTheme = useAppSelector(selectors.pageContext.subject);
 
-    if (isAda) return <></>;
+    const sidebarContext = useContext(SidebarContext);
+    if (!sidebarContext?.sidebarPresent) return <></>;
 
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return <>

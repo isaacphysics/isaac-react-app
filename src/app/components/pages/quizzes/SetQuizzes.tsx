@@ -47,6 +47,7 @@ import { PageMetadata } from "../../elements/PageMetadata";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
 import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
+import { PageContainer } from "../../elements/layout/PageContainer";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -388,170 +389,171 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         />
     </div>;
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
-        <SidebarLayout>
-            {activeTab === MANAGE_QUIZ_TAB.set
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
+        }
+        sidebar={siteSpecific(
+            activeTab === MANAGE_QUIZ_TAB.set
                 ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} hideButton />
                 : <ManageQuizzesSidebar manageQuizzesTitleFilter={manageQuizzesTitleFilter} setManageQuizzesTitleFilter={setManageQuizzesTitleFilter}
                     quizStartDate={quizStartDate} setQuizStartDate={setQuizStartDate} quizSetDateFilterType={quizSetDateFilterType}
                     setQuizSetDateFilterType={setQuizSetDateFilterType} quizDueDate={quizDueDate} setQuizDueDate={setQuizDueDate}
                     quizDueDateFilterType={quizDueDateFilterType} setQuizDueDateFilterType={setQuizDueDateFilterType}
                     manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}
-                    hideButton />
-            }
-            <MainContent>
-                <PageMetadata noTitle showSidebarButton sidebarButtonText="Search tests" helpModalId="help_modal_set_tests">
-                    <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
-                </PageMetadata>
-                <Tabs style="tabs" className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
-                    {{
-                        [siteSpecific("Set tests", "Available tests")]:
-                        <ShowLoading until={undeprecatedQuizzes}>
-                            {undeprecatedQuizzes && <>
-                                <p>The following tests are available to set to your groups.</p>
+                    hideButton />,
+            undefined        
+        )}
+    >
+        <PageMetadata noTitle showSidebarButton sidebarButtonText="Search tests" helpModalId="help_modal_set_tests">
+            <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
+        </PageMetadata>
+        <Tabs style="tabs" className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+            {{
+                [siteSpecific("Set tests", "Available tests")]:
+                <ShowLoading until={undeprecatedQuizzes}>
+                    {undeprecatedQuizzes && <>
+                        <p>The following tests are available to set to your groups.</p>
 
-                                {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
+                        {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
 
-                                {siteSpecific(
-                                    <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>,
-                                    <ListGroup className="mb-2 quiz-list">
-                                        {undeprecatedQuizzes.map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                            <Row className="w-100">
-                                                <Col xs={9} md={8} lg={9} className="d-flex align-items-center">
-                                                    <div className="p-3">
-                                                        <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
-                                                        {roleVisibilitySummary(quiz)}
-                                                    </div>
-                                                </Col>
-                                                <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
-                                                    <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))}>
+                        {siteSpecific(
+                            <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>,
+                            <ListGroup className="mb-2 quiz-list">
+                                {undeprecatedQuizzes.map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                    <Row className="w-100">
+                                        <Col xs={9} md={8} lg={9} className="d-flex align-items-center">
+                                            <div className="p-3">
+                                                <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
+                                                {roleVisibilitySummary(quiz)}
+                                            </div>
+                                        </Col>
+                                        <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
+                                            <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))}>
+                                                Set test
+                                            </Button>
+                                        </Col>
+                                        <Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
+                                            <Link className={`my-3 d-flex justify-content-end me-1`} to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                <span>Preview</span>
+                                            </Link>
+                                        </Col>
+                                        <Col xs={3} className="d-flex align-items-center justify-content-end">
+                                            <UncontrolledButtonDropdown className="d-flex d-md-none ">
+                                                <DropdownToggle caret className="text-nowrap" size="sm" color="link">
+                                                    Actions
+                                                </DropdownToggle>
+                                                <DropdownMenu>
+                                                    <DropdownItem onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))} style={{zIndex: '1'}}>
                                                         Set test
-                                                    </Button>
-                                                </Col>
-                                                <Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
-                                                    <Link className={`my-3 d-flex justify-content-end me-1`} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                        <span>Preview</span>
+                                                    </DropdownItem>
+                                                    <DropdownItem divider />
+                                                    <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                        <DropdownItem>
+                                                            Preview
+                                                        </DropdownItem>
                                                     </Link>
-                                                </Col>
-                                                <Col xs={3} className="d-flex align-items-center justify-content-end">
-                                                    <UncontrolledButtonDropdown className="d-flex d-md-none ">
-                                                        <DropdownToggle caret className="text-nowrap" size="sm" color="link">
-                                                            Actions
-                                                        </DropdownToggle>
-                                                        <DropdownMenu>
-                                                            <DropdownItem onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))} style={{zIndex: '1'}}>
-                                                                Set test
-                                                            </DropdownItem>
-                                                            <DropdownItem divider />
-                                                            <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                                <DropdownItem>
-                                                                    Preview
-                                                                </DropdownItem>
-                                                            </Link>
-                                                        </DropdownMenu>
-                                                    </UncontrolledButtonDropdown>
-                                                </Col>
-                                            </Row>
-                                        </ListGroupItem>)}
-                                    </ListGroup>)}
-                            </>}
-                        </ShowLoading>,
+                                                </DropdownMenu>
+                                            </UncontrolledButtonDropdown>
+                                        </Col>
+                                    </Row>
+                                </ListGroupItem>)}
+                            </ListGroup>)}
+                    </>}
+                </ShowLoading>,
 
-                        [siteSpecific("Manage tests", "Previously set tests")]:
-                        <>
-                            {isAda && <div className="d-flex justify-content-center mb-4">
-                                <Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
-                                    {showFilters ? "Hide filters" : "Show filters"}
-                                </Button>
-                            </div>}
+                [siteSpecific("Manage tests", "Previously set tests")]:
+                <>
+                    {isAda && <div className="d-flex justify-content-center mb-4">
+                        <Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
+                            {showFilters ? "Hide filters" : "Show filters"}
+                        </Button>
+                    </div>}
 
-                            {/* Ada filters */}
-                            {showFilters && (rowFiltersView
-                                ? <Row>
-                                    <Col xs={6} className="d-flex flex-column align-items-center">
-                                        {titleFilterInput}
-                                        {setDateFilterInput}
-                                    </Col>
-                                    <Col xs={6} className="d-flex flex-column align-items-center">
-                                        {groupFilterInput}
-                                        {dueDateFilterInput}
-                                    </Col>
-                                </Row>
-                                : <Col className="d-flex flex-column align-items-center">
-                                    {titleFilterInput}
-                                    {groupFilterInput}
-                                    {setDateFilterInput}
-                                    {dueDateFilterInput}
-                                </Col>)
+                    {/* Ada filters */}
+                    {showFilters && (rowFiltersView
+                        ? <Row>
+                            <Col xs={6} className="d-flex flex-column align-items-center">
+                                {titleFilterInput}
+                                {setDateFilterInput}
+                            </Col>
+                            <Col xs={6} className="d-flex flex-column align-items-center">
+                                {groupFilterInput}
+                                {dueDateFilterInput}
+                            </Col>
+                        </Row>
+                        : <Col className="d-flex flex-column align-items-center">
+                            {titleFilterInput}
+                            {groupFilterInput}
+                            {setDateFilterInput}
+                            {dueDateFilterInput}
+                        </Col>)
+                    }
+
+                    <ShowLoadingQuery
+                        query={quizAssignmentsQuery}
+                        ifError={() => <Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</Alert>}
+                        thenRender={quizAssignments => {
+                            let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
+                                const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
+                                    ? `Demo Group ${assignment.groupId}`
+                                    : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
+                                return {...assignment, groupName};
+                            }).reverse();
+
+                            if (showFilters || isPhy) {
+                                const filters = [];
+                                if (manageQuizzesTitleFilter !== "") {
+                                    filters.push((assignment : AppQuizAssignment) => assignment.quizSummary?.title?.toLowerCase().includes(manageQuizzesTitleFilter));
+                                }
+                                if (manageQuizzesGroupNameFilter !== "") {
+                                    filters.push((assignment : AppQuizAssignment) => assignment.groupName?.toLowerCase().includes(manageQuizzesGroupNameFilter.toLowerCase()));
+                                }
+                                if (quizStartDate && !isNaN(quizStartDate.valueOf())) {
+                                    filters.push((assignment : AppQuizAssignment) => {
+                                        return filterByDate(quizSetDateFilterType, assignment.scheduledStartDate ?? assignment.creationDate, quizStartDate);
+                                    });
+                                }
+                                if (quizDueDate && !isNaN(quizDueDate.valueOf())) {
+                                    filters.push((assignment : AppQuizAssignment) => {
+                                        return filterByDate(quizDueDateFilterType, assignment.dueDate, quizDueDate);
+                                    });
+                                }
+                                quizAssignmentsWithGroupNames = quizAssignmentsWithGroupNames.filter(filters.reduce((acc, filter) => (assignment) => acc(assignment) && filter(assignment), () => true));
                             }
 
-                            <ShowLoadingQuery
-                                query={quizAssignmentsQuery}
-                                ifError={() => <Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</Alert>}
-                                thenRender={quizAssignments => {
-                                    let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
-                                        const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
-                                            ? `Demo Group ${assignment.groupId}`
-                                            : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
-                                        return {...assignment, groupName};
-                                    }).reverse();
+                            // an array of objects, each representing one test and the groups it is assigned to
+                            const quizAssignment: QuizAssignmentProps[] = quizAssignmentsWithGroupNames.reduce((acc, assignment) => {
+                                const existing = acc.find(q => q.assignedGroups.map(a => a.assignment.quizId).includes(assignment.quizId));
+                                if (existing) {
+                                    existing.assignedGroups.push({group: assignment.groupName, assignment: assignment});
+                                } else {
+                                    acc.push({user: user, assignedGroups: [{group: assignment.groupName, assignment: assignment}], index: 0});
+                                }
+                                return acc;
+                            }, [] as QuizAssignmentProps[]);
 
-                                    if (showFilters || isPhy) {
-                                        const filters = [];
-                                        if (manageQuizzesTitleFilter !== "") {
-                                            filters.push((assignment : AppQuizAssignment) => assignment.quizSummary?.title?.toLowerCase().includes(manageQuizzesTitleFilter));
-                                        }
-                                        if (manageQuizzesGroupNameFilter !== "") {
-                                            filters.push((assignment : AppQuizAssignment) => assignment.groupName?.toLowerCase().includes(manageQuizzesGroupNameFilter.toLowerCase()));
-                                        }
-                                        if (quizStartDate && !isNaN(quizStartDate.valueOf())) {
-                                            filters.push((assignment : AppQuizAssignment) => {
-                                                return filterByDate(quizSetDateFilterType, assignment.scheduledStartDate ?? assignment.creationDate, quizStartDate);
-                                            });
-                                        }
-                                        if (quizDueDate && !isNaN(quizDueDate.valueOf())) {
-                                            filters.push((assignment : AppQuizAssignment) => {
-                                                return filterByDate(quizDueDateFilterType, assignment.dueDate, quizDueDate);
-                                            });
-                                        }
-                                        quizAssignmentsWithGroupNames = quizAssignmentsWithGroupNames.filter(filters.reduce((acc, filter) => (assignment) => acc(assignment) && filter(assignment), () => true));
-                                    }
+                            // sort the outermost table by quiz title
+                            quizAssignment.sort((a, b) => a.assignedGroups[0].assignment.quizSummary?.title?.localeCompare(b.assignedGroups[0].assignment.quizSummary?.title ?? "") ?? 0);
 
-                                    // an array of objects, each representing one test and the groups it is assigned to
-                                    const quizAssignment: QuizAssignmentProps[] = quizAssignmentsWithGroupNames.reduce((acc, assignment) => {
-                                        const existing = acc.find(q => q.assignedGroups.map(a => a.assignment.quizId).includes(assignment.quizId));
-                                        if (existing) {
-                                            existing.assignedGroups.push({group: assignment.groupName, assignment: assignment});
-                                        } else {
-                                            acc.push({user: user, assignedGroups: [{group: assignment.groupName, assignment: assignment}], index: 0});
-                                        }
-                                        return acc;
-                                    }, [] as QuizAssignmentProps[]);
-
-                                    // sort the outermost table by quiz title
-                                    quizAssignment.sort((a, b) => a.assignedGroups[0].assignment.quizSummary?.title?.localeCompare(b.assignedGroups[0].assignment.quizSummary?.title ?? "") ?? 0);
-
-                                    return <>
-                                        {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
-                                        {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
-                                            {isAda && <colgroup>
-                                                <col width={"120px"}/>
-                                                <col width={"auto"}/>
-                                                {below["xs"](deviceSize) ? <></> : below["lg"](deviceSize) ? <col width="90px"/> : <col width="160px"/>}
-                                                <col width={"60px"}/>
-                                            </colgroup>}
-                                            <tbody className={siteSpecific("list-group list-group-links", "")}>
-                                                {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
-                                            </tbody>
-                                        </Table>}
-                                    </>;
-                                }}
-                            />
-                        </>
-                    }}
-                </Tabs>
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+                            return <>
+                                {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
+                                {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
+                                    {isAda && <colgroup>
+                                        <col width={"120px"}/>
+                                        <col width={"auto"}/>
+                                        {below["xs"](deviceSize) ? <></> : below["lg"](deviceSize) ? <col width="90px"/> : <col width="160px"/>}
+                                        <col width={"60px"}/>
+                                    </colgroup>}
+                                    <tbody className={siteSpecific("list-group list-group-links", "")}>
+                                        {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
+                                    </tbody>
+                                </Table>}
+                            </>;
+                        }}
+                    />
+                </>
+            }}
+        </Tabs>
+    </PageContainer>;
 };

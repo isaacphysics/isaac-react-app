@@ -32,12 +32,12 @@ import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {useLocation, useNavigate} from "react-router";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { GlossarySidebar } from "../elements/sidebar/GlossarySidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -358,90 +358,91 @@ export const Glossary = () => {
     }
 
     return <div className="glossary-page">
-        <Container data-bs-theme={pageContext?.subject}>
-            <TitleAndBreadcrumb 
-                currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
-                icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
-                intermediateCrumbs={crumb ? [crumb] : []}
-            />
-            <MetaDescription description={metaDescription} />
-
-            <SidebarLayout>
+        <PageContainer data-bs-theme={pageContext?.subject}
+            pageTitle={<>
+                <TitleAndBreadcrumb 
+                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
+                    icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
+                    intermediateCrumbs={crumb ? [crumb] : []}
+                />
+                <MetaDescription description={metaDescription} />
+            </>}
+            sidebar={siteSpecific(
                 <GlossarySidebar 
                     searchText={searchText} setSearchText={debouncedSearchHandler} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                     filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} stageCounts={stageCounts}
                     subjectCounts={subjectCounts} hideButton
-                />
-                <MainContent>
-                    <PageMetadata noTitle showSidebarButton sidebarButtonText="Search glossary">
-                        <PageFragment fragmentId="help_toptext_glossary" />
-                    </PageMetadata>
-                    <Row>
-                        <Col md={{size: 9}} className="py-4">
-                            <Row className="no-print">
-                                {isAda && <>
-                                    <Col md={{size: 4}}>
-                                        <Label for='terms-search' className='visually-hidden'>Search by term</Label>
-                                        <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
-                                    </Col>
-                                    <Col className="mt-3 mt-md-0">
-                                        <Label for='topic-select' className='visually-hidden'>Topic</Label>
-                                        <StyledSelect inputId="topic-select"
-                                            options={ topics.map(t => ({ value: t.id, label: t.title}))}
-                                            name="topic-select"
-                                            placeholder="All topics"
-                                            onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
-                                            isClearable
-                                        />
-                                    </Col>
-                                </>}
-                            </Row>
-                            <Row className="only-print">
-                                <Col>
-                                    {searchText !== "" && <span className="pe-4">Search: <strong>{searchText}</strong></span>}
-                                    {isDefined(filterTopic) && <span className="pe-4">Topic: <strong>{filterTopic.title}</strong></span>}
-                                </Col>
-                            </Row>
+                />,
+                undefined
+            )}
+        >
+            <PageMetadata noTitle showSidebarButton sidebarButtonText="Search glossary">
+                <PageFragment fragmentId="help_toptext_glossary" />
+            </PageMetadata>
+            <Row>
+                <Col md={{size: 9}} className="py-4">
+                    <Row className="no-print">
+                        {isAda && <>
+                            <Col md={{size: 4}}>
+                                <Label for='terms-search' className='visually-hidden'>Search by term</Label>
+                                <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
+                            </Col>
+                            <Col className="mt-3 mt-md-0">
+                                <Label for='topic-select' className='visually-hidden'>Topic</Label>
+                                <StyledSelect inputId="topic-select"
+                                    options={ topics.map(t => ({ value: t.id, label: t.title}))}
+                                    name="topic-select"
+                                    placeholder="All topics"
+                                    onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                                    isClearable
+                                />
+                            </Col>
+                        </>}
+                    </Row>
+                    <Row className="only-print">
+                        <Col>
+                            {searchText !== "" && <span className="pe-4">Search: <strong>{searchText}</strong></span>}
+                            {isDefined(filterTopic) && <span className="pe-4">Topic: <strong>{filterTopic.title}</strong></span>}
                         </Col>
                     </Row>
-                    {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
-                        <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
-                            {/* Let users know that they need to select a subject */}
-                            {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
-                            {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
-                            {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>We could not find glossary terms to match your search criteria.</p>}
-                        </div>
-                    </Row>}
-                    {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-4", {"pt-0": isAda, "pe-2 pt-md-2 mb-4 border-radius-2 list-results-container": isPhy})}>
-                        <div className="no-print">
-                            <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
-                            <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
-                                {alphabetList}
-                            </div>
-                            <div className="alphabetlist pb-4">
-                                {alphabetList}
-                            </div>
-                        </div>
-                        {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-7" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
-                            <Col md={{size: 1, offset: 1}}>
-                                <h2 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
-                                    {letter}
-                                </h2>
-                            </Col>
-                            <Col>
-                                {terms.map(term => <IsaacGlossaryTerm
-                                    key={term.id}
-                                    ref={(el: HTMLParagraphElement) => {
-                                        glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
-                                    }}
-                                    doc={term}
-                                    linkToGlossary={true}
-                                />)}
-                            </Col>
-                        </div>)}
-                    </Col>}
-                </MainContent>
-            </SidebarLayout>
-        </Container>
+                </Col>
+            </Row>
+            {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
+                <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
+                    {/* Let users know that they need to select a subject */}
+                    {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>We could not find glossary terms to match your search criteria.</p>}
+                </div>
+            </Row>}
+            {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-4", {"pt-0": isAda, "pe-2 pt-md-2 mb-4 border-radius-2 list-results-container": isPhy})}>
+                <div className="no-print">
+                    <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
+                    <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
+                        {alphabetList}
+                    </div>
+                    <div className="alphabetlist pb-4">
+                        {alphabetList}
+                    </div>
+                </div>
+                {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-7" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
+                    <Col md={{size: 1, offset: 1}}>
+                        <h2 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
+                            {letter}
+                        </h2>
+                    </Col>
+                    <Col>
+                        {terms.map(term => <IsaacGlossaryTerm
+                            key={term.id}
+                            ref={(el: HTMLParagraphElement) => {
+                                glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
+                            }}
+                            doc={term}
+                            linkToGlossary={true}
+                        />)}
+                    </Col>
+                </div>)}
+            </Col>}
+        </PageContainer>
     </div>;
 };

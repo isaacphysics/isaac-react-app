@@ -31,7 +31,6 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -41,6 +40,7 @@ import { QuestionMetaData } from "../elements/QuestionMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 interface QuestionPageProps{
     questionIdOverride?: string;
     preview?: boolean;
@@ -77,72 +77,73 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
             const audienceViews = determineAudienceViews(doc.audience, navigation.creationContext);
 
             return <GameboardContext.Provider value={navigation.currentGameboard}>
-                <Container className="no-shadow" data-bs-theme={pageContext?.subject ?? doc.subjectId}>
-                    <TitleAndBreadcrumb
-                        currentPageTitle={generateQuestionTitle(doc)}
-                        displayTitleOverride={siteSpecific("Question", undefined)}
-                        subTitle={doc.subtitle}
-                        intermediateCrumbs={navigation.breadcrumbHistory}
-                        collectionType={navigation.collectionType}
-                        audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
-                        preview={preview} icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-question"}}
-                    />
-                    {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
-                    <SidebarLayout>
-                        {isDefined(gameboardId) 
+                <PageContainer className="no-shadow" data-bs-theme={pageContext?.subject ?? doc.subjectId}
+                    pageTitle={
+                        <TitleAndBreadcrumb
+                            currentPageTitle={generateQuestionTitle(doc)}
+                            displayTitleOverride={siteSpecific("Question", undefined)}
+                            subTitle={doc.subtitle}
+                            intermediateCrumbs={navigation.breadcrumbHistory}
+                            collectionType={navigation.collectionType}
+                            audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
+                            preview={preview} icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-question"}}
+                        />
+                    }
+                    sidebar={siteSpecific(
+                        isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={questionId}/>
-                            : <QuestionSidebar relatedContent={doc.relatedContent} />
-                        }
-                        <MainContent>
-                            {!preview && <CanonicalHrefElement />}
+                            : <QuestionSidebar relatedContent={doc.relatedContent} />,
+                        undefined
+                    )}
+                >
+                    {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
+                    {!preview && <CanonicalHrefElement />}
 
-                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
-                                {isPhy && <QuestionMetaData 
-                                    doc={doc} audienceViews={audienceViews} 
-                                    allQuestionsCorrect={allQuestionsCorrect} 
-                                    allQuestionsAttempted={allQuestionsAttempted} 
-                                    anyQuestionAttempted={anyQuestionAttempted}
-                                />}
-                            </PageMetadata>
-                            {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
+                    <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
+                        {isPhy && <QuestionMetaData 
+                            doc={doc} audienceViews={audienceViews} 
+                            allQuestionsCorrect={allQuestionsCorrect} 
+                            allQuestionsAttempted={allQuestionsAttempted} 
+                            anyQuestionAttempted={anyQuestionAttempted}
+                        />}
+                    </PageMetadata>
+                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
 
-                            <Row className="question-content-container">
-                                <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
+                    <Row className="question-content-container">
+                        <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
 
-                                    <SupersededDeprecatedStandaloneContentWarning doc={doc} />
+                            <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
-                                    {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                            {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                                    {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner doc={doc} />}
+                            {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner doc={doc} />}
 
-                                    <RevisionWarningBanner />
+                            <RevisionWarningBanner />
 
-                                    <WithFigureNumbering doc={doc}>
-                                        <IsaacContent doc={doc}/>
-                                    </WithFigureNumbering>
+                            <WithFigureNumbering doc={doc}>
+                                <IsaacContent doc={doc}/>
+                            </WithFigureNumbering>
 
-                                    {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
-                                        This question {" "}
-                                        <Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                                            has been replaced
-                                        </Button>.<br />
-                                        However, if you were assigned this version, you should complete it.
-                                    </div>}
+                            {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
+                                This question {" "}
+                                <Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                                    has been replaced
+                                </Button>.<br />
+                                However, if you were assigned this version, you should complete it.
+                            </div>}
 
-                                    {doc.attribution && <p className="text-muted">
-                                        <Markup trusted-markup-encoding={"markdown"}>
-                                            {doc.attribution}
-                                        </Markup>
-                                    </p>}
+                            {doc.attribution && <p className="text-muted">
+                                <Markup trusted-markup-encoding={"markdown"}>
+                                    {doc.attribution}
+                                </Markup>
+                            </p>}
 
-                                    <NavigationLinks navigation={navigation}/>
+                            <NavigationLinks navigation={navigation}/>
 
-                                    {isAda && doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-                                </Col>
-                            </Row>
-                        </MainContent>
-                    </SidebarLayout>
-                </Container>
+                            {isAda && doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        </Col>
+                    </Row>
+                </PageContainer>
             </GameboardContext.Provider>;}
         }
     />;

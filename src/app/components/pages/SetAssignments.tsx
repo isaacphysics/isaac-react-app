@@ -5,7 +5,6 @@ import {
     Card,
     CardBody,
     Col,
-    Container,
     Input,
     Label,
     Row,
@@ -53,7 +52,6 @@ import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppType
 import {BoardCard} from "../elements/cards/BoardCard";
 import {RenderNothing} from "../elements/RenderNothing";
 import {SortItemHeader} from "../elements/SortableItemHeader";
-import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
@@ -62,6 +60,7 @@ import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
 import { useHistoryState } from "../../state/actions/history";
 import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -377,11 +376,13 @@ export const SetAssignments = () => {
 
     const sortDisabled = !haveAllBoards;
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
-            icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
-        />
-        <SidebarLayout>
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
+                icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
+            />
+        }
+        sidebar={siteSpecific(
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
                 displayLimit={boardLimit} setDisplayLimit={setBoardLimit}
@@ -391,151 +392,151 @@ export const SetAssignments = () => {
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={sortDisabled} forceAllBoards={forceAllBoards}
                 hideButton
-            />
-            <MainContent>
-                <PageMetadata showSidebarButton noTitle helpModalId="help_modal_set_assignments">
-                    <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
-                </PageMetadata>
-                {isPhy &&
+            />,
+            undefined
+        )}
+    >
+        <PageMetadata showSidebarButton noTitle helpModalId="help_modal_set_assignments">
+            <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
+        </PageMetadata>
+        {isPhy &&
+            <>
+                <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
+                {isGroupsEmptyState && <Alert color="warning">
+                    You have not created any groups to assign work to.
+                    Please <Link to="/groups">create a group here first.</Link>
+                </Alert>}
+                {isBoardsEmptyState ?
+                    <Alert color="warning">
+                        You have no {siteSpecific("question decks", "quizzes")} to assign. Use one of the
+                        options above to find one.
+                    </Alert>
+                    :
                     <>
-                        <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
-                        {isGroupsEmptyState && <Alert color="warning">
-                            You have not created any groups to assign work to.
-                            Please <Link to="/groups">create a group here first.</Link>
-                        </Alert>}
-                        {isBoardsEmptyState ?
-                            <Alert color="warning">
-                                You have no {siteSpecific("question decks", "quizzes")} to assign. Use one of the
-                                options above to find one.
-                            </Alert>
-                            :
-                            <>
-                                <h5>
-                                Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
-                                assignments by start date and due date.
-                                </h5>
-                                <div className="section-divider my-4"/>
-                            </>
-                        }
-
+                        <h5>
+                        Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
+                        assignments by start date and due date.
+                        </h5>
+                        <div className="section-divider my-4"/>
                     </>
                 }
-                {isAda && <>
-                    {isGroupsEmptyState &&
-                        <PromptBanner
-                            card={{
-                                title: "You need a student group before you can assign a quiz to students.",
-                                icon: "icon-group",
-                                bodyText: "",
-                                color: "yellow",
-                                buttons: {
-                                    primary: {
-                                        text: "Create a group",
-                                        clickUrl: "/groups",
-                                        style: "outline"
-                                    }
-                                }
-                            }}
-                        />
-                    }
-                    <h3>Your quizzes</h3>
-                    <div
-                        className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
-                        {boards && boards.totalResults > 0 &&
-                            <div>
-                                <p className={"d-none d-lg-block my-auto"}>{`You have ${boards.boards.length} created quiz${boards.boards.length > 1 ? "zes" : ""}.`}</p>
-                            </div>
+
+            </>
+        }
+        {isAda && <>
+            {isGroupsEmptyState &&
+                <PromptBanner
+                    card={{
+                        title: "You need a student group before you can assign a quiz to students.",
+                        icon: "icon-group",
+                        bodyText: "",
+                        color: "yellow",
+                        buttons: {
+                            primary: {
+                                text: "Create a group",
+                                clickUrl: "/groups",
+                                style: "outline"
+                            }
                         }
-                        <div className={"w-100 w-lg-auto"}>
-                            <Button className={"w-100 w-lg-auto"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
-                                onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
-                                Create a quiz
-                            </Button>
-                            <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
-                                to={"/pages/revision_quizzes"} color={"secondary"} outline>
-                                View pre-made quizzes
-                            </Button>
-                        </div>
+                    }}
+                />
+            }
+            <h3>Your quizzes</h3>
+            <div
+                className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
+                {boards && boards.totalResults > 0 &&
+                    <div>
+                        <p className={"d-none d-lg-block my-auto"}>{`You have ${boards.boards.length} created quiz${boards.boards.length > 1 ? "zes" : ""}.`}</p>
                     </div>
-                </>}
-                {!isBoardsEmptyState && <>
-                    {isAda && <>
-                        <Row>
-                            {boardView === BoardViews.card && <Col sm={6} lg={3}>
-                                <Label className="w-100">
-                                    Display in <Input type="select" value={boardView} onChange={switchView}>
-                                        {Object.values(BoardViews).map(view => <option key={view}
-                                            value={view}>{view}</option>)}
-                                    </Input>
-                                </Label>
-                            </Col>}
-                            {boardView === BoardViews.card && <>
-                                <Col xs={6} lg={{size: 2, offset: 3}}>
-                                    <Label className="w-100">
-                                        Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
-                                            onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                            {Object.values(BoardLimit).map(limit => <option key={limit}
-                                                value={limit}>{limit}</option>)}
-                                        </Input>
-                                    </Label>
-                                </Col>
-                                <Col xs={6} lg={4}>
-                                    <Label className="w-100">
-                                        Sort by 
-                                        <div className="d-flex gap-2 align-items-center">
-                                            <Input type="select" value={boardOrder} disabled={sortDisabled}
-                                                onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}
-                                            >
-                                                {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>
-                                                    {BOARD_ORDER_NAMES[order]}
-                                                </option>)}
-                                            </Input>
-                                            {sortDisabled && <>
-                                                <i id="sortHelpTooltip" className="icon icon-info icon-color-grey ms-2"/>
-                                                <UncontrolledTooltip placement="auto" autohide target="sortHelpTooltip">
-                                                    Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.
-                                                </UncontrolledTooltip>
-                                            </>}
-                                        </div>
-                                    </Label>
-                                </Col>
-                            </>}
-                        </Row>
-                    </>}
-                    <ShowLoading until={boards}>
-                        {boards && boards.boards && <div>
-                            {boardView == BoardViews.card ?
-                                // Card view
-                                <>
-                                    <Row
-                                        className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
-                                        {filteredBoards?.map(board =>
-                                            <Col key={board.id}>
-                                                <BoardCard
-                                                    user={user}
-                                                    board={board}
-                                                    boardView={boardView}
-                                                    assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                                    toggleAssignModal={() => openAssignModal(board)}
-                                                />
-                                            </Col>)}
-                                    </Row>
-                                    <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
-                                        <p>Showing <strong>{filteredBoards?.length}</strong> of <strong>{boards.totalResults}</strong>
-                                        </p>
-                                        {boards.boards.length < boards.totalResults &&
-                                            <Button onClick={viewMore} disabled={loading}>{loading ?
-                                                <Spinner/> : "View more"}</Button>}
-                                    </div>
-                                </>
-                                :
-                                // Table view
-                                <SetAssignmentsTable {...tableProps}/>}
-                        </div>}
-                    </ShowLoading>
-                </>
                 }
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+                <div className={"w-100 w-lg-auto"}>
+                    <Button className={"w-100 w-lg-auto"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
+                        onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
+                        Create a quiz
+                    </Button>
+                    <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
+                        to={"/pages/revision_quizzes"} color={"secondary"} outline>
+                        View pre-made quizzes
+                    </Button>
+                </div>
+            </div>
+        </>}
+        {!isBoardsEmptyState && <>
+            {isAda && <>
+                <Row>
+                    {boardView === BoardViews.card && <Col sm={6} lg={3}>
+                        <Label className="w-100">
+                            Display in <Input type="select" value={boardView} onChange={switchView}>
+                                {Object.values(BoardViews).map(view => <option key={view}
+                                    value={view}>{view}</option>)}
+                            </Input>
+                        </Label>
+                    </Col>}
+                    {boardView === BoardViews.card && <>
+                        <Col xs={6} lg={{size: 2, offset: 3}}>
+                            <Label className="w-100">
+                                Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
+                                    onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                    {Object.values(BoardLimit).map(limit => <option key={limit}
+                                        value={limit}>{limit}</option>)}
+                                </Input>
+                            </Label>
+                        </Col>
+                        <Col xs={6} lg={4}>
+                            <Label className="w-100">
+                                Sort by 
+                                <div className="d-flex gap-2 align-items-center">
+                                    <Input type="select" value={boardOrder} disabled={sortDisabled}
+                                        onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}
+                                    >
+                                        {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>
+                                            {BOARD_ORDER_NAMES[order]}
+                                        </option>)}
+                                    </Input>
+                                    {sortDisabled && <>
+                                        <i id="sortHelpTooltip" className="icon icon-info icon-color-grey ms-2"/>
+                                        <UncontrolledTooltip placement="auto" autohide target="sortHelpTooltip">
+                                            Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.
+                                        </UncontrolledTooltip>
+                                    </>}
+                                </div>
+                            </Label>
+                        </Col>
+                    </>}
+                </Row>
+            </>}
+            <ShowLoading until={boards}>
+                {boards && boards.boards && <div>
+                    {boardView == BoardViews.card ?
+                        // Card view
+                        <>
+                            <Row
+                                className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
+                                {filteredBoards?.map(board =>
+                                    <Col key={board.id}>
+                                        <BoardCard
+                                            user={user}
+                                            board={board}
+                                            boardView={boardView}
+                                            assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                            toggleAssignModal={() => openAssignModal(board)}
+                                        />
+                                    </Col>)}
+                            </Row>
+                            <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
+                                <p>Showing <strong>{filteredBoards?.length}</strong> of <strong>{boards.totalResults}</strong>
+                                </p>
+                                {boards.boards.length < boards.totalResults &&
+                                    <Button onClick={viewMore} disabled={loading}>{loading ?
+                                        <Spinner/> : "View more"}</Button>}
+                            </div>
+                        </>
+                        :
+                        // Table view
+                        <SetAssignmentsTable {...tableProps}/>}
+                </div>}
+            </ShowLoading>
+        </>
+        }
+    </PageContainer>;
 };
