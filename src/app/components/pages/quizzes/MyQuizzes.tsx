@@ -199,7 +199,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                     <th/>
                 </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="assigned-quizzes">
                 {quizzes.map(quiz => {
                     return <TrLink to={quiz.link} key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
                         <td>
@@ -248,7 +248,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                     <th/>
                 </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="practice-quizzes">
                 {quizzes.map(quiz => {
                     return <TrLink to={quiz.link} key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
                         <td>

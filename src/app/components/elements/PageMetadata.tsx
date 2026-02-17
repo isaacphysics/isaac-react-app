@@ -86,14 +86,18 @@ interface MetadataTitleProps {
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
     return <div>
-        <h3 className="text-theme-dark d-flex align-items-center gap-3">
+        <h3 className="text-theme-dark d-xl-flex align-items-center gap-3">
             {title 
                 ? typeof title === "string"
                     ? <Markup encoding="latex">{title}</Markup>
                     : title
-                : <Markup encoding="latex">{doc?.title}</Markup>
+                : <Markup encoding="latex">
+                    {doc?.title}
+                </Markup>
             }
-            {badges}
+            <div className="d-flex flex-wrap gap-2 mt-1">
+                {badges}
+            </div>
         </h3>
         {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
     </div>;
@@ -113,7 +117,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
                 {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-2"/>}
                 {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
-                {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
+                {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className={classNames("ms-auto", {"mb-auto": !noTitle && badges})}/>}
             </div>}
 
             {isAda && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>

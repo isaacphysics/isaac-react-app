@@ -6,19 +6,12 @@ import { PageFragment } from "../elements/PageFragment";
 import { Loading } from "../handlers/IsaacSpinner";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { ArrayElement, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
 import { QuestionDecksSidebar } from "../elements/sidebar/QuestionDecksSidebar";
+import { validQuestionDeckStageSubjectPairs } from "../../services/constants";
 
 export const QuestionDecks = () => {
     const pageContext = useUrlPageTheme();
-
-    const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
-        "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
-        "chemistry": [LEARNING_STAGE.A_LEVEL],
-        "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
-        "biology": [LEARNING_STAGE.A_LEVEL],
-    };
 
     const getFragmentFromContext = (context: NonNullable<Required<PageContextState>>) => {
         return `pre_made_decks_${context.subject}_${context.stage[0]}`;

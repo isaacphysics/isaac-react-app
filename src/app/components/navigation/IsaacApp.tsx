@@ -54,7 +54,6 @@ import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {SetAssignments} from "../pages/SetAssignments";
-import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
 import {AdminEmails} from "../pages/AdminEmails";
@@ -79,6 +78,8 @@ import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
 import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
+import { NavigateWithSlug } from './NavigateWithSlug';
+import { FeatureFlagProvider } from '../../services/featureFlag';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -88,7 +89,7 @@ const RootLayout = () => {
     const mainContentRef = useRef(null);
     const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
 
-    return <>
+    return <FeatureFlagProvider>
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
@@ -108,7 +109,7 @@ const RootLayout = () => {
         </main>
         <ScrollToTop mainContent={mainContentRef}/>
         <SiteSpecific.Footer />
-    </>;
+    </FeatureFlagProvider>;
 };
 
 // Render
@@ -144,7 +145,7 @@ const routes = createRoutesFromElements(
 
         <Route path={PATHS.GAMEBOARD} element={<Gameboard />} />
         <Route path={PATHS.GAMEBOARD_BUILDER} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <GameboardBuilder user={authUser} />} />} />
-        <Route path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<RedirectToGameboard />} />} />
+        <Route path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<NavigateWithSlug to={`${PATHS.GAMEBOARD}#:gameboardId`} />} />} />
         <Route path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <AddGameboard user={authUser} />} />} />
 
         {/* Student pages */}
@@ -167,14 +168,15 @@ const routes = createRoutesFromElements(
         <Route path="/admin/usermanager" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminUserManager />} />} />
         <Route path="/admin/events" element={<RequireAuth auth={user => isAdminOrEventManager(user) || isEventLeader(user)} element={(authUser) => <EventManager user={authUser} />} />} />
         <Route path="/admin/stats" element={<RequireAuth auth={isStaff} element={<AdminStats />} />} />
-        <Route path="/admin/content_errors" element={<RequireAuth auth={user => isStaff(user)} element={<AdminContentErrors />} />} />
+        <Route path="/admin/content_errors" element={<RequireAuth auth={(user, env) => isStaff(user) || env === "DEV"} element={<AdminContentErrors />} />} />
         <Route path="/admin/emails" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminEmails />} />} />
         <Route path="/admin/direct_emails" element={<RequireAuth auth={isAdminOrEventManager} element={<ContentEmails />} />} />
         {/* Authentication */}
         <Route path="/login" element={<LogIn />} />
         <Route path="/logout" element={<LogOutHandler />} />
         <Route path="/auth/:provider/callback" element={<ProviderCallbackHandler />} />
-        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} /> {/* historic route */}
         <Route path="/deleteaccount" element={<RequireAuth auth={isLoggedIn} element={<AccountDeletion />} />} />
         <Route path="/deleteaccount/success" element={<AccountDeletionSuccess />} />
 
