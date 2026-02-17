@@ -69,6 +69,19 @@
     }
 
     @include only-print {
+        background-color: transparent;
+
+        .title-graphics {
+            display: none;
+        }
+        
+        .bread {
+            background-color: transparent;
+            .breadcrumb-item a {
+                color: black;
+            }
+        }
+        
         // If there is a breadcrumb and a title, hide the title - otherwise hide the breadcrumb
         .bread:has(+ .title-container) {
             + .title-container {
