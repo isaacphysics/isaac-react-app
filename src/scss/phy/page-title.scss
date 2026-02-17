@@ -74,12 +74,9 @@
         .title-graphics {
             display: none;
         }
-        
-        .bread {
-            background-color: transparent;
-            .breadcrumb-item a {
-                color: black;
-            }
+
+        h1#main-heading {
+            color: black;
         }
         
         // If there is a breadcrumb and a title, hide the title - otherwise hide the breadcrumb
@@ -87,10 +84,12 @@
             + .title-container {
                 display: none !important;
             }
-        }
 
-        .bread:not(:has(+ .title-container)) {
-            display: none !important;
+            .breadcrumb-item a {
+                color: black;
+            }
+
+            background-color: transparent;
         }
     }
 }
