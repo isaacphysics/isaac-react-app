@@ -4392,7 +4392,7 @@ export const mockRegressionTestQuestions = {
                                 {
                                     "type": "content",
                                     "encoding": "markdown",
-                                    "value": "This is a drag and drop question. This is a [drop-zone:A1|w-100h-50]."
+                                    "value": "This is a drag and drop question. This is a [drop-zone:A1|w-100h-27]."
                                 },
                                 {
                                     "type": "figure",
