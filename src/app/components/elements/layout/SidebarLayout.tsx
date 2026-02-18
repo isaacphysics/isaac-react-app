@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader } from "reactstrap";
 import classNames from "classnames";
-import { above, isAda, siteSpecific, useDeviceSize } from "../../../services";
+import { above, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
 import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -15,7 +15,7 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
     const { className, show=true, ...rest } = props;
     return show
         ? <SidebarContext.Provider value={{sidebarPresent: true}}>
-            <div {...rest} className={classNames("d-flex flex-column flex-md-row sidebar-layout", className)}/>
+            <div {...rest} className={classNames("d-flex flex-column sidebar-layout", siteSpecific("flex-lg-row", "flex-md-row"), className)}/>
         </SidebarContext.Provider>
         : props.children;
 };

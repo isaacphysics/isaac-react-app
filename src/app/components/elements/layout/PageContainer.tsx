@@ -9,6 +9,14 @@ interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
     sidebar?: React.ReactNode;
 }
 
+/**
+ * A component to manage the main layout of a page, including the page title and sidebar if required.
+ * @param props The props for the PageContainer component.
+ *  @param props.pageTitle The title of the page, displayed above both the main content and the sidebar.
+ *  @param props.sidebar The content of the sidebar. Displayed according to @see SidebarLayout. If not provided, the page will be displayed without a sidebar.
+ *  @param props.children The main content of the page.
+ * @returns A React component that renders the page layout.
+ */
 export const PageContainer = (props: PageContainerProps) => {
     const { children, sidebar, pageTitle, id, ...rest } = props;
     if (!sidebar) {
