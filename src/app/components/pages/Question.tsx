@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Button, Col, Row} from "reactstrap";
 import {useLocation, useParams} from "react-router-dom";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetQuestionQuery} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
