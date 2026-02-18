@@ -471,26 +471,24 @@ export const QuestionFinder = () => {
                 icon={{type: "icon", icon: "icon-finder"}}
             />
         }
-        sidebar={
-            siteSpecific(
-                <QuestionFinderSidebar
-                    searchText={searchQuery} setSearchText={debouncedSearchHandler}
-                    questionFinderFilterPanelProps={{
-                        searchDifficulties, setSearchDifficulties,
-                        searchTopics, setSearchTopics,
-                        searchStages, setSearchStages,
-                        searchExamBoards, setSearchExamBoards,
-                        searchStatuses, setSearchStatuses,
-                        searchBooks, setSearchBooks,
-                        excludeBooks, setExcludeBooks,
-                        choices,
-                        selections, setSelections,
-                        applyFilters: searchAndUpdateURL, clearFilters,
-                        validFiltersSelected, searchDisabled, setSearchDisabled
-                    }} hideButton/>,
-                undefined
-            )
-        }
+        sidebar={siteSpecific(
+            <QuestionFinderSidebar
+                searchText={searchQuery} setSearchText={debouncedSearchHandler}
+                questionFinderFilterPanelProps={{
+                    searchDifficulties, setSearchDifficulties,
+                    searchTopics, setSearchTopics,
+                    searchStages, setSearchStages,
+                    searchExamBoards, setSearchExamBoards,
+                    searchStatuses, setSearchStatuses,
+                    searchBooks, setSearchBooks,
+                    excludeBooks, setExcludeBooks,
+                    choices,
+                    selections, setSelections,
+                    applyFilters: searchAndUpdateURL, clearFilters,
+                    validFiltersSelected, searchDisabled, setSearchDisabled
+                }} hideButton/>,
+            undefined
+        )}
     >
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>

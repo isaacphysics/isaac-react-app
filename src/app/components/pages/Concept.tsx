@@ -87,14 +87,12 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                             <CanonicalHrefElement />
                         </>}
                     </>}
-                    sidebar={
-                        siteSpecific(
-                            isDefined(gameboardId) 
-                                ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={doc.id}/>
-                                : <ConceptSidebar relatedContent={doc.relatedContent}/>,
-                            undefined
-                        )
-                    }
+                    sidebar={siteSpecific(
+                        isDefined(gameboardId) 
+                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={doc.id}/>
+                            : <ConceptSidebar relatedContent={doc.relatedContent}/>,
+                        undefined
+                    )}
                 >
                     <PageMetadata doc={doc} />
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { PageFragment } from "../elements/PageFragment";
-import { BookHiddenState, BookInfo, ISAAC_BOOKS } from "../../services";
+import { BookHiddenState, BookInfo, ISAAC_BOOKS, siteSpecific } from "../../services";
 import { Link } from "react-router-dom";
 import { PageMetadata } from "../elements/PageMetadata";
 import { BooksOverviewSidebar } from "../elements/sidebar/BooksOverviewSidebar";
@@ -30,9 +30,10 @@ export const BooksOverview = () => {
                 icon={{type: "icon", icon: "icon-book"}}
             />
         }
-        sidebar={
-            <BooksOverviewSidebar hideButton />
-        }
+        sidebar={siteSpecific(
+            <BooksOverviewSidebar hideButton />,
+            undefined
+        )}
     >
         <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText="View all books"/>
         <PageFragment fragmentId="books_overview_fragment" />

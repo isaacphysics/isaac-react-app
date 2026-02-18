@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme, VALID_APPS_CONTEXTS } from "../../services";
+import { getHumanContext, isFullyDefinedContext, isSingleStageContext, siteSpecific, useUrlPageTheme, VALID_APPS_CONTEXTS } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { AnvilAppsListingSidebar } from "../elements/sidebar/AnvilAppsListingSidebar";
@@ -34,7 +34,10 @@ export const AnvilAppsListing = () => {
                 icon={{icon: "icon-revision", type: "icon"}}
             />
         }
-        sidebar={<AnvilAppsListingSidebar />}
+        sidebar={siteSpecific(
+            <AnvilAppsListingSidebar />,
+            undefined
+        )}
     >
         <PageMetadata />
         <PageFragment fragmentId={VALID_APPS_CONTEXTS[pageContext.subject]?.[pageContext.stage[0]] ?? ""} />

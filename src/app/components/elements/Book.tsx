@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
-import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, useContextFromContentObjectTags} from "../../services";
+import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, siteSpecific, useContextFromContentObjectTags} from "../../services";
 import {useLocation, useParams} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
@@ -48,9 +48,10 @@ export const Book = () => {
                 intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
             />
         }
-        sidebar={
-            <ContentControlledSidebar sidebar={book?.sidebar} />
-        }
+        sidebar={siteSpecific(
+            <ContentControlledSidebar sidebar={book?.sidebar} />,
+            undefined
+        )}
     >
         <ShowLoadingQuery
             query={bookIndexPageQuery}
