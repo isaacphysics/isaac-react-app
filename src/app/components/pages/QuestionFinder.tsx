@@ -463,7 +463,7 @@ export const QuestionFinder = () => {
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     return <PageContainer id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
-        title={
+        pageTitle={
             <TitleAndBreadcrumb 
                 currentPageTitle={siteSpecific("Question finder", "Questions")} 
                 help={pageHelp}
