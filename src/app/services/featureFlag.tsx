@@ -3,6 +3,7 @@ import { useGetSegueEnvironmentQuery } from "../state";
 
 export enum FeatureFlag {
     TEST_FEATURE = "TEST_FEATURE",
+    ENABLE_ADA_SIDEBARS = "ENABLE_ADA_SIDEBARS",
 }
 
 const useFlags = () : Record<FeatureFlag, boolean> => {
@@ -11,6 +12,7 @@ const useFlags = () : Record<FeatureFlag, boolean> => {
 
     return {
         [FeatureFlag.TEST_FEATURE]: isNonProd,
+        [FeatureFlag.ENABLE_ADA_SIDEBARS]: isNonProd,
     };
 };
 
@@ -53,5 +55,5 @@ interface FeatureFlagComponentProps {
  */
 export const FeatureFlagWrapper = ({ flag, children, onSet, onUnset }: FeatureFlagComponentProps) => {
     const enabled = useFeatureFlag(flag);
-    return <>{enabled ? children ?? onSet : onUnset}</>;
+    return enabled ? children ?? onSet : onUnset;
 };

@@ -1,8 +1,9 @@
 import React from "react";
 import { Container, ContainerProps } from "reactstrap";
-import { siteSpecific } from "../../../services";
+import { isAda, siteSpecific } from "../../../services";
 import { MainContent, SidebarLayout } from "./SidebarLayout";
 import classNames from "classnames";
+import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 
 interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
     pageTitle?: React.ReactNode;
@@ -19,7 +20,10 @@ interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
  */
 export const PageContainer = (props: PageContainerProps) => {
     const { children, sidebar, pageTitle, id, ...rest } = props;
-    if (!sidebar) {
+
+    const useAdaSidebars = useFeatureFlag(FeatureFlag.ENABLE_ADA_SIDEBARS);
+
+    if (!sidebar || (isAda && !useAdaSidebars)) {
         return <Container {...rest} id={id} className={classNames("mb-7", rest.className)}>
             {pageTitle}
             {children}
