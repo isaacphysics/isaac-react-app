@@ -3,7 +3,6 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacProgrammeDTO, ProgrammeCard } from "../elements/cards/ProgrammeCard";
 import { ContentDTO } from "../../../IsaacApiTypes";
-import { isPhy } from "../../services";
 import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { siteSpecific } from "../../services";

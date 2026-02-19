@@ -8,7 +8,6 @@ import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListV
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
 import { PageMetadata } from "../elements/PageMetadata";
-import { isPhy } from "../../services";
 import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledSidebar";
 import { useParams } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";

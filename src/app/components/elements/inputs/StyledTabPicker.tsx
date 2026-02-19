@@ -1,7 +1,7 @@
 import React from "react";
 import { ReactNode } from "react";
 import { Label, Input } from "reactstrap";
-import { isDefined, siteSpecific } from "../../../services";
+import { isDefined } from "../../../services";
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { Link } from "react-router-dom";

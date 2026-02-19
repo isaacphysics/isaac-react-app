@@ -5,7 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {isPhy, NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
+import {NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";

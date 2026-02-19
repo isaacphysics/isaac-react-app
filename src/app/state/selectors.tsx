@@ -1,5 +1,5 @@
 import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState} from "./index";
-import {NOT_FOUND, siteSpecific} from "../services";
+import {NOT_FOUND} from "../services";
 import { BEST_ATTEMPT_HIDDEN } from "../../IsaacApiTypes";
 
 export const selectors = {

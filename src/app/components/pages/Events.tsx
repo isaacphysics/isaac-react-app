@@ -11,7 +11,6 @@ import {
     EventTypeFilter,
     STAGE,
     isAda,
-    isPhy,
     isTeacherOrAbove,
     siteSpecific,
     useDeviceSize,
