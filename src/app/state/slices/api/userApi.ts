@@ -1,6 +1,6 @@
 import {isaacApi} from "./baseApi";
 import {onQueryLifecycleEvents} from "./utils";
-import {TOTPSharedSecretDTO, UserContext} from "../../../../IsaacApiTypes";
+import {TOTPSharedSecretDTO, UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
 import {PotentialUser, UserPreferencesDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {showToast} from "../../actions/popups";
@@ -77,6 +77,13 @@ export const userApi = isaacApi.injectEndpoints({
                 successMessage: "Your password has been updated successfully.",
                 errorTitle: "Failed to reset password"
             })
+        }),
+
+        getUserAuthSettings: build.query<UserAuthenticationSettingsDTO, string | undefined>({
+            query: (userId?: string) => ({
+                url: userId ? `/auth/user_authentication_settings/${userId}` : `/auth/user_authentication_settings`,
+                method: "GET" 
+            }),
         }),
 
         createNew: build.mutation<void, {
@@ -209,5 +216,6 @@ export const {
     useVerifyPasswordResetQuery,
     useHandlePasswordResetMutation,
     useUpdateCurrentMutation,
+    useGetUserAuthSettingsQuery,
     useCreateNewMutation,
 } = userApi;

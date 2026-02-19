@@ -73,7 +73,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
 
             {hasSections && <>
                 <div className="section-divider"/>
-                <h5 className="mb-3">Sections</h5>
+                <h5 className="mb-3">Section(s)</h5>
                 <ul>
                     <li>
                         <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => navigate(rubricPath)}/>

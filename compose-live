@@ -51,7 +51,7 @@ fi
 API_NAME=$SITE-api-$ENV-$API_VERSION
 APP_NAME=$SITE-app-$ENV-$APP_VERSION
 PG_CONTAINER=$SUBJECT-pg-$ENV
-ES_CONTAINER=$SUBJECT-elasticsearch-live
+ES_CONTAINER=$SITE-elasticsearch-v8-live
 
 # The content repo is named differently for both sites in a non-standard way:
 if [ "$SUBJECT" == "ada" ]; then
@@ -61,7 +61,6 @@ elif [ "$SUBJECT" == "phy" ]; then
 fi
 
 docker compose -p dc-${APP_NAME//./-} -f - $@ << EOF
-version: '2'
 services:
   $APP_NAME:
     container_name: $APP_NAME
@@ -103,8 +102,8 @@ services:
     restart: unless-stopped
 networks:
   default:
-    external:
-      name: isaac
+    name: isaac
+    external: true
 EOF
 
 exit 0
