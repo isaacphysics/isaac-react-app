@@ -13,6 +13,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import classNames from "classnames";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { MyAssignmentsSidebar } from "../elements/sidebar/MyAssignmentsSidebar";
+import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 
 const INITIAL_NO_ASSIGNMENTS = 10;
 const NO_ASSIGNMENTS_INCREMENT = 10;
@@ -117,7 +118,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 sortOrder={sortOrder} setSortOrder={setSortOrder}
                 assignmentQuery={assignmentQuery} hideButton
             />,
-            undefined
+            <MyAdaSidebar />
         )}
     >
         <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">

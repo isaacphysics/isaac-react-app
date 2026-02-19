@@ -62,6 +62,7 @@ import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySet
 import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
+import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -323,7 +324,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         }
         sidebar={siteSpecific(
             <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>,
-            undefined
+            <MyAdaSidebar />
         )}
     >
         {isAda && <p className="d-md-none text-center text-muted m-3">
@@ -334,7 +335,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
-                <div className={classNames("w-lg-75", {"card": isAda})}>
+                <div className={classNames({"w-lg-75": isPhy, "card": isAda})}>
                     {isAda && <Nav tabs className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
                             <NavItem key={tab} className={classnames({active: activeTab === tab})}>

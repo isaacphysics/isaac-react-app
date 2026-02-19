@@ -69,7 +69,7 @@ export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
         </Link>;
     }
 
-    return <Label {...rest} id={props.id ?? id} tabIndex={-1} className={classNames("d-flex align-items-center py-2 my-1 w-100", rest.className, siteSpecific("tab-picker-sci", "tab-picker-ada"), {"checked": checked})}>
+    return <Label {...rest} id={props.id ?? id} tabIndex={-1} className={classNames("d-flex align-items-center py-2 my-1 w-100 tab-picker", rest.className, {"checked": checked})}>
         <Input type={type} checked={checked ?? false} onChange={onInputChange} readOnly={onInputChange === undefined} disabled={disabled} aria-labelledby={props.id ?? id} />
         <PickerContents checkboxTitle={checkboxTitle} count={count} suffix={suffix} disabled={disabled} />
     </Label>;
