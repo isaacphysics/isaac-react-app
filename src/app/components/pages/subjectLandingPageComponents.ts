@@ -117,8 +117,13 @@ const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListVi
     return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: '/pages/spc'}])(context);
 };*/
 
-const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+/*const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
     return ArbitraryPageLinkCard("Mentoring scheme", "Take your problem solving skills to the next level by joining the mentoring scheme.", [{tag: "Find out more", url: "/pages/isaac_mentor"}])(context);
+};*/
+
+const ProgrammesCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Programmes", "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level.",
+        [{tag: "Mentoring", url: "/pages/mentoring"}, {tag: "SPC", url: "/pages/spc"}, {tag: "STEM SMART", url: "/pages/stem_smart"}])(context);
 };
 
 const ExperimentsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
@@ -141,7 +146,7 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
     "physics": {
         "11_14": [QuestionFinderCard, ConceptPageCard, AnvilAppsCard],
         "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, AnvilAppsCard],
-        "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, MentoringSchemeCard],
+        "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, ProgrammesCard],
         "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "chemistry": {
