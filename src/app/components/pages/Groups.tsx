@@ -62,7 +62,6 @@ import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
 import { GroupsSidebar } from "../elements/sidebar/GroupsSidebar";
@@ -596,28 +595,30 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         You can find the code for an existing group by selecting the group and clicking <i>Invite Users</i>.
     </span>;
 
-    const GroupsPhy = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "icon", icon: "icon-group"}}/>
+    const GroupsPhy = <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "icon", icon: "icon-group"}}/>
+        }
+        sidebar={siteSpecific(
+            <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
+                showArchived={showArchived} setShowArchived={setShowArchived}
+                hideButton
+            />,
+            undefined
+        )}
+    >
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-            <SidebarLayout site={isPhy}>
-                <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                    showArchived={showArchived} setShowArchived={setShowArchived}
-                    hideButton
-                />
-                <MainContent>
-                    <PageMetadata noTitle showSidebarButton sidebarButtonText="Select or create a group" helpModalId="help_modal_groups">
-                        <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
-                    </PageMetadata>
-                    {selectedGroup &&
-                        <GroupEditor group={selectedGroup} allGroups={allGroups} user={user} data-testid="group-editor"/>
-                    }
-                    {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
-                    {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} sidebarStyle={false}/>}
-                </MainContent>
-            </SidebarLayout>
+            <PageMetadata noTitle showSidebarButton sidebarButtonText="Select or create a group" helpModalId="help_modal_groups">
+                <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
+            </PageMetadata>
+            {selectedGroup &&
+                <GroupEditor group={selectedGroup} allGroups={allGroups} user={user} data-testid="group-editor"/>
+            }
+            {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
+            {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
+                showArchived={showArchived} setShowArchived={setShowArchived} sidebarStyle={false}/>}
         </ShowLoadingQuery>
-    </Container>;
+    </PageContainer>;
 
     const GroupsAda = <PageContainer
         pageTitle={<TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />}

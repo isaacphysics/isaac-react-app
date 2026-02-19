@@ -46,7 +46,6 @@ import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
-import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 
 export interface QuizzesPageProps {
     user: RegisteredUserDTO;
@@ -200,7 +199,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                     <th/>
                 </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="assigned-quizzes">
                 {quizzes.map(quiz => {
                     return <TrLink to={quiz.link} key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
                         <td>
@@ -249,7 +248,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                     <th/>
                 </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="practice-quizzes">
                 {quizzes.map(quiz => {
                     return <TrLink to={quiz.link} key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
                         <td>
@@ -467,7 +466,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}
                 hideButton
             />,
-            <MyAdaSidebar />
+            undefined
         )}
     >
         <PageMetadata noTitle showSidebarButton>

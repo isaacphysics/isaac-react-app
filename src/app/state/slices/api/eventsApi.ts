@@ -83,7 +83,6 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                     start_index: startIndex,
                     limit,
                     show_active_only: statusFilter === EventStatusFilter["Upcoming events"],
-                    show_inactive_only: false,
                     show_booked_only: statusFilter === EventStatusFilter["My booked events"],
                     show_reservations_only: statusFilter === EventStatusFilter["My event reservations"],
                     show_stage_only: !stageFilter.includes(STAGE.ALL) ? stageFilter.join(',') : undefined
@@ -117,7 +116,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 params: {
                     start_index: startIndex,
                     limit,
-                    filter: eventOverviewFilter === EventOverviewFilter["All events"] ? undefined : eventOverviewFilter,
+                    filter: eventOverviewFilter
                 }
             }),
             transformResponse: (data: {results: EventOverview[], totalResults: number}) => ({eventOverviews: data.results, total: data.totalResults}),

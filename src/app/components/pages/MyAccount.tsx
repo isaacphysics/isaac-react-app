@@ -6,7 +6,6 @@ import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
     closeActiveModal,
-    getChosenUserAuthSettings,
     getRTKQueryErrorMessage,
     openActiveModal,
     selectors,
@@ -14,6 +13,7 @@ import {
     useAdminGetUserQuery,
     useAppDispatch,
     useAppSelector,
+    useGetUserAuthSettingsQuery,
     useUpdateCurrentMutation
 } from "../../state";
 import {
@@ -62,7 +62,6 @@ import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySet
 import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
-import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -117,11 +116,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const location = useLocation();
 
     const searchParams = queryString.parse(location.search);
-    const userPreferences = useAppSelector(selectors.user.preferences);
-    const userAuthSettings = useAppSelector(selectors.user.authSettings);
     const hashAnchor = location.hash?.slice(1) ?? null;
     const authToken = searchParams?.authToken as string ?? null;
     const userOfInterest = searchParams?.userId as string ?? null;
+
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const {data: userAuthSettings} = useGetUserAuthSettingsQuery(userOfInterest || undefined);
 
     const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
@@ -131,12 +131,6 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false};
     }, [adminUserToEdit]);
-
-    useEffect(() => {
-        if (userOfInterest) {
-            getChosenUserAuthSettings(Number(userOfInterest));
-        }
-    }, [userOfInterest]);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
@@ -323,24 +317,24 @@ export const MyAccount = ({user}: AccountPageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
-    return <PageContainer id="account-page"
+    return <PageContainer id="account-page" className="mb-7"
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
         }
         sidebar={siteSpecific(
             <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>,
-            <MyAdaSidebar />
+            undefined
         )}
     >
-        {isAda && <h3 className="d-md-none text-center text-muted m-3">
+        {isAda && <p className="d-md-none text-center text-muted m-3">
             <small>
                 {`Update your Ada Computer Science account, or `}
                 <Link to="/logout" className="text-theme">Log out</Link>
             </small>
-        </h3>}
+        </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
-                <div className={classNames({"card": isAda})}>
+                <div className={classNames("w-lg-75", {"card": isAda})}>
                     {isAda && <Nav tabs className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
                             <NavItem key={tab} className={classnames({active: activeTab === tab})}>

@@ -46,7 +46,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
         interface Chainable {
-            mountWithStoreAndRouter(component: ReactNode, routes: string[], initialRoute?: string, mountOptions?: MountOptions): Chainable<Element>;
+            mountWithStoreAndRouter(component: ReactNode, routes: string[], initialRoute?: To, mountOptions?: MountOptions): Chainable<Element>;
 
             openSidebar(): Chainable<JQuery<HTMLElement>>;
             closeSidebar(): Chainable<JQuery<HTMLElement>>;
@@ -58,7 +58,7 @@ declare global {
 import React, {ReactNode} from "react";
 import {Provider} from "react-redux";
 import {store} from "../../src/app/state";
-import {createBrowserRouter, createRoutesFromElements, Route} from "react-router";
+import {createBrowserRouter, createRoutesFromElements, Route, To} from "react-router";
 import { RouterProvider } from 'react-router-dom';
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], mountOptions) => {
@@ -69,8 +69,8 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
         }
     </>));
 
-    router.navigate(initialRoute || '/');
-
+    void router.navigate(initialRoute || '/');
+    
     mount(
         <Provider store={store}>
             <RouterProvider router={router} />

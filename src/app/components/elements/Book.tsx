@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Container} from "reactstrap";
-import {MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
-import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, isPhy, useContextFromContentObjectTags} from "../../services";
+import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, siteSpecific, useContextFromContentObjectTags} from "../../services";
 import {useLocation, useParams} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
@@ -14,6 +12,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import { PageMetadata } from "./PageMetadata";
 import { WithFigureNumbering } from "./WithFigureNumbering";
 import { ContentControlledSidebar } from "./sidebar/ContentControlledSidebar";
+import { PageContainer } from "./layout/PageContainer";
 
 export const Book = () => {
 
@@ -41,59 +40,58 @@ export const Book = () => {
         setPageId(fragmentId);
     }, [book?.id, location.pathname]);
 
-    return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
-        <TitleAndBreadcrumb
-            currentPageTitle={pageId === undefined ? "Book" : book?.title ?? "Book"}
-            icon={{type: "icon", icon: "icon-book"}}
-            intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
-        />
-        <SidebarLayout site={isPhy}>
-            <ShowLoadingQuery
-                query={bookIndexPageQuery}
-                defaultErrorTitle="Unable to load book contents"
-                thenRender={(definedBookIndexPage) => {
-                    return <>
-                        <ContentControlledSidebar sidebar={book?.sidebar} hideButton/>
-                        <MainContent>
-                            {pageId
-                                ? <ShowLoadingQuery
-                                    query={bookDetailPageQuery}
-                                    defaultErrorTitle="Unable to load book page"
-                                    thenRender={(bookDetailPage) => {
-                                        return <WithFigureNumbering doc={bookDetailPage}>
-                                            <BookPage page={bookDetailPage} />
-                                        </WithFigureNumbering>;
-                                    }}
-                                />
-                                : <>
-                                    <PageMetadata doc={definedBookIndexPage} showSidebarButton sidebarButtonText={book?.sidebar?.subtitle}/>
-                                    {definedBookIndexPage.value && <div>
-                                        <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
-                                            <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
-                                        </div>
-                                        <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
-                                    </div>}
-                                    {!!definedBookIndexPage.children?.length && <>
-                                        <div className="d-flex">
-                                            <div className="flex-grow-1">
-                                                <WithFigureNumbering doc={definedBookIndexPage}>
-                                                    <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
-                                                </WithFigureNumbering>
-                                            </div>
-                                            <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
-                                                <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
-                                            </div>
-                                        </div>
-                                        <IsaacContentValueOrChildren>
-                                            {definedBookIndexPage.children.slice(1)}
-                                        </IsaacContentValueOrChildren>
-                                    </>}
-                                </>
-                            }
-                        </MainContent>
-                    </>;
-                }}
+    return <PageContainer data-bs-theme={pageContext?.subject ?? "neutral"}
+        pageTitle={
+            <TitleAndBreadcrumb
+                currentPageTitle={pageId === undefined ? "Book" : book?.title ?? "Book"}
+                icon={{type: "icon", icon: "icon-book"}}
+                intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
             />
-        </SidebarLayout>
-    </Container>;
+        }
+        sidebar={siteSpecific(
+            <ContentControlledSidebar sidebar={book?.sidebar} />,
+            undefined
+        )}
+    >
+        <ShowLoadingQuery
+            query={bookIndexPageQuery}
+            defaultErrorTitle="Unable to load book contents"
+            thenRender={(definedBookIndexPage) => {
+                return pageId
+                    ? <ShowLoadingQuery
+                        query={bookDetailPageQuery}
+                        defaultErrorTitle="Unable to load book page"
+                        thenRender={(bookDetailPage) => {
+                            return <WithFigureNumbering doc={bookDetailPage}>
+                                <BookPage page={bookDetailPage} />
+                            </WithFigureNumbering>;
+                        }}
+                    />
+                    : <>
+                        <PageMetadata doc={definedBookIndexPage} showSidebarButton sidebarButtonText={book?.sidebar?.subtitle}/>
+                        {definedBookIndexPage.value && <div>
+                            <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
+                                <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
+                            </div>
+                            <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
+                        </div>}
+                        {!!definedBookIndexPage.children?.length && <>
+                            <div className="d-flex">
+                                <div className="flex-grow-1">
+                                    <WithFigureNumbering doc={definedBookIndexPage}>
+                                        <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
+                                    </WithFigureNumbering>
+                                </div>
+                                <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
+                                    <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
+                                </div>
+                            </div>
+                            <IsaacContentValueOrChildren>
+                                {definedBookIndexPage.children.slice(1)}
+                            </IsaacContentValueOrChildren>
+                        </>}
+                    </>;
+            }}
+        />
+    </PageContainer>;
 };

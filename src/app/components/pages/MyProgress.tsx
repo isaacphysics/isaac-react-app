@@ -108,7 +108,10 @@ const MyProgress = ({user}: MyProgressProps) => {
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-progress"}} disallowLaTeX />
         }
-        sidebar={siteSpecific(null, <MyAdaSidebar />)}
+        sidebar={siteSpecific(
+            undefined, 
+            <MyAdaSidebar />
+        )}
     >
         <Card className="mt-4">
             <CardBody>

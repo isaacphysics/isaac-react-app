@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAda, isAuthorisedFullAccess, isPhy, scrollVerticallyIntoView, siteSpecific, TODAY} from "../../../services";
+import {above, isAda, isAuthorisedFullAccess, isPhy, scrollVerticallyIntoView, siteSpecific, TODAY, useDeviceSize} from "../../../services";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
@@ -149,6 +149,7 @@ export function ResultsTable<Q extends QuestionType>({
 } : ResultsTableProps<Q>) {
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
+    const deviceSize = useDeviceSize();
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -261,7 +262,7 @@ export function ResultsTable<Q extends QuestionType>({
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
                         <span>Questions</span>
-                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
                     </div>,
                     "Correct"
                 )}
@@ -277,7 +278,7 @@ export function ResultsTable<Q extends QuestionType>({
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
                         <span>Questions</span>
-                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
                     </div>,
                     "Attempted"
                 )}
@@ -296,7 +297,7 @@ export function ResultsTable<Q extends QuestionType>({
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
                             <span>Parts</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
                         </div>,
                         "Correct"
                     )}
@@ -312,7 +313,7 @@ export function ResultsTable<Q extends QuestionType>({
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
                             <span>Parts</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
                         </div>,
                         "Attempted"
                     )}
@@ -520,6 +521,7 @@ export function ResultsTablePartBreakdown({
 }: ResultsTablePartBreakdownProps) {
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
+    const deviceSize = useDeviceSize();
 
     // TODO: the sorting is somewhat duplicated from above, could be slightly refactored
     const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
@@ -589,7 +591,7 @@ export function ResultsTablePartBreakdown({
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
                                         <span>Parts</span>
-                                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
                                     </div>,
                                     "Correct"
                                 )}
@@ -604,7 +606,7 @@ export function ResultsTablePartBreakdown({
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
                                         <span>Parts</span>
-                                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
                                     </div>,
                                     "Attempted"
                                 )}

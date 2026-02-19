@@ -413,8 +413,8 @@ export const SetAssignments = () => {
                     :
                     <>
                         <h5>
-                            Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
-                            assignments by start date and due date.
+                        Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
+                        assignments by start date and due date.
                         </h5>
                         <div className="section-divider my-4"/>
                     </>

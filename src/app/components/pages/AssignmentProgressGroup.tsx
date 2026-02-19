@@ -119,7 +119,10 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                 icon={{type: "icon", icon: "icon-group"}}
             />
         }
-        sidebar={siteSpecific(null, <MyAdaSidebar />)}
+        sidebar={siteSpecific(
+            null, 
+            <MyAdaSidebar />
+        )}
     >
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
             <i className="icon icon-arrow-left me-2"/>

@@ -8,14 +8,14 @@ import { AffixButton } from "../AffixButton";
 import { SidebarButton } from "../SidebarButton";
 
 interface SidebarLayoutProps extends RowProps {
-    site?: boolean;
+    show?: boolean;
 }
 
 export const SidebarLayout = (props: SidebarLayoutProps) => {
-    const { className, site=true, ...rest } = props;
-    return site
+    const { className, show=true, ...rest } = props;
+    return show
         ? <SidebarContext.Provider value={{sidebarPresent: true}}>
-            <div {...rest} className={classNames("d-flex flex-column flex-md-row sidebar-layout", className)}/>
+            <div {...rest} className={classNames("d-flex flex-column sidebar-layout", siteSpecific("flex-lg-row", "flex-md-row"), className)}/>
         </SidebarContext.Provider>
         : props.children;
 };
@@ -37,7 +37,6 @@ export type SidebarProps = ColProps
 export const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
     // the content in such a sidebar will collapse underneath the main content on smaller screens
-    
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
@@ -63,7 +62,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const pageTheme = useAppSelector(selectors.pageContext.subject);
 
     const sidebarContext = useContext(SidebarContext);
-    if (!sidebarContext?.sidebarPresent) return <></>; 
+    if (!sidebarContext?.sidebarPresent) return <></>;
 
     const breakpoint = siteSpecific("lg", "md");
 

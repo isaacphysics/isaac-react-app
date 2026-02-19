@@ -402,7 +402,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                     quizDueDateFilterType={quizDueDateFilterType} setQuizDueDateFilterType={setQuizDueDateFilterType}
                     manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}
                     hideButton />,
-            <MyAdaSidebar />
+            <MyAdaSidebar />        
         )}
     >
         <PageMetadata noTitle showSidebarButton sidebarButtonText="Search tests" helpModalId="help_modal_set_tests">

@@ -75,7 +75,10 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                     icon={{type: "icon", icon: "icon-revision"}}
                 />
             }
-            sidebar={siteSpecific(null, <MyAdaSidebar />)}
+            sidebar={siteSpecific(
+                null, 
+                <MyAdaSidebar />
+            )}
         >
             <PageMetadata noTitle helpModalId="help_modal_assignment_progress">
                 <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_landing_toptext")} ifNotFound={RenderNothing} />

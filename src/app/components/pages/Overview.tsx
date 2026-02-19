@@ -7,13 +7,19 @@ import { AdaNewsSection } from "../elements/AdaNewsSection";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
+import { siteSpecific } from "../../services";
 
 export const Overview = () => {
     useTeacherOnboardingModal();    
 
     return <PageContainer
-        pageTitle={<TitleAndBreadcrumb currentPageTitle={"Overview"} />}
-        sidebar={<MyAdaSidebar />}
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={"Overview"} />
+        }
+        sidebar={siteSpecific(
+            undefined,
+            <MyAdaSidebar />
+        )}
         id="overview"
     >
         <section id="get-started" className="py-3">
