@@ -105,7 +105,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
         return <div>
-            <h4>Test sections</h4>
+            <h4>Test section(s)</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
                     const section = sections[k];
