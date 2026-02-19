@@ -59,7 +59,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
-    const [modalRecentlyOpened, setModalRecentlyOpened] = useState(currentAttempt ?? false);
+    const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
     
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -165,7 +165,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const previewText = (currentAttemptValue && currentAttemptValue.result)
         ? currentAttemptValue.result.tex
         // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
-        : !modalRecentlyOpened
+        : !hideSeed
             ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
             : undefined;
         // hide seed?: undefined;
@@ -244,7 +244,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const openInequality = () => {
         if (!readonly) {
             setModalVisible(true);
-            setModalRecentlyOpened(true);
+            setHideSeed(true);
         }
     };
 
@@ -287,7 +287,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                             setHasStartedEditing(false);
                             dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: "", mhchemExpression: "", frontEndValidation: false });
                             setTextInput(initialSeedText);
-                            setModalRecentlyOpened(false);
+                            setHideSeed(false);
                         }}>
                             ↺
                         </button>}

@@ -85,7 +85,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const {preferredBooleanNotation} = useUserPreferences();
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
-    const [modalRecentlyOpened, setModalRecentlyOpened] = useState(currentAttempt ?? false);
+    const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
 
     let currentAttemptValue: any | undefined = undefined;
 
@@ -139,7 +139,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
 
     const previewText = (currentAttemptValue && currentAttemptValue.result)
         ? currentAttemptValue.result.tex
-        : !modalRecentlyOpened
+        : !hideSeed
             ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
             : undefined;
 
@@ -213,7 +213,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const openInequality = () => {
         if (!readonly) {
             setModalVisible(true);
-            setModalRecentlyOpened(true);
+            setHideSeed(true);
         }
     };
 
@@ -261,7 +261,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                             if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
                             setHasStartedEditing(false);
                             setTextInput(initialSeedText);
-                            setModalRecentlyOpened(false);
+                            setHideSeed(false);
                         }}>
                             ↺
                         </button>}
