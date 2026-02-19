@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacProgrammeDTO, ProgrammeCard } from "../elements/cards/ProgrammeCard";
 import { ContentDTO } from "../../../IsaacApiTypes";
 import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
+import { siteSpecific } from "../../services";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
     new Promise((resolve) =>
@@ -88,19 +88,21 @@ export const Programmes = () => {
         }
     }, [programmes]);
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
-        <SidebarLayout>
-            <ProgrammesSidebar programmes={programmes} />
-            <MainContent>
-                <ShowLoading until={programmes} thenRender={(programmes) => {
-                    return <ul className="list-unstyled mt-4">
-                        {programmes.map((programme) => (
-                            <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} key={programme.id} className="mb-4" programme={programme} />
-                        ))}
-                    </ul>;
-                }} />
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
+        }
+        sidebar={siteSpecific(
+            <ProgrammesSidebar programmes={programmes} />,
+            undefined
+        )}
+    >
+        <ShowLoading until={programmes} thenRender={(programmes) => {
+            return <ul className="list-unstyled mt-4">
+                {programmes.map((programme) => (
+                    <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} key={programme.id} className="mb-4" programme={programme} />
+                ))}
+            </ul>;
+        }} />
+    </PageContainer>;
 };

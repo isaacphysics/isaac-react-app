@@ -1,14 +1,14 @@
 import React from "react";
-import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { PageFragment } from "../elements/PageFragment";
 import { Loading } from "../handlers/IsaacSpinner";
 import { PageContextState } from "../../../IsaacAppTypes";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
 import { QuestionDecksSidebar } from "../elements/sidebar/QuestionDecksSidebar";
 import { validQuestionDeckStageSubjectPairs } from "../../services/constants";
+import { PageContainer } from "../elements/layout/PageContainer";
+import { siteSpecific } from "../../services";
 
 export const QuestionDecks = () => {
     const pageContext = useUrlPageTheme();
@@ -21,21 +21,23 @@ export const QuestionDecks = () => {
         return <Loading/>;
     }
 
-    return <Container data-bs-theme={pageContext?.subject}>
-        <TitleAndBreadcrumb
-            currentPageTitle="Question decks by topic"
-            icon={pageContext?.subject ? {
-                type: "icon",
-                subject: pageContext.subject,
-                icon: "icon-finder"
-            } : undefined}
-        />
-        <SidebarLayout>
-            <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} hideButton />
-            <MainContent>
-                <PageMetadata showSidebarButton />
-                <PageFragment fragmentId={getFragmentFromContext(pageContext)} />
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+    return <PageContainer data-bs-theme={pageContext?.subject}
+        pageTitle={
+            <TitleAndBreadcrumb
+                currentPageTitle="Question decks by topic"
+                icon={pageContext?.subject ? {
+                    type: "icon",
+                    subject: pageContext.subject,
+                    icon: "icon-finder"
+                } : undefined}
+            />
+        }
+        sidebar={siteSpecific(
+            <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} hideButton />,
+            undefined
+        )}
+    >
+        <PageMetadata showSidebarButton />
+        <PageFragment fragmentId={getFragmentFromContext(pageContext)} />
+    </PageContainer>;
 };
