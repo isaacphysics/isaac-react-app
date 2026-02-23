@@ -66,7 +66,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
     }
 
     function assign() {
-        dispatch(assignGameboard({
+        void dispatch(assignGameboard({
             boardId: board?.id as string,
             groups: selectedGroups,
             dueDate,
