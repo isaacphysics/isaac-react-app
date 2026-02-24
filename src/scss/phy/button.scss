@@ -126,8 +126,8 @@
   }
 
   &:focus:not(:focus-visible) {
-    // TODO: depending on use case (colour of background this is used on), we may need to change how this offset border is generated
-    box-shadow: 0 0 0 3px var(--buttons-dark), 0 0 0 4.5px var(--buttons-focus-ring) !important;
+    outline: 2px solid var(--buttons-focus-ring) !important;
+    outline-offset: 3px;
   }
 
   &:disabled, &.disabled {
