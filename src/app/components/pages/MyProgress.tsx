@@ -11,7 +11,6 @@ import {
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import {
-    below,
     BookHiddenState,
     HUMAN_QUESTION_TYPES,
     ISAAC_BOOKS_BY_TAG,
