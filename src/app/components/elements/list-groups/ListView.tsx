@@ -348,7 +348,7 @@ type ListViewItemProps =
 
 type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
     className?: string;
-    fullWidth?: boolean;
+    forceFullWidth?: boolean;
     hasCaret?: boolean;
 } & (
     {
