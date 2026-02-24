@@ -194,7 +194,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
                 </div>
                 <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
-                    <div className="d-flex text-wrap mt-n1">
+                    <div className={classNames("text-wrap mt-n1", {"d-flex": fullWidth})}>
                         {url && !isDisabled
                             ? (url.startsWith("http")
                                 ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
@@ -210,7 +210,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         }
                         {isItem && <>
                             {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                            <QuestionPropertyTags className="ms-2 justify-self-end" deprecated={typedProps.deprecated} supersededBy={typedProps.supersededBy} tags={tags} />
+                            <QuestionPropertyTags className={classNames("justify-self-end", {"ms-2": fullWidth})} deprecated={typedProps.deprecated} supersededBy={typedProps.supersededBy} tags={tags} />
                         </>}
                     </div>
                     {subtitle && <div className="small text-muted text-wrap">
