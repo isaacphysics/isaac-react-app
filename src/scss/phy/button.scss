@@ -12,8 +12,8 @@
   opacity: 100%;
 
   &:focus:not(:focus-visible) {
-    outline: none !important;
-    box-shadow: 0 0 0 3px var(--buttons-light), 0 0 0 4.5px var(--buttons-focus-ring) !important;
+    outline: 1px solid var(--buttons-focus-ring) !important;
+    outline-offset: 3px;
   }
 
   &.btn-sm {
