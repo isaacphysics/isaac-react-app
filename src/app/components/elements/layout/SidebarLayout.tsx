@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader } from "reactstrap";
 import classNames from "classnames";
-import { above, siteSpecific, useDeviceSize } from "../../../services";
+import { above, isPhy, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
 import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -41,7 +41,7 @@ export const NavigationSidebar = (props: SidebarProps) => {
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, ...rest } = props;
-    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
+    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-3 py-lg-4 pe-lg-5": isPhy}, className)} />;
 };
 
 export interface ContentSidebarProps extends SidebarProps {
@@ -67,7 +67,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return <>
         {above['lg'](deviceSize)
-            ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
+            ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", {"ps-lg-3 py-lg-4 pe-lg-5": isPhy}, className)} />
             : <>
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
