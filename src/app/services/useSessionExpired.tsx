@@ -4,7 +4,7 @@ import {KEY, persistence} from "./localStorage";
 import {useCheckCurrentUserOnActivity} from "./useCheckCurrentUserOnActivity";
 
 export const setAfterRenewPath = () => {
-    persistence.session.save(KEY.AFTER_SESSION_RENEW_PATH, window.location.pathname);
+    persistence.session.save(KEY.AFTER_SESSION_RENEW_PATH, window.location.href);
 };
 
 export const useSessionExpired = (): [string, () => void] => {

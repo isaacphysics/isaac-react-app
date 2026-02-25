@@ -11,10 +11,17 @@
   font-weight: 400;
 }
 
-:not(.generic-panel):not(.concept-panel):not(.question-panel) > .content-chunk > .figure-panel {
-  // if a figure is in the top level of a content block that is not the top level of a page (i.e. preamble), indent it. otherwise (i.e. when inside a layout component), leave it for that component to handle
-  // TODO: move the padding from this to the layout component (usually accordions!)
-  padding: 0 3rem;
+@include respond-above(xs) {
+  :not(.generic-panel):not(.concept-panel):not(.question-panel) > .content-chunk > .figure-panel {
+    // if a figure is in the top level of a content block that is not the top level of a page (i.e. preamble), indent it. otherwise (i.e. when inside a layout component), leave it for that component to handle
+    // TODO: move the padding from this to the layout component (usually accordions!)
+    padding: 0 3rem;
+
+    // Ensure that the top box shadow is not cut off for figures at the top of accordions
+    &:first-child {
+      padding-top: 1.5rem;
+    }
+  }
 }
 
 .question-panel .isaac-accordion {
@@ -88,7 +95,7 @@
 .symbolic-question,
 .equality-page {
   .eqn-editor-preview {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     border: solid 1px $black;
   }
 }
@@ -114,6 +121,11 @@
   &.almost {
     background: #ffb847;
     color: #3c0000;
+  }
+  &.correct, &.almost {
+    code {
+      background-color: transparent;
+    }
   }
 }
 

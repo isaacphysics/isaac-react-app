@@ -231,6 +231,7 @@ export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
 
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
     isNuclear?: boolean;
+    showInequalitySeed?: boolean;
 }
 
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
@@ -365,6 +366,7 @@ export interface QuestionValidationResponseDTO {
     questionId?: string;
     answer?: ChoiceDTO;
     correct?: boolean;
+    marks?: number;
     explanation?: ContentDTO;
     dateAttempted?: Date;
 }
@@ -383,7 +385,6 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
 }
 
 export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
-    marksAwarded?: number;
     markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
 }
 
@@ -760,6 +761,7 @@ export interface GameboardItem {
     questionPartStates?: QuestionPartState[];
     boardId?: string;
     supersededBy?: string;
+    deprecated?: boolean;
 }
 
 export interface IsaacWildcard extends Content {

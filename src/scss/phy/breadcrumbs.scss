@@ -21,10 +21,18 @@
     }
 
     .breadcrumb-item + .breadcrumb-item::before, .breadcrumb-item:last-child::after {
-        @include pseudo-icon('/assets/common/icons/chevron-right.svg', 16px, 16px, 100%);
-        background-color: $color-neutral-white;
+        @include no-print {
+            @include pseudo-icon('/assets/common/icons/chevron-right.svg', 16px, 16px, 100%);
+            background-color: $color-neutral-white;
+        }
+
+        @include only-print {
+            content: ">";
+            color: black;
+        }
+
         padding: 0;
-        margin-right: 0.5rem;
+        margin-right: $breadcrumb-item-padding-x;
     }
     
     .breadcrumb-item:last-child::after {

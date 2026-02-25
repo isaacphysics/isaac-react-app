@@ -10,7 +10,7 @@ import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequal
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, isError, SymbolicTextInput, TooltipContents, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, isError, TooltipContents, updateEquationHelper, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 import { Loading } from "../handlers/IsaacSpinner";
@@ -84,6 +84,8 @@ const Equality = () => {
     const [currentAttempt, dispatchSetCurrentAttempt] = useState<FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO>({type: 'formula', value: "", pythonExpression: ''});
     const [editorSyntax, setEditorSyntax] = useState<LogicSyntax>('logic');
     const [textInput, setTextInput] = useState('');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
@@ -126,6 +128,13 @@ const Equality = () => {
         initialiseInequality(editorMode, hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
+
+    const updateEquation = (input: string) => {
+        return updateEquationHelper({
+            input, editorMode, inputState, setInputState, setTextInput, setHasStartedEditing,
+            initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef
+        });
+    };
 
     /*** End of text based input stuff */
 
@@ -177,11 +186,7 @@ const Equality = () => {
                     {allowTextInput && <div className="eqn-editor-input mt-md-4">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2 align-items-center">
-                            <SymbolicTextInput
-                                editorMode={editorMode} inputState={inputState} setInputState={setInputState}
-                                textInput={textInput} setTextInput={setTextInput} initialEditorSymbols={initialEditorSymbols}
-                                dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef}
-                            />
+                            <Input type="text" value={textInput} placeholder="Type your formula here" onChange={(e) => updateEquation(e.target.value)} />
                             <>
                                 {siteSpecific(
                                     <Button id="inequality-help" type="button" className="eqn-editor-help d-flex align-items-center" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
@@ -196,9 +201,9 @@ const Equality = () => {
                     </div>}
                     <div className="equality-page">
                         <div
-                            role="button" className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "mt-4": !allowTextInput})} tabIndex={0}
-                            onClick={openModal} onKeyDown={ifKeyIsEnter(() => openModal())}
-                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${allowTextInput ? 'or c' : 'C'}lick here to enter a formula</small>` }}
+                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${!allowTextInput && 'mt-4'}`} tabIndex={0}
+                            onClick={openModal} onKeyDown={ifKeyIsEnter(openModal)}
+                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<span>${allowTextInput ? 'or c' : 'C'}lick here to enter a formula</span>` }}
                         />
                         {modalVisible && <Suspense fallback={<Loading/>}>
                             <InequalityModal

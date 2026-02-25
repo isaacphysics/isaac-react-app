@@ -1,4 +1,4 @@
-import {HUMAN_STAGES, HUMAN_SUBJECTS, isValidStageSubjectPair, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject} from "./";
+import {HUMAN_STAGES, HUMAN_SUBJECTS, isPhy, isValidStageSubjectPair, LearningStage, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, validQuestionDeckStageSubjectPairs} from "./";
 import {SearchShortcut} from "../../IsaacAppTypes";
 import {Stage} from "../../IsaacApiTypes";
 
@@ -9,6 +9,13 @@ const searchList: SearchShortcut[] = [
         terms: ["my assignments", "assignments", "assignment", "homework", "hw", "my assignment", "assign", "my isaac", ...(siteSpecific(["quiz", "quizzes"], []))],
         summary: "View your assignments.",
         url: "/assignments",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "tests",
+        title: "My tests",
+        terms: ["tests", "test", "my tests", "my test"],
+        summary: "View your assigned tests.",
+        url: "/tests",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "join_group",
@@ -49,7 +56,7 @@ const searchList: SearchShortcut[] = [
         summary: `Click here to register for an ${SITE_TITLE} account.`,
         url: "/register",
         type: SEARCH_RESULT_TYPE.SHORTCUT
-    },  {
+    }, {
         id: "teacher_support",
         title: "Teacher support",
         terms: ["teacher", "teacher support", "teaching", "teachers", "help", "teacher account",
@@ -223,11 +230,87 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/computer_science",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
+        id: "further_maths",
+        title: "Further Maths question decks (pure)",
+        terms: ["further maths", "further math", "further", "fm"],
+        summary: "Question decks for pure topics in A Level Further Maths",
+        url: "/maths/a_level/question_decks#further",
+        tags: ["maths"],
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "further_stats",
+        title: "Further Maths question decks (statistics)",
+        terms: ["further maths", "further math", "further", "fm", "further stats", "stats", "statistics"],
+        summary: "Question decks for statistics topics in A Level Further Maths",
+        url: "/maths/a_level/question_decks#further_stats",
+        tags: ["maths"],
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
         id: "books",
         title: "Isaac Books",
         terms: ["books", "book", "isaac books"],
         summary: "Isaac books: in print and online",
         url: "/books",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "phy_tests",
+        title: "Physics practice admissions tests",
+        terms: ["pat", "esat"],
+        summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        url: "/physics/university/practice_tests",
+        tags: ["physics"],
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "maths_tests",
+        title: "Maths practice admissions tests",
+        terms: ["tmua", "esat"],
+        summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        url: "/maths/university/practice_tests",
+        tags: ["maths"],
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "chem_tests",
+        title: "Chemistry practice admissions tests",
+        terms: ["esat"],
+        summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        url: "/chemistry/university/practice_tests",
+        tags: ["chemistry"],
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "bio_tests",
+        title: "Biology practice admissions tests",
+        terms: ["esat"],
+        summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
+        url: "/biology/a_level/practice_tests",
+        tags: ["biology"],
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "tests",
+        title: "Practice tests",
+        terms: ["tests", "test", "practice tests", "practice test"],
+        summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
+        url: "/practice_tests",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "teacher_features",
+        title: "Teacher features",
+        terms: ["teacher", "teaching", "teachers", "teacher account", "teacher features"],
+        summary: "View teacher features on Isaac Science.",
+        url: "/teacher_features",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "tutor_support",
+        title: "Tutor support",
+        terms: ["tutor", "tutor support", "tutoring", "tutors", "tutor account", "help", "support"],
+        summary: "View tutor FAQs for using Isaac Science.",
+        url: "/support/tutor/general",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "tutor_features",
+        title: "Tutor features",
+        terms: ["tutor", "tutoring", "tutors", "tutor account", "tutor features"],
+        summary: "View tutor features on Isaac Science.",
+        url: "/tutor_features",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 ],
@@ -242,6 +325,8 @@ const group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 const stages = /(year 9|gcse|a( |-)level|university)/;
 const subjects = /(physics|maths|chemistry|biology)/;
 const stageAndSubject = new RegExp(`${stages.source} ${subjects.source}|${subjects.source} ${stages.source}`);
+const boards = /board|deck|gameboard|question|topic/;
+const subjectAndBoard = new RegExp(`${subjects.source} ${boards.source}`);
 
 export function shortcuts(term: string) {
     const lterm = decodeURIComponent(term).toLowerCase();
@@ -255,15 +340,40 @@ export function shortcuts(term: string) {
             url: ("/account?authToken=" + term),
             type: SEARCH_RESULT_TYPE.SHORTCUT
         });
-    } else if (stageAndSubject.test(lterm)) {
+    } else if (isPhy && stageAndSubject.test(lterm)) {
         const subject = lterm.match(subjects)![0].toString();
         const stage = lterm.match(stages)![0].toString().replace(/[- ]/g, "_");
         const learningStage = STAGE_TO_LEARNING_STAGE[stage as Stage];
+        // Subject/stage landing pages
         if (learningStage && isValidStageSubjectPair(subject as Subject, learningStage)) {
             response.push({
                 id: `${learningStage} ${subject}`,
                 title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]}`,
                 url: `/${subject}/${learningStage}`,
+                tags: [subject],
+                type: SEARCH_RESULT_TYPE.SHORTCUT
+            });
+        }
+        // Question decks by topic
+        const isValidDecksContext = learningStage && (validQuestionDeckStageSubjectPairs[subject as Subject] as LearningStage[])?.includes(learningStage);
+        if (isValidDecksContext) {
+            response.push({
+                id: `${subject}_${stage}_decks`,
+                title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} question decks by topic`,
+                summary: "Prepared question decks for use in classroom or homework.",
+                url: `/${subject}/${stage}/question_decks`,
+                tags: [subject],
+                type: SEARCH_RESULT_TYPE.SHORTCUT
+            });
+        }
+    } else if (isPhy && subjectAndBoard.test(lterm)) {
+        const subject = lterm.match(subjects)?.[0].toString();
+        if (subject) {
+            response.push({
+                id: `${subject}_decks`,
+                title: `${HUMAN_SUBJECTS[subject]} question decks by topic`,
+                summary: "Prepared question decks for use in classroom or homework.",
+                url: `/${subject}/a_level/question_decks`,
                 tags: [subject],
                 type: SEARCH_RESULT_TYPE.SHORTCUT
             });

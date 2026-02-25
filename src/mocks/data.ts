@@ -4339,6 +4339,116 @@ export const mockRegressionTestQuestions = {
                     ],
                     "published": true,
                     "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_drag_and_drop",
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "isaacDndQuestion",
+                            "encoding": "markdown",
+                            "id": "3d927959-a943-4c09-a39a-5fc406b14da1",
+                            "choices": [
+                                {
+                                    "encoding": "markdown",
+                                    "value": "",
+                                    "explanation": {
+                                        "type": "content",
+                                        "children": []
+                                    },
+                                    "type": "dndChoice",
+                                    "children": [],
+                                    "correct": true,
+                                    "items": [
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "A1",
+                                            "id": "eb00"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-0",
+                                            "id": "d39b"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F1",
+                                            "id": "afab"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-2",
+                                            "id": "9d81"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "answer": {
+                                "type": "content",
+                                "encoding": "markdown",
+                                "value": ""
+                            },
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "value": "This is a drag and drop question. This is a [drop-zone:A1|w-100h-27]."
+                                },
+                                {
+                                    "type": "figure",
+                                    "encoding": "markdown",
+                                    "src": "figures/sketch_beta_quad_sketch.svg",
+                                    "value": "test figure",
+                                    "figureRegions": [
+                                        {
+                                            "id": "F-0",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 50,
+                                            "top": 50
+                                        },
+                                        {
+                                            "id": "F1",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 18.8,
+                                            "top": 35.8
+                                        },
+                                        {
+                                            "id": "F-2",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 75.2,
+                                            "top": 35.5
+                                        }
+                                    ],
+                                    "condensedMaxWidth": "500px"
+                                }
+                            ],
+                            "items": [
+                                {
+                                    "type": "item",
+                                    "id": "eb00",
+                                    "value": "graph"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "d39b",
+                                    "value": "origin"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "9d81",
+                                    "value": "$x > 0$"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "afab",
+                                    "value": "$x < 0$"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
             "tags": []
@@ -4465,7 +4575,7 @@ export const mockLLMMarkedValidationResponse = {
     },
     "correct": true,
     "dateAttempted": 1760018609128,
-    "marksAwarded": 1,
+    "marks": 1,
     "markBreakdown": [
         {
             "jsonField": "unreceivedMark0",
@@ -6192,7 +6302,85 @@ export const mockQuizAssignments = [
             startDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             completedDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
         }
+    },
+    {
+        id: 11,
+        quizId: "test-quiz-assignment-3",
+        quizSummary: {
+            id: "test-quiz-assignment-3",
+            title: "Test Quiz Assignment 3",
+            type: "isaacQuiz",
+            tags: [],
+            url: "/isaac-api/api/quiz/test-quiz-assignment-3",
+            visibleToStudents: false,
+            hiddenFromRoles: [
+                "TEACHER",
+                "STUDENT"
+            ]
+        },
+        groupId: 2,
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        quizFeedbackMode: "DETAILED_FEEDBACK",
     }
+];
+
+export const mockFreeAttempts = [
+    {
+        "id": 8,
+        "userId": 9,
+        "quizId": "test-free-attempt-1",
+        "quizSummary": {
+            "id": "test-free-attempt-1",
+            "title": "Practice Quiz 1",
+            "type": "isaacQuiz",
+            "tags": [],
+            "url": "/isaac-api/api/quiz/test-free-attempt-1",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ]
+                },
+                {
+                    "stage": [
+                        "university"
+                    ]
+                }
+            ],
+            "hiddenFromRoles": []
+        },
+        "startDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+    },
+    {
+        "id": 9,
+        "userId": 9,
+        "quizId": "test-free-attempt-2",
+        "quizSummary": {
+            "id": "test-free-attempt-2",
+            "title": "Practice Quiz 2",
+            "type": "isaacQuiz",
+            "tags": [],
+            "url": "/isaac-api/api/quiz/test-free-attempt-2",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ]
+                },
+                {
+                    "stage": [
+                        "university"
+                    ]
+                }
+            ],
+            "hiddenFromRoles": []
+        },
+        "startDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        "completedDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
+    },
 ];
 
 export const mockGroups = [

@@ -103,7 +103,7 @@ export const HeaderCS = () => {
                                     {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                                     {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
                                 </NavigationSection>}
-                                <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
+                                <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
                                     {isTutorOrAbove(user) ?
                                         <>
                                             <LinkItem to="/dashboard">Overview</LinkItem>

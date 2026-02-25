@@ -34,8 +34,8 @@ const BaseMacros: {[key: string]: MathJaxMacro} = {
     "C": "\\mathbb{C}"
 };
 const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
-    "true": "\\boldsymbol{\\rm{T}}",
-    "false": "\\boldsymbol{\\rm{F}}",
+    "true": "\\mathbf{T}",
+    "false": "\\mathbf{F}",
     "and": ["{#1} \\land {#2}", 2],
     "or": ["{#1} \\lor {#2}", 2],
     "not": ["\\lnot{#1}", 1],
@@ -43,8 +43,8 @@ const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "xor": ["{#1} \\veebar {#2}", 2],
     "equivalent": "=", // Fall back to equals rather than the more correct "\\equiv"
     // FIXME: remove the lowercase versions above in future!
-    "True": "\\boldsymbol{\\rm{T}}",
-    "False": "\\boldsymbol{\\rm{F}}",
+    "True": "\\mathbf{T}",
+    "False": "\\mathbf{F}",
     "And": ["{#1} \\land {#2}", 2],
     "Or": ["{#1} \\lor {#2}", 2],
     "Not": ["\\lnot{#1}", 1],

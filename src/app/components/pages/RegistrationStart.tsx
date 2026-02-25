@@ -16,7 +16,7 @@ export const RegistrationStart = () => {
     const emailSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
         // TODO: push /register/role on both sites when teacher registration is implemented on phy
-        void navigate(siteSpecific("register/student/age", "/register/role"));
+        void navigate(siteSpecific("/register/student/age", "/register/role"));
     };
 
     const login = (event: React.MouseEvent) => {

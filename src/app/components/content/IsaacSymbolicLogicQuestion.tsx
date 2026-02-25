@@ -4,6 +4,7 @@ import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiT
 import katex from "katex";
 import {
     ifKeyIsEnter,
+    isPhy,
     jsonHelper,
     sanitiseInequalityState,
     siteSpecific,
@@ -11,12 +12,12 @@ import {
     useUserPreferences
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
-import {Button, InputGroup, UncontrolledTooltip} from 'reactstrap';
+import {Button, Input, InputGroup, UncontrolledTooltip} from 'reactstrap';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality} from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, TooltipContents, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, TooltipContents, updateEquationHelper, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
@@ -58,8 +59,10 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const [textInput, setTextInput] = useState('');
     const {preferredBooleanNotation} = useUserPreferences();
+    const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
+    const editorMode = "logic";
 
     let currentAttemptValue: InequalityState | undefined = undefined;
 
@@ -72,7 +75,12 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
-    const updateState = (state: InequalityState) => {
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.python : initialSeedText);
+
+    const emptySubmission = !hasStartedEditing && !currentAttemptValue;
+
+    const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
         dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
@@ -86,9 +94,9 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, [currentAttempt, currentAttemptValue]);
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        // Only update the text-entry box if the graphical editor is visible
         const pythonExpression = currentAttemptPythonExpression();
-        if (modalVisible || textInput === '') {
+        if (modalVisible) {
             setTextInput(pythonExpression);
         }
         if (inputState.pythonExpression !== pythonExpression) {
@@ -97,7 +105,11 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
-    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+    const previewText = (currentAttemptValue && currentAttemptValue.result)
+        ? currentAttemptValue.result.tex
+        : !hideSeed
+            ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
+            : undefined;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
@@ -111,6 +123,20 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
 
     const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
     const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+
+    const updateEquation = (input: string) => {
+        updateEquationHelper({
+            input, editorMode, inputState, setInputState, setTextInput, setHasStartedEditing,
+            initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef
+        });
+    };
+
+    const openInequality = () => {
+        if (!readonly) {
+            openModal();
+            setHideSeed(true);
+        }
+    };
 
     return <div className="symbolic-question">
         <div className="question-content">
@@ -130,11 +156,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         {!readonly && <div className="eqn-editor-input">
             <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
             <InputGroup className="my-2 separate-input-group">
-                <SymbolicTextInput
-                    editorMode="logic" inputState={inputState} setInputState={setInputState}
-                    textInput={textInput} setTextInput={setTextInput} initialEditorSymbols={initialEditorSymbols}
-                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef}
-                />
+                <Input type="text" value={textInput} placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})} onChange={(e) => updateEquation(e.target.value)} />
                 <>
                     {siteSpecific(
                         <Button id={helpTooltipId} type="button" className="eqn-editor-help">?</Button>,
@@ -153,7 +175,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
             role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded", {"empty": !previewText})} tabIndex={readonly ? undefined : 0}
-            onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
+            onClick={() => !readonly && openInequality()} onKeyDown={ifKeyIsEnter(() => !readonly && openInequality())}
             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
         />
     </div>;

@@ -6,7 +6,6 @@ import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
     closeActiveModal,
-    getChosenUserAuthSettings,
     getRTKQueryErrorMessage,
     openActiveModal,
     selectors,
@@ -14,6 +13,7 @@ import {
     useAdminGetUserQuery,
     useAppDispatch,
     useAppSelector,
+    useGetUserAuthSettingsQuery,
     useUpdateCurrentMutation
 } from "../../state";
 import {
@@ -115,11 +115,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const location = useLocation();
 
     const searchParams = queryString.parse(location.search);
-    const userPreferences = useAppSelector(selectors.user.preferences);
-    const userAuthSettings = useAppSelector(selectors.user.authSettings);
     const hashAnchor = location.hash?.slice(1) ?? null;
     const authToken = searchParams?.authToken as string ?? null;
     const userOfInterest = searchParams?.userId as string ?? null;
+
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const {data: userAuthSettings} = useGetUserAuthSettingsQuery(userOfInterest || undefined);
 
     const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
@@ -129,12 +130,6 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false};
     }, [adminUserToEdit]);
-
-    useEffect(() => {
-        if (userOfInterest) {
-            getChosenUserAuthSettings(Number(userOfInterest));
-        }
-    }, [userOfInterest]);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
@@ -323,12 +318,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
 
     return <Container id="account-page" className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
-        {isAda && <h3 className="d-md-none text-center text-muted m-3">
+        {isAda && <p className="d-md-none text-center text-muted m-3">
             <small>
                 {`Update your Ada Computer Science account, or `}
                 <Link to="/logout" className="text-theme">Log out</Link>
             </small>
-        </h3>}
+        </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <SidebarLayout>

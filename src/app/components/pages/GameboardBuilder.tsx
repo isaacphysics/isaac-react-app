@@ -70,10 +70,14 @@ class GameboardBuilderQuestionsStack {
     setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
     selectedQuestionsStack: Map<string, ContentSummary>[];
 
-    constructor(props: {questionOrderStack: string[][];
+    constructor(
+        props: {
+            questionOrderStack: string[][];
             setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
             selectedQuestionsStack: Map<string, ContentSummary>[];
-            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>}) {
+            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
+        })
+    {
         this.questionOrderStack = props.questionOrderStack;
         this.setQuestionOrderStack = props.setQuestionOrderStack;
         this.selectedQuestionsStack = props.selectedQuestionsStack;
@@ -156,7 +160,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setWildcardId(undefined);
     };
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setSubmissionAttempted(true);
@@ -215,13 +219,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         });
 
         logEvent(eventLog, "SAVE_GAMEBOARD", {});
-        dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
+        await dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
     };
 
     useEffect(() => {
         if (baseGameboard) {
             cloneGameboard(baseGameboard);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [baseGameboard]);
 
     const titleIsValid = gameboardTitle != "";

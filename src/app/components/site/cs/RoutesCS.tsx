@@ -24,7 +24,6 @@ import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {Events} from "../../pages/Events";
-import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import { OnlineCourses } from "../../pages/OnlineCourses";
 import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
 import { StudentResources } from "../../pages/StudentResources";
@@ -37,6 +36,7 @@ import {Overview} from "../../pages/Overview";
 import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
+import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -64,7 +64,7 @@ export const RoutesCS = [
 
     // Assignments
     <Route key={key++} path="/assignment_progress" element={<Navigate to="/my_markbook" replace />} />,
-    <Route key={key++} path="/assignment_progress/:assignmentId" element={<Navigate to="/my_markbook/:assignmentId" replace />} />,
+    <Route key={key++} path="/assignment_progress/:assignmentId" element={<NavigateWithSlug to="/my_markbook/:assignmentId" replace />} />,
 
     // Teacher test pages
     <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
@@ -111,7 +111,7 @@ export const RoutesCS = [
     // Events
     <Route key={key++} path='/events' element={<Events />}/>,
     <Route key={key++} path='/events/:eventId' element={<EventDetails />}/>,
-    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<RedirectToEvent />} />} />,
+    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<NavigateWithSlug to="/events/:eventId" replace />} />} />,
 
     // Static pages:
     <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us"} />} />,

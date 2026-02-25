@@ -86,7 +86,7 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
         <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral">
             {PageComponent
-                ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
+                ? <MemoryRouter initialEntries={initalRouteEntries ?? ['/']}>
                     <PageComponent/>
                 </MemoryRouter>
                 : <IsaacApp/>
@@ -97,7 +97,7 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
 
 export const renderTestHook = <Result, Props>(
     render: (initialProps: Props) => Result,
-    { extraEndpoints }: { extraEndpoints?: HttpHandler[] } = {}
+    { Wrapper, extraEndpoints }: { Wrapper?: React.FC<{children: React.ReactNode}>, extraEndpoints?: HttpHandler[] } = {}
 ): RenderHookResult<Result, Props> => {
     resetStore();
     server.resetHandlers();
@@ -106,7 +106,9 @@ export const renderTestHook = <Result, Props>(
     }
     
     return renderHook(render, {
-        wrapper: ({children}) => <Provider store={store}>{children}</Provider>
+        wrapper: ({children}) => <Provider store={store}>
+            {Wrapper ? <Wrapper>{children}</Wrapper> : children}
+        </Provider>
     });
 };
 
@@ -242,6 +244,8 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 export type PathString = `/${string}`;
 export type SearchString = `?${string}`;
 export const setUrl = async (location: Partial<URL>) => {
+    // this act seems to be generating a lot of warnings for both being there and for not being there if you remove it. 
+    // seems like an RTL issue: https://github.com/testing-library/react-testing-library/issues/1413
     await act(async () => {
         // push a new state, then go to it
         history.pushState({}, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);
