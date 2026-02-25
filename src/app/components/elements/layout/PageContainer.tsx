@@ -19,8 +19,9 @@ interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
  */
 export const PageContainer = (props: PageContainerProps) => {
     const { children, sidebar, pageTitle, id, ...rest } = props;
+    // TODO increase mb-2 to ~mb-7, but carefully consider mobile layouts and remove inconsistent additional spacing below individual pages.
     if (!sidebar) {
-        return <Container {...rest} id={id} className={classNames("mb-7", rest.className)}>
+        return <Container {...rest} id={id} className={classNames("mb-2", rest.className)}>
             {pageTitle}
             {children}
         </Container>;
@@ -28,7 +29,7 @@ export const PageContainer = (props: PageContainerProps) => {
 
     return siteSpecific(
         // Sci
-        <Container {...rest} id={id} className={classNames("mb-7", rest.className)}>
+        <Container {...rest} id={id} className={classNames("mb-2", rest.className)}>
             {pageTitle}
             <SidebarLayout show={!!sidebar}>
                 {sidebar}
@@ -45,7 +46,7 @@ export const PageContainer = (props: PageContainerProps) => {
         <SidebarLayout className="g-md-0" id={id} show={!!sidebar}>
             {sidebar}
             <MainContent className="overflow-x-auto">
-                <Container fluid {...rest} className={classNames("my-ada-container mw-1600 px-md-4 px-lg-6 mb-7", rest.className)}>
+                <Container fluid {...rest} className={classNames("my-ada-container mw-1600 px-md-4 px-lg-6 mb-2", rest.className)}>
                     {pageTitle}
                     {children}
                 </Container>
