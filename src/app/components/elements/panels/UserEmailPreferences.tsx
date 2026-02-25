@@ -42,8 +42,7 @@ export const UserEmailPreference = ({
   const userIsStudent = isStudent({ ...user, loggedIn: true });
   const isaacEmailPreferenceDescriptions = {
     assignments: "Receive assignment notifications from your teacher.",
-    news: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
-    events: "Get valuable updates on our free student workshops happening near you.",
+    newsAndUpdates: "Be the first to know about new topics, platform features, competitons and free student events.",
   };
 
   let errorMessage = null;
@@ -86,26 +85,13 @@ export const UserEmailPreference = ({
               </tr>
             )}
             <tr>
-              <td>News</td>
-              <td className="d-none d-sm-table-cell">{isaacEmailPreferenceDescriptions.news}</td>
+              <td>News and Updates</td>
+              <td className="d-none d-sm-table-cell">{isaacEmailPreferenceDescriptions.newsAndUpdates}</td>
               <td className="text-center">
                 <TrueFalseRadioInput
                   id={`${idPrefix}news`}
                   stateObject={emailPreferences}
                   propertyName="NEWS_AND_UPDATES"
-                  setStateFunction={setEmailPreferences}
-                  submissionAttempted={submissionAttempted}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Events</td>
-              <td className="d-none d-sm-table-cell">{isaacEmailPreferenceDescriptions.events}</td>
-              <td className="text-center">
-                <TrueFalseRadioInput
-                  id={`${idPrefix}events`}
-                  stateObject={emailPreferences}
-                  propertyName="EVENTS"
                   setStateFunction={setEmailPreferences}
                   submissionAttempted={submissionAttempted}
                 />
