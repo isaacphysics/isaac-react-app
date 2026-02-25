@@ -334,7 +334,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
-                <div className={classNames("w-lg-75", {"card": isAda})}>
+                <div className={siteSpecific("w-lg-75", "card")}>
                     {isAda && <Nav tabs className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
                             <NavItem key={tab} className={classnames({active: activeTab === tab})}>
