@@ -19,7 +19,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { InequalityState, initialiseInequality, InputState, updateEquationHelper, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
@@ -73,7 +73,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const initialEditorSymbols = useRef(editorSeed ?? []);
 
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
-    const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
+    const [hideSeed, setHideSeed] = useState(!!currentAttempt);
     
     let currentAttemptValue: InequalityState | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -83,7 +83,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
     const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
 
-    const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;
+    const emptySubmission = !hasStartedEditing && !currentAttemptValue;
 
     const hasMetaSymbols = doc.availableSymbols ? doc.availableSymbols.length > 0 && !doc.availableSymbols.every(
         symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim())
@@ -146,13 +146,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const updateEquation = (input: string) => {
-        updateEquationHelper({
-            input, editorMode, inputState, setInputState, setTextInput, setHasStartedEditing,
-            initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef
-        });
-    };
-
     const openInequality = () => {
         if (!readonly) {
             openModal();
@@ -190,19 +183,11 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         {showTextEntry && <div className="eqn-editor-input mb-2">
             <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
             <InputGroup className="mt-2 separate-input-group">
-                <div className="position-relative flex-grow-1">
-                    <Input type="text" value={textInput} placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})} onChange={(e) => updateEquation(e.target.value)} />
-                    {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
-                        updateEquation('');
-                        if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
-                        setHasStartedEditing(false);
-                        dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: "", mhchemExpression: "", frontEndValidation: false });
-                        setTextInput(initialSeedText);
-                        setHideSeed(false);
-                    }}>
-                        ↺
-                    </button>}
-                </div>
+                <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+                    textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+                    initialSeedText={initialSeedText} editorSeed={editorSeed} setHideSeed={setHideSeed} initialEditorSymbols={initialEditorSymbols}
+                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission}
+                />
                 <>
                     {siteSpecific(
                         <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,

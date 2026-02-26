@@ -8,7 +8,7 @@ import React, {
     useState
 } from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
+import {ChemicalFormulaDTO, FormulaDTO, IsaacSymbolicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
 import {
     ifKeyIsEnter,
@@ -24,7 +24,7 @@ import {Inequality, makeInequality} from "inequality";
 import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
-import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import {Button, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
 import { EditorMode } from "../elements/modals/inequality/constants";
@@ -179,65 +179,89 @@ export interface InputState {
     userInput: string;
 }
 
-function countChildren(root: ChildrenMap) {
-    let q = [root];
-    let count = 1;
-    while (q.length > 0) {
-        const e = q.shift();
-        if (!e) continue;
+type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 
-        const c = Object.keys(e.children).length;
-        if (c > 0) {
-            count = count + c;
-            q = q.concat(Object.values(e.children));
-        }
-    }
-    return count;
-}
-
-interface updateEquationProps {
-    input: string;
+interface SymbolicTextInputProps {
     editorMode: EditorMode;
     inputState: InputState;
     setInputState: React.Dispatch<React.SetStateAction<InputState>>;
+    textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
+    setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
     setHasStartedEditing: React.Dispatch<React.SetStateAction<boolean>>;
+    initialSeedText: string;
+    editorSeed?: any;
+    emptySubmission: boolean;
     initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
-    dispatchSetCurrentAttempt: (attempt: {type: 'formula' | 'logicFormula' | 'chemicalFormula'; value: string; pythonExpression?: string; mhchemExpression?: string}) => void;
+    dispatchSetCurrentAttempt: (attempt: GeneralFormulaDTO | ValidatedChoice<GeneralFormulaDTO>) => void;
     sketchRef: React.MutableRefObject<Inequality | null | undefined>;
 }
 
-export const updateEquationHelper = ({input, editorMode, inputState, setInputState, setTextInput, setHasStartedEditing, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef}: updateEquationProps) => {
-    setTextInput(input);
-    setHasStartedEditing(true);
-    setInputState({...inputState, userInput: input, ...(["maths", "logic"].includes(editorMode) ? {pythonExpression: input} : {mhchemExpression: input})});
+export const SymbolicTextInput = ({editorMode, inputState, setInputState, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission}: SymbolicTextInputProps) => {
+    const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
+        type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
+        value: value, 
+        ...(["chemistry", "nuclear"].includes(editorMode) ? {mhchemExpression: ""} : {pythonExpression: ""})
+    });
 
-    const parsedExpression = editorMode === "maths"
-        ? parseMathsExpression(input) 
-        : editorMode === "chemistry"
-            ? parseInequalityChemistryExpression(input)
-            : editorMode === "nuclear"
-                ? parseInequalityNuclearExpression(input)
-                : parseBooleanExpression(input);
+    function countChildren(root: ChildrenMap) {
+        let q = [root];
+        let count = 1;
+        while (q.length > 0) {
+            const e = q.shift();
+            if (!e) continue;
 
-    if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
-        if (input === '') {
-            const state = {result: {tex: "", python: "", mathml: ""}};
-            dispatchSetCurrentAttempt({ 
-                type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
-                value: JSON.stringify(sanitiseInequalityState(state)), 
-                ...(["maths", "logic"].includes(editorMode) ? {pythonExpression: ""} : {mhchemExpression: ""})});
-            initialEditorSymbols.current = [];
-        } else if (parsedExpression.length === 1) {
-            // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
-            // so textInput will almost certainly be out of sync with input which is the current content of the text box.
-            sketchRef.current?.parseSubtreeObject(parsedExpression[0], true, true, input);
-        } else {
-            const sizes = parsedExpression.map(countChildren);
-            const i = sizes.indexOf(Math.max.apply(null, sizes));
-            sketchRef.current?.parseSubtreeObject(parsedExpression[i], true, true, input);
+            const c = Object.keys(e.children).length;
+            if (c > 0) {
+                count = count + c;
+                q = q.concat(Object.values(e.children));
+            }
         }
+        return count;
     }
+
+    const updateEquation = (input: string) => {
+        setTextInput(input);
+        setInputState({...inputState, userInput: input, ...(["chemistry", "nuclear"].includes(editorMode) ? {mhchemExpression: input} : {pythonExpression: input})});
+
+        const parsedExpression = editorMode === "maths"
+            ? parseMathsExpression(input) 
+            : editorMode === "chemistry"
+                ? parseInequalityChemistryExpression(input)
+                : editorMode === "nuclear"
+                    ? parseInequalityNuclearExpression(input)
+                    : parseBooleanExpression(input);
+
+        if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
+            if (input === '') {
+                const state = {result: {tex: "", python: "", mathml: ""}};
+                dispatchSetCurrentAttempt(constructCurrentAttemptValue(JSON.stringify(sanitiseInequalityState(state))));
+                initialEditorSymbols.current = [];
+            } else if (parsedExpression.length === 1) {
+                // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
+                // so textInput will almost certainly be out of sync with input which is the current content of the text box.
+                sketchRef.current?.parseSubtreeObject(parsedExpression[0], true, true, input);
+            } else {
+                const sizes = parsedExpression.map(countChildren);
+                const i = sizes.indexOf(Math.max.apply(null, sizes));
+                sketchRef.current?.parseSubtreeObject(parsedExpression[i], true, true, input);
+            }
+        }
+    };
+
+    return <div className="position-relative flex-grow-1">      
+        <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder="Type your formula here"  className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}/>
+        {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+            updateEquation('');
+            if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
+            setHasStartedEditing(false);
+            dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
+            setTextInput(initialSeedText);
+            if (setHideSeed) setHideSeed(false);
+        }}>
+            ↺
+        </button>}
+    </div>;
 };
 
 export const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
@@ -262,7 +286,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const [inputState, setInputState] = useState<InputState>({pythonExpression: currentAttemptPythonExpression(currentAttemptValue), userInput: ''});
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
-    const [textInput, setTextInput] = useState<string>('');
     const [hasStartedEditing, setHasStartedEditing] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
@@ -278,6 +301,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
     const editorMode = "maths";
 
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]); 
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.python : initialSeedText);
+
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
@@ -287,13 +313,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
         }
         initialEditorSymbols.current = state.symbols ?? [];
-    };
-
-    const updateEquation = (input: string) => {
-        updateEquationHelper({
-            input, editorMode, inputState, setInputState, setTextInput, setHasStartedEditing,
-            initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef
-        });
     };
 
     useLayoutEffect(() => {
@@ -315,6 +334,12 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
+    const openInequality = () => {
+        if (!readonly) {
+            openModal();
+        }
+    };
+
     return <div className="symbolic-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
@@ -332,7 +357,11 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         {!readonly && <div className="eqn-editor-input">
             <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
             <InputGroup className="my-2 separate-input-group">
-                <Input type="text" value={textInput} placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})} onChange={(e) => updateEquation(e.target.value)} />
+                <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+                    textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+                    initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols}
+                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission}
+                />
                 <>
                     {siteSpecific(
                         <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
@@ -348,11 +377,11 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 The following symbols may be useful: <pre>{symbolList}</pre>
             </div>}
         </div>}
-        
-        <button
-            disabled={readonly} role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded", {"empty": !previewText})} tabIndex={readonly ? undefined : 0}
-            onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
-            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <div
+            role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})}
+            onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
+            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
         />
     </div>;
 };

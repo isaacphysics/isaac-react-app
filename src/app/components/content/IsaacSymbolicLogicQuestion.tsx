@@ -17,7 +17,7 @@ import {v4 as uuid_v4} from "uuid";
 import {Inequality} from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, TooltipContents, updateEquationHelper, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, TooltipContents, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
@@ -124,13 +124,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
     const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
-    const updateEquation = (input: string) => {
-        updateEquationHelper({
-            input, editorMode, inputState, setInputState, setTextInput, setHasStartedEditing,
-            initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef
-        });
-    };
-
     const openInequality = () => {
         if (!readonly) {
             openModal();
@@ -156,7 +149,11 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         {!readonly && <div className="eqn-editor-input">
             <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
             <InputGroup className="my-2 separate-input-group">
-                <Input type="text" value={textInput} placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})} onChange={(e) => updateEquation(e.target.value)} />
+                <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+                    textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+                    initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols}
+                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission}
+                />
                 <>
                     {siteSpecific(
                         <Button id={helpTooltipId} type="button" className="eqn-editor-help">?</Button>,
@@ -174,8 +171,8 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         </div>}
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
-            role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded", {"empty": !previewText})} tabIndex={readonly ? undefined : 0}
-            onClick={() => !readonly && openInequality()} onKeyDown={ifKeyIsEnter(() => !readonly && openInequality())}
+            role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} tabIndex={readonly ? undefined : 0}
+            onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
         />
     </div>;
