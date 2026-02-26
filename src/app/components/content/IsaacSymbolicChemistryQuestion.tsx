@@ -6,14 +6,12 @@ import {
     ifKeyIsEnter,
     jsonHelper,
     sanitiseInequalityState,
-    siteSpecific,
     useCurrentQuestionAttempt,
     parsePseudoSymbolicAvailableSymbols,
-    isPhy
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
+import { InputGroup } from "reactstrap";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
@@ -186,33 +184,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
                     textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
                     initialSeedText={initialSeedText} editorSeed={editorSeed} setHideSeed={setHideSeed} initialEditorSymbols={initialEditorSymbols}
-                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission}
+                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
                 />
-                <>
-                    {siteSpecific(
-                        <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                        <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                    )}
-                    {!modalVisible ? 
-                        (doc.isNuclear
-                            ? <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
-                                Here are some examples of expressions you can type:<br />
-                                {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
-                                {"^{0}_{-1}e"}<br />
-                                {"\\gammaray"}<br />
-                                As you type, the box above will preview the result.
-                            </UncontrolledTooltip>
-                            : <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
-                                Here are some examples of expressions you can type:<br />
-                                H2O<br />
-                                2 H2 + O2 -&gt; 2 H2O<br />
-                                CH3(CH2)3CH3<br />
-                                {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
-                                As you type, the box above will preview the result.
-                            </UncontrolledTooltip>
-                        )
-                        : null}
-                </>
             </InputGroup>
             <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, mayRequireStateSymbols)} />
             {symbolList && <div className="eqn-editor-symbols">

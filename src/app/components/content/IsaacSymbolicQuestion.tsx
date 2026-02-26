@@ -190,6 +190,7 @@ interface SymbolicTextInputProps {
     setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
     setHasStartedEditing: React.Dispatch<React.SetStateAction<boolean>>;
     initialSeedText: string;
+    helpTooltipId: string;
     editorSeed?: any;
     emptySubmission: boolean;
     initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
@@ -197,7 +198,23 @@ interface SymbolicTextInputProps {
     sketchRef: React.MutableRefObject<Inequality | null | undefined>;
 }
 
-export const SymbolicTextInput = ({editorMode, inputState, setInputState, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission}: SymbolicTextInputProps) => {
+export const SymbolicTextInput = ({editorMode, inputState, setInputState, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission}: SymbolicTextInputProps) => {
+    const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
+        const example: React.ReactNode = 
+            editorMode === "maths" ? <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>
+                : editorMode === "chemistry" ? <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>
+                    : editorMode === "nuclear" ? <>  {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>
+                        : <> A and (B or not C) <br/> A &amp; (B | !C) <br/> True &amp; ~(False + Q) <br/> 1 . ~(0 + Q) <br/></>;
+
+        return <>
+            Here are some examples of expressions you can type:<br />
+            <br />
+            {example}
+            <br />
+            As you type, the box below will preview the result.
+        </>;
+    };
+    
     const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
         type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
         value: value, 
@@ -249,34 +266,29 @@ export const SymbolicTextInput = ({editorMode, inputState, setInputState, textIn
         }
     };
 
-    return <div className="position-relative flex-grow-1">      
-        <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder="Type your formula here"  className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}/>
-        {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
-            updateEquation('');
-            if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
-            setHasStartedEditing(false);
-            dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
-            setTextInput(initialSeedText);
-            if (setHideSeed) setHideSeed(false);
-        }}>
-            ↺
-        </button>}
-    </div>;
-};
-
-export const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
-    const example: React.ReactNode = 
-        editorMode === "maths" ? <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>
-            : editorMode === "chemistry" ? <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>
-                : editorMode === "nuclear" ? <>  {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>
-                    : <> A and (B or not C) <br/> A &amp; (B | !C) <br/> True &amp; ~(False + Q) <br/> 1 . ~(0 + Q) <br/></>;
-
     return <>
-        Here are some examples of expressions you can type:<br />
-        <br />
-        {example}
-        <br />
-        As you type, the box below will preview the result.
+        <div className="position-relative flex-grow-1">      
+            <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={editorMode === "logic" ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}/>
+            {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                updateEquation('');
+                if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
+                setHasStartedEditing(false);
+                dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
+                setTextInput(initialSeedText);
+                if (setHideSeed) setHideSeed(false);
+            }}>
+                ↺
+            </button>}
+        </div>
+        <>
+            {siteSpecific(
+                <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
+            )}
+            <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
+                <TooltipContents editorMode={editorMode}/>
+            </UncontrolledTooltip>
+        </>
     </>;
 };
 
@@ -360,17 +372,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
                     textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
                     initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols}
-                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission}
+                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
                 />
-                <>
-                    {siteSpecific(
-                        <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                        <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                    )}
-                    <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
-                        <TooltipContents editorMode="maths"/>
-                    </UncontrolledTooltip>
-                </>
             </InputGroup>
             <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
             {symbolList && <div className="eqn-editor-symbols">
