@@ -312,6 +312,19 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         summary: "View tutor features on Isaac Science.",
         url: "/tutor_features",
         type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "bpho",
+        title: "British Physics Olympiad (BPhO)",
+        terms: ["bpho", "british physics olympiad", "physics olympiad", "olympiad", "bpho spc"],
+        url: "/pages/bpho_info",
+        tags: ["physics"],
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "stem_smart",
+        title: "STEM SMART",
+        terms: ["moodle"], // Other STEM SMART terms should be matched with ElasticSearch
+        url: "/pages/stem_smart",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 ],
 // Ada:
