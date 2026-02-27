@@ -103,25 +103,7 @@ export const HeaderCS = () => {
                                     {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                                     {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
                                 </NavigationSection>}
-                                <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
-                                    {isTutorOrAbove(user) ?
-                                        <>
-                                            <LinkItem to="/dashboard">Overview</LinkItem>
-                                            <LinkItem to="/groups">Teaching groups</LinkItem>
-                                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
-                                            <LinkItem to="/set_tests">Manage tests</LinkItem>
-                                            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
-                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                                        </>
-                                        :
-                                        <>
-                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                                            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
-                                            <LinkItem to="/progress">My progress</LinkItem>
-                                        </>
-                                    }
-                                    <LinkItem to="/account">My account</LinkItem>
-                                </NavigationSection>
+                                <NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>} />
                                 <div className={"navbar-separator d-nav-none d-block"}/>
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>
                             </>
