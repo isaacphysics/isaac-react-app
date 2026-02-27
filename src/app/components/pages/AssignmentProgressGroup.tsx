@@ -21,7 +21,7 @@ import {RegisteredUserDTO} from '../../../IsaacApiTypes';
 import {Link, useLocation} from 'react-router-dom';
 import {Spacer} from '../elements/Spacer';
 import {formatDate} from '../elements/DateString';
-import {Badge, Button, Card, CardBody, Col, Container, Input, Label, Row} from 'reactstrap';
+import {Badge, Button, Card, CardBody, Col, Input, Label, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {downloadLinkModal} from '../elements/modals/AssignmentProgressModalCreators';
 import {InlineTabs} from '../elements/InlineTabs';
@@ -30,6 +30,8 @@ import {Loading} from '../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
 import { useHistoryState } from '../../state/actions/history';
+import { PageContainer } from '../elements/layout/PageContainer';
+import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
@@ -109,13 +111,19 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
 
     const filteredAssignments = assignmentLikeListing?.filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()));
 
-    return <Container className="mb-5">
-        <TitleAndBreadcrumb
-            currentPageTitle={group?.groupName ?? "Group progress"}
-            intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
-            icon={{type: "icon", icon: "icon-group"}}
-        />
-
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb
+                currentPageTitle={group?.groupName ?? "Group progress"}
+                intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
+                icon={{type: "icon", icon: "icon-group"}}
+            />
+        }
+        sidebar={siteSpecific(
+            null, 
+            <MyAdaSidebar />
+        )}
+    >
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
             <i className="icon icon-arrow-left me-2"/>
             Back to assignment progress
@@ -215,7 +223,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
 
             </CardBody>
         </Card>
-    </Container>;
+    </PageContainer>;
 };
 
 

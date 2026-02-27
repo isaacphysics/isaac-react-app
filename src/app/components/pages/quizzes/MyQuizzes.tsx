@@ -44,8 +44,8 @@ import { HexIcon } from "../../elements/svg/HexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
-import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 import { PageContainer } from "../../elements/layout/PageContainer";
+import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 
 export interface QuizzesPageProps {
     user: RegisteredUserDTO;

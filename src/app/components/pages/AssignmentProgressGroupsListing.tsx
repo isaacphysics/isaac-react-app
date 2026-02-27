@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useState} from "react";
 import {openActiveModal, useAppDispatch} from "../../state";
-import {Card, CardBody, Col, Container, Label, Row} from "reactstrap";
+import {Card, CardBody, Col, Label, Row} from "reactstrap";
 import sortBy from "lodash/sortBy";
 import {AppGroup, AssignmentProgressPageSettingsContext} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -24,6 +24,8 @@ import {SearchInputWithIcon} from "../elements/SearchInputs";
 import {StyledDropdown} from "../elements/inputs/DropdownInput";
 import classNames from "classnames";
 import { PageMetadata } from "../elements/PageMetadata";
+import { PageContainer } from "../elements/layout/PageContainer";
+import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 
 export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -66,11 +68,18 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
     const {groupSortOrder, setGroupSortOrder} = pageSettings ?? {};
 
     return <>
-        <Container className="mb-5">
-            <TitleAndBreadcrumb
-                currentPageTitle={siteSpecific("Assignment progress", "Markbook")}
-                icon={{type: "icon", icon: "icon-revision"}}
-            />
+        <PageContainer
+            pageTitle={
+                <TitleAndBreadcrumb
+                    currentPageTitle={siteSpecific("Assignment progress", "Markbook")}
+                    icon={{type: "icon", icon: "icon-revision"}}
+                />
+            }
+            sidebar={siteSpecific(
+                null, 
+                <MyAdaSidebar />
+            )}
+        >
             <PageMetadata noTitle helpModalId="help_modal_assignment_progress">
                 <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_landing_toptext")} ifNotFound={RenderNothing} />
             </PageMetadata>
@@ -130,6 +139,6 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                     />
                 </CardBody>
             </Card>
-        </Container>
+        </PageContainer>
     </>;
 };

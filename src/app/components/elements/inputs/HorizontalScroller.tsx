@@ -57,7 +57,7 @@ export const HorizontalScroller = ({ children, enabled, className }: HorizontalS
     }, [handleResize]);
 
     return (
-        <div className={className}>
+        <div className={classNames(className, "d-grid")}>
             <div className={classNames("top-scrollbar-container", {"closed": !displayScroll || !enabled})} 
                 onScroll={() => syncScroll("top")} ref={topScrollbarRef} style={{ height: scrollbarSize }} 
             >

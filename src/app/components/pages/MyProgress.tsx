@@ -9,7 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Card, CardBody, Col, Row } from "reactstrap";
 import {
     below,
     BookHiddenState,
@@ -32,6 +32,8 @@ import { FlushableRef, QuestionProgressCharts } from "../elements/views/Question
 import { ActivityGraph } from "../elements/views/ActivityGraph";
 import { ProgressBar } from "../elements/views/ProgressBar";
 import { ListView } from '../elements/list-groups/ListView';
+import { PageContainer } from '../elements/layout/PageContainer';
+import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -102,8 +104,15 @@ const MyProgress = ({user}: MyProgressProps) => {
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
-    return <Container id="my-progress" className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-progress"}} disallowLaTeX />
+    return <PageContainer id="my-progress"
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-progress"}} disallowLaTeX />
+        }
+        sidebar={siteSpecific(
+            undefined, 
+            <MyAdaSidebar />
+        )}
+    >
         <Card className="mt-4">
             <CardBody>
                 <div>
@@ -198,6 +207,6 @@ const MyProgress = ({user}: MyProgressProps) => {
                 </div>
             </CardBody>
         </Card>
-    </Container>;
+    </PageContainer>;
 };
 export default MyProgress;

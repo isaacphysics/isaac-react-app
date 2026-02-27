@@ -1,21 +1,5 @@
-.overview-padding {
-  @extend .px-md-4;
-  @include media-breakpoint-up(xl) {
-    padding-left: 100px !important;
-    padding-right: 100px !important;
-  }
-  @extend .py-4;
-  @include media-breakpoint-up(xl) {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
-  }
-
-}
-
 #overview {
-  z-index: 1;
   position: relative;
-  overflow: hidden;
 }
 
 #overview:before {

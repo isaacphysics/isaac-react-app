@@ -59,8 +59,9 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
 import { useHistoryState } from "../../state/actions/history";
-import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
+import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -81,10 +82,8 @@ interface SetAssignmentsTableProps {
 
 const PhyTable = (props: SetAssignmentsTableProps) => {
     const {
-        user,
-        boards, boardSubject, setBoardSubject,
-        boardView, boardTitleFilter, setBoardTitleFilter,
-        boardCreator, setBoardCreator,
+        user, boards, boardSubject,
+        boardView, boardTitleFilter, boardCreator,
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;
@@ -393,7 +392,7 @@ export const SetAssignments = () => {
                 sortDisabled={sortDisabled} forceAllBoards={forceAllBoards}
                 hideButton
             />,
-            undefined
+            <MyAdaSidebar />
         )}
     >
         <PageMetadata showSidebarButton noTitle helpModalId="help_modal_set_assignments">

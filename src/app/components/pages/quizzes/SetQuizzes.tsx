@@ -43,10 +43,11 @@ import { ListView } from "../../elements/list-groups/ListView";
 import { HexIcon } from "../../elements/svg/HexIcon";
 import { AffixButton } from "../../elements/AffixButton";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { PageContainer } from "../../elements/layout/PageContainer";
+import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
 import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
-import { PageContainer } from "../../elements/layout/PageContainer";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -401,7 +402,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                     quizDueDateFilterType={quizDueDateFilterType} setQuizDueDateFilterType={setQuizDueDateFilterType}
                     manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}
                     hideButton />,
-            undefined        
+            <MyAdaSidebar />        
         )}
     >
         <PageMetadata noTitle showSidebarButton sidebarButtonText="Search tests" helpModalId="help_modal_set_tests">
