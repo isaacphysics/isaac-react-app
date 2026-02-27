@@ -80,7 +80,6 @@ describe("Teacher Registration", () => {
       stage,
       examBoard,
       newsPreferences,
-      events,
       submitButton,
       verificationInfo,
       additionalInfo,
@@ -103,7 +102,6 @@ describe("Teacher Registration", () => {
       stage(),
       examBoard(),
       newsPreferences(),
-      events(),
       submitButton(),
       verificationInfo(),
       additionalInfo(),
@@ -172,7 +170,6 @@ describe("Teacher Registration", () => {
         EMAIL_PREFERENCE: {
           NEWS_AND_UPDATES: false,
           ASSIGNMENTS: true,
-          EVENTS: false,
         },
       }),
       expect.objectContaining([

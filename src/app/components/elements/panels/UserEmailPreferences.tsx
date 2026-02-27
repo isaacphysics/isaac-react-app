@@ -56,8 +56,7 @@ export const UserEmailPreference = ({
       <p>
         Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox. These settings
         can be changed at any time. Expect a monthly newsletter featuring news, updates, and event announcements.
-        Assignment notifications will be sent as needed by your teacher.{" "}
-        {userIsStudent && "Assignment notifications will be sent as needed by your teacher."}
+        {userIsStudent && " Assignment notifications will be sent as needed by your teacher."}
       </p>
       <FormGroup className="overflow-auto">
         <Table className="mb-0">

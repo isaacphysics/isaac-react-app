@@ -13,8 +13,7 @@ interface RegistrationEmailPreferenceProps {
 
 type EmailPreferenceDescriptions = {
   assignments: string;
-  news: string;
-  events: string;
+  newsAndUpdates: string;
 };
 
 export const RegistrationEmailPreference = ({
@@ -26,16 +25,15 @@ export const RegistrationEmailPreference = ({
   const preferences = [
     {
       key: "assignments",
+      label: "Assignments",
       property: "ASSIGNMENTS",
       condition: userRole === "STUDENT",
     },
-    { key: "news", property: "NEWS_AND_UPDATES" },
-    { key: "events", property: "EVENTS" },
+    { key: "newsAndUpdates", label: "News and Updates", property: "NEWS_AND_UPDATES" },
   ];
   const isaacEmailPreferenceDescriptions: EmailPreferenceDescriptions = {
     assignments: "Receive assignment notifications from your teacher.",
-    news: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
-    events: "Get valuable updates on our free student workshops happening near you.",
+    newsAndUpdates: "Be the first to know about new topics, platform features, competitions and free student events.",
   };
 
   return (
@@ -50,7 +48,7 @@ export const RegistrationEmailPreference = ({
               const description = isaacEmailPreferenceDescriptions[preference.key as keyof EmailPreferenceDescriptions];
               return preference.condition === undefined || preference.condition ? (
                 <tr key={index}>
-                  <td>{preference.key.charAt(0).toUpperCase() + preference.key.slice(1)}</td>
+                  <td>{preference.label}</td>
                   <td className="d-none d-sm-table-cell">{description}</td>
                   <td className="text-center">
                     <TrueFalseRadioInput

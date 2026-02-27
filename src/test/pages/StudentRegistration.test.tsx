@@ -48,7 +48,7 @@ describe("Student Registration", () => {
       examBoard,
       assignmentPreferences,
       newsPreferences,
-      events,
+      // events,
       submitButton,
       recaptcha,
     } = formFields;
@@ -66,7 +66,7 @@ describe("Student Registration", () => {
       examBoard(),
       assignmentPreferences(),
       newsPreferences(),
-      events(),
+      // events(),
       submitButton(),
       recaptcha(),
     ].forEach((each) => expect(each).toBeVisible());
@@ -110,7 +110,6 @@ describe("Student Registration", () => {
         EMAIL_PREFERENCE: {
           NEWS_AND_UPDATES: false,
           ASSIGNMENTS: true,
-          EVENTS: false,
         },
       }),
       expect.objectContaining([
