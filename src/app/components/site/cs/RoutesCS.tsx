@@ -45,7 +45,7 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
-    <Route key={key++} path="/dashboard" element={<RequireAuth auth={isTeacherOrAbove} element={<Overview />} />} />,
+    <Route key={key++} path="/dashboard" element={<RequireAuth auth={isLoggedIn} element={<Overview />} />} />,
     <Route key={key++} path="/register" element={<RegistrationStart />} />,
     <Route key={key++} path="/register/role" element={<RegistrationRoleSelect />} />,
     <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
