@@ -213,7 +213,7 @@ describe("SetAssignments", () => {
             expect(requestAssignment(observer.observedParams!).gameboardId).toEqual(mockGameboard.id);
             expect(requestAssignment(observer.observedParams!).notes).toEqual(testNotes);
             expect(requestAssignment(observer.observedParams!).dueDate).toBeDefined();
-            expect(requestAssignment(observer.observedParams!).scheduledStartDate).not.toBeDefined();
+            expect(requestAssignment(observer.observedParams!).scheduledStartDate).toBeDefined();
         });
 
         // Close modal
@@ -243,9 +243,11 @@ describe("SetAssignments", () => {
             expect(within(await modal()).getByTestId("modal-groups-selector")).toHaveTextContent('Groups:None');
         });
 
-        it('start date is empty by default', async () => {
-            await renderModal();
-            expect(await dateInput("modal-start-date-selector")).toHaveValue('');
+        it('start date is today by default', async () => {
+            await withMockedDate(Date.parse("2025-01-30"), async () => {
+                await renderModal();
+                expect(await dateInput("modal-start-date-selector")).toHaveValue("2025-01-30");
+            });
         });
 
         it('due date is a week from now by default', async() => {

@@ -1,5 +1,4 @@
 import React, {
-    ChangeEvent,
     lazy,
     Suspense,
     useCallback,
@@ -15,6 +14,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     isDefined,
+    isPhy,
     jsonHelper,
     parsePseudoSymbolicAvailableSymbols,
     sanitiseInequalityState,
@@ -28,6 +28,7 @@ import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import {Button, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
+import classNames from "classnames";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -114,7 +115,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const [textInput, setTextInput] = useState('');
+    const [hasStartedEditing, setHasStartedEditing] = useState(false);
 
     let currentAttemptValue: any | undefined = undefined;
 
@@ -126,6 +127,11 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]); 
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.python : initialSeedText);
+
+    const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;
 
     const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
@@ -139,9 +145,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     };
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        // Only update the text-entry box if the graphical editor is visible
         const pythonExpression = currentAttemptPythonExpression();
-        if (modalVisible || textInput === '') {
+        if (modalVisible) {
             setTextInput(pythonExpression);
         }
         if (inputState.pythonExpression !== pythonExpression) {
@@ -160,7 +166,10 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         };
     }(window.scrollY), [modalVisible]);
 
-    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+    const previewText = (currentAttemptValue && currentAttemptValue.result)
+        ? currentAttemptValue.result.tex
+        : undefined;
+        // show seed?: jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
@@ -207,9 +216,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value;
+    const updateEquation = (input: string) => {
         setTextInput(input);
+        setHasStartedEditing(true);
         setInputState({...inputState, pythonExpression: input, userInput: textInput});
 
         const parsedExpression = parseMathsExpression(input);
@@ -255,8 +264,20 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="Type your formula here"/>
+                    <div className="position-relative flex-grow-1">
+                        <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
+                            placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}
+                        />
+                        {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                            updateEquation('');
+                            if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
+                            setHasStartedEditing(false);
+                            dispatchSetCurrentAttempt({ type: 'formula', value: "", pythonExpression: "", frontEndValidation: false });
+                            setTextInput(initialSeedText);
+                        }}>
+                            ↺
+                        </button>}
+                    </div>
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
@@ -281,7 +302,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </div>}
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
-                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+                role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
+                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<span>or click to replace your typed answer</span>" :
                     previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
