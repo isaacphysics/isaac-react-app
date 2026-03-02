@@ -11,7 +11,6 @@ import {
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import {
-    below,
     BookHiddenState,
     HUMAN_QUESTION_TYPES,
     ISAAC_BOOKS_BY_TAG,
@@ -188,11 +187,11 @@ const MyProgress = ({user}: MyProgressProps) => {
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
-                            <ListView type="item" items={progress.mostRecentQuestions} fullWidth={below["lg"](screenSize)} className="bordered"/>
+                            <ListView type="item" items={progress.mostRecentQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Oldest unsolved questions</h4>
-                            <ListView type="item" items={progress.oldestIncompleteQuestions} fullWidth={below["lg"](screenSize)} className="bordered"/>
+                            <ListView type="item" items={progress.oldestIncompleteQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
                         </Col>}
                     </Row>
                 </div>
