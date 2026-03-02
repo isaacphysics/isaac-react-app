@@ -114,20 +114,20 @@
   &.correct {
     background: var(--subject-color-500);
     color: white;
-    a {
+    .figure-reference, a {
       color: white !important;
     }
   }
   &.almost {
     background: #ffb847;
     color: #3c0000;
+    .figure-reference {
+      color: #3c0000;
+    }
   }
   &.correct, &.almost {
     code {
       background-color: transparent;
-    }
-    .figure-reference {
-      color: white;
     }
   }
 }
