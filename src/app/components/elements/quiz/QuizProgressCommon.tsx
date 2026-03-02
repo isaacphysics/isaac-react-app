@@ -365,7 +365,7 @@ export function ResultsTable<Q extends QuestionType>({
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 ? <>
             <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})} ref={scrollContainerRef}>
-                <table ref={tableRef} className="progress-table w-100">
+                <table ref={tableRef} className={classNames({['progress-table']: true, ['w-100']: true, ['has-selected']: questions.some((_, index) => index === selectedQuestionIndex)})}>
                     <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
                         {isPhy && selectedQuestionIndex !== undefined && <tr className="progress-table-question-header">
