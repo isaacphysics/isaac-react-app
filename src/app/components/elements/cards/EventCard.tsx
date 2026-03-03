@@ -3,11 +3,12 @@ import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString, formatDate, FRIENDLY_DATE_AND_TIME} from "../DateString";
-import {formatEventCardDate, formatEventCardDateSlim, getThemeFromTags, siteSpecific} from "../../../services";
+import {formatEventCardDate, formatEventCardDateSlim, getThemeFromTags, isStaff, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "reactstrap";
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
+import { selectors, useAppSelector } from "../../../state";
 
 const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
     return <div className="d-inline-flex">
@@ -42,6 +43,8 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
 
 export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
     const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
+
+    const user = useAppSelector(selectors.user.orNull);
 
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
@@ -79,7 +82,10 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                     </div>}
             </Link>}
         <CardBody className="d-flex flex-column">
-            {title && <CardTitle className="mb-0 pod-title" id={`event-title-${id}`}><h5>{title}</h5></CardTitle>}
+            <CardTitle className="mb-0 pod-title d-flex align-items-baseline" id={`event-title-${id}`}>
+                {title && <h5 className="mb-0 me-2">{title}</h5>}
+                {event.tags?.includes("nofilter") && isStaff(user) && <span className="pill-tag-outline">NO-FILTER</span>}
+            </CardTitle>
             {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
             </CardText>}
