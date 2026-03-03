@@ -65,7 +65,7 @@ export const TitleAndBreadcrumb = ({children, breadcrumbTitleOverride, currentPa
             collectionType={collectionType}
         />
         {children}
-        <div tabIndex={-1} className={classNames("d-sm-flex", {"py-2": isPhy, "mb-2": isAda})}>
+        <div tabIndex={-1} className={classNames("title-container d-sm-flex", {"py-2": isPhy, "mb-2": isAda})}>
             <PageTitle
                 subTitle={subTitle} disallowLaTeX={disallowLaTeX}
                 currentPageTitle={currentPageTitle} displayTitleOverride={displayTitleOverride}

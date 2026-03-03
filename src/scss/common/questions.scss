@@ -282,10 +282,10 @@ figure .inline-container {
 
 .symbolic-question, .equality-page {
   .eqn-editor-preview {
-    padding: 0.15em 0.6em;
+    padding: 0.25rem 1rem;
     cursor: default;
     &.empty {
-      color: $gray-500;
+      color: var(--bs-tertiary-color);
     }
   }
 
@@ -303,7 +303,7 @@ figure .inline-container {
   }
 
   .eqn-editor-symbols {
-    margin: 10px 0;
+    margin-top: 3px;
 
     & pre {
       display: inline;
@@ -311,6 +311,26 @@ figure .inline-container {
       background: inherit;
       border: 0;
       padding: 0;
+    }
+  }
+
+  .eqn-editor-reset-text-input {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $gray-600;
+
+    &:hover {
+      color: $gray-800;
     }
   }
 }
