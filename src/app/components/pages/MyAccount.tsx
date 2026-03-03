@@ -63,7 +63,6 @@ import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
-import { FeatureFlag, useFeatureFlag } from '../../services/featureFlag';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
