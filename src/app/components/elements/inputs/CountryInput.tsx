@@ -4,7 +4,7 @@ import {FormGroup, Label} from "reactstrap";
 import classNames from "classnames";
 import React, {ChangeEvent} from "react";
 import {useGetCountriesQuery, useGetPriorityCountriesQuery,} from "../../../state";
-import {isPhy} from "../../../services";
+import {isPhy, siteSpecific} from "../../../services";
 import {StyledDropdown} from "./DropdownInput";
 
 interface CountryInputProps {
@@ -25,9 +25,9 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
     return <FormGroup className={className}>
         <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
         <p className="d-block input-description mb-2">
-            {(isPhy && showBackfillNotice) ? "This helps us measure our reach and impact. If you did not select a country" +
-                " when you registered, we may have suggested one from your school or school email address."
-                : "This helps us personalise the platform for you."}
+            {siteSpecific("This helps us measure our reach and impact.", "This helps us personalise the platform for you.")}
+            {isPhy && showBackfillNotice && " If you did not select a country when you registered," +
+                " we may have suggested one from your school or school email address."}
         </p>
         <StyledDropdown
             id={`${idPrefix}-country-select`}
