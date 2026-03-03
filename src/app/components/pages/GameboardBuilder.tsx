@@ -51,7 +51,7 @@ const GameboardBuilder = ({ user }: { user: RegisteredUserDTO }) => {
   const [gameboardURL, setGameboardURL] = useState<string>();
   const [questionOrder, setQuestionOrder] = useState<string[]>([]);
   const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
-  const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
+  const [wildcardId, setWildcardId] = useState<string | undefined>("random");
   const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
   const cloneGameboard = useCallback(
@@ -59,7 +59,12 @@ const GameboardBuilder = ({ user }: { user: RegisteredUserDTO }) => {
       setGameboardTitle(gameboard.title ? `${gameboard.title} (Copy)` : "");
       setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
       setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
-      setWildcardId((isStaff(user) && gameboard.wildCard && gameboard.wildCard.id) || undefined);
+      // Duplicating from an existing board or creating from concepts should default to random wildcard.
+      if (baseGameboardId || concepts) {
+        setWildcardId("random");
+      } else {
+        setWildcardId((isStaff(user) && gameboard.wildCard?.id) || "random");
+      }
       if (concepts && !baseGameboardId) {
         logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", { concepts: concepts });
       } else {
@@ -85,7 +90,7 @@ const GameboardBuilder = ({ user }: { user: RegisteredUserDTO }) => {
     setQuestionOrder([]);
     setGameboardURL(undefined);
     setSelectedQuestions(new Map<string, ContentSummary>());
-    setWildcardId(undefined);
+    setWildcardId("random");
   };
 
   useEffect(() => {
@@ -184,7 +189,7 @@ const GameboardBuilder = ({ user }: { user: RegisteredUserDTO }) => {
             </Col>
           </Row>
 
-          {isStaff(user) && user.role !== "TEACHER" && (
+          {isStaff(user) && (
             <Row className="mt-2">
               <Col>
                 <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
