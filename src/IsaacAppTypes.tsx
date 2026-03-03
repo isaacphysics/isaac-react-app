@@ -483,6 +483,7 @@ export const AssignmentScheduleContext = React.createContext<{
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
 }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+export const SidebarContext = React.createContext<{sidebarPresent: boolean} | undefined>(undefined);
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
