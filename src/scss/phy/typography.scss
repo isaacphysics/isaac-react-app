@@ -83,6 +83,11 @@ code {
   }
 }
 
+.validation-response-panel.correct .content-value ul li::before {
+  // When against a dark background, use a ligher colour for contrast
+  background-color: var(--subject-color-300);
+}
+
 // NOMENSA typography for headings
 
 @mixin dynamic-font-size($mobile, $tablet, $desktop) {
