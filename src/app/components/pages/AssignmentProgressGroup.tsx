@@ -123,6 +123,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             null, 
             <MyAdaSidebar />
         )}
+        className="mb-7"
     >
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
             <i className="icon icon-arrow-left me-2"/>
