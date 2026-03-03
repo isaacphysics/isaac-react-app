@@ -60,9 +60,27 @@ code {
   padding: 0 0.05rem;
 }
 
-ul {
-  list-style-position: outside;
-  list-style-image: url('/assets/phy/icons/hexagon-bullet.svg');
+.content-value {
+  ul {
+    list-style-type: none;
+    li {
+      position: relative;
+      &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0.6rem;
+        left: -1.4rem;
+
+        width: 8px;
+        height: 8px;
+
+        mask: url("/assets/phy/icons/redesign/hexagon.svg") center center no-repeat;
+        mask-size: 90%;
+        background-color: var(--subject-color-500);
+      }
+    }
+  }
 }
 
 // NOMENSA typography for headings
