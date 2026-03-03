@@ -176,6 +176,8 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                             submissionAttempted={attemptedSignUp}
                             required={true}
                         />
+                        {/*On Sci, all of these are currently optional. Remove this hr and add following hr to sci when country is required*/}
+                        {isPhy && <hr className="section-divider" />}
                         <CountryInput
                             className="my-4"
                             userToUpdate={registrationUser}
@@ -185,7 +187,8 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                             required={isAda}
                             showBackfillNotice={false}
                         />
-                        <hr className={classNames({"d-none": userRole == 'TEACHER'}, siteSpecific("section-divider", "my-4 text-center"))} />
+                        {/*On Ada, country is required, but school is optional for students, so separate them*/}
+                        {isAda && <hr className={classNames({"d-none": userRole == 'TEACHER'}, "my-4 text-center")} />}
                         <SchoolInput
                             className="my-4"
                             userToUpdate={registrationUser}
