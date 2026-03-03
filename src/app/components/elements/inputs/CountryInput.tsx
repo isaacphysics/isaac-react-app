@@ -4,7 +4,7 @@ import {FormGroup, Label} from "reactstrap";
 import classNames from "classnames";
 import React, {ChangeEvent} from "react";
 import {useGetCountriesQuery, useGetPriorityCountriesQuery,} from "../../../state";
-import {siteSpecific} from "../../../services";
+import {isPhy} from "../../../services";
 import {StyledDropdown} from "./DropdownInput";
 
 interface CountryInputProps {
@@ -15,18 +15,19 @@ interface CountryInputProps {
     submissionAttempted: boolean;
     idPrefix?: string;
     required: boolean;
+    showBackfillNotice?: boolean; // warning text that we may have backfilled the country field from school/school email address
 }
 
-export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryCodeValid, submissionAttempted, idPrefix="account", required}: CountryInputProps) => {
+export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryCodeValid, submissionAttempted, idPrefix="account", required, showBackfillNotice=true}: CountryInputProps) => {
     const {data: allCountryOptions} = useGetCountriesQuery();
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
     return <FormGroup className={className}>
         <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
         <p className="d-block input-description mb-2">
-            {siteSpecific("This helps us measure our reach and impact. If you did not select a country" +
-                " when you registered, we may have suggested one from your school or school email address.",
-            "This helps us personalise the platform for you.")}
+            {(isPhy && showBackfillNotice) ? "This helps us measure our reach and impact. If you did not select a country" +
+                " when you registered, we may have suggested one from your school or school email address."
+                : "This helps us personalise the platform for you."}
         </p>
         <StyledDropdown
             id={`${idPrefix}-country-select`}

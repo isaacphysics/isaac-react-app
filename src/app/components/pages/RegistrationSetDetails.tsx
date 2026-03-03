@@ -179,6 +179,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                                     countryCodeValid={countryCodeIsValid}
                                     submissionAttempted={attemptedSignUp}
                                     required={isAda}
+                                    showBackfillNotice={false}
                                 />
                                 <hr className={classNames({"d-none": userRole == 'TEACHER'}, siteSpecific("section-divider", "my-4 text-center"))} />
                                 <SchoolInput
