@@ -69,7 +69,7 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
     children?: undefined;
 } | {
     thenRender?: undefined;
-    children: JSX.Element | JSX.Element[];
+    children: React.ReactNode;
 });
 // A flexible way of displaying whether a RTKQ query is loading or errored. You can give as props:
 //  - Either: `children` or `thenRender` (a function that takes the query data and returns a React element)

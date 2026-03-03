@@ -346,7 +346,7 @@ export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
 
     return <>
         <QuizTitle {...props} />
-        <SidebarLayout>
+        <SidebarLayout show={isPhy}>
             <QuizSidebar {...sidebarProps} />
             <MainContent>
                 {props.page === null || props.page == undefined ? QuizOverview({...{viewingAsSomeoneElse, ...props}}): <QuizQuestions {...props} page={props.page} /> }

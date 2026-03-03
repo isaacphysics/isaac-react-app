@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {logAction, useAppDispatch, useGetMyAssignmentsQuery} from "../../state";
 import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {Button, Col, Container, Input, Label, Row} from 'reactstrap';
+import {Button, Col, Input, Label, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {filterAssignmentsByProperties, filterAssignmentsByStatus, getDistinctAssignmentGroups, getDistinctAssignmentSetters, isAda, isPhy, isTutorOrAbove, siteSpecific} from "../../services";
 import {Assignments} from "../elements/Assignments";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PageFragment} from "../elements/PageFragment";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
 import sortBy from "lodash/sortBy";
 import { PageMetadata } from "../elements/PageMetadata";
 import classNames from "classnames";
 import { MyAssignmentsSidebar } from "../elements/sidebar/MyAssignmentsSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 const INITIAL_NO_ASSIGNMENTS = 10;
 const NO_ASSIGNMENTS_INCREMENT = 10;
@@ -107,87 +107,89 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
         setStatusFilter, setTitleFilter, setGroupFilter, setSetByFilter
     };
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}/>
-        <SidebarLayout>
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}/>
+        }
+        sidebar={siteSpecific(
             <MyAssignmentsSidebar
                 {...myAssignmentOptionProps}
                 sortOrder={sortOrder} setSortOrder={setSortOrder}
                 assignmentQuery={assignmentQuery} hideButton
-            />
-            <MainContent>
-                <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
-                    <PageFragment fragmentId={siteSpecific(
-                        isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student",
-                        isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"
-                    )} ifNotFound={<div className="mt-7"/>} />
-                </PageMetadata>
-                <div className={classNames({"my-assignments-card card": isAda})}>
-                    <div className={classNames({"pt-2 card-body": isAda})}>
-                        <ShowLoadingQuery
-                            query={assignmentQuery}
-                            defaultErrorTitle={"Error fetching your assignments"}
-                            thenRender={(assignments) => 
-                            {
-                                const myAssignments = filterAssignmentsByStatus(assignments);
+            />,
+            undefined
+        )}
+    >
+        <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
+            <PageFragment fragmentId={siteSpecific(
+                isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student",
+                isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"
+            )} ifNotFound={<div className="mt-7"/>} />
+        </PageMetadata>
+        <div className={classNames({"my-assignments-card card": isAda})}>
+            <div className={classNames({"pt-2 card-body": isAda})}>
+                <ShowLoadingQuery
+                    query={assignmentQuery}
+                    defaultErrorTitle={"Error fetching your assignments"}
+                    thenRender={(assignments) => 
+                    {
+                        const myAssignments = filterAssignmentsByStatus(assignments);
 
-                                const SORT_FUNCTIONS = {
-                                    [MyAssignmentsOrder.startDate]: (a: AssignmentDTO) => a.scheduledStartDate ? a.scheduledStartDate : a.creationDate,
-                                    [MyAssignmentsOrder.dueDate]: (a: AssignmentDTO) => a.dueDate,
-                                    [MyAssignmentsOrder.attempted]: (a: AssignmentDTO) => a.gameboard?.percentageAttempted ?? 0,
-                                    [MyAssignmentsOrder.correct]: (a: AssignmentDTO) => a.gameboard?.percentageCorrect ?? 0,
-                                };
+                        const SORT_FUNCTIONS = {
+                            [MyAssignmentsOrder.startDate]: (a: AssignmentDTO) => a.scheduledStartDate ? a.scheduledStartDate : a.creationDate,
+                            [MyAssignmentsOrder.dueDate]: (a: AssignmentDTO) => a.dueDate,
+                            [MyAssignmentsOrder.attempted]: (a: AssignmentDTO) => a.gameboard?.percentageAttempted ?? 0,
+                            [MyAssignmentsOrder.correct]: (a: AssignmentDTO) => a.gameboard?.percentageCorrect ?? 0,
+                        };
 
-                                const assignmentByStates: Record<AssignmentState, AssignmentDTO[]> = {
-                                    [AssignmentState.ALL]: [...myAssignments.inProgress, ...myAssignments.overDue, ...myAssignments.allAttempted, ...myAssignments.allCorrect],
-                                    [AssignmentState.TODO]: myAssignments.inProgress,
-                                    [AssignmentState.OVERDUE]: myAssignments.overDue,
-                                    [AssignmentState.ALL_ATTEMPTED]: myAssignments.allAttempted,
-                                    [AssignmentState.ALL_CORRECT]: myAssignments.allCorrect
-                                };
+                        const assignmentByStates: Record<AssignmentState, AssignmentDTO[]> = {
+                            [AssignmentState.ALL]: [...myAssignments.inProgress, ...myAssignments.overDue, ...myAssignments.allAttempted, ...myAssignments.allCorrect],
+                            [AssignmentState.TODO]: myAssignments.inProgress,
+                            [AssignmentState.OVERDUE]: myAssignments.overDue,
+                            [AssignmentState.ALL_ATTEMPTED]: myAssignments.allAttempted,
+                            [AssignmentState.ALL_CORRECT]: myAssignments.allCorrect
+                        };
 
-                                const filteredAssignments = filterAssignmentsByProperties(
-                                    statusFilter.includes(AssignmentState.ALL) ? assignmentByStates[AssignmentState.ALL] : statusFilter.flatMap(f => assignmentByStates[f]),
-                                    titleFilter, groupFilter, setByFilter
-                                );
+                        const filteredAssignments = filterAssignmentsByProperties(
+                            statusFilter.includes(AssignmentState.ALL) ? assignmentByStates[AssignmentState.ALL] : statusFilter.flatMap(f => assignmentByStates[f]),
+                            titleFilter, groupFilter, setByFilter
+                        );
 
-                                if (isPhy && isFirstLoad && filteredAssignments.length === 0) {
-                                    setStatusFilter([AssignmentState.ALL]);
-                                }
-                                setIsFirstLoad(false);
+                        if (isPhy && isFirstLoad && filteredAssignments.length === 0) {
+                            setStatusFilter([AssignmentState.ALL]);
+                        }
+                        setIsFirstLoad(false);
 
-                                const orderNegative = sortOrder.at(0) == "-";
-                                const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "startDate" | "dueDate" | "attempted" | "correct";
-                                const orderedAssignments = sortBy(filteredAssignments, SORT_FUNCTIONS[orderKind]);
-                                if (orderNegative) orderedAssignments.reverse();
-                                
-                                return <>
-                                    {siteSpecific(
-                                        <div className="pt-4">
-                                            <Assignments assignments={orderedAssignments.slice(0, limit)} />
-                                        </div>, 
-                                        <AdaAssignmentView
-                                            {...myAssignmentOptionProps}
-                                            assignments={assignments}
-                                            filteredAssignments={filteredAssignments}
-                                            limit={limit}
-                                        />
-                                    )}
-                                    {limit < filteredAssignments.length && <div className="text-center">
-                                        <hr className="text-center" />
-                                        <p className="mt-4">
-                                            Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered quizzes.
-                                        </p>
-                                        <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
-                                            Show more
-                                        </Button>
-                                    </div>} 
-                                </>;
-                            }}
-                        />
-                    </div>
-                </div>
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+                        const orderNegative = sortOrder.at(0) == "-";
+                        const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "startDate" | "dueDate" | "attempted" | "correct";
+                        const orderedAssignments = sortBy(filteredAssignments, SORT_FUNCTIONS[orderKind]);
+                        if (orderNegative) orderedAssignments.reverse();
+                        
+                        return <>
+                            {siteSpecific(
+                                <div className="pt-4">
+                                    <Assignments assignments={orderedAssignments.slice(0, limit)} />
+                                </div>, 
+                                <AdaAssignmentView
+                                    {...myAssignmentOptionProps}
+                                    assignments={assignments}
+                                    filteredAssignments={filteredAssignments}
+                                    limit={limit}
+                                />
+                            )}
+                            {limit < filteredAssignments.length && <div className="text-center">
+                                <hr className="text-center" />
+                                <p className="mt-4">
+                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered quizzes.
+                                </p>
+                                <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
+                                    Show more
+                                </Button>
+                            </div>} 
+                        </>;
+                    }}
+                />
+            </div>
+        </div>
+    </PageContainer>;
 };

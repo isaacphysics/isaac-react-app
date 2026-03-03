@@ -44,10 +44,9 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {Button, CardBody, Col, Container, Label, Row} from "reactstrap";
+import {Button, CardBody, Col, Label, Row} from "reactstrap";
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ListView } from "../elements/list-groups/ListView";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
@@ -62,6 +61,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { QuestionFinderSidebar } from "../elements/sidebar/QuestionFinderSidebar";
 import {Immutable} from "immer";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -462,15 +462,16 @@ export const QuestionFinder = () => {
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    return <Container id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
-        <TitleAndBreadcrumb 
-            currentPageTitle={siteSpecific("Question finder", "Questions")} 
-            help={pageHelp}
-            intermediateCrumbs={crumb ? [crumb] : []}
-            icon={{type: "icon", icon: "icon-finder"}}
-        />
-
-        <SidebarLayout>
+    return <PageContainer id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
+        pageTitle={
+            <TitleAndBreadcrumb 
+                currentPageTitle={siteSpecific("Question finder", "Questions")} 
+                help={pageHelp}
+                intermediateCrumbs={crumb ? [crumb] : []}
+                icon={{type: "icon", icon: "icon-finder"}}
+            />
+        }
+        sidebar={siteSpecific(
             <QuestionFinderSidebar
                 searchText={searchQuery} setSearchText={debouncedSearchHandler}
                 questionFinderFilterPanelProps={{
@@ -485,155 +486,155 @@ export const QuestionFinder = () => {
                     selections, setSelections,
                     applyFilters: searchAndUpdateURL, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
-                }} hideButton/>
-            <MainContent>
-                <MetaDescription description={metaDescription}/>
-                <CanonicalHrefElement/>
+                }} hideButton/>,
+            undefined
+        )}
+    >
+        <MetaDescription description={metaDescription}/>
+        <CanonicalHrefElement/>
 
-                <PageMetadata noTitle showSidebarButton>
-                    {siteSpecific(
-                        <div>
-                            {(pageContext?.subject && pageContext.stage)
-                                ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
-                                    <p className="me-0 me-lg-3">
-                                        The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
-                                        You can browse all questions <Link to="/questions">here</Link>.
-                                    </p>
-                                </div>
-                                : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
-                                    Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
-                        </div>,
-                        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
-                    )}
-                </PageMetadata>
+        <PageMetadata noTitle showSidebarButton>
+            {siteSpecific(
+                <div>
+                    {(pageContext?.subject && pageContext.stage)
+                        ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
+                            <p className="me-0 me-lg-3">
+                                The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                                You can browse all questions <Link to="/questions">here</Link>.
+                            </p>
+                        </div>
+                        : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
+                            Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
+                </div>,
+                <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+            )}
+        </PageMetadata>
 
 
-                {isAda && <Row>
-                    <Col lg={6} md={12} xs={12} className="finder-search">
-                        <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
-                        <SearchInputWithIcon
-                            defaultValue={searchQuery}
-                            placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
-                            onChange={(e) => debouncedSearchHandler(e.target.value)}
-                            onSearch={searchAndUpdateURL}
-                        />
-                    </Col>
-                </Row>}
+        {isAda && <Row>
+            <Col lg={6} md={12} xs={12} className="finder-search">
+                <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
+                <SearchInputWithIcon
+                    defaultValue={searchQuery}
+                    placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
+                    onChange={(e) => debouncedSearchHandler(e.target.value)}
+                    onSearch={searchAndUpdateURL}
+                />
+            </Col>
+        </Row>}
 
-                {isPhy && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
+        {isPhy && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
 
-                <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
-                    {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>
-                        <QuestionFinderFilterPanel {...{
-                            searchDifficulties, setSearchDifficulties,
-                            searchTopics, setSearchTopics,
-                            searchStages, setSearchStages,
-                            searchExamBoards, setSearchExamBoards,
-                            searchStatuses, setSearchStatuses,
-                            searchBooks, setSearchBooks,
-                            excludeBooks, setExcludeBooks,
-                            choices,
-                            selections, setSelections,
-                            applyFilters: () => {
-                                if (isDefined(randomSeed)) {
-                                    // on Ada, if randomSeed is defined, we need to unset it before running the search.
-                                    // since it is state, running this first won't necessarily have it updated when searchAndUpdateURL is called.
-                                    // as such, a useEffect above with randomSeed as a dep will run searchAndUpdateURL for us, instead of here.
-                                    setRandomSeed(undefined);
-                                } else {
-                                    searchAndUpdateURL();
-                                }
-                            },
-                            clearFilters,
-                            validFiltersSelected, searchDisabled, setSearchDisabled
-                        }} />
-                    </Col>}
-                    <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
-                        <ShowLoadingQuery 
-                            query={searchQuestionsQuery} 
-                            placeholder={loadingPlaceholder}
-                            defaultErrorTitle="Error loading questions"
-                            uninitializedPlaceholder={
-                                <ResultsListContainer>
-                                    <ResultsListHeader className="d-flex">
-                                        {siteSpecific(
-                                            <>Select {filteringByStatus ? "more" : "some"} filters to start searching.</>,
-                                            <span>Please select and apply filters.</span>
-                                        )}
-                                    </ResultsListHeader>
-                                </ResultsListContainer>
-                            }
-                            maintainOnRefetch={pageCount > 1}
-                            thenRender={({ results: questions, totalResults: totalQuestions, nextSearchOffset, moreResultsAvailable }, isStale) => {
-                                return <>
-                                    <ResultsListContainer>
-                                        <ResultsListHeader className="d-flex">
-                                            <div className="flex-grow-1" data-testid="question-finder-results-header">
-                                                {questions && questions.length > 0 
-                                                    ? <>
-                                                        Showing <b>{questions.length}</b>
-                                                        {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
-                                                        .
-                                                    </>
-                                                    : isPhy && <>No results.</>
-                                                }
-                                            </div>
-                                            <button 
-                                                className={siteSpecific(
-                                                    "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
-                                                    "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
-                                                } 
-                                                onClick={() => setRandomSeed(nextSeed())}
-                                                disabled={questions?.length === 0}
-                                            >
-                                                <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
-                                                {isPhy && <i className={classNames("icon icon-refresh", questions?.length === 0 ? "icon-color-grey" : "icon-color-black")}></i>}
-                                            </button>
-                                        </ResultsListHeader>
-                                        <CardBody className={classNames({"border-0": isPhy, "p-0": questions?.length, "m-0": isAda && questions?.length})}>
-                                            {questions?.length
-                                                ? <ListView type="item" items={questions} hideIconLabel/>
-                                                : isAda && (filteringByStatus 
-                                                    ? <span>Could not load any results matching the requested filters.</span>
-                                                    : <span>No results match the requested filters.</span>
-                                                )
-                                            }
-                                        </CardBody>
-                                    </ResultsListContainer>
-                                    {(questions?.length ?? 0) > 0 &&
-                                        <Row className="pt-3">
-                                            <Col className="d-flex justify-content-center mb-3">
-                                                <Button
-                                                    onClick={() => {
-                                                        debouncedSearch({
-                                                            searchQuery,
-                                                            searchTopics,
-                                                            searchExamBoards,
-                                                            searchBooks,
-                                                            searchStages,
-                                                            searchDifficulties,
-                                                            selections,
-                                                            excludeBooks,
-                                                            searchStatuses,
-                                                            startIndex: nextSearchOffset ? nextSearchOffset - 1 : 0,
-                                                            randomSeed
-                                                        });
-                                                        setPageCount(c => c + 1);
-                                                    }}
-                                                    disabled={!moreResultsAvailable || isStale}
-                                                    outline={isAda}
-                                                >
-                                                    Load more
-                                                </Button>
-                                            </Col>
-                                        </Row>
+        <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
+            {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>
+                <QuestionFinderFilterPanel {...{
+                    searchDifficulties, setSearchDifficulties,
+                    searchTopics, setSearchTopics,
+                    searchStages, setSearchStages,
+                    searchExamBoards, setSearchExamBoards,
+                    searchStatuses, setSearchStatuses,
+                    searchBooks, setSearchBooks,
+                    excludeBooks, setExcludeBooks,
+                    choices,
+                    selections, setSelections,
+                    applyFilters: () => {
+                        if (isDefined(randomSeed)) {
+                            // on Ada, if randomSeed is defined, we need to unset it before running the search.
+                            // since it is state, running this first won't necessarily have it updated when searchAndUpdateURL is called.
+                            // as such, a useEffect above with randomSeed as a dep will run searchAndUpdateURL for us, instead of here.
+                            setRandomSeed(undefined);
+                        } else {
+                            searchAndUpdateURL();
+                        }
+                    },
+                    clearFilters,
+                    validFiltersSelected, searchDisabled, setSearchDisabled
+                }} />
+            </Col>}
+            <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
+                <ShowLoadingQuery 
+                    query={searchQuestionsQuery} 
+                    placeholder={loadingPlaceholder}
+                    defaultErrorTitle="Error loading questions"
+                    uninitializedPlaceholder={
+                        <ResultsListContainer>
+                            <ResultsListHeader className="d-flex">
+                                {siteSpecific(
+                                    <>Select {filteringByStatus ? "more" : "some"} filters to start searching.</>,
+                                    <span>Please select and apply filters.</span>
+                                )}
+                            </ResultsListHeader>
+                        </ResultsListContainer>
+                    }
+                    maintainOnRefetch={pageCount > 1}
+                    thenRender={({ results: questions, totalResults: totalQuestions, nextSearchOffset, moreResultsAvailable }, isStale) => {
+                        return <>
+                            <ResultsListContainer>
+                                <ResultsListHeader className="d-flex">
+                                    <div className="flex-grow-1" data-testid="question-finder-results-header">
+                                        {questions && questions.length > 0 
+                                            ? <>
+                                                Showing <b>{questions.length}</b>
+                                                {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                                .
+                                            </>
+                                            : isPhy && <>No results.</>
+                                        }
+                                    </div>
+                                    <button 
+                                        className={siteSpecific(
+                                            "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
+                                            "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                        } 
+                                        onClick={() => setRandomSeed(nextSeed())}
+                                        disabled={questions?.length === 0}
+                                    >
+                                        <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                        {isPhy && <i className={classNames("icon icon-refresh", questions?.length === 0 ? "icon-color-grey" : "icon-color-black")}></i>}
+                                    </button>
+                                </ResultsListHeader>
+                                <CardBody className={classNames({"border-0": isPhy, "p-0": questions?.length, "m-0": isAda && questions?.length})}>
+                                    {questions?.length
+                                        ? <ListView type="item" items={questions} hideIconLabel/>
+                                        : isAda && (filteringByStatus 
+                                            ? <span>Could not load any results matching the requested filters.</span>
+                                            : <span>No results match the requested filters.</span>
+                                        )
                                     }
-                                </>;
-                            }}
-                        />
-                    </Col>
-                </Row>
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+                                </CardBody>
+                            </ResultsListContainer>
+                            {(questions?.length ?? 0) > 0 &&
+                                <Row className="pt-3">
+                                    <Col className="d-flex justify-content-center mb-3">
+                                        <Button
+                                            onClick={() => {
+                                                debouncedSearch({
+                                                    searchQuery,
+                                                    searchTopics,
+                                                    searchExamBoards,
+                                                    searchBooks,
+                                                    searchStages,
+                                                    searchDifficulties,
+                                                    selections,
+                                                    excludeBooks,
+                                                    searchStatuses,
+                                                    startIndex: nextSearchOffset ? nextSearchOffset - 1 : 0,
+                                                    randomSeed
+                                                });
+                                                setPageCount(c => c + 1);
+                                            }}
+                                            disabled={!moreResultsAvailable || isStale}
+                                            outline={isAda}
+                                        >
+                                            Load more
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            }
+                        </>;
+                    }}
+                />
+            </Col>
+        </Row>
+    </PageContainer>;
 };
