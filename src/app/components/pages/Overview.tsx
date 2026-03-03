@@ -8,9 +8,12 @@ import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { siteSpecific } from "../../services";
+import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
+import classNames from "classnames";
 
 export const Overview = () => {
-    useTeacherOnboardingModal();    
+    useTeacherOnboardingModal();   
+    const useAdaSidebars = useFeatureFlag(FeatureFlag.ENABLE_ADA_SIDEBARS); 
 
     return <PageContainer
         pageTitle={
@@ -21,6 +24,7 @@ export const Overview = () => {
             <MyAdaSidebar />
         )}
         id="overview"
+        className={classNames({"overview-padding mw-1600": !useAdaSidebars})}
     >
         <section id="get-started" className="py-3">
             <GetStartedWithAda />
