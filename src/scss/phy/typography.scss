@@ -60,9 +60,19 @@ code {
   padding: 0 0.05rem;
 }
 
+// Custom bullet points. This uses a hexagon image ::marker for non-content (hard-coded) ul lists, since these are
+// typically structural (such as in a dropdown menu) which ::marker already makes a distinction for.
+// For content ul lists, this uses a hexagon mask ::before, allowing for more customisation such as subject colour-coding.
+
+ul {
+  list-style-position: outside;
+  list-style-image: url('/assets/phy/icons/hexagon-bullet.svg');
+}
+
 .content-value {
   ul {
     list-style-type: none;
+    list-style-image: none;
     li {
       position: relative;
       &::before {
@@ -70,7 +80,7 @@ code {
         display: block;
         position: absolute;
         top: 0.6rem;
-        left: -1.4rem;
+        left: -1.2rem;
 
         width: 8px;
         height: 8px;
