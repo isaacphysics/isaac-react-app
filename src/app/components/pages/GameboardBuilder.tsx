@@ -189,7 +189,7 @@ const GameboardBuilder = ({ user }: { user: RegisteredUserDTO }) => {
             </Col>
           </Row>
 
-          {isStaff(user) && (
+          {isStaff(user) && user.role !== "TEACHER" && (
             <Row className="mt-2">
               <Col>
                 <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
