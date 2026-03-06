@@ -37,6 +37,7 @@ import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -45,7 +46,10 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
-    <Route key={key++} path="/dashboard" element={<RequireAuth auth={isLoggedIn} element={<Overview />} />} />,
+    <Route key={key++} path="/dashboard" element={<FeatureFlagWrapper flag={FeatureFlag.ENABLE_ADA_SIDEBARS}
+        onSet={<RequireAuth auth={isLoggedIn} element={<Overview />} />}
+        onUnset={<RequireAuth auth={isTeacherOrAbove} element={<Overview />} />}
+    />} />,
     <Route key={key++} path="/register" element={<RegistrationStart />} />,
     <Route key={key++} path="/register/role" element={<RegistrationRoleSelect />} />,
     <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
