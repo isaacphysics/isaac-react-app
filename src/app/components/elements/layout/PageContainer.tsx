@@ -1,8 +1,9 @@
 import React from "react";
 import { Container, ContainerProps } from "reactstrap";
-import { siteSpecific } from "../../../services";
+import { isAda, siteSpecific } from "../../../services";
 import { MainContent, SidebarLayout } from "./SidebarLayout";
 import classNames from "classnames";
+import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 
 interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
     pageTitle?: React.ReactNode;
@@ -19,8 +20,11 @@ interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
  */
 export const PageContainer = (props: PageContainerProps) => {
     const { children, sidebar, pageTitle, id, ...rest } = props;
+
+    const useAdaSidebars = useFeatureFlag(FeatureFlag.ENABLE_ADA_SIDEBARS);
+
     // TODO increase mb-2 to ~mb-7, but carefully consider mobile layouts and remove inconsistent additional spacing below individual pages.
-    if (!sidebar) {
+    if (!sidebar || (isAda && !useAdaSidebars)) {
         return <Container {...rest} id={id} className={classNames("mb-2", rest.className)}>
             {pageTitle}
             {children}

@@ -21,7 +21,8 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
                     <ContentSidebarContext.Consumer>
                         {(context) =>
                             <StyledTabPicker id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                                onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}/>
+                                onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}
+                            />
                         }
                     </ContentSidebarContext.Consumer>
                 </li>

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AppState, docSlice, mainContentIdSlice, registerPageChange, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../state";
 import { scrollTopOnPageLoad } from "./scrollManager";
 import { Location } from "history";
+import { isPhy } from "./";
 import { useReducedMotion } from "./accessibility";
 import { focusMainContent } from "./focus";
 import { useLocation } from "react-router";
@@ -20,10 +21,10 @@ export const OnPageLoad = () => {
 
     const onPageLoad = useCallback((location: Location) => {
         if (loadedPathname !== location.pathname) {
-            // this should only run on initial page load or when the pathname changes, not query params or hash changes
+            // reset sidebar state for physics -- this should only run on initial page load or when the pathname changes, not query params or hash changes
             trackPageview({ url: window.location.origin + location.pathname + location.search + location.hash }); // record pageview on each page load
             dispatch(docSlice.actions.resetPage()); // reset redux's doc after any page change
-            dispatch(sidebarSlice.actions.setOpen(false));
+            if (isPhy) dispatch(sidebarSlice.actions.setOpen(false));
             scrollTop(loadedPathname, location.pathname);
             setLoadedPathname(location.pathname);
             dispatch(mainContentIdSlice.actions.clear()); // reset so that if the new page sets it to the same element id, it still triggers a focus

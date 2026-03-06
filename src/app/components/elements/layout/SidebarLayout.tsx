@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader } from "reactstrap";
+import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Container, Accordion, AccordionItem, AccordionHeader, AccordionBody } from "reactstrap";
 import classNames from "classnames";
 import { above, isPhy, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
@@ -64,15 +64,20 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>;
 
+    const breakpoint = siteSpecific("lg", "md");
+
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
-    return <>
-        {above['lg'](deviceSize)
-            ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", {"ps-lg-3 py-lg-4 pe-lg-5": isPhy}, className)} />
-            : <>
+    return above[breakpoint](deviceSize)
+        ? siteSpecific(
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print ps-lg-3 py-lg-4 pe-lg-5 order-0", className)} />,
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
+        )
+        : siteSpecific(
+            <>
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>}
-                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3"/>}
+                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3" />}
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
@@ -91,7 +96,18 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
-            </>
-        }
-    </>;
+            </>,
+            !hideButton && <Container fluid className="w-100">
+                <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
+                    <AccordionItem className="border">
+                        <AccordionHeader targetId="myAda">
+                            <span className="fw-bold">{buttonTitle}</span>
+                        </AccordionHeader>
+                        <AccordionBody accordionId="myAda" className="accordion-flush-body">
+                            <Col {...rest} className={classNames("flex-column", className)} />
+                        </AccordionBody>
+                    </AccordionItem>
+                </Accordion>
+            </Container>
+        );
 };

@@ -60,8 +60,9 @@ import {ExigentAlert} from "../elements/ExigentAlert";
 import {Loading} from '../handlers/IsaacSpinner';
 import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySettings';
 import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
-import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 import { PageContainer } from '../elements/layout/PageContainer';
+import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
+import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -323,7 +324,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         }
         sidebar={siteSpecific(
             <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>,
-            undefined
+            <MyAdaSidebar />
         )}
     >
         {isAda && <p className="d-md-none text-center text-muted m-3">
