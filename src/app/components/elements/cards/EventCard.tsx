@@ -3,7 +3,7 @@ import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString, formatDate, FRIENDLY_DATE_AND_TIME} from "../DateString";
-import {formatEventCardDate, formatEventCardDateSlim, getThemeFromTags, isStaff, siteSpecific} from "../../../services";
+import {formatEventCardDate, formatEventCardDateSlim, getThemeFromTags, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "reactstrap";
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
