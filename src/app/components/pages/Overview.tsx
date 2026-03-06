@@ -87,6 +87,14 @@ export const TeacherOverview = () => {
                     buttonStyle: "link"
                 }}/>
                 <IconCard className={"without-margin"} card={{
+                    title: "Teacher mentoring",
+                    icon: {name: "icon-mentor", color: "secondary"},
+                    bodyText: "Participate in live sessions with an experienced Ada CS mentor to get advice on teaching core topics.",
+                    clickUrl: "/mentoring",
+                    buttonText: "Learn more",
+                    buttonStyle: "link",
+                }}/>
+                <IconCard className={"without-margin"} card={{
                     title: "Need help?",
                     icon: {name: "icon-help", color: "secondary"},
                     bodyText: "Our teacher support page has useful information for common questions and issues.",
