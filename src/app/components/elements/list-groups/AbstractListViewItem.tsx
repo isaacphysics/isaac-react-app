@@ -128,7 +128,7 @@ type ALVIType = {
     // most ALVIs, represents plain lists with optional difficulties; questions, concepts, books, etc.
     alviType: "item";
     deprecated?: boolean;
-    supersededBy?: string; // –– must contain the prefix as well as the id, e.g. "/questions/{foo}" or "/concepts/{bar}"
+    supersededByPath?: string; // –– must contain the prefix as well as the id, e.g. "/questions/{foo}" or "/concepts/{bar}"
     audienceViews?: ViewingContext[];
     status?: CompletionState;
     quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
@@ -215,7 +215,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             <ContentPropertyTags 
                                 className={classNames("justify-self-end", {"ms-2": !wrapTitleTags})}
                                 deprecated={typedProps.deprecated}
-                                supersededBy={typedProps.supersededBy}
+                                supersededByPath={typedProps.supersededByPath}
                                 tags={tags}
                             />
                         </>}

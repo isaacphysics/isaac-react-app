@@ -112,7 +112,7 @@ const GameboardBuilderRow = (
                             </button>
                             <Spacer />
                         </div>
-                        <ContentPropertyTags className="my-1" deprecated={question.deprecated} supersededBy={`/questions/${question.supersededBy}`} tags={question.tags} />
+                        <ContentPropertyTags className="my-1" deprecated={question.deprecated} supersededByPath={`/questions/${question.supersededBy}`} tags={question.tags} />
                         {question.subtitle && <>
                             <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
                         </>}

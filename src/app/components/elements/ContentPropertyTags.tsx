@@ -8,11 +8,11 @@ import { ACCESSIBILITY_WARNINGS, getAccessibilityTags, useAccessibilitySettings 
 
 interface ContentPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> {
     deprecated?: boolean;
-    supersededBy?: string;
+    supersededByPath?: string;
     tags?: string[];
 }
 
-export const ContentPropertyTags = ({ deprecated, supersededBy, tags, ...rest }: ContentPropertyTagsProps) => {
+export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...rest }: ContentPropertyTagsProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const accessibilitySettings = useAccessibilitySettings();
 
@@ -28,9 +28,9 @@ export const ContentPropertyTags = ({ deprecated, supersededBy, tags, ...rest }:
             </React.Fragment>;
         })}
 
-        {supersededBy && isTeacherOrAbove(user) && <a 
+        {supersededByPath && isTeacherOrAbove(user) && <a 
             className="pill-tag-outline mw-max-content" 
-            href={supersededBy}
+            href={supersededByPath}
             onClick={(e) => e.stopPropagation()}
             target="_blank"
         >SUPERSEDED</a>}
