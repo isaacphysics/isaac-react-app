@@ -8,7 +8,6 @@ import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
-import { selectors, useAppSelector } from "../../../state";
 import { QuestionPropertyTags } from "../ContentPropertyTags";
 
 const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
