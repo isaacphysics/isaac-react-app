@@ -13,7 +13,6 @@ import {
     isAda,
     isTeacherOrAbove,
     siteSpecific,
-    useDeviceSize,
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -36,7 +35,6 @@ export const Events = () => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const user = useAppSelector(selectors.user.orNull);
-    const deviceSize = useDeviceSize();
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
 
