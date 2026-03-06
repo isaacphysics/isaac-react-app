@@ -9,6 +9,7 @@ import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
 import { selectors, useAppSelector } from "../../../state";
+import { QuestionPropertyTags } from "../ContentPropertyTags";
 
 const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
     return <div className="d-inline-flex">
@@ -84,7 +85,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
         <CardBody className="d-flex flex-column">
             <CardTitle className="mb-0 pod-title d-flex align-items-baseline" id={`event-title-${id}`}>
                 {title && <h5 className="mb-0 me-2">{title}</h5>}
-                {event.tags?.includes("nofilter") && isStaff(user) && <span className="pill-tag-outline">NO-FILTER</span>}
+                <QuestionPropertyTags tags={event.tags} />
             </CardTitle>
             {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
