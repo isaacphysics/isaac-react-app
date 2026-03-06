@@ -24,7 +24,7 @@ import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 import { StyledCheckbox } from "./inputs/StyledCheckbox";
 import { Markup } from "./markup";
-import { QuestionPropertyTags } from "./ContentPropertyTags";
+import { ContentPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 
@@ -112,7 +112,7 @@ const GameboardBuilderRow = (
                             </button>
                             <Spacer />
                         </div>
-                        <QuestionPropertyTags className="my-1" deprecated={question.deprecated} supersededBy={question.supersededBy} tags={question.tags} />
+                        <ContentPropertyTags className="my-1" deprecated={question.deprecated} supersededBy={`/questions/${question.supersededBy}`} tags={question.tags} />
                         {question.subtitle && <>
                             <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
                         </>}

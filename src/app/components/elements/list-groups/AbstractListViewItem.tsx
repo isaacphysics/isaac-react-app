@@ -12,7 +12,7 @@ import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSel
 import { getAssigneesByBoard } from "../../pages/SetAssignments";
 import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
 import { ExternalLink } from "../ExternalLink";
-import { QuestionPropertyTags } from "../ContentPropertyTags";
+import { ContentPropertyTags } from "../ContentPropertyTags";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
@@ -128,7 +128,7 @@ type ALVIType = {
     // most ALVIs, represents plain lists with optional difficulties; questions, concepts, books, etc.
     alviType: "item";
     deprecated?: boolean;
-    supersededBy?: string;
+    supersededBy?: string; // –– must contain the prefix as well as the id, e.g. "/questions/{foo}" or "/concepts/{bar}"
     audienceViews?: ViewingContext[];
     status?: CompletionState;
     quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
@@ -212,7 +212,12 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         }
                         {isItem && <>
                             {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                            <QuestionPropertyTags className={classNames("justify-self-end", {"ms-2": !wrapTitleTags})} deprecated={typedProps.deprecated} supersededBy={typedProps.supersededBy} tags={tags} />
+                            <ContentPropertyTags 
+                                className={classNames("justify-self-end", {"ms-2": !wrapTitleTags})}
+                                deprecated={typedProps.deprecated}
+                                supersededBy={typedProps.supersededBy}
+                                tags={tags}
+                            />
                         </>}
                     </div>
                     {subtitle && <div className="small text-muted text-wrap">
