@@ -45,8 +45,6 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
 export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
     const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
-    const user = useAppSelector(selectors.user.orNull);
-
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
