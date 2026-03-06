@@ -69,14 +69,27 @@
     }
 
     @include only-print {
-        .bread:has(+ h1#main-heading) {
-            + h1#main-heading {
-                display: none !important;
-            }
+        background-color: transparent;
+
+        .title-graphics {
+            display: none;
         }
 
-        .bread:not(:has(+ h1#main-heading)) {
-            display: none !important;
+        h1#main-heading {
+            color: black;
+        }
+        
+        // If there is a breadcrumb and a title, hide the title - otherwise hide the breadcrumb
+        .bread:has(+ .title-container) {
+            + .title-container {
+                display: none !important;
+            }
+
+            .breadcrumb-item a {
+                color: black;
+            }
+
+            background-color: transparent;
         }
     }
 }

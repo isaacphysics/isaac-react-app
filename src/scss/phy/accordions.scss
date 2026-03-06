@@ -21,6 +21,11 @@
     }
   }
 
+  @include only-print {
+    border-color: var(--nav-primary);
+    border-radius: 8px;
+  }
+
   .accordion-header {
     background: rgba(white, 1);
     border-radius: 8px;

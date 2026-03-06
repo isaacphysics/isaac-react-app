@@ -1,4 +1,4 @@
-import React, {ChangeEvent, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -9,7 +9,8 @@ import {
     sanitiseInequalityState,
     siteSpecific,
     useCurrentQuestionAttempt,
-    parsePseudoSymbolicAvailableSymbols
+    parsePseudoSymbolicAvailableSymbols,
+    isPhy
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
@@ -20,6 +21,7 @@ import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
+import classNames from "classnames";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -56,12 +58,18 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const [textInput, setTextInput] = useState('');
-
+    const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
+    
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
+
+    const emptySubmission = !hasStartedEditing && !currentAttemptValue && !currentAttemptValue?.result;
 
     const hasMetaSymbols = doc.availableSymbols ? doc.availableSymbols.length > 0 && !doc.availableSymbols.every(
         symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim())
@@ -133,9 +141,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     }, [currentAttempt, currentAttemptValue]);
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        // Only update the text-entry box if the graphical editor is visible
         const mhchemExpression = currentAttemptMhchemExpression();
-        if (modalVisible || textInput === '') {
+        if (modalVisible) {
             setTextInput(mhchemExpression);
         }
         if (inputState.mhchemExpression !== mhchemExpression) {
@@ -154,7 +162,13 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         };
     }(window.scrollY), [modalVisible]);
 
-    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+    const previewText = (currentAttemptValue && currentAttemptValue.result)
+        ? currentAttemptValue.result.tex
+        // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
+        : !hideSeed
+            ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
+            : undefined;
+        // hide seed?: undefined;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
@@ -204,9 +218,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value;
+    const updateEquation = (input: string) => {
         setTextInput(input);
+        setHasStartedEditing(true);
         setInputState({...inputState, mhchemExpression: input, userInput: textInput});
 
         const parsedExpression = doc.isNuclear ? parseInequalityNuclearExpression(input) : parseInequalityChemistryExpression(input);
@@ -224,6 +238,13 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 const i = sizes.indexOf(Math.max.apply(null, sizes));
                 sketchRef.current?.parseSubtreeObject(parsedExpression[i], true, true, input);
             }
+        }
+    };
+
+    const openInequality = () => {
+        if (!readonly) {
+            setModalVisible(true);
+            setHideSeed(true);
         }
     };
 
@@ -249,11 +270,28 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
-            {showTextEntry && <div className="eqn-editor-input">
+            {showTextEntry
+                ? <i className="text-muted small">Click in either box below to edit your answer.</i>
+                : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
+            }
+            {showTextEntry && <div className="eqn-editor-input mb-2">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="Type your formula here"/>
+                <InputGroup className="mt-2 separate-input-group">
+                    <div className="position-relative flex-grow-1">
+                        <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput}
+                            placeholder="Type your formula here" className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission})}
+                        />
+                        {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                            updateEquation('');
+                            if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
+                            setHasStartedEditing(false);
+                            dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: "", mhchemExpression: "", frontEndValidation: false });
+                            setTextInput(initialSeedText);
+                            setHideSeed(false);
+                        }}>
+                            ↺
+                        </button>}
+                    </div>
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
@@ -287,9 +325,13 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             </div>}
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
-                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
+                role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
+                className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} 
+                onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
+                dangerouslySetInnerHTML={{ __html: previewText && (doc.showInequalitySeed || !emptySubmission)
+                    ? katex.renderToString(previewText) 
+                    : (showTextEntry ? '<span>or click here to drag and drop your answer</span>' : '<span>Click to enter your answer</span>')
+                }}
             />
             {modalVisible && <InequalityModal
                 close={closeModalAndReturnToScrollPosition}

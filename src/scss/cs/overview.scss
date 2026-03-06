@@ -1,3 +1,12 @@
+// can be removed if FeatureFlag.ENABLE_ADA_SIDEBARS becomes the default
+.overview-padding {
+  @extend .px-md-4;
+  @include media-breakpoint-up(xl) {
+    padding-left: 100px !important;
+    padding-right: 100px !important;
+  }
+}
+
 #overview {
   position: relative;
 }

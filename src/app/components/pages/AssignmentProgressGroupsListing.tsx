@@ -79,6 +79,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                 null, 
                 <MyAdaSidebar />
             )}
+            className="mb-7"
         >
             <PageMetadata noTitle helpModalId="help_modal_assignment_progress">
                 <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_landing_toptext")} ifNotFound={RenderNothing} />

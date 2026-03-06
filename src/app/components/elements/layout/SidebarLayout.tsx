@@ -41,7 +41,7 @@ export const NavigationSidebar = (props: SidebarProps) => {
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, ...rest } = props;
-    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-3 py-lg-4 pe-lg-5": isPhy}, className)} />;
+    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)} />;
 };
 
 export interface ContentSidebarProps extends SidebarProps {
