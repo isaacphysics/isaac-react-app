@@ -8,7 +8,7 @@ import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
-import { QuestionPropertyTags } from "../ContentPropertyTags";
+import { ContentPropertyTags } from "../ContentPropertyTags";
 
 const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
     return <div className="d-inline-flex">
@@ -82,7 +82,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
         <CardBody className="d-flex flex-column">
             <CardTitle className="mb-0 pod-title d-flex align-items-baseline" id={`event-title-${id}`}>
                 {title && <h5 className="mb-0 me-2">{title}</h5>}
-                <QuestionPropertyTags tags={event.tags} />
+                <ContentPropertyTags tags={event.tags} />
             </CardTitle>
             {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
