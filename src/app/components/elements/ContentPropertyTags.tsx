@@ -29,18 +29,18 @@ export const QuestionPropertyTags = ({ deprecated, supersededBy, tags, ...rest }
         })}
 
         {supersededBy && isTeacherOrAbove(user) && <a 
-            className="pill-tag-outline" 
+            className="pill-tag-outline mw-max-content" 
             href={`/questions/${supersededBy}`}
             onClick={(e) => e.stopPropagation()}
             target="_blank"
         >SUPERSEDED</a>}
 
         {deprecated && isTeacherOrAbove(user) && <span
-            className="pill-tag-outline" 
+            className="pill-tag-outline mw-max-content" 
         >DEPRECATED</span>}
 
         {tags?.includes("nofilter") && isStaff(user) && <span
-            className="pill-tag-outline" 
+            className="pill-tag-outline mw-max-content" 
         >NO-FILTER</span>}
     </div>;
 };
