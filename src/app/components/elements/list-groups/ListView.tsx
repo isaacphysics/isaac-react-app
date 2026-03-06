@@ -84,6 +84,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
         icon={icon}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
+        tags={item.tags}
         subtitle={item.summary ?? item.subtitle}
         breadcrumb={breadcrumb}
         url={url}
@@ -133,6 +134,7 @@ export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
+        tags={item.tags}
         url={url}
         {...rest}
     />;
