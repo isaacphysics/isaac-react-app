@@ -21,9 +21,7 @@ export function useHistoryState<T>(key: string, initialValue: T): [T, React.Disp
         setState(value);
 
         setLoadedFromHistory(false);
-    // we necessarily update location by running this – because it is an object this causes infinite loops if in dep array
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [navigate, key]);
+    }, [location, navigate, key]);
 
     return [state, setHistoryAndState, loadedFromHistory];
 }
