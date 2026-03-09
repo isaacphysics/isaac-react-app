@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export function useHistoryState<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>, boolean] {
@@ -8,15 +8,21 @@ export function useHistoryState<T>(key: string, initialValue: T): [T, React.Disp
     const [state, setState] = useState<T>(existingState ?? initialValue);
     const [loadedFromHistory, setLoadedFromHistory] = useState(existingState !== undefined);
 
+    // use a ref to track location to ensure it is never stale inside setHistoryAndState, but does not recreate the function on change
+    const locationRef = useRef(location);
+    useEffect(() => {
+        locationRef.current = location;
+    }, [location]);
+
     const setHistoryAndState = useCallback((value: React.SetStateAction<T>) => {
         // don't do anything if the value is already set (would create a new state object and not be reference-equal inside useEffect deps)
-        if (value === location.state?.[key as keyof typeof location.state]) return; 
+        if (value === locationRef.current.state?.[key as keyof typeof locationRef.current.state]) return; 
 
         void navigate({
-            ...location,
+            ...locationRef.current,
         }, {
             state: {
-                ...location.state as Array<string>,
+                ...locationRef.current.state as Array<string>,
                 [key]: value
             },
             replace: true 
@@ -24,7 +30,7 @@ export function useHistoryState<T>(key: string, initialValue: T): [T, React.Disp
         setState(value);
 
         setLoadedFromHistory(false);
-    }, [location, navigate, key]);
+    }, [navigate, key]);
 
     return [state, setHistoryAndState, loadedFromHistory];
 }
