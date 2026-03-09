@@ -6,6 +6,7 @@ import { ContentDTO } from "../../../IsaacApiTypes";
 import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { siteSpecific } from "../../services";
+import { Col } from "reactstrap";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
     new Promise((resolve) =>
@@ -98,10 +99,10 @@ export const Programmes = () => {
         )}
     >
         <ShowLoading until={programmes} thenRender={(programmes) => {
-            return <ul className="list-unstyled mt-4">
-                {programmes.map((programme) => (
-                    <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} key={programme.id} className="mb-4" programme={programme} />
-                ))}
+            return <ul className="list-unstyled mt-4 d-flex row flex-wrap row-cols-1 row-cols-md-2 g-3">
+                {programmes.map((programme) => <Col key={programme.id}>
+                    <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} className="mb-4" programme={programme} />
+                </Col>)}
             </ul>;
         }} />
     </PageContainer>;
