@@ -9,6 +9,9 @@ export function useHistoryState<T>(key: string, initialValue: T): [T, React.Disp
     const [loadedFromHistory, setLoadedFromHistory] = useState(existingState !== undefined);
 
     const setHistoryAndState = useCallback((value: React.SetStateAction<T>) => {
+        // don't do anything if the value is already set (would create a new state object and not be reference-equal inside useEffect deps)
+        if (value === location.state?.[key as keyof typeof location.state]) return; 
+
         void navigate({
             ...location,
         }, {
