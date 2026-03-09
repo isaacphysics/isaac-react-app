@@ -29,7 +29,7 @@ export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...res
         })}
 
         {supersededByPath && isTeacherOrAbove(user) && <a 
-            className="pill-tag-outline mw-max-content" 
+            className="pill-tag-outline mw-max-content z-3" 
             href={supersededByPath}
             onClick={(e) => e.stopPropagation()}
             target="_blank"
