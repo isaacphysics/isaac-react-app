@@ -6,13 +6,13 @@ import {v4 as uuid_v4} from "uuid";
 import { UncontrolledTooltip } from "reactstrap";
 import { ACCESSIBILITY_WARNINGS, getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 
-interface QuestionPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ContentPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> {
     deprecated?: boolean;
-    supersededBy?: string;
+    supersededByPath?: string;
     tags?: string[];
 }
 
-export const QuestionPropertyTags = ({ deprecated, supersededBy, tags, ...rest }: QuestionPropertyTagsProps) => {
+export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...rest }: ContentPropertyTagsProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const accessibilitySettings = useAccessibilitySettings();
 
@@ -28,9 +28,9 @@ export const QuestionPropertyTags = ({ deprecated, supersededBy, tags, ...rest }
             </React.Fragment>;
         })}
 
-        {supersededBy && isTeacherOrAbove(user) && <a 
-            className="pill-tag-outline mw-max-content" 
-            href={`/questions/${supersededBy}`}
+        {supersededByPath && isTeacherOrAbove(user) && <a 
+            className="pill-tag-outline mw-max-content z-3" 
+            href={supersededByPath}
             onClick={(e) => e.stopPropagation()}
             target="_blank"
         >SUPERSEDED</a>}
