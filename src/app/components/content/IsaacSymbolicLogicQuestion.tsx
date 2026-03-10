@@ -121,20 +121,11 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
         />
-        {!readonly && <div className="eqn-editor-input">
-            <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-            <InputGroup className="my-2 separate-input-group">
-                <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
-                    textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
-                    initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols}
-                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
-                />
-            </InputGroup>
-            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode)} />
-            {symbolList && <div className="eqn-editor-symbols">
-                The following symbols may be useful: <pre>{symbolList}</pre>
-            </div>}
-        </div>}
+        {!readonly && <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+            textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+            initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
+            dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
+        />}
     </div>;
 };
 export default IsaacSymbolicLogicQuestion;

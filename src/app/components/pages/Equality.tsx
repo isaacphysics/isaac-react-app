@@ -87,14 +87,6 @@ const Equality = () => {
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
     const allowTextInput = ['maths', 'logic'].includes(editorMode) || (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY && ['chemistry', 'nuclear'].includes(editorMode));
 
-    const parseExpression = editorMode === "maths"
-        ? parseMathsExpression
-        : editorMode === "chemistry"  
-            ? parseInequalityChemistryExpression
-            : editorMode === "nuclear"
-                ? parseInequalityChemistryExpression
-                : parseBooleanExpression;
-
     return <div>
         <Container>
             <Row>
@@ -126,17 +118,11 @@ const Equality = () => {
                     </div>}
                 </Col>
                 <Col md={8} className="pb-4 pt-md-4 question-panel">
-                    {allowTextInput && <div className="eqn-editor-input mt-md-4">
-                        <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                        <InputGroup className="my-2 seperate-input-group">
-                            <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
-                                textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
-                                initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={() => {}} sketchRef={sketchRef} 
-                                emptySubmission={!hasStartedEditing} helpTooltipId={"inequality-help"}
-                            />
-                        </InputGroup>
-                        <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode, true, parseExpression)} />
-                    </div>}
+                    {allowTextInput && <SymbolicTextInput editorMode={editorMode} demoPage inputState={inputState} setInputState={setInputState}
+                        textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+                        initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={() => {}} sketchRef={sketchRef} 
+                        emptySubmission={!hasStartedEditing} helpTooltipId={"inequality-help"}
+                    />}
                     <div className="equality-page">
                         <div
                             role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${!allowTextInput && 'mt-4'}`} tabIndex={0}

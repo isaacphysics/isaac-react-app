@@ -42,84 +42,6 @@ export function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-export const symbolicInputValidator = (input: string, editorMode: string, mayRequireStateSymbols?: boolean, parseExpression?: (input: string) => any[] | ParsingError) => {
-    const errors = [];
-    if (parseExpression) {
-        const parsedExpression = parseExpression(input);
-        if (isError(parsedExpression) && parsedExpression.error) {
-            errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
-        }
-    }
-
-    let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
-    if (editorMode === 'maths') {
-        badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+/);
-    } else if (editorMode === 'logic') {
-        badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
-    } else if (editorMode === 'chemistry') {
-        badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
-    }
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = [];
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-    }
-
-    const openRoundBracketsCount = input.split("(").length - 1;
-    const closeRoundBracketsCount = input.split(")").length - 1;
-    const openSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("[").length - 1 : 0;
-    const closeSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("]").length - 1 : 0;
-    const openCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("{").length - 1 : 0;
-    const closeCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("}").length - 1 : 0;
-    if (openRoundBracketsCount !== closeRoundBracketsCount
-        || openSquareBracketsCount !== closeSquareBracketsCount
-        || openCurlyBracketsCount !== closeCurlyBracketsCount) {
-        if (["nuclear", "chemistry"].includes(editorMode)) {
-            // Rather than a long message about which brackets need closing
-            errors.push('You are missing some brackets.');
-        } else {
-            errors.push('You are missing some ' + (closeRoundBracketsCount > openRoundBracketsCount ? 'opening' : 'closing') + ' brackets.');
-        }
-    }
-
-    if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
-        errors.push('LaTeX syntax is not supported.');
-    }
-    if (["chemistry", "nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) {
-        errors.push('Please convert decimal numbers to fractions.');
-    }
-    if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
-        errors.push('This question does not require state symbols.');
-    }
-    if (editorMode === "maths") {
-        if (/[<>=].+[<>=]/.test(input)) {
-            errors.push('We are not able to accept double inequalities, and answers will never require them.');
-        }
-        const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
-        if (invTrig != null) {
-            const trigFunction = invTrig[2];
-            if (invTrig[4] === 'h') {
-                errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
-            }
-            else {
-                errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
-            }
-        }
-        if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
-            // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-            return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
-        }
-    }
-    return errors;
-};
-
 // The parser retuns a complex structure that isn't fully typed, but we still want to label its use
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InequalitySymbol = any;
@@ -201,6 +123,22 @@ export const initialiseInequality = (editorMode: string, hiddenEditorRef: React.
     };
 };
 
+const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
+    const example: React.ReactNode = 
+        editorMode === "maths" ? <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>
+            : editorMode === "chemistry" ? <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>
+                : editorMode === "nuclear" ? <>  {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>
+                    : <> A and (B or not C) <br/> A &amp; (B | !C) <br/> True &amp; ~(False + Q) <br/> 1 . ~(0 + Q) <br/></>;
+
+    return <>
+        Here are some examples of expressions you can type:<br />
+        <br />
+        {example}
+        <br />
+        As you type, the box below will preview the result.
+    </>;
+};
+
 export interface InputState {
     pythonExpression?: string;
     mhchemExpression?: string;
@@ -211,6 +149,7 @@ type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 
 interface SymbolicTextInputProps {
     editorMode: EditorMode;
+    demoPage?: boolean;
     inputState: InputState;
     setInputState: React.Dispatch<React.SetStateAction<InputState>>;
     textInput: string;
@@ -224,25 +163,11 @@ interface SymbolicTextInputProps {
     initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
     dispatchSetCurrentAttempt: (attempt: GeneralFormulaDTO | ValidatedChoice<GeneralFormulaDTO>) => void;
     sketchRef: React.MutableRefObject<Inequality | null | undefined>;
+    mayRequireStateSymbols?: boolean;
+    symbolList?: string;
 }
 
-export const SymbolicTextInput = ({editorMode, inputState, setInputState, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission}: SymbolicTextInputProps) => {
-    const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
-        const example: React.ReactNode = 
-            editorMode === "maths" ? <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>
-                : editorMode === "chemistry" ? <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>
-                    : editorMode === "nuclear" ? <>  {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>
-                        : <> A and (B or not C) <br/> A &amp; (B | !C) <br/> True &amp; ~(False + Q) <br/> 1 . ~(0 + Q) <br/></>;
-
-        return <>
-            Here are some examples of expressions you can type:<br />
-            <br />
-            {example}
-            <br />
-            As you type, the box below will preview the result.
-        </>;
-    };
-    
+export const SymbolicTextInput = ({editorMode, demoPage, inputState, setInputState, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission, mayRequireStateSymbols, symbolList}: SymbolicTextInputProps) => {
     const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
         type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
         value: value, 
@@ -294,30 +219,121 @@ export const SymbolicTextInput = ({editorMode, inputState, setInputState, textIn
         }
     };
 
-    return <>
-        <div className="position-relative flex-grow-1">      
-            <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={editorMode === "logic" ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission && textInput === initialSeedText})}/>
-            {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
-                updateEquation('');
-                if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
-                setHasStartedEditing(false);
-                dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
-                setTextInput(initialSeedText);
-                if (setHideSeed) setHideSeed(false);
-            }}>
-                ↺
-            </button>}
-        </div>
-        <>
-            {siteSpecific(
-                <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-            )}
-            <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
-                <TooltipContents editorMode={editorMode}/>
-            </UncontrolledTooltip>
-        </>
-    </>;
+    const symbolicInputValidator = (input: string) => {
+        const errors = [];
+        if (demoPage) {
+            const parseExpression = editorMode === "maths"
+                ? parseMathsExpression
+                : editorMode === "chemistry"  
+                    ? parseInequalityChemistryExpression
+                    : editorMode === "nuclear"
+                        ? parseInequalityChemistryExpression
+                        : parseBooleanExpression;
+            const parsedExpression = parseExpression(input);
+            if (isError(parsedExpression) && parsedExpression.error) {
+                errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
+            }
+        }
+
+        let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
+        if (editorMode === 'maths') {
+            badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+/);
+        } else if (editorMode === 'logic') {
+            badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
+        } else if (editorMode === 'chemistry') {
+            badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
+        }
+        if (badCharacters.test(input)) {
+            const usedBadChars: string[] = [];
+            for(let i = 0; i < input.length; i++) {
+                const char = input.charAt(i);
+                if (badCharacters.test(char)) {
+                    if (!usedBadChars.includes(char)) {
+                        usedBadChars.push(char);
+                    }
+                }
+            }
+            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+        }
+
+        const openRoundBracketsCount = input.split("(").length - 1;
+        const closeRoundBracketsCount = input.split(")").length - 1;
+        const openSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("[").length - 1 : 0;
+        const closeSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("]").length - 1 : 0;
+        const openCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("{").length - 1 : 0;
+        const closeCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("}").length - 1 : 0;
+        if (openRoundBracketsCount !== closeRoundBracketsCount
+            || openSquareBracketsCount !== closeSquareBracketsCount
+            || openCurlyBracketsCount !== closeCurlyBracketsCount) {
+            if (["nuclear", "chemistry"].includes(editorMode)) {
+                // Rather than a long message about which brackets need closing
+                errors.push('You are missing some brackets.');
+            } else {
+                errors.push('You are missing some ' + (closeRoundBracketsCount > openRoundBracketsCount ? 'opening' : 'closing') + ' brackets.');
+            }
+        }
+
+        if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
+            errors.push('LaTeX syntax is not supported.');
+        }
+        if (["chemistry", "nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) {
+            errors.push('Please convert decimal numbers to fractions.');
+        }
+        if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
+            errors.push('This question does not require state symbols.');
+        }
+        if (editorMode === "maths") {
+            if (/[<>=].+[<>=]/.test(input)) {
+                errors.push('We are not able to accept double inequalities, and answers will never require them.');
+            }
+            const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
+            if (invTrig != null) {
+                const trigFunction = invTrig[2];
+                if (invTrig[4] === 'h') {
+                    errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
+                }
+                else {
+                    errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
+                }
+            }
+            if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
+                // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+                return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
+            }
+        }
+        return errors;
+    };
+
+    return <div className="eqn-editor-input">
+        <InputGroup className="my-2 separate-input-group flex-nowrap">
+            <div className="position-relative flex-grow-1">      
+                <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={editorMode === "logic" ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission && textInput === initialSeedText})}/>
+                {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                    updateEquation('');
+                    if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? "");
+                    setHasStartedEditing(false);
+                    dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
+                    setTextInput(initialSeedText);
+                    if (setHideSeed) setHideSeed(false);
+                }}>
+                    ↺
+                </button>}
+            </div>
+            <>
+                {siteSpecific(
+                    <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                    <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
+                )}
+                <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
+                    <TooltipContents editorMode={editorMode}/>
+                </UncontrolledTooltip>
+            </>
+            <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator}/>
+        </InputGroup>
+        {symbolList && <div className="eqn-editor-symbols">
+            The following symbols may be useful: <pre>{symbolList}</pre>
+        </div>}
+    </div>;
 };
 
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
@@ -380,40 +396,34 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         }
     };
 
-    return <div className="symbolic-question">
-        <div className="question-content">
-            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
-                {doc.children}
-            </IsaacContentValueOrChildren>
-        </div>
-        {/* TODO Accessibility */}
-        {modalVisible && <Suspense fallback={<Loading/>}>
-            <InequalityModal
-                editorMode="maths" initialEditorSymbols={initialEditorSymbols.current}
-                availableSymbols={doc.availableSymbols} editorSeed={editorSeed} questionDoc={doc}
-                onEditorStateChange={updateState} close={closeModalAndReturnToScrollPosition}
-            />
-        </Suspense>}
-        {!readonly && <div className="eqn-editor-input">
-            <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-            <InputGroup className="my-2 separate-input-group">
-                <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
-                    textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
-                    initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols}
-                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
+    return <>
+        <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />  
+        <div className="symbolic-question">
+            <div className="question-content">
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                    {doc.children}
+                </IsaacContentValueOrChildren>
+            </div>
+            {/* TODO Accessibility */}
+            {modalVisible && <Suspense fallback={<Loading/>}>
+                <InequalityModal
+                    editorMode="maths" initialEditorSymbols={initialEditorSymbols.current}
+                    availableSymbols={doc.availableSymbols} editorSeed={editorSeed} questionDoc={doc}
+                    onEditorStateChange={updateState} close={closeModalAndReturnToScrollPosition}
                 />
-            </InputGroup>
-            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode)}/>
-            {symbolList && <div className="eqn-editor-symbols">
-                The following symbols may be useful: <pre>{symbolList}</pre>
-            </div>}
-        </div>}
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-        <div
-            role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})}
-            onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
-            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
-        />
-    </div>;
+            </Suspense>}
+            {!readonly && <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+                textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+                initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
+                dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
+            />}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            <div
+                role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})}
+                onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
+                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
+            />
+        </div>
+    </>;
 };
 export default IsaacSymbolicQuestion;

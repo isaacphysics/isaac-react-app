@@ -139,20 +139,11 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             ? <i className="text-muted small">Click in either box below to edit your answer.</i>
             : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
         }
-        {showTextEntry && <div className="eqn-editor-input mb-2">
-            <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-            <InputGroup className="mt-2 separate-input-group">
-                <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
-                    textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
-                    initialSeedText={initialSeedText} editorSeed={editorSeed} setHideSeed={setHideSeed} initialEditorSymbols={initialEditorSymbols}
-                    dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
-                />
-            </InputGroup>
-            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode, mayRequireStateSymbols)} />
-            {symbolList && <div className="eqn-editor-symbols">
-                The following symbols may be useful: <pre>{symbolList}</pre>
-            </div>}
-        </div>}
+        {showTextEntry && <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+            textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeedText}
+            editorSeed={editorSeed} setHideSeed={setHideSeed} initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
+            sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId} mayRequireStateSymbols={mayRequireStateSymbols} symbolList={symbolList}
+        />}
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
             role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
