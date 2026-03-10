@@ -9,7 +9,7 @@ import {Inequality} from 'inequality';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
 import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 import { Loading } from "../handlers/IsaacSpinner";
 import { parseBooleanExpression, parseInequalityChemistryExpression, parseMathsExpression } from "inequality-grammar";
@@ -35,7 +35,6 @@ const Equality = () => {
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-    const [inputState, setInputState] = useState<InputState>({pythonExpression: '', userInput: ''});
 
     function updateState(state: InequalityState) {
         if (["maths", "logic"].includes(editorMode)) {
@@ -118,7 +117,7 @@ const Equality = () => {
                     </div>}
                 </Col>
                 <Col md={8} className="pb-4 pt-md-4 question-panel">
-                    {allowTextInput && <SymbolicTextInput editorMode={editorMode} demoPage inputState={inputState} setInputState={setInputState}
+                    {allowTextInput && <SymbolicTextInput editorMode={editorMode} demoPage
                         textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
                         initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={() => {}} sketchRef={sketchRef} 
                         emptySubmission={!hasStartedEditing} helpTooltipId={"inequality-help"}

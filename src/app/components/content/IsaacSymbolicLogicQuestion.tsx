@@ -15,7 +15,7 @@ import {v4 as uuid_v4} from "uuid";
 import {Inequality} from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
@@ -39,7 +39,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
     }
 
-    const [inputState, setInputState] = useState<InputState>(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: ''}));
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
@@ -67,9 +66,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         const pythonExpression = currentAttemptPythonExpression();
         if (modalVisible) {
             setTextInput(pythonExpression);
-        }
-        if (inputState.pythonExpression !== pythonExpression) {
-            setInputState({...inputState, userInput: textInput, pythonExpression});
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
@@ -121,7 +117,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
         />
-        {!readonly && <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+        {!readonly && <SymbolicTextInput editorMode={editorMode}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
             initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
             dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}

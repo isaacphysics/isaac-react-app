@@ -17,7 +17,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
@@ -53,8 +53,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         return (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
     }
 
-    const [inputState, setInputState] = useState<InputState>({ mhchemExpression: '', userInput: ''});
-
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
         const mhchemExpression = newState?.result?.mhchem || "";
@@ -77,9 +75,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         const mhchemExpression = currentAttemptMhchemExpression();
         if (modalVisible) {
             setTextInput(mhchemExpression);
-        }
-        if (inputState.mhchemExpression !== mhchemExpression) {
-            setInputState({...inputState, userInput: textInput, mhchemExpression});
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
@@ -139,7 +134,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             ? <i className="text-muted small">Click in either box below to edit your answer.</i>
             : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
         }
-        {showTextEntry && <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+        {showTextEntry && <SymbolicTextInput editorMode={editorMode}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeedText}
             editorSeed={editorSeed} setHideSeed={setHideSeed} initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
             sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId} mayRequireStateSymbols={mayRequireStateSymbols} symbolList={symbolList}

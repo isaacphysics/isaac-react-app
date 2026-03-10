@@ -139,19 +139,11 @@ const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
     </>;
 };
 
-export interface InputState {
-    pythonExpression?: string;
-    mhchemExpression?: string;
-    userInput: string;
-}
-
 type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 
 interface SymbolicTextInputProps {
     editorMode: EditorMode;
     demoPage?: boolean;
-    inputState: InputState;
-    setInputState: React.Dispatch<React.SetStateAction<InputState>>;
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
     setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -167,7 +159,7 @@ interface SymbolicTextInputProps {
     symbolList?: string;
 }
 
-export const SymbolicTextInput = ({editorMode, demoPage, inputState, setInputState, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission, mayRequireStateSymbols, symbolList}: SymbolicTextInputProps) => {
+export const SymbolicTextInput = ({editorMode, demoPage, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission, mayRequireStateSymbols, symbolList}: SymbolicTextInputProps) => {
     const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
         type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
         value: value, 
@@ -192,7 +184,6 @@ export const SymbolicTextInput = ({editorMode, demoPage, inputState, setInputSta
 
     const updateEquation = (input: string) => {
         setTextInput(input);
-        setInputState({...inputState, userInput: input, ...(["chemistry", "nuclear"].includes(editorMode) ? {mhchemExpression: input} : {pythonExpression: input})});
 
         const parsedExpression = editorMode === "maths"
             ? parseMathsExpression(input) 
@@ -339,7 +330,6 @@ export const SymbolicTextInput = ({editorMode, demoPage, inputState, setInputSta
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
-    const [inputState, setInputState] = useState<InputState>({pythonExpression: currentAttemptPythonExpression(currentAttemptValue), userInput: ''});
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     const [hasStartedEditing, setHasStartedEditing] = useState<boolean>(false);
@@ -384,9 +374,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         if (modalVisible || textInput === '') {
             setTextInput(pythonExpression);
         }
-        if (inputState.pythonExpression !== pythonExpression) {
-            setInputState({...inputState, userInput: textInput, pythonExpression});
-        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
@@ -412,7 +399,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                     onEditorStateChange={updateState} close={closeModalAndReturnToScrollPosition}
                 />
             </Suspense>}
-            {!readonly && <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+            {!readonly && <SymbolicTextInput editorMode={editorMode}
                 textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
                 initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
                 dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
