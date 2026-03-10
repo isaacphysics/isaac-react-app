@@ -84,7 +84,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
-    const badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
     const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
     const editorMode = doc.isNuclear ? "nuclear" : "chemistry";
 

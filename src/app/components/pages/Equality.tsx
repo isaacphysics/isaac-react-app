@@ -1,5 +1,5 @@
 import React, {ChangeEvent, lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
-import {Button, Col, Container, Input, InputGroup, Label, Row, UncontrolledTooltip} from "reactstrap";
+import {Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
 import katex from "katex";
@@ -9,7 +9,7 @@ import {Inequality} from 'inequality';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
 import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 import { Loading } from "../handlers/IsaacSpinner";
 import { parseBooleanExpression, parseInequalityChemistryExpression, parseMathsExpression } from "inequality-grammar";
@@ -27,7 +27,6 @@ const Equality = () => {
     const [currentAttempt, dispatchSetCurrentAttempt] = useState<FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO>({type: 'formula', value: "", pythonExpression: ''});
     const [editorSyntax, setEditorSyntax] = useState<LogicSyntax>('logic');
     const [textInput, setTextInput] = useState('');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
@@ -72,13 +71,6 @@ const Equality = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const updateEquation = (input: string) => {
-        return updateEquationHelper({
-            input, editorMode, inputState, setInputState, setTextInput, setHasStartedEditing,
-            initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef
-        });
-    };
-
     /*** End of text based input stuff */
 
     const availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
@@ -100,7 +92,7 @@ const Equality = () => {
         : editorMode === "chemistry"  
             ? parseInequalityChemistryExpression
             : editorMode === "nuclear"
-            ? parseInequalityChemistryExpression
+                ? parseInequalityChemistryExpression
                 : parseBooleanExpression;
 
     return <div>
@@ -136,17 +128,12 @@ const Equality = () => {
                 <Col md={8} className="pb-4 pt-md-4 question-panel">
                     {allowTextInput && <div className="eqn-editor-input mt-md-4">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                        <InputGroup className="my-2 align-items-center">
-                            <Input type="text" value={textInput} placeholder="Type your formula here" onChange={(e) => updateEquation(e.target.value)} />
-                            <>
-                                {siteSpecific(
-                                    <Button id="inequality-help" type="button" className="eqn-editor-help d-flex align-items-center" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                                    <i id="inequality-help" className="icon icon-info icon-sm h-100 ms-3" />
-                                )}
-                                <UncontrolledTooltip target='inequality-help' placement="top" autohide={false}>
-                                    <TooltipContents editorMode={editorMode} />
-                                </UncontrolledTooltip>
-                            </>
+                        <InputGroup className="my-2 seperate-input-group">
+                            <SymbolicTextInput editorMode={editorMode} inputState={inputState} setInputState={setInputState}
+                                textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+                                initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={() => {}} sketchRef={sketchRef} 
+                                emptySubmission={!hasStartedEditing} helpTooltipId={"inequality-help"}
+                            />
                         </InputGroup>
                         <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode, true, parseExpression)} />
                     </div>}

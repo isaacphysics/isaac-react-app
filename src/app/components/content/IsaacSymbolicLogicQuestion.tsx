@@ -31,7 +31,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const {preferredBooleanNotation} = useUserPreferences();
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
-    const badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨^⊻+.!=]+/);
     const editorMode = "logic";
 
     let currentAttemptValue: InequalityState | undefined = undefined;

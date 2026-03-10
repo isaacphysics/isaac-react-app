@@ -217,7 +217,7 @@ interface SymbolicTextInputProps {
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
     setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
     setHasStartedEditing: React.Dispatch<React.SetStateAction<boolean>>;
-    initialSeedText: string;
+    initialSeedText?: string;
     helpTooltipId: string;
     editorSeed?: any;
     emptySubmission: boolean;
@@ -338,7 +338,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
 
-    const badCharacters = new RegExp(/[^ 0-9A-Za-zΑ-ΡΣ-Ωα-ω()*+,-./<=>^_±²³¼½¾×÷=]+/);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
     const editorMode = "maths";
 
