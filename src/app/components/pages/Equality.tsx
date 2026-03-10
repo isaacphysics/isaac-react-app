@@ -6,72 +6,15 @@ import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useLocation} from "react-router";
 import {Inequality} from 'inequality';
-import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression} from 'inequality-grammar';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, isError, TooltipContents, updateEquationHelper, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
-import classNames from "classnames";
+import { InequalityState, initialiseInequality, InputState, isError, symbolicInputValidator, TooltipContents, updateEquationHelper, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
 import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 import { Loading } from "../handlers/IsaacSpinner";
+import { parseBooleanExpression, parseInequalityChemistryExpression, parseMathsExpression } from "inequality-grammar";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
-
-const equalityValidator = (input: string, editorMode: string) => {
-    const openBracketsCount = input.split('(').length - 1;
-    const closeBracketsCount = input.split(')').length - 1;
-    let regexStr;
-    const errors = [];
-
-    let parsedExpression;
-    if (editorMode === 'maths') {
-        regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
-        parsedExpression = parseMathsExpression(input);
-    } else if (editorMode === 'logic') {
-        regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
-        parsedExpression = parseBooleanExpression(input);
-    } else if (editorMode === 'chemistry') {
-        regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
-        parsedExpression = parseInequalityChemistryExpression(input);
-    } else  {
-        regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
-        parsedExpression = parseInequalityNuclearExpression(input);
-    }
-    const badCharacters = new RegExp(regexStr);
-
-    if (isError(parsedExpression) && parsedExpression.error) {
-        errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
-    }
-    if (/\\[a-zA-Z()]|[{}]/.test(input) && ["maths", "logic"].includes(editorMode)) {
-        errors.push('LaTeX syntax is not supported.');
-    }
-    if (/\|.+?\|/.test(input)) {
-        errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
-    }
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = [];
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-    }
-    if (openBracketsCount !== closeBracketsCount) {
-        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-    }
-    if (/\.[0-9]/.test(input)) {
-        errors.push('Please convert decimal numbers to fractions.');
-    }
-    if (/[A-Zbd-z](?!a|arc)(sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
-        // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-        return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
-    }
-    return errors;
-};
 
 const Equality = () => {
     const location = useLocation();
@@ -152,6 +95,14 @@ const Equality = () => {
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
     const allowTextInput = ['maths', 'logic'].includes(editorMode) || (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY && ['chemistry', 'nuclear'].includes(editorMode));
 
+    const parseExpression = editorMode === "maths"
+        ? parseMathsExpression
+        : editorMode === "chemistry"  
+            ? parseInequalityChemistryExpression
+            : editorMode === "nuclear"
+            ? parseInequalityChemistryExpression
+                : parseBooleanExpression;
+
     return <div>
         <Container>
             <Row>
@@ -197,7 +148,7 @@ const Equality = () => {
                                 </UncontrolledTooltip>
                             </>
                         </InputGroup>
-                        <QuestionInputValidation userInput={textInput} validator={(i: string) => equalityValidator(i, editorMode)} />
+                        <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode, true, parseExpression)} />
                     </div>}
                     <div className="equality-page">
                         <div

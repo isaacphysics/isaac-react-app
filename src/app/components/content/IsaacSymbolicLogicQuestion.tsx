@@ -15,40 +15,11 @@ import {v4 as uuid_v4} from "uuid";
 import {Inequality} from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
-
-// TODO: Create a more modular version of this to use across files
-export const symbolicLogicInputValidator = (input: string) => {
-    const openBracketsCount = input.split('(').length - 1;
-    const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = "[^ A-Za-z&|01()~¬∧∨^⊻+.!=]+";
-    const badCharacters = new RegExp(regexStr);
-
-    const errors = [];
-    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-        errors.push('LaTeX syntax is not supported.');
-    }
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = [];
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-    }
-    if (openBracketsCount !== closeBracketsCount) {
-        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-    }
-    return errors;
-};
 
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
@@ -60,6 +31,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const {preferredBooleanNotation} = useUserPreferences();
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
+    const badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨^⊻+.!=]+/);
     const editorMode = "logic";
 
     let currentAttemptValue: InequalityState | undefined = undefined;
@@ -159,7 +131,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                     dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
                 />
             </InputGroup>
-            <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
+            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode)} />
             {symbolList && <div className="eqn-editor-symbols">
                 The following symbols may be useful: <pre>{symbolList}</pre>
             </div>}

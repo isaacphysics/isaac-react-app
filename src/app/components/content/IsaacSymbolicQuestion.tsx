@@ -42,17 +42,22 @@ export function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-export const symbolicInputValidator = (input: string) => {
-    const openBracketsCount = input.split('(').length - 1;
-    const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = "[^ 0-9A-Za-zΑ-ΡΣ-Ωα-ω()*+,-./<=>^_±²³¼½¾×÷=]+"; // not \Alpha-\Omega directly because there is a gap in the unicode range (U+03A2)
-    const badCharacters = new RegExp(regexStr);
+export const symbolicInputValidator = (input: string, editorMode: string, mayRequireStateSymbols?: boolean, parseExpression?: (input: string) => any[] | ParsingError) => {
     const errors = [];
-    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-        errors.push('LaTeX syntax is not supported.');
+    if (parseExpression) {
+        const parsedExpression = parseExpression(input);
+        if (isError(parsedExpression) && parsedExpression.error) {
+            errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
+        }
     }
-    if (/\|.+?\|/.test(input)) {
-        errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+
+    let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
+    if (editorMode === 'maths') {
+        badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+/);
+    } else if (editorMode === 'logic') {
+        badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
+    } else if (editorMode === 'chemistry') {
+        badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
     }
     if (badCharacters.test(input)) {
         const usedBadChars: string[] = [];
@@ -66,28 +71,51 @@ export const symbolicInputValidator = (input: string) => {
         }
         errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
     }
-    if (openBracketsCount !== closeBracketsCount) {
-        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+
+    const openRoundBracketsCount = input.split("(").length - 1;
+    const closeRoundBracketsCount = input.split(")").length - 1;
+    const openSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("[").length - 1 : 0;
+    const closeSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("]").length - 1 : 0;
+    const openCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("{").length - 1 : 0;
+    const closeCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("}").length - 1 : 0;
+    if (openRoundBracketsCount !== closeRoundBracketsCount
+        || openSquareBracketsCount !== closeSquareBracketsCount
+        || openCurlyBracketsCount !== closeCurlyBracketsCount) {
+        if (["nuclear", "chemistry"].includes(editorMode)) {
+            // Rather than a long message about which brackets need closing
+            errors.push('You are missing some brackets.');
+        } else {
+            errors.push('You are missing some ' + (closeRoundBracketsCount > openRoundBracketsCount ? 'opening' : 'closing') + ' brackets.');
+        }
     }
-    if (/\.[0-9]/.test(input)) {
+
+    if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
+        errors.push('LaTeX syntax is not supported.');
+    }
+    if (["chemistry", "nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) {
         errors.push('Please convert decimal numbers to fractions.');
     }
-    if (/[<>=].+[<>=]/.test(input)) {
-        errors.push('We are not able to accept double inequalities, and answers will never require them.');
+    if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
+        errors.push('This question does not require state symbols.');
     }
-    const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
-    if (invTrig != null) {
-        const trigFunction = invTrig[2];
-        if (invTrig[4] === 'h') {
-            errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
+    if (editorMode === "maths") {
+        if (/[<>=].+[<>=]/.test(input)) {
+            errors.push('We are not able to accept double inequalities, and answers will never require them.');
         }
-        else {
-            errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
+        const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
+        if (invTrig != null) {
+            const trigFunction = invTrig[2];
+            if (invTrig[4] === 'h') {
+                errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
+            }
+            else {
+                errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
+            }
         }
-    }
-    if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
-        // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-        return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
+        if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
+            // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+            return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
+        }
     }
     return errors;
 };
@@ -310,6 +338,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
 
+    const badCharacters = new RegExp(/[^ 0-9A-Za-zΑ-ΡΣ-Ωα-ω()*+,-./<=>^_±²³¼½¾×÷=]+/);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
     const editorMode = "maths";
 
@@ -375,7 +404,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                     dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
                 />
             </InputGroup>
-            <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
+            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode)}/>
             {symbolList && <div className="eqn-editor-symbols">
                 The following symbols may be useful: <pre>{symbolList}</pre>
             </div>}

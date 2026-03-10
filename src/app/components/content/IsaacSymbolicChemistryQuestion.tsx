@@ -17,49 +17,11 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { InequalityState, initialiseInequality, InputState, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
-
-const symbolicInputValidator = (input: string, mayRequireStateSymbols?: boolean) => {
-    const openRoundBracketsCount = input.split("(").length - 1;
-    const closeRoundBracketsCount = input.split(")").length - 1;
-    const openSquareBracketsCount = input.split("[").length - 1;
-    const closeSquareBracketsCount = input.split("]").length - 1;
-    const openCurlyBracketsCount = input.split("{").length - 1;
-    const closeCurlyBracketsCount = input.split("}").length - 1;
-    const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
-    const badCharacters = new RegExp(regexStr);
-    const errors = [];
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = [];
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-    }
-
-    if (openRoundBracketsCount !== closeRoundBracketsCount
-        || openSquareBracketsCount !== closeSquareBracketsCount
-        || openCurlyBracketsCount !== closeCurlyBracketsCount) {
-        // Rather than a long message about which brackets need closing
-        errors.push('You are missing some brackets.');
-    }
-    if (/\.[0-9]/.test(input)) {
-        errors.push('Please convert decimal numbers to fractions.');
-    }
-    if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
-        errors.push('This question does not require state symbols.');
-    }
-    return errors;
-};
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
@@ -122,6 +84,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
+    const badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
     const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
     const editorMode = doc.isNuclear ? "nuclear" : "chemistry";
 
@@ -186,7 +149,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
                 />
             </InputGroup>
-            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, mayRequireStateSymbols)} />
+            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicInputValidator(input, editorMode, mayRequireStateSymbols)} />
             {symbolList && <div className="eqn-editor-symbols">
                 The following symbols may be useful: <pre>{symbolList}</pre>
             </div>}
