@@ -129,9 +129,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         ? currentAttemptValue.result.tex
         // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
         : !hideSeed
-            ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
+            ? initialSeedText
             : undefined;
-        // hide seed?: undefined;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();

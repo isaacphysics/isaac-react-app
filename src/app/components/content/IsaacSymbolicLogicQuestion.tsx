@@ -106,7 +106,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const previewText = (currentAttemptValue && currentAttemptValue.result)
         ? currentAttemptValue.result.tex
         : !hideSeed
-            ? jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex
+            ? initialSeedText
             : undefined;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
