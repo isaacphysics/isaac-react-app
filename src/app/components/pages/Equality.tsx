@@ -9,7 +9,7 @@ import {Inequality} from 'inequality';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, InputState, isError, symbolicInputValidator, TooltipContents, updateEquationHelper, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, InputState, symbolicInputValidator, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
 import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 import { Loading } from "../handlers/IsaacSpinner";
 import { parseBooleanExpression, parseInequalityChemistryExpression, parseMathsExpression } from "inequality-grammar";
