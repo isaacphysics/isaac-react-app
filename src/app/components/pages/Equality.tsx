@@ -1,5 +1,5 @@
 import React, {ChangeEvent, lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
-import {Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
+import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
 import katex from "katex";
@@ -8,11 +8,9 @@ import {useLocation} from "react-router";
 import {Inequality} from 'inequality';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
-import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, SymbolicTextInput, useModalWithScroll } from "../content/IsaacSymbolicQuestion";
 import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 import { Loading } from "../handlers/IsaacSpinner";
-import { parseBooleanExpression, parseInequalityChemistryExpression, parseMathsExpression } from "inequality-grammar";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 

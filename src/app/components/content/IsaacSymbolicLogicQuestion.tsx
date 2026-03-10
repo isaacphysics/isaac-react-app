@@ -10,12 +10,10 @@ import {
     useUserPreferences
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
-import {InputGroup} from 'reactstrap';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality} from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InequalityState, initialiseInequality, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, initialiseInequality, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
@@ -108,7 +106,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 editorMode="logic" logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 initialEditorSymbols={initialEditorSymbols.current} availableSymbols={doc.availableSymbols}
                 editorSeed={editorSeed} questionDoc={doc} onEditorStateChange={updateState}
-                close={closeModalAndReturnToScrollPosition}
+                close={closeModalAndReturnToScrollPosition}  hiddenEditorRef={hiddenEditorRef}
             />
         </Suspense>}
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}

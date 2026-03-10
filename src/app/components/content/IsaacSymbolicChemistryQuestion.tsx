@@ -11,47 +11,44 @@ import {
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import { InputGroup } from "reactstrap";
-import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { InequalityState, initialiseInequality, symbolicInputValidator, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, InequalitySymbol, initialiseInequality, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
-    const userPreferences = useAppSelector(selectors.user.preferences);
-    const [modalVisible, setModalVisible] = useState(false);
-    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
-    const initialEditorSymbols = useRef(editorSeed ?? []);
-
-    const [hasStartedEditing, setHasStartedEditing] = useState(false);
-    const [hideSeed, setHideSeed] = useState(!!currentAttempt);
+    const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
+    const currentAttemptValue: InequalityState | undefined = currentAttempt && currentAttempt.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
     
-    let currentAttemptValue: InequalityState | undefined;
-    if (currentAttempt && currentAttempt.value) {
-        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
-    }
-
+    const [hideSeed, setHideSeed] = useState(!!currentAttempt);
     const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
+    const previewText = (currentAttemptValue && currentAttemptValue.result) ? currentAttemptValue.result.tex
+        // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
+        : !hideSeed ? initialSeedText : undefined;
     const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
 
+    const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
+    const userPreferences = useAppSelector(selectors.user.preferences);
 
+    const editorSeed: InequalitySymbol[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
+    const initialEditorSymbols = useRef(editorSeed ?? []);
     const hasMetaSymbols = doc.availableSymbols ? doc.availableSymbols.length > 0 && !doc.availableSymbols.every(
         symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim())
     ) : false;
 
-    function currentAttemptMhchemExpression(): string {
-        return (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
-    }
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
+    const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
+    const sketchRef = useRef<Inequality | null | undefined>();
+
+    const editorMode = doc.isNuclear ? "nuclear" : "chemistry";
 
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
@@ -61,18 +58,12 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             // Otherwise this causes the response to reset on reload removing the banner
             dispatchSetCurrentAttempt({type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression});
         }
-        initialEditorSymbols.current = state.symbols;
+        initialEditorSymbols.current = state.symbols ?? [];
     };
 
     useEffect(() => {
-        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
-
-        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
-    }, [currentAttempt, currentAttemptValue]);
-
-    useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible
-        const mhchemExpression = currentAttemptMhchemExpression();
+        const mhchemExpression = (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
         if (modalVisible) {
             setTextInput(mhchemExpression);
         }
@@ -80,19 +71,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     }, [currentAttempt]);
 
     const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
-    const editorMode = doc.isNuclear ? "nuclear" : "chemistry";
-
-    const previewText = (currentAttemptValue && currentAttemptValue.result)
-        ? currentAttemptValue.result.tex
-        // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
-        : !hideSeed
-            ? initialSeedText
-            : undefined;
-
-    const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
-    const sketchRef = useRef<Inequality | null | undefined>();
-
-
     useLayoutEffect(() => {
         if (!showTextEntry) return; // as the ref won't be defined
         
@@ -100,14 +78,18 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
+    useEffect(() => {
+        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
+
+        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
+    }, [currentAttempt, currentAttemptValue]);
+
     const openInequality = () => {
         if (!readonly) {
             openModal();
             setHideSeed(true);
         }
     };
-
-    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
     // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
     const modifiedAvailableSymbols = doc.availableSymbols ? [...doc.availableSymbols] : [];
@@ -118,7 +100,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // We need these symbols available to do processing with, but don't want to display them to the user as available.
     const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
     let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
-
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')
         .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
 
@@ -134,7 +115,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             ? <i className="text-muted small">Click in either box below to edit your answer.</i>
             : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
         }
-        {showTextEntry && <SymbolicTextInput editorMode={editorMode}
+        {showTextEntry && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeedText}
             editorSeed={editorSeed} setHideSeed={setHideSeed} initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
             sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId} mayRequireStateSymbols={mayRequireStateSymbols} symbolList={symbolList}

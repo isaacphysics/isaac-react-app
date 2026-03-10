@@ -44,7 +44,7 @@ export function isError(p: ParsingError | any[]): p is ParsingError {
 
 // The parser retuns a complex structure that isn't fully typed, but we still want to label its use
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type InequalitySymbol = any;
+export type InequalitySymbol = any;
 
 export type InequalityState = {
     result?: {
@@ -58,10 +58,6 @@ export type InequalityState = {
     textEntry?: boolean;
     userInput?: string;
 };
-
-function currentAttemptPythonExpression(state?: InequalityState): string {
-    return (state && state.result && state.result.python) || "";
-}
 
 export function useModalWithScroll({setModalVisible}: { setModalVisible: (v: boolean) => void; }) {
     const scrollYRef = useRef<number>(0);
@@ -144,6 +140,7 @@ type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 interface SymbolicTextInputProps {
     editorMode: EditorMode;
     demoPage?: boolean;
+    hiddenEditorRef?: React.MutableRefObject<HTMLDivElement | null>;
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
     setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -159,7 +156,7 @@ interface SymbolicTextInputProps {
     symbolList?: string;
 }
 
-export const SymbolicTextInput = ({editorMode, demoPage, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission, mayRequireStateSymbols, symbolList}: SymbolicTextInputProps) => {
+export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission, mayRequireStateSymbols, symbolList}: SymbolicTextInputProps) => {
     const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
         type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
         value: value, 
@@ -210,7 +207,7 @@ export const SymbolicTextInput = ({editorMode, demoPage, textInput, setTextInput
         }
     };
 
-    const symbolicInputValidator = (input: string) => {
+    const textInputValidator = (input: string) => {
         const errors = [];
         if (demoPage) {
             const parseExpression = editorMode === "maths"
@@ -296,6 +293,7 @@ export const SymbolicTextInput = ({editorMode, demoPage, textInput, setTextInput
     };
 
     return <div className="eqn-editor-input">
+        <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
         <InputGroup className="my-2 separate-input-group flex-nowrap">
             <div className="position-relative flex-grow-1">      
                 <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={editorMode === "logic" ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission && textInput === initialSeedText})}/>
@@ -319,7 +317,7 @@ export const SymbolicTextInput = ({editorMode, demoPage, textInput, setTextInput
                     <TooltipContents editorMode={editorMode}/>
                 </UncontrolledTooltip>
             </>
-            <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator}/>
+            <QuestionInputValidation userInput={textInput} validator={textInputValidator}/>
         </InputGroup>
         {symbolList && <div className="eqn-editor-symbols">
             The following symbols may be useful: <pre>{symbolList}</pre>
@@ -330,25 +328,25 @@ export const SymbolicTextInput = ({editorMode, demoPage, textInput, setTextInput
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
+    
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]); 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.python : initialSeedText);
 
     const [hasStartedEditing, setHasStartedEditing] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const emptySubmission = !hasStartedEditing && !currentAttemptValue;
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
 
     const editorSeed: InequalitySymbol[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
-    const initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]> = useRef(editorSeed ?? []);
+    const initialEditorSymbols = useRef(editorSeed ?? []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+    
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);  
-
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-
-    const emptySubmission = !hasStartedEditing && !currentAttemptValue;
+    
     const editorMode = "maths";
-
-    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]); 
-    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.python : initialSeedText);
 
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
@@ -361,6 +359,15 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         initialEditorSymbols.current = state.symbols ?? [];
     };
 
+    useEffect(() => {
+        // Only update the text-entry box if the graphical editor is visible
+        const pythonExpression = (currentAttemptValue?.result && currentAttemptValue?.result.python) || "";
+        if (modalVisible) {
+            setTextInput(pythonExpression);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentAttempt]);
+
     useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
         
@@ -368,49 +375,37 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
-        const pythonExpression = currentAttemptPythonExpression(currentAttemptValue);
-        if (modalVisible || textInput === '') {
-            setTextInput(pythonExpression);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentAttempt]);
-
     const openInequality = () => {
         if (!readonly) {
             openModal();
         }
     };
 
-    return <>
-        <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />  
-        <div className="symbolic-question">
-            <div className="question-content">
-                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
-                    {doc.children}
-                </IsaacContentValueOrChildren>
-            </div>
-            {/* TODO Accessibility */}
-            {modalVisible && <Suspense fallback={<Loading/>}>
-                <InequalityModal
-                    editorMode="maths" initialEditorSymbols={initialEditorSymbols.current}
-                    availableSymbols={doc.availableSymbols} editorSeed={editorSeed} questionDoc={doc}
-                    onEditorStateChange={updateState} close={closeModalAndReturnToScrollPosition}
-                />
-            </Suspense>}
-            {!readonly && <SymbolicTextInput editorMode={editorMode}
-                textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
-                initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
-                dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
-            />}
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            <div
-                role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})}
-                onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
-            />
+    return <div className="symbolic-question">
+        <div className="question-content">
+            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                {doc.children}
+            </IsaacContentValueOrChildren>
         </div>
-    </>;
+        {!readonly && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
+            textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
+            initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
+            dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
+        />}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <div
+            role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})}
+            onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
+            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
+        />
+        {/* TODO Accessibility */}
+        {modalVisible && <Suspense fallback={<Loading/>}>
+            <InequalityModal
+                editorMode="maths" initialEditorSymbols={initialEditorSymbols.current}
+                availableSymbols={doc.availableSymbols} editorSeed={editorSeed} questionDoc={doc}
+                onEditorStateChange={updateState} close={closeModalAndReturnToScrollPosition}
+            />
+        </Suspense>}
+    </div>;
 };
 export default IsaacSymbolicQuestion;
