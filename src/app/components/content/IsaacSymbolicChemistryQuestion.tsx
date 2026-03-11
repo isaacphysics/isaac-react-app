@@ -8,6 +8,8 @@ import {
     sanitiseInequalityState,
     useCurrentQuestionAttempt,
     parsePseudoSymbolicAvailableSymbols,
+    initialiseInequality,
+    useModalWithScroll,
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
@@ -15,9 +17,9 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
-import { InequalityState, InequalitySymbol, initialiseInequality, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
+import { InequalityState, InequalitySymbol, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
