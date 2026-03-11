@@ -226,7 +226,7 @@ type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 interface SymbolicTextInputProps {
     editorMode: EditorMode;
     demoPage?: boolean;
-    hiddenEditorRef?: React.MutableRefObject<HTMLDivElement | null>;
+    hiddenEditorRef: React.MutableRefObject<HTMLDivElement | null>;
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
     setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
