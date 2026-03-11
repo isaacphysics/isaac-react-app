@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {useGetSegueEnvironmentQuery} from "../../../state";
 import {FigureNumberingContext, FigureNumbersById} from "../../../../IsaacAppTypes";
 import he from "he";
-import {BOOLEAN_NOTATION, dndDropZoneRegex, dropZoneRegex, isAda, renderA11yString, useUserPreferences} from "../../../services";
+import {BOOLEAN_NOTATION, dropZoneRegex, isAda, renderA11yString, useUserPreferences} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 
@@ -297,14 +297,10 @@ export function katexify(
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
                         `<span class="katex"><span class="visually-hidden" aria-label="${screenReaderText}" role="text"></span>`);
                 } else {
-                    const katexMathML = katex.renderToString(
-                        latexMunged
-                            .replace(dropZoneRegex, "clickable drop zone")
-                            .replace(dndDropZoneRegex, "clickable drop zone"), 
-                        {...katexOptions, output: "mathml"}
-                    ).replace(`class="katex"`, `class="katex-mathml"`);
-                    
-                    katexRenderResult = katexRenderResult.replace('<span class="katex">', `<span class="katex">${katexMathML}`);
+                    const katexMathML = katex.renderToString(latexMunged.replace(dropZoneRegex, "clickable drop zone"), {...katexOptions, output: "mathml"})
+                        .replace(`class="katex"`, `class="katex-mathml"`);
+                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                        `<span class="katex">${katexMathML}`);
                 }
 
                 if (showScreenReaderHoverText) {
