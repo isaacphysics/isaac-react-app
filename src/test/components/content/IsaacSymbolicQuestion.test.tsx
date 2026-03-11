@@ -1,5 +1,7 @@
-import {symbolicInputValidator} from "../../../app/components/content/IsaacSymbolicQuestion";
-import {symbolicLogicInputValidator} from "../../../app/components/content/IsaacSymbolicLogicQuestion";
+import {symbolicTextInputValidator} from "../../../app/components/content/IsaacSymbolicQuestion";
+
+const symbolicInputValidator = (input: string) => symbolicTextInputValidator(input, "maths");
+const symbolicLogicInputValidator = (input: string) => symbolicTextInputValidator(input, "logic");
 
 describe("IsaacSymbolicQuestion", () => {
 

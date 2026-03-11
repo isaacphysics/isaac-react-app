@@ -135,6 +135,91 @@ const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
     </>;
 };
 
+export const symbolicTextInputValidator = (input: string, editorMode: string, mayRequireStateSymbols?: boolean, demoPage?: boolean,) => {
+    const errors = [];
+    if (demoPage) {
+        const parsedExpression = editorMode === "maths"
+            ? parseMathsExpression(input) 
+            : editorMode === "chemistry"
+                ? parseInequalityChemistryExpression(input)
+                : editorMode === "nuclear"
+                    ? parseInequalityNuclearExpression(input)
+                    : parseBooleanExpression(input);
+
+        if (isError(parsedExpression) && parsedExpression.error) {
+            errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
+        }
+    }
+
+    let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
+    if (editorMode === 'maths') {
+        badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷]+/);
+    } else if (editorMode === 'logic') {
+        badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
+    } else if (editorMode === 'chemistry') {
+        badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
+    }
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = [];
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+
+    const openRoundBracketsCount = input.split("(").length - 1;
+    const closeRoundBracketsCount = input.split(")").length - 1;
+    const openSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("[").length - 1 : 0;
+    const closeSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("]").length - 1 : 0;
+    const openCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("{").length - 1 : 0;
+    const closeCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("}").length - 1 : 0;
+    if (openRoundBracketsCount !== closeRoundBracketsCount
+        || openSquareBracketsCount !== closeSquareBracketsCount
+        || openCurlyBracketsCount !== closeCurlyBracketsCount) {
+        if (["nuclear", "chemistry"].includes(editorMode)) {
+            // Rather than a long message about which brackets need closing
+            errors.push('You are missing some brackets.');
+        } else {
+            errors.push('You are missing some ' + (closeRoundBracketsCount > openRoundBracketsCount ? 'opening' : 'closing') + ' brackets.');
+        }
+    }
+
+    if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
+        errors.push('LaTeX syntax is not supported.');
+    }
+    if (["chemistry", "nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) {
+        errors.push('Please convert decimal numbers to fractions.');
+    }
+    if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
+        errors.push('This question does not require state symbols.');
+    }
+    if (editorMode === "maths") {
+        if (/[<>=].+[<>=]/.test(input)) {
+            errors.push('We are not able to accept double inequalities, and answers will never require them.');
+        }
+        const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
+        if (invTrig != null) {
+            const trigFunction = invTrig[2];
+            if (invTrig[4] === 'h') {
+                errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
+            }
+            else {
+                errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
+            }
+        }
+        if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
+            // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+            return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
+        }
+    }
+    return errors;
+};
+
 type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 
 interface SymbolicTextInputProps {
@@ -207,91 +292,6 @@ export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textIn
         }
     };
 
-    const textInputValidator = (input: string) => {
-        const errors = [];
-        if (demoPage) {
-            const parseExpression = editorMode === "maths"
-                ? parseMathsExpression
-                : editorMode === "chemistry"  
-                    ? parseInequalityChemistryExpression
-                    : editorMode === "nuclear"
-                        ? parseInequalityChemistryExpression
-                        : parseBooleanExpression;
-            const parsedExpression = parseExpression(input);
-            if (isError(parsedExpression) && parsedExpression.error) {
-                errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
-            }
-        }
-
-        let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
-        if (editorMode === 'maths') {
-            badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷]+/);
-        } else if (editorMode === 'logic') {
-            badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
-        } else if (editorMode === 'chemistry') {
-            badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
-        }
-        if (badCharacters.test(input)) {
-            const usedBadChars: string[] = [];
-            for(let i = 0; i < input.length; i++) {
-                const char = input.charAt(i);
-                if (badCharacters.test(char)) {
-                    if (!usedBadChars.includes(char)) {
-                        usedBadChars.push(char);
-                    }
-                }
-            }
-            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-        }
-
-        const openRoundBracketsCount = input.split("(").length - 1;
-        const closeRoundBracketsCount = input.split(")").length - 1;
-        const openSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("[").length - 1 : 0;
-        const closeSquareBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("]").length - 1 : 0;
-        const openCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("{").length - 1 : 0;
-        const closeCurlyBracketsCount = ["nuclear", "chemistry"].includes(editorMode) ? input.split("}").length - 1 : 0;
-        if (openRoundBracketsCount !== closeRoundBracketsCount
-            || openSquareBracketsCount !== closeSquareBracketsCount
-            || openCurlyBracketsCount !== closeCurlyBracketsCount) {
-            if (["nuclear", "chemistry"].includes(editorMode)) {
-                // Rather than a long message about which brackets need closing
-                errors.push('You are missing some brackets.');
-            } else {
-                errors.push('You are missing some ' + (closeRoundBracketsCount > openRoundBracketsCount ? 'opening' : 'closing') + ' brackets.');
-            }
-        }
-
-        if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
-            errors.push('LaTeX syntax is not supported.');
-        }
-        if (["chemistry", "nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) {
-            errors.push('Please convert decimal numbers to fractions.');
-        }
-        if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
-            errors.push('This question does not require state symbols.');
-        }
-        if (editorMode === "maths") {
-            if (/[<>=].+[<>=]/.test(input)) {
-                errors.push('We are not able to accept double inequalities, and answers will never require them.');
-            }
-            const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
-            if (invTrig != null) {
-                const trigFunction = invTrig[2];
-                if (invTrig[4] === 'h') {
-                    errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
-                }
-                else {
-                    errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
-                }
-            }
-            if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
-                // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-                return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
-            }
-        }
-        return errors;
-    };
-
     return <div className="eqn-editor-input">
         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
         <InputGroup className="my-2 separate-input-group flex-nowrap">
@@ -317,7 +317,7 @@ export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textIn
                     <TooltipContents editorMode={editorMode}/>
                 </UncontrolledTooltip>
             </>
-            <QuestionInputValidation userInput={textInput} validator={textInputValidator}/>
+            <QuestionInputValidation userInput={textInput} validator={(input) => symbolicTextInputValidator(input, editorMode, mayRequireStateSymbols, demoPage)}/>
         </InputGroup>
         {symbolList && <div className="eqn-editor-symbols">
             The following symbols may be useful: <pre>{symbolList}</pre>
