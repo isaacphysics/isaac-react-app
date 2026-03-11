@@ -151,12 +151,16 @@ export const symbolicTextInputValidator = (input: string, editorMode: string, ma
         }
     }
 
+    if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
+        errors.push('LaTeX syntax is not supported.');
+    }
+
     let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
     if (editorMode === 'maths') {
         badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷]+/);
     } else if (editorMode === 'logic') {
         badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
-    } else if (editorMode === 'chemistry') {
+    } else if (["chemistry", "nuclear"].includes(editorMode)) {
         badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
     }
     if (badCharacters.test(input)) {
@@ -189,9 +193,6 @@ export const symbolicTextInputValidator = (input: string, editorMode: string, ma
         }
     }
 
-    if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
-        errors.push('LaTeX syntax is not supported.');
-    }
     if (["chemistry", "nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) {
         errors.push('Please convert decimal numbers to fractions.');
     }
