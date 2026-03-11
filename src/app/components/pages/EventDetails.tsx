@@ -168,9 +168,9 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                 }
                 {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "RESERVED") &&
                     <Row className="mt-2">
-                        {event.userBookingStatus === "CONFIRMED" && <span className="text-success">You are booked on this event!</span>}
+                        {event.userBookingStatus === "CONFIRMED" && <strong className="text-success fs-6">You are booked on this event!</strong>}
                         {event.userBookingStatus === 'RESERVED' && <span className="text-success">
-                            You have been reserved a place on this event!
+                            <strong className="fs-6">You have been reserved a place on this event!</strong>
                             <Button color="link text-success" className="d-block" onClick={openAndScrollToBookingForm}>
                                 <u>Complete your registration below</u>
                             </Button>
