@@ -225,7 +225,7 @@ export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textIn
 
         let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
         if (editorMode === 'maths') {
-            badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+/);
+            badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷]+/);
         } else if (editorMode === 'logic') {
             badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
         } else if (editorMode === 'chemistry') {

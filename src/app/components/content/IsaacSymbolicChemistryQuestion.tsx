@@ -50,6 +50,20 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const editorMode = doc.isNuclear ? "nuclear" : "chemistry";
 
+    // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
+    const modifiedAvailableSymbols = doc.availableSymbols ? [...doc.availableSymbols] : [];
+    if (doc.isNuclear && !hasMetaSymbols) {
+        modifiedAvailableSymbols.push("_plus", "_minus", "_fraction", "_right_arrow");
+    }
+
+    // We need these symbols available to do processing with, but don't want to display them to the user as available.
+    const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
+    let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+    symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')
+        .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
+
+    const mayRequireStateSymbols = !hasMetaSymbols || doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol));
+
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
         const mhchemExpression = newState?.result?.mhchem || "";
@@ -90,20 +104,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             setHideSeed(true);
         }
     };
-
-    // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
-    const modifiedAvailableSymbols = doc.availableSymbols ? [...doc.availableSymbols] : [];
-    if (doc.isNuclear && !hasMetaSymbols) {
-        modifiedAvailableSymbols.push("_plus", "_minus", "_fraction", "_right_arrow");
-    }
-
-    // We need these symbols available to do processing with, but don't want to display them to the user as available.
-    const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
-    let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
-    symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')
-        .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
-
-    const mayRequireStateSymbols = !hasMetaSymbols || doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol));
 
     return <div className="symbolic-question">
         <div className="question-content">

@@ -13,7 +13,7 @@ import _flattenDeep from 'lodash/flattenDeep';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality} from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import { InequalityState, initialiseInequality, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
+import { InequalityState, InequalitySymbol, initialiseInequality, SymbolicTextInput, useModalWithScroll } from "./IsaacSymbolicQuestion";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 
@@ -21,30 +21,29 @@ const InequalityModal = lazy(() => import("../elements/modals/inequality/Inequal
 
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
-    const [modalVisible, setModalVisible] = useState(false);
-    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
-    const initialEditorSymbols = useRef(editorSeed ?? []);
-    const {preferredBooleanNotation} = useUserPreferences();
-    const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
+
     const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
-    const editorMode = "logic";
-
-    let currentAttemptValue: InequalityState | undefined = undefined;
-
-    function currentAttemptPythonExpression(): string {
-        return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
-    }
-
-    if (currentAttempt && currentAttempt.value) {
-        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
-    }
-
     const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
+    const previewText = (currentAttemptValue && currentAttemptValue.result) ? currentAttemptValue.result.tex
+        : !hideSeed ? initialSeedText : undefined;
     const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.python : initialSeedText);
 
+    const [hasStartedEditing, setHasStartedEditing] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
+    
+    const editorSeed: InequalitySymbol[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
+    const initialEditorSymbols = useRef(editorSeed ?? []);
+    const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+    const {preferredBooleanNotation} = useUserPreferences();
+
+    const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
+    const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
+    const sketchRef = useRef<Inequality | null | undefined>();
+
+    const editorMode = "logic";
 
     const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
@@ -54,28 +53,13 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     };
 
     useEffect(() => {
-        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
-
-        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
-    }, [currentAttempt, currentAttemptValue]);
-
-    useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible
-        const pythonExpression = currentAttemptPythonExpression();
+        const pythonExpression = (currentAttemptValue?.result && currentAttemptValue?.result.python) || "";
         if (modalVisible) {
             setTextInput(pythonExpression);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
-
-    const previewText = (currentAttemptValue && currentAttemptValue.result)
-        ? currentAttemptValue.result.tex
-        : !hideSeed
-            ? initialSeedText
-            : undefined;
-
-    const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
-    const sketchRef = useRef<Inequality | null | undefined>();
 
     useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
@@ -84,8 +68,11 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
-    const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+    useEffect(() => {
+        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
+
+        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
+    }, [currentAttempt, currentAttemptValue]);
 
     const openInequality = () => {
         if (!readonly) {
@@ -106,7 +93,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 editorMode="logic" logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 initialEditorSymbols={initialEditorSymbols.current} availableSymbols={doc.availableSymbols}
                 editorSeed={editorSeed} questionDoc={doc} onEditorStateChange={updateState}
-                close={closeModalAndReturnToScrollPosition}  hiddenEditorRef={hiddenEditorRef}
+                close={closeModalAndReturnToScrollPosition}
             />
         </Suspense>}
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
@@ -115,7 +102,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
         />
-        {!readonly && <SymbolicTextInput editorMode={editorMode}
+        {!readonly && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
             initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
             dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
