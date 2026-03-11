@@ -189,8 +189,8 @@ input[type=date]::-webkit-outer-spin-button {
       border-bottom-left-radius: 0;
     }
     input {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
     }
   }
 }
@@ -198,7 +198,7 @@ input[type=date]::-webkit-outer-spin-button {
 // Used to visually separate the button from the input in an input group (see groups page for example)
 .separate-input-group {
   input {
-    border-radius: 0.25rem;
+    border-radius: 0.25rem !important;
   }
   button {
     margin-left: 1rem !important;
