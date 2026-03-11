@@ -3,6 +3,7 @@ import {symbolicTextInputValidator} from "../../../app/components/content/IsaacS
 const symbolicInputValidator = (input: string) => symbolicTextInputValidator(input, "maths");
 const symbolicLogicInputValidator = (input: string) => symbolicTextInputValidator(input, "logic");
 const symbolicChemistryInputValidator = (input: string) => symbolicTextInputValidator(input, "chemistry");
+const symbolicNuclearInputValidator = (input: string) => symbolicTextInputValidator(input, "nuclear");
 
 describe("IsaacSymbolicQuestion", () => {
 
@@ -58,5 +59,19 @@ describe("IsaacSymbolicQuestion", () => {
         expect(symbolicChemistryInputValidator(".5")).toEqual(['Please convert decimal numbers to fractions.']);
         expect(symbolicChemistryInputValidator("2H2O(l) -> 2H2(g) + O2(g)")).toEqual(['This question does not require state symbols.']);
         expect(symbolicTextInputValidator("2H2O(l) -> 2H2(g) + O2(g)", "chemistry", true)).toEqual([]);
+    });
+
+    it("Symbolic Nuclear Question Validator matches correctly", async () => {
+
+        // empty input
+        expect(symbolicNuclearInputValidator("")).toEqual([]);
+
+        // bad chars
+        expect(symbolicNuclearInputValidator("A∧BC>+1")).toEqual(['Some of the characters you are using are not allowed: ∧']);
+
+        // misc errors
+        expect(symbolicNuclearInputValidator("^{238}_{92}U -> ^{234}_{90}Th + ^{4}_{2}He")).toEqual([]);
+        expect(symbolicNuclearInputValidator("^{238_{92}U -> ^{234}_{90}Th + ^{4}_{2}He")).toEqual(['You are missing some brackets.']);
+        expect(symbolicNuclearInputValidator(".5")).toEqual(['Please convert decimal numbers to fractions.']);
     });
 });
