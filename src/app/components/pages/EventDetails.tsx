@@ -131,21 +131,18 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                             )}
                         </Col>
                         <Col>
-                            {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
-                            {zeroOrLess(event.placesAvailable) && <div>
-                                <strong className="text-danger">FULL</strong>
-                                {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings.</span>}
-                            </div>}
-                            {event.userBookingStatus === "CONFIRMED" && <span className="ms-1"> - <span className="text-success">You are booked on this event!</span></span>}
-                            {event.userBookingStatus === 'RESERVED' && <span className="ms-1"> - <span className="text-success">
-                                You have been reserved a place on this event!
-                                <Button color="link text-success" onClick={openAndScrollToBookingForm}>
-                                    <u>Complete your registration below</u>.
-                                </Button>
-                            </span></span>}
-                            {canBeAddedToWaitingList && <span className="ms-1"> - {formatAvailabilityMessage(event)}</span>}
-                            {event.userBookingStatus === "WAITING_LIST" && <span className="ms-1"> - {formatWaitingListBookingStatusMessage(event)}</span>}
+                            <div className="text-start">
+                                {atLeastOne(event.placesAvailable) && <>{event.placesAvailable} spaces</>}
+                                {zeroOrLess(event.placesAvailable) && <>
+                                    <strong className="text-danger">FULL</strong>
+                                    {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
+                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <> for student bookings.</>}
+                                </>}
+                                
+                                {canBeAddedToWaitingList && <> {formatAvailabilityMessage(event)}</>}
+                                {event.userBookingStatus === "WAITING_LIST" && <>{formatWaitingListBookingStatusMessage(event)}</>}
+                            </div>
+                            
                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
                                 <div className="text-muted fw-normal">
                                     {studentOnlyEventMessage(eventId)}
@@ -161,16 +158,24 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                                 <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-complete me-2" color="secondary"/><b>Booking deadline</b></span>
                             )}
                         </Col>
-                        <Col>
+                        <Col className="d-md-flex flex-wrap">
                             <DateString>{event.bookingDeadline}</DateString>
                             {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                <div className="ms-1">
-                                    (The booking deadline for this event has passed.)
-                                </div>
+                                <div className="text-danger ms-1">(The booking deadline for this event has passed.)</div>
                             }
                         </Col>
                     </Row>
                 }
+                {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "RESERVED") &&
+                    <Row className="mt-2">
+                        {event.userBookingStatus === "CONFIRMED" && <span className="text-success">You are booked on this event!</span>}
+                        {event.userBookingStatus === 'RESERVED' && <span className="text-success">
+                            You have been reserved a place on this event!
+                            <Button color="link text-success" className="d-block" onClick={openAndScrollToBookingForm}>
+                                <u>Complete your registration below</u>
+                            </Button>
+                        </span>}
+                    </Row>}
             </KeyInfo>
         </MetadataContainer>
         {isPhy && isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
