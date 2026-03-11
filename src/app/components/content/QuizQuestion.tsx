@@ -1,7 +1,7 @@
 import React, {Suspense, useContext, useEffect} from "react";
 import {submitQuizQuestionIfDirty, useAppDispatch} from "../../state";
 import classnames from "classnames";
-import {isAda, isDefined, isPhy, QUESTION_TYPES} from "../../services";
+import {isAda, isDefined, isPhy, QUESTION_TYPES, siteSpecific} from "../../services";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -34,7 +34,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     return <div className="quiz-question-container">
         <div className={
             classnames(
-                "question-component p-md-2",
+                "question-component", siteSpecific("p-md-2", "p-md-4"),
                 {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
             )}>
             {isAda && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}

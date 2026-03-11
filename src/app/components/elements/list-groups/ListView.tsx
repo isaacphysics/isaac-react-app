@@ -53,7 +53,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         tags={item.tags}
-        supersededBy={item.supersededBy}
+        supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
         deprecated={item.deprecated}
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
@@ -84,6 +84,9 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
         icon={icon}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
+        tags={item.tags}
+        supersededByPath={item.supersededBy ? `/concepts/${item.supersededBy}` : undefined}
+        deprecated={item.deprecated}
         subtitle={item.summary ?? item.subtitle}
         breadcrumb={breadcrumb}
         url={url}
@@ -133,6 +136,7 @@ export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
+        tags={item.tags}
         url={url}
         {...rest}
     />;
@@ -248,7 +252,8 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
         subject={itemSubject}
         subtitle={item.summary ?? item.subtitle}  // summary more useful than subtitle, if present.
         tags={item.tags}
-        supersededBy={item.supersededBy}
+        supersededByPath={item.supersededBy ? `/pages/${item.supersededBy}` : undefined}
+        deprecated={item.deprecated}
         breadcrumb={breadcrumb}
         status={item.state}
         url={url}
@@ -278,7 +283,6 @@ export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutLis
         subject={itemSubject}
         subtitle={subtitle}
         tags={item.tags}
-        supersededBy={item.supersededBy}
         breadcrumb={breadcrumb}
         status={item.state}
         url={url}
@@ -348,7 +352,7 @@ type ListViewItemProps =
 
 type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
     className?: string;
-    fullWidth?: boolean;
+    forceFullWidth?: boolean;
     hasCaret?: boolean;
 } & (
     {
