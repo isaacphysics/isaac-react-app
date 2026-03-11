@@ -213,29 +213,31 @@ export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textIn
 
     return <div className="eqn-editor-input">
         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-        <InputGroup className="my-2 separate-input-group flex-nowrap">
-            <div className="position-relative flex-grow-1">      
-                <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={editorMode === "logic" ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission && textInput === initialSeedText})}/>
-                {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
-                    updateEquation('');
-                    if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? []);
-                    setHasStartedEditing(false);
-                    dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
-                    setTextInput(initialSeedText);
-                    if (setHideSeed) setHideSeed(false);
-                }}>
-                    ↺
-                </button>}
+        <InputGroup className="my-2 separate-input-group">
+            <div className="d-flex flex-nowrap w-100">
+                <div className="position-relative flex-grow-1">      
+                    <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={editorMode === "logic" ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission && textInput === initialSeedText})}/>
+                    {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                        updateEquation('');
+                        if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? []);
+                        setHasStartedEditing(false);
+                        dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
+                        setTextInput(initialSeedText);
+                        if (setHideSeed) setHideSeed(false);
+                    }}>
+                        ↺
+                    </button>}
+                </div>
+                <>
+                    {siteSpecific(
+                        <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                        <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
+                    )}
+                    <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
+                        <TooltipContents editorMode={editorMode}/>
+                    </UncontrolledTooltip>
+                </>
             </div>
-            <>
-                {siteSpecific(
-                    <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                    <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                )}
-                <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
-                    <TooltipContents editorMode={editorMode}/>
-                </UncontrolledTooltip>
-            </>
             <QuestionInputValidation userInput={textInput} validator={(input) => symbolicTextInputValidator(input, editorMode, mayRequireStateSymbols, demoPage)}/>
         </InputGroup>
         {symbolList && <div className="eqn-editor-symbols">

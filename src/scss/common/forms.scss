@@ -182,15 +182,23 @@ input[type=date]::-webkit-outer-spin-button {
   margin: 0;
 }
 
+.input-group {
+  :has(.eqn-editor-help) {
+    .eqn-editor-help {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
+
 // Used to visually separate the button from the input in an input group (see groups page for example)
 .separate-input-group {
   input {
-    border-radius: 0.25rem !important;
-  }
-  &:has(.eqn-editor-help) {
-    input {
-      border-radius: 0.25rem 0 0 0.25rem !important;
-    }
+    border-radius: 0.25rem;
   }
   button {
     margin-left: 1rem !important;
