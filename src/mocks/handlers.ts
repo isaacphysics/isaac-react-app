@@ -3,7 +3,6 @@ import {
     buildMockUserSummary,
     mockAssignmentsGroup2,
     mockAssignmentsGroup6, mockFragment,
-    mockGameboards,
     mockGroups,
     mockMyAssignments,
     mockNewsPods, buildMockPage,
@@ -22,7 +21,9 @@ import {
     mockProgress,
     mockLLMMarkedRegressionTestQuestion,
     mockLLMMarkedValidationResponse,
-    mockSearchResults
+    mockSearchResults,
+    mockFreeAttempts,
+    mockGameboards
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -35,7 +36,7 @@ export const handlers = [
             status: 200,
         });
     }),
-    
+
     http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
         const url = new URL(request.url);
         const startIndexStr = url.searchParams.get("start_index");
@@ -47,13 +48,13 @@ export const handlers = [
             if (startIndex === 0 && limitStr === "ALL") return g;
             g.results = g.results.slice(startIndex, Math.min(startIndex + limit, mockGameboards.totalResults));
             g.totalNotStarted = g.results.length;
-            g.totalResults = g.results.length;
         });
 
         return HttpResponse.json(limitedGameboards, {
             status: 200,
         });
     }),
+    
     http.get(API_PATH + "/groups", ({request}) => {
         const url = new URL(request.url);
         const archived = url.searchParams.get("archived_groups_only") === "true";
@@ -80,6 +81,11 @@ export const handlers = [
     }),
     http.get(API_PATH + "/quiz/assigned", () => {
         return HttpResponse.json([], {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/quiz/free_attempts", () => {
+        return HttpResponse.json(mockFreeAttempts, {
             status: 200,
         });
     }),
@@ -209,6 +215,13 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/images/figures/sketch_beta_quad_sketch.svg", () => {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="223" viewBox="-111.5 -72 223 144">
+            <path d="M-105,0H105M0,66V-66" fill="none" stroke="#000" stroke-width="1.5"/>
+            <path d="M-105,0l8-3v6zM105,0l-8-3v6zM0-66l-3,8h6zM0,66l-3-8h6z"/>
+        </svg>`;
+        return new HttpResponse(svg, { headers: {'content-type': 'image/svg+xml'}});
+    }),
     http.get(API_PATH + "/pages/questions/_llm_marked_regression_test_", () => {
         return HttpResponse.json(mockLLMMarkedRegressionTestQuestion, {
             status: 200,
@@ -282,6 +295,12 @@ export const handlers = [
             return acc;
         }, {});
         return HttpResponse.json(schools, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/users/resetpassword/:token", ({params}) => {
+        const {token} = params;
+        return HttpResponse.json({token}, {
             status: 200,
         });
     }),

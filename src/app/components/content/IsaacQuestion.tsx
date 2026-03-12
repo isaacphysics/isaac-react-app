@@ -26,7 +26,6 @@ import {
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
-import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -35,6 +34,7 @@ import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Alert, Button, Col, Form, Row } from "reactstrap";
+import { useLocation } from "react-router";
 
 function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
     // We skip the check with the API if the question type is not a restricted question type
@@ -48,14 +48,16 @@ function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof use
     }
 }
 
-export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
+export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const dispatch = useAppDispatch();
+    const location = useLocation();
     const accordion = useContext(AccordionSectionContext);
     const currentGameboard = useContext(GameboardContext);
     const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
-    const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
+    const inlinePart = useInlineRegionPart(pageQuestions);
+    const questionPart = (doc.type === "isaacInlineRegion") ? inlinePart : selectQuestionPart(pageQuestions, doc.id);
     const canAttemptQuestionType = useCanAttemptQuestionType(doc.type);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;
@@ -143,10 +145,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
 
     const almost = !correct && (
-        (numCorrectInlineQuestions && numCorrectInlineQuestions > 0) ||                                                   // inline
+        (numCorrectInlineQuestions && numCorrectInlineQuestions > 0) ||                                       // inline
         (doc.type === "isaacClozeQuestion" && [true, false].every(
-            b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))                   // cloze (detailedFeedback only)
-        )
+            b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))       // cloze (detailedFeedback only)
+        ) ||
+        (doc.type === "isaacDndQuestion" &&
+            Object.values((validationResponse as ApiTypes.DndValidationResponseDTO)?.dropZonesCorrect || {})  // dnd (detailedFeedback only)
+                .includes(true))                                                                                               
     );
 
     // Determine Action Buttons
@@ -291,4 +296,4 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         {/* Ada LLM free-text question validation response */}
         {isAda && possibleLLMFreeTextQuestionFeedbackView}
     </ConfidenceContext.Provider>;
-});
+};

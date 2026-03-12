@@ -1,15 +1,11 @@
-import React, {ReactElement, useEffect, useRef} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {UncontrolledTooltip} from "reactstrap";
 import {
-    AUDIENCE_DISPLAY_FIELDS,
-    filterAudienceViewsByProperties,
     isAda,
     isPhy,
     simpleDifficultyLabelMap,
     SITE_TITLE,
     siteSpecific,
-    stageLabelMap,
-    useUserViewingContext
 } from "../../services";
 import { mainContentIdSlice, useAppDispatch } from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
@@ -17,45 +13,20 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
-import { Difficulty } from "../../../IsaacApiTypes";
 import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
-    const userContext = useUserViewingContext();
-    const viewsWithMyStage = audienceViews.filter(vc => userContext.contexts.some(uc => uc.stage === vc.stage));
-    // If there is a possible audience view that is correct for our user context, show that specific one
-    const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
-    const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
-    const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
+    const difficulty = audienceViews.map(v => v.difficulty).filter(d => d !== undefined)[0];
 
-    return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-        {/* Show all stage/difficulty combinations for Phy, but just the first difficulty for Ada */}
-        {siteSpecific(filteredViews, [{difficulty: difficulties[0], stage: undefined}]).map((view, i) => 
-            <div key={`${view.difficulty} ${view.stage}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
-                <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
-                    {siteSpecific(view.stage && stageLabelMap[view.stage], view.difficulty && simpleDifficultyLabelMap[view.difficulty])}
-                </div>
-                {view.difficulty && <div className="ms-2 ms-sm-0 text-center">
-                    <DifficultyIcons difficulty={view.difficulty}/>
-                </div>}
-            </div>)}
+    return difficulty && <div className="h-subtitle pt-sm-0 mb-sm-0 d-flex d-sm-block align-content-center">
+        <div className="fw-regular align-self-center">
+            {simpleDifficultyLabelMap[difficulty]}
+        </div>
+        <div className="ms-2 ms-sm-0">
+            <DifficultyIcons difficulty={difficulty}/>
+        </div>
     </div>;
 }
-
-interface IconPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {
-    width: string;
-    height: string;
-}
-
-export const placeholderIcon = (props: IconPlaceholderProps): TitleIconProps => {
-    const {width, height} = props;
-    return {
-        type: "placeholder",
-        icon: undefined,
-        height,
-        width,
-    };
-};
 
 export type TitleIconProps = Omit<HexIconProps, "icon"> & {
     height?: string;
@@ -67,20 +38,28 @@ export type TitleIconProps = Omit<HexIconProps, "icon"> & {
     { type: "img" | "placeholder"; icon?: string }
 );
 
+export const TitleIcon = ({icon}: {icon: TitleIconProps}) => {
+    switch (icon.type) {
+        case "img":
+            return <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className={classNames(icon.className, {"me-3": isPhy})}/>;
+        case "icon":
+            return <HexIcon icon={icon.icon} subject={icon.subject} className={icon.className}/>;
+        case "placeholder":
+            return <div style={{width: icon.width, height: icon.height}}/>;
+    }
+};
+
 export interface PageTitleProps {
     currentPageTitle: string;
     displayTitleOverride?: string;
     subTitle?: string;
     disallowLaTeX?: boolean;
-    help?: ReactElement;
-    className?: string;
-    audienceViews?: ViewingContext[];
     preview?: boolean;
     icon?: TitleIconProps;
 }
-export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, preview, icon}: PageTitleProps) => {
+
+export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
-    const headerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
         if (preview) return; // Don't set the main content ID if we're in preview mode
@@ -92,29 +71,30 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
         document.title = currentPageTitle + " — " + SITE_TITLE;
     }, [currentPageTitle, preview]);
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
-        <div className="d-flex w-100" data-testid={"main-heading"}>
-            {isPhy && icon && (
-                icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className="me-3"/> 
-                    : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
-                        : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
-                            : undefined
-            )}
-            <div className="d-flex flex-column justify-content-center">
-                {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
-                {/* in the new isaac designs, subtitles should only ever exist in the page title, not alongside this super-title */}
-                {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
-            </div>
-        </div>
+    return <h1 id="main-heading" data-testid="main-heading" className={classNames("h-title d-flex pb-0 mb-0", {"flex-column w-100": isAda})}>
+        {isPhy && icon && <TitleIcon icon={icon} />}
+        {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX, siteSpecific("align-self-center", undefined))}
+        {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />
         </Helmet>
-        {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {isAda && help && <React.Fragment>
-            <div id="title-help" className="title-help">Help</div>
-            <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
-        </React.Fragment>}
     </h1>;
 };
 
-export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"}>{currentPageTitle}</Markup>;
+export interface TitleMetadataProps {
+    audienceViews?: ViewingContext[];
+    help?: ReactElement;
+}
+
+export const TitleMetadata = ({audienceViews, help}: TitleMetadataProps) => {
+    return <>
+        {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
+        {isAda && help && <>
+            <div id="title-help" className="title-help">Help</div>
+            <UncontrolledTooltip target="title-help" placement="bottom">{help}</UncontrolledTooltip>
+        </>}
+    </>;
+};
+
+export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean, className?: string) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"} className={className}>{currentPageTitle}</Markup>;

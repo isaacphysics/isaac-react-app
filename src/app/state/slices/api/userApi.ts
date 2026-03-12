@@ -1,10 +1,10 @@
 import {isaacApi} from "./baseApi";
 import {onQueryLifecycleEvents} from "./utils";
-import {TOTPSharedSecretDTO, UserContext} from "../../../../IsaacApiTypes";
+import {TOTPSharedSecretDTO, UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
 import {PotentialUser, UserPreferencesDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {showToast} from "../../actions/popups";
-import {history, isFirstLoginInPersistence, isTeacherOrAbove, KEY, persistence, siteSpecific} from "../../../services";
+import {isFirstLoginInPersistence, isTeacherOrAbove, KEY, navigateComponentless, persistence} from "../../../services";
 import {questionsApi} from "./questionsApi";
 import {continueToAfterAuthPath, requestCurrentUser} from "../../actions";
 
@@ -79,6 +79,13 @@ export const userApi = isaacApi.injectEndpoints({
             })
         }),
 
+        getUserAuthSettings: build.query<UserAuthenticationSettingsDTO, string | undefined>({
+            query: (userId?: string) => ({
+                url: userId ? `/auth/user_authentication_settings/${userId}` : `/auth/user_authentication_settings`,
+                method: "GET" 
+            }),
+        }),
+
         createNew: build.mutation<void, {
             newUser: Immutable<ValidationUser>,
             newUserPreferences: UserPreferencesDTO,
@@ -110,9 +117,9 @@ export const userApi = isaacApi.injectEndpoints({
 
                         if (isTeacherOrAbove(newUser)) {
                             // Redirect to email verification page
-                            history.push('/verifyemail');
+                            void navigateComponentless('/verifyemail');
                         } else {
-                            history.push(siteSpecific('/register/preferences', '/register/connect'));
+                            void navigateComponentless('/register/connect');
                         }
                     } catch {
                         // No-op - components may perform their own error handling using the hook
@@ -176,7 +183,7 @@ export const userApi = isaacApi.injectEndpoints({
                             }));
                         } else if (editingOtherUser) {
                             if (redirect) {
-                                history.push('/');
+                                void navigateComponentless('/');
                             }
                             dispatch(showToast({
                                 title: "Account settings updated",
@@ -209,5 +216,6 @@ export const {
     useVerifyPasswordResetQuery,
     useHandlePasswordResetMutation,
     useUpdateCurrentMutation,
+    useGetUserAuthSettingsQuery,
     useCreateNewMutation,
 } = userApi;

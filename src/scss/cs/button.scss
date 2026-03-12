@@ -173,8 +173,8 @@
 }
 
 .btn.confidence-help {
-  @include ada-icon-button-base(2rem, 2rem, false);
-  background-image: url("/assets/cs/icons/info-white.svg");
+  @include svg-icon("/assets/common/icons/info.svg", 2rem, 2rem);
+  background-color: $dark-pink-300;
 }
 
 .selector-tabs {

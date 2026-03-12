@@ -3,7 +3,7 @@ import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
-import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -32,7 +32,7 @@ import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {PageFragment} from "../../elements/PageFragment";
 import { SortItemHeader } from "../../elements/SortableItemHeader";
-import { Card, CardBody, Button, Table, Container, Alert, Row, Col, Label, Input } from "reactstrap";
+import { Card, CardBody, Button, Table, Alert, Row, Col, Label, Input } from "reactstrap";
 import orderBy from "lodash/orderBy";
 import classNames from "classnames";
 import StyledToggle from "../../elements/inputs/StyledToggle";
@@ -40,14 +40,14 @@ import { TrLink } from "../../elements/tables/TableLinks";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
-import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { HexIcon } from "../../elements/svg/HexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 
-export interface QuizzesPageProps extends RouteComponentProps {
+export interface QuizzesPageProps {
     user: RegisteredUserDTO;
 }
 
@@ -199,7 +199,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                     <th/>
                 </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="assigned-quizzes">
                 {quizzes.map(quiz => {
                     return <TrLink to={quiz.link} key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
                         <td>
@@ -248,7 +248,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                     <th/>
                 </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="practice-quizzes">
                 {quizzes.map(quiz => {
                     return <TrLink to={quiz.link} key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
                         <td>
@@ -349,9 +349,12 @@ export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusF
     </div>;
 };
 
-const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
+export const MyQuizzes = ({user}: QuizzesPageProps) => {
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [displayMode, setDisplayMode] = useState<"table" | "cards">("table");
     const [boardOrder, setBoardOrder] = useState<QuizzesBoardOrder>(QuizzesBoardOrder.dueDate);
@@ -405,14 +408,13 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         ({...acc, [anchor]: index + 1}), {} as Record<string, number>
     );
 
-    const history = useHistory();
     const [tabOverride, setTabOverride] = useState<number | undefined>(anchorMap[location.hash as keyof typeof anchorMap]);
 
     useEffect(() => {
         if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
             setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
         }
-    }, [anchorMap]);
+    }, [anchorMap, location.hash]);
 
     // +!! converts a string to 0 if null or empty and 1 otherwise
     const filterCount = +!!quizTitleFilter + +!!quizCreatorFilter + quizStatusFilter.length;
@@ -422,7 +424,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         <Label className="w-100 d-flex flex-column align-items-center mb-0">
             <span className="text-nowrap">
                 Filters
-                {<FilterCount count={filterCount ?? 0} widthPx={siteSpecific(25, 20)} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
+                {<FilterCount count={filterCount ?? 0} widthPx={20} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
             </span>
             <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown d-flex justify-content-center align-items-center", {"selected": showFilters})}
                 onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"
@@ -455,61 +457,61 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         : "No practice tests match your filters."
     }</span>;
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My tests", "Tests to do")} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
-        <SidebarLayout>
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My tests", "Tests to do")} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
+        }
+        sidebar={siteSpecific(
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}
                 hideButton
-            />
-            <MainContent>
-                <PageMetadata noTitle showSidebarButton>
-                    <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
-                </PageMetadata>
-                <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
-                    history.replace({...history.location, hash: tabAnchors[index - 1]});
-                    setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
-                }}>
-                    {{
-                        ["Assigned tests"]:
-                            <ShowLoading
-                                until={quizAssignments}
-                                ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
-                            >
-                                <div className="d-flex flex-column">
-                                    {tabTopContent}
-                                    {displayMode === "table" ? <Card>
-                                        <CardBody>
-                                            <AssignedQuizTable
-                                                quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                                emptyMessage={emptyAssignedMessage}
-                                            />
-                                        </CardBody>
-                                    </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
-                                </div>
-                            </ShowLoading>,
-                        ["My practice tests"]:
-                            <ShowLoading
-                                until={freeAttempts}
-                                ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
-                            >
-                                <div className="d-flex flex-column">
-                                    {tabTopContent}
-                                    {displayMode === "table" ? <Card>
-                                        <CardBody>
-                                            <PracticeQuizTable
-                                                quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                                emptyMessage={emptyPracticeMessage}
-                                            />
-                                        </CardBody>
-                                    </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
-                                </div>
-                            </ShowLoading>,
-                    }}
-                </Tabs>
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+            />,
+            undefined
+        )}
+    >
+        <PageMetadata noTitle showSidebarButton>
+            <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
+        </PageMetadata>
+        <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
+            void navigate({...location, hash: tabAnchors[index - 1]}, {replace: true});
+            setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
+        }}>
+            {{
+                ["Assigned tests"]:
+                    <ShowLoading
+                        until={quizAssignments}
+                        ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
+                    >
+                        <div className="d-flex flex-column">
+                            {tabTopContent}
+                            {displayMode === "table" ? <Card>
+                                <CardBody>
+                                    <AssignedQuizTable
+                                        quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                        emptyMessage={emptyAssignedMessage}
+                                    />
+                                </CardBody>
+                            </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
+                        </div>
+                    </ShowLoading>,
+                ["My practice tests"]:
+                    <ShowLoading
+                        until={freeAttempts}
+                        ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
+                    >
+                        <div className="d-flex flex-column">
+                            {tabTopContent}
+                            {displayMode === "table" ? <Card>
+                                <CardBody>
+                                    <PracticeQuizTable
+                                        quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                        emptyMessage={emptyPracticeMessage}
+                                    />
+                                </CardBody>
+                            </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
+                        </div>
+                    </ShowLoading>,
+            }}
+        </Tabs>
+    </PageContainer>;
 };
-
-export const MyQuizzes = withRouter(MyQuizzesPageComponent);

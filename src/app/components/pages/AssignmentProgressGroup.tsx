@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../state';
 import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../IsaacAppTypes';
 import {
@@ -18,10 +18,10 @@ import {
     useDeviceSize
 } from '../../services';
 import {RegisteredUserDTO} from '../../../IsaacApiTypes';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {Spacer} from '../elements/Spacer';
 import {formatDate} from '../elements/DateString';
-import {Badge, Button, Card, CardBody, Col, Container, Input, Label, Row} from 'reactstrap';
+import {Badge, Button, Card, CardBody, Col, Input, Label, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {downloadLinkModal} from '../elements/modals/AssignmentProgressModalCreators';
 import {InlineTabs} from '../elements/InlineTabs';
@@ -30,6 +30,8 @@ import {Loading} from '../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
 import { useHistoryState } from '../../state/actions/history';
+import { PageContainer } from '../elements/layout/PageContainer';
+import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
@@ -92,23 +94,37 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     const {groupBoardAssignments, groupQuizAssignments, isFetching} = useGroupAssignments(user, group?.id, assignmentOrder);
     const {data: groupMembers} = useGetGroupMembersQuery(isDefined(group?.id) ? group.id : skipToken);
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
+    const location = useLocation();
 
     const [searchText, setSearchText] = useState("");
     const [activeTab, setActiveTab] = useHistoryState<"assignments" | "tests">("markbookTab", "assignments");
 
-    const deviceSize = useDeviceSize();
+    useEffect(() => {
+        const hash = location.hash.replace("#", "");
+        if (hash === "assignments" || hash === "tests") {
+            setActiveTab(hash);
+        }
+    }, [location.hash, setActiveTab]);
 
     const assignmentLikeListing = activeTab === "assignments" ? groupBoardAssignments : groupQuizAssignments;
 
     const filteredAssignments = assignmentLikeListing?.filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()));
 
-    return <Container className="mb-5">
-        <TitleAndBreadcrumb
-            currentPageTitle={group?.groupName ?? "Group progress"}
-            intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
-            icon={{type: "icon", icon: "icon-group"}}
-        />
-
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb
+                currentPageTitle={group?.groupName ?? "Group progress"}
+                intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
+                icon={{type: "icon", icon: "icon-group"}}
+            />
+        }
+        sidebar={siteSpecific(
+            null, 
+            <MyAdaSidebar />
+        )}
+        className="mb-7"
+    >
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
             <i className="icon icon-arrow-left me-2"/>
             Back to assignment progress
@@ -208,7 +224,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
 
             </CardBody>
         </Card>
-    </Container>;
+    </PageContainer>;
 };
 
 

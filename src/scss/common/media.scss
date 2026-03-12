@@ -3,9 +3,8 @@
 figure {
   background-color: white;
   img {
+    // do not add padding here! it will break image region positioning. add it to the figure root element instead.
     max-width: 100%;
-    padding: 1rem;
-    padding-bottom: 2rem;
   }
 }
 

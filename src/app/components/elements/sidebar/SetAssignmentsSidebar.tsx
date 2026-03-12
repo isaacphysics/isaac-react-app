@@ -65,7 +65,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
                 ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
             </Input>
             {sortDisabled && <div className="small text-muted mt-2">
-                Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
+                Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.
             </div>}
         </search>
     </ContentSidebar>;

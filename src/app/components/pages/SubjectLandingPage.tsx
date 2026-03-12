@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { Button, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
+import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, SUBJECTS, useDeviceSize } from "../../services";
 import { AugmentedEvent, PageContextState, QuestionSearchQuery } from "../../../IsaacAppTypes";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -16,7 +15,6 @@ import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
-import { placeholderIcon } from "../elements/PageTitle";
 import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 
@@ -66,7 +64,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
             <h4 className="m-0">Try a random question!</h4>
-            <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
+            <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
                 Get a different question
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
@@ -185,20 +183,26 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     />;
 };
 
-export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
+export const SubjectLandingPage = () => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
+    const title = (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.includes(STAGE.A_LEVEL))
+        ? "A Level Maths and Further Maths" : getHumanContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb
-            currentPageTitle={getHumanContext(pageContext)}
+            currentPageTitle={title}
             icon={pageContext?.subject ? {
                 type: "img",
                 subject: pageContext.subject,
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`,
                 width: "75px",
                 height: "75px",
-            } : placeholderIcon({width: "75px", height: "75px"})}
+            } : {
+                type: "placeholder",
+                width: "75px",
+                height: "75px"
+            }}
         />
 
         {pageContext && isSingleStageContext(pageContext) && <>
@@ -214,4 +218,4 @@ export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
 
 
     </Container>;
-});
+};

@@ -33,7 +33,6 @@
 }
 
 .icon-person-active,
-.icon-warning,
 .icon-help,
 .icon-group-table-person
 {
@@ -86,11 +85,16 @@
 
 
 .icon-cog {
-  @include svg-icon('/assets/phy/icons/redesign/cog.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/cog.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-hexagon {
-  @include svg-icon('/assets/phy/icons/redesign/hexagon.svg', 16px, 16px, 12px);
+  @include svg-icon('/assets/phy/icons/redesign/hexagon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-hexagon-bullet {
+  --mask-size: 75%;
+  @extend .icon-hexagon;
 }
 
 .icon-my-isaac {
@@ -98,31 +102,31 @@
 }
 
 .icon-search {
-  @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/search.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-flag {
-  @include svg-icon('/assets/phy/icons/redesign/flag.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/flag.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-print {
-  @include svg-icon('/assets/phy/icons/redesign/print.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/print.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-share {
-  @include svg-icon('/assets/phy/icons/redesign/share.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/share.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-refresh {
-  @include svg-icon('/assets/phy/icons/redesign/refresh.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/refresh.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-sidebar {
-  @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-arrow-down {
-  @include svg-icon('/assets/common/icons/arrow-right.svg', 16px, 16px);
+  @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
   transform: rotate(90deg);
 }
 
@@ -133,6 +137,10 @@
 
 .icon-plus {
   @include svg-icon('/assets/phy/icons/redesign/plus.svg', 12px, 12px, 100%);
+}
+
+.icon-warning {
+  @include svg-icon('/assets/phy/icons/redesign/warning.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 
@@ -360,6 +368,10 @@ i.icon.icon-color-muted {
 
 i.icon.icon-color-white {
   @include icon-color-override($color-neutral-white);
+}
+
+i.icon.icon-color-alert {
+  @include icon-color-override(var(--bs-alert-color));
 }
 
 i.icon.icon-color-black-hoverable {

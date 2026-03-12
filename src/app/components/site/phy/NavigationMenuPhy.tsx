@@ -7,7 +7,7 @@ import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HoverableNavigationContext, PageContextState } from "../../../../IsaacAppTypes";
 import max from "lodash/max";
 
@@ -226,7 +226,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     >
                         <span className="mb-1">Quick switch to</span>
                         <span className="d-flex align-items-center">
-                            <i className="icon icon-hexagon me-1" />
+                            <i className="icon icon-hexagon-bullet me-1" />
                             {`${HUMAN_STAGES[quickSwitcher.stage]} ${HUMAN_SUBJECTS[quickSwitcher.subject]}`}
                         </span>
                     </NavigationItem>
@@ -234,7 +234,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     }
                     {category.subcategories.map((subcategory, j) => {
                         return <NavigationItem key={i * keyBase + j} className="align-items-center" href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
-                            <i className="icon icon-hexagon me-1" />
+                            <i className="icon icon-hexagon-bullet me-1" />
                             <span>{subcategory.fullTitle}</span>
                         </NavigationItem>;
                     })}
@@ -252,7 +252,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                                 <ul className="plain-list">
                                     {category.subcategories.map((subcategory, j) => {
                                         return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject}>
-                                            <i className="icon icon-hexagon me-1" />
+                                            <i className="icon icon-hexagon-bullet me-1" />
                                             <span>{subcategory.fullTitle}</span>
                                         </NavigationItem>;
                                     })}
@@ -271,7 +271,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                         <ul className="plain-list">
                             {category.subcategories.map((subcategory, j) => {
                                 return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
-                                    <i className="icon icon-hexagon me-1"/>
+                                    <i className="icon icon-hexagon-bullet me-1"/>
                                     <span>{subcategory.fullTitle}</span>
                                 </NavigationItem>;
                             })}
@@ -444,7 +444,7 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     // while moving the mouse between two hoverables, preventing the second dropdown from opening.
 
     const deviceSize = useDeviceSize();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const stageCategories : NavigationCategory[] = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
         const humanStage = HUMAN_STAGES[stage];
@@ -483,7 +483,7 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     return <HoverableNavigationContext.Provider value={{openId: openHoverable}}>
         {below["sm"](deviceSize) && <div className="w-100 align-self-end d-print-none mb-3">
             <MainSearchInput onSearch={(s) => {
-                history.push(`/search?query=${encodeURIComponent(s)}`);
+                void navigate(`/search?query=${encodeURIComponent(s)}`);
                 toggleMenu();
             }}/>
         </div>}
@@ -495,7 +495,7 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
         {above["md"](deviceSize) && <>
             <Spacer />
             <div className="header-search align-self-center d-print-none">
-                <MainSearchInput inline onSearch={(s) => history.push(`/search?query=${encodeURIComponent(s)}`)} />
+                <MainSearchInput inline onSearch={(s) => navigate(`/search?query=${encodeURIComponent(s)}`)} />
             </div>
         </>}
     </HoverableNavigationContext.Provider>;

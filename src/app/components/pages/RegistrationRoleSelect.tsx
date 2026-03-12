@@ -1,19 +1,21 @@
 import React from "react";
 import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {history, SITE_TITLE} from "../../services";
+import {SITE_TITLE} from "../../services";
+import { useNavigate } from "react-router";
 
 
 export const RegistrationRoleSelect = () => {
+    const navigate = useNavigate();
 
     const teacherSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/teacher/details");
+        void navigate("/register/teacher/details");
     };
 
     const studentSignup = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/student/age");
+        void navigate("/register/student/age");
     };
 
     return <Container>

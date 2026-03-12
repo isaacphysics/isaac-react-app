@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-22.04
     container:
       # This must stay in sync with the image used by the test-{site}-visual scripts in package.json.
-      image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
+      image: cypress/browsers:node-22.21.0-chrome-141.0.7390.107-1-ff-144.0-edge-141.0.3537.92-1
       options: --user 0
     strategy:
       fail-fast: false
       matrix:
-        site: [ "ada", "phy" ]
+        site: [ "ada", "sci" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
     needs: cypress-run
     runs-on: ubuntu-22.04
     container:
-      image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
+      image: cypress/browsers:node-22.21.0-chrome-141.0.7390.107-1-ff-144.0-edge-141.0.3537.92-1
       options: --user 0
     if: ${{ failure() }}
     steps:
@@ -64,8 +64,8 @@ jobs:
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-            name: phy
-            path: src/test/pages/__image_snapshots__/phy
+            name: sci
+            path: src/test/pages/__image_snapshots__/sci
       - name: VRT update - create or update branch
         id: cypress-create-branch
         run: |

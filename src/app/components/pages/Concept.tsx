@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import {withRouter} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
-import {Col, Container, Row} from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
 import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined} from "../../services";
@@ -12,12 +12,11 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {Markup} from "../elements/markup";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
-import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
+import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import queryString from "query-string";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -27,16 +26,17 @@ import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleCont
 import { skipToken } from "@reduxjs/toolkit/query";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { ConceptSidebar } from "../elements/sidebar/RelatedContentSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
-    match: {params: {conceptId: string}};
-    location: {search: string};
     preview?: boolean;
 }
 
-export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride, preview}: ConceptPageProps) => {
-    const conceptId = conceptIdOverride || params.conceptId;
+export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
+    const params = useParams();
+    const location = useLocation();
+    const conceptId = conceptIdOverride || params.conceptId || "";
     const user = useAppSelector(selectors.user.orNull);
     const conceptQuery = useGetConceptQuery(conceptId);
     const {data: doc, isLoading} = conceptQuery;
@@ -46,7 +46,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const accessibilitySettings = useAccessibilitySettings();
 
-    const query = queryString.parse(search);
+    const query = queryString.parse(location.search);
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
@@ -71,56 +71,57 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
         thenRender={supertypedDoc => {
             const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
             return <GameboardContext.Provider value={navigation.currentGameboard}>
-                <Container data-bs-theme={doc.subjectId ?? pageContext?.subject}>
-                    <TitleAndBreadcrumb
-                        intermediateCrumbs={navigation.breadcrumbHistory}
-                        currentPageTitle={doc.title as string}
-                        displayTitleOverride={siteSpecific("Concept", undefined)}
-                        collectionType={navigation.collectionType}
-                        subTitle={siteSpecific(undefined, doc.subtitle as string)}
-                        preview={preview}
-                        icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-concept"}}
-                    />
-                    {!preview && <>
-                        <MetaDescription description={doc.summary} />
-                        <CanonicalHrefElement />
+                <PageContainer data-bs-theme={doc.subjectId ?? pageContext?.subject}
+                    pageTitle={<>
+                        <TitleAndBreadcrumb
+                            intermediateCrumbs={navigation.breadcrumbHistory}
+                            currentPageTitle={doc.title as string}
+                            displayTitleOverride={siteSpecific("Concept", undefined)}
+                            collectionType={navigation.collectionType}
+                            subTitle={doc.subtitle}
+                            preview={preview}
+                            icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-concept"}}
+                        />
+                        {!preview && <>
+                            <MetaDescription description={doc.summary} />
+                            <CanonicalHrefElement />
+                        </>}
                     </>}
-                    <SidebarLayout>
-                        {isDefined(gameboardId) 
+                    sidebar={siteSpecific(
+                        isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={doc.id}/>
-                            : <ConceptSidebar relatedContent={doc.relatedContent}/>
-                        }
-                        <MainContent>
-                            <PageMetadata doc={doc} />
+                            : <ConceptSidebar relatedContent={doc.relatedContent}/>,
+                        undefined
+                    )}
+                >
+                    <PageMetadata doc={doc} />
 
-                            {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
+                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
 
-                            <Row className="concept-content-container">
-                                <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
+                    <Row className="concept-content-container">
+                        <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
-                                    <SupersededDeprecatedWarningBanner doc={doc} />
+                            <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
-                                    {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                            {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                                    <WithFigureNumbering doc={doc}>
-                                        <IsaacContent doc={doc} />
-                                    </WithFigureNumbering>
+                            <WithFigureNumbering doc={doc}>
+                                <IsaacContent doc={doc} />
+                            </WithFigureNumbering>
 
-                                    {doc.attribution && <p className="text-muted">
-                                        <Markup trusted-markup-encoding={"markdown"}>
-                                            {doc.attribution}
-                                        </Markup>
-                                    </p>}
+                            {doc.attribution && <p className="text-muted">
+                                <Markup trusted-markup-encoding={"markdown"}>
+                                    {doc.attribution}
+                                </Markup>
+                            </p>}
 
-                                    {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                            {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
-                                    <NavigationLinks navigation={navigation} />
-                                </Col>
-                            </Row>
-                        </MainContent>
-                    </SidebarLayout>
-                </Container>
+                            <NavigationLinks navigation={navigation} />
+                        </Col>
+                    </Row>
+                </PageContainer>
             </GameboardContext.Provider>;
         }}
     />; 
-});
+};

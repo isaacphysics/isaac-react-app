@@ -2,7 +2,7 @@ import { http, HttpHandler, HttpResponse } from "msw";
 import { expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
 import { API_PATH, isPhy } from "../../app/services";
 import { mockUser } from "../../mocks/data";
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { errorResponses } from "../test-factory";
 import userEvent from "@testing-library/user-event";
 
@@ -12,7 +12,7 @@ describe("Microsoft SSO Authentication", () => {
     }
 
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
-        renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
+        await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/microsoft/callback', search });
     };
 
@@ -112,7 +112,7 @@ describe("Google SSO Authentication", () => {
     }
 
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
-        renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
+        await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/google/callback', search });
     };
 
@@ -121,21 +121,23 @@ describe("Google SSO Authentication", () => {
             beforeEach(async () => await renderProviderCallback(googleSignInUnlinked));
             
             it('shows a specific error message', async () => {
-                expect(authenticationError.element).toHaveTextContent("You don't use this Google account to log in");
-                expect(authenticationError.element).toHaveTextContent(dedent`
-                    We've found an Isaac account with the email address from this Google account. However, the Isaac
-                    account isn't configured to allow access to this Google account. You've either not enabled
-                    sign-in with Google on your Isaac account, or you used a different Google account to log in.`
-                );
-                expect(authenticationError.element).toHaveTextContent(dedent`
-                    If you've not yet enabled sign-in with Google, first log in with another method (e.g. email and
-                    password). Then, on My Account, next to "Google", click "Link". Read more about signing in with
-                    Google.`
-                );
-                expect(authenticationError.element).toHaveTextContent(dedent`
-                    If you'd like to switch which Google account you log in with, follow the same instructions, but
-                    on the My Account page, click "Unlink" on any old Google account first.`
-                );
+                await waitFor(async () => {
+                    expect(authenticationError.element).toHaveTextContent("You don't use this Google account to log in");
+                    expect(authenticationError.element).toHaveTextContent(dedent`
+                        We've found an Isaac account with the email address from this Google account. However, the Isaac
+                        account isn't configured to allow access to this Google account. You've either not enabled
+                        sign-in with Google on your Isaac account, or you used a different Google account to log in.`
+                    );
+                    expect(authenticationError.element).toHaveTextContent(dedent`
+                        If you've not yet enabled sign-in with Google, first log in with another method (e.g. email and
+                        password). Then, on My Account, next to "Google", click "Link". Read more about signing in with
+                        Google.`
+                    );
+                    expect(authenticationError.element).toHaveTextContent(dedent`
+                        If you'd like to switch which Google account you log in with, follow the same instructions, but
+                        on the My Account page, click "Unlink" on any old Google account first.`
+                    );
+                });
             });
         });
     });
@@ -154,7 +156,10 @@ const microsoftSignInUnlinked = http.get(API_PATH + "/auth/microsoft/callback",
 );
 
 const googleSignInUnlinked = http.get(API_PATH + "/auth/google/callback",
-    () => HttpResponse.json(errorResponses.accountNotLinked403, { status: 403})
+    () => {
+        console.log("Mocking Google SSO unlinked account response");
+        return HttpResponse.json(errorResponses.accountNotLinked403, { status: 403});
+    }
 );
 
 const microsoftSignInDeniedAccess = http.get(API_PATH + "/auth/microsoft/callback", 

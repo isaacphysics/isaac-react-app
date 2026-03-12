@@ -28,7 +28,7 @@ interface UserPasswordProps {
     myUser: ValidationUser;
     setMyUser: (e: any) => void;
     isNewPasswordValid: boolean;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | undefined;
     setNewPassword: (e: React.SetStateAction<string>) => void;
     newPassword: string;
     editingOtherUser: boolean;

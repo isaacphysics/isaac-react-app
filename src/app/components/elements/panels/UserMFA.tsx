@@ -1,7 +1,6 @@
 import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
 import React, {useMemo, useState} from "react";
-import {ValidationUser} from "../../../../IsaacAppTypes";
-import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
 import {
     useGetSegueEnvironmentQuery,
@@ -13,8 +12,8 @@ import QRCode from 'qrcode';
 import { MyAccountTab } from "./MyAccountTab";
 
 interface UserMFAProps {
-    userToUpdate: ValidationUser;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
+    userToUpdate: RegisteredUserDTO;
+    userAuthSettings: UserAuthenticationSettingsDTO | undefined;
     editingOtherUser: boolean;
 }
 

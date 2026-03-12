@@ -32,11 +32,9 @@ export const ResearchNotificationBanner = () => {
                     </h3>
                 </Col>
                 <Col xs={12} sm={10} md={8}>
-                    <small>
-                        We record your use of this site and the information you enter to support research into
-                        online learning at the University of Cambridge{isAda ? " and the Raspberry Pi Foundation" : ""}.
-                        Full details are in the <Link to="/privacy">privacy policy</Link>.
-                    </small>
+                    We record your use of this site and the information you enter to support research into
+                    online learning at the University of Cambridge{isAda ? " and the Raspberry Pi Foundation" : ""}.
+                    Full details are in the <Link to="/privacy">privacy policy</Link>.
                 </Col>
                 <Col xs={12} md={3} className="text-center">
                     <Button color={siteSpecific("keyline", "solid")} className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickDismiss}>

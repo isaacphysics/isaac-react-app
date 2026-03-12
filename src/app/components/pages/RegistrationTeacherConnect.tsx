@@ -4,7 +4,6 @@ import {
     Card,
     CardBody,
     Col,
-    Container,
     Form,
     FormFeedback,
     FormGroup,
@@ -14,7 +13,7 @@ import {
     Row
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {history, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
+import {extractTeacherName, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
 import {
     selectors,
     useAppDispatch,
@@ -23,10 +22,14 @@ import {
     useLazyGetTokenOwnerQuery
 } from "../../state";
 import { authenticateWithTokenAfterPrompt } from "../elements/panels/TeacherConnections";
+import { useNavigate } from "react-router";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 export const RegistrationTeacherConnect = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const navigate = useNavigate();
 
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const [authenticationToken, setAuthenticationToken] = useState<string | undefined>("");
@@ -40,13 +43,13 @@ export const RegistrationTeacherConnect = () => {
         if (event) {event.preventDefault(); event.stopPropagation();}
         setSubmissionAttempted(true);
         if (user && user.loggedIn && user.id && codeIsValid) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
+            void authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 
     const continueToNext = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push(siteSpecific("/register/preferences", "/register/success"));
+        void navigate(siteSpecific("/register/preferences", "/register/success"));
     };
 
     useEffect(() => {
@@ -59,8 +62,15 @@ export const RegistrationTeacherConnect = () => {
     }, []);
 
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+        }
+        sidebar={siteSpecific(
+            <SignupSidebar activeTab={4}/>,
+            undefined
+        )}
+    >
         <Card className={"my-7"}>
             <CardBody>
                 <Form onSubmit={submit}>
@@ -99,6 +109,16 @@ export const RegistrationTeacherConnect = () => {
                                 Please enter a valid code.
                             </FormFeedback>
                         </FormGroup>
+                        {activeAuthorisations && activeAuthorisations.length > 0 &&
+                            <div className="mb-3">
+                                <h5>Connected teachers:</h5>
+                                <ul>
+                                    {activeAuthorisations.map((auth) => (
+                                        <li key={auth.id}>{extractTeacherName(auth)} - ({auth.email})</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        }
                     </Col>
                     <hr />
                     <Row className="justify-content-end">
@@ -117,10 +137,9 @@ export const RegistrationTeacherConnect = () => {
                                 </Col>
                             </>
                         )}
-                        
                     </Row>
                 </Form>
             </CardBody>
         </Card>
-    </Container>;
+    </PageContainer>;
 };

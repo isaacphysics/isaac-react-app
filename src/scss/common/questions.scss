@@ -121,6 +121,24 @@ $inline-feedback-padding: 2px;
   }
 }
 
+figure .inline-container {
+  display: flex;
+  height: 100%;
+}
+
+.figure-region-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 35%;
+  font-family: $secondary-font;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--subject-color-700);
+  width: $figure-drop-zone-placeholder-size;
+  height: $figure-drop-zone-placeholder-size;
+}
+
 .inline-container {
   display: inline-flex;
   border-radius: $border-radius-lg;
@@ -250,6 +268,12 @@ $inline-feedback-padding: 2px;
       border: $gray-136 solid 1px;
     }
 
+    > span {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
     > div {
       margin-top: -1px; // equal to the border width above, re-centres contents
     }
@@ -258,10 +282,10 @@ $inline-feedback-padding: 2px;
 
 .symbolic-question, .equality-page {
   .eqn-editor-preview {
-    padding: 0.15em 0.6em;
+    padding: 0.25rem 1rem;
     cursor: default;
     &.empty {
-      color: $gray-500;
+      color: var(--bs-tertiary-color);
     }
   }
 
@@ -279,7 +303,7 @@ $inline-feedback-padding: 2px;
   }
 
   .eqn-editor-symbols {
-    margin: 10px 0;
+    margin-top: 3px;
 
     & pre {
       display: inline;
@@ -287,6 +311,26 @@ $inline-feedback-padding: 2px;
       background: inherit;
       border: 0;
       padding: 0;
+    }
+  }
+
+  .eqn-editor-reset-text-input {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $gray-600;
+
+    &:hover {
+      color: $gray-800;
     }
   }
 }
@@ -651,7 +695,7 @@ p > .katex, .katex-display {
       color: inherit;
       min-width: 176px;
       flex-basis: 100%;
-      @media (max-width: 576px) {
+      @media (max-width: 768px) {
         min-width: 0;
       }
       &:hover {

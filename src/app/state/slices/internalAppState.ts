@@ -1,5 +1,5 @@
 import {PrintingSettings} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services";
+import {ACTION_TYPE, EXAM_BOARD, siteSpecific, STAGE} from "../../services";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {routerPageChange} from "../index";
 
@@ -34,13 +34,15 @@ export const mainContentIdSlice = createSlice({
     }
 });
 
-export type SidebarState = {open?: boolean} | null;
+export type SidebarState = {open: boolean} | null;
 export const sidebarSlice = createSlice({
     name: "sidebar",
-    initialState: null as SidebarState,
+    initialState: {
+        open: siteSpecific(false, window.innerWidth >= 768 + 220)
+    } as SidebarState,
     reducers: {
-        setOpen: (state, action: PayloadAction<boolean | undefined>) => ({...state, open: action.payload}),
-        toggle: (state) => ({...state, open: !state?.open}),
+        setOpen: (state, action: PayloadAction<boolean>) => ({...state, open: action.payload}),
+        toggle: (state) => ({...state, open: !state?.open})
     }
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { Stage } from "../../../../IsaacApiTypes";
 import { stageLabelMap, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, HUMAN_STAGES, nonemptyOrUndefined } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
@@ -25,7 +25,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     const { searchText, setSearchText, filterSubject, setFilterSubject, filterStages, setFilterStages,
         subjects, stages, subjectCounts, stageCounts, optionBar, ...rest } = props;
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const updateFilterStages = (stage: Stage) =>{
@@ -92,7 +92,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                         <li key={index}>
                             <StyledTabPicker
                                 checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage}
-                                onClick={() => history.replace(`/${pageContext.subject}/${stage}/glossary`)}
+                                onClick={() => navigate(`/${pageContext.subject}/${stage}/glossary`, { replace: true })}
                             />
                         </li>
                     )}

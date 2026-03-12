@@ -17,7 +17,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -70,8 +70,8 @@ export const { trackPageview, trackEvent } = Plausible(
 
 export const SOCIAL_LINKS = siteSpecific(
     {
-        youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
-        bluesky: {name: "Bluesky", href: "https://bsky.app/profile/isaacphysics.org"},
+        youtube: {name: "YouTube", href: "https://www.youtube.com/@isaac-science"},
+        bluesky: {name: "Bluesky", href: "https://bsky.app/profile/isaacscience.org"},
         linkedin: {name: "LinkedIn", href: "https://www.linkedin.com/company/isaac-science"}
     },
     {
@@ -112,10 +112,6 @@ export enum ACTION_TYPE {
     USER_AUTH_SETTINGS_REQUEST = "USER_AUTH_SETTINGS_REQUEST",
     USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "USER_AUTH_SETTINGS_RESPONSE_SUCCESS",
     USER_AUTH_SETTINGS_RESPONSE_FAILURE = "USER_AUTH_SETTINGS_RESPONSE_FAILURE",
-
-    SELECTED_USER_AUTH_SETTINGS_REQUEST = "SELECTED_USER_AUTH_SETTINGS_REQUEST",
-    SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "SELECTED_USER_AUTH_SETTINGS_REQUEST_SUCCESS",
-    SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE = "SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE",
 
     USER_AUTH_LINK_REQUEST = "USER_AUTH_LINK_REQUEST",
     USER_AUTH_LINK_RESPONSE_SUCCESS = "USER_AUTH_LINK_RESPONSE_SUCCESS",
@@ -642,10 +638,19 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
     },
 };
 
+export const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
+    "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+    "chemistry": [LEARNING_STAGE.A_LEVEL],
+    "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+    "biology": [LEARNING_STAGE.A_LEVEL],
+};
+
+
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
-    'ft_further_stage2_2018',
+    'ft_further_stage2_2018', 'ft_core_2018_r1', 'ft_mech_year2_2018_r1',
+    'ft_further_stage1_2018_r1' , 'ft_further_stage2_2018_r1'
 ];
 
 export enum TAG_ID {
@@ -1276,6 +1281,7 @@ export const PATHS = {
     }),
     // Common paths
     MANAGE_GROUPS: "/groups",
+    MY_TESTS: "/tests",
     TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
 };
@@ -1284,11 +1290,14 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?\]/g;
 export const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
 export const NULL_CLOZE_ITEM: ItemDTO = {
     type: "item",
     id: NULL_CLOZE_ITEM_ID
 };
+
+export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
 
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]

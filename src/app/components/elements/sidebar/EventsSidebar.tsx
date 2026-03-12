@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Form } from "reactstrap";
 import { useDeviceSize, above, EventStatusFilter, isTeacherOrAbove, isDefined, EventTypeFilter, EventStageMap, STAGE } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
@@ -10,8 +10,9 @@ import queryString from "query-string";
 
 export const EventsSidebar = (props: SidebarProps) => {
     const deviceSize = useDeviceSize();
-    const history = useHistory();
-    const query: EventsPageQueryParams = queryString.parse(history.location.search);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const query: EventsPageQueryParams = queryString.parse(location.search);
     const user = useAppSelector(selectors.user.orNull);
 
     return <ContentSidebar buttonTitle="Filter events" {...props}>
@@ -37,7 +38,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                                     query.show_booked_only = statusValue === EventStatusFilter["My booked events"] ? true : undefined;
                                     query.show_reservations_only = statusValue === EventStatusFilter["My event reservations"] ? true : undefined;
                                     query.event_status = statusValue === EventStatusFilter["All events"] ? "all" : undefined;
-                                    history.push({pathname: location.pathname, search: queryString.stringify(query)});
+                                    void navigate({pathname: location.pathname, search: queryString.stringify(query)});
                                 }}
                             />
                         </li>
@@ -56,7 +57,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                             checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
                             onChange={() => {
                                 query.types = typeValue !== EventTypeFilter["All groups"] ? typeValue : undefined;
-                                history.push({pathname: location.pathname, search: queryString.stringify(query)});}}
+                                void navigate({pathname: location.pathname, search: queryString.stringify(query)});}}
                         />
                     </li>
                 )
@@ -74,7 +75,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                             checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
                             onChange={() => {
                                 query.show_stage_only = value !== STAGE.ALL ? value : undefined;
-                                history.push({pathname: location.pathname, search: queryString.stringify(query)});
+                                void navigate({pathname: location.pathname, search: queryString.stringify(query)});
                             }}
                         />
                     </li>

@@ -1,5 +1,4 @@
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
@@ -96,7 +95,7 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
     return items[subject].length > 0 ? <ListView className={className} type="gameboard" items={items[subject].map(convertToALVIGameboard)} /> : null;
 };
 
-export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
+export const SubjectOverviewPage = () => {
     const pageContext = useUrlPageTheme();
 
     if (!isDefined(pageContext?.subject)) return <>No subject found.</>;
@@ -167,4 +166,4 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
             <LandingPageFooter context={pageContext} />
         </div>}
     </Container>;
-});
+};

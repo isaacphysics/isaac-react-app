@@ -33,7 +33,7 @@ export const selectors = {
             return !!state && !!state.questions && state.questions.questions.some(q => !!q.bestAttempt?.correct);
         },
         allQuestionsAttempted: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
+            return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev && current);
         },
         anyQuestionPreviouslyAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
@@ -56,7 +56,8 @@ export const selectors = {
         snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
         achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
         answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate,
-        preferences: (state: AppState) => state?.userPreferences
+        preferences: (state: AppState) => state?.userPreferences,
+        authSettings: (state: AppState) => state?.userAuthSettings || null,
     },
 
     mainContentId: {

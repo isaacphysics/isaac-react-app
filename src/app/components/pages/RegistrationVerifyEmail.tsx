@@ -10,8 +10,8 @@ import {
     useRequestEmailVerificationMutation,
     useVerifyEmailMutation
 } from "../../state";
-import {history, useQueryParams} from "../../services";
-import {Link} from "react-router-dom";
+import {useQueryParams} from "../../services";
+import {Link, useNavigate} from "react-router-dom";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {useCheckCurrentUserOnActivity} from "../../services/useCheckCurrentUserOnActivity";
 
@@ -19,6 +19,7 @@ import {useCheckCurrentUserOnActivity} from "../../services/useCheckCurrentUserO
 export const RegistrationVerifyEmail = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const navigate = useNavigate();
     const {userid: userIdFromParams, token: tokenFromParams} = useQueryParams(true);
 
     const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
@@ -33,7 +34,7 @@ export const RegistrationVerifyEmail = () => {
     useEffect(() => {
         dispatch(errorSlice.actions.clearError());
         if (!emailVerified && userIdFromParams && tokenFromParams) {
-            verifyEmail({userid: userIdFromParams, token: tokenFromParams});
+            void verifyEmail({userid: userIdFromParams, token: tokenFromParams});
         }
     }, [verifyEmail, userIdFromParams, tokenFromParams, emailVerified, errorSlice]);
 
@@ -45,14 +46,14 @@ export const RegistrationVerifyEmail = () => {
                     "You are not logged in or don't have an e-mail address to verify."
                 ));
             } else {
-                sendVerificationEmail({email: user?.email});
+                void sendVerificationEmail({email: user?.email});
             }
         }
     };
 
     const continueToMyAda = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/dashboard");
+        void navigate("/dashboard");
     };
 
     return <div id="verify-email">

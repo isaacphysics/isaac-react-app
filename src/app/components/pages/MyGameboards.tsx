@@ -1,10 +1,9 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
+import {unlinkUserFromGameboard, useAppDispatch} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {
     Button,
     Col,
-    Container,
     Input,
     Label,
     Row} from 'reactstrap';
@@ -26,10 +25,10 @@ import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
-import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
 import { useHistoryState } from "../../state/actions/history";
 import { MyGameboardsSidebar } from "../elements/sidebar/MyGameboardsSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 export interface GameboardsDisplaySettingsProps {
     boardView: BoardViews,
@@ -116,11 +115,9 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
     </div>;
 };
 
-export const MyGameboards = () => {
+export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
     //Redux state and dispatch
     const dispatch = useAppDispatch();
-    // We know the user is logged in to visit this page
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
     const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
@@ -136,8 +133,7 @@ export const MyGameboards = () => {
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(
-        siteSpecific(BoardViews.card, BoardViews.table),
-        BoardLimit.six
+        siteSpecific(BoardViews.card, BoardViews.table)
     );
 
     function confirmDeleteMultipleBoards() {
@@ -191,9 +187,11 @@ export const MyGameboards = () => {
         user, boards, selectedBoards, setSelectedBoards, boardView, boardTitleFilter, boardCreator, boardCompletion, loading, viewMore
     };
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
-        <SidebarLayout>
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
+        }
+        sidebar={siteSpecific(
             <MyGameboardsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
                 displayLimit={boardLimit} setDisplayLimit={setBoardLimit}
@@ -202,47 +200,47 @@ export const MyGameboards = () => {
                 boardCompletionFilter={boardCompletion} setBoardCompletionFilter={setBoardCompletion}
                 forceAllBoards={forceAllBoards}
                 hideButton
-            />
-            <MainContent>
-                <PageMetadata noTitle showSidebarButton>
-                    <PageFragment fragmentId={siteSpecific(
-                        isTutorOrAbove(user) ? "help_toptext_gameboards_teacher" : "help_toptext_gameboards_student", 
-                        isTutorOrAbove(user) ? "quizzes_help_teacher" : "quizzes_help_student"
-                    )} ifNotFound={RenderNothing} />
-                </PageMetadata>
-                {boards && boards.totalResults == 0 ?
-                    <>
-                        <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>
-                    </>
-                    :
-                    <>
-                        <div className="mt-4 mb-2">
-                            {boards 
-                                ? <span>Showing <strong>{inProgress + notStarted}</strong> {siteSpecific("question decks", "quizzes")}, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started.</span>
-                                : <IsaacSpinner size="sm" inline />
-                            }
-                        </div>
-                        {isAda && <> 
-                            {/* this is in the sidebar on phy */}
-                            <GameboardsDisplaySettings
-                                boardView={boardView} switchViewAndClearSelected={switchViewAndClearSelected} boardLimit={boardLimit}
-                                setBoardLimit={setBoardLimit} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                showFilters={showFilters} setShowFilters={setShowFilters}
-                            />
-                            <GameboardsFilters boardCreator={boardCreator} setBoardCreator={setBoardCreator} boardCompletion={boardCompletion}
-                                setBoardCompletion={setBoardCompletion} setBoardTitleFilter={setBoardTitleFilter} showFilters={showFilters}
-                            />
-                        </>}
-                        <ShowLoading until={boards}>
-                            {boards && boards.boards && <>
-                                {(boardView === BoardViews.card
-                                    ? <GameboardsCards {...cardProps}/>
-                                    : <GameboardsTable {...tableProps}/>
-                                )}
-                            </>}
-                        </ShowLoading>
+            />,
+            undefined
+        )}
+    >
+        <PageMetadata noTitle showSidebarButton>
+            <PageFragment fragmentId={siteSpecific(
+                isTutorOrAbove(user) ? "help_toptext_gameboards_teacher" : "help_toptext_gameboards_student", 
+                isTutorOrAbove(user) ? "quizzes_help_teacher" : "quizzes_help_student"
+            )} ifNotFound={RenderNothing} />
+        </PageMetadata>
+        {boards && boards.totalResults == 0 ?
+            <>
+                <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>
+            </>
+            :
+            <>
+                <div className="mt-4 mb-2">
+                    {boards 
+                        ? <span>Showing <strong>{inProgress + notStarted}</strong> {siteSpecific("question decks", "quizzes")}, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started.</span>
+                        : <IsaacSpinner size="sm" inline />
+                    }
+                </div>
+                {isAda && <> 
+                    {/* this is in the sidebar on phy */}
+                    <GameboardsDisplaySettings
+                        boardView={boardView} switchViewAndClearSelected={switchViewAndClearSelected} boardLimit={boardLimit}
+                        setBoardLimit={setBoardLimit} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                        showFilters={showFilters} setShowFilters={setShowFilters}
+                    />
+                    <GameboardsFilters boardCreator={boardCreator} setBoardCreator={setBoardCreator} boardCompletion={boardCompletion}
+                        setBoardCompletion={setBoardCompletion} setBoardTitleFilter={setBoardTitleFilter} showFilters={showFilters}
+                    />
+                </>}
+                <ShowLoading until={boards}>
+                    {boards && boards.boards && <>
+                        {(boardView === BoardViews.card
+                            ? <GameboardsCards {...cardProps}/>
+                            : <GameboardsTable {...tableProps}/>
+                        )}
                     </>}
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+                </ShowLoading>
+            </>}
+    </PageContainer>;
 };

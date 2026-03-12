@@ -105,7 +105,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
         return <div>
-            <h4>Test sections</h4>
+            <h4>Test section(s)</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
                     const section = sections[k];
@@ -346,7 +346,7 @@ export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
 
     return <>
         <QuizTitle {...props} />
-        <SidebarLayout>
+        <SidebarLayout show={isPhy}>
             <QuizSidebar {...sidebarProps} />
             <MainContent>
                 {props.page === null || props.page == undefined ? QuizOverview({...{viewingAsSomeoneElse, ...props}}): <QuizQuestions {...props} page={props.page} /> }

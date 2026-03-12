@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { convertToALVIGameboards, ListView } from "./list-groups/ListView";
 import { GameboardDTO, IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
 import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataContainer";
 import { Markup } from "./markup";
 import { PageMetadata } from "./PageMetadata";
+import { useLocation } from "react-router";
+import { scrollVerticallyIntoView } from "../../services";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
     const hasExtension = page.extensionGameboards && page.extensionGameboards.length > 0;
+
+    const { hash } = useLocation();
+
+    useEffect(() => {
+        // scroll to anchor once page has loaded
+        if (hash.includes("#")) {
+            const hashAnchor = hash.slice(1);
+            const element = document.getElementById(hashAnchor);
+            if (element) {
+                scrollVerticallyIntoView(element);
+            }
+        }
+    }, [hash, page]);
 
     return <div className="book-page">
         <PageMetadata
