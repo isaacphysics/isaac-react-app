@@ -580,7 +580,8 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
     const pathOverride = persistence.pop(KEY.AFTER_AUTH_PATH);
     if (pathOverride) {
         target = pathOverride;
-    } else if (user && isAda) {
+    } else if (user && isTeacherOrAbove(user) && isAda) {
+        // TODO: remove isTeacher check above alongside FeatureFlag.ENABLE_ADA_SIDEBARS
         target = "/dashboard";
     }
     void navigateComponentless(target);
