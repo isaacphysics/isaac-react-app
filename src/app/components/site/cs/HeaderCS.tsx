@@ -7,7 +7,6 @@ import {
     isEventLeader,
     isLoggedIn,
     isStaff,
-    isTutorOrAbove,
     PATHS
 } from "../../../services";
 import {
