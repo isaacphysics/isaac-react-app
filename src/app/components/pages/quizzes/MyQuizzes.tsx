@@ -459,7 +459,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My tests", "Tests to do")} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
+            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My tests", "Tests")} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         }
         sidebar={siteSpecific(
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}
