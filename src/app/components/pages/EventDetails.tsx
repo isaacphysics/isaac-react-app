@@ -136,11 +136,11 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                                 {zeroOrLess(event.placesAvailable) && <>
                                     <strong className="text-danger">FULL</strong>
                                     {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <> for student bookings.</>}
+                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <> for student bookings</>}
                                 </>}
                                 
-                                {canBeAddedToWaitingList && <> {formatAvailabilityMessage(event)}</>}
-                                {event.userBookingStatus === "WAITING_LIST" && <>{formatWaitingListBookingStatusMessage(event)}</>}
+                                {canBeAddedToWaitingList && <>. {formatAvailabilityMessage(event)}</>}
+                                {event.userBookingStatus === "WAITING_LIST" && <>. {formatWaitingListBookingStatusMessage(event)}</>}
                             </div>
                             
                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
@@ -159,9 +159,11 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                             )}
                         </Col>
                         <Col className="d-md-flex flex-wrap">
-                            <DateString>{event.bookingDeadline}</DateString>
+                            <div className="me-1">
+                                <DateString>{event.bookingDeadline}</DateString>
+                            </div>
                             {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                <div className="text-danger ms-1">(The booking deadline for this event has passed.)</div>
+                                <div className="text-danger">(The booking deadline for this event has passed.)</div>
                             }
                         </Col>
                     </Row>
