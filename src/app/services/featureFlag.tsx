@@ -7,6 +7,7 @@ import { Spacer } from "../components/elements/Spacer";
 import { StyledTripleToggle } from "../components/elements/inputs/StyledMultiToggle";
 
 export enum FeatureFlag {
+    _TEST_FEATURE = "_TEST_FEATURE", // used for testing; do not remove
     ENABLE_ADA_SIDEBARS = "ENABLE_ADA_SIDEBARS",
 }
 
@@ -34,6 +35,7 @@ const useFlags = () : Record<FeatureFlag, boolean> => {
 
     return {
         // default values
+        [FeatureFlag._TEST_FEATURE]: isNonProd,
         [FeatureFlag.ENABLE_ADA_SIDEBARS]: false,
 
         // overrides
