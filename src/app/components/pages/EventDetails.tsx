@@ -97,7 +97,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
         <MetadataContainer className={siteSpecific("", "mt-3")}>
             <KeyInfo className={classNames("event-key-info", siteSpecific("px-4", "gap-3 p-4"))}>
                 <Row>
-                    <Col className={firstColumnWidths}>
+                    <Col className={classNames(firstColumnWidths, "align-items-start")}>
                         {siteSpecific(
                             <b>When:</b>, 
                             <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-upcoming me-2" color="secondary"/><b>When</b></span>
@@ -111,7 +111,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                     </Col>
                 </Row>
                 {<Row>
-                    <Col className={firstColumnWidths}>
+                    <Col className={classNames(firstColumnWidths, "align-items-start")}>
                         {siteSpecific(
                             <b>Location:</b>, 
                             <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-location me-2" color="secondary"/><b>Location</b></span>
@@ -124,7 +124,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                 </Row>}
                 {event.isNotClosed && !event.hasExpired &&
                     <Row>
-                        <Col className={firstColumnWidths}>
+                        <Col className={classNames(firstColumnWidths, "align-items-start")}>
                             {siteSpecific(
                                 <b>Availability:</b>, 
                                 <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-person me-2" color="secondary"/><b>Availability</b></span>
@@ -141,18 +141,18 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                                 
                                 {canBeAddedToWaitingList && <>. {formatAvailabilityMessage(event)}</>}
                                 {event.userBookingStatus === "WAITING_LIST" && <>. {formatWaitingListBookingStatusMessage(event)}</>}
-                            </div>
-                            
-                            {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
-                                <div className="text-muted fw-normal">
-                                    {studentOnlyEventMessage(eventId)}
-                                </div>
-                            }
+                                
+                                {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
+                                    <div className="text-muted fw-normal">
+                                        {studentOnlyEventMessage(eventId)}
+                                    </div>
+                                }
+                            </div>                          
                         </Col>
                     </Row>}
                 {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
                     <Row>
-                        <Col className={firstColumnWidths}>
+                        <Col className={classNames(firstColumnWidths, "align-items-start")}>
                             {siteSpecific(
                                 <b>Booking deadline:</b>, 
                                 <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-complete me-2" color="secondary"/><b>Booking deadline</b></span>
