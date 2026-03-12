@@ -189,7 +189,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     background-color: initial;
   }
 
-  > .question-component:not(:has(> .validation-response-panel.correct, > .quick-question)) {
+  > .question-component:not(:has(> .validation-response-panel.correct, > .quick-question, + .tabbed-hints)) {
     padding-bottom: 1rem;
   }
 }
