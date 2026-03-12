@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {selectors, useAppSelector} from "../../../state";
+import {openActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler} from "reactstrap";
 import {
     isAdmin,
@@ -12,6 +12,7 @@ import {
 } from "../../../services";
 import {
     LinkItem,
+    LinkItemButton,
     MenuBadge,
     MenuOpenContext,
     NavigationSection,
@@ -20,10 +21,12 @@ import {
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
 import { useNavigate } from "react-router";
+import { FeatureFlagModal } from "../../../services/featureFlag";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    const dispatch = useAppDispatch();
 
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
 
@@ -102,6 +105,12 @@ export const HeaderCS = () => {
                                     {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
                                     {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                                     {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
+                                    <hr />
+                                    {isStaff(user) && <LinkItemButton onClick={() => {
+                                        dispatch(openActiveModal(FeatureFlagModal));
+                                    }}>
+                                        Feature flags
+                                    </LinkItemButton>}
                                 </NavigationSection>}
                                 <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
                                     {isTutorOrAbove(user) ?

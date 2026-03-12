@@ -64,3 +64,17 @@
         padding-left: $toggle-span-reduced-x-padding;
     }
 }
+
+.styled-triple-toggle {
+    height: 32px;
+    border: 1px solid $primary;
+    width: 160px;
+    border-radius: 1rem;
+    
+    .toggle-button {
+        height: 100%;
+        border-radius: inherit;
+        transition: all 0.15s ease-out;
+        background-color: white;
+    }
+}
