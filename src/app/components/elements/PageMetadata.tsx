@@ -110,17 +110,20 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const location = useLocation();
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
+    const anyActionButtonShown = isPhy && helpModalId || above['sm'](deviceSize) || doc?.id;
+    const isCrossTopic = doc?.tags?.includes("cross_topic");
+    const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
 
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
         <div className="page-metadata">
-            {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
+            {isPhy && (anyActionButtonShown || pageContainsLLMFreeTextQuestion || children || !noTitle) && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
                 {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-2"/>}
                 {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
                 {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className={classNames("ms-auto", {"mb-auto": !noTitle && badges})}/>}
             </div>}
 
-            {isAda && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>
+            {isAda && (anyActionButtonShown || isCrossTopic || pageContainsLLMFreeTextQuestion || children) && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>
                 {children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>}
                 <TagStack doc={doc} className={classNames({"mb-3": children, "d-flex align-items-end": !children})}/>
                 {children}
@@ -131,10 +134,10 @@ export const PageMetadata = (props: PageMetadataProps) => {
 
             {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
 
-            <div className="d-flex align-items-end">
+            {(isPhy || isConcept) && <div className="d-flex align-items-end">
                 {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
-            </div>
+            </div>}
 
             {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
         </div>
