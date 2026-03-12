@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, use
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { AppState, fetchSearch, selectors, useAppDispatch, useAppSelector } from "../../state";
 import { Badge, Card, CardBody, CardHeader, Col, Container, Form, Input, Label, Row } from "reactstrap";
+import { Helmet } from "react-helmet";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import {
@@ -105,6 +106,9 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
   return (
     <Container id="search-page">
+      <Helmet>
+        <meta name="robots" content="noindex,follow" />
+      </Helmet>
       <Row>
         <Col>
           <TitleAndBreadcrumb currentPageTitle="Search" />
