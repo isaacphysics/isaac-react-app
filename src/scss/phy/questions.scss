@@ -188,6 +188,10 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   &:has(> .question-component .quick-question) {
     background-color: initial;
   }
+
+  &:not(:has(.question-component > .validation-response-panel.correct)) {
+    padding-bottom: 1rem;
+  }
 }
 
 // any such styling that should not be present in an accordion
