@@ -96,7 +96,7 @@ const FeatureFlagModalBody = () => {
 
         <p className="mt-5">Manual overrides:</p>
         <ul className="list-unstyled ps-3">
-            {Object.values(FeatureFlag).map(flag => 
+            {Object.values(FeatureFlag).filter(f => f !== FeatureFlag._TEST_FEATURE).map(flag => 
                 <div className="w-100 d-flex align-items-center my-1" key={flag}>
                     <span>{flag.toString()}</span>
                     <Spacer />
