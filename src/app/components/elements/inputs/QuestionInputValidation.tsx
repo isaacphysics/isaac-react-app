@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { isDefined } from "../../../services";
 import React from "react";
 
 interface QuestionInputValidationProps<T> {
@@ -21,13 +20,10 @@ const QuestionInputValidation = <T,>({userInput, validator}: QuestionInputValida
         }, 250);
     }, [userInput, validator]);
 
-    return <>
-        {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && 
-            <div className="question-feedback-input-errors"><strong>Careful!</strong><ul>
-                {errors.map(e => (<li key={e}>{e}</li>))}
-            </ul></div>
-        }
-    </>;
+    return errors.length > 0 && <div className="question-feedback-input-errors mt-2">
+        <strong>Careful!</strong>
+        <ul className="mb-1">{errors.map(e => (<li key={e}>{e}</li>))}</ul>
+    </div>;
 };
 
 export default QuestionInputValidation;
