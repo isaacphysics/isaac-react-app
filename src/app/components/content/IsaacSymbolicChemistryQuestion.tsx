@@ -64,7 +64,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')
         .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
 
-    const mayRequireStateSymbols = !hasMetaSymbols || doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol));
+    const mayRequireStateSymbols = !hasMetaSymbols || CHEMICAL_STATES?.some(state => symbolList?.includes(state));
 
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
