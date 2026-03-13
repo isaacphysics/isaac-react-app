@@ -581,6 +581,7 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
     if (pathOverride) {
         target = pathOverride;
     } else if (user && isTeacherOrAbove(user) && isAda) {
+        // TODO: remove isTeacher check above alongside FeatureFlag.ENABLE_ADA_SIDEBARS
         target = "/dashboard";
     }
     void navigateComponentless(target);

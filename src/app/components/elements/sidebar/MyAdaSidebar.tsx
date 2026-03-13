@@ -19,7 +19,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
         title: "Overview",
         url: "/dashboard",
         icon: "icon-home",
-        user: "TEACHER"
+        user: "ALL"
     },
     groups: {
         title: "Groups",
