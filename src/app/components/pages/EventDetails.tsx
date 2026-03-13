@@ -104,10 +104,10 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                             <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-upcoming me-2" color="secondary"/><b>When</b></span>
                         )}
                     </Col>
-                    <Col>
+                    <Col className="d-md-flex flex-wrap">
                         <div>
-                            {formatEventDetailsDate(event)}
-                            {event.hasExpired && <>.{" "}<b>This event is in the past.</b></>}
+                            <span className="me-1">{formatEventDetailsDate(event)}</span>
+                            {event.hasExpired && <span className="text-danger">(This event is in the past.)</span>}
                         </div>
                     </Col>
                 </Row>
