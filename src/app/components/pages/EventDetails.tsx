@@ -41,6 +41,7 @@ import {
     userBookedReservedOrOnWaitingList, confirmThen,
     siteSpecific,
     navigateComponentless,
+    isAda,
 } from "../../services";
 import {AdditionalInformation, AugmentedEvent, PotentialUser} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -94,7 +95,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
     const KeyInfo = siteSpecific("div", Card);
 
     return <>
-        <MetadataContainer className={classNames("overflow-scroll", "mt-3": isAda)}>
+        <MetadataContainer className={classNames("overflow-scroll", {"mt-3": isAda})}>
             <KeyInfo className={classNames("event-key-info", siteSpecific("px-4", "gap-3 p-4"))}>
                 <Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
@@ -104,13 +105,10 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                         )}
                     </Col>
                     <Col>
-                        {formatEventDetailsDate(event)}
-                        {event.hasExpired && <div>
-                            <b>This event is in the past.</b>
-<div>
-    {formatEventDetailsDate(event)}
-    {!event.hasExpired && <>.{" "}<b>This event is in the past.</b></>}
-</div>
+                        <div>
+                            {formatEventDetailsDate(event)}
+                            {event.hasExpired && <>.{" "}<b>This event is in the past.</b></>}
+                        </div>
                     </Col>
                 </Row>
                 {<Row>
