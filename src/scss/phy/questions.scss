@@ -193,6 +193,12 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     > .quick-question, + .tabbed-hints)) {
     padding-bottom: 1rem;
   }
+
+  &:not(:has(.tabbed-hints)) .validation-response-panel {
+    &.correct, &.almost {
+      border-radius: 0 0 4px 4px;
+    }
+  }
 }
 
 // any such styling that should not be present in an accordion
