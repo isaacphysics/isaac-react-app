@@ -107,7 +107,10 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                         {formatEventDetailsDate(event)}
                         {event.hasExpired && <div>
                             <b>This event is in the past.</b>
-                        </div>}
+<div>
+    {formatEventDetailsDate(event)}
+    {!event.hasExpired && <>.{" "}<b>This event is in the past.</b></>}
+</div>
                     </Col>
                 </Row>
                 {<Row>
