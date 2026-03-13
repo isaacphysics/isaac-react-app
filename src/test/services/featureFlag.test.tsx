@@ -118,5 +118,5 @@ describe('Feature flag service', () => {
         );
 
         expect(screen.queryByText("Test ON")).not.toBeInTheDocument();
-    })
+    });
 });
