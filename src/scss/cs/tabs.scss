@@ -28,8 +28,7 @@ $link-text-bottom-padding: 4px;
           position: absolute;
           left: 0;
           right: 0;
-          bottom: 0;
-          transform: translateY(#{$nav-bottom-line});
+          bottom: -#{$nav-bottom-line};
           height: #{$nav-bottom-line * 2};
           background: $cs-silver;
         }
@@ -45,8 +44,7 @@ $link-text-bottom-padding: 4px;
           position: absolute;
           left: 0;
           right: 0;
-          bottom: 0;
-          transform: translateY(#{$nav-bottom-line});
+          bottom: -#{$nav-bottom-line};
           height: #{$nav-bottom-line * 2};
           background: $dark-pink-300;
         }
