@@ -289,7 +289,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 }
             </div>
             {/* Physics Hints and LLM free-text response */}
-            {isPhy && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
+            {isPhy && doc.hints && !!doc.hints.length && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
             {isPhy && possibleLLMFreeTextQuestionFeedbackView}
         </Form>
 
