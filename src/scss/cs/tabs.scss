@@ -85,6 +85,7 @@ $link-text-bottom-padding: 4px;
           top: 0;
           left: 0;
           width: 100%;
+          background: none;
           height: 100%;
           @include focus-outline;
         }
