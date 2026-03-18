@@ -88,22 +88,26 @@ export const FeatureFlagWrapper = ({ flag, children, onSet, onUnset }: FeatureFl
 
 const FeatureFlagModalBody = () => {
     const [overrides, setOverrides] = useState(loadOverridesFromStorage());
+    const allFlags = Object.values(FeatureFlag).filter(f => f !== FeatureFlag._TEST_FEATURE);
 
     return <Col>
-        <p>Feature flags are staff-only runtime switches that enable or disable features that are under development. They will only appear on staging / test environments.</p>
+        <p>Feature flags are staff-only runtime switches that enable or disable features that are under development. They will only appear on staging and dev (not test).</p>
         <p>Relevant flags will typically be enabled by default on a given branch. However, if you wish to see how multiple settings interact, you can override which flags are enabled below.</p>
         <p>Note that overrides will be maintained between site visits and should probably be left as automatic when not in use.</p>
 
         <p className="mt-5">Manual overrides:</p>
-        <ul className="list-unstyled ps-3">
-            {Object.values(FeatureFlag).filter(f => f !== FeatureFlag._TEST_FEATURE).map(flag => 
-                <div className="w-100 d-flex align-items-center my-1" key={flag}>
-                    <span>{flag.toString()}</span>
-                    <Spacer />
-                    <StyledTripleToggle initialValue={overrides[flag]} onChange={(value) => setOverrides(prev => ({ ...prev, [flag]: value }))} />
-                </div>
-            )}
-        </ul>
+        {allFlags.length
+            ? <ul className="list-unstyled ps-3">
+                {allFlags.map(flag => 
+                    <div className="w-100 d-flex align-items-center my-1" key={flag}>
+                        <span>{flag.toString()}</span>
+                        <Spacer />
+                        <StyledTripleToggle initialValue={overrides[flag]} onChange={(value) => setOverrides(prev => ({ ...prev, [flag]: value }))} />
+                    </div>
+                )}
+            </ul>
+            : <p><em>No feature flags found.</em></p>
+        }
 
         <div className="d-flex w-100 justify-content-around mt-5">
             <div className="d-flex gap-2 align-items-center">
