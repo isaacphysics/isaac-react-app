@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { above, below, isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTutor, useDeviceSize } from "../../../services";
 import { openActiveModal, selectors, useAppDispatch, useAppSelector, useGetSegueEnvironmentQuery } from "../../../state";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
-import { FeatureFlagModal } from "../../../services/featureFlag";
+import { FeatureFlagModal, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
 
 export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
     const { toggleMenu, ...rest } = props;
@@ -59,11 +59,12 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
             {isStaff(user) && <LinkItem to="/admin/stats">Site Statistics</LinkItem>}
             {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
             {isNonProd && <>
-                <hr />
+                <div className="section-divider"/>  
                 <LinkItemButton onClick={() => {
                     dispatch(openActiveModal(FeatureFlagModal));
                 }}>
                     Feature flags
+                    {hasActiveFeatureFlagOverrides() && <span className="ms-3 bg-primary active-dot" />}
                 </LinkItemButton>
             </>}
         </NavigationSection>}

@@ -139,3 +139,8 @@ export const FeatureFlagModal : ActiveModalProps = ({
     title: "Feature Flags",
     body: <FeatureFlagModalBody />
 });
+
+export const hasActiveFeatureFlagOverrides = (): boolean => {
+    const overrides = loadOverridesFromStorage();
+    return Object.keys(overrides).length > 0;
+};
