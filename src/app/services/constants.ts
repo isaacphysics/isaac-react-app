@@ -1282,8 +1282,28 @@ export const PATHS = {
     // Common paths
     MANAGE_GROUPS: "/groups",
     MY_TESTS: "/tests",
+    SET_TESTS: "/set_tests",
     TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
+    PRACTICE_TESTS: "/practice_tests",
+};
+
+export const PATH_NAMES: { [k in keyof typeof PATHS]: string } = {
+    ASSIGNMENT_PROGRESS: siteSpecific("Assignment progress", "Markbook"),
+    MY_GAMEBOARDS: siteSpecific("My question decks", "My quizzes"),
+    MY_ASSIGNMENTS: siteSpecific("My assignments", "Assigned to me"),
+    QUESTION_FINDER: "Question finder",
+    GAMEBOARD_FILTER: siteSpecific("Gameboard filter", "Quiz filter"),
+    GAMEBOARD: siteSpecific("Gameboard", "Quiz"),
+    SET_ASSIGNMENTS: siteSpecific("Set assignments", "Manage assignments"),
+    GAMEBOARD_BUILDER: siteSpecific("Gameboard builder", "Quiz builder"),
+    ADD_GAMEBOARD: siteSpecific("Add gameboard", "Add quiz"),
+    MANAGE_GROUPS: siteSpecific("Manage groups", "Groups"),
+    MY_TESTS: "My tests",
+    SET_TESTS: siteSpecific("Set / manage tests", "Set tests"),
+    TEST: "Test",
+    PREVIEW_TEST: "Preview test",
+    PRACTICE_TESTS: "Practice tests",
 };
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
