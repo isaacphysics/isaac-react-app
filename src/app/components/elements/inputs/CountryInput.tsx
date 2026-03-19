@@ -15,19 +15,17 @@ interface CountryInputProps {
     submissionAttempted: boolean;
     idPrefix?: string;
     required: boolean;
-    showBackfillNotice?: boolean; // warning text that we may have backfilled the country field from school/school email address
+    textOverride?: string; // override text to display below the input
 }
 
-export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryCodeValid, submissionAttempted, idPrefix="account", required, showBackfillNotice=true}: CountryInputProps) => {
+export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryCodeValid, submissionAttempted, idPrefix="account", required, textOverride}: CountryInputProps) => {
     const {data: allCountryOptions} = useGetCountriesQuery();
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
     return <FormGroup className={className}>
         <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
         <p className="d-block input-description mb-2">
-            {siteSpecific("This helps us measure our reach and impact.", "This helps us personalise the platform for you.")}
-            {isPhy && showBackfillNotice && " If you did not select a country when you registered," +
-                " we may have suggested one from your school or school email address."}
+            {textOverride || siteSpecific("This helps us to measure our reach and impact.", "This helps us personalise the platform for you.")}
         </p>
         <StyledDropdown
             id={`${idPrefix}-country-select`}

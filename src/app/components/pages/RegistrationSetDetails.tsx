@@ -184,8 +184,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                             setUserToUpdate={setRegistrationUser}
                             countryCodeValid={countryCodeIsValid}
                             submissionAttempted={attemptedSignUp}
-                            required={isAda}
-                            showBackfillNotice={false}
+                            required={true}
                         />
                         {/*On Ada, country is required, but school is optional for students, so separate them*/}
                         {isAda && <hr className={classNames({"d-none": userRole == 'TEACHER'}, "my-4 text-center")} />}

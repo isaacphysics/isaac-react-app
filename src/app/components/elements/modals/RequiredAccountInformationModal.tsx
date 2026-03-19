@@ -107,12 +107,15 @@ const RequiredAccountInfoBody = () => {
             }
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
             <Row className="d-flex flex-wrap my-2">
-                <Col lg={6}>
+                <Col xs={12}>
                     {!validity.countryCode && <CountryInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
+                        textOverride="This is now required information to better help us measure our reach and impact."
                     />}
+                </Col>
+                <Col xs={12}>
                     {!validity.userContexts &&
                         <UserContextAccountInput
                             user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
@@ -121,7 +124,7 @@ const RequiredAccountInfoBody = () => {
                         />
                     }
                 </Col>
-                <Col>
+                <Col xs={12}>
                     {!validity.school && <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
