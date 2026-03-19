@@ -327,9 +327,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
             <MyAdaSidebar />
         )}
     >
-        {isAda && <p className="d-md-none text-center text-muted m-3">
+        {isAda && <p className="d-md-none text-center m-3">
             <small>
-                {`Update your Ada Computer Science account, or `}
+                <span className='text-muted'>Update your Ada Computer Science account, or </span>
                 <Link to="/logout" className="text-theme">Log out</Link>
             </small>
         </p>}

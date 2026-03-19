@@ -19,7 +19,7 @@ export const conceptsApi = isaacApi.injectEndpoints({
         }),
         getConcept: build.query<IsaacConceptPageDTO, string>({
             query: (id) => ({
-                url: `/pages/concepts/${id}`
+                url: `/pages/concepts/${encodeURIComponent(id)}`
             }),
             transformResponse: (response: IsaacConceptPageDTO) => {
                 return tags.augmentDocWithSubject(response);

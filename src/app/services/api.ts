@@ -120,12 +120,12 @@ export const api = {
             });
         },
         getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
-            return endpoint.get(`/glossary/terms/${id}`);
+            return endpoint.get(`/glossary/terms/${encodeURIComponent(id)}`);
         }
     },
     questions: {
         answer: (id: string, answer: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
-            return endpoint.post(`/questions/${id}/answer`, answer);
+            return endpoint.post(`/questions/${encodeURIComponent(id)}/answer`, answer);
         },
         answeredQuestionsByDate: (userId: number | string, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
             return endpoint.get(`/questions/answered_questions/${userId}`, {
@@ -142,7 +142,7 @@ export const api = {
     },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
-            return endpoint.get(`/pages/topics/${topicName}`);
+            return endpoint.get(`/pages/topics/${encodeURIComponent(topicName)}`);
         }
     },
     websockets: {
@@ -162,10 +162,10 @@ export const api = {
             return endpoint.post(`/quiz/assignment/${quizAssignmentId}/attempt`);
         },
         answer: (quizAttemptId: number, questionId: string, attempt: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
-            return endpoint.post(`/quiz/attempt/${quizAttemptId}/answer/${questionId}`, attempt);
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/answer/${encodeURIComponent(questionId)}`, attempt);
         },
         loadFreeQuizAttempt: (quizId: string): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
-            return endpoint.post(`/quiz/${quizId}/attempt`);
+            return endpoint.post(`/quiz/${encodeURIComponent(quizId)}/attempt`);
         }
     },
 };
