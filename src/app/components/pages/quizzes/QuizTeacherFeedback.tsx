@@ -140,7 +140,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         target="_blank"
                     >
                         Download CSV
-                        <i className="icon icon-download ms-2" color="white"/>
+                        <i className="icon icon-download ms-2" color={siteSpecific("white", "primary")}/>
                     </Button>
                 </div>
 

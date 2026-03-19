@@ -6,7 +6,7 @@ const booksApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
         getBookIndexPage: build.query<IsaacBookIndexPageDTO, {id: string}>({
             query: ({id}) => ({
-                url: `/pages/books/index/${id}`
+                url: `/pages/books/index/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to fetch book contents."
@@ -16,7 +16,7 @@ const booksApi = isaacApi.injectEndpoints({
 
         getBookDetailPage: build.query<IsaacBookDetailPageDTO, {id: string}>({
             query: ({id}) => ({
-                url: `/pages/books/page/${id}`
+                url: `/pages/books/page/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to fetch book page."

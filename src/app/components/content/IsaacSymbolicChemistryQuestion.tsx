@@ -107,7 +107,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         if (/\.[0-9]/.test(input)) {
             errors.push('Please convert decimal numbers to fractions.');
         }
-        if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && hasMetaSymbols && !doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol))) {
+        if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && hasMetaSymbols && !CHEMICAL_STATES.some(state => symbolList?.includes(state))) {
             errors.push('This question does not require state symbols.');
         }
         return errors;

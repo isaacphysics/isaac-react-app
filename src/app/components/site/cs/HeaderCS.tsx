@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {selectors, useAppSelector} from "../../../state";
+import {openActiveModal, selectors, useAppDispatch, useAppSelector, useGetSegueEnvironmentQuery} from "../../../state";
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler} from "reactstrap";
 import {
     isAdmin,
@@ -11,6 +11,7 @@ import {
 } from "../../../services";
 import {
     LinkItem,
+    LinkItemButton,
     MenuBadge,
     MenuOpenContext,
     NavigationSection,
@@ -19,10 +20,15 @@ import {
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
 import { useNavigate } from "react-router";
+import { FeatureFlagModal, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    const dispatch = useAppDispatch();
+
+    const { data: env } = useGetSegueEnvironmentQuery();
+    const isNonProd = env === "DEV";
 
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
 
@@ -87,24 +93,34 @@ export const HeaderCS = () => {
 
                         <div className={"navbar-separator d-nav-none d-block"}/>
 
-                        {!isLoggedIn(user)
+                        <div className={"ms-nav-auto"}></div>
+                        
+                        {(isStaff(user) || isEventLeader(user) || isNonProd) && <NavigationSection title={isStaff(user) || isEventLeader(user) ? "Admin" : "Staging"}>
+                            {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
+                            {isAdmin(user) && <LinkItem to="/admin/usermanager">User manager</LinkItem>}
+                            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
+                            {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
+                            {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
+                            {(isStaff(user) || isNonProd) && <>
+                                <hr />
+                                <LinkItemButton onClick={() => {
+                                    dispatch(openActiveModal(FeatureFlagModal));
+                                }}>
+                                    Feature flags
+                                    {hasActiveFeatureFlagOverrides() && <span className="ms-3 bg-turquoise-blue active-dot" />}
+                                </LinkItemButton>
+                            </>}
+                        </NavigationSection>}
+
+                        {isLoggedIn(user)
                             ? <>
-                                <NavigationSection className={"ms-nav-auto text-center text-start-nav"} topLevelLink to="/register" title={"Sign up"}/>
-                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/login" title={"Log in"}/>
-                            </>
-                            :
-                            <>
-                                <div className={"ms-nav-auto"}></div>
-                                {(isStaff(user) || isEventLeader(user)) && <NavigationSection title="Admin">
-                                    {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
-                                    {isAdmin(user) && <LinkItem to="/admin/usermanager">User manager</LinkItem>}
-                                    {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
-                                    {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
-                                    {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
-                                </NavigationSection>}
                                 <NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>} />
                                 <div className={"navbar-separator d-nav-none d-block"}/>
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>
+                            </>
+                            : <>
+                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/register" title={"Sign up"}/>
+                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/login" title={"Log in"}/>
                             </>
                         }
 

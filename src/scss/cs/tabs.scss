@@ -23,8 +23,15 @@ $link-text-bottom-padding: 4px;
 
     &:hover {
       .nav-link {
-        border-bottom-width: #{$nav-bottom-line * 2};
-        padding-bottom: $link-text-bottom-padding;
+        &:after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -#{$nav-bottom-line};
+          height: #{$nav-bottom-line * 2};
+          background: $cs-silver;
+        }
       }
     }
 
@@ -32,9 +39,15 @@ $link-text-bottom-padding: 4px;
       .nav-link {
         color: $dark-pink-300;
         cursor: default;
-        border-bottom-width: #{$nav-bottom-line * 2};
-        border-bottom-color: $dark-pink-300;
-        padding-bottom: $link-text-bottom-padding;
+        &:after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -#{$nav-bottom-line};
+          height: #{$nav-bottom-line * 2};
+          background: $dark-pink-300;
+        }
       }
     }
 
@@ -72,6 +85,7 @@ $link-text-bottom-padding: 4px;
           top: 0;
           left: 0;
           width: 100%;
+          background: none;
           height: 100%;
           @include focus-outline;
         }

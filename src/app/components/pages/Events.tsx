@@ -13,7 +13,6 @@ import {
     isAda,
     isTeacherOrAbove,
     siteSpecific,
-    useDeviceSize,
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -36,7 +35,6 @@ export const Events = () => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const user = useAppSelector(selectors.user.orNull);
-    const deviceSize = useDeviceSize();
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
 
@@ -141,7 +139,6 @@ export const Events = () => {
 
                         <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
                             {events.map(event => <Col key={event.id} className={siteSpecific("g-4", "p-3")}>
-                                {deviceSize==="md" && <div className="section-divider mb-4"/>}
                                 <EventCard event={event} />
                             </Col>)}
                         </Row>
