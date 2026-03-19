@@ -112,7 +112,7 @@ const RequiredAccountInfoBody = () => {
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
-                        textOverride="This is now required information to better help us measure our reach and impact."
+                        textOverride={siteSpecific("This is now required information to better help us measure our reach and impact.", undefined)}
                     />}
                 </Col>
                 <Col xs={12}>

@@ -4,7 +4,7 @@ import {FormGroup, Label} from "reactstrap";
 import classNames from "classnames";
 import React, {ChangeEvent} from "react";
 import {useGetCountriesQuery, useGetPriorityCountriesQuery,} from "../../../state";
-import {isPhy, siteSpecific} from "../../../services";
+import {siteSpecific} from "../../../services";
 import {StyledDropdown} from "./DropdownInput";
 
 interface CountryInputProps {
@@ -15,7 +15,7 @@ interface CountryInputProps {
     submissionAttempted: boolean;
     idPrefix?: string;
     required: boolean;
-    textOverride?: string; // override text to display below the input
+    textOverride?: string;
 }
 
 export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryCodeValid, submissionAttempted, idPrefix="account", required, textOverride}: CountryInputProps) => {
