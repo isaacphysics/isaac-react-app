@@ -8,8 +8,7 @@
   },
   "engineStrict": true,
   "resolutions": {
-    "@types/react": "^18.3.23",
-    "minimatch": "^9.0.7"
+    "@types/react": "^18.3.23"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
