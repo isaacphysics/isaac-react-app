@@ -48,6 +48,7 @@ import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
 import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -296,6 +297,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useHistoryState("currentTab", MANAGE_QUIZ_TAB.set);
+    const { PATH_NAMES } = useDynamicValues();
 
     const { data: groups } = useGetGroupsQuery(false);
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
@@ -322,7 +324,6 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
 
-    const pageTitle= siteSpecific("Set / manage tests", "Manage tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {SITE_TITLE_SHORT} team have built.
         <br />
@@ -391,7 +392,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
+            <TitleAndBreadcrumb currentPageTitle={PATH_NAMES.SET_TESTS} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         }
         sidebar={siteSpecific(
             activeTab === MANAGE_QUIZ_TAB.set

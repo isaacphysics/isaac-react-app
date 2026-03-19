@@ -3,12 +3,13 @@ import {clearQuizAttempt, loadQuizAssignmentAttempt, useAppDispatch} from "../..
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {getThemeFromTags, isDefined, useCurrentQuizAttempt} from "../../../services";
-import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps} from "../../elements/quiz/QuizContentsComponent";
+import {QuizContentsComponent, QuizAttemptProps} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
 import {Alert, Container} from "reactstrap";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete when you are finished.
@@ -19,8 +20,10 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
     const {page, quizAssignmentId} = useParams<{quizAssignmentId: string; page?: string;}>();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
+    const { PATH_NAMES, CRUMBS } = useDynamicValues();
+
     useEffect(() => {
-        dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId, 10)));
+        void dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId as string, 10)));
         return () => {
             dispatch(clearQuizAttempt());
         };
@@ -45,7 +48,7 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
                 <QuizAttemptFooter {...subProps} />
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle={PATH_NAMES.TEST} intermediateCrumbs={CRUMBS.MY_TESTS} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
                     <h4 className="alert-heading">Error loading assignment!</h4>
                     <p>{error}</p>

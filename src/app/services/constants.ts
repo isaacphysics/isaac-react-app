@@ -1284,6 +1284,7 @@ export const PATHS = {
     MY_TESTS: "/tests",
     SET_TESTS: "/set_tests",
     TEST: "/test/assignment",
+    TEST_FEEDBACK: "/test/feedback",
     PREVIEW_TEST: "/test/preview",
     PRACTICE_TESTS: "/practice_tests",
 };
@@ -1302,6 +1303,7 @@ export const PATH_NAMES: { [k in keyof typeof PATHS]: string } = {
     MY_TESTS: "My tests",
     SET_TESTS: siteSpecific("Set / manage tests", "Set tests"),
     TEST: "Test",
+    TEST_FEEDBACK: "Test feedback",
     PREVIEW_TEST: "Preview test",
     PRACTICE_TESTS: "Practice tests",
 };

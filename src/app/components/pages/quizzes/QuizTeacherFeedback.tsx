@@ -32,7 +32,6 @@ import {
     AuthorisedAssignmentProgress,
     QuizFeedbackModes
 } from "../../../../IsaacAppTypes";
-import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
 import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
@@ -53,6 +52,7 @@ import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {markClassesInternal, ResultsTableHeader} from "../AssignmentProgressIndividual";
 import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -69,10 +69,12 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
-    const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
+    const numericQuizAssignmentId = parseInt(quizAssignmentId as string, 10);
     const quizAssignmentQuery = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
     const {data: quizAssignment} = quizAssignmentQuery;
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
+
+    const { CRUMBS } = useDynamicValues();
 
     const setFeedbackMode = (mode: QuizFeedbackMode) => {
         if (mode !== quizAssignment?.quizFeedbackMode) {
@@ -98,7 +100,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const numStudentsCompletedAll = quizAssignment?.userFeedback?.filter(p => p.feedback?.overallMark?.correct && p.feedback?.overallMark?.correct === quizAssignment.quiz?.total).length;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "icon", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} intermediateCrumbs={CRUMBS.SET_TESTS} icon={{type: "icon", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>
         <ShowLoadingQuery
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}

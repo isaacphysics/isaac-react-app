@@ -14,11 +14,14 @@ import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PracticeQuizzesSidebar } from "../../elements/sidebar/PracticeQuizzesSidebar";
 import { PageContainer } from "../../elements/layout/PageContainer";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 export const PracticeQuizzes = () => {
     const pageContext = useUrlPageTheme();
     const pageSubject = pageContext?.subject;
     const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
+
+    const { PATH_NAMES } = useDynamicValues();
 
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
     const user = useAppSelector(selectors.user.orNull);
@@ -91,7 +94,7 @@ export const PracticeQuizzes = () => {
     return <PageContainer { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={"Practice tests"}
+                currentPageTitle={PATH_NAMES.PRACTICE_TESTS}
                 icon={{"type": "icon", "icon": "icon-tests"}}
                 intermediateCrumbs={crumb ? [crumb] : []}
             />

@@ -1,9 +1,8 @@
 import React, {useCallback} from "react";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {getThemeFromTags, isDefined, isPhy, useQuizAttemptFeedback} from "../../../services";
+import {getThemeFromTags, isDefined, isPhy, PATH_NAMES, useQuizAttemptFeedback} from "../../../services";
 import {
-    myQuizzesCrumbs,
     QuizContentsComponent,
     QuizAttemptProps,
     QuizPagination
@@ -14,6 +13,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Col, Container} from "reactstrap";
 import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 function QuizAttemptFeedbackFooter(props: QuizAttemptProps) {
     const {page, pageLink, studentUser} = props;
@@ -49,6 +49,8 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const numericQuizAttemptId = quizAttemptId ? parseInt(quizAttemptId, 10) : undefined;
     const {attempt, studentUser, questions, sections, error} = useQuizAttemptFeedback(numericQuizAttemptId, numericQuizAssignmentId, numericStudentId);
 
+    const { CRUMBS } = useDynamicValues();
+
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
     const pageLink = useCallback((page?: number) => {
@@ -75,7 +77,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 </SidebarLayout>
             </>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle={PATH_NAMES.TEST_FEEDBACK} intermediateCrumbs={CRUMBS.MY_TESTS} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
                     <p>{error}</p>

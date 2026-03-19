@@ -37,6 +37,7 @@ import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 import { QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps } from "../sidebar/QuizSidebar";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 type PageLinkCreator = (page?: number) => string;
 export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId?: SUBJECTS | TAG_ID }, quizId: string | undefined };
@@ -233,16 +234,14 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
     ;
 }
 
-export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage tests", "Set tests"), to: `/set_tests`}];
-export const rubricCrumbs = [{title: "Practice tests", to: "/practice_tests"}];
-const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user: RegisteredUserDTO) => {
+const useGetCrumbs = (preview: boolean | undefined, view: boolean | undefined, user: RegisteredUserDTO) => {
+    const { CRUMBS } = useDynamicValues();
     if (preview && isTeacherOrAbove(user)) {
-        return teacherQuizzesCrumbs;
+        return CRUMBS.SET_TESTS;
     } if (view) {
-        return rubricCrumbs;
+        return CRUMBS.PRACTICE_TESTS;
     }
-    return myQuizzesCrumbs;
+    return CRUMBS.MY_TESTS;
 };
 
 const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps | QuizViewProps) => {
@@ -258,7 +257,7 @@ const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUse
         quizTitle += " Preview";
     }
 
-    const crumbs = getCrumbs(preview, !!view, user);
+    const crumbs = useGetCrumbs(preview, !!view, user);
     if (page === null || page === undefined) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
             intermediateCrumbs={crumbs} icon={{"type": "icon", "icon": "icon-tests"}}

@@ -46,6 +46,7 @@ import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 export interface QuizzesPageProps {
     user: RegisteredUserDTO;
@@ -361,6 +362,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
     const [showCompleted, setShowCompleted] = useState(false);
 
     const deviceSize = useDeviceSize();
+    const { PATH_NAMES } = useDynamicValues();
 
     const [showFilters, setShowFilters] = useState(false);
     const [quizTitleFilter, setQuizTitleFilter] = useState("");
@@ -459,7 +461,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
+            <TitleAndBreadcrumb currentPageTitle={PATH_NAMES.MY_TESTS} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         }
         sidebar={siteSpecific(
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}

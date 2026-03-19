@@ -2,13 +2,14 @@ import React, {useCallback, useMemo} from "react";
 import {useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {getThemeFromTags, isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
-import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizContentsComponent";
+import {QuizContentsComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
 import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
+import { useDynamicValues } from "../../../services/dynamicValues";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
     <QuizSidebarLayout>
@@ -24,13 +25,13 @@ const pageHelp = <span>
     Preview the questions on this test.
 </span>;
 
-const Error = buildErrorComponent("Test Preview", "Error loading test preview", myQuizzesCrumbs);
-
 export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
-
     const {page, quizId} = useParams<{quizId: string; page?: string;}>();
-    const quizPreviewQuery = useGetQuizPreviewQuery(quizId);
+    const quizPreviewQuery = useGetQuizPreviewQuery(quizId as string);
     const {data: quiz} = quizPreviewQuery;
+    const { CRUMBS } = useDynamicValues();
+
+    const Error = useMemo(() => buildErrorComponent("Test Preview", "Error loading test preview", CRUMBS.MY_TESTS), [CRUMBS]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
