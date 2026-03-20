@@ -61,7 +61,7 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         jest.runAllTimers();
 
-        expect(fakeDispatch).not.toBeCalled();
+        expect(fakeDispatch).not.toHaveBeenCalled();
     });
 
     it ("clears the current user if getting the current user fails", async () => {
