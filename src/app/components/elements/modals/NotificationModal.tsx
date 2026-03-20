@@ -4,14 +4,14 @@ import {Button, Col, Row} from "reactstrap";
 import {api} from "../../../services";
 import {IsaacContent} from "../../content/IsaacContent";
 
-const NotificationModalBody = (notification: { notification: any }) => {
+const SurveyNotificationModalBody = (notification: { notification: any }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user || null);
 
     const currentNotification = notification.notification;
 
-    function respond(response: string) {
-        api.notifications.respond(currentNotification.id, response);
+    async function respond(response: string) {
+        await api.notifications.respond(currentNotification.id, response);
         dispatch(closeActiveModal());
         if (response == 'ACKNOWLEDGED' && currentNotification.externalReference.url) {
             const userIdToken = "{{currentUserId}}";
@@ -54,10 +54,10 @@ const NotificationModalBody = (notification: { notification: any }) => {
     </React.Fragment>;
 };
 
-export const notificationModal = (notification: any) => {
+export const surveyNotificationModal = (notification: any) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
         title: notification.title,
-        body: <NotificationModalBody notification={notification}/>
+        body: <SurveyNotificationModalBody notification={notification}/>
     };
 };
