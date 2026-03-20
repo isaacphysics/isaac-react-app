@@ -263,14 +263,14 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 </Alert>}
 
                 {/* Action Buttons */}
-                {recordConfidence ?
-                    <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
+                {recordConfidence
+                    ? <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
                         validationPending={validationPending} setValidationPending={setValidationPending}
                         disableInitialState={confidenceDisabled}
                         identifier={doc.id} type={"question"}
-                        validationResponse={validationResponse} />
-                    :
-                    (!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
+                        validationResponse={validationResponse}
+                    />
+                    : (!correct || canSubmit || (isFastTrack && (primaryAction || secondaryAction))) && !locked &&
                         <div
                             className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-7 mb-n3": correct})}>
                             {secondaryAction &&
