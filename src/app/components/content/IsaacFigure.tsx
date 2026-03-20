@@ -1,13 +1,14 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { lazy, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {FigureRegion, FigureDTO} from "../../../IsaacApiTypes";
 import {ALPHABET, apiHelper, FIGURE_DROP_ZONE_PLACEHOLDER_SIZE} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {DragAndDropRegionContext, FigureNumberingContext, InlineContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
-import InlineDropRegion from '../elements/markup/portals/InlineDropZones';
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
 import { FigureModal } from './IsaacImage';
 import InlineEntryZoneBase from '../elements/markup/portals/InlineEntryZone';
+
+const InlineDropRegion = lazy(() => import("../elements/markup/portals/InlineDropZones"));
 
 interface IsaacFigureProps {
     doc: FigureDTO;
