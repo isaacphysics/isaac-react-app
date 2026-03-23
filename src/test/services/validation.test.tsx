@@ -73,7 +73,7 @@ describe('Required field validation', () => {
         });
 
     } else {
-        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require country code for %s on Isaac", (role) => {
+        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires country code for %s on Isaac", (role) => {
             // Arrange
             const user = {...testUser, user: {...testUser.user, role: role, countryCode: undefined}};
 
@@ -85,7 +85,7 @@ describe('Required field validation', () => {
                 "email": true,
                 "familyName": true,
                 "givenName": true,
-                "countryCode": true,
+                "countryCode": false,
                 "emailPreferences": true,
                 "school": true,
                 "userContexts": true

@@ -127,7 +127,7 @@ export function validateRequiredFields(user?: Immutable<ValidationUser> | null, 
         familyName: validateName(user?.familyName),
         email: validateEmail(user?.email),
         school: isPhy || isStudent(user) || isTutor(user) || validateUserSchool(user),
-        countryCode: isPhy || validateCountryCode(user?.countryCode),
+        countryCode: validateCountryCode(user?.countryCode),
         emailPreferences: (userPreferences?.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences?.EMAIL_PREFERENCE)) as boolean,
         userContexts: validateUserContexts(registeredContexts, isAda)
     };
