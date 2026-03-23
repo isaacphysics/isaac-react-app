@@ -7,7 +7,7 @@ import { AdaNewsSection } from "../elements/AdaNewsSection";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { isTeacherOrAbove, siteSpecific, useUserNotifications } from "../../services";
+import { isTeacherOrAbove, siteSpecific, UserNotification, useUserNotifications } from "../../services";
 import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
 import classNames from "classnames";
 import { selectors, useAppSelector } from "../../state";
@@ -19,10 +19,25 @@ export const Overview = () => {
     return isTeacherOrAbove(user) ? <TeacherOverview /> : <StudentOverview />;
 };
 
+const Notifications = ({notifications}: {notifications: UserNotification[]}) => {
+    const [expandNotifications, setExpandNotifications] = useState(false);
+
+    return <>
+        {notifications.slice(0, 3).map(notification => <AdaNotification key={notification.id} notification={notification} />)}
+        <CollapsibleContainer expanded={expandNotifications} additionalOffset={"1rem"}>
+            {notifications.slice(3).map(notification => <AdaNotification key={notification.id} notification={notification} />)}
+        </CollapsibleContainer>
+        <div className="text-center">
+            {notifications.length > 3 && <button className="btn btn-link" onClick={() => setExpandNotifications(e => !e)}>
+                {expandNotifications ? "Show fewer notifications" : `Show all ${notifications.length} notifications`}
+            </button>}
+        </div>
+    </>;
+};
+
 export const TeacherOverview = () => {
     useTeacherOnboardingModal();
-    const notifications = useUserNotifications();
-    const [expandNotifications, setExpandNotifications] = useState(false);
+    const {notifications, counts} = useUserNotifications();
 
     const useAdaSidebars = useFeatureFlag(FeatureFlag.ENABLE_ADA_SIDEBARS); 
 
@@ -38,15 +53,7 @@ export const TeacherOverview = () => {
         className={classNames({"overview-padding mw-1600": !useAdaSidebars})}
     >
         <section id="notifications" className="py-3">
-            {notifications.slice(0, 3).map(notification => <AdaNotification key={notification.id} notification={notification} />)}
-            <CollapsibleContainer expanded={expandNotifications} additionalOffset={"1rem"}>
-                {notifications.slice(3).map(notification => <AdaNotification key={notification.id} notification={notification} />)}
-            </CollapsibleContainer>
-            <div className="text-center">
-                {notifications.length > 3 && <button className="btn btn-link" onClick={() => setExpandNotifications(e => !e)}>
-                    {expandNotifications ? "Show fewer notifications" : `Show all ${notifications.length} notifications`}
-                </button>}
-            </div>
+            <Notifications notifications={notifications} />
         </section>
         <section id="get-started" className="py-3">
             <GetStartedWithAda />
@@ -89,6 +96,7 @@ export const TeacherOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: "Assigned to me",
                     icon: {name: "icon-person-check", color: "secondary"},
+                    tag: counts.assignments > 0 ? `${counts.assignments} to do` : undefined,
                     bodyText: "If you join a group for your development, this is where you’ll find quizzes assigned to you.",
                     clickUrl: "/assignments",
                     buttonText: "Work for you",
@@ -128,6 +136,8 @@ export const TeacherOverview = () => {
 };
 
 export const StudentOverview = () => {
+    const {notifications, counts} = useUserNotifications();
+
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={"Overview"} />
@@ -138,12 +148,16 @@ export const StudentOverview = () => {
         )}
         id="overview"
     >
+        <section id="notifications" className="py-3">
+            <Notifications notifications={notifications} />
+        </section>
         <section id="browse" className="py-3">
             <h2>Browse Ada CS</h2>
-            <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
+            <ColumnSlice className={"row-cols-lg-4 row-cols-md-2 mt-3"}>
                 <IconCard className={"without-margin"} card={{
                     title: "Assigned to me",
                     icon: {name: "icon-person-check", color: "secondary"},
+                    tag: counts.assignments > 0 ? `${counts.assignments} to do` : undefined,
                     bodyText: "This is where you’ll find assignments that have been assigned to you.",
                     clickUrl: "/assignments",
                     buttonText: "Work for you",
@@ -152,6 +166,7 @@ export const StudentOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: "Tests",
                     icon: {name: "icon-school", color:"secondary"},
+                    tag: counts.tests > 0 ? `${counts.tests} to do` : undefined,
                     bodyText: "This is where you’ll find tests that have been set for you.",
                     clickUrl: "/tests",
                     buttonText: "View tests",

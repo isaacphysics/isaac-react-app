@@ -140,7 +140,7 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
         return <div className="dashboard-panel"/>;
     }
 
-    const toDo = getAllSortedWorkToDo(assignments, quizAssignments, 2);
+    const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>

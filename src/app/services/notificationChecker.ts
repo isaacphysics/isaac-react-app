@@ -24,7 +24,16 @@ export interface UserNotification {
     }
 }
 
-export const useUserNotifications = () : UserNotification[] => {
+interface UserNotificationsResult {
+    notifications: UserNotification[];
+    counts: {
+        assignments: number;
+        tests: number;
+        total: number;
+    }
+}
+
+export const useUserNotifications = () : UserNotificationsResult => {
 
     // TODO: discuss additional notifications with Ada – assignment deadlines, group changes etc
 
@@ -35,7 +44,7 @@ export const useUserNotifications = () : UserNotification[] => {
     const {data: myAssignments} = useGetMyAssignmentsQuery();
     const {data: myQuizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
 
-    const toDo = getAllSortedWorkToDo(myAssignments, myQuizAssignments, 8);
+    const {all: toDo, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(myAssignments, myQuizAssignments, 8);
 
     const workToDoNotifications = toDo.map((assignmentLike, i) => isAssignment(assignmentLike)
         ? {
@@ -60,7 +69,14 @@ export const useUserNotifications = () : UserNotification[] => {
             : undefined
      ).filter((n): n is UserNotification => !!n);
 
-    return [
-        ...workToDoNotifications,
-    ];
+    return {
+        notifications: [
+            ...workToDoNotifications,
+        ],
+        counts: {
+            assignments: assignmentsCount,
+            tests: quizzesCount,
+            total: assignmentsCount + quizzesCount,
+        }
+    };
 };
