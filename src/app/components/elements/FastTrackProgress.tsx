@@ -261,7 +261,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         // Evaluate concept connections
         if (currentlyWorkingOn.isConcept) {
             const mostRecentTopTenQuestionId = getMostRecentQuestion(questionHistory, 'ft_top_ten') || undefined;
-            const mostRecentTopTenIndex = gameboard?.contents?.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId) || -1;
+            const mostRecentTopTenIndex = gameboard?.contents?.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId) ?? -1;
 
             const upperQuestionId = currentlyWorkingOn.fastTrackLevel === 'ft_upper' ? currentlyWorkingOn.id : getMostRecentQuestion(questionHistory, 'ft_upper');
             const upperIndex = conceptQuestions.upperLevelQuestions.map(question => question.id).indexOf(upperQuestionId as string);

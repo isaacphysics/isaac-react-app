@@ -47,6 +47,15 @@ export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     </LinkItem>
 );
 
+export const LinkItemButton = ({children, ...props}: React.PropsWithChildren<DropdownItemProps>) => {
+    const className = classNames(siteSpecific("px-6 px-lg-5 py-3", "ps-2 py-2 p-nav-3 font-h4 link-light nav-link"), "d-flex align-items-center");
+    return <li>
+        <DropdownItem tag="button" className={className} {...props}>
+            {children}
+        </DropdownItem>
+    </li>;
+};
+
 interface NavigationSectionProps {className?: string; children?: React.ReactNode; title: React.ReactNode; topLevelLink?: boolean; to?: string}
 export const NavigationSection = ({className, children, title, topLevelLink, to}: NavigationSectionProps) => {
     const [isOpen, setIsOpen] = useState(false);

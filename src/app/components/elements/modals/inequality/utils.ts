@@ -553,6 +553,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                     })*/,
             otherFunctions: [ ...baseItems.otherFunctions, ...customMenuItems.otherFunctions ],
             chemicalElements: [ ...baseItems.chemicalElements, ...customMenuItems.chemicalElements ],
+            otherChemicalStates: [ ...baseItems.otherChemicalStates, ...customMenuItems.otherChemicalStates ],
             otherChemistryFunctions: [ ...baseItems.otherChemistryFunctions, ...customMenuItems.otherChemistryFunctions ],
         }, false] as [MenuItems, boolean];
     } else {

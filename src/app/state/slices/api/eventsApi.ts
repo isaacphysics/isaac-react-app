@@ -70,7 +70,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 }).injectEndpoints({
     endpoints: (build) => ({
         getEvent: build.query<AugmentedEvent, string>({
-            query: (eventId) => `/events/${eventId}`,
+            query: (eventId) => `/events/${encodeURIComponent(eventId)}`,
             providesTags: (event) => event ? [{type: "Event", id: event.id}] : [],
             transformResponse: augmentEvent,
         }),
@@ -140,7 +140,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         bookMyselfOnEvent: build.mutation<void, {eventId: string; additionalInformation: AdditionalInformation}>({
             query: ({eventId, additionalInformation}) => ({
-                url: `/events/${eventId}/bookings`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings`,
                 method: "POST",
                 body: additionalInformation
             }),
@@ -157,7 +157,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
         // refetched when the "useless" parameter changes. In cases like that, using a lazy query hook would work.
         addMyselfToWaitingList: build.mutation<void, {eventId: string; additionalInformation: AdditionalInformation; waitingListOnly?: boolean}>({
             query: ({eventId, additionalInformation}) => ({
-                url: `/events/${eventId}/waiting_list`,
+                url: `/events/${encodeURIComponent(eventId)}/waiting_list`,
                 method: "POST",
                 body: additionalInformation
             }),
@@ -175,7 +175,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         cancelMyBooking: build.mutation<void, string>({
             query: (eventId) => ({
-                url: `/events/${eventId}/bookings/cancel`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings/cancel`,
                 method: "DELETE"
             }),
             invalidatesTags: (_, __, eventId) => [{type: "Event", id: eventId}],
@@ -189,7 +189,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
         // === Booking management ===
 
         getEventBookings: build.query<EventBookingDTO[], string>({
-            query: (eventId) => `/events/${eventId}/bookings`,
+            query: (eventId) => `/events/${encodeURIComponent(eventId)}/bookings`,
             providesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to load event bookings",
@@ -197,7 +197,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
         }),
 
         getEventBookingsForGroup: build.query<EventBookingDTO[], {eventId: string; groupId: number}>({
-            query: ({eventId, groupId}) => `/events/${eventId}/bookings/for_group/${groupId}`,
+            query: ({eventId, groupId}) => `/events/${encodeURIComponent(eventId)}/bookings/for_group/${groupId}`,
             providesTags: (eventBookings, _, {eventId, groupId}) => isDefined(eventBookings) ? [{type: "EventGroupBookings", id: `${eventId}|${groupId}`}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to load event bookings",
@@ -205,7 +205,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
         }),
 
         getEventBookingsForAllGroups: build.query<EventBookingDTO[], string>({
-            query: (eventId) => `/events/${eventId}/groups_bookings`,
+            query: (eventId) => `/events/${encodeURIComponent(eventId)}/groups_bookings`,
             providesTags: (eventBookings, _, eventId) => isDefined(eventBookings) ? [{type: "AllEventGroupBookings", id: eventId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to load event bookings",
@@ -214,7 +214,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         cancelUsersReservationsOnEvent: build.mutation<void, {eventId: string; userIds: number[]; groupId?: number}>({
             query: ({eventId, userIds}) => ({
-                url: `/events/${eventId}/reservations/cancel`,
+                url: `/events/${encodeURIComponent(eventId)}/reservations/cancel`,
                 method: "POST",
                 body: userIds,
             }),
@@ -228,7 +228,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         bookUserOnEvent: build.mutation<void, {eventId: string; userId: number; additionalInformation: AdditionalInformation}>({
             query: ({eventId, userId, additionalInformation}) => ({
-                url: `/events/${eventId}/bookings/${userId}`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings/${userId}`,
                 method: "POST",
                 body: additionalInformation
             }),
@@ -242,7 +242,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         reserveUsersOnEvent: build.mutation<void, {eventId: string; userIds: number[]}>({
             query: ({eventId, userIds}) => ({
-                url: `/events/${eventId}/reservations`,
+                url: `/events/${encodeURIComponent(eventId)}/reservations`,
                 method: "POST",
                 body: userIds
             }),
@@ -258,7 +258,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         promoteUserBooking: build.mutation<void, {eventId: string; userId: number}>({
             query: ({eventId, userId}) => ({
-                url: `/events/${eventId}/bookings/${userId}/promote`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings/${userId}/promote`,
                 method: "POST",
                 body: {eventId, userId} // TODO <--- is this body even needed?
             }),
@@ -270,7 +270,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         resendUserConfirmationEmail: build.mutation<void, {eventId: string; userId: number}>({
             query: ({eventId, userId}) => ({
-                url: `/events/${eventId}/bookings/${userId}/resend_confirmation`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings/${userId}/resend_confirmation`,
                 method: "POST"
             }),
             onQueryStarted: onQueryLifecycleEvents({
@@ -282,7 +282,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         cancelUserBooking: build.mutation<void, {eventId: string; userId: number}>({
             query: ({eventId, userId}) => ({
-                url: `/events/${eventId}/bookings/${userId}/cancel`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings/${userId}/cancel`,
                 method: "DELETE"
             }),
             invalidatesTags: ["EventBookings"],
@@ -293,7 +293,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         deleteUserBooking: build.mutation<void, {eventId: string; userId: number}>({
             query: ({eventId, userId}) => ({
-                url: `/events/${eventId}/bookings/${userId}`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings/${userId}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["EventBookings"],
@@ -304,7 +304,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
         recordUserEventAttendance: build.mutation<void, {eventId: string; userId: number; attended: boolean}>({
             query: ({eventId, userId, attended}) => ({
-                url: `/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`,
+                url: `/events/${encodeURIComponent(eventId)}/bookings/${userId}/record_attendance?attended=${attended}`,
                 method: "POST"
             }),
             invalidatesTags: ["EventBookings"],

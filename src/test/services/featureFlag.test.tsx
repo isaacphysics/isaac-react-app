@@ -9,23 +9,23 @@ import { handlerThatReturns } from "../../mocks/handlers";
 describe('Feature flag service', () => {
     const environmentHandler = (segueEnv: string) => handlerThatReturns({data: {segueEnvironment: segueEnv}, status: 200 });
 
-    describe('FeatureFlagWrapper', () => {
-        const renderWithFlagProvider = async (Component: ReactNode, { segueEnvironment }: { segueEnvironment: string }) => {
-            await renderTestEnvironment({
-                PageComponent: () => <FeatureFlagProvider>
-                    {Component}
-                </FeatureFlagProvider>,
-                extraEndpoints: [
-                    http.get(API_PATH + "/info/segue_environment", environmentHandler(segueEnvironment)),
-                ]
-            });
-            await waitForLoaded();
-        };
+    const renderWithFlagProvider = async (Component: ReactNode, { segueEnvironment }: { segueEnvironment: string }) => {
+        await renderTestEnvironment({
+            PageComponent: () => <FeatureFlagProvider>
+                {Component}
+            </FeatureFlagProvider>,
+            extraEndpoints: [
+                http.get(API_PATH + "/info/segue_environment", environmentHandler(segueEnvironment)),
+            ]
+        });
+        await waitForLoaded();
+    };
 
+    describe('FeatureFlagWrapper', () => {
         describe('one-way interface', () => {
             it('shows its child when the flag condition is met', async () => {
                 await renderWithFlagProvider(
-                    <FeatureFlagWrapper flag={FeatureFlag.TEST_FEATURE}>
+                    <FeatureFlagWrapper flag={FeatureFlag._TEST_FEATURE}>
                         <>Test ON</>
                     </FeatureFlagWrapper>,
                     { segueEnvironment: "DEV" }
@@ -36,7 +36,7 @@ describe('Feature flag service', () => {
         
             it('does not show the child when the flag condition is not met', async () => {
                 await renderWithFlagProvider(
-                    <FeatureFlagWrapper flag={FeatureFlag.TEST_FEATURE}>
+                    <FeatureFlagWrapper flag={FeatureFlag._TEST_FEATURE}>
                         <>Test ON</>
                     </FeatureFlagWrapper>,
                     { segueEnvironment: "PROD" }
@@ -50,7 +50,7 @@ describe('Feature flag service', () => {
             it('shows the onSet component when the flag condition is met', async () => {
                 await renderWithFlagProvider(
                     <FeatureFlagWrapper 
-                        flag={FeatureFlag.TEST_FEATURE}
+                        flag={FeatureFlag._TEST_FEATURE}
                         onSet={<>Test ON</>}
                         onUnset={<>Test OFF</>}
                     />,
@@ -63,7 +63,7 @@ describe('Feature flag service', () => {
             it('shows the onUnset component when the flag condition is not met', async () => {
                 await renderWithFlagProvider(
                     <FeatureFlagWrapper 
-                        flag={FeatureFlag.TEST_FEATURE}
+                        flag={FeatureFlag._TEST_FEATURE}
                         onSet={<>Test ON</>}
                         onUnset={<>Test OFF</>}
                     />,
@@ -78,7 +78,7 @@ describe('Feature flag service', () => {
     describe('useFeatureFlag hook', () => {
         it('flag is enabled when the flag condition is met', async () => {
             const { result } = renderTestHook(
-                () => useFeatureFlag(FeatureFlag.TEST_FEATURE),
+                () => useFeatureFlag(FeatureFlag._TEST_FEATURE),
                 {
                     Wrapper: ({ children }: { children: React.ReactNode }) => <FeatureFlagProvider>{children}</FeatureFlagProvider>,
                     extraEndpoints: [
@@ -92,7 +92,7 @@ describe('Feature flag service', () => {
 
         it('flag is enabled when at least one of the flags are enabled', async () => {
             const { result } = renderTestHook(
-                () => useFeatureFlag(["OTHER" as FeatureFlag, FeatureFlag.TEST_FEATURE]),
+                () => useFeatureFlag(["OTHER" as FeatureFlag, FeatureFlag._TEST_FEATURE]),
                 {
                     Wrapper: ({ children }: { children: React.ReactNode }) => <FeatureFlagProvider>{children}</FeatureFlagProvider>,
                     extraEndpoints: [
@@ -107,5 +107,16 @@ describe('Feature flag service', () => {
         // couldn't reliably test the negative case with the current interface, as there's no way to 
         // tell whether it's saying the switch is off because it's still loading, or because 
         // loading has finished and we know it's disabled
+    });
+
+    it("All feature flags are disabled in production", async () => {
+        await renderWithFlagProvider(
+            <FeatureFlagWrapper flag={Object.values(FeatureFlag)}>
+                <>Test ON</>
+            </FeatureFlagWrapper>,
+            { segueEnvironment: "PROD" }
+        );
+
+        expect(screen.queryByText("Test ON")).not.toBeInTheDocument();
     });
 });
