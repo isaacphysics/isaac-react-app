@@ -1,7 +1,7 @@
 import {AssignmentDTO, IAssignmentLike} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
-import {extractTeacherName, matchesAllWordsInAnyOrder} from "./";
+import {convertAssignmentToQuiz, extractTeacherName, matchesAllWordsInAnyOrder, QuizStatus} from "./";
 import { AssignmentState } from "../components/pages/MyAssignments";
 
 export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
@@ -121,3 +121,21 @@ export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduled
 export const hasAssignmentStarted = (a: AssignmentDTO): boolean => getAssignmentStartDate(a) <= Date.now();
 
 export const isOverdue = (a: IAssignmentLike) =>  a.dueDate && a.dueDate < midnightLastNight;
+
+export const getAllSortedWorkToDo = (assignments: AssignmentDTO[] | undefined | null, quizAssignments: AssignmentDTO[] | undefined | null, limit?: number): IAssignmentLike[] => {
+    const twoWeeksAgo = new Date(new Date().valueOf() - (2 * 7 * 24 * 60 * 60 * 1000));
+
+    const isComplete = (quiz: IAssignmentLike) => convertAssignmentToQuiz(quiz)?.status === QuizStatus.Complete;
+
+    // We can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
+    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => quiz.dueDate && !isOverdue(quiz) && !isComplete(quiz)) : [];
+    
+    // Any assignments without a due date are old enough that they should never be displayed here
+    const myAssignments = filterAssignmentsByStatus(assignments?.filter(a => a.dueDate && (a.dueDate > twoWeeksAgo)));
+
+    // To avoid merging & re-sorting entire lists, get the {limit} most urgent from each list first
+    const assignmentsToDo = [...myAssignments.inProgress, ...myAssignments.overDue].slice(0, limit);
+    const quizzesToDo = sortedQuizAssignments.slice(0, limit);
+    const toDo = sortUpcomingAssignments([...assignmentsToDo, ...quizzesToDo]).slice(0, limit);
+    return toDo;
+};
