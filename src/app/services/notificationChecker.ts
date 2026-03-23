@@ -67,7 +67,7 @@ export const useUserNotifications = () : UserNotificationsResult => {
                 }
             } 
             : undefined
-     ).filter((n): n is UserNotification => !!n);
+    ).filter((n): n is UserNotification => !!n);
 
     return {
         notifications: [

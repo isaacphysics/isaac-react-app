@@ -17,5 +17,5 @@ export const AdaNotification = ({ notification, ...rest }: AdaNotificationProps)
         {notification.button && <Button tag={Link} outline className="ms-auto align-self-center" to={notification.button.link}>
             {notification.button.text}
         </Button>}
-     </div>;
+    </div>;
 };
