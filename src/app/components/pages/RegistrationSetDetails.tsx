@@ -78,8 +78,9 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
         setAttemptedSignUp(true);
 
         if (familyNameIsValid && givenNameIsValid && passwordValid && emailIsValid &&
-            (!isAda || countryCodeIsValid) && (!isPhy || dobValidOrUnset) &&
-            ((userRole == 'STUDENT') || schoolIsValid) && tosAccepted ) {
+            countryCodeIsValid && (!isPhy || dobValidOrUnset) &&
+            ((userRole == 'STUDENT') || schoolIsValid) && tosAccepted 
+        ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             
             if (isAda && isTeacherOrAbove({ role: userRole })) {
