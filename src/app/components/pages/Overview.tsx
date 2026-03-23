@@ -90,7 +90,7 @@ export const TeacherOverview = () => {
                     title: "Teacher mentoring",
                     icon: {name: "icon-group", color: "secondary"},
                     bodyText: "Participate in live sessions with an experienced Ada CS mentor to get advice on teaching core topics.",
-                    clickUrl: "/mentoring",
+                    clickUrl: "/teacher_mentoring",
                     buttonText: "Learn more",
                     buttonStyle: "link",
                 }}/>
