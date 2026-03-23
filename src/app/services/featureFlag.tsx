@@ -36,7 +36,7 @@ const useFlags = () : Record<FeatureFlag, boolean> => {
     return {
         // default values
         [FeatureFlag._TEST_FEATURE]: isNonProd,
-        [FeatureFlag.ENABLE_ADA_SIDEBARS]: isNonProd,
+        [FeatureFlag.ENABLE_ADA_SIDEBARS]: false,
 
         // overrides
         ...overrides

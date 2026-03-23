@@ -52,9 +52,9 @@ export const TeacherOverview = () => {
         id="overview"
         className={classNames({"overview-padding mw-1600": !useAdaSidebars})}
     >
-        <section id="notifications" className="py-3">
+        {useAdaSidebars && <section id="notifications" className="py-3">
             <Notifications notifications={notifications} />
-        </section>
+        </section>}
         <section id="get-started" className="py-3">
             <GetStartedWithAda />
         </section>
