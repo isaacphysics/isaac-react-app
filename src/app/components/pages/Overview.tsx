@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {ColumnSlice} from "../elements/layout/ColumnSlice";
 import {IconCard} from "../elements/cards/IconCard";
 import { useTeacherOnboardingModal } from "../elements/modals/AdaTeacherOnboardingModal";
@@ -7,10 +7,12 @@ import { AdaNewsSection } from "../elements/AdaNewsSection";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { isTeacherOrAbove, siteSpecific } from "../../services";
+import { isTeacherOrAbove, siteSpecific, useUserNotifications } from "../../services";
 import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
 import classNames from "classnames";
 import { selectors, useAppSelector } from "../../state";
+import { AdaNotification } from "../elements/Notification";
+import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 
 export const Overview = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -18,7 +20,10 @@ export const Overview = () => {
 };
 
 export const TeacherOverview = () => {
-    useTeacherOnboardingModal();   
+    useTeacherOnboardingModal();
+    const notifications = useUserNotifications();
+    const [expandNotifications, setExpandNotifications] = useState(false);
+
     const useAdaSidebars = useFeatureFlag(FeatureFlag.ENABLE_ADA_SIDEBARS); 
 
     return <PageContainer
@@ -32,6 +37,17 @@ export const TeacherOverview = () => {
         id="overview"
         className={classNames({"overview-padding mw-1600": !useAdaSidebars})}
     >
+        <section id="notifications" className="py-3">
+            {notifications.slice(0, 3).map(notification => <AdaNotification key={notification.id} notification={notification} />)}
+            <CollapsibleContainer expanded={expandNotifications} additionalOffset={"1rem"}>
+                {notifications.slice(3).map(notification => <AdaNotification key={notification.id} notification={notification} />)}
+            </CollapsibleContainer>
+            <div className="text-center">
+                {notifications.length > 3 && <button className="btn btn-link" onClick={() => setExpandNotifications(e => !e)}>
+                    {expandNotifications ? "Show fewer notifications" : `Show all ${notifications.length} notifications`}
+                </button>}
+            </div>
+        </section>
         <section id="get-started" className="py-3">
             <GetStartedWithAda />
         </section>
