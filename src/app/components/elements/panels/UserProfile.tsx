@@ -109,20 +109,22 @@ export const UserProfile = (props: UserProfileProps) => {
                 submissionAttempted={submissionAttempted}
                 required={true}
             />
-            {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center border-muted my-4"/>)}
+            <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
             <CountryInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                 submissionAttempted={submissionAttempted}
-                required={isAda}
+                required={true}
+                textOverride={siteSpecific("This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
             />
             <SchoolInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
-                required={isTeacherOrAbove(userToUpdate)}
+                required={isAda && isTeacherOrAbove(userToUpdate)}
             />
+            <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
             {isPhy &&
                 <DobInput
                     userToUpdate={userToUpdate}
