@@ -61,7 +61,7 @@ import {EventManager} from "../pages/EventManager";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
-import {surveyNotificationModal} from "../elements/modals/NotificationModal";
+import {surveyNotificationModal} from "../elements/modals/SurveyNotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
