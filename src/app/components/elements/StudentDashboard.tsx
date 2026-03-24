@@ -5,7 +5,6 @@ import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from '
 import { Link } from 'react-router-dom';
 import { getAllSortedWorkToDo, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, useDeviceSize } from '../../services';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
-import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
@@ -212,7 +211,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
 
-    const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
+    const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
         {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}

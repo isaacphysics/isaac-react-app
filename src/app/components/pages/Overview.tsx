@@ -37,7 +37,7 @@ const Notifications = ({notifications}: {notifications: UserNotification[]}) => 
 
 export const TeacherOverview = () => {
     useTeacherOnboardingModal();
-    const {notifications, counts} = useUserNotifications();
+    const {notifications, workCounts} = useUserNotifications();
 
     const useAdaSidebars = useFeatureFlag(FeatureFlag.ENABLE_ADA_SIDEBARS); 
 
@@ -96,7 +96,7 @@ export const TeacherOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: "Assigned to me",
                     icon: {name: "icon-person-check", color: "secondary"},
-                    tag: counts.assignments > 0 ? `${counts.assignments} to do` : undefined,
+                    tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
                     bodyText: "If you join a group for your development, this is where you’ll find quizzes assigned to you.",
                     clickUrl: "/assignments",
                     buttonText: "Work for you",
@@ -136,7 +136,7 @@ export const TeacherOverview = () => {
 };
 
 export const StudentOverview = () => {
-    const {notifications, counts} = useUserNotifications();
+    const {notifications, workCounts} = useUserNotifications();
 
     return <PageContainer
         pageTitle={
@@ -157,7 +157,7 @@ export const StudentOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: "Assigned to me",
                     icon: {name: "icon-person-check", color: "secondary"},
-                    tag: counts.assignments > 0 ? `${counts.assignments} to do` : undefined,
+                    tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
                     bodyText: "This is where you’ll find assignments that have been assigned to you.",
                     clickUrl: "/assignments",
                     buttonText: "Work for you",
@@ -166,7 +166,7 @@ export const StudentOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: "Tests",
                     icon: {name: "icon-school", color:"secondary"},
-                    tag: counts.tests > 0 ? `${counts.tests} to do` : undefined,
+                    tag: workCounts.tests > 0 ? `${workCounts.tests} to do` : undefined,
                     bodyText: "This is where you’ll find tests that have been set for you.",
                     clickUrl: "/tests",
                     buttonText: "View tests",

@@ -8,7 +8,8 @@ import {
     isLoggedIn,
     isStaff,
     isTutorOrAbove,
-    PATHS
+    PATHS,
+    useUserNotifications
 } from "../../../services";
 import {
     LinkItem,
@@ -16,7 +17,6 @@ import {
     MenuBadge,
     MenuOpenContext,
     NavigationSection,
-    useAssignmentsCount
 } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
@@ -25,7 +25,7 @@ import { FeatureFlag, FeatureFlagModal, FeatureFlagWrapper, hasActiveFeatureFlag
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    const { notifications, workCounts } = useUserNotifications();
     const dispatch = useAppDispatch();
 
     const { data: env } = useGetSegueEnvironmentQuery();
@@ -116,9 +116,9 @@ export const HeaderCS = () => {
                         {isLoggedIn(user)
                             ? <>
                                 <FeatureFlagWrapper flag={FeatureFlag.ENABLE_ADA_SIDEBARS}
-                                    onSet={<NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>} />}
+                                    onSet={<NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />}
                                     onUnset={
-                                        <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
+                                        <NavigationSection title={<>My Ada {<MenuBadge count={workCounts.total} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
                                             {isTutorOrAbove(user) ?
                                                 <>
                                                     <LinkItem to="/dashboard">Overview</LinkItem>
@@ -126,12 +126,12 @@ export const HeaderCS = () => {
                                                     <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
                                                     <LinkItem to="/set_tests">Manage tests</LinkItem>
                                                     <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
-                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
+                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
                                                 </>
                                                 :
                                                 <>
-                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                                                    <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
+                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
+                                                    <LinkItem to="/tests">My tests {<MenuBadge count={workCounts.tests} message="incomplete tests" />}</LinkItem>
                                                     <LinkItem to="/progress">My progress</LinkItem>
                                                 </>
                                             }

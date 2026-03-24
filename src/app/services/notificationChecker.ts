@@ -26,7 +26,7 @@ export interface UserNotification {
 
 interface UserNotificationsResult {
     notifications: UserNotification[];
-    counts: {
+    workCounts: {
         assignments: number;
         tests: number;
         total: number;
@@ -73,7 +73,7 @@ export const useUserNotifications = () : UserNotificationsResult => {
         notifications: [
             ...workToDoNotifications,
         ],
-        counts: {
+        workCounts: {
             assignments: assignmentsCount,
             tests: quizzesCount,
             total: assignmentsCount + quizzesCount,
