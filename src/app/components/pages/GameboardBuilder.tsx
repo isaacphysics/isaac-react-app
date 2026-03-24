@@ -378,7 +378,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </Row>
 
                     {isStaff(user) && <Row className="mt-2 align-items-end">
-                        <Col>
+                        <Col xs={6} sm={4}>
                             <FormGroup>
                                 <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>Tag as</Label>
                                 <StyledSelect inputId="question-search-level"
@@ -396,7 +396,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 />
                             </FormGroup>
                         </Col>
-                        <Col>
+                        <Col xs={6} sm={4}>
                             <FormGroup>
                                 <Label htmlFor="gameboard-builder-url"
                                     className={"fw-bold form-optional"}>{siteSpecific("Question deck", "Quiz")} ID</Label>
@@ -414,7 +414,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
-                        <Col>
+                        <Col xs={12} sm={4}>
                             <FormGroup>
                                 <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>Wildcard</Label>
                                 <Input id="gameboard-builder-wildcard"
