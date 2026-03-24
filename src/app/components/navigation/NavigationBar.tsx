@@ -1,6 +1,5 @@
 import React, {HTMLProps, useState} from "react";
 import {Link} from "react-router-dom";
-import {selectors, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery} from "../../state";
 import {
     Badge,
     Dropdown,
@@ -11,20 +10,13 @@ import {
     NavLink,
 } from "reactstrap";
 import {
-    filterAssignmentsByStatus,
     isAda,
-    isFound,
-    isTeacherPending,
-    isOverdue,
     isPhy,
-    partitionCompleteAndIncompleteQuizzes,
     siteSpecific,
     useNavbarExpanded
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
-import {skipToken} from "@reduxjs/toolkit/query";
-import { AssignmentDTO, QuizAssignmentDTO } from "../../../IsaacApiTypes";
 
 export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
