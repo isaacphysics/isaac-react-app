@@ -647,6 +647,7 @@ export interface UserProgress {
     totalQuestionsAttemptedThisAcademicYear?: number;
     totalQuestionPartsCorrectThisAcademicYear?: number;
     totalQuestionPartsAttemptedThisAcademicYear?: number;
+    totalQuestionPartsCorrectThisRevisionPeriod?: number;
     mostRecentQuestions?: ContentSummaryDTO[];
     oldestIncompleteQuestions?: ContentSummaryDTO[];
     attemptsByType?: { [type: string]: number };
