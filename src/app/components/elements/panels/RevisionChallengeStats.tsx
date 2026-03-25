@@ -26,7 +26,7 @@ const REVISION_CHALLENGES: { [key: string]: ProgressChallenge } = {
         </span>,
         target: 50,
         active:    isAda && isBetween(new Date("2026-04-01"), new Date("2026-07-01")),
-        displayed: isAda && isBetween(new Date("2026-04-01"), new Date("2026-08-01")),
+        displayed: isAda && isBetween(new Date("2026-03-01"), new Date("2026-08-01")),
     },
 };
 
@@ -36,7 +36,7 @@ export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgr
     const completedQuestionsInChallenge = userProgress?.totalQuestionsCorrectThisRevisionPeriod ?? 0;
     const isComplete = completedQuestionsInChallenge >= (displayedChallenge?.target ?? Infinity);
 
-    return displayedChallenge && <div key={displayedChallenge?.name} className="mb-3 w-50 mx-auto">
+    return displayedChallenge && <div key={displayedChallenge?.name} className="mb-3 w-lg-50 mx-auto">
         <h5 className="mb-0">{displayedChallenge?.name}:</h5>
         {displayedChallenge?.text}
         {isComplete
