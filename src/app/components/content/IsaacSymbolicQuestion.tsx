@@ -34,7 +34,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
     
     const initialSeed: SeedExpressions = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression ?? '', [doc.formulaSeed]);  
-    const previewText = (currentAttemptValue && currentAttemptValue.result) ? currentAttemptValue.result.tex : initialSeed.latex;
+    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
     const [textInput, setTextInput] = useState((currentAttemptValue ? currentAttemptValue.result?.python : initialSeed.python) ?? "");  
 
     const [hasStartedEditing, setHasStartedEditing] = useState<boolean>(false);

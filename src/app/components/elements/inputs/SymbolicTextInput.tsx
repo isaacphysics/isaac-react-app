@@ -251,7 +251,7 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
             <div className="d-flex flex-nowrap w-100">
                 <div className="position-relative flex-grow-1">      
                     <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={(editorMode === "logic" && !demoPage) ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": !demoPage && emptySubmission && textInput === typedProps.initialSeedText})}/>
-                    {!demoPage && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                    {!demoPage && typedProps.initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                         updateEquation('');
                         if (sketchRef.current) sketchRef.current.loadTestCase(typedProps.editorSeed ?? []);
                         setHasStartedEditing(false);
