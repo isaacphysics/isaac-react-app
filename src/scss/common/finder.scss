@@ -8,8 +8,7 @@
   .finder-search {
     $search-button-offset: 50px;
     .question-search-button {
-      background: white url(/assets/cs/icons/search-jet.svg) no-repeat center;
-      background-size: 20px 20px;
+      @include svg-color(url('/assets/cs/icons/search.svg'), $white, 20px, 20px);
       border: 1px solid black;
       border-left: none;
       border-radius: 0 $border-radius-lg $border-radius-lg 0;
@@ -38,11 +37,6 @@
       padding-right: calc($search-button-offset + 1.2em) !important; // offset plus the default padding inside an input
       height: 50px;
     }
-  }
-
-  .search-item-icon {
-    max-width: 2rem;
-    max-height: 2rem;
   }
 
   .finder-filters {

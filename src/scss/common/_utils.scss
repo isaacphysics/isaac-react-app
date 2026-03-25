@@ -89,17 +89,25 @@
   display: contents !important;
 }
 
+// We override Bootstrap's default z-index so it is lower than that of the page header
+.sticky-top {
+  z-index: 18;
+}
+.sticky-bottom {
+  z-index: 18;
+}
+
 .sticky-left {
   // mirror BS sticky-top and sticky-bottom
   position: sticky;
   left: 0;
-  z-index: 1020;
+  z-index: 18;
 }
 
 .sticky-right {
   position: sticky;
   right: 0;
-  z-index: 1020;
+  z-index: 18;
 }
 
 .text-overflow-ellipsis {

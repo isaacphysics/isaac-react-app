@@ -178,10 +178,10 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         {sections?.map((section, index) => {
             const intendedAudience = isIntendedAudience(section.audience, userContext, user);
             const audienceString = stringifyAudience(section.audience, userContext, intendedAudience);
-            return <React.Fragment key={section.id || index}>
+            return <React.Fragment key={`${section.id} ${index}`}>
                 {isPhy && stageInserts?.[index] && <StageInsert stage={stageInserts[index]} />}
                 <Accordion
-                    key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
+                    id={section.id} index={index}
                     startOpen={section.startOpen}
                     deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}

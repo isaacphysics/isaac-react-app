@@ -5,7 +5,8 @@ import {selectors, useAppSelector, useRequestEmailVerificationMutation} from "..
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {examBoardLabelMap, isAda, isTutor, siteSpecific, stageLabelMap, studentOnlyEventMessage} from "../../services";
 import {Immutable} from "immer";
-import { Card, CardBody, Row, Col, Label, Input, FormFeedback, Button, UncontrolledPopover, PopoverBody } from "reactstrap";
+import { Card, CardBody, Row, Col, Label, Input, FormFeedback, Button, UncontrolledTooltip } from "reactstrap";
+import classNames from "classnames";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -144,16 +145,16 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     </React.Fragment>}
                 </div>
 
-                {!event.isVirtual && <div>
+                {<div>
                     <div>
                         <Label htmlFor="medical-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
                                 Dietary requirements or relevant medical conditions
-                                <i id="dietary-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help has-tip")} />
+                                <i id="dietary-reqs-help" aria-haspopup="true" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
                             </span>
-                            <UncontrolledPopover trigger="click" placement="bottom" target="dietary-reqs-help">
-                                <PopoverBody>For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...</PopoverBody>
-                            </UncontrolledPopover>
+                            <UncontrolledTooltip placement="bottom" target="dietary-reqs-help">
+                                For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...
+                            </UncontrolledTooltip>
                         </Label>
                         <Input
                             id="medical-reqs" name="medical-reqs" type="text" value={additionalInformation.medicalRequirements || ""}
@@ -165,11 +166,11 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         <Label htmlFor="access-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
                                 Accessibility requirements
-                                <i id="access-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help has-tip")} />
+                                <i id="access-reqs-help" aria-haspopup="true" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
                             </span>
-                            <UncontrolledPopover trigger="click" placement="bottom" target="access-reqs-help">
-                                <PopoverBody>For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.</PopoverBody>
-                            </UncontrolledPopover>
+                            <UncontrolledTooltip placement="bottom" target="access-reqs-help">
+                                For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.
+                            </UncontrolledTooltip>
                         </Label>
                         <Input
                             id="access-reqs" name="access-reqs" type="text" value={additionalInformation.accessibilityRequirements || ""}

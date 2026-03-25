@@ -120,7 +120,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                 {<Options isVisible={isVisible} setVisible={setVisible} toggle={toggle} fastTrackInfo={fastTrackInfo} doc={doc} />}
                 {isVisible && <Row>
                     <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
-                        <output htmlFor={`toggle-${elemID(doc)}`} role="alert" className={classNames("alert-secondary quick-q-alert", {"p-3 pb-0": isPhy})} color={isAda ? "hide" : "secondary"}>
+                        <output htmlFor={`toggle-${elemID(doc)}`} role="alert" className={classNames("d-block alert-secondary quick-q-alert", {"p-3 pb-0": isPhy})} color={isAda ? "hide" : "secondary"}>
                             <IsaacContentValueOrChildren {...answer} />
                         </output>
                     </Col>

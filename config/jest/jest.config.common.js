@@ -24,7 +24,10 @@ module.exports = {
     "transform": {
         "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
         "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>config/jest/fileTransform.js",
-        '^.+\\.[jt]sx?$': "<rootDir>config/jest/tsTransform.js",
+        "^.+\\.[jt]sx?$": ["ts-jest", {
+            tsconfig: "<rootDir>/tsconfig.json",
+        }],
+
     },
     "transformIgnorePatterns": [
         "/node_modules/(?!@popperjs|katex|leaflet)",
@@ -53,6 +56,7 @@ module.exports = {
     ],
     "globals": {
         REACT_APP_API_VERSION: "any",
+        EDITOR_PREVIEW: false
     },
     "workerIdleMemoryLimit": '512MB',
     "testTimeout": 20000

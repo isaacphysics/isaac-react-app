@@ -8,6 +8,61 @@ export function isDefined<T>(value: T | undefined | null): value is NonNullable<
     return <T>value !== undefined && <T>value !== null;
 }
 
+/**
+ * A utility function to map over the values of an object, returning a new object with the same keys but transformed 
+ * values.
+ * 
+ * @param obj The object whose values are to be transformed.
+ * @param fn The function to apply to each value.
+ * @returns A new object with the same keys as the input object, but with values transformed by the provided function.
+ */
+// Allowing `any` is the only way to achieve type safety at the call site, at the price of giving up some type safety
+// in the implementation.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function mapObject<T extends Record<string, any>, V>(obj: T, fn: (val: T[keyof T]) => V): Record<string, V> {
+    return Object.fromEntries(
+        Object.entries(obj).map(
+            ([key, value]) => [key, fn(value)]
+        )
+    );
+};
+
+/**
+ * Use this to wrap a function in additional logic in a type-safe way, without needing to consider the original 
+ * function's call signature. Especially useful with highly polymorphic functions, as it saves you from needing to 
+ * think about the decorated function's signature. Works as long as you don't need to access the original parameters.
+ * 
+ * Examples:
+ * ```js
+ * // logTwice gets the same type signature as console.log.
+ * const logTwice = decorate(console.log, original => {
+ *   original();
+ *   original();
+ * });
+ * 
+ * logTwice("hello");
+ * 
+ * // loggedPrompt gets the same type signature as window.prompt
+ * const loggedPrompt = decorate(window.prompt, original => {
+ *   console.log('Requesting value from user ');
+ *   return original();
+ * });
+ *
+ * loggedPrompt("Please enter the value of 'x': ");
+ * ```
+ *
+ * @param fn The function to decorate.
+ * @param cb The wrapper logic. Use the function passed into the wrapper to call the original function. `decorate` 
+ *           forwards any parameters automatically.
+ * @returns  A function wrapping the original function call.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function decorate<T extends (...args: any) => any>(fn: T, cb: (orig: () => ReturnType<T>) => ReturnType<T>): T {
+    return ((...args) => {
+        return cb(() => fn(...args));
+    }) as T;
+};
+
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
 export type ArrayElement<T extends readonly any[]> = T extends readonly (infer U)[] ? U : never;
@@ -161,6 +216,13 @@ export const interleave = <T>(...lists: T[][]): T[] => {
         }
     }
     return result;
+};
+
+export const nonemptyOrUndefined = <T>(arr: T[] | undefined): T[] | undefined => {
+    if (arr && arr.length === 0) {
+        return undefined;
+    }
+    return arr;
 };
 
 export const nextRandom = () => Math.random();

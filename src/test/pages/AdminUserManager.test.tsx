@@ -125,7 +125,7 @@ describe("AdminUserManager", () => {
 
     it("shows no list of users initially", async () => {
         const searchHandler = handlerThatReturns({data: [buildMockUserSummary(mockUser, true)]});
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -141,7 +141,7 @@ describe("AdminUserManager", () => {
 
     it("shows no table if no filters are set", async () => {
         const searchHandler = handlerThatReturns({data: [buildMockUserSummary(mockUser, true)]});
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -160,7 +160,7 @@ describe("AdminUserManager", () => {
                 usersToReturn: [mockUser],
             }
         );
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -188,7 +188,7 @@ describe("AdminUserManager", () => {
                 defaultUsersToReturn: [mockUser, {...mockUser, id: mockUser.id + 1, familyName: "Smith"}]
             }
         );
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -206,7 +206,7 @@ describe("AdminUserManager", () => {
             {role: mockUser.role, schoolURN: mockSchool.urn},
             {defaultUsersToReturn: []}
         );
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -229,7 +229,7 @@ describe("AdminUserManager", () => {
             {usersToReturn: [mockUser]}
         );
         const deleteHandler = handlerThatReturns();
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -269,7 +269,7 @@ describe("AdminUserManager", () => {
             }
         );
         const roleChangeHandler = handlerThatReturns();
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -325,7 +325,7 @@ describe("AdminUserManager", () => {
             }
         );
         const statusChangeHandler = handlerThatReturns();
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),
@@ -395,7 +395,7 @@ describe("AdminUserManager", () => {
             }
         );
         const resetPasswordHandler = handlerThatReturns();
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
                 http.get(API_PATH + "/admin/users", searchHandler),

@@ -30,7 +30,7 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
                 </span>
             )}
         </div>,
-        <div className={classNames(className, "d-sm-flex flex-wrap mt-1 align-items-baseline", {"justify-content-end": !stack})}>
+        <div className={classNames(className, "d-sm-flex flex-wrap align-items-baseline", {"justify-content-end": !stack})}>
             <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
                 {difficulties.length > 0 && <>
                     <div className="hierarchy-tags text-center me-2">

@@ -1,68 +1,42 @@
-import {ClozeDropRegionContext} from "../../../../../IsaacAppTypes";
+import {DragAndDropRegionContext} from "../../../../../IsaacAppTypes";
 import ReactDOM from "react-dom";
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {ContentDTO, ItemDTO} from "../../../../../IsaacApiTypes";
-import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
-import {Badge, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
-import {Immutable} from "immer";
+import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {useDroppable} from "@dnd-kit/core";
-import {CSS} from "@dnd-kit/utilities";
-import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
 import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
+import DropZoneItem from "../../DnDItem";
 
-export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
-    const {attributes, listeners, setNodeRef, isDragging, isOver, transform, transition} = useSortable({
-        id,
-        attributes: {
-            role: "button",
-            roleDescription: "draggable item",
-        },
-        data: { type, text: item.altText ?? item.value }
-    });
-    const style: React.CSSProperties = {
-        transform: CSS.Translate.toString(transform),
-        transition,
-        opacity: (overrideOver || isOver) || isDragging ? "0.2" : "1",
-        touchAction: "none"
-    };
-
-    // This is to manage focus properly for accessibility reasons
-    const dropRegionContext = useContext(ClozeDropRegionContext);
-    useEffect(() => {
-        if (dropRegionContext?.shouldGetFocus && dropRegionContext?.shouldGetFocus(id)) {
-            const el = document.getElementById(id);
-            el?.focus();
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dropRegionContext?.shouldGetFocus]);
-
-    return <Badge id={id} className={classNames("p-1 cloze-item feedback-zone", {"cloze-bg": !!item, "m-2": type === "item-section", "feedback-showing": isDefined(isCorrect)})} color="theme" style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
-        <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
-        <span aria-hidden={true}>
-            <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
-                {item.children as ContentDTO[]}
-            </IsaacContentValueOrChildren>
-        </span>
-        {isDefined(isCorrect) && <div className={"feedback-box"}>
-            <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
-        </div>}
-    </Badge>;
+interface InlineDropRegionProps {
+    divId: string;
+    zoneId: string | number;
+    emptyWidth?: string; // the width of the drop zone **when empty** – when filled the content determines the width
+    emptyHeight?: string; // as above for height
+    rootElement?: HTMLElement;
+    skipPortalling?: boolean;
 }
 
 // Inline droppables rendered for each registered drop region
-function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id: string; index: number; emptyWidth?: string; emptyHeight?: string; rootElement?: HTMLElement}) {
-    const dropRegionContext = useContext(ClozeDropRegionContext);
+function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling}: InlineDropRegionProps) {
+    const dropRegionContext = useContext(DragAndDropRegionContext);
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + `${index + 1}`;
+    const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + zoneId;
     const dropdownItems = dropRegionContext?.allItems ?? [];
     const nonSelectedItemIds = (dropRegionContext?.nonSelectedItems ?? []).map(item => item.id);
+    dropRegionContext?.zoneIds.add(divId);
 
     useEffect(() => {
         // Register with the current cloze question on first render
-        dropRegionContext?.register(droppableId, index);
+        switch (dropRegionContext?.questionType) {
+            case "isaacClozeQuestion":
+                dropRegionContext?.register(droppableId, zoneId as number);
+                break;
+            case "isaacDragAndDropQuestion":
+                dropRegionContext?.register(droppableId, zoneId as string);
+                break;
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -74,16 +48,16 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         ? dropRegionContext.dropZoneValidationMap[droppableId]?.correct
         : undefined;
 
-    const droppableTarget = rootElement?.querySelector(`#${id}`);
+    const droppableTarget = rootElement?.querySelector(`#${divId}`);
 
     const {isOver, setNodeRef} = useDroppable({
         id: droppableId,
         data: { type: "drop-zone", itemId: item?.replacementId }
     });
 
-    const height = (item || !emptyHeight) ? "auto" : (emptyHeight + "px");
+    const height = (item || !emptyHeight) ? "auto" : emptyHeight;
     // Ada buttons have a fixed width that needs to be overriden
-    const width = (item || !emptyWidth) ? "auto" : (emptyWidth + "px");
+    const width = (item || !emptyWidth) ? "auto" : emptyWidth;
 
     const draggableDropZone = <span
         style={{minHeight: height, minWidth: width}}
@@ -91,7 +65,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         ref={setNodeRef}
     >
         {item
-            ? <Item item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
+            ? <DropZoneItem item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
             : <>&nbsp;<span className={"visually-hidden"}>drop zone</span></>
         }
     </span>;
@@ -140,10 +114,9 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     </Dropdown>;
 
     if (dropRegionContext && droppableTarget) {
-        return ReactDOM.createPortal(
-            (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) ? dropdownZone : draggableDropZone,
-            droppableTarget
-        );
+        const result = (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) 
+            ? dropdownZone : draggableDropZone;
+        return skipPortalling ? result : ReactDOM.createPortal(result, droppableTarget);
     }
     return null;
 }

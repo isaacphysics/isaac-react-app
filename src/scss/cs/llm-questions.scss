@@ -1,16 +1,5 @@
 @import '../common/llm-questions.scss';
 
-.llm-indicator {
-    background-color: $cyan-700;
-    color: $cs-jet;
-    border: 1px solid $cs-silver;
-
-    &.small {
-        border: 1px solid $cs-silver !important;
-        font-weight: 600 !important;
-    }
-}
-
 .llm-info-banner {
     background-color: $cyan-700;
     color: $cs-jet;

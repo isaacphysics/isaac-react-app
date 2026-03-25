@@ -1,0 +1,35 @@
+.ptn-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  
+  > div {
+    flex: 1 0 100%;
+  }
+}
+
+.ptn-move-left {
+  animation: 0.4s ease-in-out forwards ptn-move-left;
+}
+
+@keyframes ptn-move-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.ptn-move-right {
+  animation: 0.4s ease-in-out forwards ptn-move-right;
+}
+
+@keyframes ptn-move-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

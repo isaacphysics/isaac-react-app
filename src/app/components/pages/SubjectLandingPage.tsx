@@ -1,40 +1,43 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { RouteComponentProps, withRouter } from "react-router";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
-import { AugmentedEvent, PageContextState } from "../../../IsaacAppTypes";
+import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, SUBJECTS, useDeviceSize } from "../../services";
+import { AugmentedEvent, PageContextState, QuestionSearchQuery } from "../../../IsaacAppTypes";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { searchQuestions, selectors, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
+import { selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery, useSearchQuestionsQuery } from "../../state";
 import { EventCard } from "../elements/cards/EventCard";
 import debounce from "lodash/debounce";
 import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
-import { placeholderIcon } from "../elements/PageTitle";
 import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
-import {v4 as uuid_v4} from "uuid";
+import { skipToken } from "@reduxjs/toolkit/query";
+
+const loadingPlaceholder = <ul className="w-100 list-group ">
+    <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
+        <IsaacSpinner size="sm" />
+    </li>
+</ul>;
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
-    const dispatch = useAppDispatch();
-    const [randomSeed, setrandomSeed] = useState(nextSeed);
+    const [randomSeed, setRandomSeed] = useState(nextSeed);
 
-    const handleGetDifferentQuestion = () => setrandomSeed(nextSeed);
-    const [searchId, setSearchId] = useState('');
+    const handleGetDifferentQuestion = () => setRandomSeed(nextSeed);
 
-    const searchDebounce = useCallback(debounce(() => {
+    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
+    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
+
+    const searchDebounce = useMemo(() => debounce(() => {
         if (!isFullyDefinedContext(context)) {
             return;
         }
 
-        const nextSearchId = uuid_v4();
-        setSearchId(nextSearchId);
-        dispatch(searchQuestions({
+        setSearchParams({
             querySource: "randomQuestion",
             searchString: "",
             tags: "",
@@ -51,39 +54,42 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             startIndex: undefined,
             limit: 1,
             randomSeed
-        }, nextSearchId));
-    }), [dispatch, context, randomSeed]);
-
-    const {results: questions, searchId: questionSearchId } = useAppSelector((state) => state && state.questionSearchResult) || {};
+        });
+    }, 250, { leading: true }), [context, randomSeed]);
 
     useEffect(() => {
         searchDebounce();
     }, [searchDebounce]);
 
-    const question = questions?.[0];
-
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
             <h4 className="m-0">Try a random question!</h4>
-            <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
+            <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
                 Get a different question
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
-        {question && searchId === questionSearchId
-            ? <ListView className="border-0" type="item" items={[{
-                type: DOCUMENT_TYPE.QUESTION,
-                title: question.title,
-                tags: question.tags,
-                id: question.id,
-                audience: question.audience,
-            } as ContentSummaryDTO]}/>
-            : <ul className="w-100 list-group ">
-                <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
-                    <IsaacSpinner size="sm" />
-                </li>
-            </ul>
-        }
+        <ShowLoadingQuery
+            query={searchQuestionsQuery}
+            defaultErrorTitle="Unable to load question"
+            placeholder={loadingPlaceholder}
+            thenRender={({ results: questions }) => {
+                const question = questions?.[0];
+                return question
+                    ? <ListView className="border-0" type="item" items={[{
+                        type: DOCUMENT_TYPE.QUESTION,
+                        title: question.title,
+                        tags: question.tags,
+                        id: question.id,
+                        audience: question.audience,
+                    } as ContentSummaryDTO]}/>
+                    : <ul className="w-100 list-group ">
+                        <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
+                            <span>No questions found.</span>
+                        </li>
+                    </ul>;
+            }}
+        />
     </div>;
 };
 
@@ -177,20 +183,26 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     />;
 };
 
-export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
+export const SubjectLandingPage = () => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
+    const title = (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.includes(STAGE.A_LEVEL))
+        ? "A Level Maths and Further Maths" : getHumanContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb
-            currentPageTitle={getHumanContext(pageContext)}
+            currentPageTitle={title}
             icon={pageContext?.subject ? {
                 type: "img",
                 subject: pageContext.subject,
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`,
                 width: "75px",
                 height: "75px",
-            } : placeholderIcon({width: "75px", height: "75px"})}
+            } : {
+                type: "placeholder",
+                width: "75px",
+                height: "75px"
+            }}
         />
 
         {pageContext && isSingleStageContext(pageContext) && <>
@@ -206,4 +218,4 @@ export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
 
 
     </Container>;
-});
+};

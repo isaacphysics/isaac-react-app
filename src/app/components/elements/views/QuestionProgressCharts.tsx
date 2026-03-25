@@ -103,7 +103,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 type: donut()
             },
             donut: {
-                title: isAllZero(topicColumns) ? "No Data" : "By Topic",
+                title: isAllZero(topicColumns) ? "No data" : "By topic",
                 label: {format: (value) => `${value}`}
             },
             bindto: `#${subId}-topicChart`,
@@ -119,7 +119,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     order: null
                 },
                 donut: {
-                    title: isAllZero(difficultyColumns) ? "No data" : "By Difficulty",
+                    title: isAllZero(difficultyColumns) ? "No data" : "By difficulty",
                     label: {format: (value) => `${value}`}
                 },
                 bindto: `#${subId}-stageChart`,

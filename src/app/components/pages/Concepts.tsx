@@ -1,14 +1,11 @@
 import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
-import {Container} from "reactstrap";
 import queryString from "query-string";
-import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, stageLabelMap, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
+import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, siteSpecific, stageLabelMap, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import { ListView } from "../elements/list-groups/ListView";
-import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
-import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
 import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -17,6 +14,8 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 import { FilterSummary } from "./QuestionFinder";
+import { GenericConceptsListingSidebar, SubjectSpecificConceptsListingSidebar } from "../elements/sidebar/ConceptsListingSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -26,8 +25,9 @@ const subjectToTagMap = {
 };
 
 // This component is Isaac Physics only (currently)
-export const Concepts = withRouter((props: RouteComponentProps) => {
-    const {location, history} = props;
+export const Concepts = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
 
@@ -119,7 +119,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         if (e) {
             e.preventDefault();
         }
-        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
+        pushConceptsToHistory(navigate, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
 
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -142,59 +142,53 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const sidebarProps = {searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts};
 
     return (
-        <Container id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
-            <TitleAndBreadcrumb 
+        <PageContainer id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
+            pageTitle={<TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
-                icon={{type: "hex", icon: "icon-concept"}}
-            />
-            <SidebarLayout>
+                icon={{type: "icon", icon: "icon-concept"}}
+            />}
+            sidebar={siteSpecific(
+                pageContext?.subject 
+                    ? <SubjectSpecificConceptsListingSidebar {...sidebarProps} hideButton /> 
+                    : <GenericConceptsListingSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>,
+                undefined
+            )}
+        >
+            <PageMetadata noTitle showSidebarButton>
                 {pageContext?.subject 
-                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} hideButton /> 
-                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
+                    ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
+                        <p className="me-0 me-lg-3">
+                            The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                            You can browse all concepts <Link to="/concepts">here</Link>.
+                        </p>
+                    </div> 
+                    : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
                 }
-                <MainContent>
-                    <PageMetadata noTitle showSidebarButton>
-                        {pageContext?.subject 
-                            ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
-                                <p className="me-0 me-lg-3">
-                                    The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
-                                    You can browse all concepts <Link to="/concepts">here</Link>.
-                                </p>
-                            </div> 
-                            : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
-                        }
-                    </PageMetadata>
-                    {isPhy && !pageContext?.subject && (!pageContext?.stage || pageContext.stage.length === 0) && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
-                    
-                    <ResultsListContainer>
-                        <ShowLoadingQuery
-                            query={listConceptsQuery}
-                            thenRender={({results: concepts}) => {
+            </PageMetadata>
+            {isPhy && !pageContext?.subject && (!pageContext?.stage || pageContext.stage.length === 0) && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
+            
+            <ResultsListContainer>
+                <ShowLoadingQuery
+                    query={listConceptsQuery}
+                    thenRender={({results: concepts}) => {
 
-                                const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
+                        const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
 
-                                return <>
-                                    {!!shortcutAndFilteredSearchResults.length && <ResultsListHeader>
-                                        Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
-                                    </ResultsListHeader>}
+                        return <>
+                            {!!shortcutAndFilteredSearchResults.length && <ResultsListHeader>
+                                Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
+                            </ResultsListHeader>}
 
-                                    {shortcutAndFilteredSearchResults.length
-                                        ? isPhy
-                                            ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
-                                            : <LinkToContentSummaryList 
-                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                            />
-                                        : <em>No results found</em>
-                                    }
-                                </>;
-                            }}
-                            defaultErrorTitle="Error fetching concepts"
-                        />
-                    </ResultsListContainer>
-                </MainContent>
-            </SidebarLayout>
-        </Container>
+                            {shortcutAndFilteredSearchResults.length
+                                ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
+                                : <em>No results found</em>
+                            }
+                        </>;
+                    }}
+                    defaultErrorTitle="Error fetching concepts"
+                />
+            </ResultsListContainer>
+        </PageContainer>
     );
-});
+};

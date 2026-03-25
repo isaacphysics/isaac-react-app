@@ -1,8 +1,8 @@
-import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
-import {BaseTag} from "../../IsaacAppTypes";
+import {AbstractBaseTagService, getTagFromPath, TAG_ID, TAG_LEVEL} from "./";
+import {BaseTag, Tag} from "../../IsaacAppTypes";
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
-const softHyphen = "\u00AD";
+export const softHyphen = "\u00AD";
 
 export class PhysicsTagService extends AbstractBaseTagService {
     private static readonly tagHierarchy = [TAG_LEVEL.subject, TAG_LEVEL.field, TAG_LEVEL.topic];
@@ -197,13 +197,13 @@ export class PhysicsTagService extends AbstractBaseTagService {
         return {...doc, subjectId: documentSubject && documentSubject.id};
     }
 
-    private getPageSubjectTag(tagArray: TAG_ID[]) {
+    private getPageSubjectTag(tagArray: TAG_ID[]): Tag | undefined {
         // Extract the subject tag from a tag array,
         // defaulting to the current site subject if no tags
         // and intelligently choosing if more than one subject tag.
-        const globalSubjectTagId = subject.id;
+        const globalSubjectTagId = getTagFromPath();
         if (tagArray == null || tagArray.length == 0) {
-            return this.getById(globalSubjectTagId as TAG_ID);
+            return globalSubjectTagId ? this.getById(globalSubjectTagId) : undefined;
         }
 
         const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray, true);

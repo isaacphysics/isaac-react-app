@@ -1,29 +1,33 @@
 import React, {useEffect} from "react";
-import {Col, Container, Row} from "reactstrap";
-import {SeguePageDTO} from "../../../IsaacApiTypes";
+import {Col, Row} from "reactstrap";
+import {ContentSummaryDTO, GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {above, isAda, isPhy, useDeviceSize, useUrlHashValue} from "../../services";
-import {withRouter} from "react-router-dom";
+import {isAda, isPhy, siteSpecific, useUrlHashValue} from "../../services";
+import {useParams} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {EditContentButton} from "../elements/EditContentButton";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
+import queryString from "query-string";
 import { useUntilFound } from "./Glossary";
-import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar, ContentControlledSidebar, GenericSidebarWithRelatedContent } from "../elements/layout/SidebarLayout";
-import { TeacherNotes } from "../elements/TeacherNotes";
 import { useGetGenericPageQuery } from "../../state/slices/api/genericApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
+import { useGetGameboardByIdQuery } from "../../state";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { NewsSidebar } from "../elements/sidebar/NewsSidebar";
+import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledSidebar";
+import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
+import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
+import { PolicyPageSidebar } from "../elements/sidebar/PolicyPageSidebar";
+import { GenericSidebarWithRelatedContent } from "../elements/sidebar/RelatedContentSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
-    match: {params: {pageId: string}};
 }
 
 // Used to decide whether a page should have huge gutters or not. Generic pages do by default, as most are textual,
@@ -35,22 +39,33 @@ const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
 };
 
 // Overrides for physics pages which shouldn't use the default GenericPageSidebar
-// TODO this should also consider page tags (for events/news etc)
-const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>([
-    ["privacy_policy", () => <PolicyPageSidebar />],
-    ["terms_of_use", () => <PolicyPageSidebar />],
-    ["cookie_policy", () => <PolicyPageSidebar />],
-    ["accessibility_statement", () => <PolicyPageSidebar />]
-]);
+const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: {pageId: string, tags?: string[], gameboard?: GameboardDTO, relatedContent?: ContentSummaryDTO[]} & React.HTMLAttributes<HTMLDivElement>) => {
+    if (["privacy_policy", "terms_of_use", "cookie_policy", "accessibility_statement"].includes(pageId)) {
+        return <PolicyPageSidebar {...sidebarProps} />;
+    }
+    if (tags?.includes("news")) {
+        return <NewsSidebar {...sidebarProps} />;
+    }
+    if (gameboard?.id && gameboard.wildCard?.url === window.location.pathname) {
+        return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} {...sidebarProps} />;
+    }
+    if (relatedContent) {
+        return <GenericSidebarWithRelatedContent relatedContent={relatedContent} {...sidebarProps} />;
+    }
+    return <GenericPageSidebar {...sidebarProps} />;
+};
 
-export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
-    const pageId = pageIdOverride || params.pageId;
+export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
+    const params = useParams();
+    const pageId = pageIdOverride || params.pageId || "";
 
     const pageQuery = useGetGenericPageQuery(pageId);
 
     const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
 
-    const deviceSize = useDeviceSize();
+    const query = queryString.parse(location.search);
+    const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
+    const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
     useEffect(() => {
         if (hash) {
@@ -69,41 +84,44 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         thenRender={supertypedDoc => {
             const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
 
+            const isNews = doc.tags?.includes("news") || false;
+
             const sidebar = doc.sidebar
                 ? <ContentControlledSidebar sidebar={doc.sidebar} />
-                : React.cloneElement(PHY_SIDEBAR.has(pageId) 
-                    ? PHY_SIDEBAR.get(pageId)!() 
-                    : doc.relatedContent
-                        ? <GenericSidebarWithRelatedContent relatedContent={doc.relatedContent} />
-                        : <GenericPageSidebar/>,
+                : siteSpecific(
+                    <SciSidebar pageId={pageId} tags={doc.tags} gameboard={gameboard} relatedContent={doc.relatedContent} />,
+                    undefined
                 );
 
-            return <Container data-bs-theme={doc.subjectId}>
-                <TitleAndBreadcrumb 
-                    currentPageTitle={doc.title as string} 
-                    subTitle={doc.subtitle} 
-                    icon={{type: "hex", icon: "icon-generic"}}
-                /> 
+            return <PageContainer data-bs-theme={doc.subjectId}
+                pageTitle={
+                    <TitleAndBreadcrumb 
+                        currentPageTitle={doc.title as string} 
+                        subTitle={doc.subtitle}
+                        displayTitleOverride={isPhy && isNews ? "News" : undefined}
+                        icon={{type: "icon", icon: isNews ? "icon-news" : "icon-generic"}}
+                    /> 
+                }
+                sidebar={sidebar}
+            >
                 <MetaDescription description={doc.summary} />
-                <SidebarLayout>
-                    {sidebar}
-                    <MainContent>
-                        {/* on generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 
-                            as such, we promote a generic page's subtitle to be the regular title. */}
-                        <PageMetadata doc={{...doc, subtitle: undefined}} title={doc.subtitle} noTitle={!doc.subtitle} />
+                {/* on non-news generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 
+                    as such, we promote a generic page's subtitle to be the regular title. */}
+                {isNews 
+                    ? <PageMetadata doc={doc} />
+                    : <PageMetadata doc={{...doc, subtitle: undefined}} title={doc.subtitle} noTitle={!doc.subtitle} />
+                }
 
-                        <Row className="generic-content-container">
-                            <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
-                                <WithFigureNumbering doc={doc}>
-                                    <IsaacContent doc={doc} />
-                                </WithFigureNumbering>
-                            </Col>
-                        </Row>
-                    </MainContent>
-                </SidebarLayout>
+                <Row className="generic-content-container">
+                    <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
+                    </Col>
+                </Row>
 
                 {isAda && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-            </Container>;
+            </PageContainer>;
         }}
     />;
-});
+};

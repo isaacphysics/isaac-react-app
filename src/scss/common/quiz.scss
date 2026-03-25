@@ -176,7 +176,6 @@
   @extend .my-gameboard-table;
   min-width: 694px;
   thead > tr {
-    @extend .my-gameboard-table-header;
     > th {
       padding: 0.5rem 1rem;
     }

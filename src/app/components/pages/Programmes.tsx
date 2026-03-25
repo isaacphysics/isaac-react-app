@@ -1,34 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { MainContent, ProgrammesSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacProgrammeDTO, ProgrammeCard } from "../elements/cards/ProgrammeCard";
 import { ContentDTO } from "../../../IsaacApiTypes";
+import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
+import { siteSpecific } from "../../services";
+import { Col } from "reactstrap";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
     new Promise((resolve) =>
         resolve([
             {
-                id: "01_stem_smart",
-                title: "STEM SMART",
-                children: [
-                    {
-                        encoding: "markdown",
-                        value: "A free, **16-month** STEM tutoring and mentoring programme which supports students from state schools who may have experienced educational hardship or are in a group statistically less likely to go on to higher education.",
-                    },
-                    {
-                        encoding: "markdown",
-                        value: "The application deadline for the 2026-27 programme closes on **31st October 2025!**",
-                    }
-                ] as ContentDTO[],
-                url: "/pages/stem_smart",
+                id: "01_pms",
+                title: "Physics Mentoring Scheme",
+                value: "Weekly assignments in physics and maths to develop problem solving skills, supported by an online weekly tutorial led by the Isaac team. There is a year 11, a year 12 and year 13 scheme.",
+                url: "/pages/isaac_mentor",
                 image: {
-                    src: "/assets/phy/programmes/stem_smart.jpg",
+                    src: "/assets/phy/programmes/pms.jpg",
                 },
-                date: "January (year 12) – April (year 13)",
-                applicableTo: "Sixth form",
-                location: "Online, with an in-person residential",
+                date: "September – July, annually",
+                applicableTo: "Years 11-13",
+                location: "Online",
             },
             {
                 id: "02_spc",
@@ -43,16 +36,25 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
                 location: "University of Cambridge",
             },
             {
-                id: "03_pms",
-                title: "Physics Mentoring Scheme",
-                value: "Weekly assignments in physics and maths to develop problem solving skills, supported by an online weekly tutorial led by the Isaac team. There is a year 11, a year 12 and year 13 scheme.",
-                url: "/pages/isaac_mentor",
+                id: "03_stem_smart",
+                title: "STEM SMART",
+                children: [
+                    {
+                        encoding: "markdown",
+                        value: "A free, **16-month** STEM tutoring and mentoring programme which supports students from state schools who may have experienced educational hardship or are in a group statistically less likely to go on to higher education.",
+                    },
+                    {
+                        encoding: "markdown",
+                        value: "The application deadline for the 2026-27 programme closed on 31st October 2025. The next round is expected to open in September 2026; check back later for more information!",
+                    }
+                ] as ContentDTO[],
+                url: "/pages/stem_smart",
                 image: {
-                    src: "/assets/phy/programmes/pms.jpg",
+                    src: "/assets/phy/programmes/stem_smart.jpg",
                 },
-                date: "September – July, annually",
-                applicableTo: "Years 11-13",
-                location: "Online",
+                date: "January (year 12) – April (year 13)",
+                applicableTo: "Sixth form",
+                location: "Online, with an in-person residential",
             },
             {
                 id: "04_biology_challenges",
@@ -87,19 +89,21 @@ export const Programmes = () => {
         }
     }, [programmes]);
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "hex", icon: "icon-events"}} />
-        <SidebarLayout>
-            <ProgrammesSidebar programmes={programmes} />
-            <MainContent>
-                <ShowLoading until={programmes} thenRender={(programmes) => {
-                    return <ul className="list-unstyled mt-4">
-                        {programmes.map((programme) => (
-                            <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} key={programme.id} className="mb-4" programme={programme} />
-                        ))}
-                    </ul>;
-                }} />
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
+        }
+        sidebar={siteSpecific(
+            <ProgrammesSidebar programmes={programmes} />,
+            undefined
+        )}
+    >
+        <ShowLoading until={programmes} thenRender={(programmes) => {
+            return <ul className="list-unstyled mt-4 d-flex row flex-wrap row-cols-1 row-cols-md-2 g-3">
+                {programmes.map((programme) => <Col key={programme.id}>
+                    <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} className="mb-4" programme={programme} />
+                </Col>)}
+            </ul>;
+        }} />
+    </PageContainer>;
 };

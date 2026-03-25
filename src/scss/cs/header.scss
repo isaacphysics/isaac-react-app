@@ -1,9 +1,5 @@
 @import "../common/header";
 
-header {
-  background-color: $cs-black;
-}
-
 div.header-progress {
   justify-content: center !important;
   padding-left: 15% !important;
@@ -23,11 +19,16 @@ div.header-progress {
       border: none !important;
     }
     .navbar-toggler-icon {
-      background-image: url('/assets/cs/icons/hamburger.svg');
+      display: inline-block;
+      background-image: none;
+      @include svg-color(url('/assets/cs/icons/hamburger.svg'), $white, 24px, 24px, 100%);
     }
     &.open {
       .navbar-toggler-icon {
-        background-image: url('/assets/cs/icons/close.svg');
+        display: inline-block;
+        background-image: none;
+        @include svg-color(url('/assets/cs/icons/close.svg'), $white, 18px, 18px, 100%);
+        margin-left: 6px; // So the close and hamburger icons have the same offset
       }
     }
   }
@@ -59,11 +60,9 @@ div.header-progress {
       border: none !important;
     }
     .search-toggler-icon {
+      @include svg-color(url('/assets/cs/icons/search.svg'), $white, 1.25rem, 1.25rem);
       display: inline-block;
-      width: 1.25em;
-      height: 1.25em;
       vertical-align: middle;
-      background-image: url('/assets/cs/icons/search-white.svg');
     }
   }
 }
@@ -71,6 +70,7 @@ div.header-progress {
 
 header {
   position: relative;
+  background-color: $cs-black;
   z-index: 20;
 
   --focus-outline-color: #{$cyan-300};

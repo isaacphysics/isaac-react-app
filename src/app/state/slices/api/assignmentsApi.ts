@@ -58,7 +58,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
 
         unassignGameboard: build.mutation<void, {boardId: string, groupId: number}>({
             query: ({boardId, groupId}) => ({
-                url: `/assignments/assign/${boardId}/${groupId}`,
+                url: `/assignments/assign/${encodeURIComponent(boardId)}/${groupId}`,
                 method: "DELETE",
             }),
             invalidatesTags: (_, error) => !error ? ["AssignmentProgress", "AllMyAssignments"] : [],

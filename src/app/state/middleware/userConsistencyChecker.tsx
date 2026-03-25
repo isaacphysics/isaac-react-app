@@ -3,6 +3,8 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE, isDefined, trackEvent} from "../../services";
 import {AppDispatch, changePage, getUserId, logAction, redirectTo, setUserId} from "../index";
 import {setAfterRenewPath} from "../../services/useSessionExpired";
+import { Action } from "../../../IsaacAppTypes";
+import {Immutable} from "immer";
 
 let timeoutHandle: number | undefined;
 
@@ -18,7 +20,7 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
     const storedUserId = getUserId();
     const state = middleware.getState();
     const dispatch = middleware.dispatch as AppDispatch;
-    const appUserId = state?.user?._id;
+    const appUserId = state?.user?.id;
     if (storedUserId != appUserId) {
         dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
@@ -31,10 +33,10 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
 };
 
 
-const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
+const setCurrentUser = (user: RegisteredUserDTO | Immutable<RegisteredUserDTO>, api: MiddlewareAPI) => {
     clearTimeout(timeoutHandle);
     // Only start checking if we can successfully store the user id
-    if (setUserId(user._id)) {
+    if (setUserId(user.id)) {
         scheduleNextCheck(api);
     } else {
         console.error("Cannot perform user consistency checking!");
@@ -51,7 +53,7 @@ function clearCurrentUser() {
 
 // This is where we handle clearing the store on logout and when the user is logged out elsewhere. We do this by
 // hard redirecting to the homepage (or the session expired page) which will cause the Redux store to be cleared.
-export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
+export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => (action: Action) => {
     let redirect: string | undefined;
     switch (action.type) {
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
@@ -84,6 +86,10 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
             clearCurrentUser();
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
+            if (action.authResponse && "id" in action.authResponse) {
+                setCurrentUser(action.authResponse, api);
+            }
+            break;
         case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
             setCurrentUser(action.user, api);
             break;
@@ -95,7 +101,7 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
         // Redirect after action has been processed so that the notificationManager sees a logged-out user when deciding
         // whether to show the "required fields" modal and recording that in local storage.
         // TODO this might not be the case anymore since this is now a hard redirect now.
-        redirectTo(redirect);
+        redirectTo(window.location.origin + redirect);
     }
 
     return result;

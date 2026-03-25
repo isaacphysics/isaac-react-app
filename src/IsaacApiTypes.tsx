@@ -178,6 +178,10 @@ export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
     withReplacement?: boolean;
 }
 
+export interface IsaacDragAndDropQuestionDTO extends IsaacItemQuestionDTO {
+    withReplacement?: boolean;
+}
+
 export interface IsaacPodDTO extends ContentDTO {
     image?: ImageDTO;
     url?: string;
@@ -228,6 +232,7 @@ export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
 
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
     isNuclear?: boolean;
+    showInequalitySeed?: boolean;
 }
 
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
@@ -242,6 +247,11 @@ export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
     numberOfCoordinates?: number;
     numberOfDimensions?: number;
     placeholderValues?:  string[];
+    useBrackets?: boolean;
+    separator?: string;
+    prefixes?: string[];
+    suffixes?: string[];
+    buttonText?: string;
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
@@ -357,6 +367,7 @@ export interface QuestionValidationResponseDTO {
     questionId?: string;
     answer?: ChoiceDTO;
     correct?: boolean;
+    marks?: number;
     explanation?: ContentDTO;
     dateAttempted?: Date;
 }
@@ -365,13 +376,16 @@ export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO
     itemsCorrect?: boolean[];
 }
 
+export interface DndValidationResponseDTO extends QuestionValidationResponseDTO {
+    dropZonesCorrect?: Record<string, boolean>;
+}
+
 export interface InlineRegionValidationResponseDTO extends QuestionValidationResponseDTO {
     partsCorrect?: number;
     partsTotal?: number;
 }
 
 export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
-    marksAwarded?: number;
     markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
 }
 
@@ -387,7 +401,6 @@ export interface UserGroupDTO {
     additionalManagerPrivileges?: boolean;
     ownerSummary?: UserSummaryWithEmailAddressDTO;
     additionalManagers?: UserSummaryWithEmailAddressDTO[];
-    _id?: number;
 }
 
 export interface AnvilAppDTO extends ContentDTO {
@@ -473,6 +486,8 @@ export interface EmailTemplateDTO extends ContentDTO {
 }
 
 export interface FigureDTO extends ImageDTO {
+    figureRegions?: FigureRegion[];
+    condensedMaxWidth?: string;
 }
 
 export interface FormulaDTO extends ChoiceDTO {
@@ -526,6 +541,16 @@ export interface MediaDTO extends ContentDTO {
     altText?: string;
 }
 
+export interface DesmosEmbeddingDTO extends MediaDTO {
+    calculatorId?: string;
+}
+
+export interface GeogebraEmbeddingDTO extends MediaDTO {
+    materialId?: string;
+    appType?: string;
+    allowNewInputs?: boolean;
+}
+
 export interface NotificationDTO extends ContentDTO {
     externalReference?: ExternalReference;
     expiry?: Date;
@@ -539,8 +564,16 @@ export interface CoordinateChoiceDTO extends ItemChoiceDTO {
     items?: CoordinateItemDTO[];
 }
 
+export interface DndChoiceDTO extends ItemChoiceDTO {
+    items?: DndItemDTO[];
+}
+
 export interface ItemDTO extends ContentDTO {
     altText?: string;
+}
+
+export interface DndItemDTO extends ItemDTO {
+    dropZoneId?: string;
 }
 
 export interface LLMFreeTextMarkSchemeEntryDTO {
@@ -612,7 +645,15 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "all";
+export interface FigureRegion {
+    id: string;
+    minWidth: string;
+    width: number;
+    left: number;
+    top: number;
+}
+
+export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "post_18" | "all";
 
 export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "sqa" | "ada" | "all";
 
@@ -652,13 +693,9 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     emailVerificationStatus?: EmailVerificationStatus;
     teacherAccountPending?: boolean;
     id?: number;
-    _id?: number;
 }
 
-export interface AuthenticationResponseDTO extends RegisteredUserDTO {
-    MFA_REQUIRED?: boolean;
-    EMAIL_VERIFICATION_REQUIRED?: boolean;
-}
+export type AuthenticationResponseDTO = Immutable<RegisteredUserDTO> | { MFA_REQUIRED?: boolean; } | { EMAIL_VERIFICATION_REQUIRED?: boolean; };
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
     linkedAccounts?: AuthenticationProvider[];
@@ -725,6 +762,7 @@ export interface GameboardItem {
     questionPartStates?: QuestionPartState[];
     boardId?: string;
     supersededBy?: string;
+    deprecated?: boolean;
 }
 
 export interface IsaacWildcard extends Content {

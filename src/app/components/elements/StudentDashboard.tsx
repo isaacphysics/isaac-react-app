@@ -3,9 +3,8 @@ import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } 
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
+import { getAllSortedWorkToDo, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, useDeviceSize } from '../../services';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
-import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
@@ -60,6 +59,8 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
     </UncontrolledTooltip>;
 
     const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
+    const streakLength = (streakRecord?.weeklyStreakRecord?.currentStreak || 0);
+    const inStreakFreezeRange = new Date(1766361600000) <= new Date() && new Date() <= new Date(1767571200000);
 
     return <div className='w-100 dashboard-panel'>
         <h4>Build your weekly streak</h4>
@@ -67,9 +68,12 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
             <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
         <div className="streak-text mb-2">
-            {remainingToAnswer <= 0
-                ? `You've maintained your streak for this week!`
-                : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+            {streakLength >= 1 && inStreakFreezeRange
+                ? "Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!"
+                : remainingToAnswer <= 0
+                    ? `You've maintained your streak for this week!`
+                    : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+
             }
         </div>
         <Spacer/>
@@ -131,25 +135,11 @@ interface CurrentWorkPanelProps {
 }
 
 const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPanelProps) => {
-    const twoWeeksAgo = new Date(new Date().valueOf() - (2 * 7 * 24 * 60 * 60 * 1000));
-
     if (!isDefined(assignments) || !isDefined(quizAssignments)) {
         return <div className="dashboard-panel"/>;
     }
 
-    const isComplete = (quiz: IAssignmentLike) => convertAssignmentToQuiz(quiz)?.status === QuizStatus.Complete;
-
-    // We can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
-    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => quiz.dueDate && !isOverdue(quiz) && !isComplete(quiz)) : [];
-    
-    // Any assignments without a due date are old enough that they should never be displayed here
-    const myAssignments = filterAssignmentsByStatus(assignments.filter(a => a.dueDate && (a.dueDate > twoWeeksAgo)));
-
-    // Get the 2 most urgent due dates from assignments & quizzes combined
-    // To avoid merging & re-sorting entire lists, get the 2 most urgent from each list first
-    const assignmentsToDo = [...myAssignments.inProgress, ...myAssignments.overDue].slice(0, 2);
-    const quizzesToDo = sortedQuizAssignments.slice(0, 2);
-    const toDo = sortUpcomingAssignments([...assignmentsToDo, ...quizzesToDo]).slice(0, 2);
+    const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
@@ -221,7 +211,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
 
-    const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
+    const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
         {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}

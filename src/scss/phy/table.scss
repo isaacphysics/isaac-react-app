@@ -1,17 +1,13 @@
 @import "../common/table";
 
 .table:not(.table-borderless) thead th {
-    vertical-align: bottom;
-    border-bottom: 2px solid $border-color;
+  vertical-align: bottom;
+  border-bottom: 2px solid $border-color;
 }
 
 .table:not(.table-borderless) {
-    th, td {
-        border-top: 1px solid $border-color;
-        border-bottom-style: none;
-    }
-}
-
-#boards-table .my-gameboard-table-header > th {
-    border-top: none;
+  th, td {
+    border-top: 1px solid $border-color;
+    border-bottom-style: none;
+  }
 }

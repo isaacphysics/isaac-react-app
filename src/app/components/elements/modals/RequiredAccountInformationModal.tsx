@@ -1,29 +1,30 @@
 import {
     AppState,
     closeActiveModal,
-    errorSlice,
+    getRTKQueryErrorMessage,
     selectors,
-    updateCurrentUser,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useUpdateCurrentMutation
 } from "../../../state";
 import React, {useEffect, useState} from "react";
-import {ActiveModalWithoutState, BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
+import {ActiveModalProps, BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
     isDefined,
     isLoggedIn,
     isMobile,
     SITE_TITLE,
-    siteSpecific, validateCountryCode,
+    siteSpecific,
+    validateCountryCode,
     validateRequiredFields,
 } from "../../../services";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Immutable} from "immer";
-import { AccountTypeMessage } from "../AccountTypeMessage";
+import {AccountTypeMessage} from "../AccountTypeMessage";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
-import { Form, CardBody, Row, Col, Button } from "reactstrap";
+import {Button, CardBody, Col, Form, Row} from "reactstrap";
 import {CountryInput} from "../inputs/CountryInput";
 import {ExigentAlert} from "../ExigentAlert";
 
@@ -48,6 +49,8 @@ const RequiredAccountInfoBody = () => {
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
 
+    const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
+
     const validity = validateRequiredFields(initialUserValue, userPreferences, initialUserContexts);
 
     // If the base user or user preferences objects change outside of this modal, reinitialise the local state. This
@@ -68,14 +71,23 @@ const RequiredAccountInfoBody = () => {
     };
 
     // Form submission
-    function formSubmission(event: React.FormEvent<HTMLFormElement>) {
+    async function formSubmission(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setSubmissionAttempted(true);
 
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
-            dispatch(errorSlice.actions.clearError());
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
-            dispatch(closeActiveModal());
+            await updateCurrentUser({
+                currentUser: user,
+                updatedUser: userToUpdate,
+                userPreferences: userPreferencesToUpdate,
+                registeredUserContexts: userContexts,
+                passwordCurrent: null,
+                redirect: false
+            }).unwrap()
+                // If successful, close the modal.
+                .then(() => {dispatch(closeActiveModal());})
+                // Otherwise do nothing, as the component will re-render with the relevant error anyway.
+                .catch(() => {});
         }
     }
 
@@ -87,14 +99,23 @@ const RequiredAccountInfoBody = () => {
                     <p>Please fill in all required fields.</p>
                 </ExigentAlert>
             }
+            {updateCurrentUserError &&
+                <ExigentAlert color="warning">
+                    <p className="alert-heading fw-bold">Unable to update your account</p>
+                    <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
+                </ExigentAlert>
+            }
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
             <Row className="d-flex flex-wrap my-2">
-                <Col lg={6}>
+                <Col xs={12}>
                     {!validity.countryCode && <CountryInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
+                        textOverride={siteSpecific("This is now required information to better help us measure our reach and impact.", undefined)}
                     />}
+                </Col>
+                <Col xs={12}>
                     {!validity.userContexts &&
                         <UserContextAccountInput
                             user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
@@ -103,7 +124,7 @@ const RequiredAccountInfoBody = () => {
                         />
                     }
                 </Col>
-                <Col>
+                <Col xs={12}>
                     {!validity.school && <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -147,7 +168,7 @@ const RequiredAccountInfoBody = () => {
     </Form>;
 };
 
-export const requiredAccountInformationModal: ActiveModalWithoutState = {
+export const requiredAccountInformationModal: ActiveModalProps = {
     title: "Required account information",
     body: <RequiredAccountInfoBody />,
     size: "lg"

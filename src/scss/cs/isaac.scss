@@ -192,6 +192,8 @@ $in-progress-fill: $cs-in-progress;
 $failed-fill: $cs-failed;
 $fully-attempted-fill: $cs-perfect; // Ada don't use these colours, but given ticks are used in place reusing $cs-perfect would make sense
 
+/* constants */
+$figure-drop-zone-placeholder-size: 24px;
 
 // fonts
 $primary-font: "poppins", sans-serif;
@@ -247,24 +249,22 @@ $shadow-25: rgba(0, 0, 0, 0.25); // Used by forms
 $shadow-3: rgba(0, 0, 0, 0.3); // Used by buttons
 $shadow-black: rgb(0, 0, 0); // Used by buttons
 
-// ISAAC
-// Node module imports
-@import "~bootstrap/scss/functions";
+// Bootstrap
 
-$nav-link-hover-color: $cs-jet;
-$border-color: $cs-black;
-// bootstrap 4 alert-warning colours
-$warning-bg-subtle: #fffef3;
-$warning-border-subtle: #fffeee;
-$toast-padding-x: 1.5rem;
-$border-color: $cs-light-gray;
+// functions and variables are imported first to provide functions and !default values
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables"; 
 
-$accordion-button-active-bg: $cs-white;
-$accordion-border-radius: 1rem;
-$accordion-inner-border-radius: 1rem;
+// any overrides to Bootstrap variables must appear here
 
-// all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
-@import "~bootstrap/scss/variables"; 
+$spacer: 1rem !default;
+$spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
+    5: ($spacer * 2),
+    6: ($spacer * 2.5),
+    7: ($spacer * 3),
+    8: ($spacer * 3.5),
+    9: ($spacer * 4),
+));
 
 // Theme
 $theme-colour-overrides: (
@@ -288,16 +288,20 @@ $theme-colour-overrides: (
     "perfect": $cs-perfect,
     "in-progress": $cs-in-progress,
     "failed": $cs-failed,
+
+    "notification": $yellow-300,
 );
 $theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
+$sidebar-width: 220px;
+
 $grid-breakpoints: (
   xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  nav: 1256px,
+  sm: 576px, // sidebar only appears at md and above; sm remains the same
+  md: calc(768px + $sidebar-width),
+  lg: calc(992px + $sidebar-width),
+  xl: calc(1200px + $sidebar-width),
+  nav: 1256px, // nav expansion is independent of sidebar
   // xxl: 1400px // we don't need xxl
 );
 
@@ -315,46 +319,71 @@ $element-sizes: (
 );
 
 $container-max-widths: (
-  sm: 540px,
-  md: 720px,
-  lg: 960px,
+  sm: calc(540px + $sidebar-width),
+  md: calc(720px + $sidebar-width),
+  lg: calc(960px + $sidebar-width),
   xl: 1140px,
   // xxl: 1320px, // for large screens we keep the single-column layout and only expand the margin, so we don't use a larger container
 );
 
-$spacer: 1rem !default;
-$spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
-    5: ($spacer * 2),
-    6: ($spacer * 2.5),
-    7: ($spacer * 3),
-    8: ($spacer * 3.5),
-    9: ($spacer * 4),
-));
-
 $enable-negative-margins: true;
+
+$border-color: $cs-light-gray;
 
 $card-border-width: 0;
 $card-border-radius: 1rem;
 $card-spacer-x: 1.5rem;
 $card-spacer-y: 1.5rem;
+
 $accordion-border-width: 0;
 $accordion-border-radius: 1rem;
+$accordion-inner-border-radius: 1rem;
+$accordion-button-active-bg: $cs-white;
+
+$toast-padding-x: 1.5rem;
+
+$nav-link-hover-color: $cs-jet;
 
 $badge-font-weight: $font-weight-medium;
 
+// bootstrap 4 alert-warning colours
+$warning-bg-subtle: #fffef3;
+$warning-border-subtle: #fffeee;
+
 // all Bootstrap overrides must appear before this
-@import "~bootstrap/scss/bootstrap"; 
-@import "~katex/dist/katex.min.css";
-@import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
-@import "~billboard.js/dist/theme/insight.css";
-@import "~highlight.js/styles/a11y-light.css";
-@import "~leaflet/dist/leaflet.css";
+@import "bootstrap/scss/maps";
+
+$custom-colors-bg-subtle: (
+    "notification": $yellow-300,
+);
+
+$custom-colors-border-subtle: (
+    "notification": $yellow-300,
+);
+
+$theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-subtle);
+$theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
+
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+@import "../common/bootstrap-contents";
+// See https://getbootstrap.com/docs/5.3/customize/sass/#importing; using Option A ("@import "bootstrap/scss/bootstrap";") is not feasible as we need the default overrides above.
+// Instead, import contents of bootstrap/scss/bootstrap.scss manually *without the utilities imports*.
+
+// Node module imports
+
+@import "katex/dist/katex.min.css";
+@import "bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
+@import "billboard.js/dist/theme/insight.css";
+@import "highlight.js/styles/a11y-light.css";
+@import "leaflet/dist/leaflet.css";
 
 @import "../common/isaac";
 
 // Utility
 @import "../common/mixins";
 @import "../common/_utils";
+@import "../common/transitions";
 
 // Theming
 @import "accessibility";
@@ -363,8 +392,10 @@ $badge-font-weight: $font-weight-medium;
 // Atoms
 @import "fonts";
 @import "typography";
+@import "containers";
 @import "modals";
 @import "page-title";
+@import "sidebar";
 @import "questions";
 @import "forms";
 @import "elements";
@@ -390,6 +421,7 @@ $badge-font-weight: $font-weight-medium;
 @import "../common/scroll";
 @import "checkbox";
 @import "../common/toggle";
+@import "../common/tooltip";
 @import "button";
 @import "logo";
 @import "featured-profile";

@@ -15,7 +15,7 @@ export const TutorFeatures = () => {
     const isDisabled = !isLoggedIn(user) || !isTutorOrAbove(user);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Tutor features"} icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={"Tutor features"} icon={{type: "icon", icon: "icon-account"}}/>
         <PageMetadata noTitle>
             {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"} className="float-end">
                 {isLoggedIn(user) ? "Upgrade my account" : "Get a tutor account"}

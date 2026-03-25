@@ -16,7 +16,7 @@ export const NotFound = () => {
             <TitleAndBreadcrumb
                 breadcrumbTitleOverride={siteSpecific("Unknown page", "404")}
                 currentPageTitle={window.navigator.onLine ? "Page not found" : "No internet"}
-                icon={{type: "hex", icon: "icon-error"}}
+                icon={{type: "icon", icon: "icon-error"}}
             />
             <p className="my-4">
                 {"We're sorry, page not found: "}

@@ -1,4 +1,6 @@
 import {useEffect, useState} from "react";
+import { siteSpecific } from "./siteConstants";
+import { isAda } from "./siteConstants";
 
 const MOBILE_WINDOW_WIDTH = 768;
 
@@ -32,7 +34,8 @@ const descDeviceSizes = [DeviceSize.XXXL, DeviceSize.XXL, DeviceSize.XL, DeviceS
 
 export const useDeviceSize = () => {
     const getSize = (): DeviceSize => {
-        const width = window.innerWidth;
+        const shouldIncludeSidebar = isAda && window.innerWidth >= 768;
+        const width = window.innerWidth - (shouldIncludeSidebar ? 220 : 0);
         if (width >= 1800) return DeviceSize.XXXL;
         else if (width >= 1400) return DeviceSize.XXL;
         else if (width >= 1200) return DeviceSize.XL;
@@ -74,6 +77,25 @@ export const useDeviceHeight = () => {
     }, []);
 
     return windowHeight;
+};
+
+export const useNavbarExpanded = () => {
+    // nav uses a separate breakpoint in the CSS, which doesn't align with the ordered structure of DeviceSize,
+    // hence the need for a separate hook
+    const isExpanded = (): boolean => {
+        const width = window.innerWidth;
+        return width >= siteSpecific(992, 1256);
+    };
+
+    const [navbarExpanded, setNavbarExpanded] = useState(isExpanded);
+    
+    useEffect(() => {
+        const handleResize = () => {setNavbarExpanded(isExpanded());};
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return navbarExpanded;
 };
 
 // above(ds) and below(ds) return true if device size === ds to match the scss functions respond-above(ds) and respond-below(ds)

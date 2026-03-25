@@ -1,16 +1,5 @@
 @import '../common/llm-questions.scss';
 
-.llm-indicator {
-    background-color: $color-misc-llm;
-    color: $color-neutral-900;
-    border: 2px solid $color-neutral-900;
-
-    &.small {
-        border: 1px solid $color-neutral-900 !important;
-        font-weight: 600 !important;
-    }
-}
-
 .llm-info-banner {
     background-color: $color-misc-llm;
     border: 2px solid $color-neutral-900;

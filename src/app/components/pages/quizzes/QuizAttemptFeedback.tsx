@@ -1,7 +1,7 @@
 import React, {useCallback} from "react";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {getThemeFromTags, isDefined, useQuizAttemptFeedback} from "../../../services";
+import {getThemeFromTags, isDefined, isPhy, useQuizAttemptFeedback} from "../../../services";
 import {
     myQuizzesCrumbs,
     QuizContentsComponent,
@@ -67,7 +67,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
         <ShowLoading until={attempt || error}>
             {isDefined(attempt) && <>
                 <QuizContentsComponent {...subProps} />
-                <SidebarLayout>
+                <SidebarLayout show={isPhy}>
                     <Col lg={4} xl={3} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0")} />
                     <MainContent>
                         {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
@@ -75,7 +75,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 </SidebarLayout>
             </>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
                     <p>{error}</p>

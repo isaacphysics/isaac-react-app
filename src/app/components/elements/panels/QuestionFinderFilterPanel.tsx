@@ -276,7 +276,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     tag={"li"}
                 >
                     <>
-                        <li>
+                        <li className="pb-2">
                             <CheckboxWrapper active={excludeBooks}>
                                 <StyledCheckbox
                                     color="primary"
@@ -286,7 +286,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 />
                             </CheckboxWrapper>
                         </li>
-                        <div className="section-divider ms-3 my-2"/>
+                        <div className="section-divider ms-3 my-0 pb-2"/> {/* this cannot use margin as spacing as it is inside a collapsible region, which cannot count child margin towards the total height */}
                         {bookOptions.map((book, index) => (
                             <li key={index}>
                                 <CheckboxWrapper active={searchBooks.includes(book.tag) && !excludeBooks}>
@@ -327,12 +327,12 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
                                 label={siteSpecific(
                                     <div className="d-flex">
-                                    Not started
+                                        Not started
                                         <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/>
                                     </div>,
                                     <div>
-                                    Not attempted
-                                        <img className="ps-2 icon-status" src="/assets/common/icons/not-started.svg" alt="Not attempted" />
+                                        Not attempted
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-not-started.svg" alt="Not attempted" />
                                     </div>
                                 )}
                             />
@@ -351,7 +351,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     </div>,
                                     <div>
                                         Completed
-                                        <img className="ps-2 icon-status" src="/assets/common/icons/completed.svg" alt="Completed" />
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-correct.svg" alt="Completed" />
                                     </div>
                                 )}
                             />
@@ -400,7 +400,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     </div>,
                                     <div>
                                         Try again
-                                        <img className="ps-2 icon-status" src="/assets/common/icons/incorrect.svg" alt="Try again" />
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-in-progress.svg" alt="Try again" />
                                     </div>
                                 )}
                             />

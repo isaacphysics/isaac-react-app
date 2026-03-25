@@ -4,16 +4,14 @@ import {
     api,
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
-    history,
-    isNotPartiallyLoggedIn,
-    isFirstLoginInPersistence,
+    isAda,
     isTeacherOrAbove,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     trackEvent,
-    siteSpecific,
-    isAda,
+    isTeacherAuthResponsePendingVerification,
+    navigateComponentless,
 } from "../../services";
 import {
     Action,
@@ -21,12 +19,8 @@ import {
     CredentialsAuthDTO,
     FreeTextRule,
     InlineContext,
-    PotentialUser,
-    QuestionSearchQuery,
-    UserPreferencesDTO,
     UserSnapshot,
     ValidatedChoice,
-    ValidationUser,
 } from "../../../IsaacAppTypes";
 import {
     AuthenticationProvider,
@@ -34,8 +28,9 @@ import {
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
+    RegisteredUserDTO,
     TestCaseDTO,
-    UserContext, UserRole
+    UserRole
 } from "../../../IsaacApiTypes";
 import {AxiosError} from "axios";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
@@ -53,7 +48,7 @@ import {
     store,
 } from "../index";
 import {Immutable} from "immer";
-import { Button } from "reactstrap";
+import { NavigateFunction } from "react-router";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
@@ -110,23 +105,14 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
 }
 
 // User authentication
-export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
+// only used internally for other action/reducer pairs here; prefer userApi slice's getUserAuthSettings for most cases
+const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const getChosenUserAuthSettings = (userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST});
-    try {
-        const authenticationSettings = await api.authentication.getSelectedUserAuthSettings(userId);
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS, selectedUserAuthSettings: authenticationSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -170,7 +156,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
     try {
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         await dispatch(requestCurrentUser() as any);
         continueToAfterAuthPath(result.data);
@@ -196,7 +182,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
-        if (isNotPartiallyLoggedIn(currentUser.data)) {
+        if (!isTeacherAuthResponsePendingVerification(currentUser.data)) {
             await Promise.all([
                 dispatch(getUserAuthSettings() as any),
                 dispatch(getUserPreferences() as any)
@@ -214,132 +200,6 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
-};
-
-export const registerNewUser = (
-    newUser: Immutable<ValidationUser>,
-    newUserPreferences: UserPreferencesDTO,
-    newUserContexts: UserContext[] | undefined,
-    passwordCurrent: string | null,
-) => async (dispatch: Dispatch<Action>) => {
-
-    try {
-        // Create the user
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(newUser, newUserPreferences, passwordCurrent, newUserContexts);
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(requestCurrentUser() as any);
-
-        if (isTeacherOrAbove(newUser)) {
-            // Redirect to email verification page
-            history.push('/verifyemail');
-        } else {
-            history.push(siteSpecific('/register/preferences', '/register/connect'));
-        }
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const updateCurrentUser = (
-    updatedUser: Immutable<ValidationUser>,
-    updatedUserPreferences: UserPreferencesDTO,
-    userContexts: UserContext[] | undefined,
-    passwordCurrent: string | null,
-    currentUser: Immutable<PotentialUser>,
-    redirect: boolean
-) => async (dispatch: Dispatch<Action>) => {
-
-    function showEmailChangeModal() {
-        dispatch(openActiveModal({
-            title: `Editing your email address`,
-            body: <div>
-                <p>
-                    You have changed your account email address. This new email address won&#39;t be used until you click the verification link sent to it.
-                    Until then, we will use the old email address and you will still need to use that when logging in by email and password.
-                </p>
-                <p> Would you like to continue? </p>
-                <div className="w-100">
-                    <Button
-                        className={"float-start mb-4"}
-                        color={siteSpecific("tertiary", "keyline")}
-                        onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        className={"float-end mb-4"}
-                        onClick={() => { continueSettingsUpdate(); dispatch(closeActiveModal() as any); }}
-                    >
-                        OK
-                    </Button>
-                </div>
-            </div>
-        }) as any);
-    }
-
-    function cancelSettingsUpdate() {
-        dispatch(showToast({
-            title: "Account settings not updated",
-            body: "Your account settings update was cancelled.",
-            color: "danger",
-            timeout: 5000,
-            closable: false,
-        }) as any);
-    }
-
-    async function continueSettingsUpdate() {
-        const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
-
-        try {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-            const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-
-            await dispatch(requestCurrentUser() as any);
-
-            if (!editingOtherUser) {
-            // Invalidate tagged caches that are dependent on the current user's settings
-                dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
-            }
-
-            const isFirstLogin = isFirstLoginInPersistence() || false;
-            if (isFirstLogin) {
-                persistence.session.remove(KEY.FIRST_LOGIN);
-                if (redirect) {
-                    continueToAfterAuthPath({loggedIn: true, ...currentUser.data});
-                }
-            } else if (!editingOtherUser) {
-                dispatch(showToast({
-                    title: "Account settings updated",
-                    body: "Your account settings were updated successfully.",
-                    color: "success",
-                    timeout: 5000,
-                    closable: false,
-                }) as any);
-            } else if (editingOtherUser) {
-                if (redirect) {
-                    history.push('/');
-                }
-                dispatch(showToast({
-                    title: "Account settings updated",
-                    body: "The user's account settings were updated successfully.",
-                    color: "success",
-                    timeout: 5000,
-                    closable: false,
-                }) as any);
-            }
-        } catch (e: any) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-        }
-    }
-
-    // Confirm email change
-    if (currentUser.loggedIn && currentUser.id == updatedUser.id && currentUser.email !== updatedUser.email) {
-        showEmailChangeModal();
-    } else {
-        continueSettingsUpdate();
-    }
 };
 
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
@@ -410,24 +270,28 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
 
         if (result.status === 202) {
             // We haven't been fully authenticated, some additional action is required
-            if (result.data.MFA_REQUIRED) {
+            if ("MFA_REQUIRED" in result.data) {
                 // MFA is required for this user and user isn't logged in yet.
                 dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
                 return;
-            } else if (result.data.EMAIL_VERIFICATION_REQUIRED) {
+            } else if ("EMAIL_VERIFICATION_REQUIRED" in result.data) {
                 // Email verification is required for this user
-                history.push("/verifyemail");
+                void navigateComponentless("/verifyemail");
                 // A partial login is still "successful", though we are unable to request user preferences and auth settings
-                dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+                dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
                 // We can, however, request the current user. This lets us set the session expiry time.
                 dispatch(requestCurrentUser() as any);
                 return;
             }
         }
+
+        // otherwise, result.data is a valid user object
+        const user = result.data as RegisteredUserDTO;
+
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         dispatch(requestCurrentUser() as any);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        continueToAfterAuthPath(result.data);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
+        continueToAfterAuthPath(user);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -449,28 +313,6 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
     }
 };
 
-export const verifyPasswordReset = (token: string | null) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
-        await api.users.verifyPasswordReset(token);
-        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const handlePasswordReset = (params: {token: string; password: string}) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
-        await api.users.handlePasswordReset(params);
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
-        history.push('/login');
-        dispatch(showToast({color: "success", title: "Password reset successful", body: "Please log in with your new password.", timeout: 5000}) as any);
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
     try {
@@ -485,7 +327,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
     // TODO MT handle case when user is already logged in
 };
 
-export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigate: NavigateFunction, provider: AuthenticationProvider, parameters: string) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
@@ -494,7 +336,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: providerResponse.data});
         trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
@@ -510,7 +352,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         // They will see the required account information modal either way on registration.
         const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
-        history.push(nextPage || defaultNextPage);
+        await navigate(nextPage || defaultNextPage);
     } catch (error: any) {
         const providerErrors = fetchErrorFromParameters(parameters);
         trackEvent("sign_in_failure", { props: {
@@ -521,7 +363,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             isaacError: error?.response?.data?.responseCode || error?.code || 'unknown',
             isaacErrorDescription: error?.response?.data?.errorMessage || error?.message || 'unknown'
         }});
-        history.push("/auth_error", { errorMessage: extractMessage(error), provider, providerErrors });
+        await navigate("/auth_error", { state: { errorMessage: extractMessage(error), provider, providerErrors } });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         if (!extractMessage(error).startsWith("You do not use") && !providerErrors.errorDescription?.startsWith("AADSTS65004")) {
             dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
@@ -635,29 +477,6 @@ export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attem
     });
 }
 
-let questionSearchCounter = 0;
-
-export const searchQuestions = (query: QuestionSearchQuery, searchId?: string) => async (dispatch: Dispatch<Action>) => {
-    const searchCount = ++questionSearchCounter;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
-    try {
-        const questionsResponse = await api.questions.search(query);
-        // Because some searches might take longer to return that others, check this is the most recent search still.
-        // Otherwise, we just discard the data.
-        if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data, searchId});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to search for questions", e));
-    }
-};
-
-export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
-    questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: {results: [], totalResults: 0}});
-};
-
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
@@ -685,7 +504,7 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
         dispatch(logAction({
             type: "VIEW_SUPERSEDED_BY_QUESTION", questionId: page.id, supersededBy: page.supersededBy
         }) as any);
-        history.push(`/questions/${page.supersededBy}`);
+        void navigateComponentless(`/questions/${page.supersededBy}`);
     }
 };
 
@@ -706,7 +525,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
             dispatch(showToast({color: "success", title: "Test submitted", body: "Test submitted successfully", timeout: 3000}) as any);
-            history.push(generatePostQuizUrl(quizId));
+            void navigateComponentless(generatePostQuizUrl(quizId));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
@@ -722,7 +541,7 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
             <strong>A submission has already been recorded for this test by your account.</strong>
         </div>
     }) as any);
-    history.push(generatePostQuizUrl(quizId));
+    void navigateComponentless(generatePostQuizUrl(quizId));
 };
 
 // Question testing
@@ -734,20 +553,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     } catch (e) {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Failed to test question", e));
-    }
-};
-
-// Search
-export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
-    try {
-        if (query === "") {
-            return;
-        }
-        const searchResponse = await api.search.get(query, types);
-        dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Search failed", e));
     }
 };
 
@@ -767,7 +572,7 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 // SERVICE ACTIONS (w/o dispatch)
 
 export const changePage = (path: string) => {
-    history.push(path);
+    void navigateComponentless(path);
 };
 
 export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => {
@@ -776,14 +581,15 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
     if (pathOverride) {
         target = pathOverride;
     } else if (user && isTeacherOrAbove(user) && isAda) {
+        // TODO: remove isTeacher check above alongside FeatureFlag.ENABLE_ADA_SIDEBARS
         target = "/dashboard";
     }
-    history.push(target);
+    void navigateComponentless(target);
 };
 
 // Hard redirect (refreshes page)
 export const redirectTo = (path: string) => {
-    window.location.href = window.location.origin + path;
+    window.location.href = path;
 };
 
 export const registerPageChange = (path: string) => {

@@ -22,8 +22,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isAda, isPhy, MINIMUM_PASSWORD_LENGTH, SITE_TITLE, siteSpecific} from "../../services";
-import {Redirect} from "react-router";
+import {isAda, isPhy, MINIMUM_PASSWORD_LENGTH, SITE_TITLE, siteSpecific} from "../../services";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
@@ -32,7 +31,7 @@ import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {extractErrorMessage} from '../../services/errors';
 import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
 import { MicrosoftSignInButton } from '../elements/MicrosoftSignInButton';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -42,6 +41,7 @@ import { Link } from 'react-router-dom';
 export const useLoginLogic = () => {
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const totpChallengePending = useAppSelector((state: AppState) => state?.totpChallengePending);
     const error = useAppSelector((state: AppState) => state?.error);
@@ -65,7 +65,7 @@ export const useLoginLogic = () => {
 
     const signUp = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register", {email: email, password: password});
+        void navigate("/register", { state: { email: email, password: password } });
     };
 
     const attemptLogIn = () => {
@@ -83,6 +83,15 @@ export const useLoginLogic = () => {
 export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
     const dispatch = useAppDispatch();
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            window.requestAnimationFrame(() => {
+                inputRef.current?.focus();
+            });
+        }
+    }, []);
 
     return <>
         <h3 ref={ref} tabIndex={-1}>Two-Factor Authentication</h3>
@@ -91,6 +100,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
             <Label htmlFor="verification-code">Verification Code</Label>
             <Input
                 id="verification-code" type="text" name="verification-code" placeholder="Verification code"
+                innerRef={inputRef}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setMfaVerificationCode(e.target.value)
                 }
@@ -224,7 +234,7 @@ export const LogIn = () => {
     }, [totpChallengePending]);
 
     if (user && user.loggedIn) {
-        return logInAttempted ? <Loading/> : <Redirect to="/"/>;
+        return logInAttempted ? <Loading/> : <Navigate to="/"/>;
     }
 
     const metaDescription = siteSpecific(

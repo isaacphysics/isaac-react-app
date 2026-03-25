@@ -14,28 +14,16 @@ export const ReportButton = ({pageId} : {pageId?: string}) => {
         dispatch(logAction(eventDetails));
     }
 
-    return siteSpecific(
-        <IconButton
-            icon="icon-flag"
-            className="w-max-content h-max-content"
-            affixClassName="icon-color-black-hoverable"
-            aria-label="Report a problem (opens in new tab)" 
-            title="Report a problem (opens in new tab)"
-            color="tint"
-            data-bs-theme="neutral"
-            onClick={() => {
-                logPageReport();
-                window.open(pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem", "_blank");
-            }}
-        />,
-        <button
-            className="report-icon btn-action"
-            aria-label="Report a problem (opens in new tab)"
-            title="Report a problem (opens in new tab)"
-            onClick={() => {
-                logPageReport();
-                window.open(pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem", "_blank");
-            }}
-        />
-    );
+    return <IconButton
+        icon={{name: "icon-flag icon-color-black-hoverable", color: "white"}}
+        className="w-max-content h-max-content action-button"
+        aria-label="Report a problem (opens in new tab)" 
+        title="Report a problem (opens in new tab)"
+        color={siteSpecific("tint", "primary")}
+        data-bs-theme="neutral"
+        onClick={() => {
+            logPageReport();
+            window.open(pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem", "_blank");
+        }}
+    />;
 };

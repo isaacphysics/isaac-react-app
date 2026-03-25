@@ -4,8 +4,9 @@ import { isPhy } from "./siteConstants";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
 import { itemiseTag } from "./filter";
 import { tags } from "./tags";
-import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
+import { getContextSpecificTags, STAGE_SPECIFIC_EXCLUSIONS_MAP, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
+import { mapObject } from "./miscUtils";
 
 export const sublistDelimiter = " >>> ";
 
@@ -79,14 +80,14 @@ export function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsS
     };
 }
 
-export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>[], pageContext?: PageContextState) => {
-    const choices: ChoiceTree[] = [];
-    if (!pageContext?.subject) {
-        choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
-    } else {
-        choices.push({});
-        choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
-    }
+export const updateTopicChoices = (
+    topicSelections: Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>[],
+    pageContext?: PageContextState,
+    allowedTags?: TAG_ID[]
+): ChoiceTree[] => {
+    const subject = pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : tags.allSubjectTags; 
+    const choices: ChoiceTree[] = [ { subject: subject.map(itemiseTag) } ];
+
     for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++) {
         if (Object.keys(topicSelections[tierIndex]).length > 0) {
             choices[tierIndex+1] = {};
@@ -97,10 +98,25 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
             }
         }
     }
-    if (choices.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
-        SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => 
-            pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
-        );
+
+    if (choices.length > 1 && pageContext?.subject) {
+        const contextSpecificTags = getContextSpecificTags(SUBJECT_SPECIFIC_CHILDREN_MAP, pageContext)
+            .map(t => tags.getById(t))    
+            .map(itemiseTag);
+        choices[1][pageContext.subject]?.push(...contextSpecificTags);
     }
-    return choices;
+
+    return allowedTags ? filterChoices(choices, allowedTags) : choices;
+};
+
+const filterChoices = (choices: ChoiceTree[], allowedTags: TAG_ID[]): ChoiceTree[] => 
+    choices.map(tree => 
+        mapObject(tree, tags => 
+            tags && tags.filter(tag => allowedTags.includes(tag.value))
+        )
+    );
+
+export const getAllowedTags = (pageContext?: PageContextState): TAG_ID[] => {
+    const exclusions = getContextSpecificTags(STAGE_SPECIFIC_EXCLUSIONS_MAP, pageContext);
+    return tags.allTagIds.filter(tagId => !exclusions.includes(tagId));
 };

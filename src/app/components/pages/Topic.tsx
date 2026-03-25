@@ -1,6 +1,6 @@
 import React from "react";
-import {Link, withRouter} from "react-router-dom";
-import {selectors, useAppSelector} from "../../state";
+import {Link, useParams} from "react-router-dom";
+import {selectors, useAppSelector, useGetTopicWithStateUpdateQuery} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {
@@ -9,7 +9,6 @@ import {
     getRelatedDocs,
     isAda,
     PATHS,
-    TAG_ID,
 } from "../../services";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -18,12 +17,12 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
-import {useGetTopicQuery} from "../../state";
 
-export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
+export const Topic = () => {
     const user = useAppSelector(selectors.user.orNull);
+    const {topicName=null} = useParams();
     
-    const { data: topicPage } = useGetTopicQuery(topicName);
+    const { data: topicPage } = useGetTopicWithStateUpdateQuery(topicName);
 
     const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage ?? null);
 
@@ -87,4 +86,4 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             </Row>
         </Container>
     } />;
-});
+};

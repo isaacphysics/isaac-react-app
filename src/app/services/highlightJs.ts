@@ -15,8 +15,8 @@ import {LanguageFn, Mode} from "highlight.js";
 
 const importHljsCore = import("highlight.js/lib/core");
 
-function registerLanguages() {
-    importHljsCore.then(({default: hljs}) => {
+async function registerLanguages() {
+    await importHljsCore.then(({default: hljs}) => {
         hljs.registerLanguage('java', java);
         hljs.registerLanguage('vba', vbnet);
         hljs.registerLanguage('javascript', javascript);
@@ -34,6 +34,10 @@ function registerLanguages() {
         hljs.registerLanguage('pseudocode', isaacPseudocodeHighlightDefinition);
     });
 }
+
+const highlightElement = (e: HTMLElement) => importHljsCore.then(({default: hljs}) => {
+    return hljs.highlightElement(e);
+});
 
 function addLineNumbers(code: Element) {
     // Adapt the PrismJS code for line numbering:
@@ -391,5 +395,6 @@ const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
 
 export const highlightJsService = {
     registerLanguages,
-    addLineNumbers
+    addLineNumbers,
+    highlightElement
 };

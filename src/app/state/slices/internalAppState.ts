@@ -1,5 +1,5 @@
 import {PrintingSettings} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services";
+import {ACTION_TYPE, EXAM_BOARD, siteSpecific, STAGE} from "../../services";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {routerPageChange} from "../index";
 
@@ -34,13 +34,15 @@ export const mainContentIdSlice = createSlice({
     }
 });
 
-export type SidebarState = {open?: boolean} | null;
+export type SidebarState = {open: boolean} | null;
 export const sidebarSlice = createSlice({
     name: "sidebar",
-    initialState: null as SidebarState,
+    initialState: {
+        open: siteSpecific(false, window.innerWidth >= 768 + 220)
+    } as SidebarState,
     reducers: {
-        setOpen: (state, action: PayloadAction<boolean | undefined>) => ({...state, open: action.payload}),
-        toggle: (state) => ({...state, open: !state?.open}),
+        setOpen: (state, action: PayloadAction<boolean>) => ({...state, open: action.payload}),
+        toggle: (state) => ({...state, open: !state?.open})
     }
 });
 
@@ -67,9 +69,6 @@ export const errorSlice = createSlice({
     extraReducers: (builder) => {
         const generalMatcher = (action: any): action is {type: string, errorMessage: string} => [
             ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE,
-            ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE,
-            ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE,
-            ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE,
             ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE,
             ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE
         ].includes(action.type);

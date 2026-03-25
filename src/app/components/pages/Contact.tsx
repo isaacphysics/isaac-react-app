@@ -107,7 +107,7 @@ export const Contact = () => {
     return <Container id="contact-page" className="pb-7">
         <TitleAndBreadcrumb 
             currentPageTitle="Contact us" 
-            icon={{type: "hex", "icon": "icon-contact"}}
+            icon={{type: "icon", "icon": "icon-contact"}}
         />
         <MetaDescription description={metaDescription}/>
         <div className="pt-4">

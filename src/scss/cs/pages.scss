@@ -11,11 +11,6 @@
   max-width: 1600px !important;
 }
 
-.title-help {
-  color: $dark-pink-300;
-  text-decoration: underline;
-}
-
 // All topics page
 #topics-bg {
   background-image: url("/assets/cs/decor/dots-circle-bg.svg");
@@ -37,14 +32,13 @@
   z-index: 0;
   #gameboard-section {
     background: $cs-white;
-    #gameboard-title-section {}
   }
 }
 
 // My quizzes page
 .my-gameboard-table {
   thead {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: $cs-list-outline-gray;
     tr, th, td {
       background-color: transparent !important;
     }

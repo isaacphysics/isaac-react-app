@@ -4,25 +4,27 @@ import {DAYS_AGO, SOME_FIXED_FUTURE_DATE, SOME_FIXED_PAST_DATE} from "../test/da
 import {
     BookingStatus,
     CompletionState,
+    ContentSummaryDTO,
     DetailedQuizSummaryDTO,
     EmailVerificationStatus,
     EventStatus,
     IsaacQuizDTO,
     QuizAttemptDTO,
+    SearchResultsWrapper,
     USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
-import {School} from "../IsaacAppTypes";
+import {LoggedInUser, School} from "../IsaacAppTypes";
 import {recordOf} from "./utils";
 
 export const mockUser = {
     givenName: "Test",
     familyName: "Admin",
     email: "test-admin@test.com",
-    dateOfBirth: 777777777777,
+    dateOfBirth: new Date(777777777777),
     gender: "MALE",
-    registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 100),
+    registrationDate: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 100)),
     role: "ADMIN" as UserRole,
     schoolOther: "N/A",
     countryCode: "GB-SCT",
@@ -32,14 +34,14 @@ export const mockUser = {
             examBoard: "all"
         }
     ],
-    registeredContextsLastConfirmed: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1),
+    registeredContextsLastConfirmed: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1)),
     firstLogin: false,
-    lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-    lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
+    lastUpdated: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1)),
+    lastSeen: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1)),
     emailVerificationStatus: "VERIFIED" as EmailVerificationStatus,
     loggedIn: true,
     id: 1 as const
-};
+} satisfies LoggedInUser;
 
 export const buildMockStudent = <T extends number>(id: T extends (typeof mockUser.id) ? `Student ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T) => {
     if (id === mockUser.id) throw Error("A mock student cannot have the same ID as the mockUser");
@@ -2267,6 +2269,11 @@ export const mockGameboards = {
     totalResults: 7
 };
 
+export const mockGameboardsShort = {
+    results: mockGameboards.results.slice(0, 6),
+    totalResults: 6,
+};
+
 export const mockRubrics = recordOf<string, DetailedQuizSummaryDTO>()({
     a_level_1d_motion_test: {
         id: "a_level_1d_motion_test",
@@ -2685,7 +2692,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         //scheduledStartDate: undefined,
-        _id: 37
     },
     {
         id: 38,
@@ -2951,7 +2957,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 38
     },
     {
         id: 40,
@@ -3082,7 +3087,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 40
     },
     {
         id: 45,
@@ -3534,7 +3538,6 @@ export const mockMyAssignments = [
         creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
-        _id: 45
     }
 ];
 
@@ -4336,6 +4339,116 @@ export const mockRegressionTestQuestions = {
                     ],
                     "published": true,
                     "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_drag_and_drop",
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "isaacDndQuestion",
+                            "encoding": "markdown",
+                            "id": "3d927959-a943-4c09-a39a-5fc406b14da1",
+                            "choices": [
+                                {
+                                    "encoding": "markdown",
+                                    "value": "",
+                                    "explanation": {
+                                        "type": "content",
+                                        "children": []
+                                    },
+                                    "type": "dndChoice",
+                                    "children": [],
+                                    "correct": true,
+                                    "items": [
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "A1",
+                                            "id": "eb00"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-0",
+                                            "id": "d39b"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F1",
+                                            "id": "afab"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-2",
+                                            "id": "9d81"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "answer": {
+                                "type": "content",
+                                "encoding": "markdown",
+                                "value": ""
+                            },
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "value": "This is a drag and drop question. This is a [drop-zone:A1|w-100h-27]."
+                                },
+                                {
+                                    "type": "figure",
+                                    "encoding": "markdown",
+                                    "src": "figures/sketch_beta_quad_sketch.svg",
+                                    "value": "test figure",
+                                    "figureRegions": [
+                                        {
+                                            "id": "F-0",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 50,
+                                            "top": 50
+                                        },
+                                        {
+                                            "id": "F1",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 18.8,
+                                            "top": 35.8
+                                        },
+                                        {
+                                            "id": "F-2",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 75.2,
+                                            "top": 35.5
+                                        }
+                                    ],
+                                    "condensedMaxWidth": "500px"
+                                }
+                            ],
+                            "items": [
+                                {
+                                    "type": "item",
+                                    "id": "eb00",
+                                    "value": "graph"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "d39b",
+                                    "value": "origin"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "9d81",
+                                    "value": "$x > 0$"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "afab",
+                                    "value": "$x < 0$"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
             "tags": []
@@ -4462,7 +4575,7 @@ export const mockLLMMarkedValidationResponse = {
     },
     "correct": true,
     "dateAttempted": 1760018609128,
-    "marksAwarded": 1,
+    "marks": 1,
     "markBreakdown": [
         {
             "jsonField": "unreceivedMark0",
@@ -4489,14 +4602,14 @@ export const mockQuestionFinderResults = {
             "title": "A Bag of Flour",
             "subtitle": "Step into Physics: Weight 6",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_weight_class_q6",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4529,14 +4642,14 @@ export const mockQuestionFinderResults = {
             "title": "A Bungee Jumper",
             "subtitle": "Step into Physics: Force and Motion Practice 9",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_forcemotion_hw_q9",
-            "state": "ALL_CORRECT",
+            "state": CompletionState.ALL_CORRECT,
             "audience": [
                 {
                     "stage": [
@@ -4569,14 +4682,14 @@ export const mockQuestionFinderResults = {
             "title": "A Car Leaving Town",
             "subtitle": "Step into Physics: Acceleration 11",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_accel_class_q11",
-            "state": "IN_PROGRESS",
+            "state": CompletionState.IN_PROGRESS,
             "audience": [
                 {
                     "stage": [
@@ -4609,7 +4722,7 @@ export const mockQuestionFinderResults = {
             "title": "A Car on a Motorway",
             "subtitle": "Step into Physics: Calculating Speed 3",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
@@ -4649,14 +4762,14 @@ export const mockQuestionFinderResults = {
             "title": "A Cat, Cyclist, Aeroplane and Cow",
             "subtitle": "Step into Physics: Acceleration Practice 1",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_accel_hw_q1",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4687,7 +4800,7 @@ export const mockQuestionFinderResults = {
     ],
     "nextSearchOffset": 5,
     "totalResults": 5
-};
+} satisfies SearchResultsWrapper<ContentSummaryDTO>;
 
 export const mockQuestionFinderResultsWithMultipleStages = {
     "results": [
@@ -4704,7 +4817,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "fields"
             ],
             "url": "/api/pages/questions/phys_linking_22_q5",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4729,7 +4842,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "mechanics"
             ],
             "url": "/api/pages/questions/gcse_ch2_13_q12",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4762,7 +4875,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "wave_motion"
             ],
             "url": "/api/pages/questions/phys19_k1_q4",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4787,7 +4900,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "phys_book_step_up"
             ],
             "url": "/api/pages/questions/step_up_35_q7",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4820,7 +4933,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "electricity"
             ],
             "url": "/api/pages/questions/phys_linking_33_q1",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4845,7 +4958,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "nuclear"
             ],
             "url": "/api/pages/questions/gcse_ch6_51_q2_r1",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4868,7 +4981,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
     ],
     "nextSearchOffset": 6,
     "totalResults": 6
-};
+} satisfies SearchResultsWrapper<ContentSummaryDTO>;
 
 export const mockConceptsResults = {
     results: [{
@@ -4929,6 +5042,9 @@ export const mockConceptPage =
                         "id": "_mock_accordion_",
                         "audience": [
                             {
+                                "examBoard": [
+                                    "aqa"
+                                ],
                                 "stage": [
                                     "a_level"
                                 ]
@@ -4951,6 +5067,63 @@ export const mockConceptPage =
         ],
         "subtitle": "Mock concept page"
     };
+
+export const mockSearchResults = {
+    results: [{
+        id: "cooling_excalibur",
+        title: "Cooling Excalibur",
+        type: "isaacQuestionPage",
+        level: 6,
+        tags: ["chemistry", "entropy", "problem_solving", "physical"],
+        url: "/isaac-api/api/pages/questions/cooling_excalibur",
+        audience: [{"stage": ["university"], "difficulty": ["challenge_3"]}]
+    }, {
+        id: "cp_force",
+        title: "Force",
+        subtitle: "Newton's 2nd law, change in momentum, vectors",
+        type: "isaacConceptPage",
+        tags: ["dynamics", "physics", "mechanics"],
+        audience: [{ stage: ["a_level"]}, { stage: ["gcse"]}],
+        url: "/isaac-api/api/pages/concepts/cp_force"
+    }, {
+        id: "book_physics_skills_19",
+        title: "Essential Pre-University Physics",
+        subtitle: "By A. C. Machacek and J. J. Crowter, with extra questions written by L. C. Phillips",
+        type: "isaacBookIndexPage",
+        tags: ["physics", "physics_skills_19"],
+        url: "/isaac-api/api/pages/book_physics_skills_19"
+    }, {
+        id: "book_physics_skills_19__a1",
+        title: "Using and Rearranging Equations",
+        subtitle: "A1",
+        type: "isaacBookDetailPage",
+        tags: ["physics", "physics_skills_19"],
+        url: "/isaac-api/api/pages/book_physics_skills_19__a1"
+    }, {
+        id: "spc",
+        title: "Senior Physics Challenge (SPC)",
+        summary: "Learn more about our summer school for UK Y12 students.",
+        type: "page",
+        tags: ["search_result"],
+        url: "/isaac-api/api/pages/spc"
+    }, {
+        id: "d57ad3a6-6656-4ed7-81df-8d3f680839a6",
+        title: "Event regression test",
+        subtitle: "Open event with free spaces",
+        type: "isaacEventPage",
+        tags: ["regression_test", "student"],
+        url: "/isaac-api/api/pages/d57ad3a6-6656-4ed7-81df-8d3f680839a6"
+    }, {
+        id: "topic_summary_number_representation",
+        title: "Representation of numbers",
+        type: "isaacTopicSummaryPage",
+        tags: ["computer_systems", "computer_science", "number_representation"],
+        url: "/isaac-api/api/pages/topic_summary_number_representation"
+    }],
+    get totalResults() {
+        return this.results.length;
+    }
+};
 
 const gameboardContents = {
     37: {
@@ -6129,7 +6302,85 @@ export const mockQuizAssignments = [
             startDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             completedDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
         }
+    },
+    {
+        id: 11,
+        quizId: "test-quiz-assignment-3",
+        quizSummary: {
+            id: "test-quiz-assignment-3",
+            title: "Test Quiz Assignment 3",
+            type: "isaacQuiz",
+            tags: [],
+            url: "/isaac-api/api/quiz/test-quiz-assignment-3",
+            visibleToStudents: false,
+            hiddenFromRoles: [
+                "TEACHER",
+                "STUDENT"
+            ]
+        },
+        groupId: 2,
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        quizFeedbackMode: "DETAILED_FEEDBACK",
     }
+];
+
+export const mockFreeAttempts = [
+    {
+        "id": 8,
+        "userId": 9,
+        "quizId": "test-free-attempt-1",
+        "quizSummary": {
+            "id": "test-free-attempt-1",
+            "title": "Practice Quiz 1",
+            "type": "isaacQuiz",
+            "tags": [],
+            "url": "/isaac-api/api/quiz/test-free-attempt-1",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ]
+                },
+                {
+                    "stage": [
+                        "university"
+                    ]
+                }
+            ],
+            "hiddenFromRoles": []
+        },
+        "startDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+    },
+    {
+        "id": 9,
+        "userId": 9,
+        "quizId": "test-free-attempt-2",
+        "quizSummary": {
+            "id": "test-free-attempt-2",
+            "title": "Practice Quiz 2",
+            "type": "isaacQuiz",
+            "tags": [],
+            "url": "/isaac-api/api/quiz/test-free-attempt-2",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ]
+                },
+                {
+                    "stage": [
+                        "university"
+                    ]
+                }
+            ],
+            "hiddenFromRoles": []
+        },
+        "startDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        "completedDate": DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
+    },
 ];
 
 export const mockGroups = [
@@ -6178,9 +6429,6 @@ export const mockAssignmentsGroup6 = [
 ].filter(isDefined);
 
 export const mockUserPreferences = {
-    BETA_FEATURE: {
-        HIDE_QUESTION_ATTEMPTS: true
-    },
     EMAIL_PREFERENCE: {
         EVENTS: false,
         NEWS_AND_UPDATES: false,

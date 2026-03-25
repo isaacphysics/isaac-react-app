@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse } from "reactstrap";
 import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy } from "../../../services";
-import { PhyHexIcon } from "../svg/PhyHexIcon";
+import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
@@ -57,7 +57,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                         <div className="board-subject-hexagon-container justify-content-center">
                             {generateGameboardSubjectHexagons(boardSubjects)}
                         </div>
-                        <PhyHexIcon icon="icon-question-deck" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
+                        <HexIcon icon="icon-question-deck" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
                         <h4 className="text-break m-0">

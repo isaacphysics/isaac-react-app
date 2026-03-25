@@ -5,7 +5,7 @@ import {
     useAppDispatch,
     useMarkQuizAttemptAsCompleteMutation
 } from "../../../state";
-import {Link, useHistory} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -21,16 +21,16 @@ function extractSectionIdFromQuizQuestionId(questionId: string) {
 export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: string}) {
     const {attempt, page, sections, questions, pageLink} = props;
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [markQuizAttemptAsComplete, {isLoading: submitting}] = useMarkQuizAttemptAsCompleteMutation();
 
     const submitQuiz = () => {
-        markQuizAttemptAsComplete(attempt.id as number)
+        void markQuizAttemptAsComplete(attempt.id as number)
             .then((result) => {
                 if (mutationSucceeded(result)) {
                     dispatch(showSuccessToast("Test submitted successfully", "Your answers have been submitted successfully."));
-                    history.push(props.feedbackLink);
+                    void navigate(props.feedbackLink);
                 }
             });
     };

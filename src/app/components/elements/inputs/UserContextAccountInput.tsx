@@ -142,37 +142,34 @@ export function UserContextAccountInput({
 }: UserContextAccountInputProps) {
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL;
+    const noMoreValidStages = !getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length;
+    const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL || noMoreValidStages;
 
     return <WithLinkableSetting id={"account-context"} className={className}>
-        <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
-            {siteSpecific(
-                <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
-                <span>Show me content for...</span>
-            )}
-        </Label>
-        {siteSpecific(
-            // Physics
-            <React.Fragment>
-                <i id={`show-me-content-${componentId}`} className="mx-2 icon icon-info icon-color-grey" />
-                <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
+        <div className="mb-2">
+            <Label htmlFor="user-context-selector" className={classNames("fw-bold mb-0", (required ? "form-required" : "form-optional"))}>
+                {siteSpecific(
+                    <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
+                    <span>Show me content for...</span>
+                )}
+            </Label>
+            <i id={`show-me-content-${componentId}`} className={classNames("icon icon-inline icon-info mx-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
+            <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
+                {siteSpecific(<>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
                     {"You will be able to change this preference on relevant pages."}<br />
                     {'If you prefer to see all content by default, select "All stages".'}
-                </UncontrolledTooltip>
-            </React.Fragment>,
-            // Computer science
-            <React.Fragment>
-                <span id={`show-me-content-${componentId}`} className="icon-help" />
-                <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
+                </>, 
+                <>
                     {/* This tooltip is very hard to reach */}
                     {tutorOrAbove ?
                         <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
                         <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
                     }
-                </UncontrolledTooltip>
-            </React.Fragment>
-        )}
+                </>)}
+            </UncontrolledTooltip>
+        </div>
+        
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
 
             {userContexts.length ? userContexts.map((userContext, index) => {
@@ -195,16 +192,18 @@ export function UserContextAccountInput({
                 />
             </FormGroup>
             }
-            {isAda && <>
-                {tutorOrAbove &&
-                    <Col lg={6} className="p-0 pe-4 pe-lg-0">
-                        <Button color="keyline" className="mb-3 px-2 w-100"
-                            onClick={() => setUserContexts([...userContexts, {}])}
-                            disabled={!validateUserContexts(userContexts)}>
-                            Add more content
-                        </Button>
-                    </Col>}
-            </>}
+            {isAda && tutorOrAbove && !isAllStages &&
+                <Col lg={6} className="p-0 pe-4 pe-lg-0">
+                    <Button color="keyline" className="mb-3 px-2 w-100"
+                        onClick={() => {
+                            const newStage = getFilteredStageOptions({byUserContexts: userContexts})[0]?.value as STAGE;
+                            const newExamBoard = getFilteredExamBoardOptions({byStages: [newStage || STAGE.ALL], byUserContexts: userContexts})[0]?.value as EXAM_BOARD;
+                            setUserContexts([...userContexts, {stage: newStage, examBoard: newExamBoard}]);
+                        }}
+                        disabled={!validateUserContexts(userContexts)}>
+                        Add more content
+                    </Button>
+                </Col>}
             {isPhy && tutorOrAbove && validateUserContexts(userContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
                     aria-label="Add stage"

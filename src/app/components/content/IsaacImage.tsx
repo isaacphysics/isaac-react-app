@@ -4,7 +4,7 @@ import {apiHelper} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Markup} from "../elements/markup";
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
-import { ActiveModal } from '../../../IsaacAppTypes';
+import { ActiveModalProps } from '../../../IsaacAppTypes';
 
 interface FigureModalProps {
     path?: string;
@@ -13,7 +13,7 @@ interface FigureModalProps {
     toggle: () => void;
 }
 
-export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) : ActiveModal => {
+export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) : ActiveModalProps => {
     return {
         closeAction: toggle,
         size: "xxl",
@@ -50,7 +50,7 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
 
     return <div className="figure-panel">
         <figure>
-            <div className="text-center position-relative">
+            <div className="text-center position-relative p-3 pb-5">
                 <button className="figure-fullscreen" aria-label="Expand image" onClick={() => {
                     dispatch(openActiveModal(FigureModal({
                         path, 

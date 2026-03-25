@@ -17,7 +17,7 @@ export const EmailVerificationBanner = () => {
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     function clickVerify() {
         if (user?.loggedIn && user.email) {
-            sendVerificationEmail({email: user.email});
+            void sendVerificationEmail({email: user.email});
         }
         setHidden(true);
     }
@@ -26,7 +26,7 @@ export const EmailVerificationBanner = () => {
         <Container className="py-3">
 
             <Row style={{alignItems: "center"}}>
-                <Col xs={12} sm={2} md={1}>
+                <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
                     <h3 className="text-center">
                         <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/icons/info.svg" style={{height: "1.5rem"}}
                             alt="" aria-labelledby="email-verification-heading"/>
@@ -34,14 +34,18 @@ export const EmailVerificationBanner = () => {
                     </h3>
                 </Col>
                 {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
-                    <Col xs={12} sm={10} md={8}>
-                        <small>Your email address is not verified - please find our email in your inbox and follow the
-                            verification link. You can <Button color="link primary-font-link" onClick={clickVerify} id="email-verification-request">
-                            request a new verification email</Button> if necessary. To change your account email,
+                    <Col xs={12} sm={siteSpecific(10, 7)} md={8}>
+                        <small>
+                            Your email address is not verified - please find our email in your inbox and follow the
+                            verification link. You can{" "}
+                            <Button color="link primary-font-link" onClick={clickVerify} id="email-verification-request">
+                                request a new verification email
+                            </Button>{" "}
+                            if necessary. To change your account email,
                             go to <Link to="/account">My account</Link>.
                         </small>
                     </Col>
-                    <Col xs={12} md={3} className="text-center">
+                    <Col xs={12} sm={siteSpecific(12, 2)} md={3} className="text-center">
                         <Button
                             color={siteSpecific("keyline", "solid")} className="mt-3 mb-2 d-block d-md-inline-block banner-button"
                             onClick={() => setHidden(true)} id="email-verification-snooze"

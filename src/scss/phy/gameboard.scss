@@ -11,6 +11,7 @@
       z-index: 2;
       .select__option.select__option--is-focused {
         background-color: $primary;
+        color: $color-neutral-white;
       }
     }
   }
@@ -62,12 +63,12 @@ button.btn.delete-button {
   }
 }
 
-.board-sidebar-question {
-  &.selected-question {
+.board-sidebar-content {
+  &.selected-content {
     background-color: $color-neutral-100;
     border-left: solid 3px var(--subject-color-500);
   }
-  &:not(.selected-question) {
+  &:not(.selected-content) {
     border-left: solid 3px transparent;
   }
 }

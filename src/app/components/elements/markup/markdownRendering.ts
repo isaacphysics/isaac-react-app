@@ -1,5 +1,5 @@
 import { PageContextState } from "../../../../IsaacAppTypes";
-import {dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, isSingleStageContext, MARKDOWN_RENDERER} from "../../../services";
+import {dndDropZoneRegex, dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, isSingleStageContext, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 
@@ -42,6 +42,15 @@ export const renderClozeDropZones = (markdown: string) => {
         while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
         const dropId = `drop-region-${index}`;
         return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
+    });
+};
+
+export const renderDndDropZones = (markdown: string) => {
+    return markdown.replace(dndDropZoneRegex, (_match, id, _params, widthMatch, heightMatch) => {
+        const width = widthMatch ? widthMatch.slice("w-".length) : "100";
+        const height = heightMatch ? heightMatch.slice("h-".length) : "27";
+        const dropId = `drop-region-${id}`;
+        return `<span data-index="${id}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
     });
 };
 

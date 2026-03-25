@@ -1,15 +1,14 @@
-import React, {lazy, Suspense, useCallback, useEffect, useMemo, useReducer, useState} from "react";
+import React, {lazy, useEffect, useMemo, useReducer, useState} from "react";
 import {
     AppState,
-    clearQuestionSearch,
     closeActiveModal,
-    searchQuestions,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useSearchQuestionsQuery
 } from "../../../state";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
-import {MultiValue} from "react-select";
+import {GroupBase, MultiValue} from "react-select";
 import {
     tags,
     DIFFICULTY_ICON_ITEM_OPTIONS,
@@ -35,9 +34,8 @@ import {
     useDeviceSize,
     EXAM_BOARD, QUESTIONS_PER_GAMEBOARD
 } from "../../../services";
-import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
-import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
-import {GroupBase} from "react-select/dist/declarations/src/types";
+import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
+import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";
@@ -49,6 +47,8 @@ import { CollapsibleList } from "../CollapsibleList";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { updateTopicChoices, initialiseListState, listStateReducer } from "../../../services";
 import { HorizontalScroller } from "../inputs/HorizontalScroller";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -56,7 +56,7 @@ const GameboardBuilderRow = lazy(() => importGameboardBuilderRow);
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
-    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
+    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 1080})}
 };
 
 interface QuestionSearchModalProps {
@@ -72,6 +72,9 @@ export const QuestionSearchModal = (
     const deviceSize = useDeviceSize();
     const sublistDelimiter = " >>> ";
 
+    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
+    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
+
     const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");
@@ -81,9 +84,9 @@ export const QuestionSearchModal = (
     useEffect(function populateExamBoardFromUserContext() {
         const userExamBoard = userContext.contexts[0].examBoard as EXAM_BOARD;
         if (userContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userContext.contexts[0].examBoard]);
 
-    const [isSearching, setIsSearching] = useState(false);
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
 
@@ -101,14 +104,9 @@ export const QuestionSearchModal = (
 
     const modalQuestions : GameboardBuilderQuestions = {selectedQuestions, questionOrder, setSelectedQuestions, setQuestionOrder};
 
-    const {results: questions} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
-    useEffect(() => {
-        setIsSearching(false);
-    }, [questions]);
-
-    const searchDebounce = useCallback(
+    const searchDebounce = useMemo(() => 
         debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
             setQuestionsSort({});
@@ -116,15 +114,12 @@ export const QuestionSearchModal = (
             const isBookSearch = book.length > 0; // Tasty.
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
-                dispatch(clearQuestionSearch);
-                return;
+                return setSearchParams(skipToken);
             }
 
             const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(",");
 
-            setIsSearching(true);
-
-            dispatch(searchQuestions({
+            setSearchParams({
                 querySource: "gameboardBuilder",
                 searchString: searchString || undefined,
                 tags: tags || undefined,
@@ -134,12 +129,11 @@ export const QuestionSearchModal = (
                 fasttrack,
                 startIndex,
                 limit: 300
-            }));
+            });
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
-        }, 250),
-        []
-    );
+        }, 250, { leading: true }),
+    [eventLog]);
 
     const sortableTableHeaderUpdateState = (sortState: Record<string, SortOrder>, setSortState: React.Dispatch<React.SetStateAction<Record<string, SortOrder>>>, key: string) => (order: SortOrder) => {
         const newSortState = {...sortState};
@@ -155,19 +149,17 @@ export const QuestionSearchModal = (
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
     },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
 
-    const sortedQuestions = useMemo(() => {
-        return questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
-            questions.filter(question => {
-                const qIsPublic = searchResultIsPublic(question, user);
-                if (isBookSearch) return qIsPublic;
-                const qTopicsMatch =
-                    searchTopics.length === 0 ||
-                    (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
+    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions(questionsSort, creationContext)(
+        questions.filter(question => {
+            const qIsPublic = searchResultIsPublic(question, user);
+            if (isBookSearch) return qIsPublic;
+            const qTopicsMatch =
+                searchTopics.length === 0 ||
+                (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
 
-                return qIsPublic && qTopicsMatch;
-            })
-        );
-    }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
+            return qIsPublic && qTopicsMatch;
+        })
+    );
 
     const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center mt-2">
         <div className="flex-grow-1 mb-1">
@@ -204,7 +196,7 @@ export const QuestionSearchModal = (
     return <Row>
         <Col className="col-12 col-xl-3 mt-4">
             <Row>
-                <Col className={isPhy && !isBookSearch ? "col-12 col-lg-6 col-xl-12" : ""}>
+                <Col className={classNames({"col-12 col-lg-6 col-xl-12": isPhy && !isBookSearch})}>
                     {isAda && <CollapsibleList 
                         title={<span className="ms-n3">Topic</span>} 
                         expanded={listState.topics.state} 
@@ -230,14 +222,11 @@ export const QuestionSearchModal = (
                         <Label htmlFor="question-search-book">Book</Label>
                         <StyledSelect
                             inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
-                            onChange={(e) => {
-                                selectOnChange(setSearchBook, true)(e);
-                                sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
-                            }}
+                            onChange={selectOnChange(setSearchBook, true)}
                             options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                         />
                     </div>}
-                    <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
+                    <div className={classNames("mb-2", {"d-none": isBookSearch})}>
                         <Label htmlFor="question-search-stage">Stage</Label>
                         <StyledSelect
                             inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -289,41 +278,48 @@ export const QuestionSearchModal = (
             {addSelectionsRow}
         </Col>
         <Col className="col-12 col-xl-9">
-            <Suspense fallback={<Loading/>}>
-                <HorizontalScroller enabled={sortedQuestions && sortedQuestions.length > 6} className="my-4">
-                    <Table bordered className="my-0">
-                        <thead>
-                            <tr className="search-modal-table-header">
-                                <th className="w-5"> </th>
-                                <SortItemHeader<SortOrder>
-                                    className={siteSpecific("w-40", "w-30")}
-                                    setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                                    defaultOrder={SortOrder.ASC}
-                                    reverseOrder={SortOrder.DESC}
-                                    currentOrder={questionsSort['title']}
-                                    alignment="start"
-                                >Question title</SortItemHeader>
-                                <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                <th className="w-15">Stage</th>
-                                <th className="w-15">Difficulty</th>
-                                {isAda && <th className="w-15">Exam boards</th>}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
-                                <GameboardBuilderRow
-                                    key={`question-search-modal-row-${question.id}`}
-                                    question={question}
-                                    currentQuestions={modalQuestions}
-                                    undoStack={undoStack}
-                                    redoStack={redoStack}
-                                    creationContext={creationContext}
-                                />
-                            )}
-                        </tbody>
-                    </Table>
-                </HorizontalScroller>
-            </Suspense>
+            <HorizontalScroller enabled className="my-4">
+                <Table bordered className="my-0">
+                    <thead>
+                        <tr>
+                            <th className="w-5"> </th>
+                            <SortItemHeader<SortOrder>
+                                className={siteSpecific("w-40", "w-30")}
+                                setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
+                                defaultOrder={SortOrder.ASC}
+                                reverseOrder={SortOrder.DESC}
+                                currentOrder={questionsSort['title']}
+                                alignment="start"
+                            >Question title</SortItemHeader>
+                            <th className={siteSpecific("w-25", "w-20")}>Topic</th>
+                            <th className="w-15">Stage</th>
+                            <th className="w-15">Difficulty</th>
+                            {isAda && <th className="w-15">Exam boards</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ShowLoadingQuery
+                            query={searchQuestionsQuery}
+                            placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
+                            defaultErrorTitle="Failed to load questions."
+                            thenRender={({results: questions}) => {
+                                if (!questions) return <></>;
+                                const sortedQuestions = sortAndFilterBySearch(questions);
+                                return sortedQuestions?.map(question =>
+                                    <GameboardBuilderRow
+                                        key={`question-search-modal-row-${question.id}`}
+                                        question={question}
+                                        currentQuestions={modalQuestions}
+                                        undoStack={undoStack}
+                                        redoStack={redoStack}
+                                        creationContext={creationContext}
+                                    />
+                                );
+                            }}
+                        />
+                    </tbody>
+                </Table>
+            </HorizontalScroller>
         </Col>
     </Row>;
 };

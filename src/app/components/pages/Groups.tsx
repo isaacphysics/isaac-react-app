@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {connect} from "react-redux";
 import {
     Button,
     ButtonDropdown,
@@ -7,7 +6,6 @@ import {
     CardBody,
     CardProps,
     Col,
-    Container,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
@@ -23,10 +21,9 @@ import {
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {
-    AppState,
-    mutationSucceeded,
+    AppDispatch,
     resetMemberPassword,
     showAdditionalManagerSelfRemovalModal,
     showCreateGroupModal,
@@ -64,9 +61,12 @@ import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
-import { MainContent, GroupsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
+import { GroupsSidebar } from "../elements/sidebar/GroupsSidebar";
+import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
+import { IconButton } from "../elements/AffixButton";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -96,6 +96,19 @@ const passwordResetInformation = function(member: AppGroupMembership, passwordRe
         message = 'Password reset request cannot be sent because this user\'s account email address is either invalid or not accepting email.';
     }
     return message;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: any, user: RegisteredUserDTO, groupToDelete: AppGroup) => {
+    if (user.id === groupToDelete.ownerId) {
+        if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
+            deleteGroup(groupToDelete.id as number);
+        }
+    } else {
+        if (confirm("You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '" + groupToDelete.groupName + "'?")) {
+            dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
+        }
+    }
 };
 
 interface MemberInfoProps {
@@ -268,6 +281,8 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
     const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
 
+    const [deleteGroup] = useDeleteGroupMutation();
+
     return <Card className={classNames({"mb-4": isPhy})} {...rest}>
         <CardBody>
             <h4 className={"mb-2"}>
@@ -278,7 +293,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 <div>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <Label htmlFor="groupName" className={"form-required fw-bold"}>
-                            {isUserGroupOwner ? "Rename group" : "Group name" }
+                            {isUserGroupOwner || group.additionalManagerPrivileges ? "Rename group" : "Group name" }
                         </Label>
                         <InputGroup className="flex-column flex-md-row align-items-center gap-2 stackable-input-group w-100">
                             <Input
@@ -331,7 +346,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                         {isTeacherOrAbove(user) &&
                             <div>
                                 <Button className="w-100 d-inline-block text-nowrap" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                                    {isUserGroupOwner ?
+                                    {(isUserGroupOwner || group.additionalManagerPrivileges) ?
                                         `${additionalManagers.length > 1 ? "Edit" : "Add"} group managers` : `More information`
                                     }
                                 </Button>
@@ -400,13 +415,17 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 {canArchive && <>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                     <div>
-                        <Button className={classNames("w-100 w-md-auto", {"mt-n3 mb-2": isPhy})} color={siteSpecific("solid", "keyline")} 
+                        <Button className={classNames("w-100 w-md-auto mb-2", {"mt-n3": isPhy})} color="keyline"
                             onClick={async () => {
                                 if (group.archived) toggleArchived();
                                 else await dispatch(showGroupArchiveModal({group, toggleArchived}));
                             }}>
                             {`${group.archived ? "Unarchive" : "Archive"} group`}
                         </Button>
+                        {group.archived && <Button className={classNames("w-100 w-md-auto ms-md-2 mb-2", {"mt-md-n3": isPhy})} color="solid"
+                            onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, group);}}>
+                            {"Delete group"}
+                        </Button>}
                     </div>
                 </>}
             </div>
@@ -464,21 +483,6 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
     }, [groups, sortOrder]);
 
     const [deleteGroup] = useDeleteGroupMutation();
-    const confirmDeleteGroup = (groupToDelete: AppGroup) => {
-        if (user.id === groupToDelete.ownerId) {
-            if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
-                deleteGroup(groupToDelete.id as number).then(result => {
-                    if (mutationSucceeded(result)) {
-                        setSelectedGroupId(undefined);
-                    }
-                });
-            }
-        } else {
-            if (confirm("You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '" + groupToDelete.groupName + "'?")) {
-                dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
-            }
-        }
-    };
 
     return <Card className="group-selector">
         <CardBody>
@@ -522,7 +526,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 <StyledTabPicker
                                     id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
                                     onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
-                                    suffix={showArchived ? {icon: "icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(g);}, info: "Delete group"} : undefined}
+                                    suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: "Delete group"} : undefined}
                                 />
                             </li>
                             : <div key={g.id} className="group-item p-md-2" data-testid={"group-item"}>
@@ -530,9 +534,10 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                     <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                         {g.groupName}
                                     </Button>
-                                    {showArchived &&
-                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                            aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
+                                    {showArchived && (isPhy ?
+                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}}
+                                            aria-label="Delete group" className="ms-1 icon-close" title={"Delete group"}/> :
+                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label="Delete group" title="Delete group" onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
                                     }
                                 </div>
                                 {isAda && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
@@ -549,14 +554,11 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
     </Card>;
 };
 
-const stateToProps = (_state: AppState, props: any): {hashAnchor: string | null} => {
-    const {location: {hash}} = props;
-    return {hashAnchor: hash?.slice(1) ?? null};
-};
-
-const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: string | null}) => {
+export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
+    const location = useLocation();
+    const hashAnchor = location.hash ? location.hash.slice(1) : null;
 
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = useGetGroupsQuery(showArchived);
@@ -592,31 +594,35 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         You can find the code for an existing group by selecting the group and clicking <i>Invite Users</i>.
     </span>;
 
-    const GroupsPhy = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "hex", icon: "icon-group"}}/>
+    const GroupsPhy = <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "icon", icon: "icon-group"}}/>
+        }
+        sidebar={siteSpecific(
+            <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
+                showArchived={showArchived} setShowArchived={setShowArchived}
+                hideButton
+            />,
+            undefined
+        )}
+    >
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-            <SidebarLayout>
-                <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                    showArchived={showArchived} setShowArchived={setShowArchived}
-                    hideButton
-                />
-                <MainContent>
-                    <PageMetadata noTitle showSidebarButton sidebarButtonText="Select or create a group" helpModalId="help_modal_groups">
-                        <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
-                    </PageMetadata>
-                    {selectedGroup &&
-                        <GroupEditor group={selectedGroup} allGroups={allGroups} user={user} data-testid="group-editor"/>
-                    }
-                    {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
-                    {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} sidebarStyle={false}/>}
-                </MainContent>
-            </SidebarLayout>
+            <PageMetadata noTitle showSidebarButton sidebarButtonText="Select or create a group" helpModalId="help_modal_groups">
+                <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
+            </PageMetadata>
+            {selectedGroup &&
+                <GroupEditor group={selectedGroup} allGroups={allGroups} user={user} data-testid="group-editor"/>
+            }
+            {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
+            {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
+                showArchived={showArchived} setShowArchived={setShowArchived} sidebarStyle={false}/>}
         </ShowLoadingQuery>
-    </Container>;
+    </PageContainer>;
 
-    const GroupsAda = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
+    const GroupsAda = <PageContainer
+        pageTitle={<TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />}
+        sidebar={<MyAdaSidebar />}
+    >
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             {!isEmptyState ?
                 <>
@@ -642,15 +648,13 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
                         <br />
                         You need a student group before you can assign quizzes and tests in {SITE_TITLE_SHORT}.
                     </p>
-                    <Button onClick={() => {dispatch(showCreateGroupModal({user}));}}>
-                       Create a group
+                    <Button onClick={() => void dispatch(showCreateGroupModal({user}))}>
+                        Create a group
                     </Button>
                 </div>
             }
         </ShowLoadingQuery>
-    </Container>;
+    </PageContainer>;
 
     return siteSpecific(GroupsPhy, GroupsAda);
 };
-
-export const Groups = withRouter(connect(stateToProps)(GroupsComponent));

@@ -6,7 +6,7 @@ import {renderTestEnvironment} from "../testUtils";
 describe("UserContextReconfirmationModal", () => {
 
     it('should not show if the user has recently updated their audience context information', async () => {
-        renderTestEnvironment();
+        await renderTestEnvironment();
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         // Check for modals
@@ -22,7 +22,7 @@ describe("UserContextReconfirmationModal", () => {
     });
 
     it('should show if the user has not updated their audience context information since last August', async () => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             modifyUser: user => produce(user, u => {
                 u.registeredContextsLastConfirmed = MOST_RECENT_AUGUST().valueOf() - 10000000;
             })

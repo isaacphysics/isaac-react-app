@@ -93,7 +93,7 @@ export const StudentResources = () => {
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
                         title: featuredStudentChallengePod.title ?? "",
-                        icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
+                        icon: {name: "icon-lightbulb-empty", color: "secondary"},
                         bodyText: featuredStudentChallengePod.value ?? "",
                         tag: featuredStudentChallengePod.subtitle ?? "",
                         clickUrl: featuredStudentChallengePod.url ?? "",
@@ -101,7 +101,7 @@ export const StudentResources = () => {
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
                         title: "There are no active challenges at the moment.",
-                        icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
+                        icon: {name: "icon-lightbulb-empty", color: "secondary"},
                         bodyText: "Check back soon!",
                     }}/>}
                 </ColumnSlice>
@@ -147,12 +147,12 @@ export const StudentResources = () => {
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
                     </ImageBlock>
-                    <TextBlock className="">
+                    <TextBlock>
                         <h2>Studying science or maths?</h2>
                         <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you learn physics, chemistry, biology and maths.</p>
-                        <Button className="external-link" tag={({ children, className }) => ExternalLink({ href: 'https://isaacscience.org', children, className })}>
+                        <ExternalLink asButton href='https://isaacscience.org'>
                             Go to Isaac Science
-                        </Button>
+                        </ExternalLink>
                     </TextBlock>
                 </ColumnSlice>
             </Container>

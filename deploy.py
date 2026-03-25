@@ -127,7 +127,7 @@ def get_old_versions(ctx):
     app_name_prefix = f"{ctx['site']}-app-live-"
     previous_app_version = ""
 
-    if 'old_app' not in ctx or ctx['old_api'] is None:
+    if 'old_app' not in ctx or ctx['old_api'] is None or ('old_app_site' in ctx and ctx['old_app_site'] != ctx['site']):
         print("# Find the previous app version")
         while previous_app_version == "":
             previous_app_version = ask_to_run_command(
@@ -141,7 +141,9 @@ def get_old_versions(ctx):
                 previous_app_version = input(f"Enter old APP version (e.g. v1.2.3) for {ctx['site']} {ctx['env']}: ")
 
         ctx['old_app'] = previous_app_version
+        ctx['old_app_site'] = ctx['site']
     else:
+        print(f"Inferring previous app version as {ctx['old_app']}")
         previous_app_version = ctx['old_app']
 
     if 'old_api' not in ctx or ctx['old_api'] is None:
@@ -185,7 +187,7 @@ def bring_down_any_existing_containers(ctx):
     ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-", expected_nonzero_exit_codes=[1])
     # TODO: only prompt if containers found
     print(f"# Bring them down using:")
-    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -- bash -c './compose {ctx['site']} {ctx['env']} $0 down -v'", expected_nonzero_exit_codes=[1])
+    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -L1 -- bash -c './compose {ctx['site']} {ctx['env']} $0 down -v'", expected_nonzero_exit_codes=[1])
 
 
 def bring_up_the_new_containers(ctx):
@@ -276,7 +278,7 @@ def deploy_live(ctx):
             ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']}", expected_nonzero_exit_codes=[1])
             # TODO: only prompt if containers found
             print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
-            ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']} | xargs -- bash -c 'docker stop $0 && docker rm $0'", expected_nonzero_exit_codes=[1])
+            ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']} | xargs -L1 -- bash -c 'docker stop $0 && docker rm $0'", expected_nonzero_exit_codes=[1])
 
         update_config(ctx)
 
@@ -334,23 +336,23 @@ def get_target_api_version_from_app_image(ctx):
 
 if __name__ == '__main__':
     assert_using_a_tty()
-    context = vars(parse_command_line_arguments())
-    context = validate_args(context)
+    initial_context = vars(parse_command_line_arguments())
+    initial_context = validate_args(initial_context)
 
-    EXEC = context['exec']
+    EXEC = initial_context['exec']
 
-    context['live'] = context['env'] == 'live' # As env changes during live deployment
-    context['subject'] = 'ada' if context['site'] == Site.ADA else 'phy'
-
-    get_target_api_version_from_app_image(context)
+    initial_context['live'] = initial_context['env'] == 'live' # As env changes during live deployment
 
     check_repos_are_up_to_date()
 
-    check_running_servers(context)
+    check_running_servers(initial_context)
 
-    sites = [Site.ADA, Site.SCI] if context['site'] == Site.BOTH else [context['site']]
+    sites = [Site.ADA, Site.SCI] if initial_context['site'] == Site.BOTH else [initial_context['site']]
     for site in sites:
+        context = initial_context.copy()
         context['site'] = site
+        context['subject'] = 'ada' if context['site'] == Site.ADA else 'phy'
+        get_target_api_version_from_app_image(context)
         if context['env'] == 'test' and volume_exists(context):
             deploy_test(context)
         elif context['env'] in ('staging', 'dev') and volume_exists(context):

@@ -9,19 +9,13 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import debounce from 'lodash/debounce';
 import {isEventManager, siteSpecific} from "../../services";
 import { Container, Card, CardTitle, CardBody, Label, Input, Row, Col, Button } from 'reactstrap';
-
-interface AdminEmailsProps {
-    location: {
-        state?: {
-            csvIDs?: number[];
-        };
-    };
-}
+import { useLocation } from 'react-router';
 
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
-export const AdminEmails = (props: AdminEmailsProps) => {
-    const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
+export const AdminEmails = () => {
+    const location = useLocation();
+    const [csvIDs, setCSVIDs] = useState(location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const [emailSent, setEmailSent] = useState(false);
@@ -41,7 +35,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
     return <Container id="admin-emails-page">
         <TitleAndBreadcrumb 
             currentPageTitle="Admin emails" 
-            icon={{type: "hex", icon: "icon-contact"}}
+            icon={{type: "icon", icon: "icon-contact"}}
         />
 
         <Card className="p-3 my-3">
