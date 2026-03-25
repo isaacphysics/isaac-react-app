@@ -102,7 +102,7 @@ const Equality = () => {
                 {allowTextInput && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef} demoPage
                     textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
                     initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={setCurrentAttempt} sketchRef={sketchRef} 
-                    emptySubmission={!hasStartedEditing} helpTooltipId={"inequality-help"}
+                    emptySubmission={!hasStartedEditing} helpTooltipId={"inequality-help"} mayRequireStateSymbols={false}
                 />}
                 <div
                     role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${!allowTextInput && 'mt-4'}`} tabIndex={0}

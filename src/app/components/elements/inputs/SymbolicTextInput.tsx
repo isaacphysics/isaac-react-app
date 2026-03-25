@@ -141,26 +141,42 @@ const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
     </>;
 };
 
-interface SymbolicTextInputProps {
-    editorMode: EditorMode;
-    demoPage?: boolean;
+type RequiredSymbolicTextInputProps = {
     hiddenEditorRef: React.MutableRefObject<HTMLDivElement | null>;
+    sketchRef: React.MutableRefObject<Inequality | null | undefined>;
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
-    setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
     setHasStartedEditing: React.Dispatch<React.SetStateAction<boolean>>;
-    initialSeedText?: string;
-    helpTooltipId: string;
-    editorSeed?: InequalitySymbol[];
-    emptySubmission: boolean;
     initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
-    dispatchSetCurrentAttempt: ((attempt: GeneralFormulaDTO | ValidatedChoice<GeneralFormulaDTO>) => void) | Dispatch<SetStateAction<GeneralFormulaDTO>>;
-    sketchRef: React.MutableRefObject<Inequality | null | undefined>;
-    mayRequireStateSymbols?: boolean;
-    symbolList?: string;
+    helpTooltipId: string;
+    emptySubmission: boolean;
 }
 
-export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textInput, setTextInput, setHideSeed, setHasStartedEditing, initialSeedText, editorSeed, helpTooltipId, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef, emptySubmission, mayRequireStateSymbols, symbolList}: SymbolicTextInputProps) => {
+type DemoPageDependentProps = {
+    demoPage: true;
+    dispatchSetCurrentAttempt: Dispatch<SetStateAction<GeneralFormulaDTO>>;
+} | {
+    demoPage?: false;
+    initialSeedText: string;
+    editorSeed: InequalitySymbol[];
+    symbolList?: string;
+    dispatchSetCurrentAttempt: ((attempt: GeneralFormulaDTO | ValidatedChoice<GeneralFormulaDTO>) => void);
+};
+
+type EditorModeDependentProps = {
+    editorMode: "maths" | "logic";
+    mayRequireStateSymbols?: false;
+} | {
+    editorMode: "chemistry" | "nuclear"
+    setHideSeed?: React.Dispatch<React.SetStateAction<boolean>>;
+    mayRequireStateSymbols: boolean;
+};
+
+type SymbolicTextInputProps = DemoPageDependentProps & EditorModeDependentProps & RequiredSymbolicTextInputProps;
+
+export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, setHasStartedEditing, helpTooltipId, initialEditorSymbols, sketchRef, emptySubmission, ...typedProps}: SymbolicTextInputProps) => {
+    const { demoPage, editorMode, dispatchSetCurrentAttempt, mayRequireStateSymbols } = typedProps;
+
     const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
         type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
         value: value, 
@@ -216,14 +232,14 @@ export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textIn
         <InputGroup className="my-2 separate-input-group">
             <div className="d-flex flex-nowrap w-100">
                 <div className="position-relative flex-grow-1">      
-                    <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={(editorMode === "logic" && !demoPage) ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": emptySubmission && textInput === initialSeedText})}/>
-                    {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                    <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={(editorMode === "logic" && !demoPage) ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": !demoPage && emptySubmission && textInput === typedProps.initialSeedText})}/>
+                    {!demoPage && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                         updateEquation('');
-                        if (sketchRef.current) sketchRef.current.loadTestCase(editorSeed ?? []);
+                        if (sketchRef.current) sketchRef.current.loadTestCase(typedProps.editorSeed ?? []);
                         setHasStartedEditing(false);
                         dispatchSetCurrentAttempt({...constructCurrentAttemptValue(""), frontEndValidation: false});
-                        setTextInput(initialSeedText);
-                        if (setHideSeed) setHideSeed(false);
+                        setTextInput(typedProps.initialSeedText);
+                        if ("setHideSeed" in typedProps) typedProps.setHideSeed?.(false);
                     }}>
                         ↺
                     </button>}
@@ -240,8 +256,8 @@ export const SymbolicTextInput = ({editorMode, demoPage, hiddenEditorRef, textIn
             </div>
             <QuestionInputValidation userInput={textInput} validator={(input) => symbolicTextInputValidator(input, editorMode, mayRequireStateSymbols, demoPage)}/>
         </InputGroup>
-        {symbolList && <div className="eqn-editor-symbols">
-            The following symbols may be useful: <pre>{symbolList}</pre>
+        {!demoPage && <div className="eqn-editor-symbols">
+            The following symbols may be useful: <pre>{typedProps.symbolList}</pre>
         </div>}
     </div>;
 };
