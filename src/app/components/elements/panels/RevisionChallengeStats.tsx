@@ -33,7 +33,7 @@ const REVISION_CHALLENGES: { [key: string]: ProgressChallenge } = {
 export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgress | null}) => {
     // assumes there is only one active challenge! (completedQuestionsInChallenge is not challenge-specific)
     const displayedChallenge = Object.values(REVISION_CHALLENGES).find((c) => c.displayed);
-    const completedQuestionsInChallenge = userProgress?.totalQuestionPartsCorrectThisRevisionPeriod ?? 0;
+    const completedQuestionsInChallenge = userProgress?.totalQuestionsCorrectThisRevisionPeriod ?? 0;
     const isComplete = completedQuestionsInChallenge >= (displayedChallenge?.target ?? Infinity);
 
     return displayedChallenge && <div key={displayedChallenge?.name} className="mb-3 w-50 mx-auto">
