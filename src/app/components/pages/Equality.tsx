@@ -115,7 +115,7 @@ const Equality = () => {
                         initialEditorSymbols={initialEditorSymbols.current} availableSymbols={availableSymbols || []}
                         onEditorStateChange={(state: InequalityState) => {
                             updateState(state);
-                            dispatchSetCurrentAttempt(["maths", "logic"].includes(editorMode)
+                            setCurrentAttempt(["maths", "logic"].includes(editorMode)
                                 ? { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python) || "" }
                                 : { type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" }
                             );
