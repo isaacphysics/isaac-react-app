@@ -19,7 +19,7 @@ import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
-import { InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { InequalityState, SeedExpressions, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -28,11 +28,11 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const currentAttemptValue: InequalityState | undefined = currentAttempt && currentAttempt.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
     
     const [hideSeed, setHideSeed] = useState(!!currentAttempt);
-    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
-    const previewText = (currentAttemptValue && currentAttemptValue.result) ? currentAttemptValue.result.tex
-        // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
-        : !hideSeed ? initialSeedText : undefined;
-    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeedText);
+    const initialSeed: SeedExpressions = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression ?? '', [doc.formulaSeed]);  
+    const previewText = (currentAttemptValue && currentAttemptValue.result)  
+        ? currentAttemptValue.result.tex 
+        : !hideSeed ? initialSeed.latex : undefined;  
+    const [textInput, setTextInput] = useState((currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeed.mhchem) ?? "");  
 
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -118,7 +118,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
         }
         {showTextEntry && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
-            textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeedText}
+            textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeed.mhchem}
             editorSeed={editorSeed} setHideSeed={setHideSeed} initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
             sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId} mayRequireStateSymbols={mayRequireStateSymbols} symbolList={symbolList}
         />}

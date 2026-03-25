@@ -17,7 +17,7 @@ import { Inequality, WidgetSpec } from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
-import { InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { InequalityState, SeedExpressions, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -25,12 +25,13 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
 
-    const [hideSeed, setHideSeed] = useState(currentAttempt ?? false);
-    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
-    const previewText = (currentAttemptValue && currentAttemptValue.result) ? currentAttemptValue.result.tex
-        : !hideSeed ? initialSeedText : undefined;
-    const [textInput, setTextInput] = useState(currentAttemptValue ? currentAttemptValue.result?.python : initialSeedText);
-
+    const [hideSeed, setHideSeed] = useState(!!currentAttempt);
+    const initialSeed: SeedExpressions = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression ?? '', [doc.formulaSeed]);  
+    const previewText = (currentAttemptValue && currentAttemptValue.result)  
+        ? currentAttemptValue.result.tex 
+        : !hideSeed ? initialSeed.latex : undefined;  
+    const [textInput, setTextInput] = useState((currentAttemptValue ? currentAttemptValue.result?.python : initialSeed.python) ?? "");
+ 
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
@@ -106,7 +107,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         />
         {!readonly && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
-            initialSeedText={initialSeedText} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
+            initialSeedText={initialSeed.python} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
             dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
         />}
     </div>;

@@ -70,6 +70,12 @@ export type InequalityState = {
     userInput?: string;
 };
 
+export type SeedExpressions = {
+    latex: string;
+    python: string;
+    mhchem: string;
+}
+
 // Inequality grammar is not currently typed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any 
 export function isError(p: ParsingError | any[]): p is ParsingError {
