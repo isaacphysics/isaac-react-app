@@ -288,6 +288,8 @@ $theme-colour-overrides: (
     "perfect": $cs-perfect,
     "in-progress": $cs-in-progress,
     "failed": $cs-failed,
+
+    "notification": $yellow-300,
 );
 $theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
@@ -350,6 +352,18 @@ $warning-border-subtle: #fffeee;
 
 // all Bootstrap overrides must appear before this
 @import "bootstrap/scss/maps";
+
+$custom-colors-bg-subtle: (
+    "notification": $yellow-300,
+);
+
+$custom-colors-border-subtle: (
+    "notification": $yellow-300,
+);
+
+$theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-subtle);
+$theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
+
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
 @import "../common/bootstrap-contents";

@@ -36,7 +36,7 @@ import {
     OnPageLoad,
     PATHS,
     persistence,
-    showNotification,
+    canShowPopupNotification,
     trackEvent
 } from "../../services";
 import {Generic} from "../pages/Generic";
@@ -61,7 +61,7 @@ import {EventManager} from "../pages/EventManager";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
-import {notificationModal} from "../elements/modals/NotificationModal";
+import {surveyNotificationModal} from "../elements/modals/SurveyNotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
@@ -241,14 +241,14 @@ export const IsaacApp = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, loggedInUserId]);
 
-    const showNotifications = isLoggedIn(user) && showNotification(user);
+    const canShowSurveyNotification = isLoggedIn(user) && canShowPopupNotification(user);
     useEffect(() => {
         const dateNow = new Date();
-        if (showNotifications && notifications && notifications.length > 0) {
-            dispatch(openActiveModal(notificationModal(notifications[0])));
+        if (canShowSurveyNotification && notifications && notifications.length > 0) {
+            dispatch(openActiveModal(surveyNotificationModal(notifications[0])));
             persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString());
         }
-    }, [dispatch, showNotifications, notifications]);
+    }, [dispatch, canShowSurveyNotification, notifications]);
 
 
     function onBeforePrint() {
