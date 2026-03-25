@@ -1,5 +1,5 @@
 import { Inequality, WidgetSpec } from "inequality";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormulaDTO, LogicFormulaDTO, ChemicalFormulaDTO } from "../../../../IsaacApiTypes";
 import { EditorMode } from "../modals/inequality/constants";
 import { parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError } from "inequality-grammar";
@@ -9,6 +9,47 @@ import { isPhy, siteSpecific } from "../../../services";
 import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
 import QuestionInputValidation from "./QuestionInputValidation";
 import classNames from "classnames";
+
+interface ModeConstantTypes {
+    badInputCharacters: RegExp,
+    tooltipExample: ReactNode,
+    formulaType: string,
+    // Inequality grammar is not currently typed
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any 
+    parseExpressionFunc: (exp: string) => any[] | ParsingError,
+    currentAttemptOutput: string,
+}
+
+const modeConstants: Record<EditorMode, ModeConstantTypes> = {
+    "maths": {
+        badInputCharacters: new RegExp(/[^ 0-9A-Za-z]+/),
+        tooltipExample: <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>,
+        formulaType: "formula",
+        parseExpressionFunc: parseMathsExpression,
+        currentAttemptOutput: "pythonExpression",
+    },
+    "logic": {
+        badInputCharacters: new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/),
+        tooltipExample: <> A and (B or not C) <br/> A &amp; (B | !C) <br/> True &amp; ~(False + Q) <br/> 1 . ~(0 + Q) <br/></>,
+        formulaType: "logicFormula",
+        parseExpressionFunc: parseBooleanExpression,
+        currentAttemptOutput: "pythonExpression",
+    },
+    "chemistry": {
+        badInputCharacters: new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/),
+        tooltipExample: <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>,
+        formulaType: "chemicalFormula",
+        parseExpressionFunc: parseInequalityChemistryExpression,
+        currentAttemptOutput: "mhchemExpression",
+    },
+    "nuclear": {
+        badInputCharacters: new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/),
+        tooltipExample: <> {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>,
+        formulaType: "chemicalFormula",
+        parseExpressionFunc: parseInequalityNuclearExpression,
+        currentAttemptOutput: "mhchemExpression",
+    }
+};
 
 export type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 
@@ -35,16 +76,10 @@ export function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-export const symbolicTextInputValidator = (input: string, editorMode: string, mayRequireStateSymbols?: boolean, demoPage?: boolean,) => {
+export const symbolicTextInputValidator = (input: string, editorMode: EditorMode, mayRequireStateSymbols?: boolean, demoPage?: boolean,) => {
     const errors = [];
     if (demoPage) {
-        const parsedExpression = editorMode === "maths"
-            ? parseMathsExpression(input) 
-            : editorMode === "chemistry"
-                ? parseInequalityChemistryExpression(input)
-                : editorMode === "nuclear"
-                    ? parseInequalityNuclearExpression(input)
-                    : parseBooleanExpression(input);
+        const parsedExpression = modeConstants[editorMode].parseExpressionFunc(input);
 
         if (isError(parsedExpression) && parsedExpression.error) {
             errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
@@ -55,14 +90,8 @@ export const symbolicTextInputValidator = (input: string, editorMode: string, ma
         errors.push('LaTeX syntax is not supported.');
     }
 
-    let badCharacters = new RegExp(/[^ 0-9A-Za-z]+/);
-    if (editorMode === 'maths') {
-        badCharacters = new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷]+/);
-    } else if (editorMode === 'logic') {
-        badCharacters = new RegExp(/[^ A-Za-z&|01()~¬∧∨⊻+.!=]+/);
-    } else if (["chemistry", "nuclear"].includes(editorMode)) {
-        badCharacters = new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/);
-    }
+    const badCharacters = modeConstants[editorMode].badInputCharacters;
+
     if (badCharacters.test(input)) {
         const usedBadChars: string[] = [];
         for(let i = 0; i < input.length; i++) {
@@ -122,16 +151,10 @@ export const symbolicTextInputValidator = (input: string, editorMode: string, ma
 };
 
 const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
-    const example: React.ReactNode = 
-        editorMode === "maths" ? <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>
-            : editorMode === "chemistry" ? <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>
-                : editorMode === "nuclear" ? <>  {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>
-                    : <> A and (B or not C) <br/> A &amp; (B | !C) <br/> True &amp; ~(False + Q) <br/> 1 . ~(0 + Q) <br/></>;
-
     return <>
         Here are some examples of expressions you can type:<br />
         <br />
-        {example}
+        {modeConstants[editorMode].tooltipExample}
         <br />
         As you type, the box below will preview the result.
     </>;
@@ -174,9 +197,9 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
     const { demoPage, editorMode, dispatchSetCurrentAttempt, mayRequireStateSymbols } = typedProps;
 
     const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
-        type: editorMode === "maths" ? 'formula' : editorMode === "logic" ? "logicFormula" : "chemicalFormula", 
-        value: value, 
-        ...(["chemistry", "nuclear"].includes(editorMode) ? {mhchemExpression: ""} : {pythonExpression: ""})
+        type: modeConstants[editorMode].formulaType, 
+        [modeConstants[editorMode].currentAttemptOutput]: "",
+        value: value
     });
 
     function countChildren(root: ChildrenMap) {
@@ -196,15 +219,8 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
     }
 
     const updateEquation = (input: string) => {
+        const parsedExpression = modeConstants[editorMode].parseExpressionFunc(input);
         setTextInput(input);
-
-        const parsedExpression = editorMode === "maths"
-            ? parseMathsExpression(input) 
-            : editorMode === "chemistry"
-                ? parseInequalityChemistryExpression(input)
-                : editorMode === "nuclear"
-                    ? parseInequalityNuclearExpression(input)
-                    : parseBooleanExpression(input);
 
         if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
