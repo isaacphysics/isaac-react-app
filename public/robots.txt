@@ -10,3 +10,6 @@ Disallow:
 User-agent: Googlebot
 User-agent: Bingbot
 Disallow:
+
+# Sitemap location
+Sitemap: https://isaaccomputerscience.org/sitemap.xml

@@ -8,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
 
-module.exports = env => {
+const webpackConfigCs = env => {
 
     let configCS = {
         entry: {
@@ -39,6 +39,10 @@ module.exports = env => {
                 },{
                     from: resolve('public/robots.txt'),
                     to: 'robots.txt',
+                }, {
+                    from: resolve('public/sitemap.xml'),
+                    to: 'sitemap.xml',
+                    noErrorOnMissing: true, // Sitemap is generated separately so is ok
                 }]
             }),
         ],
@@ -46,3 +50,5 @@ module.exports = env => {
 
     return merge(configCommon(env), configCS);
 };
+
+module.exports = webpackConfigCs;
