@@ -121,6 +121,11 @@
     .figure-reference, a {
       color: white !important;
     }
+    .figure-caption {
+      .figure-reference, a {
+        color: inherit !important;
+      }
+    }
   }
   &.almost {
     background: #ffb847;
