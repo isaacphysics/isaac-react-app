@@ -16,6 +16,9 @@ import { UserContextPicker } from './inputs/UserContextPicker';
 import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { selectors, useAppSelector } from '../../state';
+import { IconButton } from './AffixButton';
+import { useBookmarks } from '../../services/bookmarks';
+import { BookmarkButton } from './BookmarkButton';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -51,6 +54,7 @@ export const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}:
     const anyActionButtonShown = isPhy && helpModalId || above['sm'](deviceSize) || doc?.id;
 
     return anyActionButtonShown && <div {...rest} className={classNames("d-flex no-print gap-2", rest.className)}>
+        {isPhy && isQuestion && <BookmarkButton doc={doc} />}
         {isPhy && helpModalId && <HelpButton modalId={helpModalId} />}
         {above['sm'](deviceSize) && <>
             <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
