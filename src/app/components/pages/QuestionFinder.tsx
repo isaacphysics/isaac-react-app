@@ -595,7 +595,7 @@ export const QuestionFinder = () => {
                                 </ResultsListHeader>
                                 <CardBody className={classNames({"border-0": isPhy, "p-0": questions?.length, "m-0": isAda && questions?.length})}>
                                     {questions?.length
-                                        ? <ListView type="item" items={questions} hideIconLabel/>
+                                        ? <ListView type="item" items={questions} bookmark hideIconLabel/>
                                         : isAda && (filteringByStatus 
                                             ? <span>Could not load any results matching the requested filters.</span>
                                             : <span>No results match the requested filters.</span>

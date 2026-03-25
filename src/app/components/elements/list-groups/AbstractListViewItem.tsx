@@ -16,6 +16,7 @@ import { ContentPropertyTags } from "../ContentPropertyTags";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
+import { useBookmarks } from "../../../services/bookmarks";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -132,6 +133,7 @@ type ALVIType = {
     audienceViews?: ViewingContext[];
     status?: CompletionState;
     quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
+    bookmark?: boolean; // if set, displays a bookmark for logged-in users that will save the alvi to the user's bookmarks on click
 } | {
     // quizzes – have exclusive "preview" and "view test" buttons
     alviType: "quiz";
@@ -168,6 +170,7 @@ export type AbstractListViewItemProps = {
 
 export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, forceFullWidth, url, state, className, hasCaret, ...typedProps}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
+    const { isBookmarked, bookmarkItem } = useBookmarks();
     const user = useAppSelector(selectors.user.orNull);
 
     const isItem = typedProps.alviType === "item";
@@ -259,6 +262,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
+                    {isItem && typedProps.bookmark && isTeacherOrAbove(user) && <button className={classNames("alvi-bookmark", {"saved": isBookmarked(url)})} onClick={() => bookmarkItem(url)} /> }
                 </>
             }
             {hasCaret && <div className="list-caret align-content-center" aria-hidden="true">
