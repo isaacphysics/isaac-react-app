@@ -8,9 +8,8 @@ import {useLocation} from "react-router";
 import {Inequality} from 'inequality';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
-import { ChemicalFormulaDTO, FormulaDTO, LogicFormulaDTO } from "../../../IsaacApiTypes";
 import { Loading } from "../handlers/IsaacSpinner";
-import { InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { GeneralFormulaDTO, InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -20,7 +19,7 @@ const Equality = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
 
-    const [currentAttempt, dispatchSetCurrentAttempt] = useState<FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO>({type: 'formula', value: "", pythonExpression: ''});
+    const [currentAttempt, setCurrentAttempt] = useState<GeneralFormulaDTO>({type: 'formula', value: "", pythonExpression: ''});
     const currentAttemptValue: InequalityState | undefined = (currentAttempt && currentAttempt.value) ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
     const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
     const userPreferences = useAppSelector(selectors.user.preferences);
@@ -45,7 +44,7 @@ const Equality = () => {
             const pythonExpression = newState?.result?.python || "";
             const previousPythonExpression = currentAttempt.value || "";
             if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(newState), pythonExpression });
+                setCurrentAttempt({ type: 'formula', value: JSON.stringify(newState), pythonExpression });
             }
             initialEditorSymbols.current = state.symbols ?? [];
         } else {
@@ -53,7 +52,7 @@ const Equality = () => {
             const mhchemExpression = newState?.result?.mhchem || "";
             const previousMhchemExpression = currentAttempt.value || "";
             if (!previousMhchemExpression || previousMhchemExpression !== mhchemExpression) {
-                dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression });
+                setCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression });
             }
             initialEditorSymbols.current = state.symbols ?? [];
         }
@@ -102,7 +101,7 @@ const Equality = () => {
             <Col md={8} className="pb-4 pt-md-4 question-panel equality-page">
                 {allowTextInput && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef} demoPage
                     textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}
-                    initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={() => {}} sketchRef={sketchRef} 
+                    initialEditorSymbols={initialEditorSymbols} dispatchSetCurrentAttempt={setCurrentAttempt} sketchRef={sketchRef} 
                     emptySubmission={!hasStartedEditing} helpTooltipId={"inequality-help"}
                 />}
                 <div

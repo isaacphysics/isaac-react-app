@@ -1,5 +1,5 @@
 import { Inequality } from "inequality";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { FormulaDTO, LogicFormulaDTO, ChemicalFormulaDTO } from "../../../../IsaacApiTypes";
 import { EditorMode } from "../modals/inequality/constants";
 import { parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError } from "inequality-grammar";
@@ -10,7 +10,7 @@ import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
 import QuestionInputValidation from "./QuestionInputValidation";
 import classNames from "classnames";
 
-type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
+export type GeneralFormulaDTO = FormulaDTO | LogicFormulaDTO | ChemicalFormulaDTO;
 
 interface ChildrenMap {
     children: {[key: string]: ChildrenMap};
@@ -154,7 +154,7 @@ interface SymbolicTextInputProps {
     editorSeed?: InequalitySymbol[];
     emptySubmission: boolean;
     initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
-    dispatchSetCurrentAttempt: (attempt: GeneralFormulaDTO | ValidatedChoice<GeneralFormulaDTO>) => void;
+    dispatchSetCurrentAttempt: ((attempt: GeneralFormulaDTO | ValidatedChoice<GeneralFormulaDTO>) => void) | Dispatch<SetStateAction<GeneralFormulaDTO>>;
     sketchRef: React.MutableRefObject<Inequality | null | undefined>;
     mayRequireStateSymbols?: boolean;
     symbolList?: string;
