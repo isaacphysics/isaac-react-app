@@ -300,12 +300,9 @@ export const AdminUserManager = () => {
                         </UncontrolledButtonDropdown>}
                     </Col>
                     <Col>
-                        <Link className="btn btn-secondary float-end" to={{
-                            pathname: "/admin/emails",
-                            state: {
-                                csvIDs: selectedUserIds
-                            }
-                        }}>Email</Link>
+                        <Link className="btn btn-secondary float-end" to="/admin/emails" state={{csvIDs: selectedUserIds}}>
+                            Email
+                        </Link>
                     </Col>
                 </Row>
 
