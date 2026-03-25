@@ -11,18 +11,18 @@ import QuestionInputValidation from "./QuestionInputValidation";
 import classNames from "classnames";
 
 interface ModeConstantTypes {
-    badInputCharacters: RegExp,
-    tooltipExample: ReactNode,
-    formulaType: string,
+    badInputCharacters: RegExp;
+    tooltipExample: ReactNode;
+    formulaType: string;
     // Inequality grammar is not currently typed
     // eslint-disable-next-line @typescript-eslint/no-explicit-any 
-    parseExpressionFunc: (exp: string) => any[] | ParsingError,
-    currentAttemptOutput: string,
+    parseExpressionFunc: (exp: string) => any[] | ParsingError;
+    currentAttemptOutput: string;
 }
 
 const modeConstants: Record<EditorMode, ModeConstantTypes> = {
     "maths": {
-        badInputCharacters: new RegExp(/[^ 0-9A-Za-z]+/),
+        badInputCharacters: new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷]+/),
         tooltipExample: <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>,
         formulaType: "formula",
         parseExpressionFunc: parseMathsExpression,
