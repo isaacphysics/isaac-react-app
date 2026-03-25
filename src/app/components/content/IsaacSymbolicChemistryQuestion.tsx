@@ -14,12 +14,12 @@ import {
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import { v4 as uuid_v4 } from "uuid";
-import { Inequality } from "inequality";
+import { Inequality, WidgetSpec } from "inequality";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
-import { InequalityState, InequalitySymbol, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -40,7 +40,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     const userPreferences = useAppSelector(selectors.user.preferences);
 
-    const editorSeed: InequalitySymbol[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
+    const editorSeed: WidgetSpec[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const hasMetaSymbols = doc.availableSymbols ? doc.availableSymbols.length > 0 && !doc.availableSymbols.every(
         symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim())

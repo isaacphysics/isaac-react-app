@@ -5,7 +5,7 @@ import {ifKeyIsEnter, isStaff, siteSpecific, sanitiseInequalityState, jsonHelper
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useLocation} from "react-router";
-import {Inequality} from 'inequality';
+import {Inequality, WidgetSpec} from 'inequality';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import { Loading } from "../handlers/IsaacSpinner";
@@ -32,7 +32,7 @@ const Equality = () => {
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
-    const initialEditorSymbols = useRef<string[]>([]);
+    const initialEditorSymbols = useRef<WidgetSpec[]>([]);
     const availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);

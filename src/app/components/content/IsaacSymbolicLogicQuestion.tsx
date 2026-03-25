@@ -13,11 +13,11 @@ import {
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {v4 as uuid_v4} from "uuid";
-import {Inequality} from 'inequality';
+import { Inequality, WidgetSpec } from 'inequality';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
-import { InequalityState, InequalitySymbol, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -36,7 +36,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     
-    const editorSeed: InequalitySymbol[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
+    const editorSeed: WidgetSpec[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
     const {preferredBooleanNotation} = useUserPreferences();

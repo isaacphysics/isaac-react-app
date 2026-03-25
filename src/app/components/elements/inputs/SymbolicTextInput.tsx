@@ -1,4 +1,4 @@
-import { Inequality } from "inequality";
+import { Inequality, WidgetSpec } from "inequality";
 import React, { Dispatch, SetStateAction } from "react";
 import { FormulaDTO, LogicFormulaDTO, ChemicalFormulaDTO } from "../../../../IsaacApiTypes";
 import { EditorMode } from "../modals/inequality/constants";
@@ -16,10 +16,6 @@ interface ChildrenMap {
     children: {[key: string]: ChildrenMap};
 }
 
-// The parser retuns a complex structure that isn't fully typed, but we still want to label its use
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type InequalitySymbol = any;
-
 export type InequalityState = {
     result?: {
         tex?: string;
@@ -28,7 +24,7 @@ export type InequalityState = {
         mhchem?: string;
         uniqueSymbols?: string;
     };
-    symbols?: InequalitySymbol[];
+    symbols?: WidgetSpec[];
     textEntry?: boolean;
     userInput?: string;
 };
@@ -147,7 +143,7 @@ type RequiredSymbolicTextInputProps = {
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
     setHasStartedEditing: React.Dispatch<React.SetStateAction<boolean>>;
-    initialEditorSymbols: React.MutableRefObject<InequalitySymbol[]>;
+    initialEditorSymbols: React.MutableRefObject<WidgetSpec[]>;
     helpTooltipId: string;
     emptySubmission: boolean;
 }
@@ -158,7 +154,7 @@ type DemoPageDependentProps = {
 } | {
     demoPage?: false;
     initialSeedText: string;
-    editorSeed: InequalitySymbol[];
+    editorSeed: WidgetSpec[];
     symbolList?: string;
     dispatchSetCurrentAttempt: ((attempt: GeneralFormulaDTO | ValidatedChoice<GeneralFormulaDTO>) => void);
 };
