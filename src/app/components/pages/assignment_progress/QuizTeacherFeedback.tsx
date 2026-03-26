@@ -51,6 +51,7 @@ import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {markClassesInternal} from "./AssignmentProgressIndividual";
+import {AssignmentSummaryCard} from "./SingleAssignmentProgress";
 import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
 import { ResultsTableHeader } from "./ResultsTableHeader";
@@ -218,22 +219,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     </Button>
                 </div>
 
-                <Card className="my-4">
-                    <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
-                        <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                            <i className={classNames("icon me-2", quizAssignment.dueDate && quizAssignment.dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                            Due: {formatDate(quizAssignment.dueDate)}
-                        </div>
-                        <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                            <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                            {numStudentsSubmitted} of {quizAssignment.userFeedback?.length} submitted their test
-                        </div>
-                        <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                            <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                            {numStudentsCompletedAll} of {quizAssignment.userFeedback?.length} got full marks
-                        </div>
-                    </CardBody>
-                </Card>
+                <AssignmentSummaryCard studentsAttempted={numStudentsSubmitted} studentsCompleted={numStudentsCompletedAll}
+                    totalStudents={quizAssignment.userFeedback?.length} dueDate={quizAssignment.dueDate} isQuiz/>
 
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>

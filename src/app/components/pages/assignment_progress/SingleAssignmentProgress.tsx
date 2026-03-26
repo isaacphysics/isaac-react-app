@@ -34,6 +34,32 @@ import { DetailedMarksTab, GroupAssignmentTab, isQuestionFullyAttempted } from "
 import { formatDate } from "../../elements/DateString";
 import { Tabs } from "../../elements/Tabs";
 
+interface AssignmentSummaryCardProps {
+    studentsAttempted?: number;
+    studentsCompleted?: number;
+    totalStudents?: number;
+    dueDate?: number | Date;
+    isQuiz?: boolean;
+}
+
+export const AssignmentSummaryCard = ({studentsAttempted, studentsCompleted, totalStudents, dueDate, isQuiz}: AssignmentSummaryCardProps) => {
+    return <Card className="my-4">
+        <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
+            <div className="d-flex align-items-center flex-grow-1 fw-bold">
+                <i className={classNames("icon me-2", dueDate && dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                Due: {formatDate(dueDate)}
+            </div>
+            <div className="d-flex align-items-center flex-grow-1 fw-bold">
+                <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                {studentsAttempted} of {totalStudents} {isQuiz ? "submitted their test" : "attempted all questions"}
+            </div>
+            <div className="d-flex align-items-center flex-grow-1 fw-bold">
+                <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                {studentsCompleted} of {totalStudents} got full marks
+            </div>
+        </CardBody>
+    </Card>;
+};
 
 const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
     const dispatch = useAppDispatch();
@@ -86,22 +112,8 @@ const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgr
             </Button>
         </div>
 
-        <Card className="my-4">
-            <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
-                <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className={classNames("icon me-2", assignment.dueDate && assignment.dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                    Due: {formatDate(assignment.dueDate)}
-                </div>
-                <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                    {numStudentsAttemptedAll} of {progress.length} attempted all questions
-                </div>
-                <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                    {numStudentsCompletedAll} of {progress.length} got full marks
-                </div>
-            </CardBody>
-        </Card>
+        <AssignmentSummaryCard studentsAttempted={numStudentsAttemptedAll} studentsCompleted={numStudentsCompletedAll}
+            totalStudents={progress.length} dueDate={assignment.dueDate} />
 
         <Tabs style="cards">
             {{
