@@ -204,20 +204,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <Card className="p-4 my-3">
-                            <div className={classNames("d-flex", {"mb-3": isPhy})}>
-                                {siteSpecific(
-                                    <h4>Overview: {quizTitle}</h4>,
-                                    <h3>Group results</h3>
-                                )}
-                                <Spacer />
-                                {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
-                                    {settingsVisible ? "Hide settings" : "Show settings"}
-                                    <i className={classNames("icon icon-cog anim-rotate-45", { "active": settingsVisible })}/>
-                                </button>}
-                            </div>
-
-                            <ResultsTableHeader settingsVisible={settingsVisible} isAssignment={false} />
-
+                            <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} showLegend
+                                headerText={siteSpecific(<h4>Overview: {quizTitle}</h4>, <h3>Group results</h3>)} 
+                            />
                             <QuizProgressDetails assignment={quizAssignment} />
                         </Card>
                     </AssignmentProgressPageSettingsContext.Provider>

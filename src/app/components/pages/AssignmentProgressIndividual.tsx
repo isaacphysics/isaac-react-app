@@ -1,10 +1,10 @@
-import React, {useContext, useMemo, useState} from "react";
+import React, {Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
 import { getAssignmentProgressCSVDownloadLink, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
-import { Badge, Button, Card, CardBody } from "reactstrap";
+import { Badge, Button, Card, CardBody, Label } from "reactstrap";
 import { formatDate } from "../elements/DateString";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import { Spacer } from "../elements/Spacer";
@@ -13,7 +13,6 @@ import classNames from "classnames";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { Markup } from "../elements/markup";
-import { AssignmentProgressLegend } from "./SingleAssignmentProgress";
 import { downloadLinkModal } from "../elements/modals/AssignmentProgressModalCreators";
 import { openActiveModal, useAppDispatch } from "../../state";
 
@@ -87,9 +86,11 @@ const BoardLink = ({id}: {id?: string}) => <a className="new-tab-link" href={`${
 interface GroupAssignmentTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
+    settingsVisible: boolean;
+    setSettingsVisible: Dispatch<SetStateAction<boolean>>
 }
 
-const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => {
+const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSettingsVisible}: GroupAssignmentTabProps) => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
     const questions = assignment.gameboard.contents;
 
@@ -125,28 +126,17 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
     }
 
-    const [settingsVisible, setSettingsVisible] = useState(true);
-
     return <Card>
         <CardBody>
-            <div className={classNames("d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center", {"mb-3": isPhy})}>
-                <div className="d-flex w-100 align-items-start justify-content-between">
-                    <div>
-                        {siteSpecific(
-                            <h4>Overview: {assignment.gameboard.title} <BoardLink id={assignment.gameboard?.id} /></h4>,
-                            <h3>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h3>
-                        )}
-                        <span>See who attempted the assignment and which questions they struggled with.</span>
-                    </div>
-                    {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
-                        {settingsVisible ? "Hide settings" : "Show settings"}
-                        <i className={classNames("icon icon-cog icon-dropdown-90", {"active": settingsVisible})}/>
-                    </button>}
-                </div>
-            </div>
-
-            <ResultsTableHeader settingsVisible={settingsVisible} isAssignment={true} />
-            {isPhy && <AssignmentProgressLegend id={`${assignment.id ?? ""}`} />}
+            <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment showLegend
+                headerText={<div>
+                    {siteSpecific(
+                        <h4>Overview: {assignment.gameboard.title} <BoardLink id={assignment.gameboard?.id} /></h4>,
+                        <h3>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h3>
+                    )}
+                    <span>See who attempted the assignment and which questions they struggled with.</span>
+                </div>}
+            />
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
                 assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
@@ -156,10 +146,61 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     </Card>;
 };
 
-export const ResultsTableHeader = ({settingsVisible, isAssignment} : {settingsVisible: boolean, isAssignment: boolean}) => {
+
+const LegendKey = ({cellClass, description}: {cellClass: string, description?: string}) => {
+    return <li className="d-flex flex-row flex-md-column flex-lg-row flex-wrap px-1 py-1 py-md-2 justify-content-start justify-content-md-center align-items-center">
+        <div className="key-cell d-flex me-2 me-md-0 me-lg-2"><span className={cellClass}/></div>
+        {description && <div className="key-description">{description}</div>}
+    </li>;
+};
+
+const AssignmentProgressLegend = () => {
+    const context = useContext(AssignmentProgressPageSettingsContext);
+    const key = "key-progress-legend";
+
+    return <div className="mb-2">
+        <Label htmlFor={key} className="mt-2">Section key:</Label>
+        <div className="d-flex flex-row flex-sm-column justify-content-between">
+            {context?.attemptedOrCorrect === "CORRECT" 
+                ? <ul id={key} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
+                    <LegendKey cellClass="completed" description={`100% correct`}/>
+                    <LegendKey cellClass="passed" description={`≥${passMark * 100}% correct`}/>
+                    <LegendKey cellClass="in-progress" description={`≥${100 - passMark * 100}% correct`}/>
+                    <LegendKey cellClass="failed" description={`<${100 - passMark * 100}% correct`}/>
+                    <LegendKey cellClass="" description={`Not attempted`}/>
+                </ul>
+                : <ul id={key} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-4 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
+                    <LegendKey cellClass="fully-attempted" description={`100% attempted`}/>
+                    <LegendKey cellClass="passed" description={`≥${passMark * 100}% attempted`}/>
+                    <LegendKey cellClass="in-progress" description={`≥${100 - passMark * 100}% attempted`}/>
+                    <LegendKey cellClass="" description={`<${100 - passMark * 100}% attempted`}/>
+                </ul>
+            }
+        </div>
+    </div>;
+};
+
+interface ResultsTableHeaderProps {
+    headerText: ReactNode;
+    settingsVisible: boolean;
+    setSettingsVisible: Dispatch<SetStateAction<boolean>>;
+    isAssignment?: boolean;
+    showLegend?: boolean;
+};
+
+export const ResultsTableHeader = ({headerText, settingsVisible, setSettingsVisible, isAssignment, showLegend}: ResultsTableHeaderProps) => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     return <>
+        <div className={classNames("d-flex", {"mb-3": isPhy})}>
+            {headerText}
+            <Spacer />
+            {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
+                {settingsVisible ? "Hide settings" : "Show settings"}
+                <i className={classNames("icon icon-cog anim-rotate-45", {"active": settingsVisible})}/>
+            </button>}
+        </div>
+
         <div className={classNames("d-flex flex-column flex-lg-row row-gap-2 my-2", {"pt-1": isAda /* increase space for checkbox */})}>
             {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
                 <div className="pb-3">
@@ -174,13 +215,15 @@ export const ResultsTableHeader = ({settingsVisible, isAssignment} : {settingsVi
                     label={<span className="text-muted">Show mark as percentages</span>}
                 />
                 <Spacer />
-                <AdaAssignmentProgressKey isAssignment={isAssignment} />
+                {showLegend && <AdaAssignmentProgressKey isAssignment={isAssignment} />}
             </>}
         </div>
+
+        {isPhy && showLegend && <AssignmentProgressLegend/>}
     </>;
 };
 
-export const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment: boolean}) => {
+export const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment?: boolean}) => {
     const context = useContext(AssignmentProgressPageSettingsContext);
 
     const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
@@ -286,22 +329,21 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
 interface DetailedMarksTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
+    settingsVisible: boolean;
+    setSettingsVisible: Dispatch<SetStateAction<boolean>>
 }
 
-const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
+const DetailedMarksTab = ({assignment, progress, settingsVisible, setSettingsVisible}: DetailedMarksTabProps) => {
     const questions = assignment.gameboard.contents;
 
     return <Card>
         <CardBody>
-            {siteSpecific(
-                <h4>Performance on questions</h4>,
-                <h3>Performance on questions</h3>
-            )}
-            <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
-
-            {isPhy && <div className="py-3 mt-2">
-                <AssignmentProgressSettings />
-            </div>}
+            <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment 
+                headerText={<div>
+                    {siteSpecific(<h4>Performance on questions</h4>, <h3>Performance on questions</h3>)}
+                    <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
+                </div>}
+            />
 
             {questions.map((_, questionIndex) => (
                 <DetailedMarksCard
@@ -359,6 +401,7 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
 
     const numStudentsAttemptedAll = progress.filter(p => p.questionResults?.every(isQuestionFullyAttempted)).length;
     const numStudentsCompletedAll = progress.filter(p => p.questionResults?.every(r => r === CompletionState.ALL_CORRECT)).length;
+    const [settingsVisible, setSettingsVisible] = useState(true);
 
     return <>
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
@@ -393,12 +436,12 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
         <Tabs style="cards">
             {{
                 "Group overview": <GroupAssignmentTab
-                    assignment={assignment}
-                    progress={progress}
+                    assignment={assignment} progress={progress}
+                    settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible}
                 />,
                 "Detailed marks": <DetailedMarksTab
-                    assignment={assignment}
-                    progress={progress}
+                    assignment={assignment} progress={progress}
+                    settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible}
                 />
             }}
         </Tabs>
