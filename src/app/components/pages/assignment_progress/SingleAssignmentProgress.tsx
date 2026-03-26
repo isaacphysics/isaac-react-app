@@ -35,7 +35,7 @@ import { formatDate } from "../../elements/DateString";
 import { Tabs } from "../../elements/Tabs";
 
 
-export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
+const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
     const dispatch = useAppDispatch();
     const questions = assignment.gameboard.contents;
 

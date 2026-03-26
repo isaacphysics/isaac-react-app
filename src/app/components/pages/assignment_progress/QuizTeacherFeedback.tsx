@@ -55,15 +55,77 @@ import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
 import { ResultsTableHeader } from "./ResultsTableHeader";
 
-const pageHelp = <span>
-    See the feedback for your students for this test assignment.
-</span>;
+interface QuizQuestion extends ContentBaseDTO {
+    questionPartsTotal?: number | undefined;
+}
 
-const feedbackNames: Record<QuizFeedbackMode, string> = {
-    NONE: "No feedback for students",
-    OVERALL_MARK: "Overall mark only",
-    SECTION_MARKS: "Section-by-section mark breakdown",
-    DETAILED_FEEDBACK: "Detailed feedback on each question",
+const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
+
+    const questions : QuizQuestion[] = questionsInQuiz(assignment.quiz).map(q => ({...q, questionPartsTotal: 1} as QuizQuestion));
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
+
+    function questionsInSection(section?: IsaacQuizSectionDTO) {
+        return section?.children?.filter(isQuestion) || [];
+    }
+
+    function questionsInQuiz(quiz?: IsaacQuizDTO) {
+        const questions: QuizQuestion[] = [];
+        quiz?.children?.forEach(
+            section => {
+                questions.push(...questionsInSection(section));
+            }
+        );
+        return questions;
+    }
+
+    function markClasses(studentProgress: AssignmentProgressDTO) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        }
+
+        const correctParts = studentProgress.correctQuestionPartsCount;
+        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+        const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
+
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, total);
+    }
+
+    function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        }
+
+        const correctParts = (studentProgress.correctPartResults || [])[index];
+        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
+        const totalParts = questions[index].questionPartsTotal ?? 0;
+
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, totalParts);
+    }
+
+    const totalParts = questions.length;
+
+    const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
+        const partsCorrect = questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0), 0);
+        return {
+            user: user.user as UserSummaryDTO,
+            completed: user.feedback?.complete ?? false,
+            // a list of the correct parts of an answer, one list for each question
+            correctPartResults:      questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0),
+            incorrectPartResults:    questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0),
+            notAttemptedPartResults: user.feedback?.complete || user.feedback?.questionMarks !== undefined
+                ? questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.notAttempted ?? 0)
+                // if the quiz has not been completed (i.e. submitted), then all parts are not attempted
+                : questions.map(q => q.questionPartsTotal ?? 0),
+            questionResults: [],
+            correctQuestionPagesCount: partsCorrect,  // quizzes don't have pages, but QuizProgressCommon expects this key to be the "Correct" column value for sorting
+            correctQuestionPartsCount: partsCorrect,
+            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0), 0),
+        };
+    });
+
+    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
+        questions={questions} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+        isAssignment={false}/>;
 };
 
 export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
@@ -85,6 +147,17 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test");
     const pageTitle = `${quizTitle} ${(assignmentNotYetStarted ? `(starts ${formatDate(assignmentStartDate)})` : "results")}`;
+
+    const pageHelp = <span>
+        See the feedback for your students for this test assignment.
+    </span>;
+
+    const feedbackNames: Record<QuizFeedbackMode, string> = {
+        NONE: "No feedback for students",
+        OVERALL_MARK: "Overall mark only",
+        SECTION_MARKS: "Section-by-section mark breakdown",
+        DETAILED_FEEDBACK: "Detailed feedback on each question",
+    };
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
@@ -175,77 +248,4 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             </>}
         />
     </Container>;
-};
-
-interface QuizQuestion extends ContentBaseDTO {
-    questionPartsTotal?: number | undefined;
-}
-
-export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
-
-    const questions : QuizQuestion[] = questionsInQuiz(assignment.quiz).map(q => ({...q, questionPartsTotal: 1} as QuizQuestion));
-    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
-
-    function questionsInSection(section?: IsaacQuizSectionDTO) {
-        return section?.children?.filter(isQuestion) || [];
-    }
-
-    function questionsInQuiz(quiz?: IsaacQuizDTO) {
-        const questions: QuizQuestion[] = [];
-        quiz?.children?.forEach(
-            section => {
-                questions.push(...questionsInSection(section));
-            }
-        );
-        return questions;
-    }
-
-    function markClasses(studentProgress: AssignmentProgressDTO) {
-        if (!isAuthorisedFullAccess(studentProgress)) {
-            return "revoked";
-        }
-
-        const correctParts = studentProgress.correctQuestionPartsCount;
-        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
-        const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
-
-        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, total);
-    }
-
-    function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
-        if (!isAuthorisedFullAccess(studentProgress)) {
-            return "revoked";
-        }
-
-        const correctParts = (studentProgress.correctPartResults || [])[index];
-        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
-        const totalParts = questions[index].questionPartsTotal ?? 0;
-
-        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, totalParts);
-    }
-
-    const totalParts = questions.length;
-
-    const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
-        const partsCorrect = questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0), 0);
-        return {
-            user: user.user as UserSummaryDTO,
-            completed: user.feedback?.complete ?? false,
-            // a list of the correct parts of an answer, one list for each question
-            correctPartResults:      questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0),
-            incorrectPartResults:    questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0),
-            notAttemptedPartResults: user.feedback?.complete || user.feedback?.questionMarks !== undefined
-                ? questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.notAttempted ?? 0)
-                // if the quiz has not been completed (i.e. submitted), then all parts are not attempted
-                : questions.map(q => q.questionPartsTotal ?? 0),
-            questionResults: [],
-            correctQuestionPagesCount: partsCorrect,  // quizzes don't have pages, but QuizProgressCommon expects this key to be the "Correct" column value for sorting
-            correctQuestionPartsCount: partsCorrect,
-            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0), 0),
-        };
-    });
-
-    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
-        questions={questions} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-        isAssignment={false}/>;
 };

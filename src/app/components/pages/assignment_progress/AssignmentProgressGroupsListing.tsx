@@ -27,7 +27,7 @@ import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 
-export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
+const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
 
     const openDownloadLink = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
