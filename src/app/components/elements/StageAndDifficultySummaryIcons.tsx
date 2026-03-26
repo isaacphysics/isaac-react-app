@@ -17,7 +17,9 @@ interface StageAndDifficultySummaryIconsProps {
 export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryIconsProps) => {
     const {audienceViews, className, iconClassName, stack, spacerWidth} = props;
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
-    const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : STAGE.CORE);
+    // Prefer Core over Advanced if both are present
+    const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
+        audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : undefined);
     return siteSpecific(
         <div className={classNames(className, "d-flex flex-column")}>
             {audienceViews.map((view) =>

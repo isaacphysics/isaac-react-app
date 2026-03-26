@@ -19,7 +19,9 @@ import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const difficulty = audienceViews.map(v => v.difficulty).filter(d => d !== undefined)[0];
-    const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : STAGE.CORE);
+    // Prefer Core over Advanced if both are present
+    const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
+        audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : undefined);
 
     return difficulty && <div className="h-subtitle pt-sm-0 mb-sm-0 d-flex d-sm-block align-content-center">
         <div className="fw-regular text-nowrap align-self-center">
