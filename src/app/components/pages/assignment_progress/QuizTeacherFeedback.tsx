@@ -50,9 +50,10 @@ import {
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import {markClassesInternal, ResultsTableHeader} from "../AssignmentProgressIndividual";
+import {markClassesInternal} from "./AssignmentProgressIndividual";
 import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
+import { ResultsTableHeader } from "./ResultsTableHeader";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.

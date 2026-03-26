@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../state';
-import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../IsaacAppTypes';
+import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../../state';
+import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../../IsaacAppTypes';
 import {
     above,
     AssignmentOrder,
@@ -16,22 +16,22 @@ import {
     siteSpecific,
     SortOrder,
     useDeviceSize
-} from '../../services';
-import {RegisteredUserDTO} from '../../../IsaacApiTypes';
+} from '../../../services';
+import {RegisteredUserDTO} from '../../../../IsaacApiTypes';
 import {Link, useLocation} from 'react-router-dom';
-import {Spacer} from '../elements/Spacer';
-import {formatDate} from '../elements/DateString';
+import {Spacer} from '../../elements/Spacer';
+import {formatDate} from '../../elements/DateString';
 import {Badge, Button, Card, CardBody, Col, Input, Label, Row} from 'reactstrap';
-import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
-import {downloadLinkModal} from '../elements/modals/AssignmentProgressModalCreators';
-import {InlineTabs} from '../elements/InlineTabs';
-import {StyledDropdown} from '../elements/inputs/DropdownInput';
-import {Loading} from '../handlers/IsaacSpinner';
+import {TitleAndBreadcrumb} from '../../elements/TitleAndBreadcrumb';
+import {downloadLinkModal} from '../../elements/modals/AssignmentProgressModalCreators';
+import {InlineTabs} from '../../elements/InlineTabs';
+import {StyledDropdown} from '../../elements/inputs/DropdownInput';
+import {Loading} from '../../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
-import { useHistoryState } from '../../state/actions/history';
-import { PageContainer } from '../elements/layout/PageContainer';
-import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
+import { useHistoryState } from '../../../state/actions/history';
+import { PageContainer } from '../../elements/layout/PageContainer';
+import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();

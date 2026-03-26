@@ -1,10 +1,10 @@
 import React, {useCallback, useContext, useState} from "react";
-import {openActiveModal, useAppDispatch} from "../../state";
+import {openActiveModal, useAppDispatch} from "../../../state";
 import {Card, CardBody, Col, Label, Row} from "reactstrap";
 import sortBy from "lodash/sortBy";
-import {AppGroup, AssignmentProgressPageSettingsContext} from "../../../IsaacAppTypes";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {AppGroup, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
+import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
+import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
     getGroupAssignmentProgressCSVDownloadLink,
@@ -14,18 +14,18 @@ import {
     isTeacherOrAbove,
     PATHS,
     siteSpecific
-} from "../../services";
-import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {PageFragment} from "../elements/PageFragment";
-import {RenderNothing} from "../elements/RenderNothing";
-import {Spacer} from "../elements/Spacer";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {SearchInputWithIcon} from "../elements/SearchInputs";
-import {StyledDropdown} from "../elements/inputs/DropdownInput";
+} from "../../../services";
+import {downloadLinkModal} from "../../elements/modals/AssignmentProgressModalCreators";
+import {PageFragment} from "../../elements/PageFragment";
+import {RenderNothing} from "../../elements/RenderNothing";
+import {Spacer} from "../../elements/Spacer";
+import {ShowLoading} from "../../handlers/ShowLoading";
+import {SearchInputWithIcon} from "../../elements/SearchInputs";
+import {StyledDropdown} from "../../elements/inputs/DropdownInput";
 import classNames from "classnames";
-import { PageMetadata } from "../elements/PageMetadata";
-import { PageContainer } from "../elements/layout/PageContainer";
-import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
+import { PageMetadata } from "../../elements/PageMetadata";
+import { PageContainer } from "../../elements/layout/PageContainer";
+import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 
 export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();

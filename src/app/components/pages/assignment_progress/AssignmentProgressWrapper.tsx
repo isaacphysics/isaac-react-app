@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import {useGetGroupsQuery, useGetMySetAssignmentsQuery} from "../../state";
+import {useGetGroupsQuery, useGetMySetAssignmentsQuery} from "../../../state";
 import sortBy from "lodash/sortBy";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import { useParams } from "react-router-dom";
 import { AssignmentProgressGroupsListing } from "./AssignmentProgressGroupsListing";
-import { GroupSortOrder, useAssignmentProgressAccessibilitySettings } from "../../services";
+import { GroupSortOrder, useAssignmentProgressAccessibilitySettings } from "../../../services";
 import { AssignmentProgressGroup } from "./AssignmentProgressGroup";
-import { AssignmentProgressPageSettingsContext } from "../../../IsaacAppTypes";
+import { AssignmentProgressPageSettingsContext } from "../../../../IsaacAppTypes";
 import { SingleAssignmentProgress } from "./SingleAssignmentProgress";
 
 // This exists as a wrapper around all assignment progress pages, as a way of providing the group from `getGroupsQuery` while not requesting this several times

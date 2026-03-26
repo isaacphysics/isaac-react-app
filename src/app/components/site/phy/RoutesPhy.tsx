@@ -6,7 +6,7 @@ import {Concepts} from "../../pages/Concepts";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
-import {QuizTeacherFeedback} from "../../pages/quizzes/QuizTeacherFeedback";
+import {QuizTeacherFeedback} from "../../pages/assignment_progress/QuizTeacherFeedback";
 import {QuizPreview} from "../../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../../pages/quizzes/QuizDoFreeAttempt";
 import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
