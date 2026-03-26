@@ -145,46 +145,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     </Button>
                 </div>
 
-                {/* <div className="content-metadata-container d-flex flex-column flex-md-row">
-                    <div className="d-flex flex-column pb-3 pb-md-0 px-3 flex-grow-1 justify-content-center">
-                        <span>
-                            Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}
-                        </span>
-                        {quizAssignment.dueDate && <span>
-                            Due date: {formatDate(quizAssignment.dueDate)}
-                        </span>}
-                    </div>
-
-                    <div className="px-3 py-3 py-md-0 text-md-center justify-content-center">
-                        <Label for="feedbackMode" className="pe-1">Student feedback mode:</Label><br/>
-                        <UncontrolledButtonDropdown size="sm">
-                            <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
-                                {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
-                            </DropdownToggle>
-                            <DropdownMenu container={"root"} className="z-1050">
-                                {QuizFeedbackModes.map(mode =>
-                                    <DropdownItem key={mode}
-                                        onClick={() => setFeedbackMode(mode)}
-                                        active={mode === quizAssignment?.quizFeedbackMode}
-                                    >
-                                        {feedbackNames[mode]}
-                                    </DropdownItem>
-                                )}
-                            </DropdownMenu>
-                        </UncontrolledButtonDropdown>
-                    </div>
-
-                    <div className="px-3 pt-3 pt-md-0 align-content-center">
-                        <Button
-                            color={siteSpecific("solid", "keyline")} className="btn-md mt-1 text-nowrap"
-                            href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
-                            target="_blank"
-                        >
-                            Download CSV
-                        </Button>
-                    </div>
-                </div> */}
-
                 <Card className="my-4">
                     <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                         <div className="d-flex align-items-center flex-grow-1 fw-bold">
