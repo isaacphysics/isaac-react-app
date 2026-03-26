@@ -132,14 +132,14 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
-    const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
+    const numericQuizAssignmentId = parseInt(quizAssignmentId ?? "", 10);
     const quizAssignmentQuery = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
     const {data: quizAssignment} = quizAssignmentQuery;
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
 
-    const setFeedbackMode = (mode: QuizFeedbackMode) => {
+    const setFeedbackMode = async (mode: QuizFeedbackMode) => {
         if (mode !== quizAssignment?.quizFeedbackMode) {
-            updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {quizFeedbackMode: mode}});
+            await updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {quizFeedbackMode: mode}});
         }
     };
 
