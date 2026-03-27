@@ -23,12 +23,12 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
         audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : undefined);
 
-    return difficulty && <div className="h-subtitle pt-sm-0 mb-sm-0 ms-0 ms-sm-2 d-flex d-sm-block align-content-center">
+    return difficulty && <div className="h-subtitle d-flex align-content-center">
         <div className="fw-regular text-nowrap align-self-center">
             {!!adaStage && stageLabelMap[adaStage] + ": "}
             {simpleDifficultyLabelMap[difficulty]}
         </div>
-        <div className="ms-2 ms-sm-0">
+        <div className="ms-2 d-flex align-items-center">
             <DifficultyIcons difficulty={difficulty}/>
         </div>
     </div>;
