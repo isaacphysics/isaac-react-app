@@ -209,7 +209,7 @@ export const Glossary = () => {
                     if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
                     if (isPhy && isDefined(filterStages) && !(filterStages.some(s => term.stages?.includes(s)))) continue;
 
-                    const value = term?.value?.[0] ?? '#';
+                    const value = term?.value?.[0].toUpperCase() ?? '#';
                     const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
                 }
