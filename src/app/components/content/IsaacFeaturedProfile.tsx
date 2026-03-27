@@ -12,6 +12,7 @@ interface IsaacFeaturedProfileProps {
 export const IsaacFeaturedProfile = ({ doc, contentIndex }: IsaacFeaturedProfileProps) => {
   const path = doc.image && doc.image.src && apiHelper.determineImageUrl(doc.image.src);
   const summary = doc.children && doc.children[0];
+  const profileImageAlt = doc.image?.altText || (doc.title ? `${doc.title} profile image` : "Profile image");
 
   return (
     <div
@@ -20,7 +21,7 @@ export const IsaacFeaturedProfile = ({ doc, contentIndex }: IsaacFeaturedProfile
       }`}
     >
       <div>
-        <img className="profile-image" src={path} alt="" />
+        <img className="profile-image" src={path} alt={profileImageAlt} />
       </div>
       <Row className="profile-titles">
         <Col>
