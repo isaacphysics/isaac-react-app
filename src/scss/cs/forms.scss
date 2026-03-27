@@ -67,6 +67,9 @@ input[type=text], input[type=search] {
   &:not(.select__input) {
     line-height: 50px !important;
   }
+  &::placeholder {
+    overflow: visible;
+  }
 }
 
 .basic-multi-select {
