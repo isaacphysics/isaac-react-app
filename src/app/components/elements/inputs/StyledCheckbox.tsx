@@ -24,7 +24,7 @@ export const StyledCheckbox = (props: InputProps & {partial?: boolean, removeVer
         setChecked(props.checked ?? false);
     }, [props.checked]);
 
-    return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": invalid, "checkbox-small": bsSize === "sm"})}>
+    return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": invalid, "checkbox-small": bsSize === "sm"}, rest.className)}>
         <div className={classNames({"me-2 my-2": label, "mb-2 mt-0": label && removeVerticalOffset})}>
             {isAda && checked && <div className="tick"/>}
             <input {...rest} id={id} type="checkbox" className={classNames(className ?? "", "d-block", {"checked": checked, "icon-checkbox-off": !partial && !checked, "icon-checkbox-selected": !partial && checked})}

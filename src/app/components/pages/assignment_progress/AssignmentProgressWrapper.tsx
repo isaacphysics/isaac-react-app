@@ -7,7 +7,7 @@ import { AssignmentProgressGroupsListing } from "./AssignmentProgressGroupsListi
 import { GroupSortOrder, useAssignmentProgressAccessibilitySettings } from "../../../services";
 import { AssignmentProgressGroup } from "./AssignmentProgressGroup";
 import { AssignmentProgressPageSettingsContext } from "../../../../IsaacAppTypes";
-import { SingleAssignmentProgress } from "./SingleAssignmentProgress";
+import { AssignmentProgressIndividual } from "./AssignmentProgressIndividual";
 
 // This exists as a wrapper around all assignment progress pages, as a way of providing the group from `getGroupsQuery` while not requesting this several times
 function AssignmentProgressType({user, assignmentId, groupId}: {user: RegisteredUserDTO, assignmentId?: string, groupId?: string}) {
@@ -28,7 +28,7 @@ function AssignmentProgressType({user, assignmentId, groupId}: {user: Registered
         const assignment = assignments?.find(a => a.id === parseInt(assignmentId));
         const group = groups?.find(g => g.id === assignment?.groupId);
 
-        return <SingleAssignmentProgress user={user} group={group} />;
+        return <AssignmentProgressIndividual user={user} group={group} />;
     }
 
     // otherwise we are on Group Listing view

@@ -12,7 +12,7 @@ import StyledToggle from "../../elements/inputs/StyledToggle";
 const AssignmentProgressSettings = () => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
-    return <div className="d-flex w-100 flex-column flex-md-row content-metadata-container my-0 align-items-stretch align-items-md-center px-4 px-sm-5 px-md-0">
+    return <div className="d-flex w-100 flex-column flex-md-row content-metadata-container my-0 align-items-stretch align-items-md-center px-4 px-sm-5 px-md-0 pb-3">
         <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
             <span>Table display mode</span>
             <Spacer />
@@ -130,16 +130,13 @@ export const ResultsTableHeader = ({headerText, settingsVisible, setSettingsVisi
             </button>}
         </div>
 
-        <div className={classNames("d-flex flex-column flex-lg-row row-gap-2 my-2", {"pt-1": isAda /* increase space for checkbox */})}>
+        <div className={"d-flex flex-column flex-lg-row row-gap-2 my-2"}>
             {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
-                <div className="pb-3">
-                    <AssignmentProgressSettings />
-                </div>
+                <AssignmentProgressSettings />
             </CollapsibleContainer>}
 
             {isAda && <>
-                <StyledCheckbox
-                    checked={assignmentProgressContext?.formatAsPercentage}
+                <StyledCheckbox className="pt-1" checked={assignmentProgressContext?.formatAsPercentage}
                     onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
                     label={<span className="text-muted">Show mark as percentages</span>}
                 />
