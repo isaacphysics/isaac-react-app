@@ -162,16 +162,7 @@ export const Glossary = () => {
     const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
     const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const rawGlossaryTerms = useAppSelector(
-        (state: AppState) => state && state.glossaryTerms?.map(
-            // TODO: convert the glossary JSON files rather than processing them here
-            gt => {
-                const value: string = gt.value ?? "";
-                gt.value = value.charAt(0).toUpperCase() + value.slice(1);
-                return gt;
-            }
-        ), (l, r) => !!(l && r && l.length === r.length)
-    );
+    const rawGlossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms, (l, r) => !!(l && r && l.length === r.length));
 
     const debouncedSearchHandler = useMemo(() =>
         debounce((searchTerm: string) => {
