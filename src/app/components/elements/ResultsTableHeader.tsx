@@ -1,13 +1,13 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext} from "react";
-import { AssignmentProgressPageSettingsContext } from "../../../../IsaacAppTypes";
-import { isAda, isPhy } from "../../../services";
-import { ICON, passMark } from "../../elements/quiz/QuizProgressCommon";
+import { AssignmentProgressPageSettingsContext } from "../../../IsaacAppTypes";
+import { isAda, isPhy } from "../../services";
+import { ICON, passMark } from "./quiz/QuizProgressCommon";
 import { Label } from "reactstrap";
-import { StyledCheckbox } from "../../elements/inputs/StyledCheckbox";
-import { Spacer } from "../../elements/Spacer";
+import { StyledCheckbox } from "./inputs/StyledCheckbox";
+import { Spacer } from "./Spacer";
 import classNames from "classnames";
-import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
-import StyledToggle from "../../elements/inputs/StyledToggle";
+import { CollapsibleContainer } from "./CollapsibleContainer";
+import StyledToggle from "./inputs/StyledToggle";
 
 const AssignmentProgressSettings = () => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);

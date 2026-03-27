@@ -49,11 +49,11 @@ import {
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import {markClassesInternal} from "./AssignmentProgressIndividualTabs";
-import {AssignmentSummaryCard} from "./AssignmentProgressIndividual";
+import {markClassesInternal} from "../assignment_progress/AssignmentProgressIndividualTabs";
+import {AssignmentSummaryCard} from "../assignment_progress/AssignmentProgressIndividual";
 import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
-import { ResultsTableHeader } from "./ResultsTableHeader";
+import { ResultsTableHeader } from "../../elements/ResultsTableHeader";
 
 interface QuizQuestion extends ContentBaseDTO {
     questionPartsTotal?: number | undefined;

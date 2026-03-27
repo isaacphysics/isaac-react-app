@@ -8,7 +8,7 @@ import { Spacer } from "../../elements/Spacer";
 import classNames from "classnames";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { Markup } from "../../elements/markup";
-import { ResultsTableHeader } from "./ResultsTableHeader";
+import { ResultsTableHeader } from "../../elements/ResultsTableHeader";
 
 export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT", studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
     if (attemptedOrCorrect === "CORRECT") {
