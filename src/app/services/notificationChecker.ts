@@ -1,6 +1,7 @@
+import { skipToken } from "@reduxjs/toolkit/query";
 import {RegisteredUserDTO} from "../../IsaacApiTypes";
-import { useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery } from "../state";
-import {getAllSortedWorkToDo, isAssignment, isQuiz, KEY, PATHS, persistence} from "./";
+import { selectors, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery } from "../state";
+import {getAllSortedWorkToDo, isAssignment, isQuiz, isTeacherPending, KEY, PATHS, persistence} from "./";
 import {Immutable} from "immer";
 
 export function canShowPopupNotification(user: Immutable<RegisteredUserDTO> | null): boolean {
@@ -34,15 +35,16 @@ interface UserNotificationsResult {
 }
 
 export const useUserNotifications = () : UserNotificationsResult => {
-
+    const user = useAppSelector(selectors.user.orNull);
+    const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
+    
+    const {data: myAssignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    const {data: myQuizAssignments} = useGetQuizAssignmentsAssignedToMeQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    
     // TODO: discuss additional notifications with Ada – assignment deadlines, group changes etc
-
     // const [getAssignmentsSetByMe, {data: assignmentsSetByMe}] = useLazyGetMySetAssignmentsQuery();
     // const [getQuizzesSetByMe, {data: quizzesSetByMe}] = useLazyGetQuizAssignmentsSetByMeQuery();
     // const [getGroups, {data: groups}] = useLazyGetGroupsQuery();
-
-    const {data: myAssignments} = useGetMyAssignmentsQuery();
-    const {data: myQuizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
 
     const {all: toDo, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(myAssignments, myQuizAssignments, 8);
 
