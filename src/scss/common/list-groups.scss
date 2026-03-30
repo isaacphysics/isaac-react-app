@@ -42,7 +42,7 @@
   &:not(.saved) {
     &::after {
       margin-top: -1rem;
-      @include svg-color(url("/assets/common/bookmark.svg"), $color-neutral-200, 16px, 48px, 16px);
+      @include svg-color(url("/assets/common/bookmark.svg"), $gray-110, 16px, 48px, 16px);
     }
   }
 }
