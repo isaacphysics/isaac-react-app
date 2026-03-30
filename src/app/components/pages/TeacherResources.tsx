@@ -31,11 +31,11 @@ export const TeacherResources = () => {
                             full of free tools and resources to support classwork, homework and exam prep.
                         </p>
                         {(!isLoggedIn(user) && <>
-                            <Button color="keyline" to="/register" tag={Link}>Sign up to Ada&nbsp;CS</Button>    
+                            <Button color="keyline" className="bg-white" to="/register" tag={Link}>Sign up to Ada&nbsp;CS</Button>    
                         </>) || isTeacherOrAbove(user) && <>
-                            <Button color="keyline" to="/dashboard" tag={Link}>Go to My&nbsp;Ada Overview</Button>
+                            <Button color="keyline" className="bg-white" to="/dashboard" tag={Link}>Go to My&nbsp;Ada Overview</Button>
                         </> || <>
-                            <Button color="keyline" to="/teacher_account_request" tag={Link}>Upgrade to a teacher account</Button>    
+                            <Button color="keyline" className="bg-white" to="/teacher_account_request" tag={Link}>Upgrade to a teacher account</Button>    
                         </>}
                     </TextBlock>
                     <ImageBlock>

@@ -3,7 +3,7 @@ import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { above, below, isStudent, isTeacherOrAbove, useDeviceSize } from "../../../services";
+import { above, below, isStudent, isTeacherOrAbove, useDeviceSize, useUserNotifications } from "../../../services";
 import { Spacer } from "../Spacer";
 import { useLocation } from "react-router";
 
@@ -19,7 +19,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
         title: "Overview",
         url: "/dashboard",
         icon: "icon-home",
-        user: "TEACHER"
+        user: "ALL"
     },
     groups: {
         title: "Groups",
@@ -99,6 +99,8 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const user = useAppSelector(selectors.user.loggedInOrNull);
     const deviceSize = useDeviceSize();
 
+    const { notifications: _, workCounts } = useUserNotifications();
+
     const isOpen = useAppSelector(selectors.sidebar.open);
     const toggleSidebar = () => dispatch(sidebarSlice.actions.toggle());
 
@@ -119,7 +121,12 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
                         checkboxTitle={<div className={classNames("d-flex align-items-center gap-3")}>
                             <i className={classNames("icon icon-sm ms-1", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
-                            <b>{tab.title}</b>
+                            <b className="d-flex align-items-center gap-2">
+                                {tab.title}
+                                {((key === "assignedToMe" && workCounts.assignments > 0) || (key === "myTests" && workCounts.tests > 0)) && <span 
+                                    className="d-inline-block bg-primary active-dot"
+                                />}
+                            </b>
                         </div>}
                         checked={isActive}
                         className={classNames("nav-link my-ada-tab ps-1")}
