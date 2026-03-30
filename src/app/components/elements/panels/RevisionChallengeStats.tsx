@@ -25,8 +25,8 @@ const REVISION_CHALLENGES: { [key: string]: ProgressChallenge } = {
             </a> for instructions on how to join.
         </span>,
         target: 50,
-        active:    isAda && isBetween(new Date("2026-04-01"), new Date("2026-07-01")),
-        displayed: isAda && isBetween(new Date("2026-03-01"), new Date("2026-08-01")),
+        active:    isAda && isBetween(new Date("2026-04-01"), new Date("2026-07-02")),
+        displayed: isAda && isBetween(new Date("2026-04-01"), new Date("2026-08-01")),
     },
 };
 
