@@ -18,6 +18,7 @@ import React from "react";
 import isEqual from "lodash/isEqual";
 import uniqWith from "lodash/uniqWith";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
+import { InequalityState } from "../../inputs/SymbolicTextInput";
 
 // This file contains helper functions used specifically in the Inequality modal
 
@@ -57,7 +58,7 @@ export function generateLetterMenuItem(l: string): MenuItemProps | undefined {
 }
 
 export function generateLogicFunctionsItems(syntax: LogicSyntax = "logic"): MenuItemProps[] {
-    const labels: any = {
+    const labels = {
         logic: { and: "\\land", or: "\\lor", xor: '\\veebar', not: "\\lnot", equiv: "=", True: "\\mathsf{T}", False: "\\mathsf{F}" },
         binary: { and: "\\cdot", or: "+", xor: '\\oplus', not: "\\overline{x}", equiv: "=", True: "1", False: "0" }
     };
@@ -685,9 +686,9 @@ interface PrepareInequalityArgs {
     inequalityModalRef: React.RefObject<HTMLDivElement>;
     isTrashActive: React.MutableRefObject<boolean>;
     sketch: React.MutableRefObject<Nullable<Inequality>>;
-    initialEditorSymbols: { type: string; properties: any }[];
-    onEditorStateChange?: (state: any) => void;
-    setEditorState: (state: any) => void;
+    initialEditorSymbols: WidgetSpec[];
+    onEditorStateChange?: (state: InequalityState) => void;
+    setEditorState: (state: InequalityState) => void;
 }
 export function prepareInequality({editorMode, inequalityModalRef, initialEditorSymbols, isTrashActive, sketch, logicSyntax, setEditorState, onEditorStateChange}: PrepareInequalityArgs) {
     if (!isDefined(inequalityModalRef.current)) {
@@ -719,11 +720,11 @@ export function prepareInequality({editorMode, inequalityModalRef, initialEditor
     };
     newSketch.onCloseMenus = () => undefined;
     newSketch.isTrashActive = () => isTrashActive.current;
-    newSketch.onNewEditorState = (state: any) => {
+    newSketch.onNewEditorState = (state: InequalityState) => {
         const modal = inequalityModalRef.current;
         if (modal) {
             const newState = sanitiseInequalityState(state);
-            setEditorState((prev: any) => ({...prev, ...newState}));
+            setEditorState((prev: InequalityState) => ({...prev, ...newState}));
             onEditorStateChange?.(newState);
         }
     };
