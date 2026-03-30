@@ -102,7 +102,7 @@ export const HeaderCS = () => {
                             {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
                             {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                             {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
-                            {(isStaff(user) || isNonProd) && <>
+                            {isNonProd && <>
                                 <hr />
                                 <LinkItemButton onClick={() => {
                                     dispatch(openActiveModal(FeatureFlagModal));
