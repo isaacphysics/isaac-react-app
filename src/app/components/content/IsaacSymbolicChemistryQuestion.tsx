@@ -271,8 +271,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 </IsaacContentValueOrChildren>
             </div>
             {showTextEntry
-                ? <i className="text-muted small">Click in either box below to edit your answer.</i>
-                : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
+                ? <i className="text-muted small d-print-none">Click in either box below to edit your answer.</i>
+                : previewText && <i className="text-muted small d-print-none">Click in the box below to edit your answer.</i>
             }
             {showTextEntry && <div className="eqn-editor-input mb-2">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
