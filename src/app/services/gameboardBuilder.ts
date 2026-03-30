@@ -1,4 +1,4 @@
-import {determineAudienceViews, difficultiesOrdered, SortOrder, sortStringsNumerically, tags} from "./";
+import {determineAudienceViews, difficultiesOrdered, sortByStringValue, SortOrder, sortStringsNumerically, tags} from "./";
 import orderBy from "lodash/orderBy";
 import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
@@ -18,6 +18,10 @@ export const sortQuestions = (sortState: {[s: string]: string}, creationContext?
             return (sortState.difficulty === SortOrder.ASC && aIndex > bIndex) ? 1 : -1;
         });
         return questions;
+    }
+    if (sortState.book && sortState.book != SortOrder.NONE) {
+        const sortedQuestions = questions.sort(sortByStringValue("subtitle"));
+        return sortState.book == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
     }
     const keys: string[] = [];
     const order: ("asc" | "desc")[] = [];
