@@ -198,11 +198,16 @@ const MyProgress = ({user}: MyProgressProps) => {
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
-                            <ListView type="item" items={progress.mostRecentQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
+                            <ListView 
+                                type="item" 
+                                items={progress.mostRecentQuestions} 
+                                style={["sm", "lg", "xl"].includes(screenSize) ? "stacked" : undefined} 
+                                className="bordered"
+                            />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Oldest unsolved questions</h4>
-                            <ListView type="item" items={progress.oldestIncompleteQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
+                            <ListView type="item" items={progress.oldestIncompleteQuestions} style={["sm", "lg", "xl"].includes(screenSize) ? "stacked" : undefined} className="bordered"/>
                         </Col>}
                     </Row>
                 </div>
