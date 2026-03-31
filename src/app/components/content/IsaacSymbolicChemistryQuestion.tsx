@@ -114,8 +114,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             </IsaacContentValueOrChildren>
         </div>
         {showTextEntry
-            ? <i className="text-muted small">Click in either box below to edit your answer.</i>
-            : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
+            ? <i className="text-muted small d-print-none">Click in either box below to edit your answer.</i>
+            : previewText && <i className="text-muted small d-print-none">Click in the box below to edit your answer.</i>
         }
         {showTextEntry && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeed.mhchem}
