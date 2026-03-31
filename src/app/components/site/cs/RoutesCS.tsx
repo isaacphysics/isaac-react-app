@@ -108,10 +108,6 @@ export const RoutesCS = [
     <Route key={key++} path="/projects" element={<CSProjects />} />,
     <Route key={key++} path="/pages/online_courses" element={<OnlineCourses />} />,
 
-    // Books: FIXME ADA are we going to include these?
-    // <Route key={key++} path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
-    // <Route key={key++} path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
-
     // Events
     <Route key={key++} path='/events' element={<Events />}/>,
     <Route key={key++} path='/events/:eventId' element={<EventDetails />}/>,
@@ -121,11 +117,6 @@ export const RoutesCS = [
     <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us"} />} />,
     <Route key={key++} path="/safeguarding" element={<Generic pageIdOverride={"events_safeguarding"} />} />,
     <Route key={key++} path="/teacher_account_request" element={<RequireAuth auth={isLoggedIn} element={<TeacherAccountSelfUpgrade />} />} />,
-
-    // <Route key={key++} path="/student_rewards" element={<Generic pageIdOverride={"student_rewards_programme"} />} />,
-    // <Route key={key++} path="/teachcomputing" element={<Generic pageIdOverride={"teach_computing"} />} />,
-
-    // <Route key={key++} ifUser={isEventLeaderOrStaff} path="/events_toolkit" element={<Generic pageIdOverride={"fragments/event_leader_event_toolkit_fragment"} />} />,
 
     // <Route key={key++} path="/coming_soon" element={<ComingSoon />} />,
     <Route key={key++} path="/equality" element={<RequireAuth auth={isStaff} element={<Equality />} />} />,

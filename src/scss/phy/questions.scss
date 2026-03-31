@@ -197,7 +197,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   }
 
   > .question-component:not(:has(> .validation-response-panel.correct, > .validation-response-panel.almost,
-    > .quick-question, + .tabbed-hints)) {
+    > .quick-question:is(.isaac-accordion *), + .tabbed-hints)) {
     padding-bottom: 1rem;
   }
 

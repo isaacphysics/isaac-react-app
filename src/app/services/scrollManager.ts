@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {decorate, isDefined, PATHS} from "./";
 
 const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: string, reducedMotion: boolean): boolean => {
@@ -58,3 +59,23 @@ const safeScrollTo = decorate(window.scrollTo, original => {
         }
     }, 20);
 });
+
+export function useModalWithScroll({setModalVisible}: { setModalVisible: (v: boolean) => void; }) {
+    const scrollYRef = useRef<number>(0);
+
+    const openModal = () => {
+        scrollYRef.current = window.scrollY;
+        setModalVisible(true);
+    };
+
+    const closeModalAndReturnToScrollPosition = () => {
+        document.body.style.overflow = "initial";
+        setModalVisible(false);
+        window.scrollTo(0, scrollYRef.current);
+    };
+
+    return {
+        openModal,
+        closeModalAndReturnToScrollPosition,
+    };
+};
