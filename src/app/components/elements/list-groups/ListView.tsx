@@ -3,7 +3,7 @@ import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps 
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { Button, ListGroup } from "reactstrap";
+import { ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
@@ -13,7 +13,6 @@ import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 import { IconProps } from "../svg/HexIcon";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
-import { Draggable } from "@hello-pangea/dnd";
 
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
@@ -328,14 +327,6 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
     />;
 };
 
-export type ListViewCardProps = Omit<Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>, "alviType" | "alviLayout">;
-
-export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {showBlanks?: boolean} & ListGroupProps) => {
-    const { cards, showBlanks, ...rest } = props;
-    return <ListGroup {...rest} className={classNames("list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row", rest.className)}>
-        {cards.map((card, index) => card ? <ListViewCardItem {...card} key={index} alviType="item" alviLayout="card"/> : (showBlanks ? <ListGroupItem key={index}/> : null))}
-    </ListGroup>;
-
 export type CustomListViewItemProps = ListViewItemBaseProps<"item", "card"> & {
     item: Omit<Extract<AbstractListViewItemProps, {alviType: "item"}>, "alviType"> & {
         type?: string;
@@ -361,7 +352,6 @@ type ListViewItemProps =
     | ShortcutListViewItemProps
     | BookIndexListViewItemProps
     | BookDetailListViewItemProps
-    | BuilderListViewItemProps
     | CustomListViewItemProps
 ;
 
@@ -465,17 +455,6 @@ export const ListView = <T extends {type?: string}, G extends alviTypes>(props: 
                         }
                     });
                 }
-                case "builder": {
-                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "list" as const};
-                    return items.map((item, index) => {
-                        switch (item.type) {
-                            case (DOCUMENT_TYPE.QUESTION):
-                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
-                            default:
-                                return failedToRender(item);
-                        }
-                    });
-                }
                 default:
                     return null;
             }
@@ -536,17 +515,6 @@ export const ListViewCards = <T extends {type?: string}, G extends alviTypes>(pr
                         switch (item.type) {
                             case (DOCUMENT_TYPE.QUIZ):
                                 return <QuizListViewItem key={index} item={item} {...lviProps} />;
-                            default:
-                                return failedToRender(item);
-                        }
-                    });
-                }
-                case "builder": {
-                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "card" as const};
-                    return items.map((item, index) => {
-                        switch (item.type) {
-                            case (DOCUMENT_TYPE.QUESTION):
-                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
                             default:
                                 return failedToRender(item);
                         }
