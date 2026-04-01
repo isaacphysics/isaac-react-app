@@ -1,9 +1,9 @@
 import { PageContextState } from "../../../IsaacAppTypes";
 import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, ISAAC_BOOKS_BY_TAG, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS } from "../../services";
 import { AbstractListViewItemState, ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
-import { CustomListViewItemProps } from "../elements/list-groups/ListView";
+import { CustomListViewItemProps, transformItemsForCustomListView } from "../elements/list-groups/ListView";
 
-type CardProps = Omit<CustomListViewItemProps['item'], "alviType" | "alviLayout">; // we'll add these back later, so we don't need to specify them for every card
+type CardProps = CustomListViewItemProps['item'];
 
 export const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
     return `/${context.subject}/${context.stage}/${page}`;
@@ -194,11 +194,6 @@ const applyContext = (context: NonNullable<Required<PageContextState>>, cards: (
     return cards.map(card => card ? card(context) : null);
 };
 
-const transformCardsForCardView = (card: CardProps | null): CustomListViewItemProps['item'] => {
-    if (!card) return {type: "custom"};
-    return {...card, type: "custom"};
-};
-
 export const getLandingPageCardsForContext = (context: PageContextState, stacked?: boolean, showBlanks?: boolean): CustomListViewItemProps['item'][] => {
     if (!isFullyDefinedContext(context)) return [];
     if (!isSingleStageContext(context)) return [];
@@ -214,7 +209,7 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 
     return applyContext(
         context, stacked ? [...baseCards, ...subjectSpecificCards] : interleave(baseCards, subjectSpecificCards) // base cards always appear on the left
-    ).filter(showBlanks ? () => true : (card): card is NonNullable<typeof card> => !!card).map(transformCardsForCardView);
+    ).filter(showBlanks ? () => true : (card): card is NonNullable<typeof card> => !!card).map(transformItemsForCustomListView);
 };
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {

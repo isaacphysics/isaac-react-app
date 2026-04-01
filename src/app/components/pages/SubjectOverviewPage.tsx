@@ -2,9 +2,9 @@ import React from "react";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
-import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, Subject, useDeviceSize } from "../../services";
+import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, Subject, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
-import { convertToALVIGameboard, ListView, ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
+import { convertToALVIGameboard, CustomListViewItemProps, ListView, ListViewCards, transformItemsForCustomListView } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 import { AbstractListViewItemState } from "../elements/list-groups/AbstractListViewItem";
@@ -18,7 +18,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 
     const humanSubject = context?.subject && HUMAN_SUBJECTS[context.subject];
 
-    const cards: (ListViewCardProps | null)[] = [
+    const cards: (CustomListViewItemProps['item'] | null)[] = [
         {
             title: "11-14",
             subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`,
@@ -66,10 +66,15 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         },
     ].map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) || card.state === AbstractListViewItemState.COMING_SOON ? card : null);
 
-    return <ListViewCards showBlanks={above["lg"](deviceSize)} cards={cards
-        .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
-        .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
-    } />;
+    return <ListViewCards
+        type="item"
+        items={cards
+            .filter(above["lg"](deviceSize) ? () => true : (card): card is NonNullable<typeof card> => !!card) // remove nulls on smaller screens
+            .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
+            .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
+            .map(transformItemsForCustomListView)
+        }
+    />;
 };
 
 const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {

@@ -341,6 +341,11 @@ export const CustomListViewItem = (props: CustomListViewItemProps) => {
     />;
 };
 
+export const transformItemsForCustomListView = (item: CustomListViewItemProps['item'] | null): CustomListViewItemProps['item'] => {
+    if (!item) return {type: "custom"};
+    return {...item, type: "custom"};
+};
+
 type ListViewItemProps =
     | QuestionListViewItemProps
     | ConceptListViewItemProps
@@ -426,8 +431,8 @@ export const ListView = <T extends {type?: string}, G extends alviTypes>(props: 
                             case SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE:
                                 if(isPhy) return <BookDetailListViewItem key={index} item={item} {...lviProps} />;
                                 return <GenericListViewItem key={index} item={item} {...lviProps} />;
-                            // case "custom":
-                            //     return <CustomListViewItem key={index} item={item} {...lviProps} />;
+                            case "custom":
+                                return <CustomListViewItem key={index} item={item} {...lviProps} />;
                             default:
                                 return failedToRender(item);
                         }
