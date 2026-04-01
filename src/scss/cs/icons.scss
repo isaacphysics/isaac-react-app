@@ -230,3 +230,37 @@ i.icon.icon-color-pink {
   @include icon-color-override($dark-pink-300);
 }
 
+@mixin svg-icon-v2($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
+  $max-scale: 1.5;
+  @include svg-icon($path, calc($width * $max-scale), calc($height * $max-scale), $mask-size, $mask-position);
+  mask-origin: content-box !important;
+  padding: calc(10px * $max-scale - 10px * $scale); 
+}
+
+.icon-home-v2 {
+  @include svg-icon-v2('/assets/cs/icons/home.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1);
+}
+
+.icon-group-v2 {
+  @include svg-icon-v2('/assets/cs/icons/group.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1.2);
+}
+
+.icon-file-v2 {
+  @include svg-icon-v2('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1);
+}
+
+.icon-school-v2 {
+  @include svg-icon-v2('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1.1);
+}
+
+.icon-done-all-v2 {
+  @include svg-icon-v2('/assets/cs/icons/done_all.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1.2);
+}
+
+.icon-person-check-v2 {
+  @include svg-icon-v2('/assets/cs/icons/person_check.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1.2);
+}
+
+.icon-cog-v2 {
+  @include svg-icon-v2('/assets/cs/icons/settings.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1);
+}
