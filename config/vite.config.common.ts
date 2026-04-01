@@ -1,5 +1,6 @@
 import type { Plugin, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import checker from 'vite-plugin-checker';
 import fs from 'fs/promises';
 
 // Vite requires an index.html file at the project root. Since we have two sites and each needs its own index.html,
@@ -65,6 +66,7 @@ export const generateConfig = (site: "sci" | "ada", renderer = false) => (env: R
             react({}),
             // purgeCssPlugin(), // see above
             renameIndexPlugin(indexPath),
+            checker({ typescript: true }),
         ],
 
         build: {
