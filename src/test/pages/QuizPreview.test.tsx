@@ -95,7 +95,7 @@ describe("QuizPreview", () => {
             await teacherPreviewsMissingQuiz();
             siteSpecific(
                 () => expectPhyBreadCrumbs({href: '/tests', text: "My tests"}),
-                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "Tests assigned to me"}, "Test Preview"])
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "Tests"}, "Test Preview"])
             )();
         });
 
