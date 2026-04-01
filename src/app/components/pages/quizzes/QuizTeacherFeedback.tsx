@@ -19,6 +19,7 @@ import {
 import {
     getQuizAssignmentCSVDownloadLink,
     isAuthorisedFullAccess,
+    isDefined,
     isPhy,
     isQuestion,
     nthHourOf,
@@ -47,7 +48,7 @@ import {
     Label,
     UncontrolledButtonDropdown
 } from "reactstrap";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {FetchBaseQueryError, skipToken} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {markClassesInternal, ResultsTableHeader} from "../AssignmentProgressIndividual";
@@ -66,17 +67,17 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
 };
 
 export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
-    const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
+    const {quizAssignmentId} = useParams();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
-    const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
-    const quizAssignmentQuery = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
+    const numericQuizAssignmentId = isDefined(quizAssignmentId) ? parseInt(quizAssignmentId, 10) : undefined;
+    const quizAssignmentQuery = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId ?? skipToken);
     const {data: quizAssignment} = quizAssignmentQuery;
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
 
     const setFeedbackMode = (mode: QuizFeedbackMode) => {
-        if (mode !== quizAssignment?.quizFeedbackMode) {
-            updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {quizFeedbackMode: mode}});
+        if (mode !== quizAssignment?.quizFeedbackMode && isDefined(numericQuizAssignmentId)) {
+            void updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {quizFeedbackMode: mode}});
         }
     };
 

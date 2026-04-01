@@ -24,7 +24,7 @@ describe("UserContextReconfirmationModal", () => {
     it('should show if the user has not updated their audience context information since last August', async () => {
         await renderTestEnvironment({
             modifyUser: user => produce(user, u => {
-                u.registeredContextsLastConfirmed = MOST_RECENT_AUGUST().valueOf() - 10000000;
+                u.registeredContextsLastConfirmed = new Date(MOST_RECENT_AUGUST().valueOf() - 10000000);
             })
         });
         const modal = await screen.findByTestId("active-modal");
