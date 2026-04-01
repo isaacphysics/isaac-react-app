@@ -362,6 +362,10 @@ iframe.email-html {
   overflow: hidden;
   border-top: 1px solid rgba(0, 0, 0, 0.15);
   opacity: 1;
+
+  &:is(hr) {
+    border-bottom: none;
+  }
 }
 
 .section-divider-y {
@@ -375,6 +379,10 @@ iframe.email-html {
 .section-divider-bold {
   @extend .section-divider;
   border-top: 2px solid rgba(0, 0, 0, 0.20);
+  
+  &:is(hr) {
+    border-bottom: none;
+  }
 }
 
 .hoverable-tooltip {
@@ -532,4 +540,6 @@ iframe.email-html {
   border-radius: 50%;
   width: 8px;
   height: 8px;
+  min-width: 8px;
+  min-height: 8px;
 }

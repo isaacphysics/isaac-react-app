@@ -1,55 +1,12 @@
 import {DragAndDropRegionContext} from "../../../../../IsaacAppTypes";
 import ReactDOM from "react-dom";
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {ContentDTO, ItemDTO} from "../../../../../IsaacApiTypes";
-import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
-import {Badge, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
-import {Immutable} from "immer";
+import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {useDroppable} from "@dnd-kit/core";
-import {CSS} from "@dnd-kit/utilities";
-import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
 import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
-
-export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
-    const {attributes, listeners, setNodeRef, isDragging, isOver, transform, transition} = useSortable({
-        id,
-        attributes: {
-            role: "button",
-            roleDescription: "draggable item",
-        },
-        data: { type, text: item.altText ?? item.value }
-    });
-    const style: React.CSSProperties = {
-        transform: CSS.Translate.toString(transform),
-        transition,
-        opacity: (overrideOver || isOver) || isDragging ? "0.2" : "1",
-        touchAction: "none"
-    };
-
-    // This is to manage focus properly for accessibility reasons
-    const dropRegionContext = useContext(DragAndDropRegionContext);
-    useEffect(() => {
-        if (dropRegionContext?.shouldGetFocus && dropRegionContext?.shouldGetFocus(id)) {
-            const el = document.getElementById(id);
-            el?.focus();
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dropRegionContext?.shouldGetFocus]);
-
-    return <Badge id={id} className={classNames("p-1 cloze-item feedback-zone", {"cloze-bg": !!item, "m-2": type === "item-section", "feedback-showing": isDefined(isCorrect)})} color="theme" style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
-        <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
-        <span aria-hidden={true}>
-            <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
-                {item.children as ContentDTO[]}
-            </IsaacContentValueOrChildren>
-        </span>
-        {isDefined(isCorrect) && <div className={"feedback-box"}>
-            <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
-        </div>}
-    </Badge>;
-}
+import DropZoneItem from "../../DnDItem";
 
 interface InlineDropRegionProps {
     divId: string;
@@ -108,7 +65,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
         ref={setNodeRef}
     >
         {item
-            ? <Item item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
+            ? <DropZoneItem item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
             : <>&nbsp;<span className={"visually-hidden"}>drop zone</span></>
         }
     </span>;

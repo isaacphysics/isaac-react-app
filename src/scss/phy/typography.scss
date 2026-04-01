@@ -73,7 +73,7 @@ ul {
   ul:not(.list-unstyled) {
     list-style-type: none;
     list-style-image: none;
-    li {
+    > li {
       position: relative;
       &::before {
         content: "";

@@ -1,5 +1,9 @@
-import {symbolicInputValidator} from "../../../app/components/content/IsaacSymbolicQuestion";
-import {symbolicLogicInputValidator} from "../../../app/components/content/IsaacSymbolicLogicQuestion";
+import { symbolicTextInputValidator } from "../../../app/components/elements/inputs/SymbolicTextInput";
+
+const symbolicInputValidator = (input: string) => symbolicTextInputValidator(input, "maths");
+const symbolicLogicInputValidator = (input: string) => symbolicTextInputValidator(input, "logic");
+const symbolicChemistryInputValidator = (input: string) => symbolicTextInputValidator(input, "chemistry");
+const symbolicNuclearInputValidator = (input: string) => symbolicTextInputValidator(input, "nuclear");
 
 describe("IsaacSymbolicQuestion", () => {
 
@@ -25,7 +29,7 @@ describe("IsaacSymbolicQuestion", () => {
         expect(symbolicInputValidator("a<b<c")).toEqual(['We are not able to accept double inequalities, and answers will never require them.']);
     });
 
-    it("Symbolic Question Validator matches correctly", async () => {
+    it("Symbolic Logic Question Validator matches correctly", async () => {
 
         // empty input
         expect(symbolicLogicInputValidator("")).toEqual([]);
@@ -39,5 +43,35 @@ describe("IsaacSymbolicQuestion", () => {
         expect(symbolicLogicInputValidator("((A&B))")).toEqual([]);
         expect(symbolicLogicInputValidator("((A&B)))")).toEqual(['You are missing some opening brackets.']);
         expect(symbolicLogicInputValidator("(((A&B))")).toEqual(['You are missing some closing brackets.']);
+    });
+
+    it("Symbolic Chemistry Question Validator matches correctly", async () => {
+
+        // empty input
+        expect(symbolicChemistryInputValidator("")).toEqual([]);
+
+        // bad chars
+        expect(symbolicChemistryInputValidator("A∧BC>+1")).toEqual(['Some of the characters you are using are not allowed: ∧']);
+
+        // misc errors
+        expect(symbolicChemistryInputValidator("2H2O -> 2H2 + O2")).toEqual([]);
+        expect(symbolicChemistryInputValidator("2(H2O")).toEqual(['You are missing some brackets.']);
+        expect(symbolicChemistryInputValidator(".5")).toEqual(['Please convert decimal numbers to fractions.']);
+        expect(symbolicChemistryInputValidator("2H2O(l) -> 2H2(g) + O2(g)")).toEqual(['This question does not require state symbols.']);
+        expect(symbolicTextInputValidator("2H2O(l) -> 2H2(g) + O2(g)", "chemistry", true)).toEqual([]);
+    });
+
+    it("Symbolic Nuclear Question Validator matches correctly", async () => {
+
+        // empty input
+        expect(symbolicNuclearInputValidator("")).toEqual([]);
+
+        // bad chars
+        expect(symbolicNuclearInputValidator("A∧BC>+1")).toEqual(['Some of the characters you are using are not allowed: ∧']);
+
+        // misc errors
+        expect(symbolicNuclearInputValidator("^{238}_{92}U -> ^{234}_{90}Th + ^{4}_{2}He")).toEqual([]);
+        expect(symbolicNuclearInputValidator("^{238_{92}U -> ^{234}_{90}Th + ^{4}_{2}He")).toEqual(['You are missing some brackets.']);
+        expect(symbolicNuclearInputValidator(".5")).toEqual(['Please convert decimal numbers to fractions.']);
     });
 });

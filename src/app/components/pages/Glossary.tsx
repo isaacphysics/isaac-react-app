@@ -162,16 +162,7 @@ export const Glossary = () => {
     const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
     const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const rawGlossaryTerms = useAppSelector(
-        (state: AppState) => state && state.glossaryTerms?.map(
-            // TODO: convert the glossary JSON files rather than processing them here
-            gt => {
-                const value: string = gt.value ?? "";
-                gt.value = value.charAt(0).toUpperCase() + value.slice(1);
-                return gt;
-            }
-        ), (l, r) => !!(l && r && l.length === r.length)
-    );
+    const rawGlossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms, (l, r) => !!(l && r && l.length === r.length));
 
     const debouncedSearchHandler = useMemo(() =>
         debounce((searchTerm: string) => {
@@ -218,7 +209,7 @@ export const Glossary = () => {
                     if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
                     if (isPhy && isDefined(filterStages) && !(filterStages.some(s => term.stages?.includes(s)))) continue;
 
-                    const value = term?.value?.[0] ?? '#';
+                    const value = term?.value?.[0].toUpperCase() ?? '#';
                     const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
                 }

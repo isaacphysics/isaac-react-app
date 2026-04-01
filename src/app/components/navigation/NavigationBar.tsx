@@ -1,6 +1,5 @@
 import React, {HTMLProps, useState} from "react";
 import {Link} from "react-router-dom";
-import {selectors, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery} from "../../state";
 import {
     Badge,
     Dropdown,
@@ -11,20 +10,13 @@ import {
     NavLink,
 } from "reactstrap";
 import {
-    filterAssignmentsByStatus,
     isAda,
-    isFound,
-    isTeacherPending,
-    isOverdue,
     isPhy,
-    partitionCompleteAndIncompleteQuizzes,
     siteSpecific,
     useNavbarExpanded
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
-import {skipToken} from "@reduxjs/toolkit/query";
-import { AssignmentDTO, QuizAssignmentDTO } from "../../../IsaacApiTypes";
 
 export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
@@ -92,28 +84,4 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
         <span className={classNames("badge rounded-pill ms-2", {"bg-grey text-body": isPhy, "bg-turquoise-blue text-dark": isAda})}>{count}</span>
         <span className="visually-hidden"> {message}</span>
     </div>;
-}
-
-export function getActiveWorkCount(assignments?: AssignmentDTO[], quizAssignments?: QuizAssignmentDTO[]) {
-    const assignmentsCount = assignments
-        ? filterAssignmentsByStatus(assignments).inProgress.length
-        : 0;
-    const quizzesCount = quizAssignments && isFound(quizAssignments)
-        ? partitionCompleteAndIncompleteQuizzes(quizAssignments)[1].filter(q => !isOverdue(q)).length
-        : 0;
-    return {assignmentsCount, quizzesCount};
-}
-
-export function useAssignmentsCount() {
-    const user = useAppSelector(selectors.user.orNull);
-
-    // Only fetches assignments if the user is logged in (not including Ada partial logins), and refetch on login/logout, reconnect.
-    const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
-    // We should add refetchOnFocus: true if we want to refetch on browser focus - hard to say if this is a good idea or not.
-    const queryOptions = {refetchOnMountOrArgChange: true, refetchOnReconnect: true};
-
-    const {data: assignments} = useGetMyAssignmentsQuery(queryArg, queryOptions);
-    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery(queryArg, queryOptions);
-
-    return getActiveWorkCount(assignments, quizAssignments);
 }

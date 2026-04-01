@@ -8,7 +8,8 @@ import {
     isLoggedIn,
     isStaff,
     isTutorOrAbove,
-    PATHS
+    PATHS,
+    useUserNotifications
 } from "../../../services";
 import {
     LinkItem,
@@ -16,16 +17,15 @@ import {
     MenuBadge,
     MenuOpenContext,
     NavigationSection,
-    useAssignmentsCount
 } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
 import { useNavigate } from "react-router";
-import { FeatureFlagModal, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
+import { FeatureFlag, FeatureFlagModal, FeatureFlagWrapper, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    const { notifications, workCounts } = useUserNotifications();
     const dispatch = useAppDispatch();
 
     const { data: env } = useGetSegueEnvironmentQuery();
@@ -102,7 +102,7 @@ export const HeaderCS = () => {
                             {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
                             {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                             {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
-                            {(isStaff(user) || isNonProd) && <>
+                            {isNonProd && <>
                                 <hr />
                                 <LinkItemButton onClick={() => {
                                     dispatch(openActiveModal(FeatureFlagModal));
@@ -115,25 +115,30 @@ export const HeaderCS = () => {
 
                         {isLoggedIn(user)
                             ? <>
-                                <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
-                                    {isTutorOrAbove(user) ?
-                                        <>
-                                            <LinkItem to="/dashboard">Overview</LinkItem>
-                                            <LinkItem to="/groups">Manage groups</LinkItem>
-                                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Quizzes</LinkItem>
-                                            <LinkItem to="/set_tests">Tests</LinkItem>
-                                            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
-                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>Assigned to me {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                                        </>
-                                        :
-                                        <>
-                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>Quizzes {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                                            <LinkItem to="/tests">Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
-                                            <LinkItem to="/progress">Progress</LinkItem>
-                                        </>
+                                <FeatureFlagWrapper flag={FeatureFlag.ENABLE_ADA_SIDEBARS}
+                                    onSet={<NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />}
+                                    onUnset={
+                                        <NavigationSection title={<>My Ada {<MenuBadge count={workCounts.total} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
+                                            {isTutorOrAbove(user) ?
+                                                <>
+                                                    <LinkItem to="/dashboard">Overview</LinkItem>
+                                                    <LinkItem to="/groups">Manage groups</LinkItem>
+                                                    <LinkItem to={PATHS.SET_ASSIGNMENTS}>Quizzes</LinkItem>
+                                                    <LinkItem to="/set_tests">Tests</LinkItem>
+                                                    <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
+                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Assigned to me {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
+                                                </>
+                                                :
+                                                <>
+                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Quizzes {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
+                                                    <LinkItem to="/tests">Tests {<MenuBadge count={workCounts.tests} message="incomplete tests" />}</LinkItem>
+                                                    <LinkItem to="/progress">Progress</LinkItem>
+                                                </>
+                                            }
+                                            <LinkItem to="/account">Account</LinkItem>
+                                        </NavigationSection>
                                     }
-                                    <LinkItem to="/account">Account</LinkItem>
-                                </NavigationSection>
+                                />
                                 <div className={"navbar-separator d-nav-none d-block"}/>
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>
                             </>

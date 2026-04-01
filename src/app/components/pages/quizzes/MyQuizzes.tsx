@@ -46,6 +46,7 @@ import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
+import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 
 export interface QuizzesPageProps {
     user: RegisteredUserDTO;
@@ -466,7 +467,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}
                 hideButton
             />,
-            undefined
+            <MyAdaSidebar />
         )}
     >
         <PageMetadata noTitle showSidebarButton>
