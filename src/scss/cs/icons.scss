@@ -231,7 +231,7 @@ i.icon.icon-color-pink {
 }
 
 @mixin svg-icon-v2($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
-  $max-scale: 1.5;
+  $max-scale: 1.25;
   @include svg-icon($path, calc($width * $max-scale), calc($height * $max-scale), $mask-size, $mask-position);
   mask-origin: content-box !important;
   padding: calc(10px * $max-scale - 10px * $scale); 
@@ -242,7 +242,7 @@ i.icon.icon-color-pink {
 }
 
 .icon-group-v2 {
-  @include svg-icon-v2('/assets/cs/icons/group.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1.2);
+  @include svg-icon-v2('/assets/cs/icons/group.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), none, 1.1);
 }
 
 .icon-file-v2 {
