@@ -97,7 +97,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
         }
         {!enableSearch && <Spacer />}
         <button type="button" className="d-flex bg-transparent px-4" onClick={_ => setEnableSearch(c => !c)}>
-            <i className={classNames("icon icon-search icon-color-white", {"icon-md": isAda})}/>
+            <i className={classNames("icon icon-search icon-color-white", {"icon-md me-n2": isAda})}/>
         </button>
     </div>;
 };
