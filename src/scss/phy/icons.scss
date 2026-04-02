@@ -54,7 +54,7 @@
 
 .icon-not-attempted {
   // only for assignment progress – prefer icon-not-started for questions
-  @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-bin {
