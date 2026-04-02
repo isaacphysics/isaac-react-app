@@ -5,7 +5,7 @@ import { generateConfig } from "./config/vite.config.common";
 const SITE_STRING = process.env.CYPRESS_SITE == 'ada' ? 'ada' : 'sci';
 const UPDATE_BASELINE = process.env.CYPRESS_UPDATE_BASELINE == 'true';
 
-const config = process.env.CYPRESS_SITE == 'ada' ? generateConfig("ada")({}) : generateConfig("sci")({});
+const config = process.env.CYPRESS_SITE == 'ada' ? generateConfig("ada")({mode: "test"}) : generateConfig("sci")({mode: "test"});
 
 export default defineConfig({
     component: {

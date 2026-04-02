@@ -1,6 +1,5 @@
 import type { Plugin, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import checker from 'vite-plugin-checker';
 import fs from 'fs/promises';
 
 // Vite requires an index.html file at the project root. Since we have two sites and each needs its own index.html,
@@ -54,11 +53,22 @@ const renameIndexPlugin = (indexPath: string): Plugin => {
     };
 };
 
-export const generateConfig = (site: "sci" | "ada", renderer = false) => (env: Record<string, any>) => {
+export const generateConfig = (site: "sci" | "ada", renderer = false) => async (env: Record<string, any>) => {
     // TODO: rename more phy => sci; bottleneck on router config
     const oldStyleSite = site === "sci" ? "phy" : "ada";
     const isBuild = env['command'] === 'build';
+    const isTest = env['mode'] === 'test';
     const indexPath = `index-${site}${renderer ? '-renderer' : ''}.html`;
+
+    let checker;
+    if (!isBuild && !isTest) {
+        // owing to Cypress not supporting ESM, importing this at the top level causes Cypress to attempt to require() it.
+        // vite-plugin-checker has a transitive dependency in `unicorn-magic` which does not support CJS at all, so these are
+        // simply incompatible. This workaround imports the checker only when we are not in test mode (set in cypress.config.ts).
+
+        // if at any point Cypress supports ESM, you can remove the if-check and move this import back to the top.
+        checker = await import('vite-plugin-checker').then(mod => mod.checker);
+    }
     
     return {
         plugins: [
@@ -66,7 +76,7 @@ export const generateConfig = (site: "sci" | "ada", renderer = false) => (env: R
             react({}),
             // purgeCssPlugin(), // see above
             renameIndexPlugin(indexPath),
-            !isBuild && checker({ typescript: true }),
+            !isBuild && !isTest && checker?.({ typescript: true }),
         ],
 
         build: {
