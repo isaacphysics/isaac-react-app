@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {
     DOCUMENT_TYPE,
     documentTypePathPrefix,
+    isAda,
     isIntendedAudience,
     isTutorOrAbove,
     sortByStringValue,
@@ -58,7 +59,7 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
 }
 
-function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
+function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
 
     if (audienceQuestions.length + remainingQuestions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
@@ -122,18 +123,16 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
         return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 me-lg-3">
             <Link
-                className={"btn-link btn text-start"}
+                className="btn-link btn text-start"
                 to={getURLForContent(contentSummary)}
-                onClick={() => {
-                    dispatch(logAction(getEventDetails(contentSummary, parentPage)));
-                }}
+                onClick={async () => await dispatch(logAction(getEventDetails(contentSummary, parentPage)))}
             >
-                <span className={"font-size-1 fw-regular"}>
+                <span className="font-size-1 fw-regular">
                     {contentSummary.title}
                 </span>
             </Link>
         </ListGroupItem>;
     };
 
-    return renderQuestionsCS(questions, remainingQuestions, makeListGroupItem, conceptId, showConceptGameboardButton);
+    return isAda ? renderQuestions(questions, remainingQuestions, makeListGroupItem, conceptId, showConceptGameboardButton) : null;
 }
