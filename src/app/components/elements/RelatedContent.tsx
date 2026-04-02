@@ -3,25 +3,15 @@ import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
-    AUDIENCE_DISPLAY_FIELDS,
-    determineAudienceViews,
-    difficultyShortLabelMap,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
-    filterAudienceViewsByProperties,
-    isAda,
     isIntendedAudience,
-    isPhy,
     isTutorOrAbove,
-    siteSpecific,
-    sortByNumberStringValue,
     sortByStringValue,
-    stageLabelMap,
     useUserViewingContext
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ConceptGameboardButton} from "./ConceptGameboardButton";
-import classNames from "classnames";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -112,105 +102,38 @@ function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQues
     </div>;
 }
 
-function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
-    if (concepts.length == 0 && questions.length == 0) return null;
-    return <div className="d-flex align-items-stretch flex-wrap no-print">
-        <div className="w-100 w-lg-50 d-flex">
-            <div className="flex-fill simple-card me-lg-3 my-3 p-3 text-wrap">
-                <div className="related-concepts related-title">
-                    <h5 className="mb-2">Related Concepts</h5>
-                </div>
-                <hr/>
-                <div className="d-lg-flex">
-                    <ListGroup className="me-lg-3">
-                        {concepts.length > 0 ?
-                            concepts.map(contentSummary => renderItem(contentSummary)):
-                            <div className="mt-2 ms-3">There are no related concepts</div>
-                        }
-                    </ListGroup>
-                </div>
-            </div>
-        </div>
-        <div className="w-100 w-lg-50 d-flex">
-            <div className="flex-fill simple-card ms-lg-3 my-3 p-3 text-wrap">
-                <div className="related-questions related-title">
-                    <h5 className="mb-2">Related Questions</h5>
-                    {showConceptGameboardButton && questions.length > 0 && <p className="text-end">
-                        <ConceptGameboardButton conceptId={conceptId}/>
-                    </p>}
-                </div>
-                <hr/>
-                <div className="d-lg-flex">
-                    <ListGroup className="me-lg-3">
-                        {questions.length > 0 ?
-                            questions.map(contentSummary => renderItem(contentSummary)) :
-                            <div className="mt-2 ms-3">There are no related questions</div>
-                        }
-                    </ListGroup>
-                </div>
-            </div>
-        </div>
-    </div>;
-}
-
 export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-    const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    const remainingContent: ContentSummaryDTO[] = isAda ? content.filter(c => !isIntendedAudience(c.audience, userContext, user)) : [];
-    const showConceptGameboardButton = isAda && isTutorOrAbove(useAppSelector(selectors.user.orNull));
+    const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
+    const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userContext, user));
+    const showConceptGameboardButton = isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
-    const sortedContent = siteSpecific(
-        // level, difficulty, title; all ascending (reverse the calls for required ordering)
-        (c: ContentSummaryDTO[]) => c.sort(sortByStringValue("title"))
-            .sort(sortByNumberStringValue("difficulty"))
-            .sort(sortByNumberStringValue("level")), // TODO should this reference to level still be here?
-        // On Ada, just sort by title (ascending)
-        (c: ContentSummaryDTO[]) => c.sort(sortByStringValue("title"))
-    )(audienceFilteredContent);
+    const sortedContent = audienceFilteredContent.sort(sortByStringValue("title"));
 
-    const sortedRemainder: ContentSummaryDTO[] = isAda ? remainingContent.sort(sortByStringValue("title")) : [];
+    const sortedRemainder: ContentSummaryDTO[] = remainingContent.sort(sortByStringValue("title"));
 
-    const concepts = sortedContent
-        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.CONCEPT);
     const questions = sortedContent
         .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
     const remainingQuestions = sortedRemainder
         .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
 
     const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
-        const audienceViews = filterAudienceViewsByProperties(determineAudienceViews(contentSummary.audience), AUDIENCE_DISPLAY_FIELDS);
         return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 me-lg-3">
             <Link
-                className={classNames({"btn-link btn text-start": isAda})}
+                className={"btn-link btn text-start"}
                 to={getURLForContent(contentSummary)}
                 onClick={() => {
                     dispatch(logAction(getEventDetails(contentSummary, parentPage)));
                 }}
             >
-                <span className={classNames({"font-size-1 fw-regular": isAda})}>
+                <span className={"font-size-1 fw-regular"}>
                     {contentSummary.title}
-                    {isPhy && <React.Fragment>
-                        {audienceViews.length > 0 && " ("}
-                        {audienceViews.map(av => {
-                            let result = "";
-                            if (av.stage) { result += stageLabelMap[av.stage]; }
-                            if (av.stage && av.difficulty) { result += " - "; }
-                            if (av.difficulty) { result += difficultyShortLabelMap[av.difficulty]; }
-                            return result;
-                        }).join(", ")}
-                        {audienceViews.length > 0 && ")"}
-                    </React.Fragment>}
                 </span>
             </Link>
         </ListGroupItem>;
     };
 
-    return siteSpecific(
-        // Physics
-        renderConceptsAndQuestionsPhy(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
-        // Computer Science
-        renderQuestionsCS(questions, remainingQuestions, makeListGroupItem, conceptId, showConceptGameboardButton)
-    );
+    return renderQuestionsCS(questions, remainingQuestions, makeListGroupItem, conceptId, showConceptGameboardButton);
 }
