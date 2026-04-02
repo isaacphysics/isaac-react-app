@@ -20,10 +20,10 @@ const calloutStyle = siteSpecific({
     width: "50",
     height: "50",
     src: {
-        regular: "/assets/cs/icons/regular-callout.svg",
-        testData: "/assets/cs/icons/test-callout.svg",
-        sampleRun: "/assets/cs/icons/run-callout.svg",
-        scenario: "/assets/cs/icons/scenario-callout.svg",
+        regular: "/assets/cs/icons/callout/regular-callout.svg",
+        testData: "/assets/cs/icons/callout/test-callout.svg",
+        sampleRun: "/assets/cs/icons/callout/run-callout.svg",
+        scenario: "/assets/cs/icons/callout/scenario-callout.svg",
     },
     style: {
         marginTop: -15,
