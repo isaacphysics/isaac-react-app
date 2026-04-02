@@ -322,7 +322,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
 
-    const pageTitle= siteSpecific("Set / manage tests", "Manage tests");
+    const pageTitle= siteSpecific("Set / manage tests", "Tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {SITE_TITLE_SHORT} team have built.
         <br />
