@@ -34,7 +34,7 @@
 }
 
 .icon-feedback-tick {
-  @include svg-icon-raw('/assets/cs/icons/tick-rp-green.svg', 20px, 20px);
+  @include svg-icon-raw('/assets/cs/icons/tick-rp-green.svg', var(--icon-size), var(--icon-size), contain);
   margin-bottom: -5px;
 }
 

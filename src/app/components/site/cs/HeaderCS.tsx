@@ -52,7 +52,7 @@ export const HeaderCS = () => {
             <a href={`#${mainContentId}`} className="skip-main position-absolute">Skip to main content</a>
 
             <button aria-label="Toggle search bar" className={"ms-auto me-4 search-toggler d-nav-none"} onClick={() => setIsSearchOpen(!isSearchOpen)}>
-                <span className={"search-toggler-icon"}/>
+                <i className="icon icon-sm icon-search icon-color-white"/>
             </button>
             <NavbarToggler className={classNames("me-4", {"open": isOpen})} onClick={() => setIsOpen(!isOpen)} />
 
