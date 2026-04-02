@@ -327,7 +327,7 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
     />;
 };
 
-export type CustomListViewItemProps = ListViewItemBaseProps<"item", "card"> & {
+export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
     item: Omit<Extract<AbstractListViewItemProps, {alviType: "item"}>, "alviType"> & {
         type?: string;
     }
