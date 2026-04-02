@@ -14,6 +14,7 @@ import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} f
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
+import { LoggedInUser } from "../IsaacAppTypes";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -29,7 +30,7 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
 
 export interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
-    modifyUser?: <T extends typeof mockUser | RegisteredUserDTO>(u: T) => T;
+    modifyUser?: (u: RegisteredUserDTO) => RegisteredUserDTO;
     sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
@@ -64,10 +65,23 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
                     }
                     );
                 }
-                const userWithRole = produce(mockUser, user => {
-                    user.role = role ?? mockUser.role;
+
+                const userWithRole = produce(mockUser, u => {
+                    u.role = role ?? mockUser.role;
                 });
-                return HttpResponse.json(modifyUser ? modifyUser(userWithRole) : userWithRole, {
+
+                const user = modifyUser ? modifyUser(userWithRole) : userWithRole;
+
+                const userDateFix = produce(user, u => {
+                    // ensure dates are stored as numbers; this response otherwise converts Date()s to strings, which breaks comparison
+                    u.dateOfBirth = u.dateOfBirth?.valueOf();
+                    u.registrationDate = u.registrationDate?.valueOf();
+                    u.registeredContextsLastConfirmed = u.registeredContextsLastConfirmed?.valueOf();
+                    u.lastUpdated = u.lastUpdated?.valueOf();
+                    u.lastSeen = u.lastSeen?.valueOf();
+                });
+
+                return HttpResponse.json(userDateFix, {
                     status: 200,
                     headers: {
                         "x-session-expires": sessionExpires ?? SOME_FIXED_FUTURE_DATE_AS_STRING,

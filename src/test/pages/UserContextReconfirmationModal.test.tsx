@@ -2,6 +2,7 @@ import {screen} from "@testing-library/react";
 import {MOST_RECENT_AUGUST} from "../../app/state";
 import produce from "immer";
 import {renderTestEnvironment} from "../testUtils";
+import { RegisteredUserDTO } from "../../IsaacApiTypes";
 
 describe("UserContextReconfirmationModal", () => {
 
@@ -23,8 +24,8 @@ describe("UserContextReconfirmationModal", () => {
 
     it('should show if the user has not updated their audience context information since last August', async () => {
         await renderTestEnvironment({
-            modifyUser: user => produce(user, u => {
-                u.registeredContextsLastConfirmed = new Date(MOST_RECENT_AUGUST().valueOf() - 10000000);
+            modifyUser: (user: RegisteredUserDTO) => produce(user, u => {
+                u.registeredContextsLastConfirmed = new Date(MOST_RECENT_AUGUST().valueOf() - 1);
             })
         });
         const modal = await screen.findByTestId("active-modal");
