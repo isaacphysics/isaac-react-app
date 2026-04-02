@@ -66,7 +66,7 @@ export const generateConfig = (site: "sci" | "ada", renderer = false) => (env: R
             react({}),
             // purgeCssPlugin(), // see above
             renameIndexPlugin(indexPath),
-            checker({ typescript: true }),
+            !isBuild && checker({ typescript: true }),
         ],
 
         build: {
