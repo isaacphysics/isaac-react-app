@@ -32,13 +32,6 @@
   margin-top: -1px;
 }
 
-.icon-person-active,
-.icon-help,
-.icon-group-table-person
-{
-  background-image: url(/assets/phy/ru.png) !important;
-}
-
 .icon-correct {
   @include svg-icon-raw('/assets/phy/icons/redesign/status-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
