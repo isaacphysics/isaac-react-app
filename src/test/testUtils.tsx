@@ -14,7 +14,6 @@ import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} f
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
-import { LoggedInUser } from "../IsaacAppTypes";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
