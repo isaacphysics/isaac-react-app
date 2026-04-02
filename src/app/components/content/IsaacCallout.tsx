@@ -9,7 +9,7 @@ const calloutStyle = siteSpecific({
     width: "43",
     height: "43",
     // SVG taken from https://www.svgrepo.com/svg/914/speech-bubble, no attribution needed
-    src: "/assets/phy/callout-speech-bubble.svg",
+    src: "/assets/phy/icons/callout-speech-bubble.svg",
     style: {
         marginTop: -7,
         marginLeft: -2,
