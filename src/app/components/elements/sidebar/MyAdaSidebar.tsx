@@ -18,38 +18,38 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
     overview: {
         title: "Overview",
         url: "/dashboard",
-        icon: "icon-home-v2",
+        icon: "icon-home",
         user: "ALL"
     },
     groups: {
         title: "Groups",
         url: "/groups",
-        icon: "icon-group-v2",
+        icon: "icon-group",
         user: "TEACHER"
     },
     setQuizzes: {
         title: "Quizzes",
         url: "/quizzes/set",
-        icon: "icon-file-v2",
+        icon: "icon-file",
         user: "TEACHER"
     },
     setTests: {
         title: "Tests",
         url: "/set_tests",
-        icon: "icon-school-v2",
+        icon: "icon-school",
         user: "TEACHER"
     },
     markbook: {
         title: "Markbook",
         url: "/my_markbook",
-        icon: "icon-done-all-v2",
+        icon: "icon-done-all",
         user: "TEACHER"
     },
 
     assignedToMe: {
         title: "Assigned to me",
         url: "/assignments",
-        icon: "icon-person-check-v2",
+        icon: "icon-person-check",
         user: "ALL"
     },
 
@@ -69,7 +69,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
     account: {
         title: "Account",
         url: "/account",
-        icon: "icon-cog-v2",
+        icon: "icon-cog",
         user: "ALL"
     }
 };
@@ -120,7 +120,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         key={key}
                         id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
                         checkboxTitle={<div className={classNames("d-flex align-items-center gap-3")}>
-                            <i className={classNames("icon icon-sm", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
+                            <i className={classNames("icon icon-sm ms-1", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
                             <b className="d-flex align-items-center gap-2">
                                 {tab.title}
                                 {((key === "assignedToMe" && workCounts.assignments > 0) || (key === "myTests" && workCounts.tests > 0)) && <span 
