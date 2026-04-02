@@ -4,26 +4,26 @@
     .inequality-ui {
         &.button {
             &.confirm {
-                background-image: url('/assets/phy/icons/inequality-confirm-phy.svg');
+                background-image: url('/assets/phy/icons/inequality/hex-confirm-phy.svg');
             }
             &.centre {
-                background-image: url('/assets/phy/icons/inequality-centre-phy.svg');
+                background-image: url('/assets/phy/icons/inequality/hex-centre-phy.svg');
             }
             &.help {
-                background-image: url('/assets/phy/icons/inequality-help-phy.svg');
+                background-image: url('/assets/phy/icons/inequality/hex-help-phy.svg');
             }
             &.show-question {
-                background-image: url('/assets/phy/icons/inequality-togglequestion-phy.svg');
+                background-image: url('/assets/phy/icons/inequality/hex-togglequestion-phy.svg');
             }
             &.trash {
-                background-image: url('/assets/phy/icons/inequality-trash-phy.svg');
+                background-image: url('/assets/phy/icons/inequality/hex-trash-phy.svg');
             }
             &.reset {
-                background-image: url('/assets/phy/icons/inequality-reset-phy.svg');
+                background-image: url('/assets/phy/icons/inequality/hex-reset-phy.svg');
             }
         }
         .clear-number {
-            background-image: url('/assets/phy/icons/inequality-clear-phy.svg');
+            background-image: url('/assets/phy/icons/inequality/hex-clear-phy.svg');
         }
 
         &.katex-preview {
