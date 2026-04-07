@@ -190,7 +190,7 @@ describe("Groups", () => {
       window.confirm = jest.fn(() => true);
       await act(() => userEvent.click(deleteButton));
       expect(window.confirm).toHaveBeenCalledTimes(1);
-      expect(correctDeleteRequests).toEqual(1);
+      await waitFor(() => expect(correctDeleteRequests).toEqual(1));
 
       await waitFor(() => {
         const newGroupNames = screen
