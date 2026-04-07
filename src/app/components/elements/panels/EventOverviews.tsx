@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import {Accordion} from "../Accordion";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
-import {atLeastOne, isAda, isEventLeader, zeroOrLess} from "../../../services";
+import {atLeastOne, isEventLeader, zeroOrLess} from "../../../services";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import orderBy from "lodash/orderBy";
@@ -46,9 +46,6 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
         <div className="clearfix">
-            {isAda && <div className="mb-3 float-start">
-                <Button color="solid" size="sm" tag={Link} to="/events_toolkit">Events toolkit</Button>
-            </div>}
             <div className="float-start">
                 {/* Load More Button */}
                 <Button size={"sm"} disabled={!(eventOverviews && total && eventOverviews.length < total)} onClick={() => {

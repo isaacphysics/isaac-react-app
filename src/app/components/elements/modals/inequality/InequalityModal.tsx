@@ -30,6 +30,7 @@ import {
     prepareInequality,
     setupAndTeardownDocStyleAndListeners
 } from "./utils";
+import { InequalityState } from "../../inputs/SymbolicTextInput";
 
 // This file contains the React components associated with the Inequality modal
 
@@ -308,9 +309,9 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
 interface InequalityModalProps {
     availableSymbols?: string[];
     close: () => void;
-    onEditorStateChange?: (state: any) => void;
-    initialEditorSymbols: any;
-    editorSeed?: any;
+    onEditorStateChange?: (state: InequalityState) => void;
+    initialEditorSymbols: WidgetSpec[];
+    editorSeed?: WidgetSpec[]
     editorMode: EditorMode;
     logicSyntax?: LogicSyntax;
     questionDoc?: ContentDTO;
@@ -332,7 +333,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
 
     // Setting up the Inequality `sketch` object
     const sketch = useRef<Nullable<Inequality>>(null);
-    const [editorState, setEditorState] = useState<any>({});
+    const [editorState, setEditorState] = useState<InequalityState>({});
     useLayoutEffect(() => {
         if (!inequalityModalRef) return;
         return prepareInequality({
@@ -348,11 +349,11 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     }, [!!inequalityModalRef]);
     useEffect(() => {
         if (!isDefined(sketch.current)) return;
-        sketch.current.onNewEditorState = (state: any) => {
+        sketch.current.onNewEditorState = (state: InequalityState) => {
             const modal = inequalityModalRef.current;
             if (modal) {
                 const newState = sanitiseInequalityState(state);
-                setEditorState((prev: any) => ({...prev, ...newState}));
+                setEditorState((prev: InequalityState) => ({...prev, ...newState}));
                 onEditorStateChange?.(newState);
             }
         };
@@ -472,7 +473,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     // --- Resetting to seed value ---
     const resetToInitialState = () => {
         // loadTestCase should probably be renamed to resetSymbolsTo or something (in the inequality package)
-        sketch.current?.loadTestCase(editorSeed ?? "");
+        sketch.current?.loadTestCase(editorSeed ?? []);
     };
 
     // --- Rendering ---

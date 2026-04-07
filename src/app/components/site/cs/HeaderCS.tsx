@@ -102,7 +102,7 @@ export const HeaderCS = () => {
                             {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
                             {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                             {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
-                            {(isStaff(user) || isNonProd) && <>
+                            {isNonProd && <>
                                 <hr />
                                 <LinkItemButton onClick={() => {
                                     dispatch(openActiveModal(FeatureFlagModal));
@@ -122,20 +122,20 @@ export const HeaderCS = () => {
                                             {isTutorOrAbove(user) ?
                                                 <>
                                                     <LinkItem to="/dashboard">Overview</LinkItem>
-                                                    <LinkItem to="/groups">Teaching groups</LinkItem>
-                                                    <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
-                                                    <LinkItem to="/set_tests">Manage tests</LinkItem>
+                                                    <LinkItem to="/groups">Manage groups</LinkItem>
+                                                    <LinkItem to={PATHS.SET_ASSIGNMENTS}>Quizzes</LinkItem>
+                                                    <LinkItem to="/set_tests">Tests</LinkItem>
                                                     <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
-                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
+                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Assigned to me {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
                                                 </>
                                                 :
                                                 <>
-                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
-                                                    <LinkItem to="/tests">My tests {<MenuBadge count={workCounts.tests} message="incomplete tests" />}</LinkItem>
-                                                    <LinkItem to="/progress">My progress</LinkItem>
+                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Quizzes {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
+                                                    <LinkItem to="/tests">Tests {<MenuBadge count={workCounts.tests} message="incomplete tests" />}</LinkItem>
+                                                    <LinkItem to="/progress">Progress</LinkItem>
                                                 </>
                                             }
-                                            <LinkItem to="/account">My account</LinkItem>
+                                            <LinkItem to="/account">Account</LinkItem>
                                         </NavigationSection>
                                     }
                                 />
