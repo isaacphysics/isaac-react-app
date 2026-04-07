@@ -153,14 +153,14 @@ export const navigateToGroups = async () => {
     isPhy ?
         await followHeaderNavLink("My Isaac", "Manage groups")
         :
-        await followHeaderNavLink("My Ada", "Teaching groups");
+        await followHeaderNavLink("My Ada", "Manage groups");
 };
 
 export const navigateToMyAccount = async () => {
     isPhy ?
         await followHeaderNavLink("My Isaac", "My account")
         :
-        await followHeaderNavLink("My Ada", "My account");
+        await followHeaderNavLink("My Ada", "Account");
 };
 
 export const navigateToUserManager = async () => {
@@ -181,7 +181,7 @@ export const navigateToSetAssignments = async () => {
     isPhy ?
         await followHeaderNavLink("My Isaac", "Set assignments")
         :
-        await followHeaderNavLink("My Ada", "Manage assignments");
+        await followHeaderNavLink("My Ada", "Quizzes");
 };
 
 // Open a given tab in the account page.
