@@ -67,7 +67,7 @@ import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
 import {TutorRequest} from "../pages/TutorRequest";
-import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
+import {AssignmentProgress} from "../pages/assignment_progress/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
