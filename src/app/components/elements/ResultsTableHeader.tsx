@@ -136,7 +136,7 @@ export const ResultsTableHeader = ({headerText, settingsVisible, setSettingsVisi
             </CollapsibleContainer>}
 
             {isAda && <>
-                <StyledCheckbox className="pt-1" checked={assignmentProgressContext?.formatAsPercentage}
+                <StyledCheckbox checked={assignmentProgressContext?.formatAsPercentage}
                     onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
                     label={<span className="text-muted">Show mark as percentages</span>}
                 />
