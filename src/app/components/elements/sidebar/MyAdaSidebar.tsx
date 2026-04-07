@@ -60,7 +60,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
         user: "STUDENT"
     },
     progress: {
-        title: "My Progress",
+        title: "Progress",
         url: "/progress",
         icon: "icon-done-all",
         user: "STUDENT"
