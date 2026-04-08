@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
-import {useGetGroupsQuery, useGetMySetAssignmentsQuery} from "../../state";
+import {useGetGroupsQuery, useGetMySetAssignmentsQuery} from "../../../state";
 import sortBy from "lodash/sortBy";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import { useParams } from "react-router-dom";
 import { AssignmentProgressGroupsListing } from "./AssignmentProgressGroupsListing";
-import { GroupSortOrder, useAssignmentProgressAccessibilitySettings } from "../../services";
+import { GroupSortOrder, useAssignmentProgressAccessibilitySettings } from "../../../services";
 import { AssignmentProgressGroup } from "./AssignmentProgressGroup";
-import { AssignmentProgressPageSettingsContext } from "../../../IsaacAppTypes";
-import { SingleAssignmentProgress } from "./SingleAssignmentProgress";
+import { AssignmentProgressPageSettingsContext } from "../../../../IsaacAppTypes";
+import { AssignmentProgressIndividual } from "./AssignmentProgressIndividual";
 
 // This exists as a wrapper around all assignment progress pages, as a way of providing the group from `getGroupsQuery` while not requesting this several times
 function AssignmentProgressType({user, assignmentId, groupId}: {user: RegisteredUserDTO, assignmentId?: string, groupId?: string}) {
@@ -28,7 +28,7 @@ function AssignmentProgressType({user, assignmentId, groupId}: {user: Registered
         const assignment = assignments?.find(a => a.id === parseInt(assignmentId));
         const group = groups?.find(g => g.id === assignment?.groupId);
 
-        return <SingleAssignmentProgress user={user} group={group} />;
+        return <AssignmentProgressIndividual user={user} group={group} />;
     }
 
     // otherwise we are on Group Listing view

@@ -102,7 +102,7 @@ const MyProgress = ({user}: MyProgressProps) => {
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
-    const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
+    const pageTitle = viewingOwnData ? siteSpecific("My progress", "Progress") : `Progress for ${userName || "user"}`;
 
     return <PageContainer id="my-progress"
         pageTitle={

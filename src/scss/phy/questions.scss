@@ -29,8 +29,10 @@
     background: $gray-103;
   }
   .card-body > .content-chunk > .content-value {
-    padding-left: 1.625rem;
-    padding-right: 1.625rem;
+    @include respond-above(xs) {
+      padding-left: 1.625rem;
+      padding-right: 1.625rem;
+    }
     font-size: $question-font-size;
     line-height: $question-line-height;
   }
