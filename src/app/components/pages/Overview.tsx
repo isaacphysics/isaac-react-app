@@ -7,16 +7,15 @@ import { AdaNewsSection } from "../elements/AdaNewsSection";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { isTeacherOrAbove, siteSpecific, UserNotification, useUserNotifications } from "../../services";
-import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
-import classNames from "classnames";
+import { isTutorOrAbove, siteSpecific, UserNotification, useUserNotifications } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 import { AdaNotification } from "../elements/Notification";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 
 export const Overview = () => {
     const user = useAppSelector(selectors.user.orNull);
-    return isTeacherOrAbove(user) ? <TeacherOverview /> : <StudentOverview />;
+    // Ada doesn't support tutors, but we use them in tests; using isTutorOrAbove is for consistency: https://github.com/isaacphysics/isaac-react-app/pull/2026#discussion_r2976393189
+    return isTutorOrAbove(user) ? <TeacherOverview /> : <StudentOverview />;
 };
 
 const Notifications = ({notifications}: {notifications: UserNotification[]}) => {
@@ -39,8 +38,6 @@ export const TeacherOverview = () => {
     useTeacherOnboardingModal();
     const {notifications, workCounts} = useUserNotifications();
 
-    const useAdaSidebars = useFeatureFlag(FeatureFlag.ENABLE_ADA_SIDEBARS); 
-
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={"Overview"} />
@@ -50,11 +47,10 @@ export const TeacherOverview = () => {
             <MyAdaSidebar />
         )}
         id="overview"
-        className={classNames({"overview-padding mw-1600": !useAdaSidebars})}
     >
-        {useAdaSidebars && <section id="notifications" className="py-3">
+        <section id="notifications" className="py-3">
             <Notifications notifications={notifications} />
-        </section>}
+        </section>
         <section id="get-started" className="py-3">
             <GetStartedWithAda />
         </section>

@@ -172,6 +172,10 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/cross.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-notification {
+  @include svg-icon('/assets/common/icons/notification-active.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-dash {
   @include svg-icon('/assets/common/icons/dash.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
