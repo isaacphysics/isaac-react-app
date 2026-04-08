@@ -64,9 +64,9 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible OR if the question attempt is loaded for the first time
         const pythonExpression = currentAttemptValue?.result && currentAttemptValue?.result.python;
-        if (isDefined(pythonExpression) && (modalVisible || !questionAttemptLoaded.current)) {
+        if (modalVisible || (isDefined(pythonExpression) && !questionAttemptLoaded.current)) {
             questionAttemptLoaded.current = true;
-            setTextInput(pythonExpression);
+            setTextInput(pythonExpression ?? "");
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);

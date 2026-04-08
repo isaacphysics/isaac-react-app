@@ -82,9 +82,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible OR if the question attempt is loaded for the first time
         const mhchemExpression = currentAttemptValue?.result && currentAttemptValue?.result.mhchem;
-        if (isDefined(mhchemExpression) && (modalVisible || !questionAttemptLoaded.current)) {
+        if (modalVisible || (isDefined(mhchemExpression) && !questionAttemptLoaded.current)) {
             questionAttemptLoaded.current = true;
-            setTextInput(mhchemExpression);
+            setTextInput(mhchemExpression ?? "");
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
