@@ -116,6 +116,7 @@ describe('Overview page', () => {
                         await waitFor(() => expect(goToMyAdaButton).toHaveTextContent("Go to My Ada"));
                         await userEvent.click(goToMyAdaButton);
                         await waitFor(() => expect(modal.element).toBeNull());
+                        await waitFor(() => expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBeNull());
                     });
                 });
             });
