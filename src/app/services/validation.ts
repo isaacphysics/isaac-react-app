@@ -29,7 +29,7 @@ export const isValidGameboardId = (gameboardId?: string) => {
     return !gameboardId || /^[a-z0-9_-]+$/.test(gameboardId);
 };
 
-const isDobOverN = (n: number, dateOfBirth?: Date) => {
+const isDobOverN = (n: number, dateOfBirth?: Date | number) => {
     if (dateOfBirth) {
         const today = new Date();
         const nYearsAgo = new Date(today.getFullYear() - n, today.getMonth(), today.getDate());
@@ -40,8 +40,8 @@ const isDobOverN = (n: number, dateOfBirth?: Date) => {
     }
 };
 
-export const isDobOverThirteen = (dateOfBirth?: Date) => isDobOverN(13, dateOfBirth);
-export const isDobOverTen = (dateOfBirth?: Date) => isDobOverN(10, dateOfBirth);
+export const isDobOverThirteen = (dateOfBirth?: Date | number) => isDobOverN(13, dateOfBirth);
+export const isDobOverTen = (dateOfBirth?: Date | number) => isDobOverN(10, dateOfBirth);
 export const isDobOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
 
 export const MINIMUM_PASSWORD_LENGTH = 8;
