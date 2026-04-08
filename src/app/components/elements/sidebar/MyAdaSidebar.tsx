@@ -3,7 +3,7 @@ import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { above, below, isStudent, isTeacherOrAbove, useDeviceSize, useUserNotifications } from "../../../services";
+import { above, below, isStudent, isTeacherOrAbove, isTutorOrAbove, useDeviceSize, useUserNotifications } from "../../../services";
 import { Spacer } from "../Spacer";
 import { useLocation } from "react-router";
 
@@ -11,7 +11,7 @@ interface MyAdaTab {
     title: string;
     url: string;
     icon: string;
-    user: "STUDENT" | "TEACHER" | "ALL"; // Which user roles can see this tab – n.b. teacher means teacherOrAbove
+    user: "STUDENT" | "TUTOR" | "TEACHER" | "ALL"; // Which user roles can see this tab – n.b. teacher means teacherOrAbove
 }
 
 const MyAdaTabs: Record<string, MyAdaTab> = {
@@ -25,13 +25,13 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
         title: "Groups",
         url: "/groups",
         icon: "icon-group",
-        user: "TEACHER"
+        user: "TUTOR"
     },
     setQuizzes: {
         title: "Quizzes",
         url: "/quizzes/set",
         icon: "icon-file",
-        user: "TEACHER"
+        user: "TUTOR"
     },
     setTests: {
         title: "Tests",
@@ -43,7 +43,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
         title: "Markbook",
         url: "/my_markbook",
         icon: "icon-done-all",
-        user: "TEACHER"
+        user: "TUTOR"
     },
 
     assignedToMe: {
@@ -111,6 +111,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
             {Object.entries(MyAdaTabs)
                 .filter(([_, tab]) => {
                     if (tab.user === "TEACHER") return isTeacherOrAbove(user);
+                    if (tab.user === "TUTOR") return isTutorOrAbove(user);
                     if (tab.user === "STUDENT") return isStudent(user);
                     if (tab.user === "ALL") return true;
                     return false;

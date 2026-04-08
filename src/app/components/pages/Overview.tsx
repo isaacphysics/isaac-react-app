@@ -7,14 +7,15 @@ import { AdaNewsSection } from "../elements/AdaNewsSection";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { isTeacherOrAbove, siteSpecific, UserNotification, useUserNotifications } from "../../services";
+import { isTutorOrAbove, siteSpecific, UserNotification, useUserNotifications } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 import { AdaNotification } from "../elements/Notification";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 
 export const Overview = () => {
     const user = useAppSelector(selectors.user.orNull);
-    return isTeacherOrAbove(user) ? <TeacherOverview /> : <StudentOverview />;
+    // Ada doesn't support tutors, but we use them in tests; using isTutorOrAbove is for consistency: https://github.com/isaacphysics/isaac-react-app/pull/2026#discussion_r2976393189
+    return isTutorOrAbove(user) ? <TeacherOverview /> : <StudentOverview />;
 };
 
 const Notifications = ({notifications}: {notifications: UserNotification[]}) => {

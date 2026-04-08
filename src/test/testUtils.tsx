@@ -2,7 +2,7 @@ import {RegisteredUserDTO, UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
-import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
+import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy, siteSpecific} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
 import {isaacApi, removeToast, requestCurrentUser, store} from "../app/state";
@@ -136,39 +136,43 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
     await userEvent.click(link);
 };
 
+export const followMainMenuLink = async (linkName: string) => {
+    if (isPhy) {
+        return await followHeaderNavLink("My Isaac", linkName);
+    } else {
+        // My Ada nav occurs through sidebar after clicking header button
+        const header = await screen.findByTestId("header");
+        const navLink = await within(header).findByRole("link", {name: new RegExp("My Ada")});
+        await userEvent.click(navLink);
+
+        const sidebar = await screen.findByTestId("sidebar");
+        const link = await within(sidebar).findByRole("link", {name: linkName});
+        await userEvent.click(link);
+    }
+};
+
 export const navigateToGroups = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "Manage groups")
-        :
-        await followHeaderNavLink("My Ada", "Manage groups");
+    await followMainMenuLink(siteSpecific("Manage groups", "Groups"));
 };
 
 export const navigateToMyAccount = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "My account")
-        :
-        await followHeaderNavLink("My Ada", "Account");
+    await followMainMenuLink(siteSpecific("My account", "Account"));
 };
 
 export const navigateToUserManager = async () => {
-    isPhy ?
-        await followHeaderNavLink("Admin", "User Manager")
-        :
+    if (isPhy) {
+        await followHeaderNavLink("Admin", "User Manager");
+    } else {
         await followHeaderNavLink("Admin", "User manager");
+    }
 };
 
 export const navigateToAssignmentProgress = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "Assignment progress")
-        :
-        await followHeaderNavLink("My Ada", "Markbook");
+    await followMainMenuLink(siteSpecific("Assignment progress", "Markbook"));
 };
 
 export const navigateToSetAssignments = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "Set assignments")
-        :
-        await followHeaderNavLink("My Ada", "Quizzes");
+    await followMainMenuLink(siteSpecific("Set assignments", "Quizzes"));
 };
 
 // Open a given tab in the account page.
