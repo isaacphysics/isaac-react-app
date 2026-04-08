@@ -80,6 +80,7 @@ import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
 import { FeatureFlagProvider } from '../../services/featureFlag';
+import { NewAdaNavigationBanner } from './NewAdaNavigationBanner';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -93,7 +94,9 @@ const RootLayout = () => {
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
+        {/* TODO: turn notification banners into a useBanners hook or similar; c.f. REVISION_CHALLENGES – we could reuse the auto-expiry logic */}
         <IsaacScienceLaunchBanner />
+        <NewAdaNavigationBanner />
         <ResearchNotificationBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
