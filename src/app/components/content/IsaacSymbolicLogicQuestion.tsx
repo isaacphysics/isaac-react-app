@@ -5,6 +5,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     initialiseInequality,
+    isDefined,
     jsonHelper,
     sanitiseInequalityState,
     useCurrentQuestionAttempt,
@@ -24,6 +25,7 @@ const InequalityModal = lazy(() => import("../elements/modals/inequality/Inequal
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
+    const questionAttemptLoaded = useRef(!!currentAttemptValue);
 
     const [hideSeed, setHideSeed] = useState(!!currentAttempt);
     const initialSeed: SeedExpressions = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression ?? '', [doc.formulaSeed]);  
@@ -56,9 +58,10 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     };
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible
-        const pythonExpression = (currentAttemptValue?.result && currentAttemptValue?.result.python) || "";
-        if (modalVisible) {
+        // Only update the text-entry box if the graphical editor is visible OR if the question attempt is loaded for the first time
+        const pythonExpression = currentAttemptValue?.result && currentAttemptValue?.result.python;
+        if (isDefined(pythonExpression) && (modalVisible || !questionAttemptLoaded.current)) {
+            questionAttemptLoaded.current = true;
             setTextInput(pythonExpression);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
