@@ -5,7 +5,6 @@ import {
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
     isAda,
-    isTeacherOrAbove,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
