@@ -56,7 +56,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
                         <td>
                             {mark.marks > 0 && <>
                                 <span className="visually-hidden">Predicted as awarded</span>
-                                <span className={siteSpecific("icon-inline icon-correct", "icon-feedback-tick")} />
+                                <span className={siteSpecific("icon-inline icon-correct", "icon icon-feedback-tick icon-sm")} />
                             </>}
                         </td>
                     </tr>)}

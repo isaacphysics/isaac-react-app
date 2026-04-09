@@ -96,18 +96,6 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-event-upcoming {
-  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-event-complete {
-  @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-task-complete {
-  @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
 .icon-file {
   @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
