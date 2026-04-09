@@ -10,6 +10,7 @@ import {
     parsePseudoSymbolicAvailableSymbols,
     initialiseInequality,
     useModalWithScroll,
+    isDefined,
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
@@ -26,13 +27,14 @@ const InequalityModal = lazy(() => import("../elements/modals/inequality/Inequal
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt && currentAttempt.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
-    
+    const questionAttemptLoaded = useRef(!!currentAttemptValue);
+
     const [hideSeed, setHideSeed] = useState(!!currentAttempt);
     const initialSeed: SeedExpressions = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression ?? '', [doc.formulaSeed]);  
     const previewText = (currentAttemptValue && currentAttemptValue.result)  
         ? currentAttemptValue.result.tex 
         : !hideSeed ? initialSeed.latex : undefined;  
-    const [textInput, setTextInput] = useState((currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeed.mhchem) ?? "");  
+    const [textInput, setTextInput] = useState((currentAttemptValue ? currentAttemptValue.result?.mhchem : initialSeed.mhchem) ?? "");
 
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -78,10 +80,11 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     };
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible
-        const mhchemExpression = (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
-        if (modalVisible) {
-            setTextInput(mhchemExpression);
+        // Only update the text-entry box if the graphical editor is visible OR if the question attempt is loaded for the first time
+        const mhchemExpression = currentAttemptValue?.result && currentAttemptValue?.result.mhchem;
+        if (modalVisible || (isDefined(mhchemExpression) && !questionAttemptLoaded.current)) {
+            questionAttemptLoaded.current = true;
+            setTextInput(mhchemExpression ?? "");
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
