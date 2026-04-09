@@ -7,7 +7,7 @@ import { Tooltip } from "reactstrap";
 
 export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
     const { isBookmarked, bookmarkItem } = useBookmarks();
-    const isQuestionBookmarked = doc?.type === "isaacQuestionPage" && doc.id ? isBookmarked(`/questions/${doc.id}`) : false;
+    const isQuestionBookmarked = doc?.type === "isaacQuestionPage" && doc.id ? isBookmarked(doc.id) : false;
     const [showBookmarkTooltip, setShowBookmarkTooltip] = useState(false);
 
     return <>
@@ -22,7 +22,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
                     setTimeout(() => setShowBookmarkTooltip(false), 1000);
                 }
 
-                bookmarkItem(`/questions/${doc?.id}`);
+                bookmarkItem(doc?.id);
             }}
         />
         <Tooltip 
