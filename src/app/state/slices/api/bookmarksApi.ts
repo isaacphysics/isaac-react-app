@@ -2,28 +2,31 @@ import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
 import {isaacApi} from "./baseApi";
 
 // This is in no way fixed! Modify as you will.
-export const bookmarksApi = isaacApi.injectEndpoints({
+export const bookmarksApi = isaacApi.enhanceEndpoints({addTagTypes: ["Bookmarks"]}).injectEndpoints({
     endpoints: (build) => ({
         getBookmarks: build.query<ContentSummaryDTO[], void>({
             query: () => ({
-                url: "/users/current_user/bookmarks",
+                url: "/bookmarks",
                 method: "GET"
             }),
-            transformResponse: (response: ContentSummaryDTO[]) => response || []
+            transformResponse: (response: ContentSummaryDTO[]) => response || [],
+            providesTags: ["Bookmarks"],
         }),
-        bookmarkItem: build.mutation<void, {id: string}>({
-            query: ({id}) => ({
-                url: "/users/current_user/bookmarks",
+        bookmarkItem: build.mutation<void, {content_id: string}>({
+            query: ({content_id}) => ({
+                url: "/bookmarks",
                 method: "POST",
-                body: {id}
+                params: {content_id}
             }),
+            invalidatesTags: ["Bookmarks"],
         }),
-        deleteBookmark: build.mutation<void, {id: string}>({
-            query: ({id}) => ({
-                url: "/users/current_user/bookmarks",
+        deleteBookmark: build.mutation<void, {content_id: string}>({
+            query: ({content_id}) => ({
+                url: "/bookmarks",
                 method: "DELETE",
-                body: {id}
+                params: {content_id}
             }),
+            invalidatesTags: ["Bookmarks"],
         }),
     }),
 });

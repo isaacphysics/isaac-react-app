@@ -173,6 +173,8 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const user = useAppSelector(selectors.user.orNull);
 
+    const contentId = (url?.includes("/questions/") || url?.includes("/concepts/")) && url.split("/").slice(-1)[0];
+
     const isItem = typedProps.alviType === "item";
     const isGameboard = typedProps.alviType === "gameboard";
     const isQuiz = typedProps.alviType === "quiz";
@@ -262,7 +264,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
-                    {isItem && typedProps.bookmark && isTeacherOrAbove(user) && <button className={classNames("alvi-bookmark", {"saved": isBookmarked(url)})} onClick={() => bookmarkItem(url)} /> }
+                    {isItem && contentId && typedProps.bookmark && isTeacherOrAbove(user) && <button className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} onClick={() => bookmarkItem(contentId)} /> }
                 </>
             }
             {hasCaret && <div className="list-caret align-content-center" aria-hidden="true">

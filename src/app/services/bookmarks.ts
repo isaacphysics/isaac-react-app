@@ -1,6 +1,6 @@
 // TODO: move to slices when API exists
 
-import { useState } from "react";
+import { useBookmarkItemMutation, useDeleteBookmarkMutation, useGetBookmarksQuery } from "../state";
 
 // TODO 
 // - add these endpoints in the backend (see bookmarksApi.ts)
@@ -8,21 +8,26 @@ import { useState } from "react";
 // - modify /questions endpoint to return a bookmarked field for each question
 
 export const useBookmarks = () => {
-    const [bookmarks, setBookmarks] = useState<string[]>([]);
+    const [bookmarkItemMutation] = useBookmarkItemMutation();
+    const [deleteBookmarkMutation] = useDeleteBookmarkMutation();
 
-    const bookmarkItem = (url?: string) => {
-        if (!url) return;
+    const {data: bookmarks = []} = useGetBookmarksQuery();
 
-        if (bookmarks.includes(url)) {
-            setBookmarks(bookmarks.filter(b => b !== url));
+    const bookmarkIds = bookmarks.flatMap((bookmark) => bookmark.id ?? []);
+
+    const bookmarkItem = (content_id?: string) => {
+        if (!content_id) return;
+
+        if (!bookmarkIds.includes(content_id)) {
+            void bookmarkItemMutation({content_id: content_id});
         } else {
-            setBookmarks([...bookmarks, url]);
+            void deleteBookmarkMutation({content_id: content_id});
         }
     };
 
-    const isBookmarked = (url?: string) => {
-        if (!url) return false;
-        return bookmarks.includes(url);
+    const isBookmarked = (content_id?: string) => {
+        if (!content_id) return false;
+        return bookmarkIds.includes(content_id);
     };
 
     return { isBookmarked, bookmarkItem };
