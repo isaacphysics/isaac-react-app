@@ -213,6 +213,26 @@ describe("Contact form presets", () => {
     );
   });
 
+  it("shows page-not-found subject when pageNotFound preset is provided", async () => {
+    renderContactUs();
+    setLocation("?preset=pageNotFound&page=%2Fmissing-page");
+    const { firstName, subject } = formFields;
+    await waitFor(() => expect(firstName()).not.toHaveValue(""));
+    expect(subject()).toHaveValue('Page not found "/missing-page"');
+  });
+
+  it("includes the page URL in the message if submitting a form with pageNotFound preset", async () => {
+    renderContactUs();
+    setLocation("?preset=pageNotFound&page=%2Fmissing-page&url=https://example.com/missing-page");
+    const { firstName, message } = formFields;
+    await waitFor(() => expect(firstName()).not.toHaveValue(""));
+    await userEvent.type(message(), "Test message");
+    await clickButton("Submit");
+    expect(contactFormSubmitSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ message: expect.stringContaining("https://example.com/missing-page") }),
+    );
+  });
+
   const testFields = ["subject", "message"];
 
   it.each(testFields)("includes a custom %s if provided in the URL", async (field) => {

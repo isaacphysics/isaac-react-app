@@ -64,12 +64,20 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     }
   };
 
+  const setPageNotFoundPresets = () => {
+    presetSubject = `Page not found "${urlQuery.page ?? ""}"`;
+    presetUrl = `Page link: ${urlQuery.url}`;
+    presetPlaceholder = "Please describe how you reached this page and what you expected to see.";
+  };
+
   if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
     setTeacherRequestPresets(user);
   } else if (urlQuery?.preset == "accountDeletion" && user?.loggedIn) {
     setAccountDeletionPresets(user);
   } else if (urlQuery?.preset == "contentProblem") {
     setContentProblemPresets();
+  } else if (urlQuery?.preset == "pageNotFound") {
+    setPageNotFoundPresets();
   }
 
   return [
