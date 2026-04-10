@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from "react";
+import React, {useCallback, useMemo, useRef} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {CoordinateChoiceDTO, CoordinateItemDTO, IsaacCoordinateQuestionDTO} from "../../../IsaacApiTypes";
 import {Button, Input} from "reactstrap";
@@ -112,48 +112,61 @@ const CoordinateInput = (props: CoordinateInputProps) => {
     </span>;
 };
 
+const generateEmptyCoordItem = (numberOfDimensions: number): CoordinateItemDTO => {
+    return {
+        type: "coordinateItem",
+        coordinates: Array<string>(numberOfDimensions).fill("")
+    };
+};
+
+const generateEmptyCoord = (numberOfCoordinates: number, numberOfDimensions: number) => {
+    return {
+        type: "coordinateChoice", 
+        items: Array.from({length: numberOfCoordinates}).map(() => generateEmptyCoordItem(numberOfDimensions))
+    } satisfies CoordinateChoiceDTO;
+};
+
 const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacCoordinateQuestionDTO>) => {
 
-    const numberOfDimensions = doc.numberOfDimensions ?? 2;
+    const numberOfDimensions = useRef(doc.numberOfDimensions ?? 2);
+    const numberOfCoordinates = useRef(doc.numberOfCoordinates);
     const buttonText = doc.buttonText ?? "Add coordinate";
 
-    const getEmptyCoordItem = useCallback((): CoordinateItemDTO => {
-        return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
-    }, [numberOfDimensions]);
+    const emptyCoordItem = () => generateEmptyCoordItem(numberOfDimensions.current);
+    const emptyCoord = () => generateEmptyCoord(numberOfCoordinates.current ?? 2, numberOfDimensions.current);
 
     const { currentAttempt: nullableCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => {
-        return {...nullableCurrentAttempt, items: nullableCurrentAttempt?.items?.map(item => isDefined(item) ? item : getEmptyCoordItem())};
-    }, [getEmptyCoordItem, nullableCurrentAttempt]);
-
-    const getEmptyCoord = useCallback(() => {
-        return {type: "coordinateChoice", items: Array.from({length: doc.numberOfCoordinates ?? currentAttempt?.items?.length ?? 2}).map(getEmptyCoordItem)} satisfies CoordinateChoiceDTO;
-    }, [currentAttempt?.items?.length, doc.numberOfCoordinates, getEmptyCoordItem]);
+        return {
+            ...nullableCurrentAttempt, 
+            items: nullableCurrentAttempt?.items?.map(item => isDefined(item) ? item : emptyCoordItem())
+        };
+    }, [nullableCurrentAttempt]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
-        if (doc.numberOfCoordinates && !items.length) {
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : emptyCoordItem());
+        if (numberOfCoordinates.current && !items.length) {
             // if the number of coordinates is fixed and we don't have a prior attempt, we need to fill all other items with blanks before updating the indexed item
-            items.push(...getEmptyCoord().items);
+            items.push(...emptyCoord().items);
         }
         items[index] = cleanItem(value);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
-    }, [currentAttempt?.items, dispatchSetCurrentAttempt, doc.numberOfCoordinates, getEmptyCoord, getEmptyCoordItem]);
+    }, [currentAttempt?.items, dispatchSetCurrentAttempt]);
 
     const removeItem = useCallback((index: number) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : emptyCoordItem());
         items.splice(index, 1);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
-    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
+    }, [currentAttempt?.items, dispatchSetCurrentAttempt]);
 
     const addCoord = useCallback(() => {
         if (!isDefined(currentAttempt)) {
-            dispatchSetCurrentAttempt(getEmptyCoord());
+            dispatchSetCurrentAttempt(emptyCoord());
         }
         else {
-            updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem());
+            updateItem(currentAttempt?.items?.length ?? 1, emptyCoordItem());
         }
-    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem, updateItem]);
+    }, [currentAttempt, dispatchSetCurrentAttempt, updateItem]);
 
     return <div className="coordinate-question">
         <div className="question-content">
@@ -170,8 +183,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     separator={doc.separator ?? ","}
                     prefixes={doc.prefixes}
                     suffixes={doc.suffixes}
-                    numberOfDimensions={numberOfDimensions}
-                    value={currentAttempt?.items?.[index] ?? getEmptyCoordItem()}
+                    numberOfDimensions={numberOfDimensions.current}
+                    value={currentAttempt?.items?.[index] ?? emptyCoordItem()}
                     readonly={readonly}
                     onChange={value => updateItem(index, value)}
                 />
@@ -185,7 +198,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                             separator={doc.separator ?? ","}
                             prefixes={doc.prefixes}
                             suffixes={doc.suffixes}
-                            numberOfDimensions={numberOfDimensions}
+                            numberOfDimensions={numberOfDimensions.current}
                             value={item}
                             readonly={readonly}
                             onChange={value => updateItem(index, value)}
@@ -200,8 +213,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     separator={doc.separator ?? ","}
                     prefixes={doc.prefixes}
                     suffixes={doc.suffixes}
-                    numberOfDimensions={numberOfDimensions}
-                    value={getEmptyCoordItem()}
+                    numberOfDimensions={numberOfDimensions.current}
+                    value={emptyCoordItem()}
                     readonly={readonly}
                     onChange={value => updateItem(0, value)}
                 />
