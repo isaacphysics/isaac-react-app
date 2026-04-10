@@ -181,12 +181,12 @@ $max-scale: 1.25;
   padding: calc(10px * $max-scale - 10px * $scale);
 }
 
-@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
+@mixin svg-icon-unscaled($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
-  width: calc($width * $max-scale);
-  height: calc($height * $max-scale);
-  min-width: calc($width * $max-scale);
-  min-height: calc($height * $max-scale);
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
   background-color: black; // this has to be here, not inside the @supports, as that raises the specificity beyond that of background colours specified alongside @include svg-icon
 
   @supports (mask: url($path) center center no-repeat) {
@@ -215,6 +215,15 @@ $max-scale: 1.25;
       }
     }
   }
+}
+
+@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
+  @include svg-icon-unscaled($path, $width, $height, $mask-size, $mask-position);
+  width: calc($width * $max-scale);
+  height: calc($height * $max-scale);
+  min-width: calc($width * $max-scale);
+  min-height: calc($height * $max-scale);
+
   mask-origin: content-box !important;
   padding: calc(10px * $max-scale - 10px * $scale);
 }
@@ -228,12 +237,12 @@ $max-scale: 1.25;
   min-height: $height;
   &::before {
     content: '';
-    @include svg-icon($bg_path, $width, $height, $mask-size, $mask-position);
+    @include svg-icon-unscaled($bg_path, $width, $height, $mask-size, $mask-position);
     position: absolute;
   }
   &::after {
     content: '';
-    @include svg-icon($fg_path, $width, $height, $mask-size, $mask-position);
+    @include svg-icon-unscaled($fg_path, $width, $height, $mask-size, $mask-position);
     position: absolute;
   }
 }
