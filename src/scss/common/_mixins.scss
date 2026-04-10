@@ -178,7 +178,7 @@ $viewport-sizes: (
   }
 }
 
-@mixin svg-icon-unscaled($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
+@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
   width: $width;
   height: $height;
@@ -215,15 +215,15 @@ $viewport-sizes: (
 }
 
 $max-scale: 1.25;
-@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
-  @include svg-icon-unscaled($path, $width, $height, $mask-size, $mask-position);
+@mixin svg-icon-scaled($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
+  @include svg-icon($path, $width, $height, $mask-size, $mask-position);
   width: calc($width * $max-scale);
   height: calc($height * $max-scale);
   min-width: calc($width * $max-scale);
   min-height: calc($height * $max-scale);
 
   mask-origin: content-box !important;
-  padding: calc(10px * $max-scale - 10px * $scale);
+  padding: calc($height/2 * ($max-scale - $scale)) calc($width/2 * ($max-scale - $scale));
 }
 
 @mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: 100%, $mask-position: none) {
@@ -235,12 +235,12 @@ $max-scale: 1.25;
   min-height: $height;
   &::before {
     content: '';
-    @include svg-icon-unscaled($bg_path, $width, $height, $mask-size, $mask-position);
+    @include svg-icon($bg_path, $width, $height, $mask-size, $mask-position);
     position: absolute;
   }
   &::after {
     content: '';
-    @include svg-icon-unscaled($fg_path, $width, $height, $mask-size, $mask-position);
+    @include svg-icon($fg_path, $width, $height, $mask-size, $mask-position);
     position: absolute;
   }
 }

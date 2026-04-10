@@ -121,7 +121,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         key={key}
                         id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
                         checkboxTitle={<div className={classNames("d-flex align-items-center gap-3")}>
-                            <i className={classNames("icon icon-sm ms-1", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
+                            <i className={classNames("icon icon-sm icon-scaled", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
                             <b className="d-flex align-items-center gap-2">
                                 {tab.title}
                                 {((key === "assignedToMe" && workCounts.assignments > 0) || (key === "myTests" && workCounts.tests > 0)) && <span 

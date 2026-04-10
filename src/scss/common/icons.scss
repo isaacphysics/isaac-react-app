@@ -210,6 +210,18 @@ img[aria-disabled="true"] {
   vertical-align: bottom;
 }
 
+.icon-scaled {
+  $max-scale: 1.25;
+  width: calc(var(--icon-size) * $max-scale) !important;
+  height: calc(var(--icon-size) * $max-scale) !important;
+  min-width: calc(var(--icon-size) * $max-scale) !important;
+  min-height: calc(var(--icon-size) * $max-scale) !important;
+
+  mask-origin: content-box !important;
+  // The following line should be overriden by icons using a non-default scaling factor
+  padding: calc(var(--icon-size)/2 * ($max-scale - 1));
+}
+
 i.icon:not(.icon-raw) {
   &, &[color="primary"] {
     background-color: var(--layered-icon-parent-bg-override, var(--icon-primary));
