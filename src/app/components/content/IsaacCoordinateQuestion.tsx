@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect, useMemo} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {CoordinateChoiceDTO, CoordinateItemDTO, IsaacCoordinateQuestionDTO} from "../../../IsaacApiTypes";
 import {Button, Input} from "reactstrap";
@@ -114,14 +114,18 @@ const CoordinateInput = (props: CoordinateInputProps) => {
 
 const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacCoordinateQuestionDTO>) => {
 
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
-
     const numberOfDimensions = doc.numberOfDimensions ?? 2;
     const buttonText = doc.buttonText ?? "Add coordinate";
 
     const getEmptyCoordItem = useCallback((): CoordinateItemDTO => {
         return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
     }, [numberOfDimensions]);
+
+    const { currentAttempt: nullableCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
+    const currentAttempt = useMemo(() => {
+        return {...nullableCurrentAttempt, items: nullableCurrentAttempt?.items?.map(item => isDefined(item) ? item : getEmptyCoordItem())};
+    }, [getEmptyCoordItem, nullableCurrentAttempt]);
+
     const getEmptyCoord = useCallback(() => {
         return {type: "coordinateChoice", items: Array.from({length: doc.numberOfCoordinates ?? currentAttempt?.items?.length ?? 2}).map(getEmptyCoordItem)} satisfies CoordinateChoiceDTO;
     }, [currentAttempt?.items?.length, doc.numberOfCoordinates, getEmptyCoordItem]);
@@ -144,7 +148,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
 
     const addCoord = useCallback(() => {
         if (!isDefined(currentAttempt)) {
-            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem(), getEmptyCoordItem()]});
+            dispatchSetCurrentAttempt(getEmptyCoord());
         }
         else {
             updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem());
