@@ -137,6 +137,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
 
     const { currentAttempt: nullableCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => {
+        // see https://github.com/isaacphysics/isaac-react-app/pull/2093; it was previously possible to generate null items, which we must now deal with
         return {
             ...nullableCurrentAttempt, 
             items: nullableCurrentAttempt?.items?.map(item => isDefined(item) ? item : emptyCoordItem())
