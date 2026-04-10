@@ -122,12 +122,19 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
     const getEmptyCoordItem = useCallback((): CoordinateItemDTO => {
         return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
     }, [numberOfDimensions]);
+    const getEmptyCoord = useCallback(() => {
+        return {type: "coordinateChoice", items: Array.from({length: doc.numberOfCoordinates ?? currentAttempt?.items?.length ?? 2}).map(getEmptyCoordItem)} satisfies CoordinateChoiceDTO;
+    }, [currentAttempt?.items?.length, doc.numberOfCoordinates, getEmptyCoordItem]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
         const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
+        if (doc.numberOfCoordinates && !items.length) {
+            // if the number of coordinates is fixed and we don't have a prior attempt, we need to fill all other items with blanks before updating the indexed item
+            items.push(...getEmptyCoord().items);
+        }
         items[index] = cleanItem(value);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
-    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
+    }, [currentAttempt?.items, dispatchSetCurrentAttempt, doc.numberOfCoordinates, getEmptyCoord, getEmptyCoordItem]);
 
     const removeItem = useCallback((index: number) => {
         const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
