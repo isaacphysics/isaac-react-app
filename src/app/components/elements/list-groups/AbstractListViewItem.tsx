@@ -192,7 +192,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isCrossTopic = isAda && tags?.includes("cross_topic");
     const isLLM = tags?.includes("llm_question_page");
 
-    const flatLayout = style === "flat" && above['sm'](deviceSize);
+    const flatLayout = style === "flat" && above['md'](deviceSize);
     const stackedLayout = style === "stacked" || below["sm"](deviceSize);
     const wrapTitleTags = below["xs"](deviceSize);
 
