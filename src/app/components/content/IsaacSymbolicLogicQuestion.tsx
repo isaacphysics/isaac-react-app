@@ -5,6 +5,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     initialiseInequality,
+    isDefined,
     jsonHelper,
     sanitiseInequalityState,
     useCurrentQuestionAttempt,
@@ -24,6 +25,7 @@ const InequalityModal = lazy(() => import("../elements/modals/inequality/Inequal
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
+    const questionAttemptLoaded = useRef(!!currentAttemptValue);
 
     const [hideSeed, setHideSeed] = useState(!!currentAttempt);
     const initialSeed: SeedExpressions = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression ?? '', [doc.formulaSeed]);  
@@ -51,15 +53,20 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
-        dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
+        if (state.userInput !== "" || modalVisible) {
+            // Only call dispatch if the user has inputted text or is interacting with the modal
+            // Otherwise this causes the response to reset on reload removing the banner
+            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+        }
         initialEditorSymbols.current = state.symbols ?? [];
     };
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible
-        const pythonExpression = (currentAttemptValue?.result && currentAttemptValue?.result.python) || "";
-        if (modalVisible) {
-            setTextInput(pythonExpression);
+        // Only update the text-entry box if the graphical editor is visible OR if the question attempt is loaded for the first time
+        const pythonExpression = currentAttemptValue?.result && currentAttemptValue?.result.python;
+        if (modalVisible || (isDefined(pythonExpression) && !questionAttemptLoaded.current)) {
+            questionAttemptLoaded.current = true;
+            setTextInput(pythonExpression ?? "");
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);

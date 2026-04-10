@@ -13,6 +13,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     initialiseInequality,
+    isDefined,
     jsonHelper,
     parsePseudoSymbolicAvailableSymbols,
     sanitiseInequalityState,
@@ -32,10 +33,11 @@ const InequalityModal = lazy(() => import("../elements/modals/inequality/Inequal
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
-    
+    const questionAttemptLoaded = useRef(!!currentAttemptValue);
+
     const initialSeed: SeedExpressions = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression ?? '', [doc.formulaSeed]);  
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
-    const [textInput, setTextInput] = useState((currentAttemptValue ? currentAttemptValue.result?.python : initialSeed.python) ?? "");  
+    const [textInput, setTextInput] = useState((currentAttemptValue ? currentAttemptValue.result?.python : initialSeed.python) ?? "");
 
     const [hasStartedEditing, setHasStartedEditing] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -64,10 +66,11 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     };
 
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible
-        const pythonExpression = (currentAttemptValue?.result && currentAttemptValue?.result.python) || "";
-        if (modalVisible) {
-            setTextInput(pythonExpression);
+        // Only update the text-entry box if the graphical editor is visible OR if the question attempt is loaded for the first time
+        const pythonExpression = currentAttemptValue?.result && currentAttemptValue?.result.python;
+        if (modalVisible || (isDefined(pythonExpression) && !questionAttemptLoaded.current)) {
+            questionAttemptLoaded.current = true;
+            setTextInput(pythonExpression ?? "");
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);

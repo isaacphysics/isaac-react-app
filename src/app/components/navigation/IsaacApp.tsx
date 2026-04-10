@@ -67,7 +67,7 @@ import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
 import {TutorRequest} from "../pages/TutorRequest";
-import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
+import {AssignmentProgress} from "../pages/assignment_progress/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
@@ -80,6 +80,7 @@ import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
 import { FeatureFlagProvider } from '../../services/featureFlag';
+import { NewAdaNavigationBanner } from './NewAdaNavigationBanner';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -93,7 +94,9 @@ const RootLayout = () => {
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
+        {/* TODO: turn notification banners into a useBanners hook or similar; c.f. REVISION_CHALLENGES – we could reuse the auto-expiry logic */}
         <IsaacScienceLaunchBanner />
+        <NewAdaNavigationBanner />
         <ResearchNotificationBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />

@@ -10,7 +10,7 @@ const buildContactUrl = (state: {overridePathname?: string}, pathname: string) =
 };
 
 export const NotFound = () => {
-    const {pathname, state} = useLocation<{overridePathname?: string}>();
+    const {pathname, state} = useLocation();
     return <Container>
         <div className="pb-1">
             <TitleAndBreadcrumb

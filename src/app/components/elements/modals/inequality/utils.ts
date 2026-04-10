@@ -688,7 +688,7 @@ interface PrepareInequalityArgs {
     sketch: React.MutableRefObject<Nullable<Inequality>>;
     initialEditorSymbols: WidgetSpec[];
     onEditorStateChange?: (state: InequalityState) => void;
-    setEditorState: (state: InequalityState) => void;
+    setEditorState: React.Dispatch<React.SetStateAction<InequalityState>>;
 }
 export function prepareInequality({editorMode, inequalityModalRef, initialEditorSymbols, isTrashActive, sketch, logicSyntax, setEditorState, onEditorStateChange}: PrepareInequalityArgs) {
     if (!isDefined(inequalityModalRef.current)) {

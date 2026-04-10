@@ -27,14 +27,20 @@ describe('Overview page', () => {
             await waitFor(() => expect(screen.getByTestId('active-modal-footer')).toBeInTheDocument(), { timeout: 2000 });
         };
 
-        it('is only shown for teachers', async () => {
+        it('is shown for students', async () => {
             await renderOverviewPage('STUDENT');
-            expectH1('Upgrade to a teacher account');
+            expectH1('Overview');
         });
 
-        it('shows the heading', async () => {
-            await renderOverviewPage(); 
+        it('is shown for teachers', async () => {
+            await renderOverviewPage('TEACHER');
             expectH1('Overview');
+        });
+
+        it('is only shown for logged-in users', async () => {
+            await renderOverviewPage('ANONYMOUS');
+            const main = screen.getByTestId('main');
+            await within(main).findByText("Log in or sign up:");
         });
 
         describe('Teacher onboarding modal', () => {
@@ -110,6 +116,7 @@ describe('Overview page', () => {
                         await waitFor(() => expect(goToMyAdaButton).toHaveTextContent("Go to My Ada"));
                         await userEvent.click(goToMyAdaButton);
                         await waitFor(() => expect(modal.element).toBeNull());
+                        await waitFor(() => expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBeNull());
                     });
                 });
             });

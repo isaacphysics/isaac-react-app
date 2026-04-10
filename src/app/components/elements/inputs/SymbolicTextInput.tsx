@@ -274,7 +274,7 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
             </div>
             <QuestionInputValidation userInput={textInput} validator={(input) => symbolicTextInputValidator(input, editorMode, mayRequireStateSymbols, demoPage)}/>
         </InputGroup>
-        {!demoPage && <div className="eqn-editor-symbols">
+        {!demoPage && typedProps.symbolList && <div className="eqn-editor-symbols">
             The following symbols may be useful: <pre>{typedProps.symbolList}</pre>
         </div>}
     </div>;

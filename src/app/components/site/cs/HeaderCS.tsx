@@ -7,7 +7,6 @@ import {
     isEventLeader,
     isLoggedIn,
     isStaff,
-    isTutorOrAbove,
     PATHS,
     useUserNotifications
 } from "../../../services";
@@ -21,11 +20,11 @@ import {
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
 import { useNavigate } from "react-router";
-import { FeatureFlag, FeatureFlagModal, FeatureFlagWrapper, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
+import { FeatureFlagModal, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const { notifications, workCounts } = useUserNotifications();
+    const { notifications } = useUserNotifications();
     const dispatch = useAppDispatch();
 
     const { data: env } = useGetSegueEnvironmentQuery();
@@ -115,30 +114,7 @@ export const HeaderCS = () => {
 
                         {isLoggedIn(user)
                             ? <>
-                                <FeatureFlagWrapper flag={FeatureFlag.ENABLE_ADA_SIDEBARS}
-                                    onSet={<NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />}
-                                    onUnset={
-                                        <NavigationSection title={<>My Ada {<MenuBadge count={workCounts.total} message="incomplete assignments" data-testid="my-assignments-badge" />}</>}>
-                                            {isTutorOrAbove(user) ?
-                                                <>
-                                                    <LinkItem to="/dashboard">Overview</LinkItem>
-                                                    <LinkItem to="/groups">Manage groups</LinkItem>
-                                                    <LinkItem to={PATHS.SET_ASSIGNMENTS}>Quizzes</LinkItem>
-                                                    <LinkItem to="/set_tests">Tests</LinkItem>
-                                                    <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
-                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Assigned to me {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
-                                                </>
-                                                :
-                                                <>
-                                                    <LinkItem to={PATHS.MY_ASSIGNMENTS}>Quizzes {<MenuBadge count={workCounts.assignments} message="incomplete assignments" />}</LinkItem>
-                                                    <LinkItem to="/tests">Tests {<MenuBadge count={workCounts.tests} message="incomplete tests" />}</LinkItem>
-                                                    <LinkItem to="/progress">Progress</LinkItem>
-                                                </>
-                                            }
-                                            <LinkItem to="/account">Account</LinkItem>
-                                        </NavigationSection>
-                                    }
-                                />
+                                <NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />
                                 <div className={"navbar-separator d-nav-none d-block"}/>
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>
                             </>
