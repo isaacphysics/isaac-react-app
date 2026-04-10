@@ -162,28 +162,31 @@ $viewport-sizes: (
   aspect-ratio: calc($width / $height);
 }
 
-@mixin svg-icon-raw($path, $width, $height, $background-size: none, $background-position: none) {
+$max-scale: 1.25;
+@mixin svg-icon-raw($path, $width, $height, $background-size: none, $background-position: none, $scale: 1) {
   // use this only for SVG icons that should not be recoloured; prefer @svg-icon in general
   display: inline-block;
   background: url($path) center center no-repeat;
-  width: $width;
-  height: $height;
-  min-width: $width;
-  min-height: $height;
+  width: calc($width * $max-scale);
+  height: calc($height * $max-scale);
+  min-width: calc($width * $max-scale);
+  min-height: calc($height * $max-scale);
   @if $background-size != none {
     background-size: $background-size;
   }
   @if $background-position != none {
     background-position: $background-position;
   }
+  mask-origin: content-box !important;
+  padding: calc(10px * $max-scale - 10px * $scale);
 }
 
-@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
+@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
   display: inline-block;
-  width: $width;
-  height: $height;
-  min-width: $width;
-  min-height: $height;
+  width: calc($width * $max-scale);
+  height: calc($height * $max-scale);
+  min-width: calc($width * $max-scale);
+  min-height: calc($height * $max-scale);
   background-color: black; // this has to be here, not inside the @supports, as that raises the specificity beyond that of background colours specified alongside @include svg-icon
 
   @supports (mask: url($path) center center no-repeat) {
@@ -212,6 +215,8 @@ $viewport-sizes: (
       }
     }
   }
+  mask-origin: content-box !important;
+  padding: calc(10px * $max-scale - 10px * $scale);
 }
 
 @mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: 100%, $mask-position: none) {
