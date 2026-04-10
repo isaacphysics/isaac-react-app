@@ -170,7 +170,7 @@ export type AbstractListViewItemProps = {
     url?: string;
     state?: AbstractListViewItemState;
     className?: string;
-    Tag?: ListGroupItemProps["tag"];
+    componentTag?: ListGroupItemProps["tag"];
 } & ALVIType;
 
 export type AbstractListViewProps = ALVILayout & {
@@ -178,7 +178,7 @@ export type AbstractListViewProps = ALVILayout & {
     style?: "flat" | "stacked"; // flat = expand horizontally to fit content on one line; stacked = expand vertically, better for mobile or multi-column layouts; undefined = responsive
 }
 
-export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, style, url, state, className, Tag, ...typedProps}: AbstractListViewItemProps & AbstractListViewProps) => { 
+export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, style, url, state, className, componentTag, ...typedProps}: AbstractListViewItemProps & AbstractListViewProps) => { 
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
 
@@ -286,7 +286,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
         data-testid={"list-view-item"}
-        tag={Tag}
+        tag={componentTag}
     >
         {cardBody}
     </ListGroupItem>;
