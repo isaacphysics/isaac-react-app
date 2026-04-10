@@ -95,7 +95,7 @@
 .icon-group {
   @include svg-icon('/assets/cs/icons/group.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
   &.icon-scaled {
-    --scaling-factor: 1.1;
+    --scaling-factor: 1.10;
   }
 }
 
@@ -188,24 +188,22 @@
   @include svg-icon('/assets/cs/icons/home.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-done-all {
-  @include svg-icon('/assets/cs/icons/done_all.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-person-check {
-  @include svg-icon('/assets/cs/icons/person_check.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
 .icon-cog {
   @include svg-icon('/assets/cs/icons/settings.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-done-all {
   @include svg-icon('/assets/cs/icons/done_all.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  &.icon-scaled {
+    --scaling-factor: 1.095;
+  }
 }
 
 .icon-person-check {
   @include svg-icon('/assets/cs/icons/person_check.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  &.icon-scaled {
+    --scaling-factor: 1.11;
+  }
 }
 
 .icon-cog {

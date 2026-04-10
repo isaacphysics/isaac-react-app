@@ -106,6 +106,9 @@ img[aria-disabled="true"] {
 
 .icon-school {
   @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  &.icon-scaled {
+    --scaling-factor: 1.10;
+  }
 }
 
 .icon-event {
