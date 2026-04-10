@@ -1,5 +1,44 @@
 @import "../common/icons";
 
+$max-scale: 1.25;
+@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none, $scale: 1) {
+  display: inline-block;
+  width: calc($width * $max-scale);
+  height: calc($height * $max-scale);
+  min-width: calc($width * $max-scale);
+  min-height: calc($height * $max-scale);
+  background-color: black; // this has to be here, not inside the @supports, as that raises the specificity beyond that of background colours specified alongside @include svg-icon
+
+  @supports (mask: url($path) center center no-repeat) {
+    mask: url($path) center center no-repeat;
+    @if $mask-size != none {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
+  }
+
+  @supports not (mask: url($path) center center no-repeat) {
+    // TODO this had to be shorthand format to correctly override all background props, surely can simplify though
+    @if $mask-size != none {
+      @if $mask-position != none {
+        background: url($path) $mask-position/$mask-size no-repeat !important;
+      } @else {
+        background: url($path) center center/$mask-size no-repeat !important;
+      }
+    } @else {
+      @if $mask-position != none {
+        background: url($path) $mask-position no-repeat !important;
+      } @else {
+        background: url($path) center center no-repeat !important;
+      }
+    }
+  }
+  mask-origin: content-box !important;
+  padding: calc(10px * $max-scale - 10px * $scale);
+}
+
 // icon-lg is 60px on Sci, but we want a smaller size for CS to fit its ALVI size constraints
 .icon-lg {
   --icon-size: 32px;
