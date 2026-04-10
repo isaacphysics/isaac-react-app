@@ -333,8 +333,7 @@ export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "ca
     }
 }
 
-export const CustomListViewItem = (props: CustomListViewItemProps) => {
-    const { item, ...rest } = props;
+export const CustomListViewItem = ({item, ...rest}: CustomListViewItemProps) => {
     return <AbstractListViewItem
         {...item}
         {...rest}
