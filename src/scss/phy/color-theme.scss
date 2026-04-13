@@ -1,90 +1,141 @@
 @use "sass:map";
 
-// VARIABLE DEFINITIONS
-@each $palette, $subject-colors in $isaac-color-palettes {
-  @include color-mode($palette) {
+@each $ld-palette, $subject-palettes-map in $isaac-light-dark-palettes {
+  // @include color-mode($ld-palette) {
+  [data-ld-theme="#{$ld-palette}"] {
 
-    // BADGES
-    --badges-dark: #{map.get($subject-colors, 500)};
-    --badges-dark-text: #{$color-neutral-white};
-    --badges-light: #{map.get($subject-colors, 100)};
-    --badges-light-text: #{map.get($subject-colors, 900)};
+    @each $palette, $subject-colors in $subject-palettes-map {
 
-    // BUTTONS
-    --buttons-dark: #{map.get($subject-colors, 700)};
-    --buttons-dark-contrast: #{$color-neutral-white};
-    --buttons-dark-disabled: #{map.get($subject-colors, 300)};
-    --buttons-dark-disabled-text: #{map.get($subject-colors, 300)};
-    --buttons-dark-hover: #{$color-neutral-900};
-    --buttons-dark-hover-icon: #{$color-neutral-200};
-    --buttons-dark-hover-prefix: #{$color-neutral-200};
-    --buttons-dark-icon: #{map.get($subject-colors, 200)};
-    --buttons-dark-prefix: #{map.get($subject-colors, 100)};
-    --buttons-dark-text: #{$color-neutral-white};
-    --buttons-focus-ring: #{map.get($subject-colors, 300)};
-    --buttons-keyline-border: #{map.get($subject-colors, 500)};
-    --buttons-keyline-disabled-border: #{map.get($subject-colors, 300)};
-    --buttons-keyline-white-border: #{map.get($subject-colors, 400)};
-    --buttons-keyline-white-hover: #{map.get($subject-colors, 900)};
-    --buttons-keyline-white-text: #{$color-neutral-white};
-    --buttons-light: #{$color-neutral-white};
-    --buttons-light-disabled: #{$color-neutral-white};
-    --buttons-light-disabled-text: #{map.get($subject-colors, 300)};
-    --buttons-light-hover: #{map.get($subject-colors, 700)};
-    --buttons-light-hover-icon: #{map.get($subject-colors, 200)};
-    --buttons-light-hover-prefix: #{map.get($subject-colors, 100)};
-    --buttons-light-icon: #{map.get($subject-colors, 400)};
-    --buttons-light-prefix: #{map.get($subject-colors, 500)};
-    --buttons-light-text: #{$color-neutral-900};
-    --buttons-tint: #{map.get($subject-colors, 50)};
-    --buttons-tint-border: #{map.get($subject-colors, 100)};
+      // these should be accessible regardless of the current (color) theme
+      @if $palette == "neutral" {
+        --color-neutral-white: #{map.get($subject-colors, "white")};
+      }
+      --color-#{$palette}-50: #{map.get($subject-colors, 50)};
+      --color-#{$palette}-100: #{map.get($subject-colors, 100)};
+      --color-#{$palette}-200: #{map.get($subject-colors, 200)};
+      --color-#{$palette}-300: #{map.get($subject-colors, 300)};
+      --color-#{$palette}-400: #{map.get($subject-colors, 400)};
+      --color-#{$palette}-500: #{map.get($subject-colors, 500)};
+      --color-#{$palette}-600: #{map.get($subject-colors, 600)};
+      --color-#{$palette}-700: #{map.get($subject-colors, 700)};
+      --color-#{$palette}-800: #{map.get($subject-colors, 800)};
+      --color-#{$palette}-900: #{map.get($subject-colors, 900)};
 
-    // NAVIGATION
-    --nav-primary: #{map.get($subject-colors, 500)};
-    --nav-secondary: #{map.get($subject-colors, 400)};
-    --tab-active: #{map.get($subject-colors, 500)};
-    --tab-hover: #{map.get($subject-colors, 300)};
+      &[data-bs-theme="#{$palette}"], [data-bs-theme="#{$palette}"] {
+      // @include color-mode($palette) {
+        // these will only be accessible when the current (color) theme matches the palette
 
-    // ICONS
-    --icon-primary: #{map.get($subject-colors, 500)};
-    --icon-hover: #{$color-neutral-white};
+        // BADGES
+        --badges-dark: #{map.get($subject-colors, 500)};
+        --badges-dark-text: #{$color-neutral-white};
+        --badges-light: #{map.get($subject-colors, 100)};
+        --badges-light-text: #{map.get($subject-colors, 900)};
 
-    --subject-color-50: #{map.get($subject-colors, 50)};
-    --subject-color-100: #{map.get($subject-colors, 100)};
-    --subject-color-200: #{map.get($subject-colors, 200)};
-    --subject-color-300: #{map.get($subject-colors, 300)};
-    --subject-color-400: #{map.get($subject-colors, 400)};
-    --subject-color-500: #{map.get($subject-colors, 500)};
-    --subject-color-600: #{map.get($subject-colors, 600)};
-    --subject-color-700: #{map.get($subject-colors, 700)};
-    --subject-color-800: #{map.get($subject-colors, 800)};
-    --subject-color-900: #{map.get($subject-colors, 900)};
+        // BUTTONS
+        --buttons-dark: #{map.get($subject-colors, 700)};
+        --buttons-dark-contrast: #{$color-neutral-white};
+        --buttons-dark-disabled: #{map.get($subject-colors, 300)};
+        --buttons-dark-disabled-text: #{map.get($subject-colors, 300)};
+        --buttons-dark-hover: #{$color-neutral-900};
+        --buttons-dark-hover-icon: #{$color-neutral-200};
+        --buttons-dark-hover-prefix: #{$color-neutral-200};
+        --buttons-dark-icon: #{map.get($subject-colors, 200)};
+        --buttons-dark-prefix: #{map.get($subject-colors, 100)};
+        --buttons-dark-text: #{$color-neutral-white};
+        --buttons-focus-ring: #{map.get($subject-colors, 300)};
+        --buttons-keyline-border: #{map.get($subject-colors, 500)};
+        --buttons-keyline-disabled-border: #{map.get($subject-colors, 300)};
+        --buttons-keyline-white-border: #{map.get($subject-colors, 400)};
+        --buttons-keyline-white-hover: #{map.get($subject-colors, 900)};
+        --buttons-keyline-white-text: #{$color-neutral-white};
+        --buttons-light: #{$color-neutral-white};
+        --buttons-light-disabled: #{$color-neutral-white};
+        --buttons-light-disabled-text: #{map.get($subject-colors, 300)};
+        --buttons-light-hover: #{map.get($subject-colors, 700)};
+        --buttons-light-hover-icon: #{map.get($subject-colors, 200)};
+        --buttons-light-hover-prefix: #{map.get($subject-colors, 100)};
+        --buttons-light-icon: #{map.get($subject-colors, 400)};
+        --buttons-light-prefix: #{map.get($subject-colors, 500)};
+        --buttons-light-text: #{$color-neutral-900};
+        --buttons-tint: #{map.get($subject-colors, 50)};
+        --buttons-tint-border: #{map.get($subject-colors, 100)};
 
-    // ALERT
-    --alert-text-color: #{map.get($subject-colors, 900)};
+        // NAVIGATION
+        --nav-primary: #{map.get($subject-colors, 500)};
+        --nav-secondary: #{map.get($subject-colors, 400)};
+        --tab-active: #{map.get($subject-colors, 500)};
+        --tab-hover: #{map.get($subject-colors, 300)};
 
-    @if $palette == "neutral" {
-      // neutral has some special cases
-      --badges-light: #{$color-neutral-white};
-      --buttons-dark: #{$color-neutral-900};
-      --buttons-dark-hover: #{$color-brand-700};
-      --buttons-dark-icon: #{$color-neutral-300};
-      --buttons-dark-prefix: #{$color-neutral-200};
-      --buttons-keyline-border: #{$color-neutral-700};
-      --buttons-keyline-white-hover: #{$color-brand-700};
-      --buttons-light-hover: #{$color-brand-500};
-      --buttons-light-hover-prefix: #{$color-neutral-200};
-      --buttons-light-icon: #{$color-brand-500};
+        // ICONS
+        --icon-primary: #{map.get($subject-colors, 500)};
+        --icon-hover: #{$color-neutral-white};
 
-      --nav-primary: #{$color-brand-500};
-      --tab-active: #{$color-brand-500};
-      --tab-hover: #{$color-neutral-300};
+        --subject-color-50: #{map.get($subject-colors, 50)};
+        --subject-color-100: #{map.get($subject-colors, 100)};
+        --subject-color-200: #{map.get($subject-colors, 200)};
+        --subject-color-300: #{map.get($subject-colors, 300)};
+        --subject-color-400: #{map.get($subject-colors, 400)};
+        --subject-color-500: #{map.get($subject-colors, 500)};
+        --subject-color-600: #{map.get($subject-colors, 600)};
+        --subject-color-700: #{map.get($subject-colors, 700)};
+        --subject-color-800: #{map.get($subject-colors, 800)};
+        --subject-color-900: #{map.get($subject-colors, 900)};
 
-      --icon-primary: #{$color-brand-500};
+        // ALERT
+        --alert-text-color: #{map.get($subject-colors, 900)};
 
-      --alert-text-color: #{$color-neutral-800};
+        @if $palette == "neutral" {
+          // neutral has some special cases
+          --badges-light: #{$color-neutral-white};
+          --buttons-dark: #{$color-neutral-900};
+          --buttons-dark-hover: #{$color-brand-700};
+          --buttons-dark-icon: #{$color-neutral-300};
+          --buttons-dark-prefix: #{$color-neutral-200};
+          --buttons-keyline-border: #{$color-neutral-700};
+          --buttons-keyline-white-hover: #{$color-brand-700};
+          --buttons-light-hover: #{$color-brand-500};
+          --buttons-light-hover-prefix: #{$color-neutral-200};
+          --buttons-light-icon: #{$color-brand-500};
+
+          --nav-primary: #{$color-brand-500};
+          --tab-active: #{$color-brand-500};
+          --tab-hover: #{$color-neutral-300};
+
+          --icon-primary: #{$color-brand-500};
+
+          --alert-text-color: #{$color-neutral-800};
+        }
+
+
+        // COMPONENT STYLES
+        .alert-secondary {
+          @extend .alert-#{$palette};
+          color: var(--alert-text-color);
+        }
+      }
     }
+
+    --border-light: var(--color-neutral-100);
+
   }
+}
+
+// since the brand colours are not used above, we need to make them available (dark mode-inclusively) globally
+
+[data-ld-theme="light"] {
+  --color-brand-400: #{$color-brand-400};
+  --color-brand-500: #{$color-brand-500};
+  --color-brand-700: #{$color-brand-700};
+  --color-brand-800: #{$color-brand-800};
+  --color-brand-900: #{$color-brand-900};
+}
+
+[data-ld-theme="dark"] {
+  --color-brand-400: #{$color-brand-900};
+  --color-brand-500: #{$color-brand-800};
+  --color-brand-700: #{$color-brand-400};
+  --color-brand-800: #{$color-brand-400};
+  --color-brand-900: #{$color-brand-400};
 }
   
 :root {
@@ -96,7 +147,6 @@
   --forms-colour-input-placeholder: var(--primary-color-label);
   --forms-colour-input-text: #{$color-neutral-900};
 
-  --border-light: #F5F4F0;
 
   --icon-secondary: #{$color-brand-500};
   --icon-tertiary: #{$color-neutral-900};
@@ -116,16 +166,6 @@
   --buttons-font-size-btn-lg: 0.875rem;
 }
 
-
-// COMPONENT STYLES
-@each $palette, $subject-colors in $isaac-color-palettes {
-  @include color-mode($palette) {
-    .alert-secondary {
-      @extend .alert-#{$palette};
-      color: var(--alert-text-color);
-    }
-  }
-}
 
 .text-theme {
   color: var(--subject-color-500);

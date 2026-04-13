@@ -95,7 +95,7 @@
 }
 
 .dashboard {
-  background-color: white;
+  background-color: var(--color-neutral-white);
 
   &.dashboard-outer { // avoids double-padding for teachers viewing student dashboard
     padding: 30px 30px 50px;
@@ -129,8 +129,8 @@ $dashboard-panel-padding: 30px;
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: $color-neutral-50;
-  border: 2px solid $color-neutral-200;
+  background-color: var(--color-neutral-50);
+  border: 2px solid var(--color-neutral-200);
   border-radius: 8px;
   height: 100%;
   max-height: 450px;
@@ -141,7 +141,7 @@ $dashboard-panel-padding: 30px;
   }
 
   h4 {
-    color: $color-brand-700;
+    color: var(--color-brand-700);
     font-size: 18px;
     font-family: $secondary-font;
     font-weight: bold;
@@ -149,7 +149,7 @@ $dashboard-panel-padding: 30px;
   }
 
   .streak-text {
-    color: $color-brand-700;
+    color: var(--color-brand-700);
     font-weight: 600;
     font-size: 14px;
   }
@@ -220,11 +220,11 @@ a:has(.assignment-card) {
 }
 
 .assignment-card {
-  border: 1.5px solid $color-neutral-300;
+  border: 1.5px solid var(--color-neutral-300);
   text-decoration: none;
   border-radius: 8px;
-  background-color: white;
-  color: $color-neutral-700;
+  background-color: var(--color-neutral-white);
+  color: var(--color-neutral-700);
   font-size: 13px;
   padding: 10px;
   transition: all 0.2s ease-out;
