@@ -174,7 +174,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
         return <Link {...rest} className={classNames("w-100 d-flex assignments-card mb-3", rest.className)} to={boardLink}>
             {card}
             {onDelete && <Button className="delete-button" color="solid" onClick={(e) => {onDelete(); e.preventDefault();}}>
-                <img src="/assets/phy/icons/bin-black.svg" alt="Delete board"/>
+                <i className="icon icon-bin icon-sm icon-color-white" aria-label="Delete board" />
             </Button>}
         </Link>;
     } else {
