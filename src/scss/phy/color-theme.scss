@@ -1,6 +1,25 @@
 @use "sass:map";
 @use "sass:color";
 
+// since the brand colours are not used as themes, we need to make them available (dark mode-inclusively) globally
+[data-ld-theme="light"] {
+  --color-brand-400: #{$color-brand-400};
+  --color-brand-500: #{$color-brand-500};
+  --color-brand-700: #{$color-brand-700};
+  --color-brand-800: #{$color-brand-800};
+  --color-brand-900: #{$color-brand-900};
+  --breadcrumb-alt: var(--color-neutral-900);
+}
+
+[data-ld-theme="dark"] {
+  --color-brand-400: #{$color-brand-700};
+  --color-brand-500: #{$color-brand-500};
+  --color-brand-700: #{$color-brand-300};
+  --color-brand-800: #{$color-brand-300};
+  --color-brand-900: #{$color-brand-300};
+  --breadcrumb-alt: var(--color-neutral-100);
+}
+
 @each $ld-palette, $subject-palettes-map in $isaac-light-dark-palettes {
   [data-ld-theme="#{$ld-palette}"] {
 
@@ -23,6 +42,16 @@
 
       &[data-bs-theme="#{$palette}"], [data-bs-theme="#{$palette}"] {
         // these will only be accessible when the current (color) theme matches the palette
+        --subject-color-50: #{map.get($subject-colors, 50)};
+        --subject-color-100: #{map.get($subject-colors, 100)};
+        --subject-color-200: #{map.get($subject-colors, 200)};
+        --subject-color-300: #{map.get($subject-colors, 300)};
+        --subject-color-400: #{map.get($subject-colors, 400)};
+        --subject-color-500: #{map.get($subject-colors, 500)};
+        --subject-color-600: #{map.get($subject-colors, 600)};
+        --subject-color-700: #{map.get($subject-colors, 700)};
+        --subject-color-800: #{map.get($subject-colors, 800)};
+        --subject-color-900: #{map.get($subject-colors, 900)};
 
         // BADGES
         --badges-dark: #{map.get($subject-colors, 500)};
@@ -57,6 +86,7 @@
         }
         
         @if $palette == "neutral" {
+          // == COMMON TO ALL THEMES == //
           --buttons-dark-contrast: #{map.get($subject-colors, "white")};
           --buttons-dark-hover: #{map.get($subject-colors, 900)};
           --buttons-dark-hover-icon: #{map.get($subject-colors, 200)};
@@ -67,13 +97,28 @@
           --buttons-light-disabled: #{map.get($subject-colors, "white")};
           --buttons-light-text: #{map.get($subject-colors, 900)};
 
+          // == NEUTRAL SPECIAL CASES == //
+          --badges-light: #{map.get($subject-colors, "white")};
+          --buttons-dark: var(--subject-color-900);
+          --buttons-dark-hover: var(--color-brand-700);
+          --buttons-dark-icon: var(--subject-color-300);
+          --buttons-dark-prefix: var(--subject-color-200);
+          --buttons-keyline-border: var(--subject-color-700);
+          --buttons-keyline-white-hover: var(--color-brand-700);
+          --buttons-light-hover: var(--color-brand-500);
+          --buttons-light-hover-prefix: var(--subject-color-200);
+          --buttons-light-icon: var(--color-brand-500);
+          --nav-primary: var(--color-brand-500);
+          --tab-active: var(--color-brand-500);
+          --tab-hover: var(--subject-color-300);
+          --icon-primary: var(--color-brand-500);
+          --alert-text-color: var(--subject-color-800);
+
           @if $ld-palette == "dark" {
             --banner-header-bg-light: #{map.get($subject-colors, 100)};
             --banner-header-bg-base:  #{map.get($subject-colors, 50)};
             --banner-header-bg-dark:  #{map.get($subject-colors, "white")};
-          }
-        } @else {
-          @if $ld-palette == "dark" {
+          } @else if $ld-palette == "dark" {
             --banner-header-bg-light: #{map.get($subject-colors, 200)};
             --banner-header-bg-base:  #{color.adjust(map.get($subject-colors, 50), $lightness: -5%)};
             --banner-header-bg-dark:  #{color.adjust(map.get($subject-colors, 50), $lightness: -10%)};
@@ -91,42 +136,8 @@
         --icon-primary: #{map.get($subject-colors, 500)};
         --icon-hover: #{$color-neutral-white};
 
-        --subject-color-50: #{map.get($subject-colors, 50)};
-        --subject-color-100: #{map.get($subject-colors, 100)};
-        --subject-color-200: #{map.get($subject-colors, 200)};
-        --subject-color-300: #{map.get($subject-colors, 300)};
-        --subject-color-400: #{map.get($subject-colors, 400)};
-        --subject-color-500: #{map.get($subject-colors, 500)};
-        --subject-color-600: #{map.get($subject-colors, 600)};
-        --subject-color-700: #{map.get($subject-colors, 700)};
-        --subject-color-800: #{map.get($subject-colors, 800)};
-        --subject-color-900: #{map.get($subject-colors, 900)};
-
         // ALERT
         --alert-text-color: #{map.get($subject-colors, 900)};
-
-        @if $palette == "neutral" {
-          // neutral has some special cases
-          --badges-light: #{$color-neutral-white};
-          --buttons-dark: #{$color-neutral-900};
-          --buttons-dark-hover: #{$color-brand-700};
-          --buttons-dark-icon: #{$color-neutral-300};
-          --buttons-dark-prefix: #{$color-neutral-200};
-          --buttons-keyline-border: #{$color-neutral-700};
-          --buttons-keyline-white-hover: #{$color-brand-700};
-          --buttons-light-hover: #{$color-brand-500};
-          --buttons-light-hover-prefix: #{$color-neutral-200};
-          --buttons-light-icon: #{$color-brand-500};
-
-          --nav-primary: #{$color-brand-500};
-          --tab-active: #{$color-brand-500};
-          --tab-hover: #{$color-neutral-300};
-
-          --icon-primary: #{$color-brand-500};
-
-          --alert-text-color: #{$color-neutral-800};
-        }
-
 
         // COMPONENT STYLES
         .alert-secondary {
@@ -148,26 +159,6 @@
       --color-misc-#{$misc}: #{$color};
     }
   }
-}
-
-// since the brand colours are not used above, we need to make them available (dark mode-inclusively) globally
-
-[data-ld-theme="light"] {
-  --color-brand-400: #{$color-brand-400};
-  --color-brand-500: #{$color-brand-500};
-  --color-brand-700: #{$color-brand-700};
-  --color-brand-800: #{$color-brand-800};
-  --color-brand-900: #{$color-brand-900};
-  --breadcrumb-alt: var(--color-neutral-900);
-}
-
-[data-ld-theme="dark"] {
-  --color-brand-400: #{$color-brand-700};
-  --color-brand-500: #{$color-brand-500};
-  --color-brand-700: #{$color-brand-300};
-  --color-brand-800: #{$color-brand-300};
-  --color-brand-900: #{$color-brand-300};
-  --breadcrumb-alt: var(--color-neutral-100);
 }
   
 :root {
