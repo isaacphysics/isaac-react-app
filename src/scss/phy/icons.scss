@@ -63,7 +63,7 @@
 
 .icon-initials {
   // background hex
-  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 28px, 28px, 100%);
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--color-brand-400), 28px, 28px, 100%);
   opacity: 0.2;
   // initials text
   + * {
@@ -340,22 +340,22 @@ svg {
 
 // These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
 
-// the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
+// the default icon colour for `neutral` is var(--color-theme-500) (green), but we use black icons in a few places across e.g. navigation
 
 i.icon.icon-color-black {
-  @include icon-color-override($color-neutral-900);
+  @include icon-color-override(var(--color-neutral-900));
 }
 
 i.icon.icon-color-grey {
-  @include icon-color-override($color-neutral-500);
+  @include icon-color-override(var(--color-neutral-500));
 }
 
 i.icon.icon-color-muted {
-  @include icon-color-override($color-neutral-300);
+  @include icon-color-override(var(--color-neutral-300));
 }
 
 i.icon.icon-color-white {
-  @include icon-color-override($color-neutral-white);
+  @include icon-color-override(var(--color-neutral-white));
 }
 
 i.icon.icon-color-alert {
@@ -363,5 +363,5 @@ i.icon.icon-color-alert {
 }
 
 i.icon.icon-color-black-hoverable {
-  --buttons-light-icon: #{$color-neutral-900};
+  --buttons-light-icon: var(--color-neutral-900);
 }

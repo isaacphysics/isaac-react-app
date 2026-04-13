@@ -91,11 +91,11 @@ details.teacher-notes {
 }
 
 .pill-tag-outline {
-  @include pill-tag($color-neutral-600, white, $color-neutral-900);
+  @include pill-tag(var(--color-neutral-600), var(--color-neutral-white), var(--color-neutral-900));
 }
 
 .warning-tag {
-  @include pill-tag(white, $color-misc-orange-500, $color-misc-orange-500);
+  @include pill-tag(var(--color-neutral-white), $color-misc-orange-500, $color-misc-orange-500);
   padding: 0.03rem 0.6rem;
 }
 

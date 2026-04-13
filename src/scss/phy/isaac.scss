@@ -174,12 +174,12 @@ $card-inner-border-radius: 1rem;
 $accordion-icon-width: 1.125rem;
 
 $dropdown-link-hover-bg: var(--color-neutral-50);
-$dropdown-link-active-bg: var(--subject-color-200, $color-neutral-200);
+$dropdown-link-active-bg: var(--subject-color-200, var(--color-neutral-200));
 $dropdown-link-active-color: inherit;
 
 $input-border-radius: 0.5rem;
 
-$tooltip-bg: rgba($color-neutral-700, 0.98);
+$tooltip-bg: rgba(var(--color-neutral-700), 0.98);
 $tooltip-opacity: 1;
 $tooltip-padding-x: 0.6rem;
 $tooltip-padding-y: 0.6rem;

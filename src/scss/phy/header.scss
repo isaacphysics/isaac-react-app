@@ -7,9 +7,9 @@
   }
   ul#main-menu {
     li:not(.explore-group) {
-      border-top: $color-neutral-200 1px solid;
+      border-top: var(--color-neutral-200) 1px solid;
       &:last-child {
-        border-bottom: $color-neutral-200 1px solid;
+        border-bottom: var(--color-neutral-200) 1px solid;
       }
       > a {
         position: relative;

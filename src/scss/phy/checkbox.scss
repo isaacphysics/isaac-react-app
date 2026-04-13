@@ -55,7 +55,7 @@
     }
 
     &::after {
-        background-color: $color-neutral-white;
+        background-color: var(--color-neutral-white);
     }
 
     &:disabled::before{
@@ -74,7 +74,7 @@
         var(--checkbox-size), var(--checkbox-size), var(--checkbox-size)
     );
 
-    background: $color-neutral-white;
+    background: var(--color-neutral-white);
     &:hover:not(:disabled) {
         background: #f8f8f8;
     }
@@ -91,13 +91,13 @@
         var(--checkbox-size), var(--checkbox-size), var(--checkbox-size)
     );
 
-    background: $color-neutral-white;
+    background: var(--color-neutral-white);
     &:hover:not(:disabled) {
         background: #f8f8f8;
     }
 
     &::after {
-        background-color: var(--checkbox-selected-color, $color-brand-500);
+        background-color: var(--checkbox-selected-color, var(--color-brand-500));
     }
 }
   
@@ -109,7 +109,7 @@
     );
   
     &::before {
-        background-color: var(--checkbox-selected-color, $color-brand-500);
+        background-color: var(--checkbox-selected-color, var(--color-brand-500));
     }
     &::after {
         background-color: var(--color-neutral-100);

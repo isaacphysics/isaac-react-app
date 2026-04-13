@@ -78,7 +78,7 @@
   &:disabled, &.disabled {
     color: var(--buttons-light-disabled-text);
     border-color: var(--buttons-keyline-disabled-border);
-    --buttons-light-icon: #{$color-neutral-400};
+    --buttons-light-icon: var(--color-neutral-400);
   }
 
   i.icon {
