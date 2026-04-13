@@ -29,7 +29,7 @@ details.teacher-notes {
     width: max-content;
     padding: 0.5rem 1rem;
     background-color: $color-misc-pale-yellow;
-    border: 2px solid $color-neutral-900;
+    border: 2px solid var(--color-neutral-900);
     border-radius: 6px;
     z-index: 1;
     
@@ -52,7 +52,7 @@ details.teacher-notes {
   > div {
     padding: 1.5rem 2rem;
     background-color: $color-misc-pale-yellow;
-    border: 2px solid $color-neutral-900;
+    border: 2px solid var(--color-neutral-900);
     border-radius: 6px;
     border-top-left-radius: 0;
     transform: translateY(-2px); // would prefer margin-top, but safari keeps rendering the top 2px in spite of any CSS blocking it

@@ -81,8 +81,8 @@
 
 .question-tag-indicator {
     background-color: $color-misc-llm;
-    color: $color-neutral-900;
-    border: 2px solid $color-neutral-900;
+    color: var(--color-neutral-900);
+    border: 2px solid var(--color-neutral-900);
 
     &.small {
         border: 1px solid $color-neutral-900 !important;
@@ -145,7 +145,7 @@
 
 .numeric-question {
   .numeric-help.numeric-help {
-    color: $color-neutral-900;
+    color: var(--color-neutral-900);
     font-size: 0.875rem;
   }
 

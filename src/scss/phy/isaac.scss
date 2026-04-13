@@ -161,7 +161,7 @@ $container-max-widths: (
 
 $enable-negative-margins: true;
 
-$border-color: $color-neutral-200;
+$border-color: var(--color-neutral-200);
 $border-width: 1px;
 $border-color-translucent: rgba(0, 0, 0, 0.1);
 
@@ -173,7 +173,7 @@ $card-inner-border-radius: 1rem;
 
 $accordion-icon-width: 1.125rem;
 
-$dropdown-link-hover-bg: $color-neutral-50;
+$dropdown-link-hover-bg: var(--color-neutral-50);
 $dropdown-link-active-bg: var(--subject-color-200, $color-neutral-200);
 $dropdown-link-active-color: inherit;
 

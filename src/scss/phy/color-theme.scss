@@ -196,10 +196,10 @@
 }
 
 .text-brand {
-  color: $color-brand-500;
+  color: var(--color-brand-500);
   &:is(a) {
     &:hover, &:focus {
-      color: $color-brand-700;
+      color: var(--color-brand-700);
     }
   }
 }

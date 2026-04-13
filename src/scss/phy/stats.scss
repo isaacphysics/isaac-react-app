@@ -57,7 +57,7 @@ section#homepage-images {
     height: inherit;
     mask: url('/assets/phy/icons/redesign/hexagon.svg') no-repeat center center;
     mask-size: contain;
-    background-color: $color-brand-400;
+    background-color: var(--color-brand-400);
   }
 }
 

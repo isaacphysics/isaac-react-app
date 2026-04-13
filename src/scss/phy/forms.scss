@@ -6,7 +6,7 @@
   }
   .select__control, .select__control:hover {
     min-height: 2.6rem;
-    border: 1px solid $color-neutral-300;
+    border: 1px solid var(--color-neutral-300);
     border-radius: $border-radius-lg;
 
     .select__value-container {
@@ -39,14 +39,14 @@
       }
     }
     input.form-control {
-      border: 1px solid $color-neutral-300;
+      border: 1px solid var(--color-neutral-300);
       @include border-radius($input-border-radius, 0);
     }
   }
 }
 
 [type='search'].search--filter-input {
-  border: 1px solid $color-neutral-300;
+  border: 1px solid var(--color-neutral-300);
   background: $color-neutral-white url(/assets/cs/icons/search.svg) no-repeat 95%;
   background-size: 20px;
 }
@@ -62,13 +62,13 @@
 select.form-select {
   border: none;
   border-radius: 0;
-  border-bottom: 2px solid $color-neutral-300;
+  border-bottom: 2px solid var(--color-neutral-300);
   background-color: transparent;
 
   &:disabled {
-    background-color: $color-neutral-50;
-    border-color: $color-neutral-200;
-    color: $color-neutral-400;
+    background-color: var(--color-neutral-50);
+    border-color: var(--color-neutral-200);
+    color: var(--color-neutral-400);
     background-blend-mode: difference;
   }
 }
@@ -98,7 +98,7 @@ select.form-select {
 input {
   &.form-control {
     height: 2.6rem;
-    border: 1px solid $color-neutral-300;
+    border: 1px solid var(--color-neutral-300);
     border-radius: $border-radius-lg;
   }
 }
@@ -106,7 +106,7 @@ input {
 select {
   &.form-select {
     height: 2.6rem;
-    border: 1px solid $color-neutral-300;
+    border: 1px solid var(--color-neutral-300);
     border-radius: $border-radius-lg;
     background-color: white;
 
@@ -117,10 +117,10 @@ select {
 }
 
 input[color='primary']:checked {
-  background-color: $color-brand-500;
+  background-color: var(--color-brand-500);
 }
 
 .inline-form-input-btn {
-  border: 1px solid $color-neutral-300;
+  border: 1px solid var(--color-neutral-300);
   width: 55px;
 }
