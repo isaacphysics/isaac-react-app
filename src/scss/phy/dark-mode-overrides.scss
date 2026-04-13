@@ -1,8 +1,24 @@
 
-:root {
-    --bs-body-bg: var(--color-neutral-white) !important;
+#root {
+  --bs-body-bg: var(--color-neutral-white) !important;
 }
 
 [data-ld-theme="dark"] {
-    --bs-white-rgb: 24, 26, 27;
+  --bs-white-rgb: 24, 26, 27;
+  --bs-black-rgb: 242, 241, 237;
+
+  .card {
+    --bs-card-color: var(--color-neutral-900);
+  }
+
+  .dropdown-menu {
+    --bs-dropdown-link-color: var(--color-neutral-800);
+    --bs-dropdown-link-hover-color: var(--color-neutral-800);
+    --bs-dropdown-link-hover-bg: var(--color-neutral-200);
+    --bs-dropdown-border-color: var(--color-neutral-300);
+  }
+
+  .nav.navbar-nav {
+    --bs-navbar-color: var(--color-neutral-900);
+  }
 }

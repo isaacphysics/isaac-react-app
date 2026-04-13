@@ -114,7 +114,7 @@
   }
 
   li.list-group-item.correct {
-    background-color: $color-misc-correct;
+    background-color: var(--color-misc-correct);
   }
 }
 

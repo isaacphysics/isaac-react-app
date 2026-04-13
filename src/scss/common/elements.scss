@@ -302,15 +302,18 @@ iframe.email-html {
 }
 
 .collapsible-list-container {
-  border-top: 2px solid $gray-107;
+  border-top: 2px solid var(--color-neutral-400, $gray-107);
   img {
     transition: transform 0.1s ease;
+  }
+  button {
+    color: inherit;
   }
 }
 
 :has(> .collapsible-list-container) {
   &:last-of-type {
-    border-bottom: 2px solid $gray-107;
+    border-bottom: 2px solid var(--color-neutral-400, $gray-107);
   }
 }
 
@@ -360,7 +363,7 @@ iframe.email-html {
   height: 0;
   margin: 0.5rem 0;
   overflow: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid color-mix(in srgb, var(--color-neutral-900, black), transparent 85%);
   opacity: 1;
 
   &:is(hr) {
@@ -372,13 +375,13 @@ iframe.email-html {
   width: 0;
   margin: 0 0.5rem;
   overflow: hidden;
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  border-left: 1px solid color-mix(in srgb, var(--color-neutral-900, black), transparent 85%);
   opacity: 1;
 }
 
 .section-divider-bold {
   @extend .section-divider;
-  border-top: 2px solid rgba(0, 0, 0, 0.20);
+  border-top: 2px solid color-mix(in srgb, var(--color-neutral-900, black), transparent 80%);
   
   &:is(hr) {
     border-bottom: none;

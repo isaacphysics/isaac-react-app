@@ -7,6 +7,10 @@
     flex-direction: column;
 }
 
+body:has(> #root[data-ld-theme="dark"]) {
+  background-color: #181a1b;
+}
+
 .content-body {
   @include no-print {
     background-color: var(--color-neutral-50);

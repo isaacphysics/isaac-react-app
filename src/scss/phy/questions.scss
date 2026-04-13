@@ -25,9 +25,6 @@
 }
 
 .question-panel .isaac-accordion {
-  @include no-print {
-    background: $gray-103;
-  }
   .card-body > .content-chunk > .content-value {
     @include respond-above(xs) {
       padding-left: 1.625rem;
@@ -167,7 +164,7 @@
 
 // styling for question components outside an accordion
 form:has(> .question-component), div.quiz-question-container:has(> .question-component) {
-  background-color: white;
+  background-color: var(--color-neutral-white);
   box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   padding: 0;
   border: 2px solid var(--nav-primary);

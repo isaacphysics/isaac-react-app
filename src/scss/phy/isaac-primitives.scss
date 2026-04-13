@@ -3,6 +3,7 @@ $color-palettes: (
 );
 
 /* Fluent primitives */
+$color-brand-300: #5ebc3f;
 $color-brand-400: #4e9934;
 $color-brand-500: #3a8621;
 $color-brand-700: #1a6600;
@@ -76,7 +77,50 @@ $color-misc-pale-yellow: #f9fdd5;
 $color-misc-correct: #ecf7e9;
 $color-misc-llm: #eeffff;
 
+$light-misc-palette: (
+  "orange-50": $color-misc-orange-50,
+  "orange-300": $color-misc-orange-300,
+  "orange-500": $color-misc-orange-500,
+  "orange-600": $color-misc-orange-600,
+  "navy": $color-misc-navy,
+  "red": $color-misc-red,
+  "pale-yellow": $color-misc-pale-yellow,
+  "correct": $color-misc-correct,
+  "llm": $color-misc-llm
+);
+
 $color-wildcard-orange: #ff7800;
+
+// DARK MODE
+// the Fluent subject palettes can just be inverted since they all have the same hue.
+// however, the neutral palette changes from a yellow tint (at lightest) to a blue tint (at darkest), which when inverted looks pretty bad.
+// as such, the dark mode neutral palette is custom.
+
+$color-neutral-dark-white: #181a1b;
+$color-neutral-dark-50: #1f252a;
+$color-neutral-dark-100: #2d3135;
+$color-neutral-dark-200: #3a3e42;
+$color-neutral-dark-300: #4a4e52;
+$color-neutral-dark-400: #62626d;
+$color-neutral-dark-500: #908f94;
+$color-neutral-dark-600: #bebebe;
+$color-neutral-dark-700: #e6e5e1;
+$color-neutral-dark-800: #ece9e5;
+$color-neutral-dark-900: #f2f1ed;
+
+$color-misc-dark-correct: #344d2d;
+
+$dark-misc-palette: (
+  "orange-50": $color-misc-orange-50,
+  "orange-300": $color-misc-orange-300,
+  "orange-500": $color-misc-orange-500,
+  "orange-600": $color-misc-orange-600,
+  "navy": $color-misc-navy,
+  "red": $color-misc-red,
+  "pale-yellow": $color-misc-pale-yellow,
+  "correct": $color-misc-dark-correct,
+  "llm": $color-misc-llm
+);
 
 $light-color-palettes: (
   // brand is excluded as there are no pages with the "brand" colour scheme;
@@ -146,17 +190,17 @@ $light-color-palettes: (
 
 $dark-color-palettes: (
   "neutral": (
-    "white": #181a1b,
-    50: #1f252a,
-    100: #545461,
-    200: #62626d,
-    300: #6f6f78,
-    400: #908f94,
-    500: #bebebe,
-    600: #e6e5e1,
-    700: #f2f1ed,
-    800: #faf9f5,
-    900: #faf9f5
+    "white": $color-neutral-dark-white,
+    50: $color-neutral-dark-50,
+    100: $color-neutral-dark-100,
+    200: $color-neutral-dark-200,
+    300: $color-neutral-dark-300,
+    400: $color-neutral-dark-400,
+    500: $color-neutral-dark-500,
+    600: $color-neutral-dark-600,
+    700: $color-neutral-dark-700,
+    800: $color-neutral-dark-800,
+    900: $color-neutral-dark-900
   ),
   "biology": (
     50: $color-biology-900,
@@ -211,4 +255,9 @@ $dark-color-palettes: (
 $isaac-light-dark-palettes: (
   "light": $light-color-palettes,
   "dark": $dark-color-palettes
+);
+
+$isaac-light-dark-misc: (
+  "light": $light-misc-palette,
+  "dark": $dark-misc-palette
 );

@@ -1,7 +1,7 @@
 @use "sass:map";
+@use "sass:color";
 
 @each $ld-palette, $subject-palettes-map in $isaac-light-dark-palettes {
-  // @include color-mode($ld-palette) {
   [data-ld-theme="#{$ld-palette}"] {
 
     @each $palette, $subject-colors in $subject-palettes-map {
@@ -22,7 +22,6 @@
       --color-#{$palette}-900: #{map.get($subject-colors, 900)};
 
       &[data-bs-theme="#{$palette}"], [data-bs-theme="#{$palette}"] {
-      // @include color-mode($palette) {
         // these will only be accessible when the current (color) theme matches the palette
 
         // BADGES
@@ -33,32 +32,54 @@
 
         // BUTTONS
         --buttons-dark: #{map.get($subject-colors, 700)};
-        --buttons-dark-contrast: #{$color-neutral-white};
         --buttons-dark-disabled: #{map.get($subject-colors, 300)};
         --buttons-dark-disabled-text: #{map.get($subject-colors, 300)};
-        --buttons-dark-hover: #{$color-neutral-900};
-        --buttons-dark-hover-icon: #{$color-neutral-200};
-        --buttons-dark-hover-prefix: #{$color-neutral-200};
         --buttons-dark-icon: #{map.get($subject-colors, 200)};
         --buttons-dark-prefix: #{map.get($subject-colors, 100)};
-        --buttons-dark-text: #{$color-neutral-white};
         --buttons-focus-ring: #{map.get($subject-colors, 300)};
         --buttons-keyline-border: #{map.get($subject-colors, 500)};
         --buttons-keyline-disabled-border: #{map.get($subject-colors, 300)};
         --buttons-keyline-white-border: #{map.get($subject-colors, 400)};
         --buttons-keyline-white-hover: #{map.get($subject-colors, 900)};
-        --buttons-keyline-white-text: #{$color-neutral-white};
-        --buttons-light: #{$color-neutral-white};
-        --buttons-light-disabled: #{$color-neutral-white};
         --buttons-light-disabled-text: #{map.get($subject-colors, 300)};
         --buttons-light-hover: #{map.get($subject-colors, 700)};
         --buttons-light-hover-icon: #{map.get($subject-colors, 200)};
         --buttons-light-hover-prefix: #{map.get($subject-colors, 100)};
         --buttons-light-icon: #{map.get($subject-colors, 400)};
         --buttons-light-prefix: #{map.get($subject-colors, 500)};
-        --buttons-light-text: #{$color-neutral-900};
         --buttons-tint: #{map.get($subject-colors, 50)};
         --buttons-tint-border: #{map.get($subject-colors, 100)};
+
+        @if $ld-palette == "light" {
+          --banner-header-bg-light: #{map.get($subject-colors, 600)};
+          --banner-header-bg-base:  #{map.get($subject-colors, 800)};
+          --banner-header-bg-dark:  #{map.get($subject-colors, 900)};
+        }
+        
+        @if $palette == "neutral" {
+          --buttons-dark-contrast: #{map.get($subject-colors, "white")};
+          --buttons-dark-hover: #{map.get($subject-colors, 900)};
+          --buttons-dark-hover-icon: #{map.get($subject-colors, 200)};
+          --buttons-dark-hover-prefix: #{map.get($subject-colors, 200)};
+          --buttons-dark-text: #{map.get($subject-colors, "white")};
+          --buttons-keyline-white-text: #{map.get($subject-colors, "white")};
+          --buttons-light: #{map.get($subject-colors, "white")};
+          --buttons-light-disabled: #{map.get($subject-colors, "white")};
+          --buttons-light-text: #{map.get($subject-colors, 900)};
+
+          @if $ld-palette == "dark" {
+            --banner-header-bg-light: #{map.get($subject-colors, 100)};
+            --banner-header-bg-base:  #{map.get($subject-colors, 50)};
+            --banner-header-bg-dark:  #{map.get($subject-colors, "white")};
+          }
+        } @else {
+          @if $ld-palette == "dark" {
+            --banner-header-bg-light: #{map.get($subject-colors, 200)};
+            --banner-header-bg-base:  #{color.adjust(map.get($subject-colors, 50), $lightness: -5%)};
+            --banner-header-bg-dark:  #{color.adjust(map.get($subject-colors, 50), $lightness: -10%)};
+          }
+        }
+
 
         // NAVIGATION
         --nav-primary: #{map.get($subject-colors, 500)};
@@ -117,6 +138,15 @@
 
     --border-light: var(--color-neutral-100);
 
+  } 
+}
+
+// misc colours – uses a slightly different palette structure as most colours don't have scales
+@each $ld-palette, $subject-palette-map in $isaac-light-dark-misc {
+  [data-ld-theme="#{$ld-palette}"] {
+    @each $misc, $color in $subject-palette-map {
+      --color-misc-#{$misc}: #{$color};
+    }
   }
 }
 
@@ -128,14 +158,16 @@
   --color-brand-700: #{$color-brand-700};
   --color-brand-800: #{$color-brand-800};
   --color-brand-900: #{$color-brand-900};
+  --breadcrumb-alt: var(--color-neutral-900);
 }
 
 [data-ld-theme="dark"] {
-  --color-brand-400: #{$color-brand-900};
-  --color-brand-500: #{$color-brand-800};
-  --color-brand-700: #{$color-brand-400};
-  --color-brand-800: #{$color-brand-400};
-  --color-brand-900: #{$color-brand-400};
+  --color-brand-400: #{$color-brand-700};
+  --color-brand-500: #{$color-brand-500};
+  --color-brand-700: #{$color-brand-300};
+  --color-brand-800: #{$color-brand-300};
+  --color-brand-900: #{$color-brand-300};
+  --breadcrumb-alt: var(--color-neutral-100);
 }
   
 :root {
