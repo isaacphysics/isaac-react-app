@@ -22,14 +22,14 @@
 
 details.teacher-notes {
   margin-bottom: 1rem;
-  color: $color-neutral-900;
+  color: var(--color-neutral-900);
   summary {
     display: flex;
     align-items: center;
     position: relative;
     width: max-content;
     padding: 0.5rem 1rem;
-    background-color: $color-misc-pale-yellow;
+    background-color: var(--color-misc-pale-yellow);
     border: 2px solid var(--color-neutral-900);
     border-radius: 6px;
     z-index: 1;
@@ -52,7 +52,7 @@ details.teacher-notes {
 
   > div {
     padding: 1.5rem 2rem;
-    background-color: $color-misc-pale-yellow;
+    background-color: var(--color-misc-pale-yellow);
     border: 2px solid var(--color-neutral-900);
     border-radius: 6px;
     border-top-left-radius: 0;

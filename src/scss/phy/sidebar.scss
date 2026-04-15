@@ -60,8 +60,8 @@
     border-left: solid 2px transparent;
 
     .badge.rounded-pill {
-      background-color: white;
-      color: var(--bs-body-color-rgb);
+      background-color: var(--color-neutral-white);
+      color: var(--color-neutral-900);
     }
 
     background-size: 205% 100%;
@@ -75,7 +75,7 @@
       
       .badge.rounded-pill {
         background-color: var(--subject-color-500);
-        color: white;
+        color: var(--color-neutral-white);
       }
     }
 

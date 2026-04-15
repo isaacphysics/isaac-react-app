@@ -408,8 +408,8 @@ iframe.email-html {
   }
 
   .badge.rounded-pill {
-    background-color: white;
-    color: var(--bs-body-color-rgb);
+    background-color: var(--color-neutral-white, white);
+    color: var(--color-neutral-900, var(--bs-body-color-rgb));
   }
 
   background-size: 205% 100%;
@@ -429,7 +429,7 @@ iframe.email-html {
     
     .badge.rounded-pill {
       background-color: var(--tab-active);
-      color: white;
+      color: var(--color-neutral-white, white);
     }
   }
 
@@ -471,7 +471,7 @@ iframe.email-html {
       
       .badge.rounded-pill {
         background-color: var(--tab-active);
-        color: white;
+        color: var(--color-neutral-white, white);
       }
     }
   }

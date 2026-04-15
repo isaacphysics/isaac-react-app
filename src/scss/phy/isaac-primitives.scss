@@ -108,6 +108,7 @@ $color-neutral-dark-700: #e6e5e1;
 $color-neutral-dark-800: #ece9e5;
 $color-neutral-dark-900: #f2f1ed;
 
+$color-misc-dark-pale-yellow: #323524;
 $color-misc-dark-correct: #344d2d;
 
 $dark-misc-palette: (
@@ -117,7 +118,7 @@ $dark-misc-palette: (
   "orange-600": $color-misc-orange-600,
   "navy": $color-misc-navy,
   "red": $color-misc-red,
-  "pale-yellow": $color-misc-pale-yellow,
+  "pale-yellow": $color-misc-dark-pale-yellow,
   "correct": $color-misc-dark-correct,
   "llm": $color-misc-llm
 );
