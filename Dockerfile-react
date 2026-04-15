@@ -18,3 +18,4 @@ ARG BUILD_TARGET
 
 COPY --from=builder /build/$BUILD_TARGET/ /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY csp-headers.conf /etc/nginx/csp-headers.conf
