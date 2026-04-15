@@ -103,3 +103,19 @@ details.teacher-notes {
 .tab-picker {
   @include tab-picker(left, 2px, var(--subject-color-100));
 }
+
+.theme-preview {
+  background: none;
+  color: inherit;
+
+  > img {
+    outline: 2px solid transparent;
+    outline-offset: 4px;
+    border-radius: 12px;
+    transition: border-color 0.1s ease-in-out;
+  }
+
+  &.active > img {
+    outline: 2px solid var(--border-medium);
+  }
+}

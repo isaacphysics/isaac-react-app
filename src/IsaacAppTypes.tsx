@@ -225,6 +225,7 @@ export interface BooleanNotation {
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
     CHEM_TEXT_ENTRY?: boolean;
+    DARK_MODE?: boolean;
 }
 
 export interface AccessibilitySettings {

@@ -17,7 +17,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {ArrayElement, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -1041,7 +1041,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
+export enum ACCOUNT_TAB {account, customise, theme, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
 
 export interface AccountTabs {
     tab: ACCOUNT_TAB,
@@ -1054,6 +1054,7 @@ export interface AccountTabs {
 export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.account, title: "Profile"},
     {tab: ACCOUNT_TAB.customise, title: "Customise", hidden: isPhy},
+    {tab: ACCOUNT_TAB.theme, title: "Theme", hidden: isAda},
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
     {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
