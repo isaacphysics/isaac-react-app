@@ -55,7 +55,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 <span className="d-inline-flex flex-wrap">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
                     {isScheduled && <em className="mx-1">(scheduled)</em>}
-                    <a className="new-tab-link" href={quiz ? assignment.quizSummary?.url : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+                    <a className="new-tab-link" href={quiz ? `${PATHS.PREVIEW_TEST}/${assignment.quizSummary?.id}` : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
                         <i className="icon icon-new-tab" />
                     </a>
                 </span>
