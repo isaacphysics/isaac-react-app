@@ -237,6 +237,9 @@ export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestion
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
 
+export interface IsaacSymbolicGraphQuestionDTO extends IsaacSymbolicQuestionDTO {
+}
+
 export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
     formulaSeed?: string;
     availableSymbols?: string[];

@@ -88,6 +88,7 @@ export function generateMathsBasicFunctionsItems(): MenuItemProps[] {
         {type: "Relation", properties: { relation: '>' }, menu: { label: '>', texLabel: true, className: 'relation greater' }},
         {type: "Relation", properties: { relation: '<=' }, menu: { label: '\\leq', texLabel: true, className: 'relation less-or-equal' }},
         {type: "Relation", properties: { relation: '>=' }, menu: { label: '\\geq', texLabel: true, className: 'relation greater-or-equal' }},
+        {type: "GraphLine", properties: {}, menu: { label: '→', texLabel: true, className: 'graphline' }},
     ];
 }
 
