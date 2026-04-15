@@ -48,6 +48,13 @@ const modeConstants: Record<EditorMode, ModeConstantTypes> = {
         formulaType: "chemicalFormula",
         parseExpressionFunc: parseInequalityNuclearExpression,
         currentAttemptOutput: "mhchemExpression",
+    },
+    "graph": {
+        badInputCharacters: new RegExp(/[^ 0-9()[\]{},":\\]+/),
+        tooltipExample: <> {"Good luck!"} </>,
+        formulaType: "graphFormula",
+        parseExpressionFunc: parseMathsExpression,
+        currentAttemptOutput: "pythonExpression",
     }
 };
 
@@ -189,7 +196,7 @@ type DemoPageDependentProps = {
 };
 
 type EditorModeDependentProps = {
-    editorMode: "maths" | "logic";
+    editorMode: "maths" | "logic" | "graph";
     mayRequireStateSymbols?: false;
 } | {
     editorMode: "chemistry" | "nuclear"
