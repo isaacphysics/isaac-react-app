@@ -79,6 +79,19 @@
         --buttons-tint: var(--subject-color-50);
         --buttons-tint-border: var(--subject-color-100);
 
+        // NAVIGATION
+        --nav-primary: var(--subject-color-500);
+        --nav-secondary: var(--subject-color-400);
+        --tab-active: var(--subject-color-500);
+        --tab-hover: var(--subject-color-300);
+
+        // ICONS
+        --icon-primary: var(--subject-color-500);
+        --icon-hover: var(--color-neutral-white);
+
+        // ALERT
+        --alert-text-color: var(--subject-color-900);
+
         @if $ld-palette == "light" {
           --banner-header-bg-light: var(--subject-color-600);
           --banner-header-bg-base:  var(--subject-color-800);
@@ -125,19 +138,6 @@
           }
         }
 
-
-        // NAVIGATION
-        --nav-primary: var(--subject-color-500);
-        --nav-secondary: var(--subject-color-400);
-        --tab-active: var(--subject-color-500);
-        --tab-hover: var(--subject-color-300);
-
-        // ICONS
-        --icon-primary: var(--subject-color-500);
-        --icon-hover: var(--color-neutral-white);
-
-        // ALERT
-        --alert-text-color: var(--subject-color-900);
 
         // COMPONENT STYLES
         .alert-secondary {

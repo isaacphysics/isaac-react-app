@@ -1,5 +1,5 @@
 .list-group-links {
-  border: 1px solid $gray-107;
+  border: 1px solid var(--color-neutral-500, $gray-107);
   .question-link-title {
     font-size: 1.25rem;
   }

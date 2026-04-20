@@ -30,6 +30,7 @@ export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
             <h3>Theme</h3>
         </>}
         rightColumn={<>
+            <span>Here you can select your preferred site theme.</span>
             <div className="d-flex gap-4 mt-4">
                 {Object.values(lightnessThemes).map((theme) => <ThemeSelector 
                     key={theme.value}
