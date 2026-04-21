@@ -312,6 +312,9 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
                                 My question decks
                             </NavigationItemClose>
+                            <NavigationItemClose href={PATHS.BOOKMARKS}>
+                                My bookmarks
+                            </NavigationItemClose>
                             <NavigationItemClose href="/assignments" className="d-flex align-items-center">
                                 My assignments
                                 {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}

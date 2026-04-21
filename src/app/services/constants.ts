@@ -1284,6 +1284,7 @@ export const PATHS = {
     MY_TESTS: "/tests",
     TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
+    BOOKMARKS: "/bookmarks",
 };
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
