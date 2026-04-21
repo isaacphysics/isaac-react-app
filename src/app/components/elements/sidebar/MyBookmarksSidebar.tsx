@@ -22,8 +22,6 @@ interface MyBookmarksSidebarProps extends ContentSidebarProps {
 export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
     const { bookmarks, searchText, setSearchText, searchSubjects, setSearchSubjects, searchStages, setSearchStages, sortOrder, setSortOrder, ...rest } = props;
 
-    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
-    const [internalSearchText, setInternalSearchText] = useState(searchText);
     const [subjectExpanded, toggleSubjectExpanded] = useState(true);
     const [stageExpanded, toggleStageExpanded] = useState(false);
 
