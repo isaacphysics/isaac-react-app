@@ -9,6 +9,7 @@ import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
 import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
     <QuizSidebarLayout>
@@ -28,8 +29,8 @@ const Error = buildErrorComponent("Test Preview", "Error loading test preview", 
 
 export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
-    const {page, quizId} = useParams<{quizId: string; page?: string;}>();
-    const quizPreviewQuery = useGetQuizPreviewQuery(quizId);
+    const {page, quizId} = useParams();
+    const quizPreviewQuery = useGetQuizPreviewQuery(isDefined(quizId) ? quizId : skipToken);
     const {data: quiz} = quizPreviewQuery;
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;

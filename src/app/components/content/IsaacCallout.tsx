@@ -9,7 +9,7 @@ const calloutStyle = siteSpecific({
     width: "43",
     height: "43",
     // SVG taken from https://www.svgrepo.com/svg/914/speech-bubble, no attribution needed
-    src: "/assets/phy/callout-speech-bubble.svg",
+    src: "/assets/phy/icons/callout-speech-bubble.svg",
     style: {
         marginTop: -7,
         marginLeft: -2,
@@ -20,10 +20,10 @@ const calloutStyle = siteSpecific({
     width: "50",
     height: "50",
     src: {
-        regular: "/assets/cs/icons/regular-callout.svg",
-        testData: "/assets/cs/icons/test-callout.svg",
-        sampleRun: "/assets/cs/icons/run-callout.svg",
-        scenario: "/assets/cs/icons/scenario-callout.svg",
+        regular: "/assets/cs/icons/callout/regular-callout.svg",
+        testData: "/assets/cs/icons/callout/test-callout.svg",
+        sampleRun: "/assets/cs/icons/callout/run-callout.svg",
+        scenario: "/assets/cs/icons/callout/scenario-callout.svg",
     },
     style: {
         marginTop: -15,

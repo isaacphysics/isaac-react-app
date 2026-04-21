@@ -1,6 +1,6 @@
 import React from "react";
 import { mockUser } from "../../mocks/data";
-import { AssignmentProgress } from "../../app/components/pages/AssignmentProgressWrapper";
+import { AssignmentProgress } from "../../app/components/pages/assignment_progress/AssignmentProgressWrapper";
 import { PATHS } from "../../app/services";
 import { RegisteredUserDTO } from "../../IsaacApiTypes";
 

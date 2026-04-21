@@ -661,6 +661,7 @@ export interface UserProgress {
     totalQuestionsAttemptedThisAcademicYear?: number;
     totalQuestionPartsCorrectThisAcademicYear?: number;
     totalQuestionPartsAttemptedThisAcademicYear?: number;
+    totalQuestionsCorrectThisRevisionPeriod?: number;
     mostRecentQuestions?: ContentSummaryDTO[];
     oldestIncompleteQuestions?: ContentSummaryDTO[];
     attemptsByType?: { [type: string]: number };
@@ -777,7 +778,7 @@ export interface SearchShortcut {
     id: string;
     title: string;
     terms: string[];
-    summary: string;
+    summary?: string;
     url: string;
     type: SEARCH_RESULT_TYPE;
     hash?: string;

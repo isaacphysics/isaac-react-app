@@ -3,22 +3,28 @@ import {AppState, closeActiveModal, store, useAppDispatch, useAppSelector} from 
 import {Button, Col, Row} from "reactstrap";
 import {api} from "../../../services";
 import {IsaacContent} from "../../content/IsaacContent";
+import { ActiveModalProps } from '../../../../IsaacAppTypes';
+import { NotificationDTO } from '../../../../IsaacApiTypes';
 
-const NotificationModalBody = (notification: { notification: any }) => {
+const SurveyNotificationModalBody = (notification: { notification: NotificationDTO }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user || null);
 
     const currentNotification = notification.notification;
 
-    function respond(response: string) {
-        api.notifications.respond(currentNotification.id, response);
+    async function respond(response: string) {
+        if (!currentNotification.id) {
+            return;
+        }
+
+        await api.notifications.respond(currentNotification.id, response);
         dispatch(closeActiveModal());
-        if (response == 'ACKNOWLEDGED' && currentNotification.externalReference.url) {
+        if (response == 'ACKNOWLEDGED' && currentNotification.externalReference?.url) {
             const userIdToken = "{{currentUserId}}";
 
             // if they have a token representing the user id then replace it.
-            if (currentNotification.externalReference.url.includes(userIdToken) && user && user.loggedIn) {
-                const newUrl = currentNotification.externalReference.url.replace(userIdToken, user.id);
+            if (currentNotification.externalReference.url.includes(userIdToken) && user && user.loggedIn && user.id) {
+                const newUrl = currentNotification.externalReference.url.replace(userIdToken, `${user.id}`);
                 window.open(newUrl, "_blank");
             } else {
                 window.open(currentNotification.externalReference.url, "_blank");
@@ -54,10 +60,10 @@ const NotificationModalBody = (notification: { notification: any }) => {
     </React.Fragment>;
 };
 
-export const notificationModal = (notification: any) => {
+export const surveyNotificationModal = (notification: ActiveModalProps) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
         title: notification.title,
-        body: <NotificationModalBody notification={notification}/>
+        body: <SurveyNotificationModalBody notification={notification}/>
     };
 };

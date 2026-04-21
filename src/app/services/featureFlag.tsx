@@ -8,7 +8,6 @@ import { StyledTripleToggle } from "../components/elements/inputs/StyledMultiTog
 
 export enum FeatureFlag {
     _TEST_FEATURE = "_TEST_FEATURE", // used for testing; do not remove
-    ENABLE_ADA_SIDEBARS = "ENABLE_ADA_SIDEBARS",
     ENABLE_SCI_BOOKMARKS = "ENABLE_SCI_BOOKMARKS",
 }
 
@@ -37,7 +36,6 @@ const useFlags = () : Record<FeatureFlag, boolean> => {
     return {
         // default values
         [FeatureFlag._TEST_FEATURE]: isNonProd,
-        [FeatureFlag.ENABLE_ADA_SIDEBARS]: false,
         [FeatureFlag.ENABLE_SCI_BOOKMARKS]: false,
 
         // overrides
@@ -90,7 +88,7 @@ export const FeatureFlagWrapper = ({ flag, children, onSet, onUnset }: FeatureFl
 
 const FeatureFlagModalBody = () => {
     const [overrides, setOverrides] = useState(loadOverridesFromStorage());
-    const allFlags = Object.values(FeatureFlag).filter(f => f !== FeatureFlag._TEST_FEATURE);
+    const allFlags = Object.values(FeatureFlag).filter(f => f !== FeatureFlag._TEST_FEATURE) as FeatureFlag[]; 
 
     return <Col>
         <p>Feature flags are staff-only runtime switches that enable or disable features that are under development. They will only appear on staging and dev (not test).</p>

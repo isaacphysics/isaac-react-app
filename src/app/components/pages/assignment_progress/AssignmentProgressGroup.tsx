@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../state';
-import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../IsaacAppTypes';
+import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../../state';
+import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../../IsaacAppTypes';
 import {
     above,
     AssignmentOrder,
@@ -16,22 +16,22 @@ import {
     siteSpecific,
     SortOrder,
     useDeviceSize
-} from '../../services';
-import {RegisteredUserDTO} from '../../../IsaacApiTypes';
+} from '../../../services';
+import {RegisteredUserDTO} from '../../../../IsaacApiTypes';
 import {Link, useLocation} from 'react-router-dom';
-import {Spacer} from '../elements/Spacer';
-import {formatDate} from '../elements/DateString';
+import {Spacer} from '../../elements/Spacer';
+import {formatDate} from '../../elements/DateString';
 import {Badge, Button, Card, CardBody, Col, Input, Label, Row} from 'reactstrap';
-import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
-import {downloadLinkModal} from '../elements/modals/AssignmentProgressModalCreators';
-import {InlineTabs} from '../elements/InlineTabs';
-import {StyledDropdown} from '../elements/inputs/DropdownInput';
-import {Loading} from '../handlers/IsaacSpinner';
+import {TitleAndBreadcrumb} from '../../elements/TitleAndBreadcrumb';
+import {downloadLinkModal} from '../../elements/modals/AssignmentProgressModalCreators';
+import {InlineTabs} from '../../elements/InlineTabs';
+import {StyledDropdown} from '../../elements/inputs/DropdownInput';
+import {Loading} from '../../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
-import { useHistoryState } from '../../state/actions/history';
-import { PageContainer } from '../elements/layout/PageContainer';
-import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
+import { useHistoryState } from '../../../state/actions/history';
+import { PageContainer } from '../../elements/layout/PageContainer';
+import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
@@ -55,7 +55,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 <span className="d-inline-flex flex-wrap">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
                     {isScheduled && <em className="mx-1">(scheduled)</em>}
-                    <a className="new-tab-link" href={quiz ? assignment.quizSummary?.url : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+                    <a className="new-tab-link" href={quiz ? `${PATHS.PREVIEW_TEST}/${assignment.quizSummary?.id}` : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
                         <i className="icon icon-new-tab" />
                     </a>
                 </span>
@@ -216,7 +216,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                             : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
                                 <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
-                                    {activeTab === "assignments" ? "Manage assignments" : "Manage tests"}
+                                    {activeTab === "assignments" ? siteSpecific("Manage assignments", "Quizzes") : siteSpecific("Manage tests", "Tests")}
                                 </Link></strong>
                             </div>
                     }

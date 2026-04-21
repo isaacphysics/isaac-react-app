@@ -33,14 +33,6 @@
   justify-content: center;
   flex-wrap: nowrap;
 
-  .sign-up-tabs & {
-    margin-bottom: 2rem;
-
-    @include respond-above(md) {
-      margin-bottom: 6rem;
-    }
-  }
-
   .nav-item {
     height: 100%;
     line-height: 1.5;

@@ -36,7 +36,7 @@ import {
     OnPageLoad,
     PATHS,
     persistence,
-    showNotification,
+    canShowPopupNotification,
     trackEvent
 } from "../../services";
 import {Generic} from "../pages/Generic";
@@ -61,13 +61,13 @@ import {EventManager} from "../pages/EventManager";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
-import {notificationModal} from "../elements/modals/NotificationModal";
+import {surveyNotificationModal} from "../elements/modals/SurveyNotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
 import {TutorRequest} from "../pages/TutorRequest";
-import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
+import {AssignmentProgress} from "../pages/assignment_progress/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
@@ -80,6 +80,7 @@ import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
 import { FeatureFlagProvider } from '../../services/featureFlag';
+import { NewAdaNavigationBanner } from './NewAdaNavigationBanner';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -93,7 +94,9 @@ const RootLayout = () => {
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
+        {/* TODO: turn notification banners into a useBanners hook or similar; c.f. REVISION_CHALLENGES – we could reuse the auto-expiry logic */}
         <IsaacScienceLaunchBanner />
+        <NewAdaNavigationBanner />
         <ResearchNotificationBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
@@ -241,14 +244,14 @@ export const IsaacApp = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, loggedInUserId]);
 
-    const showNotifications = isLoggedIn(user) && showNotification(user);
+    const canShowSurveyNotification = isLoggedIn(user) && canShowPopupNotification(user);
     useEffect(() => {
         const dateNow = new Date();
-        if (showNotifications && notifications && notifications.length > 0) {
-            dispatch(openActiveModal(notificationModal(notifications[0])));
+        if (canShowSurveyNotification && notifications && notifications.length > 0) {
+            dispatch(openActiveModal(surveyNotificationModal(notifications[0])));
             persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString());
         }
-    }, [dispatch, showNotifications, notifications]);
+    }, [dispatch, canShowSurveyNotification, notifications]);
 
 
     function onBeforePrint() {
