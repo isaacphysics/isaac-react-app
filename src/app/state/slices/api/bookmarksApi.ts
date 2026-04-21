@@ -1,7 +1,6 @@
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
 import {isaacApi} from "./baseApi";
 
-// This is in no way fixed! Modify as you will.
 export const bookmarksApi = isaacApi.enhanceEndpoints({addTagTypes: ["Bookmarks"]}).injectEndpoints({
     endpoints: (build) => ({
         getBookmarks: build.query<ContentSummaryDTO[], void>({
