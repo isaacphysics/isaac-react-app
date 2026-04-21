@@ -46,6 +46,8 @@ import { Navigate, Route } from "react-router";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { MyBookmarks } from "../../pages/MyBookmarks";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
+import { NotFound } from "../../pages/NotFound";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -157,7 +159,10 @@ export const RoutesPhy = [
     <Route key={key++} path="/concepts" element={<Concepts />} />,
 
     // Bookmarks
-    <Route key={key++} path="/bookmarks" element={<RequireAuth auth={isLoggedIn} element={<MyBookmarks />} />} />,
+    <Route key={key++} path="/bookmarks" element={<FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}
+        onSet={<RequireAuth auth={isLoggedIn} element={<MyBookmarks />} />}
+        onUnset={<NotFound />}
+    />} />,
 
     // Static pages
     <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us_index"} />} />,
