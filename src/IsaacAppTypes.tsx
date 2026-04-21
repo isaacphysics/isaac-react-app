@@ -313,6 +313,20 @@ export interface ActiveModalProps {
     bodyContainerClassName?: string;
 }
 
+export enum BookmarksOrder {
+    "date" = "date",
+    "-date" = "-date",
+    "title" = "title",
+    "-title" = "-title"
+}
+
+export const BOOKMARKS_ORDER_NAMES: Record<BookmarksOrder, string> = {
+    [BookmarksOrder.date]: "Date added (newest first)",
+    [BookmarksOrder["-date"]]: "Date added (oldest first)",
+    [BookmarksOrder.title]: "Title (A-Z)",
+    [BookmarksOrder["-title"]]: "Title (Z-A)"
+};
+
 export type ProgressSortOrder = number | "name" | "totalPartPercentage" | "totalAttemptedPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
 export enum QuizzesBoardOrder {
