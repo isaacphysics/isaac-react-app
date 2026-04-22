@@ -231,14 +231,6 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
 
         const attempt = dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
 
-        if (isLoggedIn(currentUser) && !isTeacherPending(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-            dispatch(saveGameboard({
-                boardId: currentGameboard.id,
-                user: currentUser,
-                redirectOnSuccess: false
-            }));
-        }
-
         return attempt;
     }
     return Promise.resolve();
