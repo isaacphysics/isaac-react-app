@@ -78,7 +78,7 @@ const MyProgress = ({user}: MyProgressProps) => {
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const [chartTab, setChartTab] = useState<"correct" | "attempted">("correct");
-    const screenSize = useDeviceSize();
+    const deviceSize = useDeviceSize();
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
@@ -198,11 +198,21 @@ const MyProgress = ({user}: MyProgressProps) => {
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
-                            <ListView type="item" items={progress.mostRecentQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
+                            <ListView 
+                                type="item" 
+                                items={progress.mostRecentQuestions} 
+                                style={deviceSize !== "md" ? "stacked" : undefined}
+                                className="bordered"
+                            />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Oldest unsolved questions</h4>
-                            <ListView type="item" items={progress.oldestIncompleteQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
+                            <ListView 
+                                type="item" 
+                                items={progress.oldestIncompleteQuestions}
+                                style={deviceSize !== "md" ? "stacked" : undefined}
+                                className="bordered"
+                            />
                         </Col>}
                     </Row>
                 </div>
