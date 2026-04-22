@@ -191,7 +191,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     onChange={value => updateItem(index, value)}
                 />
             ) : (currentAttempt?.items && currentAttempt?.items.length > 0)
-                ? <>
+                ? <React.Fragment key={"coord-input-fragment"}>
                     {currentAttempt?.items?.map((item, index) =>
                         <CoordinateInput
                             key={index}
@@ -207,19 +207,22 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                             remove={(currentAttempt?.items && currentAttempt?.items.length > 1) ? () => removeItem(index) : undefined}
                         />
                     )}
-                </>
-                : <CoordinateInput
-                    key={0}
-                    placeholderValues={doc.placeholderValues ?? []}
-                    useBrackets={doc.useBrackets ?? true}
-                    separator={doc.separator ?? ","}
-                    prefixes={doc.prefixes}
-                    suffixes={doc.suffixes}
-                    numberOfDimensions={numberOfDimensions.current}
-                    value={emptyCoordItem()}
-                    readonly={readonly}
-                    onChange={value => updateItem(0, value)}
-                />
+                </React.Fragment>
+                : <React.Fragment key={"coord-input-fragment"}>
+                    {/* the internal structure of this must be identical to the above to transition smoothly when first typing, so we require a wrapper fragment with the same key */}
+                    <CoordinateInput
+                        key={0}
+                        placeholderValues={doc.placeholderValues ?? []}
+                        useBrackets={doc.useBrackets ?? true}
+                        separator={doc.separator ?? ","}
+                        prefixes={doc.prefixes}
+                        suffixes={doc.suffixes}
+                        numberOfDimensions={numberOfDimensions.current}
+                        value={emptyCoordItem()}
+                        readonly={readonly}
+                        onChange={value => updateItem(0, value)}
+                    />
+                </React.Fragment>
         }
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
