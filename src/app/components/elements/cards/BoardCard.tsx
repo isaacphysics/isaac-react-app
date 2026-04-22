@@ -39,6 +39,7 @@ import indexOf from "lodash/indexOf";
 import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
 import { IconButton } from "../AffixButton";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
+import { useSetAssignment } from "../../../services/setAssignment";
 
 
 interface HexagonGroupsButtonProps {
@@ -128,24 +129,24 @@ type BoardCardProps = {
     board: GameboardDTO;
     boards?: Boards | null;
     boardView: BoardViews;
-    // Set assignments only
-    assignees?: BoardAssignee[];
-    toggleAssignModal?: () => void;
+    displayAssignmentInfo: boolean;
     // My gameboards only
     setSelectedBoards?: (selectedBoards: GameboardDTO[]) => void;
     selectedBoards?: GameboardDTO[];
 };
 
-export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal, setSelectedBoards, selectedBoards}: BoardCardProps) => {
+export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSelectedBoards, selectedBoards}: BoardCardProps) => {
     // Decides whether we show the "Assign/Unassign" button, along with other "Set Assignments"-specific stuff
-    const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
+    const isSetAssignments = displayAssignmentInfo;
 
     const hexagonId = (`board-hex-${board.id}`).replace(/[^a-z0-9-]+/gi, '');
     const boardLink = isSetAssignments ? `/assignment/${board.id}` : `${PATHS.GAMEBOARD}#${board.id}`;
-    const hasAssignedGroups = assignees && assignees.length > 0;
+
+    const { openAssignModal, assignees } = useSetAssignment(board);
+
+    const hasAssignedGroups = isDefined(assignees?.length) && assignees.length > 0;
 
     const dispatch = useAppDispatch();
-
     const deviceSize = useDeviceSize();
 
     const updateBoardSelection = (board: GameboardDTO, checked: boolean) => {
@@ -183,7 +184,6 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         hexagonId,
         boardSubjects,
         assignees,
-        toggleAssignModal,
         isTable,
     };
 
@@ -227,7 +227,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
                 <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
                 <td className={"align-middle text-center"}>
-                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "solid")} size="sm" onClick={toggleAssignModal}>
+                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "solid")} size="sm" onClick={openAssignModal}>
                         Assign{hasAssignedGroups && "\u00a0/ Unassign"}
                     </Button>
                 </td>
@@ -285,8 +285,10 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </tr>)
         :
         siteSpecific(
-            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
-                {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
+            // sci
+            <GameboardCard 
+                gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
+                openAssignModal={openAssignModal} groupCount={isSetAssignments ? assignees?.length : undefined}>
                 <Row>
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
@@ -299,6 +301,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </Col>
                 </Row>
             </GameboardCard>,
+
+            // ada
             <Card className={"board-card"} data-testid={"gameboard-card"}>
                 <CardBody className="pb-7 pt-4">
                     <Row className={"mb-2"}>
@@ -353,7 +357,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
-                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={toggleAssignModal}>
+                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={openAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}
                     </CardFooter>

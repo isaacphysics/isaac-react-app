@@ -115,6 +115,7 @@ const CSTable = (props: GameboardsTableProps) => {
                             boardView={boardView}
                             user={user}
                             boards={boards}
+                            displayAssignmentInfo={false}
                         />)
                     }
                 </tbody>
@@ -144,6 +145,7 @@ const Cards = (props: GameboardsCardsProps) => {
                     boardView={boardView}
                     user={user}
                     boards={boards}
+                    displayAssignmentInfo={false}
                 />
             </Col>)}
         </Row>}

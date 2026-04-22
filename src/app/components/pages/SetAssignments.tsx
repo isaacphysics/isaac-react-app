@@ -14,17 +14,12 @@ import {
 } from "reactstrap";
 import {Link, useLocation} from "react-router-dom";
 import {
-    closeActiveModal,
-    openActiveModal,
     openIsaacBooksModal,
     selectors,
     setAssignBoardPath,
     useAppDispatch,
     useAppSelector,
-    useGetGroupsQuery,
-    useGetMySetAssignmentsQuery,
-    useUnassignGameboardMutation
-} from "../../state";
+    useGetGroupsQuery} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -47,7 +42,7 @@ import {
     useDeviceSize,
     useGameboards,
 } from "../../services";
-import {AssignmentDTO, GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
 import {RenderNothing} from "../elements/RenderNothing";
@@ -56,7 +51,6 @@ import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
 import { PageMetadata } from "../elements/PageMetadata";
-import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
 import { useHistoryState } from "../../state/actions/history";
 import { PageContainer } from "../elements/layout/PageContainer";
@@ -76,8 +70,6 @@ interface SetAssignmentsTableProps {
     setBoardCreator: (creator: BoardCreators) => void;
     boardOrder: AssignmentBoardOrder;
     setBoardOrder: (boardOrder: AssignmentBoardOrder) => void;
-    groupsByGameboard: { [p: string]: BoardAssignee[] };
-    openAssignModal: (board: GameboardDTO) => void;
 }
 
 const PhyTable = (props: SetAssignmentsTableProps) => {
@@ -85,7 +77,6 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         user, boards, boardSubject,
         boardView, boardTitleFilter, boardCreator,
         boardOrder, setBoardOrder,
-        groupsByGameboard, openAssignModal
     } = props;
 
     const filteredBoards = useMemo(() => {
@@ -134,8 +125,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                                 user={user}
                                 board={board}
                                 boardView={boardView}
-                                assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                toggleAssignModal={() => openAssignModal(board)}
+                                displayAssignmentInfo={true}
                             />)
                         }
                     </tbody>
@@ -151,7 +141,6 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         boardTitleFilter, setBoardTitleFilter,
         boardCreator, setBoardCreator,
         boardOrder, setBoardOrder,
-        groupsByGameboard, openAssignModal
     } = props;
 
     const tableHeader = <tr>
@@ -221,8 +210,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                                 user={user}
                                 board={board}
                                 boardView={boardView}
-                                assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                toggleAssignModal={() => openAssignModal(board)}
+                                displayAssignmentInfo={true}
                             />)
                     }
                 </tbody>
@@ -282,8 +270,6 @@ export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const {data: groups} = useGetGroupsQuery(false);
-    const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(undefined);
-    const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
 
     const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
     const [boardSubject, setBoardSubject] = useHistoryState<BoardSubjects>("boardSubject", BoardSubjects.all);
@@ -329,28 +315,17 @@ export const SetAssignments = () => {
         }
     }, [boardView, setBoardTitleFilter]);
 
-    const dispatch = useAppDispatch();
-    const [unassignBoard] = useUnassignGameboardMutation();
-
-    const openAssignModal = useCallback((board: GameboardDTO) => {
-        dispatch(openActiveModal(SetAssignmentsModal({
-            board,
-            groups: groups ?? [],
-            assignees: (isDefined(board) && isDefined(board?.id) && groupsByGameboard[board.id]) || [],
-            toggle: () => dispatch(closeActiveModal()),
-            unassignBoard
-        })));
-    }, [dispatch, groups, groupsByGameboard, unassignBoard]);
-
-    useEffect(() => {
-        if (boards && hashAnchor) {
-            setHashAnchor(undefined);
-            const board = boards.boards.find(b => b.id === hashAnchor);
-            if (board) {
-                openAssignModal(board);
-            }
-        }
-    }, [boards, hashAnchor, openAssignModal]);
+    // TODO: this won't be used going forwards, but historic assignment links ought to still work – perhaps have a conditional component instead to prevent calling 
+    // all the hooks required in useSetAssignment unnecessarily
+    // useEffect(() => {
+    //     if (boards && hashAnchor) {
+    //         setHashAnchor(undefined);
+    //         const board = boards.boards.find(b => b.id === hashAnchor);
+    //         if (board) {
+    //             openSetAssignmentModal(board);
+    //         }
+    //     }
+    // }, [boards, hashAnchor, openSetAssignmentModal]);
 
     // Page help
     const pageHelp = <span>
@@ -363,8 +338,7 @@ export const SetAssignments = () => {
         user,
         boards, boardSubject, setBoardSubject,
         boardView, switchView, boardTitleFilter, setBoardTitleFilter,
-        boardCreator, setBoardCreator, boardOrder, setBoardOrder,
-        groupsByGameboard, openAssignModal
+        boardCreator, setBoardCreator, boardOrder, setBoardOrder
     };
 
     const filteredBoards = useMemo(() =>
@@ -413,8 +387,8 @@ export const SetAssignments = () => {
                     :
                     <>
                         <h5>
-                        Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
-                        assignments by start date and due date.
+                            Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
+                            assignments by start date and due date.
                         </h5>
                         <div className="section-divider my-4"/>
                     </>
@@ -517,8 +491,7 @@ export const SetAssignments = () => {
                                             user={user}
                                             board={board}
                                             boardView={boardView}
-                                            assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                            toggleAssignModal={() => openAssignModal(board)}
+                                            displayAssignmentInfo
                                         />
                                     </Col>)}
                             </Row>

@@ -18,15 +18,15 @@ interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
     gameboard?: GameboardDTO;
     linkLocation?: GameboardLinkLocation;
     onDelete?: () => void; // if this exists, a delete button will be shown calling this function
-    setAssignmentsDetails?: {
-        groupCount?: number;
-        toggleAssignModal?: () => void;
-    }
+    openAssignModal?: () => void;
+    groupCount?: number;
 }
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, onDelete, children, setAssignmentsDetails, ...rest} = props;
+    const {gameboard, linkLocation, onDelete, children, openAssignModal, groupCount, ...rest} = props;
+
+    const isSetAssignments = isDefined(groupCount);
 
     const [showMore, setShowMore] = useState(false);
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(gameboard), [gameboard]);
@@ -41,8 +41,6 @@ export const GameboardCard = (props: GameboardCardProps) => {
     }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.alias ?? tag.title).sort();
 
     const boardSubjects = determineGameboardSubjects(gameboard);
-
-    const isSetAssignments = isDefined(setAssignmentsDetails);
 
     const boardLink = gameboard && (isSetAssignments 
         ? `/assignment/${gameboard.id}`
@@ -100,29 +98,24 @@ export const GameboardCard = (props: GameboardCardProps) => {
                         : <>
                             <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
                                 Assigned to
-                                <div className="board-bubble-info">{setAssignmentsDetails?.groupCount ?? 0}</div>
-                                group{setAssignmentsDetails?.groupCount !== 1 && "s"}
+                                <div className="board-bubble-info">{groupCount ?? 0}</div>
+                                group{groupCount !== 1 && "s"}
                             </Label>
                         </>
                     }
                 </div>
-                {isSetAssignments 
-                    ? above['md'](deviceSize) && <div className="d-flex gap-3 align-items-center mb-2">
-                        {isPhy && boardLink && <div className="card-share-link">
-                            <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
-                        </div>}
-                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
-                            Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
-                        </Button> 
-                    </div>
-                    : boardLink && <div className="d-flex justify-content-end card-share-link">
-                        <ShareLink linkUrl={boardLink} gameboardId={gameboard.id} reducedWidthLink clickAwayClose />
-                    </div>
-                }
+                {above['md'](deviceSize) && <div className="d-flex gap-3 align-items-center mb-2">
+                    {isPhy && boardLink && <div className="card-share-link">
+                        <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
+                    </div>}
+                    <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
+                        Assign / Unassign
+                    </Button> 
+                </div>}
 
-                {isSetAssignments && !above['md'](deviceSize) &&
-                    <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
-                        Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
+                {!above['md'](deviceSize) &&
+                    <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
+                        Assign / Unassign
                     </Button> 
                 }
 
