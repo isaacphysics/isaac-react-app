@@ -92,7 +92,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
                     {"border-dark": !noDisplayUnit}
                 )}
                 color={noDisplayUnit ? undefined : "white"}
-                caret={isPhy}
+                caret={isPhy && noDisplayUnit}
             >
                 <div className={classNames("align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                     <Markup encoding={"latex"}>
