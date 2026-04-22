@@ -91,7 +91,7 @@ const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
 
 const CoordinateInput = (props: CoordinateInputProps) => {
     const {value, placeholderValues, useBrackets, separator, prefixes, suffixes, numberOfDimensions, onChange, readonly, remove} = props;
-    return <span className="coordinate-input">
+    return <div className="coordinate-input">
         {useBrackets ? "(" : ""}
         {[...Array(numberOfDimensions)].map((_, i) =>
             <span key={i}>
@@ -109,7 +109,7 @@ const CoordinateInput = (props: CoordinateInputProps) => {
             </span>)}
         {useBrackets ? ")" : ""}
         {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
-    </span>;
+    </div>;
 };
 
 const generateEmptyCoordItem = (numberOfDimensions: number): CoordinateItemDTO => {
