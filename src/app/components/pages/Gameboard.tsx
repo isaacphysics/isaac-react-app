@@ -111,7 +111,7 @@ export const Gameboard = () => {
                                     onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                                     color="keyline" block
                                 >
-                                    {siteSpecific("Save to My question decks", "Save to My quizzes")}
+                                    {siteSpecific("Save this deck", "Save to My quizzes")}
                                 </Button>
                             </Col>
                         </Row>

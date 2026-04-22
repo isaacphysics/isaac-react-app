@@ -178,7 +178,7 @@ const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
         <h4>More in My Isaac</h4>
         <div className="d-flex flex-column">
             <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
-                My question decks
+                My saved decks
             </Link>
             <Link to="/assignments" className="panel-my-isaac-link">
                 My assignments
