@@ -123,11 +123,6 @@ export const Contact = () => {
                     </>}
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
-                    {isPhy && <div>
-                        <h3>Call us</h3>
-                        <p>Give us a call on <a href="tel:+441223337066">01223 337066</a></p>
-                    </div>
-                    }
                     <h3>Follow us</h3>
                     <p>Follow us on:</p>
                     {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
