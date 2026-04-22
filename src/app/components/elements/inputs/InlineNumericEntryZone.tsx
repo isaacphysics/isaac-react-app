@@ -96,7 +96,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
             >
                 <div className={classNames("align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                     <Markup encoding={"latex"}>
-                        {isDefined(unit) ? wrapUnitForSelect(unit) : siteSpecific("Unit", "Unit...")}
+                        {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit"}
                     </Markup>
                 </div>
             </DropdownToggle>
