@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
-import { isDefined, isLoggedIn, isPhy, siteSpecific, useCurrentQuestionAttempt } from "../../../services";
+import { isDefined, isLoggedIn, isPhy, useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
