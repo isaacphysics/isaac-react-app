@@ -74,7 +74,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
             }}
         />
         <Spacer/>
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center mt-3">
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
                 See assignment schedule
             </Link>
