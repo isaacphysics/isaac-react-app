@@ -37,9 +37,9 @@ import {Link} from "react-router-dom";
 import {BoardAssignee, Boards} from "../../../../IsaacAppTypes";
 import indexOf from "lodash/indexOf";
 import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
-import { IconButton } from "../AffixButton";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { useSetAssignment } from "../../../services/setAssignment";
+import { RemoveBoardButton, SaveBoardButton } from "../SaveBoardButton";
 
 
 interface HexagonGroupsButtonProps {
@@ -146,7 +146,6 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
 
     const hasAssignedGroups = isDefined(assignees?.length) && assignees.length > 0;
 
-    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
 
     const updateBoardSelection = (board: GameboardDTO, checked: boolean) => {
@@ -157,21 +156,6 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
             setSelectedBoards(selectedBoards.filter((thisBoard) => thisBoard.id !== board.id));
         }
     };
-
-    function confirmDeleteBoard() {
-        if (hasAssignedGroups) {
-            if (isAdminOrEventManager(user)) {
-                alert(`Warning: You currently have groups assigned to this ${siteSpecific("question deck", "quiz")}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Quizzes")} page.`);
-            } else {
-                dispatch(showErrorToast(`${siteSpecific("Question Deck", "Quiz")} Deletion Not Allowed`, `You have groups assigned to this gameboard. To delete this ${siteSpecific("question deck", "quiz")}, you must unassign all groups.`));
-                return;
-            }
-        }
-
-        if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title}));
-        }
-    }
 
     const boardSubjects = determineGameboardSubjects(board);
     const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(board);
@@ -237,7 +221,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     </div>
                 </td>}
                 {isAda && <td className={"align-middle text-center"}>
-                    <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                    <RemoveBoardButton board={board} color="keyline" size="sm" />
                 </td>}
             </> 
                 : 
@@ -266,28 +250,30 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                             <ShareLink linkUrl={boardLink} gameboardId={board.id} innerClassName="btn-keyline" outline clickAwayClose />
                         </div>
                     </td>}
-                    {siteSpecific(<td className={"text-center align-middle"}>
-                        <IconButton icon={{name: "icon-bin", size: "sm", color: siteSpecific("tertiary", "primary")}} color={siteSpecific("", "keyline")} className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
-                    </td>,
-                    <td className={"text-center align-middle overflow-hidden"}>
-                        <Input
-                            id={`board-delete-${board.id}`}
-                            type="checkbox"
-                            color="secondary"
-                            className={"isaac-checkbox me-n2"}
-                            checked={board && selectedBoards?.some(e => e.id === board.id)}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                board && updateBoardSelection(board, event.target.checked)
-                            } aria-label="Delete quiz"
-                        />
-                    </td>)}
+                    {siteSpecific(
+                        <td className={"text-center align-middle"}>
+                            <SaveBoardButton board={board} color="keyline" size="sm" />
+                        </td>,
+                        <td className={"text-center align-middle overflow-hidden"}>
+                            <Input
+                                id={`board-delete-${board.id}`}
+                                type="checkbox"
+                                color="secondary"
+                                className={"isaac-checkbox me-n2"}
+                                checked={board && selectedBoards?.some(e => e.id === board.id)}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                    board && updateBoardSelection(board, event.target.checked)
+                                } aria-label="Delete quiz"
+                            />
+                        </td>
+                    )}
                 </>}
         </tr>)
         :
         siteSpecific(
             // sci
             <GameboardCard 
-                gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
+                gameboard={board} linkLocation={GameboardLinkLocation.Card} data-testid="gameboard-card"
                 openAssignModal={openAssignModal} groupCount={isSetAssignments ? assignees?.length : undefined}>
                 <Row>
                     <Col>
@@ -356,7 +342,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
-                        <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                        <RemoveBoardButton board={board} color="keyline" size="sm" />
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={openAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}

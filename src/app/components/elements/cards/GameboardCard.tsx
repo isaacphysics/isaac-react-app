@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
 import { ShareLink } from "../ShareLink";
+import { SaveBoardButton } from "../SaveBoardButton";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -17,14 +18,13 @@ export enum GameboardLinkLocation {
 interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
     gameboard?: GameboardDTO;
     linkLocation?: GameboardLinkLocation;
-    onDelete?: () => void; // if this exists, a delete button will be shown calling this function
     openAssignModal?: () => void;
     groupCount?: number;
 }
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, onDelete, children, openAssignModal, groupCount, ...rest} = props;
+    const {gameboard, linkLocation, children, openAssignModal, groupCount, ...rest} = props;
 
     const isSetAssignments = isDefined(groupCount);
 
@@ -105,17 +105,18 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     }
                 </div>
                 {above['md'](deviceSize) && <div className="d-flex gap-3 align-items-center mb-2">
+                    {isPhy && gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
                     {isPhy && boardLink && <div className="card-share-link">
                         <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
                     </div>}
                     <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                        Assign / Unassign
+                        {isSetAssignments ? "Assign / Unassign" : "Assign"}
                     </Button> 
                 </div>}
 
                 {!above['md'](deviceSize) &&
                     <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                        Assign / Unassign
+                        {isSetAssignments ? "Assign / Unassign" : "Assign"}
                     </Button> 
                 }
 
@@ -166,14 +167,10 @@ export const GameboardCard = (props: GameboardCardProps) => {
     if (gameboard && linkLocation === GameboardLinkLocation.Card && boardLink) {
         return <Link {...rest} className={classNames("w-100 d-flex assignments-card mb-3", rest.className)} to={boardLink}>
             {card}
-            {onDelete && <Button className="delete-button" color="solid" onClick={(e) => {onDelete(); e.preventDefault();}}>
-                <i className="icon icon-bin icon-sm icon-color-white" aria-label="Delete board" />
-            </Button>}
         </Link>;
     } else {
         return <div className={classNames("w-100 d-flex assignments-card mb-3", rest.className)}>
             {card}
-            {onDelete && <Button className="delete-button" color="solid" onClick={(e) => {onDelete(); e.preventDefault();}}>bin</Button>}
         </div>;
     }
 };
