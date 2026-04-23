@@ -11,14 +11,14 @@ export interface Tier {id: TierID; name: string; for: string}
 
 const disabledSubjectStageTopics: Record<string, Record<string, TAG_ID[]>> = {
     "biology": {
-        "gcse": [TAG_ID.biochemistry, TAG_ID.genetics, TAG_ID.physiology, TAG_ID.ecology, TAG_ID.evolution, TAG_ID.bioMathsSkills]
-    }
+        "gcse": [TAG_ID.biochemistry, TAG_ID.genetics, TAG_ID.physiology, TAG_ID.ecology, TAG_ID.evolution, TAG_ID.bioMathsSkills],
+    },
 };
 
-const comingSoonSubjectStageTopics: Record<string, Record<string, TAG_ID[]>>= {
+const comingSoonSubjectStageTopics: Record<string, Record<string, TAG_ID[]>> = {
     "biology": {
-        "gcse": [TAG_ID.biochemistry, TAG_ID.physiology]
-    }
+        "gcse": [TAG_ID.biochemistry, TAG_ID.physiology],
+    },
 };
 
 interface HierarchyFilterProps {
