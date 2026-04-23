@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    PHY_NAV_SUBJECTS,
-    SUBJECT_SPECIFIC_CHILDREN_MAP,
-    TAG_ID,
-    TAG_LEVEL,
-    tags
-} from "../../../services";
+import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import classNames from "classnames";
 import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
