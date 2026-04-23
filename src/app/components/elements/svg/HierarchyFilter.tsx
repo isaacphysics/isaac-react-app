@@ -73,7 +73,7 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
                             onChange={selectValue}
                             label={<span>{choice.label}</span>}
                             className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})}
-                            disabled={isDisabled}
+                            disabled={isDisabled && !isSelected}
                         />
                         {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
                             <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, choices, selections, questionFinderFilter, setSelections}}/>
