@@ -163,6 +163,7 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
     },
     "biology": {
         "a_level": [BoardsByTopicCard, GlossaryCard, BiologyExtensionQuestionsCard],
+        "gcse": [null, null, null], // GCSE Biology does not yet have a landing page
     }
 };
 
@@ -184,7 +185,8 @@ const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
         "university": ["maths_book_2e"],
     },
     "biology": {
-        "a_level": ["maths_book_2e", "maths_book_gcse"]
+        "a_level": ["maths_book_2e", "maths_book_gcse"],
+        "gcse": [], // GCSE Biology does not yet have a landing page
     }
 };
 
