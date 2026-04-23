@@ -13,17 +13,15 @@ export const bookmarksApi = isaacApi.enhanceEndpoints({addTagTypes: ["Bookmarks"
         }),
         bookmarkItem: build.mutation<void, {content_id: string}>({
             query: ({content_id}) => ({
-                url: "/bookmarks",
+                url: `/bookmarks/${encodeURIComponent(content_id)}`,
                 method: "POST",
-                params: {content_id}
             }),
             invalidatesTags: ["Bookmarks"],
         }),
         deleteBookmark: build.mutation<void, {content_id: string}>({
             query: ({content_id}) => ({
-                url: "/bookmarks",
+                url: `/bookmarks/${encodeURIComponent(content_id)}`,
                 method: "DELETE",
-                params: {content_id}
             }),
             invalidatesTags: ["Bookmarks"],
         }),
