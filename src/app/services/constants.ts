@@ -636,6 +636,9 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
         [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_chem_fragment",
         [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_chem_fragment",
     },
+    "biology": {
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_bio_fragment",
+    }
 };
 
 export const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
