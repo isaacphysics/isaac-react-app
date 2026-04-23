@@ -645,7 +645,7 @@ export const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_N
     "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
     "chemistry": [LEARNING_STAGE.A_LEVEL],
     "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
-    "biology": [LEARNING_STAGE.A_LEVEL],
+    "biology": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
 };
 
 
