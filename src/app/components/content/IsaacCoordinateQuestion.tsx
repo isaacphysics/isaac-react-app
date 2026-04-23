@@ -170,42 +170,36 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
         }
     }, [currentAttempt, dispatchSetCurrentAttempt, updateItem]);
 
+    const displayedCoordinates = doc.numberOfCoordinates
+        ? Array.from({length: doc.numberOfCoordinates}).map((_, index) => currentAttempt?.items?.[index] ?? emptyCoordItem())
+        : (currentAttempt?.items && currentAttempt?.items.length > 0 
+            ? currentAttempt.items
+            : [emptyCoordItem()]);
+
     return <div className="coordinate-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        {doc.numberOfCoordinates
-            ? Array.from({length: doc.numberOfCoordinates}).map((_, index) =>
-                <CoordinateInput
-                    key={index}
-                    placeholderValues={doc.placeholderValues ?? []}
-                    useBrackets={doc.useBrackets ?? true}
-                    separator={doc.separator ?? ","}
-                    prefixes={doc.prefixes}
-                    suffixes={doc.suffixes}
-                    numberOfDimensions={numberOfDimensions.current}
-                    value={currentAttempt?.items?.[index] ?? emptyCoordItem()}
-                    readonly={readonly}
-                    onChange={value => updateItem(index, value)}
-                />
-            ) : (currentAttempt?.items && currentAttempt?.items.length > 0 ? currentAttempt.items: [emptyCoordItem()]).map((item, index) =>
-                <CoordinateInput
-                    key={index}
-                    placeholderValues={doc.placeholderValues ?? []}
-                    useBrackets={doc.useBrackets ?? true}
-                    separator={doc.separator ?? ","}
-                    prefixes={doc.prefixes}
-                    suffixes={doc.suffixes}
-                    numberOfDimensions={numberOfDimensions.current}
-                    value={item}
-                    readonly={readonly}
-                    onChange={value => updateItem(index, value)}
-                    remove={(currentAttempt?.items && currentAttempt?.items.length > 1) ? () => removeItem(index) : undefined}
-                />
-            )
-        }
+        {displayedCoordinates.map((item, index) => (
+            <CoordinateInput
+                key={index}
+                placeholderValues={doc.placeholderValues ?? []}
+                useBrackets={doc.useBrackets ?? true}
+                separator={doc.separator ?? ","}
+                prefixes={doc.prefixes}
+                suffixes={doc.suffixes}
+                numberOfDimensions={numberOfDimensions.current}
+                value={item}
+                readonly={readonly}
+                onChange={value => updateItem(index, value)}
+                remove={(!doc.numberOfCoordinates && currentAttempt?.items && currentAttempt?.items.length > 1) 
+                    ? () => removeItem(index)
+                    : undefined
+                }
+            />
+        ))}
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
             <Markup encoding="latex">{buttonText}</Markup>
