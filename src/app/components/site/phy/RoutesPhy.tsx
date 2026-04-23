@@ -136,9 +136,8 @@ export const RoutesPhy = [
     // <Route key={key++} path="/revision" element={<SubjectLandingPage />} />,
     <Route key={key++} path="/revision/:pageId" element={<RevisionPage />} />,
 
-    // Temporary redirects for GCSE Biology 
-    // TODO: Remove when we have content for these pages
-    // <Route key={key++} path="/biology/gcse" element={<Navigate to="/pages/2026_04_gcse_biology_launch" replace />} />,
+    // Temporary redirect for GCSE Biology 
+    // TODO: Remove when we have some GCSE Biology concept pages
     <Route key={key++} path="/biology/gcse/concepts" element={<Navigate to="/concepts?stages=gcse&types=biology" replace />} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
