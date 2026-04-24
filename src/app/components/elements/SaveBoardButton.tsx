@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { IconButton } from "./AffixButton";
 import { GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
@@ -17,9 +17,11 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
     const user = useAppSelector(selectors.user.loggedInOrNull);
 
     const isLinked = useMemo(() => board.savedToCurrentUser, [board]);
+    const [justLinked, setJustLinked] = useState(false);
 
     const linkBoard = useCallback(() => {
         if (!user || !board) return;
+        setJustLinked(true);
         void dispatch(saveGameboard({
             boardId: board.id ?? "",
             boardTitle: board.title,
@@ -33,6 +35,7 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
             ? `Are you sure you want to unlink your board '${board.title}' from your account? You'll only be able to find it again if you've set it as an assignment.`
             : `Are you sure you want to unlink '${board.title}' from your account?`;
         if (confirm(confirmMessage)) {
+            setJustLinked(false);
             void dispatch(unlinkUserFromGameboard({
                 boardId: board.id ?? "", 
                 boardTitle: board.title
@@ -43,10 +46,9 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
 
     return <IconButton
         color="tint"
-        icon={{name: classNames("icon-star icon-color-black-hoverable", { "fill": isLinked })}}
+        icon={{name: classNames("icon-star icon-color-black-hoverable", { "fill": isLinked, "anim-star-select": isLinked && justLinked })}}
         className={classNames(className, "w-max-content h-max-content action-button", {"icon-button-sm": size === "sm"})}
         title={isLinked ? "Unsave board" : "Save board"}
-        data-bs-theme="neutral"
         onClick={(e) => { 
             e.preventDefault();
             if (isLinked) {

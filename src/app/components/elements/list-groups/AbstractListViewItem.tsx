@@ -3,7 +3,7 @@ import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Badge, Button, Col, ListGroupItem } from "reactstrap";
+import { Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { above, below, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { TitleIcon, TitleIconProps } from "../PageTitle";
@@ -16,6 +16,8 @@ import { ContentPropertyTags } from "../ContentPropertyTags";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
+import { SaveBoardButton } from "../SaveBoardButton";
+import { BoardItemIndicator } from "../cards/GameboardCard";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -50,16 +52,6 @@ export const StatusDisplay = (props: StatusDisplayProps) => {
         case CompletionState.NOT_ATTEMPTED:
             return;
     }
-};
-
-interface ItemCountProps extends React.HTMLAttributes<HTMLSpanElement> {
-    count: number;
-}
-
-const ItemCount = ({count, ...rest}: ItemCountProps) => {
-    return <Badge color="theme" {...rest} className={classNames("list-view-status-indicator count-tag", rest.className)}>
-        {count < 100 ? count : "99+"}
-    </Badge>;
 };
 
 export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
@@ -99,7 +91,8 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
     const [ getAssignments ] = useLazyGetMySetAssignmentsQuery();
     const [ unassignBoard ] = useUnassignGameboardMutation();
 
-    return <Button color="solid" 
+    return <Button 
+        color="keyline" 
         onClick={async (e) => {
             e.stopPropagation();
             const {data: groups} = await getGroups(false, true);
@@ -140,7 +133,7 @@ type ALVIType = {
     audienceViews?: ViewingContext[];
     status?: CompletionState;
 } | {
-    // gameboards – have exclusive "assign" buttons
+    // gameboards – have exclusive "assign" and "save to my decks" buttons
     alviType: "gameboard";
     board?: GameboardDTO;
 };
@@ -193,7 +186,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                         <StatusDisplay status={typedProps.status} showText={false} />
                     </div>}
-                    {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
+                    {isGameboard && typedProps.board?.contents && <BoardItemIndicator type="list-view" count={typedProps.board.contents.length} />}
                 </div>
                 <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
@@ -236,8 +229,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isPhy && isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                         <StatusDisplay status={typedProps.status} showText className="py-1" />
                     }
-                    {isGameboard && fullWidth && isTeacherOrAbove(user) && <div className="d-flex pt-3">
-                        <GameboardAssign board={typedProps.board} />
+                    {isGameboard && fullWidth && isDefined(typedProps.board) && <div className="d-flex pt-3 gap-3">
+                        {/* note order flipped relative to non-fullWidth to keep Assign at highest priority visually */}
+                        {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
+                        <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                     </div>}
                     {isCard && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
                         <LinkTags linkTags={typedProps.linkTags}/>
@@ -253,9 +248,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isItem && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
-                    {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
-                        <GameboardAssign board={typedProps.board} />
-                    </Col>}
+                    {isGameboard && typedProps.board && <div className="d-flex align-items-center justify-content-end gap-3 ms-3">
+                        <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
+                        {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
+                    </div>}
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}

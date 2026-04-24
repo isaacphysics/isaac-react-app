@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { GameboardDTO } from "../../../../IsaacApiTypes";
-import { Row, Col, Button, Label, Collapse } from "reactstrap";
+import { Row, Col, Button, Label, Collapse, Badge } from "reactstrap";
 import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
@@ -14,13 +14,19 @@ export enum GameboardLinkLocation {
     Card,
     Title
 }
-
-interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
-    gameboard?: GameboardDTO;
-    linkLocation?: GameboardLinkLocation;
-    openAssignModal?: () => void;
-    groupCount?: number;
+interface BoardItemIndicatorProps extends React.HTMLAttributes<HTMLSpanElement> {
+    count: number;
+    type: "list-view" | "board-card"
 }
+
+export const BoardItemIndicator = ({count, type, ...rest}: BoardItemIndicatorProps) => {
+    return <Badge 
+        color="theme" {...rest} 
+        className={classNames("count-tag", {"list-view-status-indicator": type === "list-view", "hex-status-indicator": type === "board-card"}, rest.className)}
+    >
+        {count < 100 ? count : "99+"}
+    </Badge>;
+};
 
 interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
     gameboard?: GameboardDTO;
@@ -53,6 +59,13 @@ const CardUsageInfo = ({ gameboard, groupCount, isSetAssignments, className, ...
     </div>;
 };
 
+interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
+    gameboard?: GameboardDTO;
+    linkLocation?: GameboardLinkLocation;
+    openAssignModal?: () => void;
+    groupCount?: number;
+}
+
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
     const {gameboard, linkLocation, children, openAssignModal, groupCount, ...rest} = props;
@@ -82,11 +95,12 @@ export const GameboardCard = (props: GameboardCardProps) => {
         <Row data-testid="my-assignment">
             <Col className="d-flex flex-column align-items-start">
                 <div className="d-flex align-items-center w-100">
-                    <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
+                    <div className="d-flex position-relative justify-content-center board-subject-hexagon-size me-4 my-2">
                         <div className="board-subject-hexagon-container justify-content-center">
                             {generateGameboardSubjectHexagons(boardSubjects)}
                         </div>
                         <HexIcon icon="icon-question-deck" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
+                        {gameboard?.contents && <BoardItemIndicator count={gameboard.contents.length} type="board-card" data-bs-theme={boardSubjects[0]} />}
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
                         <h4 className="text-break m-0">

@@ -160,12 +160,8 @@
 }
 
 .list-view-status-indicator {
-  position: absolute;
-  top: 2px;
+  @extend .hex-status-indicator;
   right: 16px;
-  > i {
-    display: inline-block;
-  }
 }
 
 .list-group-links li.disabled {
