@@ -7,3 +7,7 @@ div.fade:has(> .tooltip) {
 .tooltip .tooltip-arrow {
   pointer-events: none;
 }
+
+.symbolic-help-tooltip .tooltip-inner {
+  font-variant-ligatures: no-common-ligatures;
+}
