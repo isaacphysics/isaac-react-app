@@ -90,14 +90,13 @@ export const Gameboard = () => {
                         undefined
                     )}
                 >
-                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details">
-                        {user && <div className="d-flex justify-content-end mb-5">
-                            <SaveBoardButton 
-                                board={gameboard} 
-                                color={gameboard.savedToCurrentUser ? "solid" : "keyline"} 
-                            />
-                        </div>}
-                    </PageMetadata>
+                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"
+                        additionalActionButtons={<SaveBoardButton 
+                            board={gameboard} 
+                            color={siteSpecific("tint", "solid")} 
+                            data-bs-theme="neutral"
+                        />}
+                    />
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                     <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
                     {user && isTutorOrAbove(user)

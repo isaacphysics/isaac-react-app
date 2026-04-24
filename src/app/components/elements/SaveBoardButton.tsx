@@ -4,6 +4,7 @@ import { GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
 import { ButtonProps } from "reactstrap";
 import { saveGameboard, selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector } from "../../state";
+import { siteSpecific } from "../../services";
 
 interface SaveBoardButtonProps extends ButtonProps {
     board: GameboardDTO;
@@ -16,8 +17,8 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
 
-    const isLinked = useMemo(() => board.savedToCurrentUser, [board]);
     const [justLinked, setJustLinked] = useState(false);
+    const isLinked = useMemo(() => board.savedToCurrentUser || justLinked, [board, justLinked]);
 
     const linkBoard = useCallback(() => {
         if (!user || !board) return;
@@ -45,8 +46,10 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
 
 
     return <IconButton
-        color="tint"
-        icon={{name: classNames("icon-star icon-color-black-hoverable", { "fill": isLinked, "anim-star-select": isLinked && justLinked })}}
+        icon={{
+            name: classNames("icon-star", siteSpecific("icon-color-black-hoverable", undefined), { "fill": isLinked, "anim-star-select": justLinked }),
+            color: siteSpecific(undefined, props.color === "solid" ? "white" : "primary")
+        }}
         className={classNames(className, "w-max-content h-max-content action-button", {"icon-button-sm": size === "sm"})}
         title={isLinked ? "Unsave board" : "Save board"}
         onClick={(e) => { 
