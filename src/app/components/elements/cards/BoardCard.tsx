@@ -39,7 +39,7 @@ import indexOf from "lodash/indexOf";
 import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { useSetAssignment } from "../../../services/setAssignment";
-import { RemoveBoardButton, SaveBoardButton } from "../SaveBoardButton";
+import { SaveBoardButton } from "../SaveBoardButton";
 
 
 interface HexagonGroupsButtonProps {
@@ -221,7 +221,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     </div>
                 </td>}
                 {isAda && <td className={"align-middle text-center"}>
-                    <RemoveBoardButton board={board} color="keyline" size="sm" />
+                    <SaveBoardButton board={board} color="keyline" size="sm" />
                 </td>}
             </> 
                 : 
@@ -342,7 +342,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
-                        <RemoveBoardButton board={board} color="keyline" size="sm" />
+                        <SaveBoardButton board={board} color="keyline" size="sm" />
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={openAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}
