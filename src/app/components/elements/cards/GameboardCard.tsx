@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse } from "reactstrap";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -21,6 +21,37 @@ interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
     openAssignModal?: () => void;
     groupCount?: number;
 }
+
+interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
+    gameboard?: GameboardDTO;
+    groupCount?: number;
+    isSetAssignments?: boolean;
+}
+
+// "Attempted/Correct" percentages or "Assigned to X groups"
+const CardUsageInfo = ({ gameboard, groupCount, isSetAssignments, className, ...rest }: CardUsageInfoProps) => {
+    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end column-gap-7 column-gap-md-4")}>
+        {!isSetAssignments 
+            ? <>
+                <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                    {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
+                    Attempted
+                </Label>
+                <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                    {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
+                    Correct
+                </Label> 
+            </>
+            : <>
+                <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
+                    Assigned to
+                    <div className="board-bubble-info">{groupCount ?? 0}</div>
+                    group{groupCount !== 1 && "s"}
+                </Label>
+            </>
+        }
+    </div>;
+};
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
@@ -49,8 +80,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const card = <div className="px-3 py-2 flex-grow-1">
         <Row data-testid="my-assignment">
-            <Col sm={isSetAssignments ? 8 : 12} md={8} className="d-flex flex-column align-items-start">
-                <div className="d-flex align-items-center">
+            <Col className="d-flex flex-column align-items-start">
+                <div className="d-flex align-items-center w-100">
                     <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
                         <div className="board-subject-hexagon-container justify-content-center">
                             {generateGameboardSubjectHexagons(boardSubjects)}
@@ -69,62 +100,32 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             {boardSubjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}
                         </div>}
                     </div>
+                    {!below['xs'](deviceSize) && <CardUsageInfo className="float-end" gameboard={gameboard} groupCount={groupCount} isSetAssignments={isSetAssignments} />}
                 </div>
 
                 {children}
 
                 <Spacer/>
-                
-                {above[isSetAssignments ? 'sm' : 'md'](deviceSize) && <Button className="my-2 btn-underline" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
-                    {showMore ? "Hide details" : "Show details"}
-                </Button>}
-            </Col>
-
-            <Col sm={isSetAssignments ? 4 : 12} md={4} className="d-flex flex-column justify-content-between">
-                <div className={classNames("d-flex flex-wrap justify-content-center justify-content-sm-end", 
-                    {"justify-content-lg-center justify-content-xl-end column-gap-7 column-gap-md-4": !isSetAssignments},
-                )}>
-                    {!isSetAssignments 
-                        ? <>
-                            <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                                {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
-                                Attempted
-                            </Label>
-                            <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                                {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
-                                Correct
-                            </Label> 
-                        </>
-                        : <>
-                            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
-                                Assigned to
-                                <div className="board-bubble-info">{groupCount ?? 0}</div>
-                                group{groupCount !== 1 && "s"}
-                            </Label>
-                        </>
-                    }
-                </div>
-                {above['md'](deviceSize) && <div className="d-flex gap-3 align-items-center mb-2">
-                    {isPhy && gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
-                    {isPhy && boardLink && <div className="card-share-link">
-                        <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
-                    </div>}
-                    <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                        {isSetAssignments ? "Assign / Unassign" : "Assign"}
-                    </Button> 
-                </div>}
-
-                {!above['md'](deviceSize) &&
-                    <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                        {isSetAssignments ? "Assign / Unassign" : "Assign"}
-                    </Button> 
-                }
-
-                {!above[isSetAssignments ? 'sm' : 'md'](deviceSize) && <Button className="my-2 btn-underline w-max-content" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
-                    {showMore ? "Hide details" : "Show details"}
-                </Button>}
             </Col>
         </Row>
+
+        <div className="d-flex flex-column flex-sm-row align-items-start mt-2">
+            <Button className="my-2 btn-underline order-1 order-sm-0" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
+                {showMore ? "Hide details" : "Show details"}
+            </Button>
+            <Spacer />
+            <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
+                {isPhy && gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
+                {isPhy && boardLink && <div className="card-share-link">
+                    <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
+                </div>}
+                <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
+                    {isSetAssignments ? "Assign / Unassign" : "Assign"}
+                </Button> 
+            </div>
+        </div>
+
+        {/* collapsed info */}
         <Collapse isOpen={showMore} className="w-100">
             <Row>
                 <Col xs={12} md={8} className="mt-sm-2">
