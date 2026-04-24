@@ -160,7 +160,7 @@
 }
 
 .list-view-status-indicator {
-  @extend .hex-status-indicator;
+  @extend %hex-status-indicator;
   right: 16px;
 }
 

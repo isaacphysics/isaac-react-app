@@ -22,7 +22,7 @@ interface BoardItemIndicatorProps extends React.HTMLAttributes<HTMLSpanElement> 
 export const BoardItemIndicator = ({count, type, ...rest}: BoardItemIndicatorProps) => {
     return <Badge 
         color="theme" {...rest} 
-        className={classNames("count-tag", {"list-view-status-indicator": type === "list-view", "hex-status-indicator": type === "board-card"}, rest.className)}
+        className={classNames("count-tag", {"list-view-status-indicator": type === "list-view", "board-card-status-indicator": type === "board-card"}, rest.className)}
     >
         {count < 100 ? count : "99+"}
     </Badge>;
