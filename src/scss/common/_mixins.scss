@@ -276,14 +276,8 @@ $viewport-sizes: (
 @mixin icon-color-override($color) {
   // only do this if masks are supported
   @supports (mask-position: center) {
-    background-color: var(--layered-icon-parent-bg-override, $color) !important;
-
-    &::before {
-      background-color: $color !important;
-    }
-    &::after {
-      background-color: $color !important;
-    }
+    --icon-foreground: #{$color};
+    --icon-background: #{$color};
   }
 }
 
