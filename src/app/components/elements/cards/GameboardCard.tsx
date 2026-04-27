@@ -125,6 +125,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
             </Col>
         </Row>
 
+        {below['xs'](deviceSize) && <CardUsageInfo className="d-flex w-100 justify-content-around" gameboard={gameboard} groupCount={groupCount} isSetAssignments={isSetAssignments} />}
+
         <div className="d-flex flex-column flex-sm-row align-items-start mt-2">
             <Button className="my-2 btn-underline order-1 order-sm-0" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
                 {showMore ? "Hide details" : "Show details"}
