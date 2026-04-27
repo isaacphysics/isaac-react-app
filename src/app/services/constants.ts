@@ -485,7 +485,7 @@ export const PHY_NAV_SUBJECTS = {
     [SUBJECTS.PHYSICS]: [LEARNING_STAGE["11_TO_14"], LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
     [SUBJECTS.MATHS]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
     [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
-    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL],
+    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
 } as const;
 
 export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) => {
@@ -636,13 +636,16 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
         [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_chem_fragment",
         [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_chem_fragment",
     },
+    "biology": {
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_bio_fragment",
+    }
 };
 
 export const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
     "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
     "chemistry": [LEARNING_STAGE.A_LEVEL],
     "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
-    "biology": [LEARNING_STAGE.A_LEVEL],
+    "biology": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
 };
 
 

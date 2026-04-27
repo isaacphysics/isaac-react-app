@@ -40,7 +40,6 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             url: `/${context.subject}/gcse`,
             stage: LEARNING_STAGE.GCSE,
             subject: context.subject,
-            state: context.subject === "biology" ? AbstractListViewItemState.COMING_SOON : undefined,
         },
         {
             title: "A Level",
@@ -64,7 +63,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             stage: LEARNING_STAGE.UNIVERSITY,
             subject: context.subject,
         },
-    ].map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) || card.state === AbstractListViewItemState.COMING_SOON ? card : null);
+    ].map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) ? card : null);
 
     return <ListViewCards
         type="item"
