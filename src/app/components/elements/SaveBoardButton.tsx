@@ -4,7 +4,7 @@ import { GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
 import { ButtonProps } from "reactstrap";
 import { saveGameboard, selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector } from "../../state";
-import { isAda, isLoggedIn, isStudent, siteSpecific } from "../../services";
+import { isLoggedIn, siteSpecific } from "../../services";
 
 interface SaveBoardButtonProps extends ButtonProps {
     board: GameboardDTO;
