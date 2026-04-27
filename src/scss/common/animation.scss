@@ -11,5 +11,7 @@
 }
 
 .anim-star-select {
-    animation: star-select 0.3s ease-out;
+    @include not-reduced-motion {
+        animation: star-select 0.3s ease-out;
+    }
 }
