@@ -6,7 +6,6 @@ import {
     formatBoardOwner,
     generateGameboardSubjectHexagons,
     isAda,
-    isAdminOrEventManager,
     isDefined,
     isPhy,
     PATHS,
@@ -14,7 +13,6 @@ import {
     stageLabelMap,
     useDeviceSize
 } from "../../../services";
-import {showErrorToast, unlinkUserFromGameboard, useAppDispatch} from "../../../state";
 import {GameboardDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Circle} from "../svg/Circle";
 import classNames from "classnames";
