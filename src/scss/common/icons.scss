@@ -181,15 +181,13 @@ img[aria-disabled="true"] {
 
 .icon-star {
   @include svg-icon-layered(
-    '/assets/common/icons/star.svg', 
-    '/assets/common/icons/star-fill.svg', 
+    '/assets/common/icons/star.svg',
+    '/assets/common/icons/star-fill.svg',
     calc(var(--icon-size) * 1.2), calc(var(--icon-size) * 1.2), var(--mask-size, 60%)
   );
   margin: calc(var(--icon-size) * (1 - 1.2)/2) !important;
 
-  &:not(.fill)::before {
-    background-color: transparent !important;
-  }
+  @extend %icon-fillable;
 }
 
 .icon-ai {
