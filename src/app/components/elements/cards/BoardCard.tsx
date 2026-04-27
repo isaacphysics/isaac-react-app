@@ -166,6 +166,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
         hexagonId,
         boardSubjects,
         assignees,
+        toggleAssignModal: openAssignModal,
         isTable,
     };
 
