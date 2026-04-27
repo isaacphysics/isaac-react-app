@@ -45,7 +45,6 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
     }, [user, board, dispatch]);
 
     if (!isLoggedIn(user)) return null; // anon users should not be able to save boards
-    if (isAda && isStudent(user)) return null; // Ada students have no page to display saved boards ( :/ ) so hide
 
     return <IconButton
         icon={{

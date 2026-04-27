@@ -24,7 +24,8 @@ import {
     PATHS,
     SEARCH_RESULT_TYPE,
     showWildcard,
-    siteSpecific
+    siteSpecific,
+    isStudent
 } from "../../services";
 import {Navigate, useLocation} from "react-router";
 import classNames from "classnames";
@@ -91,11 +92,14 @@ export const Gameboard = () => {
                     )}
                 >
                     <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"
-                        additionalActionButtons={<SaveBoardButton 
-                            board={gameboard} 
-                            color={siteSpecific("tint", "solid")} 
-                            data-bs-theme="neutral"
-                        />}
+                        additionalActionButtons={
+                            // hide for Ada students, who have no *accessible* page to see saved quizzes
+                            !(isAda && isStudent(user)) && <SaveBoardButton 
+                                board={gameboard} 
+                                color={siteSpecific("tint", "solid")} 
+                                data-bs-theme="neutral"
+                            />
+                        }
                     />
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                     <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
