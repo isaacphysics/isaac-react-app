@@ -1,7 +1,9 @@
 import { PageContextState } from "../../../IsaacAppTypes";
 import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, ISAAC_BOOKS_BY_TAG, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS } from "../../services";
 import { AbstractListViewItemState, ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
-import { ListViewCardProps } from "../elements/list-groups/ListView";
+import { CustomListViewItemProps, transformItemsForCustomListView } from "../elements/list-groups/ListView";
+
+type CardProps = CustomListViewItemProps['item'];
 
 export const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
     return `/${context.subject}/${context.stage}/${page}`;
@@ -15,7 +17,7 @@ const getHumanContextWithFurtherMaths = (pageContext?: PageContextState): string
     return getHumanContext(pageContext);
 };
 
-const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title: "Question finder",
     subtitle: `Find ${getHumanContextWithFurtherMaths(context)} questions to try by topic and difficulty level.`,
     icon: {type: "icon", icon: "icon-finder"},
@@ -23,7 +25,7 @@ const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): L
     linkTags: [{tag: "Find questions", url: extendUrl(context, 'questions')}]
 });
 
-const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title: "Concepts",
     subtitle: `Review the key concepts for ${getHumanContextWithFurtherMaths(context)}.`,
     icon: {type: "icon", icon: "icon-concept"},
@@ -31,7 +33,7 @@ const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): List
     linkTags: [{tag: "Explore concepts", url: extendUrl(context, 'concepts')}]
 });
 
-const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title: context.stage.includes("university") ? "Practice admissions tests" : "Tests",
     subtitle: `Use tests to ${context.stage.includes("university") ? "prepare for university admissions tests" : "practise a range of topics"}. These tests are available for you to freely attempt.`,
     icon: {type: "icon", icon: "icon-tests"},
@@ -39,7 +41,7 @@ const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): Li
     linkTags: [{tag: "Find a test", url: extendUrl(context, 'practice_tests')}]
 });
 
-const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title: "Question decks by topic",
     subtitle: context.subject === "chemistry" && context.stage.includes("university")
         ? "Consolidate your chemistry understanding with these questions by topic."
@@ -53,7 +55,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
-const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title: "Revision",
     subtitle: "Revise with our summary videos, topic tests and question decks.",
     icon: {type: "icon", icon: "icon-revision"},
@@ -62,7 +64,7 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     state: (context.subject.includes("physics") && ["gcse", "a_level"].includes(context.stage[0])) ? undefined : AbstractListViewItemState.COMING_SOON,
 });
 
-const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const GlossaryCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title: "Glossary",
     subtitle: `Use the glossary to understand the vocabulary you need for ${getHumanContext(context)}.`,
     icon: {type: "icon", icon: "icon-tests"},
@@ -70,7 +72,7 @@ const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListVie
     linkTags: [{tag: "Browse the glossary", url: extendUrl(context, 'glossary')}]
 });
 
-const BookCard = (book: BookInfo, description: string) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const BookCard = (book: BookInfo, description: string) => (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title: book.title,
     subtitle: description,
     icon: {type: "icon", icon: "icon-book"},
@@ -81,7 +83,7 @@ const BookCard = (book: BookInfo, description: string) => (context: NonNullable<
 const StepIntoPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_into"], "Discover secondary physics ideas and interesting experiments. Aimed at students in years 7 and 8.");
 const StepUpPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_up"], "Build a strong foundation in physics. Aimed at students in year 9.");
 
-const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[], state?: AbstractListViewItemState) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[], state?: AbstractListViewItemState) => (context: NonNullable<Required<PageContextState>>): CardProps => ({
     title,
     subtitle,
     icon: {type: "icon", icon: "icon-revision"},
@@ -91,8 +93,8 @@ const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListVi
 });
 
 // Content want these to each have their own specific wordings
-const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    const subjectSpecificAnvilCard: {[subject in keyof typeof PHY_NAV_SUBJECTS]: Partial<{[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (ListViewCardProps)}>} = {
+const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
+    const subjectSpecificAnvilCard: {[subject in keyof typeof PHY_NAV_SUBJECTS]: Partial<{[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (CardProps)}>} = {
         "physics": {
             "11_14": ArbitraryPageLinkCard("Core skills practice", `Keep training those maths skills with our algebra tools.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
             "gcse": ArbitraryPageLinkCard("Core skills practice", `Practise the important equations in GCSE Physics with these tools.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
@@ -113,32 +115,32 @@ const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListVi
     return subjectSpecificAnvilCard[context.subject][context.stage[0] as keyof typeof subjectSpecificAnvilCard[typeof context.subject]] || ArbitraryPageLinkCard("Core skills practice", `Consolidate your ${context.subject} skills with these tools.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}])(context);
 };
 
-/*const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+/*const SPCCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: '/pages/spc'}])(context);
 };*/
 
-/*const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+/*const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     return ArbitraryPageLinkCard("Mentoring scheme", "Take your problem solving skills to the next level by joining the mentoring scheme.", [{tag: "Find out more", url: "/pages/isaac_mentor"}])(context);
 };*/
 
-const ProgrammesCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+const ProgrammesCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     return ArbitraryPageLinkCard("Programmes", "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level.",
         [{tag: "Mentoring", url: "/pages/mentoring"}, {tag: "SPC", url: "/pages/spc"}, {tag: "STEM SMART", url: "/pages/stem_smart"}])(context);
 };
 
-const ExperimentsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+const ExperimentsCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     return ArbitraryPageLinkCard("Experiments", "Develop experimental skills with interesting experiments.", [{tag: "Explore experiments", url: "/books/step_into_phys/exp_falling"}])(context);
 };
 
-const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     return ArbitraryPageLinkCard("Revision", "Revise with our tailored revision decks on core pure, further pure, and mechanics.", [{tag: "List of revision decks", url: "/pages/revision_maths_alevel"}])(context);
 };
 
-const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     return ArbitraryPageLinkCard("Biology extension", "Stretch your understanding of biology with our extension questions that make you think outside the box.", [{tag: "View extension questions", url: "/pages/biology_extension_questions"}])(context);
 };
 
-const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+const MathsUniCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     return ArbitraryPageLinkCard(context.subject === "maths" ? "Revision" : `Maths revision for ${context.subject}`, `Refresh your maths skills in preparation for ${context.subject} at university.`, [{tag: "List of revision areas", url: extendUrl(context, "")}], AbstractListViewItemState.COMING_SOON)(context);
 };
 
@@ -186,13 +188,13 @@ const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
     }
 };
 
-type LandingPageCard =  ((context: NonNullable<Required<PageContextState>>) => ListViewCardProps);
+type LandingPageCard =  ((context: NonNullable<Required<PageContextState>>) => CardProps);
 
-const applyContext = (context: NonNullable<Required<PageContextState>>, cards: (LandingPageCard | null)[]): (ListViewCardProps | null)[] => {
+const applyContext = (context: NonNullable<Required<PageContextState>>, cards: (LandingPageCard | null)[]): (CardProps | null)[] => {
     return cards.map(card => card ? card(context) : null);
 };
 
-export const getLandingPageCardsForContext = (context: PageContextState, stacked?: boolean): (ListViewCardProps | null)[] => {
+export const getLandingPageCardsForContext = (context: PageContextState, stacked?: boolean, showBlanks?: boolean): CustomListViewItemProps['item'][] => {
     if (!isFullyDefinedContext(context)) return [];
     if (!isSingleStageContext(context)) return [];
 
@@ -205,7 +207,9 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 
     const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0] as keyof typeof subjectSpecificCardsMap[typeof context.subject]] || [];
 
-    return applyContext(context, stacked ? [...baseCards, ...subjectSpecificCards] : interleave(baseCards, subjectSpecificCards)); // base cards always appear on the left
+    return applyContext(
+        context, stacked ? [...baseCards, ...subjectSpecificCards] : interleave(baseCards, subjectSpecificCards) // base cards always appear on the left
+    ).filter(showBlanks ? () => true : (card): card is NonNullable<typeof card> => !!card).map(transformItemsForCustomListView);
 };
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {
