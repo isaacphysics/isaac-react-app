@@ -23,7 +23,7 @@ describe("AdminUserManager", () => {
         const url = new URL(request.url);
         const searchParams = paramsToObject(url.searchParams);
         // If default params, return an empty array or defaultUsersToReturn
-        if (!isDefined(params.postcodeRadius) && (Object.entries(searchParams).length === 1 && searchParams["postcodeRadius"] === "FIVE_MILES")) {
+        if (Object.entries(searchParams).length === 0) {
             return HttpResponse.json(defaultUsersToReturn
                 ? defaultUsersToReturn.map(u => buildMockUserSummary(u, true))
                 : []
@@ -71,14 +71,6 @@ describe("AdminUserManager", () => {
         if (isDefined(params["schoolOther"])) {
             const schoolInput = await screen.findByLabelText<HTMLInputElement>("Find by manually entered school:");
             await userEvent.type(schoolInput, params.schoolOther);
-        }
-        if (isDefined(params["postcode"])) {
-            const postcodeInput = await screen.findByLabelText<HTMLInputElement>("Find users with school within a given distance of postcode:");
-            await userEvent.type(postcodeInput, params.postcode);
-        }
-        if (isDefined(params["postcodeRadius"])) {
-            const radiusInput = await screen.findByTestId<HTMLInputElement>("postcode-radius-search");
-            await userEvent.selectOptions(radiusInput, params.postcodeRadius);
         }
         if (isDefined(params["schoolURN"])) {
             const urnInput = await screen.findByLabelText<HTMLInputElement>("Find a user with school URN:");
@@ -155,7 +147,7 @@ describe("AdminUserManager", () => {
 
     it("shows no list of users after searching, leaving, and coming back.", async () => {
         const searchHandler = buildSearchHandler(
-            {postcodeRadius: 'FIVE_MILES'},
+            {},
             {
                 usersToReturn: [mockUser],
             }

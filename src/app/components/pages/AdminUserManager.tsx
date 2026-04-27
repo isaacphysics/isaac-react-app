@@ -27,9 +27,7 @@ export const AdminUserManager = () => {
 
     const [searchUsers, {isUninitialized: searchNotRequested, isLoading: searchLoading}] = useAdminSearchUsersMutation();
     const searchResults = useAppSelector(selectors.admin.userSearch);
-    const [searchQuery, setSearchQuery] = useState<AdminSearchEndpointParams>({
-        postcodeRadius: "FIVE_MILES",
-    });
+    const [searchQuery, setSearchQuery] = useState<AdminSearchEndpointParams>({});
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const adminSearchResultsRef = useRef<HTMLDivElement>(null);
 
@@ -111,15 +109,12 @@ export const AdminUserManager = () => {
         event.preventDefault();
         let hasFilterSet = false;
         for (const filter in searchQuery) {
-            if (filter && filter !== "postcodeRadius") {
+            if (filter) {
                 hasFilterSet = true;
             }
         }
         if (!hasFilterSet) {
             alert("At least one search filter must be set.");
-        }
-        else if (searchQuery.postcode && !/^[A-Z]{1,2}[0-9][A-Z0-9]? ?([0-9][A-Z]{2})?$/i.test(searchQuery.postcode)) {
-            alert("Postcode input invalid");
         }
         else {
             adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
@@ -214,30 +209,6 @@ export const AdminUserManager = () => {
                                     <option value="EVENT_MANAGER">Event manager</option>
                                     <option value="ADMIN">Admin</option>
                                 </Input>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label htmlFor="postcode-search">Find users with school within a given distance of postcode:</Label>
-                                <Row>
-                                    <Col md={7}>
-                                        <Input
-                                            id="postcode-search" data-testid="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
-                                            onChange={e => setParamIfNotDefault("postcode", e.target.value, "")}
-                                        />
-                                    </Col>
-                                    <Col md={5} className="mt-2 mt-md-0">
-                                        <Input
-                                            id="postcode-radius-search" data-testid="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
-                                            onChange={e => setParamIfNotDefault("postcodeRadius", e.target.value, "")}
-                                        >
-                                            <option value="FIVE_MILES">5 miles</option>
-                                            <option value="TEN_MILES">10 miles</option>
-                                            <option value="FIFTEEN_MILES">15 miles</option>
-                                            <option value="TWENTY_MILES">20 miles</option>
-                                            <option value="TWENTY_FIVE_MILES">25 miles</option>
-                                            <option value="FIFTY_MILES">50 miles</option>
-                                        </Input>
-                                    </Col>
-                                </Row>
                             </FormGroup>
                             <FormGroup>
                                 <Label htmlFor="school-urn-search">Find a user with school URN:</Label>
