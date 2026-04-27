@@ -4,7 +4,7 @@ import { GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
 import { ButtonProps } from "reactstrap";
 import { saveGameboard, selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector } from "../../state";
-import { siteSpecific } from "../../services";
+import { isAda, isLoggedIn, isStudent, siteSpecific } from "../../services";
 
 interface SaveBoardButtonProps extends ButtonProps {
     board: GameboardDTO;
@@ -44,6 +44,8 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
         }
     }, [user, board, dispatch]);
 
+    if (!isLoggedIn(user)) return null; // anon users should not be able to save boards
+    if (isAda && isStudent(user)) return null; // Ada students have no page to display saved boards ( :/ ) so hide
 
     return <IconButton
         icon={{

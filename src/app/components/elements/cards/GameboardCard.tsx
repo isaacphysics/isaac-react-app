@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse, Badge } from "reactstrap";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
 import { ShareLink } from "../ShareLink";
 import { SaveBoardButton } from "../SaveBoardButton";
+import { selectors, useAppSelector } from "../../../state";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -71,6 +72,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
     const {gameboard, linkLocation, children, openAssignModal, groupCount, ...rest} = props;
 
     const isSetAssignments = isDefined(groupCount);
+    const user = useAppSelector(selectors.user.orNull);
 
     const [showMore, setShowMore] = useState(false);
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(gameboard), [gameboard]);
@@ -133,9 +135,9 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 {isPhy && boardLink && <div className="card-share-link">
                     <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
                 </div>}
-                <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
+                {isTutorOrAbove(user) && <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
                     {isSetAssignments ? "Assign / Unassign" : "Assign"}
-                </Button> 
+                </Button>}
             </div>
         </div>
 

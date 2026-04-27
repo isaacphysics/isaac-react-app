@@ -2,6 +2,7 @@ import {
     getValue,
     isAdminOrEventManager,
     isDefined,
+    isStudent,
     isTutorOrAbove,
     Item,
     KEY,
@@ -149,12 +150,19 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
             return rejectWithValue(null);
         }
         try {
+            const reduxState = getState() as AppState;
+
+            // no need to check for assignments for students; just unlink immediately
+            if (reduxState && reduxState.user && isStudent(reduxState.user)) {
+                const deleteResponse = await dispatch(gameboardApi.endpoints.unlinkUserFromGameboard.initiate(boardId));
+                return mutationSucceeded(deleteResponse) ? boardId : rejectWithValue(null);
+            }
+
             const getAssignments = dispatch(assignmentsApi.endpoints.getMySetAssignments.initiate(undefined));
             const response = await getAssignments;
             getAssignments.unsubscribe();
             if (response.isSuccess) {
                 const assignmentsByMe = response.data;
-                const reduxState = getState() as AppState;
                 // Check if there are any assignments that use this gameboard...
                 const hasAssignedGroups = (assignmentsByMe?.filter(a => a.gameboardId === boardId) ?? []).length > 0;
                 if (hasAssignedGroups) {
