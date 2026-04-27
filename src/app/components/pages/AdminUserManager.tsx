@@ -169,13 +169,6 @@ export const AdminUserManager = () => {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="school-other-search">Find by manually entered school:</Label>
-                                <Input
-                                    id="school-other-search" type="text" defaultValue={searchQuery.schoolOther || undefined}
-                                    onChange={e => setParamIfNotDefault("schoolOther", e.target.value, "")}
-                                />
-                            </FormGroup>
-                            <FormGroup>
                                 <Label htmlFor="verification-status-search">Find by email verification status:</Label>
                                 <Input
                                     id="verification-status-search" type="select" defaultValue={String(searchQuery.emailVerificationStatus)}
@@ -215,6 +208,13 @@ export const AdminUserManager = () => {
                                 <Input
                                     id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
                                     onChange={e => setParamIfNotDefault("schoolURN", e.target.value, "")}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="school-other-search">Find by manually entered school:</Label>
+                                <Input
+                                    id="school-other-search" type="text" defaultValue={searchQuery.schoolOther || undefined}
+                                    onChange={e => setParamIfNotDefault("schoolOther", e.target.value, "")}
                                 />
                             </FormGroup>
                         </Col>
