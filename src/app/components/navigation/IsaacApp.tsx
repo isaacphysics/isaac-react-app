@@ -88,7 +88,6 @@ const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 
 const RootLayout = () => {
     const mainContentRef = useRef(null);
-    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
 
     return <FeatureFlagProvider>
         <SiteSpecific.Header />
@@ -101,7 +100,7 @@ const RootLayout = () => {
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
         <OnPageLoad />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={accessibilitySettings?.REDUCED_MOTION ? "true" : "false"}>
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <FigureNumberingProvider>
                     <Suspense fallback={<Loading/>}>
