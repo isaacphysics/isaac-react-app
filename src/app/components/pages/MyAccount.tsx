@@ -64,7 +64,6 @@ import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { UserTheme } from '../elements/panels/UserTheme';
-import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
