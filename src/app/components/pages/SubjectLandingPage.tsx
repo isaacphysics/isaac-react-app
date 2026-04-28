@@ -211,7 +211,11 @@ export const SubjectLandingPage = () => {
               * for just a single frame, before the useEffect takes place. */}
             <RandomQuestionBanner key={`${pageContext.stage}_${pageContext.subject}`} context={pageContext} />
 
-            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-7" />
+            <ListViewCards
+                type="item" 
+                items={getLandingPageCardsForContext(pageContext, below['md'](deviceSize), !below['md'](deviceSize))}
+                className="my-7"
+            />
             
             <LandingPageFooter context={pageContext} />
         </>}

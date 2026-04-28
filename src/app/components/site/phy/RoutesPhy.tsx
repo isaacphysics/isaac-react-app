@@ -139,6 +139,10 @@ export const RoutesPhy = [
     // <Route key={key++} path="/revision" element={<SubjectLandingPage />} />,
     <Route key={key++} path="/revision/:pageId" element={<RevisionPage />} />,
 
+    // Temporary redirect for GCSE Biology 
+    // TODO: Remove when we have some GCSE Biology concept pages
+    <Route key={key++} path="/biology/gcse/concepts" element={<Navigate to="/concepts?stages=gcse&types=biology" replace />} />,
+
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).flatMap(([path, Component]) => (
         Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {

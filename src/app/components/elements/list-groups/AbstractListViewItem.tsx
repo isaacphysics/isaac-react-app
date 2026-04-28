@@ -3,7 +3,7 @@ import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Badge, Button, Col, ListGroupItem } from "reactstrap";
+import { Badge, Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { above, below, isAda, isDefined, isLoggedIn, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { TitleIcon, TitleIconProps } from "../PageTitle";
@@ -134,6 +134,8 @@ type ALVIType = {
     audienceViews?: ViewingContext[];
     status?: CompletionState;
     quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
+    hasCaret?: boolean;
+    linkTags?: ListViewTagProps[];
     allowBookmarking?: boolean; // if set, displays a bookmark for logged-in users that will save the alvi to the user's bookmarks on click
 } | {
     // quizzes – have exclusive "preview" and "view test" buttons
@@ -146,30 +148,40 @@ type ALVIType = {
     // gameboards – have exclusive "assign" buttons
     alviType: "gameboard";
     board?: GameboardDTO;
+} | {
+    // gameboard builder items – have exclusive checkbox/selectability and audience views, but no links or status indicators
+    alviType: "builder";
+    deprecated?: boolean;
+    supersededByPath?: string;
+    audienceViews?: ViewingContext[];
 };
 
 type ALVILayout = {
-    alviLayout: "card"
-    linkTags?: ListViewTagProps[];
+    alviLayout: "card";
 } | {
     alviLayout: "list";
 };
 
 export type AbstractListViewItemProps = {
+    // properties of an individual item; can be different per item.
     title?: string;
     icon?: TitleIconProps;
     subject?: Subject;
     subtitle?: string;
     breadcrumb?: string[];
     tags?: string[];
-    forceFullWidth?: boolean;
     url?: string;
     state?: AbstractListViewItemState;
     className?: string;
-    hasCaret?: boolean;
-} & ALVIType & ALVILayout;
+    componentTag?: ListGroupItemProps["tag"];
+} & ALVIType;
 
-export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, forceFullWidth, url, state, className, hasCaret, ...typedProps}: AbstractListViewItemProps) => { 
+export type AbstractListViewProps = ALVILayout & {
+    // properties of the list as a whole; affect the layout of every item but are not specific to any one item.
+    style?: "flat" | "stacked"; // flat = expand horizontally to fit content on one line; stacked = expand vertically, better for mobile or multi-column layouts; undefined = responsive
+}
+
+export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, style, url, state, className, componentTag, ...typedProps}: AbstractListViewItemProps & AbstractListViewProps) => { 
     const deviceSize = useDeviceSize();
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const user = useAppSelector(selectors.user.orNull);
@@ -181,18 +193,20 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isItem = typedProps.alviType === "item";
     const isGameboard = typedProps.alviType === "gameboard";
     const isQuiz = typedProps.alviType === "quiz";
+    const isBuilder = typedProps.alviType === "builder";
     const isCard = typedProps.alviLayout === "card";
     const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
 
     const isCrossTopic = isAda && tags?.includes("cross_topic");
     const isLLM = tags?.includes("llm_question_page");
 
-    const fullWidth = forceFullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
-    const wrapTitleTags = below["xs"](deviceSize) || (isDefined(forceFullWidth) && !forceFullWidth);
+    const flatLayout = style === "flat" && above['md'](deviceSize);
+    const stackedLayout = style === "stacked" || below["sm"](deviceSize);
+    const wrapTitleTags = below["xs"](deviceSize);
 
     const cardBody = <>
         <div className="w-100 d-flex flex-row">
-            <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
+            <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard})}>
                 <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
                     {icon && <div className="inner-progress-icon">
                         <TitleIcon icon={icon} />
@@ -231,34 +245,34 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {subtitle && <div className="small text-muted text-wrap">
                         <Markup encoding="latex">{subtitle}</Markup>
                     </div>}
-                    {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                    {breadcrumb && !(flatLayout && subtitle) && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                         <Breadcrumb breadcrumb={breadcrumb}/>
                     </span>}
-                    {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
+                    {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                     </div>}
-                    {(isCrossTopic || isLLM) && <div className={classNames("d-flex flex-wrap gap-2 mt-1", {"mt-2": isPhy || !fullWidth})}>
+                    {(isCrossTopic || isLLM) && <div className={classNames("d-flex flex-wrap gap-2 mt-1", {"mt-2": isPhy || !stackedLayout})}>
                         {isCrossTopic && <CrossTopicQuestionIndicator small />}
                         {isLLM && <LLMFreeTextQuestionIndicator small />}
                     </div>}
-                    {isPhy && isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
+                    {isPhy && isItem && stackedLayout && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                         <StatusDisplay status={typedProps.status} showText className="py-1" />
                     }
-                    {isGameboard && fullWidth && isTeacherOrAbove(user) && <div className="d-flex pt-3">
+                    {isGameboard && stackedLayout && isTeacherOrAbove(user) && <div className="d-flex pt-3">
                         <GameboardAssign board={typedProps.board} />
                     </div>}
-                    {isCard && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
+                    {isItem && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
                         <LinkTags linkTags={typedProps.linkTags}/>
                     </div>}
-                    {isQuiz && fullWidth && <div className="d-flex d-md-none align-items-center">
+                    {isQuiz && stackedLayout && <div className="d-flex d-md-none align-items-center">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/>
                     </div>}
                 </div>
             </Col>
-            {!fullWidth &&
+            {!stackedLayout &&
                 <>
                     {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
-                    {isItem && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
+                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
                     {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
@@ -273,7 +287,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     /> }
                 </>
             }
-            {hasCaret && <div className="list-caret align-content-center" aria-hidden="true">
+            {isItem && typedProps.hasCaret && <div className="list-caret align-content-center" aria-hidden="true">
                 <i className="icon icon-chevron-right" aria-hidden="true"/>
             </div>}
         </div>
@@ -284,6 +298,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
         data-testid={"list-view-item"}
+        tag={componentTag}
     >
         {cardBody}
     </ListGroupItem>;

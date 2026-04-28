@@ -17,6 +17,7 @@ import {
 } from "reactstrap";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {
+    CONTACT_FORM_CHAR_LENGTH_LIMIT,
     isPhy,
     isTeacherOrAbove,
     SITE_TITLE,
@@ -99,6 +100,7 @@ export const Contact = () => {
     }, [messageSent, successRef]);
 
     const isValidEmail = validateEmail(email);
+    const reachedMaxLength = message.length >= CONTACT_FORM_CHAR_LENGTH_LIMIT; 
 
     const metaDescription = siteSpecific(
         "Contact the Isaac team with questions, comments or feedback about our resources.",
@@ -123,11 +125,6 @@ export const Contact = () => {
                     </>}
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
-                    {isPhy && <div>
-                        <h3>Call us</h3>
-                        <p>Give us a call on <a href="tel:+441223337066">01223 337066</a></p>
-                    </div>
-                    }
                     <h3>Follow us</h3>
                     <p>Follow us on:</p>
                     {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
@@ -196,9 +193,10 @@ export const Contact = () => {
                                             <FormGroup className="form-group">
                                                 <Label htmlFor="message-input" className="form-required">Message</Label>
                                                 <Input id="message-input" type="textarea" name="message" rows={7} value={message}
-                                                    placeholder={presetPlaceholder}
+                                                    placeholder={presetPlaceholder} maxLength={CONTACT_FORM_CHAR_LENGTH_LIMIT}
                                                     onChange={e => setMessage(e.target.value)} required/>
                                             </FormGroup>
+                                            {reachedMaxLength && <Alert color="warning">Your message has reached the maximum length.</Alert>}
                                         </Col>
                                     </Row>
                                 </CardBody>
