@@ -4449,6 +4449,63 @@ export const mockRegressionTestQuestions = {
                             ]
                         }
                     ]
+                },
+                {
+                    "id": "_regression_test_|acc_coordinates",
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "isaacCoordinateQuestion",
+                            "encoding": "markdown",
+                            "id": "a4335dfc-c908-4bda-a1f6-78367ee5d8a9",
+                            "choices": [
+                                {
+                                    "encoding": "markdown",
+                                    "value": "",
+                                    "explanation": {
+                                        "type": "content",
+                                        "children": []
+                                    },
+                                    "type": "coordinateChoice",
+                                    "items": [
+                                        {
+                                            "type": "coordinateItem",
+                                            "coordinates": [
+                                                "2",
+                                                "1"
+                                            ]
+                                        },
+                                        {
+                                            "type": "coordinateItem",
+                                            "coordinates": [
+                                                "4",
+                                                "2"
+                                            ]
+                                        }
+                                    ],
+                                    "correct": true
+                                }
+                            ],
+                            "answer": {
+                                "type": "content",
+                                "encoding": "markdown",
+                                "value": ""
+                            },
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "value": "This is a coordinate question. The correct answer is (2, 1) and (4, 2)."
+                                }
+                            ],
+                            "disregardSignificantFigures": true,
+                            "numberOfDimensions": 2,
+                            "placeholderValues": [
+                                "placeholder",
+                                "placeholder"
+                            ]
+                        }
+                    ]
                 }
             ],
             "tags": []
