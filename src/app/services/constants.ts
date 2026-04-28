@@ -1240,6 +1240,8 @@ export const GRAY_120 = '#c9cad1';
 
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 
+export const CONTACT_FORM_CHAR_LENGTH_LIMIT = 5000;
+
 export const SEARCH_RESULTS_PER_PAGE = 30;
 
 export const GAMEBOARD_UNDO_STACK_SIZE_LIMIT = 10;
