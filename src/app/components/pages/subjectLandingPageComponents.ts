@@ -109,7 +109,9 @@ const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): CardPr
             "a_level": ArbitraryPageLinkCard("Core skills practice", `Practise core skills required in A Level Chemistry.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
             "university": ArbitraryPageLinkCard("Skills practice", `Consolidate your chemistry skills with these tools`, [{tag: `Refine your chemistry skills`, url: extendUrl(context, "tools")}], AbstractListViewItemState.COMING_SOON)(context),
         },
-        "biology": {},
+        "biology": {
+            "gcse": ArbitraryPageLinkCard("Core skills practice", `Practise core maths skills that are used in GCSE Biology.`, [{tag: `Practise mental maths`, url: extendUrl(context, "tools")}])(context),
+        },
     };
 
     return subjectSpecificAnvilCard[context.subject][context.stage[0] as keyof typeof subjectSpecificAnvilCard[typeof context.subject]] || ArbitraryPageLinkCard("Core skills practice", `Consolidate your ${context.subject} skills with these tools.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}])(context);
@@ -162,6 +164,7 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
         "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "biology": {
+        "gcse": [BoardsByTopicCard, AnvilAppsCard],
         "a_level": [BoardsByTopicCard, GlossaryCard, BiologyExtensionQuestionsCard],
     }
 };
@@ -184,7 +187,8 @@ const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
         "university": ["maths_book_2e"],
     },
     "biology": {
-        "a_level": ["maths_book_2e", "maths_book_gcse"]
+        "gcse": ["maths_book_gcse"],
+        "a_level": ["maths_book_2e", "maths_book_gcse"],
     }
 };
 
@@ -201,9 +205,11 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
     const baseCards: LandingPageCard[] =
         context.stage.includes("11_14") && context.subject === "physics"
             ? [StepIntoPhyCard, StepUpPhyCard, ExperimentsCard]
-            : context.stage.includes("gcse") && (context.subject === "chemistry" || context.subject === "maths")
+            : context.stage.includes("gcse") && ["chemistry", "maths"].includes(context.subject)
                 ? [QuestionFinderCard, ConceptPageCard]
-                : [QuestionFinderCard, ConceptPageCard, PracticeTestsCard];
+                : context.stage.includes("gcse") && context.subject === "biology"
+                    ? [QuestionFinderCard, GlossaryCard]
+                    : [QuestionFinderCard, ConceptPageCard, PracticeTestsCard];
 
     const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0] as keyof typeof subjectSpecificCardsMap[typeof context.subject]] || [];
 
