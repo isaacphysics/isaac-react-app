@@ -214,6 +214,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 
 // all Bootstrap overrides must appear before this
 @import "bootstrap/scss/mixins";
+@import "../common/bootstrap-theme-override";
 @import "bootstrap/scss/utilities";
 @import "../common/bootstrap-contents";
 @import "dark-mode-overrides";
