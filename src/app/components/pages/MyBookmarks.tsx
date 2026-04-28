@@ -18,7 +18,7 @@ export const MyBookmarks = () => {
     const [sortOrder, setSortOrder] = useState<BookmarksOrder>(BookmarksOrder.date);
 
     return <PageContainer
-        pageTitle={<TitleAndBreadcrumb currentPageTitle="My bookmarks" icon={{type: "icon", icon: "icon-book"}} />}
+        pageTitle={<TitleAndBreadcrumb currentPageTitle="My bookmarks" icon={{type: "icon", icon: "icon-my-bookmarks"}} />}
         sidebar={<MyBookmarksSidebar 
             searchText={searchText} 
             setSearchText={setSearchText}
