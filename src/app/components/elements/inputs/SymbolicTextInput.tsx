@@ -13,6 +13,7 @@ import classNames from "classnames";
 interface ModeConstantTypes {
     badInputCharacters: RegExp;
     tooltipExample: ReactNode;
+    tooltipLink?: string;
     formulaType: string;
     // Inequality grammar is not currently typed
     // eslint-disable-next-line @typescript-eslint/no-explicit-any 
@@ -24,6 +25,7 @@ const modeConstants: Record<EditorMode, ModeConstantTypes> = {
     "maths": {
         badInputCharacters: new RegExp(/[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷]+/),
         tooltipExample: <> a*x^2 + b x + c <br/> (-b ± sqrt(b**2 - 4ac)) / (2a) <br/> 1/2 mv**2 <br/> log(x_a, 2) == log(x_a) / log(2) <br/> </>,
+        tooltipLink: "/solving_problems#symbolic_text",
         formulaType: "formula",
         parseExpressionFunc: parseMathsExpression,
         currentAttemptOutput: "pythonExpression",
@@ -38,6 +40,7 @@ const modeConstants: Record<EditorMode, ModeConstantTypes> = {
     "chemistry": {
         badInputCharacters: new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/),
         tooltipExample: <> H2O <br/> 2 H2 + O2 -&gt; 2 H2O <br/> CH3(CH2)3CH3 <br/> {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"} <br/> </>,
+        tooltipLink: "/pages/chemistry_text_entry",
         formulaType: "chemicalFormula",
         parseExpressionFunc: parseInequalityChemistryExpression,
         currentAttemptOutput: "mhchemExpression",
@@ -45,6 +48,7 @@ const modeConstants: Record<EditorMode, ModeConstantTypes> = {
     "nuclear": {
         badInputCharacters: new RegExp(/[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/),
         tooltipExample: <> {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"} <br/> {"^{0}_{-1}e"} <br/> {"\\gammaray"} <br/> </>,
+        tooltipLink: "/pages/chemistry_text_entry",
         formulaType: "chemicalFormula",
         parseExpressionFunc: parseInequalityNuclearExpression,
         currentAttemptOutput: "mhchemExpression",
@@ -156,13 +160,19 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
     return errors;
 };
 
-const TooltipContents = ({editorMode}: {editorMode: EditorMode}) => {
+const SymbolicHelpTooltip = ({editorMode, helpTooltipId}: {editorMode: EditorMode, helpTooltipId: string}) => {
     return <>
-        Here are some examples of expressions you can type:<br />
-        <br />
-        {modeConstants[editorMode].tooltipExample}
-        <br />
-        As you type, the box below will preview the result.
+        {siteSpecific(
+            <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href={modeConstants[editorMode].tooltipLink}>?</Button>,
+            <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
+        )}
+        <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false} className="symbolic-help-tooltip">
+            Here are some examples of expressions you can type:<br />
+            <br />
+            {modeConstants[editorMode].tooltipExample}
+            <br />
+            As you type, the box below will preview the result.
+        </UncontrolledTooltip>
     </>;
 };
 
@@ -262,15 +272,7 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
                         ↺
                     </button>}
                 </div>
-                <>
-                    {siteSpecific(
-                        <Button id={helpTooltipId} type="button" className="eqn-editor-help" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                        <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
-                    )}
-                    <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false}>
-                        <TooltipContents editorMode={editorMode}/>
-                    </UncontrolledTooltip>
-                </>
+                <SymbolicHelpTooltip editorMode={editorMode} helpTooltipId={helpTooltipId}/>
             </div>
             <QuestionInputValidation userInput={textInput} validator={(input) => symbolicTextInputValidator(input, editorMode, mayRequireStateSymbols, demoPage)}/>
         </InputGroup>

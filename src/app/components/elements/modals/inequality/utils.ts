@@ -473,7 +473,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
 
         parsedAvailableSymbols.forEach((l) => {
             const availableSymbol = l.trim();
-            if (availableSymbol.endsWith('()')) {
+            if (availableSymbol.endsWith('()') && availableSymbol !== '()') {
                 // Functions
                 const functionName = availableSymbol.replace('()', '');
                 if (TRIG_FUNCTION_NAMES.includes(functionName)) {

@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useMemo, useRef} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {CoordinateChoiceDTO, CoordinateItemDTO, IsaacCoordinateQuestionDTO} from "../../../IsaacApiTypes";
 import {Button, Input} from "reactstrap";
@@ -91,7 +91,7 @@ const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
 
 const CoordinateInput = (props: CoordinateInputProps) => {
     const {value, placeholderValues, useBrackets, separator, prefixes, suffixes, numberOfDimensions, onChange, readonly, remove} = props;
-    return <span className="coordinate-input">
+    return <div className="coordinate-input">
         {useBrackets ? "(" : ""}
         {[...Array(numberOfDimensions)].map((_, i) =>
             <span key={i}>
@@ -109,40 +109,72 @@ const CoordinateInput = (props: CoordinateInputProps) => {
             </span>)}
         {useBrackets ? ")" : ""}
         {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
-    </span>;
+    </div>;
+};
+
+const generateEmptyCoordItem = (numberOfDimensions: number): CoordinateItemDTO => {
+    return {
+        type: "coordinateItem",
+        coordinates: Array<string>(numberOfDimensions).fill("")
+    };
+};
+
+const generateEmptyCoord = (numberOfCoordinates: number, numberOfDimensions: number) => {
+    return {
+        type: "coordinateChoice", 
+        items: Array.from({length: numberOfCoordinates}).map(() => generateEmptyCoordItem(numberOfDimensions))
+    } satisfies CoordinateChoiceDTO;
 };
 
 const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacCoordinateQuestionDTO>) => {
 
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
-
-    const numberOfDimensions = doc.numberOfDimensions ?? 2;
+    const numberOfDimensions = useRef(doc.numberOfDimensions ?? 2);
+    const numberOfCoordinates = useRef(doc.numberOfCoordinates);
     const buttonText = doc.buttonText ?? "Add coordinate";
 
-    const getEmptyCoordItem = useCallback((): CoordinateItemDTO => {
-        return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
-    }, [numberOfDimensions]);
+    const emptyCoordItem = () => generateEmptyCoordItem(numberOfDimensions.current);
+    const emptyCoord = () => generateEmptyCoord(numberOfCoordinates.current ?? 2, numberOfDimensions.current);
+
+    const { currentAttempt: nullableCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
+    const currentAttempt = useMemo(() => {
+        // see https://github.com/isaacphysics/isaac-react-app/pull/2093; it was previously possible to generate null items, which we must now deal with
+        if (!isDefined(nullableCurrentAttempt)) return undefined;
+        return {
+            ...nullableCurrentAttempt, 
+            items: nullableCurrentAttempt?.items?.map(item => isDefined(item) ? item : emptyCoordItem())
+        };
+    }, [nullableCurrentAttempt]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : emptyCoordItem());
+        if (numberOfCoordinates.current && !items.length) {
+            // if the number of coordinates is fixed and we don't have a prior attempt, we need to fill all other items with blanks before updating the indexed item
+            items.push(...emptyCoord().items);
+        }
         items[index] = cleanItem(value);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
-    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
+    }, [currentAttempt?.items, dispatchSetCurrentAttempt]);
 
     const removeItem = useCallback((index: number) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : emptyCoordItem());
         items.splice(index, 1);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
-    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
+    }, [currentAttempt?.items, dispatchSetCurrentAttempt]);
 
     const addCoord = useCallback(() => {
         if (!isDefined(currentAttempt)) {
-            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem(), getEmptyCoordItem()]});
+            dispatchSetCurrentAttempt(emptyCoord());
         }
         else {
-            updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem());
+            updateItem(currentAttempt?.items?.length ?? 1, emptyCoordItem());
         }
-    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem, updateItem]);
+    }, [currentAttempt, dispatchSetCurrentAttempt, updateItem]);
+
+    const displayedCoordinates = doc.numberOfCoordinates
+        ? Array.from({length: doc.numberOfCoordinates}).map((_, index) => currentAttempt?.items?.[index] ?? emptyCoordItem())
+        : (currentAttempt?.items && currentAttempt?.items.length > 0 
+            ? currentAttempt.items
+            : [emptyCoordItem()]);
 
     return <div className="coordinate-question">
         <div className="question-content">
@@ -150,51 +182,24 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        {doc.numberOfCoordinates
-            ? Array.from({length: doc.numberOfCoordinates}).map((_, index) =>
-                <CoordinateInput
-                    key={index}
-                    placeholderValues={doc.placeholderValues ?? []}
-                    useBrackets={doc.useBrackets ?? true}
-                    separator={doc.separator ?? ","}
-                    prefixes={doc.prefixes}
-                    suffixes={doc.suffixes}
-                    numberOfDimensions={numberOfDimensions}
-                    value={currentAttempt?.items?.[index] ?? getEmptyCoordItem()}
-                    readonly={readonly}
-                    onChange={value => updateItem(index, value)}
-                />
-            ) : (currentAttempt?.items && currentAttempt?.items.length > 0)
-                ? <>
-                    {currentAttempt?.items?.map((item, index) =>
-                        <CoordinateInput
-                            key={index}
-                            placeholderValues={doc.placeholderValues ?? []}
-                            useBrackets={doc.useBrackets ?? true}
-                            separator={doc.separator ?? ","}
-                            prefixes={doc.prefixes}
-                            suffixes={doc.suffixes}
-                            numberOfDimensions={numberOfDimensions}
-                            value={item}
-                            readonly={readonly}
-                            onChange={value => updateItem(index, value)}
-                            remove={(currentAttempt?.items && currentAttempt?.items.length > 1) ? () => removeItem(index) : undefined}
-                        />
-                    )}
-                </>
-                : <CoordinateInput
-                    key={0}
-                    placeholderValues={doc.placeholderValues ?? []}
-                    useBrackets={doc.useBrackets ?? true}
-                    separator={doc.separator ?? ","}
-                    prefixes={doc.prefixes}
-                    suffixes={doc.suffixes}
-                    numberOfDimensions={numberOfDimensions}
-                    value={getEmptyCoordItem()}
-                    readonly={readonly}
-                    onChange={value => updateItem(0, value)}
-                />
-        }
+        {displayedCoordinates.map((item, index) => (
+            <CoordinateInput
+                key={index}
+                placeholderValues={doc.placeholderValues ?? []}
+                useBrackets={doc.useBrackets ?? true}
+                separator={doc.separator ?? ","}
+                prefixes={doc.prefixes}
+                suffixes={doc.suffixes}
+                numberOfDimensions={numberOfDimensions.current}
+                value={item}
+                readonly={readonly}
+                onChange={value => updateItem(index, value)}
+                remove={(!doc.numberOfCoordinates && currentAttempt?.items && currentAttempt?.items.length > 1) 
+                    ? () => removeItem(index)
+                    : undefined
+                }
+            />
+        ))}
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
             <Markup encoding="latex">{buttonText}</Markup>

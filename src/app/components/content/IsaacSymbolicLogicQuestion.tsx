@@ -56,7 +56,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         if (state.userInput !== "" || modalVisible) {
             // Only call dispatch if the user has inputted text or is interacting with the modal
             // Otherwise this causes the response to reset on reload removing the banner
-            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+            dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
         }
         initialEditorSymbols.current = state.symbols ?? [];
     };

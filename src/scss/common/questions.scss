@@ -237,6 +237,17 @@ figure .inline-container {
       height: 100%;
       min-width: 36px !important;
       border-radius: 0 $border-radius-lg $border-radius-lg 0;
+
+      &.dropdown-toggle {
+        &::after {
+          background-color: var(--subject-color-700); // caret only shown on sci
+        }
+
+        &:hover::after {
+          background-color: white;
+        }
+      }
+
       &.feedback-shown {
         padding-right: 36px !important;
       }

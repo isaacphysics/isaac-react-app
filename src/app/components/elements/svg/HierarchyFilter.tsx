@@ -1,10 +1,5 @@
 import React from "react";
-import {
-    SUBJECT_SPECIFIC_CHILDREN_MAP,
-    TAG_ID,
-    TAG_LEVEL,
-    tags
-} from "../../../services";
+import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import classNames from "classnames";
 import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
@@ -13,6 +8,18 @@ import { selectors, useAppSelector } from "../../../state";
 
 export type TierID = "subjects" | "fields" | "topics";
 export interface Tier {id: TierID; name: string; for: string}
+
+const disabledSubjectStageTopics: Record<string, Record<string, TAG_ID[]>> = {
+    "biology": {
+        "gcse": [TAG_ID.biochemistry, TAG_ID.genetics, TAG_ID.physiology, TAG_ID.ecology, TAG_ID.evolution, TAG_ID.bioMathsSkills],
+    },
+};
+
+const comingSoonSubjectStageTopics: Record<string, Record<string, TAG_ID[]>> = {
+    "biology": {
+        "gcse": [TAG_ID.biochemistry, TAG_ID.physiology],
+    },
+};
 
 interface HierarchyFilterProps {
     choices: ChoiceTree[];
@@ -47,6 +54,9 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
                 setSelections(newSelections);
             };
 
+            const isDisabled = pageContext?.subject && pageContext?.stage?.[0] && disabledSubjectStageTopics[pageContext?.subject]?.[pageContext?.stage?.[0]]?.includes(choice.value);
+            const isComingSoon = isDisabled && pageContext?.subject && pageContext?.stage?.[0] && comingSoonSubjectStageTopics[pageContext?.subject]?.[pageContext?.stage?.[0]]?.includes(choice.value);
+
             return <React.Fragment key={i}>
                 {tier === 1 && pageContext?.subject && pageContext?.stage?.length === 1 && SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]]?.includes(choice.value) && <div>
                     <p className="ps-3 text-muted small mb-0">
@@ -54,7 +64,7 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
                     </p>
                 </div>}
                 <li key={choice.value}>
-                    <CheckboxWrapper active={isSelected && tier !== 2} className={classNames({"search-field": tier===2, "hierarchy-true-root": root && tier === 0})}>
+                    <CheckboxWrapper active={isSelected && tier !== 2} className={classNames({"search-field": tier===2, "hierarchy-true-root": root && tier === 0, "d-flex": isComingSoon})}>
                         <StyledCheckbox
                             partial
                             color="white"
@@ -63,10 +73,12 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
                             onChange={selectValue}
                             label={<span>{choice.label}</span>}
                             className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})}
+                            disabled={isDisabled && !isSelected}
                         />
                         {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
                             <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, choices, selections, questionFinderFilter, setSelections}}/>
                         }
+                        {isComingSoon && <span className="badge bg-theme ms-2 h-min-content align-self-center">Coming soon!</span>}
                     </CheckboxWrapper>
                 </li>
             </React.Fragment>;

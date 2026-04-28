@@ -318,15 +318,8 @@ svg {
 
 .btn.btn-keyline:hover > i.icon:not(.icon-raw), .btn.btn-secondary:hover > i.icon:not(.icon-raw),
 .btn.btn-tint:hover > i.icon:not(.icon-raw), .btn.btn-tertiary:hover > i.icon:not(.icon-raw) {
-  background-color: var(--layered-icon-parent-bg-override, var(--icon-hover));
-
-  &::before {
-    background-color: var(--icon-hover);
-  }
-
-  &::after {
-    background-color: var(--icon-hover);
-  }
+  --icon-foreground: var(--icon-hover);
+  --icon-background: var(--icon-hover);
 }
 
 .phy-hex-icon {
@@ -364,4 +357,8 @@ i.icon.icon-color-alert {
 
 i.icon.icon-color-black-hoverable {
   --buttons-light-icon: var(--color-neutral-900);
+}
+
+i.icon.icon-color-theme-hoverable {
+  --buttons-light-icon: var(--subject-color-500);
 }

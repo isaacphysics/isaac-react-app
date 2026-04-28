@@ -54,11 +54,7 @@
   }
 
   i.icon {
-    background-color: var(--layered-icon-parent-bg-override, var(--buttons-dark-icon));
-  }
-
-  i.icon::after {
-    background-color: var(--buttons-dark-icon);
+    --icon-foreground: var(--buttons-dark-icon);
   }
 }
 
@@ -82,11 +78,7 @@
   }
 
   i.icon {
-    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
-  }
-
-  i.icon::after {
-    background-color: var(--buttons-light-icon);
+    --icon-foreground: var(--buttons-light-icon);
   }
 }
 
@@ -106,11 +98,7 @@
   }
 
   i.icon {
-    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
-  }
-
-  i.icon::after {
-    background-color: var(--buttons-light-icon);
+    --icon-foreground: var(--buttons-light-icon);
   }
 }
 
@@ -151,11 +139,7 @@
   }
 
   i.icon {
-    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
-  }
-
-  i.icon::after {
-    background-color: var(--buttons-light-icon);
+    --icon-foreground: var(--buttons-light-icon);
   }
 }
 

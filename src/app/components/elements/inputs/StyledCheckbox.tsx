@@ -10,7 +10,7 @@ import classNames from "classnames";
 
 export const StyledCheckbox = (props: InputProps & {partial?: boolean, removeVerticalOffset?: boolean}) => {
 
-    const {label, ignoreLabelHover, className, bsSize, partial, invalid, removeVerticalOffset, ...rest} = props;
+    const {label, ignoreLabelHover, className, bsSize, partial, invalid, removeVerticalOffset, disabled, ...rest} = props;
 
     const [checked, setChecked] = useState(props.checked ?? false);
     const id = useMemo(() => {return (props.id ?? "") + "-" + v4();}, [props.id]);
@@ -27,14 +27,15 @@ export const StyledCheckbox = (props: InputProps & {partial?: boolean, removeVer
     return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": invalid, "checkbox-small": bsSize === "sm"})}>
         <div className={classNames({"me-2 my-2": label, "mb-2 mt-0": label && removeVerticalOffset})}>
             {isAda && checked && <div className="tick"/>}
-            <input {...rest} id={id} type="checkbox" className={classNames(className ?? "", "d-block", {"checked": checked, "icon-checkbox-off": !partial && !checked, "icon-checkbox-selected": !partial && checked})}
+            <input {...rest} id={id} type="checkbox" className={classNames(className, "d-block", {"checked": checked, "icon-checkbox-off": !partial && !checked, "icon-checkbox-selected": !partial && checked, "pe-none": disabled})}
                 onChange={(e) => onCheckChange(e)}
                 // If the user toggles with a keyboard, this does not change the state of the checkbox, so we need to do it manually (with modification to `target`
                 // as this is a keyboard event, not a change event). We also prevent default to avoid submitting the outer form.
                 onKeyDown={(e) => ifKeyIsEnter(() => {onCheckChange({...e, target: {...e.currentTarget, checked: !e.currentTarget.checked}}); e.preventDefault();})(e)}
+                disabled={disabled}
             />
         </div>
-        {label && <label htmlFor={id} className={classNames({"text-muted" : props.disabled, "hover-override" : ignoreLabelHover, "mb-2": removeVerticalOffset})} {...label.props}/>}
+        {label && <label htmlFor={id} className={classNames({"text-muted" : disabled, "hover-override" : ignoreLabelHover, "mb-2": removeVerticalOffset})} {...label.props}/>}
         <Spacer/>
     </div>;
 };
