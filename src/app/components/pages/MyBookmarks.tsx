@@ -32,7 +32,7 @@ export const MyBookmarks = () => {
         />}
     >
 
-        <PageMetadata noTitle showSidebarButton sidebarInTitle>
+        <PageMetadata noTitle>
             <PageFragment fragmentId="help_toptext_bookmarks" />
         </PageMetadata>
 
