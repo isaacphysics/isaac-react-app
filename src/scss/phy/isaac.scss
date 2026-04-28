@@ -375,12 +375,12 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 // Utility
 @import "../common/mixins";
 @import "../common/_utils";
+@import "../common/_accessibility";
 @import "../common/transitions";
 @import "../common/animation";
 
 // theming
 @import "color-theme";
-@import "../common/accessibility";
 
 // Atoms
 @import "fonts";
