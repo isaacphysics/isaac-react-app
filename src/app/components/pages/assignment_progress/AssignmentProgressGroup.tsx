@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../../state';
+import {openActiveModal, useAppDispatch, useGetGroupMembersQuery} from '../../../state';
 import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../../IsaacAppTypes';
 import {
     above,
@@ -15,7 +15,8 @@ import {
     PATHS,
     siteSpecific,
     SortOrder,
-    useDeviceSize
+    useDeviceSize,
+    useGroupAssignments
 } from '../../../services';
 import {RegisteredUserDTO} from '../../../../IsaacApiTypes';
 import {Link, useLocation} from 'react-router-dom';

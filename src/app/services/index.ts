@@ -45,6 +45,7 @@ export * from "./search";
 export * from "./scrollManager";
 export * from "./pageLoad";
 export * from "./assignments";
+export * from "./assignmentSorting";
 export * from "./events";
 export * from "./userViewingContext";
 export * from "./userPreferences";
