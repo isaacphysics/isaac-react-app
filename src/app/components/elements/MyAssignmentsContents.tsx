@@ -88,7 +88,7 @@ const AssignmentCard = siteSpecific(PhyAssignmentCard, CSAssignmentCard);
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
 }
-export const Assignments = ({assignments}: AssignmentsProps) => {
+export const MyAssignmentsContents = ({assignments}: AssignmentsProps) => {
     return <>
         {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index} />)}
         {assignments.length === 0 &&

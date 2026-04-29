@@ -4,7 +4,7 @@ import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Button, Col, Input, Label, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {filterAssignmentsByProperties, filterAssignmentsByStatus, getDistinctAssignmentGroups, getDistinctAssignmentSetters, isAda, isPhy, isTutorOrAbove, siteSpecific} from "../../services";
-import {Assignments} from "../elements/Assignments";
+import {MyAssignmentsContents} from "../elements/MyAssignmentsContents";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PageFragment} from "../elements/PageFragment";
 import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
@@ -75,7 +75,7 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
             </Col>
         </Row>
         <Row className="mt-3">
-            <Assignments assignments={filteredAssignments.slice(0, limit)} />
+            <MyAssignmentsContents assignments={filteredAssignments.slice(0, limit)} />
         </Row>
     </>;
 };
@@ -169,7 +169,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                         return <>
                             {siteSpecific(
                                 <div className="pt-4">
-                                    <Assignments assignments={orderedAssignments.slice(0, limit)} />
+                                    <MyAssignmentsContents assignments={orderedAssignments.slice(0, limit)} />
                                 </div>, 
                                 <AdaAssignmentView
                                     {...myAssignmentOptionProps}
