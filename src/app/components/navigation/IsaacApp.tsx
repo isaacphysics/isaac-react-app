@@ -81,6 +81,7 @@ import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
 import { FeatureFlagProvider } from '../../services/featureFlag';
 import { NewAdaNavigationBanner } from './NewAdaNavigationBanner';
+import { Assignment } from '../pages/Assignment';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -157,6 +158,9 @@ const routes = createRoutesFromElements(
         <Route path="/progress/:userIdOfInterest" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
         <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
         <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
+
+        <Route path="/assignment/:assignmentId/view" element={<RequireAuth auth={isLoggedIn} element={<Assignment />} />} />
+
 
         {/* Teacher pages */}
         {/* Tutors can set and manage assignments, but not tests/quizzes */}

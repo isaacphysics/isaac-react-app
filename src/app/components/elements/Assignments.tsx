@@ -27,7 +27,7 @@ const CSCircle = ({label, percentage}: {percentage: number | unknown, label: str
 const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
 
-    return <GameboardCard gameboard={assignment.gameboard} linkLocation={GameboardLinkLocation.Card}>
+    return <GameboardCard gameboard={assignment.gameboard} linkLocation={GameboardLinkLocation.Card} assignment={assignment}>
         <Row className="w-100">
             <Col xs={12} md={6}>
                 {isDefined(assignmentStartDate) && 
@@ -90,7 +90,7 @@ interface AssignmentsProps {
 }
 export const Assignments = ({assignments}: AssignmentsProps) => {
     return <>
-        {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
+        {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index} />)}
         {assignments.length === 0 &&
             <p className="text-center py-4"><strong>There are no {siteSpecific("assignments", "quizzes")} to display for the selected filters.</strong></p>
         }
