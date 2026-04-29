@@ -38,6 +38,9 @@ export const Assignment = () => {
     const assignmentId = location.pathname.split("/")[2];
     const assignment = assignments?.find(a => a.id?.toString() === assignmentId);
 
+    // TODO (AV2): replace both queries with e.g. getAssignmentQuery that can return both assignment + gameboard together.
+    // should also ensure the questions' summary object contains the /assignment/:aid/question/:qid URL.
+
     const gameboardQuery = useGetGameboardByIdQuery(assignment?.gameboardId || skipToken);
     const { data: gameboard } = gameboardQuery;
 

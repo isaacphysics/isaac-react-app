@@ -160,6 +160,7 @@ const routes = createRoutesFromElements(
         <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
 
         <Route path="/assignment/:assignmentId/view" element={<RequireAuth auth={isLoggedIn} element={<Assignment />} />} />
+        <Route path="/assignment/:assignmentId/question/:questionId" element={<RequireAuth auth={isLoggedIn} element={<Question />} />} />
 
 
         {/* Teacher pages */}
