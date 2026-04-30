@@ -5,6 +5,7 @@ import { Alert } from "reactstrap";
 import { Link } from "react-router";
 import { useGetMyAssignmentsQuery } from "../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
 
 interface AccessingAssignedQuestionOutsideAssignmentWarningProps {
     question?: QuestionDTO;
@@ -13,9 +14,13 @@ interface AccessingAssignedQuestionOutsideAssignmentWarningProps {
 
 export const AccessingAssignedQuestionOutsideAssignmentWarning = ({question, assignment}: AccessingAssignedQuestionOutsideAssignmentWarningProps) => {
 
+    const isAssignmentsV2 = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
+
     // don't bother loading if we're in an assignment – this warning won't show
-    const {data: assignments} = useGetMyAssignmentsQuery(assignment?.id ? skipToken : undefined);
+    const {data: assignments} = useGetMyAssignmentsQuery(!isAssignmentsV2 || assignment?.id ? skipToken : undefined);
     const assignmentsToDo = getAssignmentsToDo(assignments);
+
+    if (!isAssignmentsV2) return null;
 
     // if we are not currently on an assignment...
     if (!isDefined(assignment) && isDefined(question)) {

@@ -56,15 +56,15 @@ export const Gameboard = () => {
             icon={{type: "icon", icon: "icon-error"}}
         />
         <h3 className="my-4">
-            {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboard?.id}</code>{"."}
+            {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
         </h3>
     </>;
 
-    return !gameboard?.id
+    return !gameboardId
         ? <Navigate to={PATHS.QUESTION_FINDER} />
         : <ShowLoadingQuery
             query={gameboardQuery}
-            defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboard.id}`}
+            defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
             ifNotFound={notFoundComponent}
             placeholder={<Container><LoadingPlaceholder /></Container>}
             thenRender={(gameboard) => {

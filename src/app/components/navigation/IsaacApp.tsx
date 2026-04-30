@@ -79,7 +79,7 @@ import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
-import { FeatureFlagProvider } from '../../services/featureFlag';
+import { FeatureFlag, FeatureFlagProvider, FeatureFlagWrapper } from '../../services/featureFlag';
 import { NewAdaNavigationBanner } from './NewAdaNavigationBanner';
 import { Assignment } from '../pages/Assignment';
 
@@ -159,9 +159,15 @@ const routes = createRoutesFromElements(
         <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
         <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
 
-        <Route path="/assignment/:assignmentId/view" element={<RequireAuth auth={isLoggedIn} element={<Assignment />} />} />
-        <Route path="/assignment/:assignmentId/question/:questionId" element={<RequireAuth auth={isLoggedIn} element={<Question />} />} />
-
+        {/* Assignments V2 links */}
+        <Route path="/assignment/:assignmentId/view" element={<FeatureFlagWrapper flag={FeatureFlag.ASSIGNMENTS_V2}
+            onSet={<RequireAuth auth={isLoggedIn} element={<Assignment />} />}
+            onUnset={<NotFound />}
+        />} />
+        <Route path="/assignment/:assignmentId/question/:questionId" element={<FeatureFlagWrapper flag={FeatureFlag.ASSIGNMENTS_V2}
+            onSet={<RequireAuth auth={isLoggedIn} element={<Question />} />}
+            onUnset={<NotFound />}
+        />} />
 
         {/* Teacher pages */}
         {/* Tutors can set and manage assignments, but not tests/quizzes */}

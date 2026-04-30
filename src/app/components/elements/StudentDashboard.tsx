@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
 import { getFriendlyDaysUntil } from './DateString';
+import { FeatureFlag, useFeatureFlag } from '../../services/featureFlag';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -94,6 +95,8 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
     const { assignment, isTeacherDashboard, groups } = props;
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
 
+    const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
+
     // QuizAssignmentDTOs don't have group names
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
 
@@ -110,7 +113,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
         ) : isAssignment(assignment) 
             ? (isTeacherDashboard
                 ? `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`
-                : `/assignment/${assignment.id}/view`
+                : (isAssignmentsV2Link ? `/assignment/${assignment.id}/view` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`)
             )
             : "";
 
