@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     convertGameboardItemToContentSummary,
@@ -37,7 +37,6 @@ import { SupersededDeprecatedBoardContentWarning } from "../navigation/Supersede
 import { PageContainer } from "../elements/layout/PageContainer";
 
 export const Gameboard = () => {
-    const dispatch = useAppDispatch();
     const location = useLocation();
     const gameboardId = location.hash ? location.hash.slice(1) : null;
     const gameboardQuery = useGetGameboardByIdQuery(gameboardId || skipToken);
@@ -45,19 +44,10 @@ export const Gameboard = () => {
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
-    const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
-    const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
-    const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
-    const displayQuestions = (gameboard?.wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
+    const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId))) || undefined;
+
     const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
     const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;
-
-    // Only log a gameboard view when we have a gameboard loaded:
-    useEffect(() => {
-        if (isDefined(gameboard) && isFound(gameboard)) {
-            dispatch(logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id}));
-        }
-    }, [dispatch, gameboard]);
 
     const notFoundComponent = <>
         <TitleAndBreadcrumb
@@ -69,6 +59,7 @@ export const Gameboard = () => {
             {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
         </h3>
     </>;
+
     return !gameboardId
         ? <Navigate to={PATHS.QUESTION_FINDER} />
         : <ShowLoadingQuery
@@ -91,32 +82,56 @@ export const Gameboard = () => {
                 >
                     <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
-                    <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
-                    {user && isTutorOrAbove(user)
-                        ? <Row>
-                            <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
-                                <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="keyline" block>
-                                    {"Set as assignment"}
-                                </Button>
-                            </Col>
-                            <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
-                                <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="keyline" block>
-                                    {"Duplicate and edit"}
-                                </Button>
-                            </Col>
-                        </Row>
-                        : gameboard && !gameboard.savedToCurrentUser && <Row>
-                            <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                                <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`}
-                                    onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
-                                    color="keyline" block
-                                >
-                                    {siteSpecific("Save to My question decks", "Save to My quizzes")}
-                                </Button>
-                            </Col>
-                        </Row>
-                    }
+                            
+                    <GameboardContents gameboard={gameboard} />;
                 </PageContainer>;
             }}
         />;
+};
+
+interface GameboardContentsProps {
+    gameboard: GameboardDTO;
+}
+
+export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
+    const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
+    const displayQuestions = (gameboard?.wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
+
+    // Only log a gameboard view when we have a gameboard loaded:
+    useEffect(() => {
+        if (isDefined(gameboard) && isFound(gameboard)) {
+            void dispatch(logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id}));
+        }
+    }, [dispatch, gameboard]);
+
+    return <>
+        <ListView type="item" items={displayQuestions} linkedBoardId={gameboard.id} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
+        {user && isTutorOrAbove(user)
+            ? <Row>
+                <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
+                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`} color="keyline" block>
+                        {"Set as assignment"}
+                    </Button>
+                </Col>
+                <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
+                    <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboard.id}`}} color="keyline" block>
+                        {"Duplicate and edit"}
+                    </Button>
+                </Col>
+            </Row>
+            : gameboard && !gameboard.savedToCurrentUser && <Row>
+                <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
+                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}
+                        onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
+                        color="keyline" block
+                    >
+                        {siteSpecific("Save to My question decks", "Save to My quizzes")}
+                    </Button>
+                </Col>
+            </Row>
+        }
+    </>;
 };

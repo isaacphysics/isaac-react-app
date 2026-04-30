@@ -72,6 +72,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {formatDate} from "../elements/DateString";
 import { ListView } from "../elements/list-groups/ListView";
+import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -191,6 +192,7 @@ interface AssignmentListEntryProps {
 }
 const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+    const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
     const {openAssignmentModal, boardsById} = useContext(AssignmentScheduleContext);
     const [ unassignGameboard ] = useUnassignGameboardMutation();
     const [showMore, setShowMore] = useState(false);
@@ -202,7 +204,9 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     };
     const assignmentOwnedByMe = assignment.ownerUserId === user.id;
     const assignmentStartDate = getAssignmentStartDate(assignment);
-    const gameboardLink = assignment.gameboardId ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}` : undefined;
+    const gameboardLink = assignment.gameboardId 
+        ? isAssignmentsV2Link ? `/assignment/${assignment.id}/view` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`
+        : undefined;
     const gameboardTitle = assignment.gameboard?.title ?? `Unknown ${siteSpecific("question deck", "quiz")} (may belong to another user)`;
     const gameboard = boardsById[assignment.gameboardId];
     const boardSubjects = determineGameboardSubjects(gameboard);
