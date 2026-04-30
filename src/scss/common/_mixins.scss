@@ -369,3 +369,9 @@ $viewport-sizes: (
   line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+@mixin safari-only {
+    @supports (font: -apple-system-body) {
+        @content;
+    }
+}

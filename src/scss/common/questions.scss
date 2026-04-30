@@ -752,3 +752,19 @@ p > .katex, .katex-display {
 .spaced-tooltip br {
     margin-bottom: 0.5rem;
 }
+
+.dropdown-menu {
+  @include safari-only {
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 7px;
+      height: 7px;
+      -webkit-overflow-scrolling: auto;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(0,0,0,.5);
+        -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+  }
+}
