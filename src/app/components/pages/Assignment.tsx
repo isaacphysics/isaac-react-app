@@ -24,6 +24,7 @@ import {PageMetadata} from "../elements/PageMetadata";
 import { SupersededDeprecatedBoardContentWarning } from "../navigation/SupersededDeprecatedWarning";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GameboardContents } from "./Gameboard";
+import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
 
 // this is fairly similar to <Gameboard />, but coming directly from an assignment URL requires that we load the assignment before
 // we can request the gameboard by ID, so the order of operations is a bit different.
@@ -81,8 +82,7 @@ export const Assignment = () => {
                     />
                 }
                 sidebar={siteSpecific(
-                    // <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />,
-                    undefined,
+                    <GameboardSidebar gameboard={gameboard} assignments={assignment ? [assignment] : []} hideButton />,
                     undefined
                 )}
             >
