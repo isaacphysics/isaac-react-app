@@ -41,6 +41,8 @@ import { getAccessibilityTags, useAccessibilitySettings } from "../../services/a
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../navigation/AssignedQuestionWarningBanner";
+
 interface QuestionPageProps{
     questionIdOverride?: string;
     preview?: boolean;
@@ -117,6 +119,8 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
                     <Row className="question-content-container">
                         <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
+
+                            <AccessingAssignedQuestionOutsideAssignmentWarning question={doc} assignment={assignment} />
 
                             <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
