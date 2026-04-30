@@ -97,20 +97,33 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
     // QuizAssignmentDTOs don't have group names
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
 
-    const groupName = isQuiz(assignment) ? groupIdToName[assignment.groupId as number]
-        : isAssignment(assignment) ? assignment.groupName
+    const groupName = isQuiz(assignment) 
+        ? groupIdToName[assignment.groupId as number]
+        : isAssignment(assignment) 
+            ? assignment.groupName
             : "";
 
-    const link = isQuiz(assignment) ? (isTeacherDashboard ? `${PATHS.TEST}/${assignment.id}/feedback` : `${PATHS.TEST}/${assignment.id}`)
-        : isAssignment(assignment) ? (isTeacherDashboard ? `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`)
+    const link = isQuiz(assignment)
+        ? (isTeacherDashboard 
+            ? `${PATHS.TEST}/${assignment.id}/feedback` 
+            : `${PATHS.TEST}/${assignment.id}`
+        ) : isAssignment(assignment) 
+            ? (isTeacherDashboard
+                ? `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`
+                : `/assignment/${assignment.id}/view`
+            )
             : "";
 
-    const title = isQuiz(assignment) ? assignment.quizSummary?.title
-        : isAssignment(assignment) ? assignment.gameboard?.title
+    const title = isQuiz(assignment)
+        ? assignment.quizSummary?.title
+        : isAssignment(assignment)
+            ? assignment.gameboard?.title
             : "";
 
-    const icon = isQuiz(assignment) ? "icon icon-tests"
-        : isAssignment(assignment) ? "icon icon-question-deck"
+    const icon = isQuiz(assignment)
+        ? "icon icon-tests"
+        : isAssignment(assignment)
+            ? "icon icon-question-deck"
             : "";
 
     return <Link to={link} className="w-100">
@@ -153,7 +166,9 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
             : <>
                 <span className="mb-2">You have assignments that are active or due soon:</span>
                 <div className="row overflow-y-auto pt-1 mt-n1">
-                    {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard assignment={assignment} groups={groups}/></span>)}
+                    {toDo.map((assignment: IAssignmentLike) => <div key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3">
+                        <AssignmentCard assignment={assignment} groups={groups}/>
+                    </div>)}
                 </div>
                 <Spacer/>
                 <div className="d-flex align-items-center">
