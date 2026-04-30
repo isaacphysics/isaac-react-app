@@ -86,7 +86,9 @@ export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | undef
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment?.groupName && distinctAssignmentGroups.add(assignment.groupName);
+            if (assignment?.groupName) {
+                distinctAssignmentGroups.add(assignment.groupName);
+            }
         });
     }
     return distinctAssignmentGroups;
@@ -97,7 +99,9 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | unde
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment?.assignerSummary && distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string);
+            if (assignment?.assignerSummary) {
+                distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string);
+            }
         });
     }
     return distinctFormattedAssignmentSetters;

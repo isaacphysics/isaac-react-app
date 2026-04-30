@@ -6,7 +6,7 @@ import {
     AssignmentOrderType,
     EnhancedAssignment
 } from "../../IsaacAppTypes";
-import {AssignmentDTO, GameboardDTO, IsaacQuizDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {GameboardDTO, IsaacQuizDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import sortBy from "lodash/sortBy";
 import { skipToken } from "@reduxjs/toolkit/query";
 
