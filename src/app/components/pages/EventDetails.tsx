@@ -397,8 +397,9 @@ const EventDetails = () => {
                         </span>}
                     </>}
                 >
-                    <KeyEventInfo {...eventBookingProps} />
+                    {isPhy && <KeyEventInfo {...eventBookingProps} />}
                 </PageMetadata>
+                {isAda && <KeyEventInfo {...eventBookingProps} />}
                 <div className={siteSpecific("", "mt-4 pt-2 card")}>
                     <div className={siteSpecific("", "card-body")}>
                         <Row> 
