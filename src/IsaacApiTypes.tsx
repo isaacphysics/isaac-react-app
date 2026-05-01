@@ -775,8 +775,6 @@ export interface AdminSearchEndpointParams {
     familyName?: string;
     role?: UserRole;
     schoolOther?: string;
-    postcode?: string;
-    postcodeRadius?: string;
     schoolURN?: string;
     emailVerificationStatus?: EmailVerificationStatus;
     subjectOfInterest?: string;
