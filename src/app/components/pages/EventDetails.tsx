@@ -95,7 +95,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
     const KeyInfo = siteSpecific("div", Card);
 
     return <>
-        <MetadataContainer className={classNames("overflow-scroll", {"mt-3": isAda})}>
+        <MetadataContainer className={classNames("overflow-auto", {"mt-3": isAda})}>
             <KeyInfo className={classNames("event-key-info", siteSpecific("px-4", "gap-3 p-4"))}>
                 <Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
