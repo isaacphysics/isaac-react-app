@@ -402,15 +402,11 @@ const EventDetails = () => {
                 {isAda && <KeyEventInfo {...eventBookingProps} />}
                 <div className={siteSpecific("", "mt-4 pt-2 card")}>
                     <div className={siteSpecific("", "card-body")}>
-                        <Row> 
-                            <Col>
-                                <div className="d-flex flex-column-reverse d-md-block">
-                                    <ImageAndMap {...eventBookingProps} />
-                                    <IsaacContent doc={event}/>
-                                </div>
-                                <BookingForm {...eventBookingProps} />
-                            </Col>
-                        </Row>
+                        <div className="d-flex flex-column-reverse d-md-block">
+                            <ImageAndMap {...eventBookingProps} />
+                            <IsaacContent doc={event}/>
+                        </div>
+                        <BookingForm {...eventBookingProps} />
                     </div>
                 </div>
                 <Button tag={Link} to="/events" color="keyline" className="float-end my-4">
