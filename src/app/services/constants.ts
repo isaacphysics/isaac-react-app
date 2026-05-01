@@ -310,7 +310,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
-    [EXAM_BOARD.SQA]: "SQA",
+    [EXAM_BOARD.SQA]: "Qualifications Scotland",
     [EXAM_BOARD.ADA]: "Ada CS",
     [EXAM_BOARD.ALL]: "All exam boards",
 };

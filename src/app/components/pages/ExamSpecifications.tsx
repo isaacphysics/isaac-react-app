@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {Tabs} from "../elements/Tabs";
 import {PageFragment} from "../elements/PageFragment";
-import {CS_EXAM_BOARDS_BY_STAGE, EXAM_BOARD, STAGE, STAGES_CS, stageLabelMap} from "../../services";
+import {CS_EXAM_BOARDS_BY_STAGE, EXAM_BOARD, STAGE, STAGES_CS, stageLabelMap, examBoardLabelMap} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ExamBoard} from "../../../IsaacApiTypes";
@@ -93,7 +93,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSp
             }}
         >
             {Object.assign({}, ...stageExamBoards.map(examBoard => ({
-                [examBoard.toUpperCase()]: <></>
+                [examBoardLabelMap[examBoard]]: <></>
             })))}
         </Tabs>}), {});
 
