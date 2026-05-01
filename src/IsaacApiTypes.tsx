@@ -457,6 +457,7 @@ export interface ContentSummaryDTO {
     tags?: string[];
     url?: string;
     state?: CompletionState;
+    bookmarked?: Date;
     supersededBy?: string;
     deprecated?: boolean;
     difficulty?: string;

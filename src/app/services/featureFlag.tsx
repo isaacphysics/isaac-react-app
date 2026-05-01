@@ -8,6 +8,7 @@ import { StyledTripleToggle } from "../components/elements/inputs/StyledMultiTog
 
 export enum FeatureFlag {
     _TEST_FEATURE = "_TEST_FEATURE", // used for testing; do not remove
+    ENABLE_SCI_BOOKMARKS = "ENABLE_SCI_BOOKMARKS",
 }
 
 const loadOverridesFromStorage = (): Partial<Record<FeatureFlag, boolean>> => {
@@ -35,6 +36,7 @@ const useFlags = () : Record<FeatureFlag, boolean> => {
     return {
         // default values
         [FeatureFlag._TEST_FEATURE]: isNonProd,
+        [FeatureFlag.ENABLE_SCI_BOOKMARKS]: false,
 
         // overrides
         ...overrides

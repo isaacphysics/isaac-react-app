@@ -9,6 +9,7 @@ import { LoginLogoutButton } from "./HeaderPhy";
 import { Link, useNavigate } from "react-router-dom";
 import { HoverableNavigationContext, PageContextState } from "../../../../IsaacAppTypes";
 import max from "lodash/max";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
@@ -312,6 +313,11 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
                                 My question decks
                             </NavigationItemClose>
+                            <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
+                                <NavigationItemClose href={PATHS.BOOKMARKS}>
+                                    My bookmarks
+                                </NavigationItemClose>
+                            </FeatureFlagWrapper>
                             <NavigationItemClose href="/assignments" className="d-flex align-items-center">
                                 My assignments
                                 {workCounts.assignments > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</span>}
