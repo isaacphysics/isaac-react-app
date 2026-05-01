@@ -15,7 +15,7 @@ describe("AdminUserManager", () => {
      *
      * Will return the usersToReturn if provided, otherwise will return [mockUser].map(buildMockUserSummary).
      */
-    const buildSearchHandler = (adminSearchParams: AdminSearchEndpointParams, {usersToReturn, defaultUsersToReturn}: {usersToReturn?: any[], defaultUsersToReturn?: any[]}) => jest.fn(({request, params, cookies}) => {
+    const buildSearchHandler = (adminSearchParams: AdminSearchEndpointParams, {usersToReturn, defaultUsersToReturn}: {usersToReturn?: any[], defaultUsersToReturn?: any[]}) => jest.fn(({request, params}) => {
         if (Object.entries(adminSearchParams).length === 0) return HttpResponse.json(usersToReturn
             ? usersToReturn.map(u => buildMockUserSummary(u, true))
             : [buildMockUserSummary(mockUser, true)],
