@@ -311,7 +311,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                         {isTutorOrAbove(user) && <h5 className="pt-2 pt-sm-0">STUDENT</h5>}
                         <ul className="plain-list flex-grow-1">
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
-                                My question decks
+                                My saved decks
                             </NavigationItemClose>
                             <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
                                 <NavigationItemClose href={PATHS.BOOKMARKS}>

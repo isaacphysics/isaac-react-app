@@ -76,3 +76,17 @@ button.btn.delete-button {
 .bg-wildcard {
   background-color: $color-misc-pale-yellow;
 }
+
+%hex-status-indicator {
+  position: absolute;
+  top: 2px;
+  z-index: 7;
+  > i {
+    display: inline-block;
+  }
+}
+
+.board-card-status-indicator {
+  @extend %hex-status-indicator;
+  right: 0px;
+}

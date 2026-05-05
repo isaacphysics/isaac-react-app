@@ -1,8 +1,8 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext, isDefined} from './';
-import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext, isDefined} from './';
+import {attemptQuestion, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 import _flattenDeep from 'lodash/flatMapDeep';
 import { Inequality, makeInequality } from "inequality";
@@ -230,14 +230,6 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
         }
 
         const attempt = dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
-
-        if (isLoggedIn(currentUser) && !isTeacherPending(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-            dispatch(saveGameboard({
-                boardId: currentGameboard.id,
-                user: currentUser,
-                redirectOnSuccess: false
-            }));
-        }
 
         return attempt;
     }

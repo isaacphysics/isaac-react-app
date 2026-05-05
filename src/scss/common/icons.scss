@@ -179,6 +179,17 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/dash.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-star {
+  @include svg-icon-layered(
+    '/assets/common/icons/star.svg',
+    '/assets/common/icons/star-fill.svg',
+    calc(var(--icon-size) * 1.2), calc(var(--icon-size) * 1.2), var(--mask-size, 60%)
+  );
+  margin: calc(var(--icon-size) * (1 - 1.2)/2) !important;
+
+  @extend %icon-fillable;
+}
+
 .icon-ai {
   @include svg-icon('/assets/common/icons/ai.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }

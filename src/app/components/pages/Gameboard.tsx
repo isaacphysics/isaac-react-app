@@ -24,7 +24,8 @@ import {
     PATHS,
     SEARCH_RESULT_TYPE,
     showWildcard,
-    siteSpecific
+    siteSpecific,
+    isStudent
 } from "../../services";
 import {Navigate, useLocation} from "react-router";
 import classNames from "classnames";
@@ -35,6 +36,7 @@ import {ListView} from "../elements/list-groups/ListView";
 import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
 import { SupersededDeprecatedBoardContentWarning } from "../navigation/SupersededDeprecatedWarning";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { SaveBoardButton } from "../elements/SaveBoardButton";
 
 export const Gameboard = () => {
     const dispatch = useAppDispatch();
@@ -89,7 +91,16 @@ export const Gameboard = () => {
                         undefined
                     )}
                 >
-                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
+                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"
+                        additionalActionButtons={
+                            // hide for Ada students, who have no *accessible* page to see saved quizzes
+                            !(isAda && isStudent(user)) && <SaveBoardButton 
+                                board={gameboard} 
+                                color={siteSpecific("tint", "solid")} 
+                                data-bs-theme="neutral"
+                            />
+                        }
+                    />
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                     <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
                     {user && isTutorOrAbove(user)
@@ -111,7 +122,7 @@ export const Gameboard = () => {
                                     onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                                     color="keyline" block
                                 >
-                                    {siteSpecific("Save to My question decks", "Save to My quizzes")}
+                                    {siteSpecific("Save this deck", "Save to My quizzes")}
                                 </Button>
                             </Col>
                         </Row>

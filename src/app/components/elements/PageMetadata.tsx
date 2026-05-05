@@ -27,6 +27,7 @@ type PageMetadataProps = {
     children?: ReactNode; // any content-type specific metadata that may require information outside of `doc`; e.g. question completion state, event info, etc.
     noTitle?: boolean; // if true, any children (usually text) will be rendered in place of the title, with any action buttons (e.g. share, print, report) rendered to the side
     helpModalId?: string;
+    additionalActionButtons?: ReactNode; // pages can extend the standard action buttons with their own. they will be placed to the left of the main ones.
     pageContainsLLMFreeTextQuestion?: boolean;
 } & (
     {
@@ -45,14 +46,16 @@ interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
     isQuestion: boolean;
     helpModalId?: string;
     doc?: SeguePageDTO;
+    additionalActionButtons?: ReactNode;
 }
 
-export const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: ActionButtonsProps) => {
+export const ActionButtons = ({location, isQuestion, helpModalId, doc, additionalActionButtons, ...rest}: ActionButtonsProps) => {
     const deviceSize = useDeviceSize();
 
     const anyActionButtonShown = isPhy && helpModalId || above['sm'](deviceSize) || doc?.id;
 
     return anyActionButtonShown && <div {...rest} className={classNames("d-flex no-print gap-2", rest.className)}>
+        {additionalActionButtons}
         {isPhy && isQuestion && <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
             <BookmarkButton doc={doc} />
         </FeatureFlagWrapper>
@@ -110,7 +113,7 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
+    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, additionalActionButtons } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const isConcept = doc?.type === "isaacConceptPage";
     const location = useLocation();
@@ -121,16 +124,16 @@ export const PageMetadata = (props: PageMetadataProps) => {
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
         <div className="page-metadata">
             {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
-                {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-2"/>}
+                {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="float-end ms-3 mb-2"/>}
                 {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
-                {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className={classNames("ms-auto", {"mb-auto": !noTitle && badges})}/>}
+                {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className={classNames("ms-auto", {"mb-auto": !noTitle && badges})}/>}
             </div>}
 
             {isAda && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>
-                {children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>}
+                {children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="float-end ms-3 mb-3"/>}
                 <TagStack doc={doc} className={classNames({"mb-3": children, "d-flex align-items-end": !children})}/>
                 {children}
-                {!children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
+                {!children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="ms-auto"/>}
             </div>}
 
             {isPhy && !noTitle && children}
