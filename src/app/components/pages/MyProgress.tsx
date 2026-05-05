@@ -33,6 +33,7 @@ import { ProgressBar } from "../elements/views/ProgressBar";
 import { ListView } from '../elements/list-groups/ListView';
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
+import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -77,15 +78,15 @@ const MyProgress = ({user}: MyProgressProps) => {
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const [chartTab, setChartTab] = useState<"correct" | "attempted">("correct");
-    const screenSize = useDeviceSize();
+    const deviceSize = useDeviceSize();
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
-            dispatch(getMyProgress());
-            dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
+            void dispatch(getMyProgress());
+            void dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
         } else if (isTeacherOrAbove(user)) {
-            dispatch(getUserProgress(userIdOfInterest));
-            dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
+            void dispatch(getUserProgress(userIdOfInterest));
+            void dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
     }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
@@ -101,7 +102,7 @@ const MyProgress = ({user}: MyProgressProps) => {
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
-    const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
+    const pageTitle = viewingOwnData ? siteSpecific("My progress", "Progress") : `Progress for ${userName || "user"}`;
 
     return <PageContainer id="my-progress"
         pageTitle={
@@ -117,6 +118,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                 <div>
                     <Row>
                         <Col>
+                            <RevisionChallengeStats userProgress={progress} />
                             <AggregateQuestionStats userProgress={progress} />
                         </Col>
                         {isPhy && <Col className="align-self-center" xs={12} md={3}>
@@ -196,11 +198,21 @@ const MyProgress = ({user}: MyProgressProps) => {
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
-                            <ListView type="item" items={progress.mostRecentQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
+                            <ListView 
+                                type="item" 
+                                items={progress.mostRecentQuestions} 
+                                style={deviceSize !== "md" ? "stacked" : undefined}
+                                className="bordered"
+                            />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Oldest unsolved questions</h4>
-                            <ListView type="item" items={progress.oldestIncompleteQuestions} forceFullWidth={["sm", "lg", "xl"].includes(screenSize)} className="bordered"/>
+                            <ListView 
+                                type="item" 
+                                items={progress.oldestIncompleteQuestions}
+                                style={deviceSize !== "md" ? "stacked" : undefined}
+                                className="bordered"
+                            />
                         </Col>}
                     </Row>
                 </div>

@@ -110,14 +110,6 @@
     }
   }
 
-  .search-toggler-icon {
-    @include svg-color(url('/assets/cs/icons/search.svg'), $white, 1.5rem, 1.5rem);
-    margin: 15px;
-    float: right;
-    background-color: #333;
-    vertical-align: middle;
-  }
-
   .connections-search {
     margin: 12px 0;
     height: 1.8rem;

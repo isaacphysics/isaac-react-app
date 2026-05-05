@@ -35,8 +35,6 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                 <Markup encoding="latex" className="text-black">{page.title}</Markup>
             </>}
             subtitle=""
-            showSidebarButton
-            sidebarButtonText={page.sidebar?.subtitle}
         />
 
         <MetadataContainer className="d-flex flex-column gap-2">

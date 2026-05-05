@@ -57,6 +57,17 @@ img[aria-disabled="true"] {
   opacity: 0.5;
 }
 
+%icon-fillable {
+  &:not(.fill):not(.fill)::before {
+    // this must override icon-color-xxx (specificity (0, 2, 2)), otherwise the icon always appears filled
+    --icon-background: transparent;
+  }
+
+  &.fill::before {
+    --icon-background: var(--icon-foreground);
+  }
+}
+
 .icon-download {
   @include svg-icon('/assets/common/icons/download.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
@@ -94,18 +105,6 @@ img[aria-disabled="true"] {
 
 .icon-search {
   @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-event-upcoming {
-  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-event-complete {
-  @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-task-complete {
-  @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-file {
@@ -172,12 +171,29 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/cross.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-notification {
+  @include svg-icon('/assets/common/icons/notification-active.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-dash {
   @include svg-icon('/assets/common/icons/dash.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-ai {
   @include svg-icon('/assets/common/icons/ai.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-bookmark {
+  @include svg-icon-layered(
+    '/assets/common/icons/bookmark.svg', 
+    '/assets/common/icons/bookmark-fill.svg', 
+    calc(var(--icon-size) * 1.2), calc(var(--icon-size) * 1.2), var(--mask-size, 60%)
+  );
+  margin: calc(var(--icon-size) * (1 - 1.2)/2) !important;
+
+  &:not(.fill)::before {
+    background-color: transparent !important;
+  }
 }
 
 // Icon sizing
@@ -219,48 +235,40 @@ img[aria-disabled="true"] {
 }
 
 i.icon:not(.icon-raw) {
-  &, &[color="primary"] {
-    background-color: var(--layered-icon-parent-bg-override, var(--icon-primary));
-    
-    @include not-reduced-motion {
-      transition: all 0.15s ease-in-out; // mirrors BS's $btn-transition
-    }
-  
-    // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
-    &::after {
-      background-color: var(--icon-primary);
-      
-      @include not-reduced-motion {
-        transition: all 0.15s ease-in-out;
-      }
-    }
+  background-color: var(--layered-icon-parent-bg-override, var(--icon-foreground));
+  @include not-reduced-motion {
+    transition: all 0.15s ease-in-out; // mirrors BS's $btn-transition
+  }
 
-    // however, the ::before is also able to change colour, e.g. during hover inversions on keyline or tint buttons
-    &::before {
-      @include not-reduced-motion {
-        transition: all 0.15s ease-in-out;
-      }
+  &::after {
+    background-color: var(--icon-foreground);
+    @include not-reduced-motion {
+      transition: all 0.15s ease-in-out;
     }
+  }
+
+  &::before {
+    background-color: var(--icon-background);
+    @include not-reduced-motion {
+      transition: all 0.15s ease-in-out;
+    }
+  }
+
+  &, &[color="primary"] {
+    // default icon colours
+    --icon-foreground: var(--icon-primary);
+    --icon-background: var(--color-neutral-900, black);
   }
 
   &[color="secondary"] {
-    background-color: var(--layered-icon-parent-bg-override, var(--icon-secondary));
-    &::after {
-      background-color: var(--icon-secondary);
-    }
+    --icon-foreground: var(--icon-secondary);
   }
 
   &[color="tertiary"] {
-    background-color: var(--layered-icon-parent-bg-override, var(--icon-tertiary));
-    &::after {
-      background-color: var(--icon-tertiary);
-    }
+    --icon-foreground: var(--icon-tertiary);
   }
 
   &[color="white"] {
-    background-color: $white;
-    &::after {
-      background-color: $white;
-    }
+    --icon-foreground: white;
   }
 }

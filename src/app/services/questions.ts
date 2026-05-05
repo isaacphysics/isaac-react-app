@@ -1,9 +1,12 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext, isDefined} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
+import _flattenDeep from 'lodash/flatMapDeep';
+import { Inequality, makeInequality } from "inequality";
+import { InequalityState } from "../components/elements/inputs/SymbolicTextInput";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
 const IsaacReorderQuestion = lazy(() => import("../components/content/IsaacReorderQuestion"));
@@ -96,7 +99,7 @@ export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
 
 // Inequality specific functions
 
-export function sanitiseInequalityState(state: any) {
+export function sanitiseInequalityState(state: InequalityState): InequalityState {
     const saneState = JSON.parse(JSON.stringify(state));
     if (saneState.result?.tex) {
         saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_LATEX[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP_LATEX[l] : l).join('');
@@ -161,6 +164,46 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
         }
     }
     return theseSymbols;
+};
+
+export const initialiseInequality = (editorMode: string, hiddenEditorRef: React.MutableRefObject<HTMLDivElement | null>, sketchRef: React.MutableRefObject<Inequality | null | undefined>, currentAttemptValue: InequalityState | undefined, updateState: (state: InequalityState) => void) => {
+    if (!isDefined(hiddenEditorRef.current)) {
+        throw new Error("Unable to initialise inequality; target element not found.");
+    }
+
+    const {sketch, p} = makeInequality(
+        hiddenEditorRef.current,
+        100,
+        0,
+        _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
+        {
+            editorMode,
+            textEntry: true,
+            fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
+            fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
+        }
+    );
+    if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
+
+    sketch.log = { initialState: [], actions: [] };
+    sketch.onNewEditorState = updateState;
+    sketch.onCloseMenus = () => undefined;
+    sketch.isUserPrivileged = () => true;
+    sketch.onNotifySymbolDrag = () => undefined;
+    sketch.isTrashActive = () => false;
+    sketch.editorMode = editorMode;
+
+    sketchRef.current = sketch;
+
+    return () => {
+        if (sketchRef.current) {
+            sketchRef.current.onNewEditorState = () => null;
+            sketchRef.current.onCloseMenus = () => null;
+            sketchRef.current.isTrashActive = () => false;
+            sketchRef.current = null;
+        }
+        p.remove();
+    };
 };
 
 /**
@@ -228,6 +271,7 @@ const questionPlaceholdersByContext: {[subject in keyof typeof PHY_NAV_SUBJECTS]
     },
     "biology": {
         "a_level": "Adrenaline",
+        "gcse": "Mystery Cell"
     },
 };
 

@@ -51,26 +51,26 @@
             background-color: $inequality-primary;
             &.confirm {
                 right: 10px;
-                background-image: url('/assets/cs/icons/inequality-confirm-cs.svg');
+                background-image: url('/assets/cs/icons/inequality/inequality-confirm-cs.svg');
             }
             &.centre {
-                background-image: url('/assets/cs/icons/inequality-centre-cs.svg');
+                background-image: url('/assets/cs/icons/inequality/inequality-centre-cs.svg');
             }
             &.help {
-                background-image: url('/assets/cs/icons/inequality-help-cs.svg');
+                background-image: url('/assets/cs/icons/inequality/inequality-help-cs.svg');
             }
             &.show-question {
-                background-image: url('/assets/cs/icons/inequality-togglequestion-cs.svg');
+                background-image: url('/assets/cs/icons/inequality/inequality-togglequestion-cs.svg');
             }
             &.trash {
-                background-image: url('/assets/cs/icons/inequality-trash-cs.svg');
+                background-image: url('/assets/cs/icons/inequality/inequality-trash-cs.svg');
             }
             &.reset {
-                background-image: url('/assets/cs/icons/inequality-reset-cs.svg');
+                background-image: url('/assets/cs/icons/inequality/inequality-reset-cs.svg');
             }
         }
         .clear-number {
-            background: url('/assets/cs/icons/inequality-clear-cs.svg') !important;
+            background: url('/assets/cs/icons/inequality/inequality-clear-cs.svg') !important;
         }
         div.top-menu.numbers {
             > div.input-box .menu-item svg.v-hexagon {

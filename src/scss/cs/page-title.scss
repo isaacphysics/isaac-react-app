@@ -15,6 +15,11 @@ h1#main-heading {
 .title-breadcrumb-container {
     @extend .pt-4;
     @extend .pt-md-7;
+
+    .h-subtitle {
+        padding-top: unset;
+        margin-bottom: unset;
+    }
 }
 
 .my-ada-container .title-breadcrumb-container {

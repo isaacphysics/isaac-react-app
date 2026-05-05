@@ -45,6 +45,9 @@ import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Navigate, Route } from "react-router";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
+import { MyBookmarks } from "../../pages/MyBookmarks";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
+import { NotFound } from "../../pages/NotFound";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -136,6 +139,10 @@ export const RoutesPhy = [
     // <Route key={key++} path="/revision" element={<SubjectLandingPage />} />,
     <Route key={key++} path="/revision/:pageId" element={<RevisionPage />} />,
 
+    // Temporary redirect for GCSE Biology 
+    // TODO: Remove when we have some GCSE Biology concept pages
+    <Route key={key++} path="/biology/gcse/concepts" element={<Navigate to="/concepts?stages=gcse&types=biology" replace />} />,
+
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).flatMap(([path, Component]) => (
         Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
@@ -154,6 +161,12 @@ export const RoutesPhy = [
 
     // Concepts List
     <Route key={key++} path="/concepts" element={<Concepts />} />,
+
+    // Bookmarks
+    <Route key={key++} path="/bookmarks" element={<FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}
+        onSet={<RequireAuth auth={isLoggedIn} element={<MyBookmarks />} />}
+        onUnset={<NotFound />}
+    />} />,
 
     // Static pages
     <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us_index"} />} />,

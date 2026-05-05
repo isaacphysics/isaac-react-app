@@ -1,7 +1,7 @@
 import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {getThemeFromTags, isTeacherOrAbove, tags} from "../../../services";
+import {getThemeFromTags, isDefined, isTeacherOrAbove, tags} from "../../../services";
 import {QuizContentsComponent, rubricCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
@@ -9,6 +9,7 @@ import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
 import { Spacer } from "../../elements/Spacer";
 import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const pageHelp = <span>
     View information about a test without adding it to {'"My tests"'}. This page does not show any questions.
@@ -32,8 +33,8 @@ const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =
     </QuizSidebarLayout>;
 
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
-    const {quizId} = useParams<{quizId: string}>();
-    const quizRubricQuery = useGetQuizRubricQuery(quizId);
+    const {quizId} = useParams();
+    const quizRubricQuery = useGetQuizRubricQuery(isDefined(quizId) ? quizId : skipToken);
     const view = {
         quiz: quizRubricQuery.data && tags.augmentDocWithSubject(quizRubricQuery.data),
         quizId: quizRubricQuery.data?.id,
@@ -42,7 +43,7 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     return <Container data-testid="quiz-view" className="mb-7" data-bs-theme={getThemeFromTags(view.quiz?.tags)}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
             <QuizContentsComponent view={view} pageHelp={pageHelp} user={user} />
-            <QuizFooter quizId={quizId} user={user} />
+            <QuizFooter quizId={quizId as string} user={user} />
         </ShowLoadingQuery>
     </Container>;
 };

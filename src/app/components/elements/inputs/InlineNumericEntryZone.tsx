@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
-import { isDefined, isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
+import { isDefined, isLoggedIn, isPhy, useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
@@ -88,14 +88,15 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
                 className={classNames(
-                    "feedback-wrapper px-2 py-0", 
+                    "feedback-wrapper px-2 py-0 d-flex", 
                     {"border-dark": !noDisplayUnit}
                 )}
                 color={noDisplayUnit ? undefined : "white"}
+                caret={isPhy && noDisplayUnit}
             >
-                <div className={classNames({[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
+                <div className={classNames("align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                     <Markup encoding={"latex"}>
-                        {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit..."}
+                        {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit"}
                     </Markup>
                 </div>
             </DropdownToggle>

@@ -135,7 +135,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                             <div className="section-divider-bold flex-grow-1"/>
                         </div>
                         {news && <Row className="h-100">
-                            {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id}>
+                            {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id} className="mb-3">
                                 <NewsCard newsItem={newsItem} className="force-horizontal p-2" />
                             </Col>)}
                         </Row>}
@@ -150,7 +150,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             </div>
             <Row className="h-100 item-list-container">
                 {relevantEvents.map((event, i) =>
-                    <Col xs={12} key={i}>
+                    <Col xs={12} key={i} className={classNames({"mb-3": ['xs', 'md'].includes(deviceSize)})}>
                         {event && <EventCard event={event} layout={"landing-page"} className={classNames({"force-horizontal": !['xs', 'md'].includes(deviceSize)})} />}
                     </Col>
                 )}
@@ -211,7 +211,11 @@ export const SubjectLandingPage = () => {
               * for just a single frame, before the useEffect takes place. */}
             <RandomQuestionBanner key={`${pageContext.stage}_${pageContext.subject}`} context={pageContext} />
 
-            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-7" />
+            <ListViewCards
+                type="item" 
+                items={getLandingPageCardsForContext(pageContext, below['md'](deviceSize), !below['md'](deviceSize))}
+                className="my-7"
+            />
             
             <LandingPageFooter context={pageContext} />
         </>}
