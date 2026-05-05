@@ -117,7 +117,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const HeaderTag = siteSpecific("div", CardHeader);
 
     return <div className={classNames({"card": isAda})} data-testid="question-finder-filters">
-        <HeaderTag className={classNames("finder-header")} onClick={(e) => {
+        <HeaderTag className="finder-header" onClick={(e) => {
             // the filters panel can only be collapsed when it is not a sidebar
             // (changing screen size after collapsing does not re-expand it but the options become visible)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
