@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {selectors, useAppSelector, useGenerateAnswerSpecificationMutation} from "../../state";
-import {Col, Container, Row} from 'reactstrap';
+import {Container} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
 import {
@@ -10,26 +10,23 @@ import {
     makeGraphSketcher
 } from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
-import {isDefined, isStaff} from "../../services";
+import {isDefined, isStaff, useModalWithScroll} from "../../services";
 
 const GraphSketcherPage = () => {
     const user = useAppSelector(selectors.user.orNull);
     const [modalVisible, setModalVisible] = useState(false);
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const [initialState, setInitialState] = useState<GraphSketcherState>();
     const previewRef = useRef(null);
     const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
 
-    function openModal() {
-        setModalVisible(true);
-    }
-
     function closeModal() {
         if (currentAttempt?.value && isStaff(user)) {
             generateGraphSpec({ type: 'graphChoice', value: currentAttempt.value});
         }
-        setModalVisible(false);
+        closeModalAndReturnToScrollPosition();
     }
 
     function handleKeyPress(ev: KeyboardEvent) {
@@ -79,27 +76,19 @@ const GraphSketcherPage = () => {
 
     return <div>
         <Container>
-            <Row>
-                <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Graph Sketcher demo page" icon={{type: "icon", icon: "icon-concept"}} />
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <div className="graph-sketcher-question">
-                        <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
-                            <div ref={previewRef} className={`graph-sketcher-preview`} />
-                        </div>
-                        {modalVisible && <GraphSketcherModal
-                            user={user}
-                            close={closeModal}
-                            onGraphSketcherStateChange={onGraphSketcherStateChange}
-                            initialState={initialState}
-                        />}
-                    </div>
-                    {graphSpec && graphSpec.map((spec, i) => <pre key={i}>{spec}</pre>)}
-                </Col>
-            </Row>
+            <TitleAndBreadcrumb currentPageTitle="Graph Sketcher demo page" icon={{type: "icon", icon: "icon-concept"}} />
+            <div className="graph-sketcher-question">
+                <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
+                    <div ref={previewRef} className={`graph-sketcher-preview`} />
+                </div>
+                {modalVisible && <GraphSketcherModal
+                    user={user}
+                    close={closeModal}
+                    onGraphSketcherStateChange={onGraphSketcherStateChange}
+                    initialState={initialState}
+                />}
+            </div>
+            {graphSpec && graphSpec.map((spec, i) => <pre key={i}>{spec}</pre>)}
             <div className="question-content d-flex justify-content-center d-print-none">
                 <div><i>{isDefined(currentAttempt?.value) ? "Click on the grid to edit your sketch." : "Click on the grid to start your sketch."}</i></div>
             </div>
