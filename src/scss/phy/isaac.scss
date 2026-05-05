@@ -179,7 +179,7 @@ $dropdown-link-active-color: inherit;
 
 $input-border-radius: 0.5rem;
 
-$tooltip-bg: rgba(var(--color-neutral-700), 0.98);
+$tooltip-bg: color-mix(var(--color-neutral-700) 98%, transparent);
 $tooltip-opacity: 1;
 $tooltip-padding-x: 0.6rem;
 $tooltip-padding-y: 0.6rem;
