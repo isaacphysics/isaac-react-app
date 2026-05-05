@@ -302,7 +302,7 @@ iframe.email-html {
 }
 
 .collapsible-list-container {
-  border-top: 2px solid var(--color-neutral-400, $gray-107);
+  border-top: 2px solid var(--color-neutral-200, $gray-107);
   img {
     transition: transform 0.1s ease;
   }
@@ -313,7 +313,7 @@ iframe.email-html {
 
 :has(> .collapsible-list-container) {
   &:last-of-type {
-    border-bottom: 2px solid var(--color-neutral-400, $gray-107);
+    border-bottom: 2px solid var(--color-neutral-200, $gray-107);
   }
 }
 
