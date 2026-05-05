@@ -15,7 +15,7 @@ import {
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
-import {DraggableProvided, DraggableStateSnapshot} from "@hello-pangea/dnd";
+import {DraggableProvided, DraggableStateSnapshot, DroppableProvided} from "@hello-pangea/dnd";
 import {Question} from "../pages/Question";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
@@ -29,7 +29,7 @@ import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 
 interface GameboardBuilderRowInterface {
-    provided?: DraggableProvided;
+    provided?: DraggableProvided | DroppableProvided;
     snapshot?: DraggableStateSnapshot;
     question: ContentSummary;
     currentQuestions: GameboardBuilderQuestions;
@@ -37,6 +37,26 @@ interface GameboardBuilderRowInterface {
     redoStack: GameboardBuilderQuestionsStackProps;
     creationContext?: AudienceContext;
 }
+
+export const handleBuilderRowChange = ({ provided, question, currentQuestions, undoStack, redoStack, creationContext }: GameboardBuilderRowInterface) => {
+    if (question.id) {
+        const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
+        const newQuestionOrder = [...currentQuestions.questionOrder];
+        if (newSelectedQuestions.has(question.id)) {
+            newSelectedQuestions.delete(question.id);
+            newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
+        } else {
+            newSelectedQuestions.set(question.id, {...question, creationContext});
+            newQuestionOrder.push(question.id);
+        }
+        currentQuestions.setSelectedQuestions(newSelectedQuestions);
+        currentQuestions.setQuestionOrder(newQuestionOrder);
+        if (provided) {
+            undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+            redoStack.clear();
+        }
+    }
+};
 
 const GameboardBuilderRow = (
     {provided, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
@@ -60,39 +80,19 @@ const GameboardBuilderRow = (
     const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
-    const handleCheckboxChange = () => {
-        if (question.id) {
-            const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
-            const newQuestionOrder = [...currentQuestions.questionOrder];
-            if (newSelectedQuestions.has(question.id)) {
-                newSelectedQuestions.delete(question.id);
-                newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-            } else {
-                newSelectedQuestions.set(question.id, {...question, creationContext});
-                newQuestionOrder.push(question.id);
-            }
-            currentQuestions.setSelectedQuestions(newSelectedQuestions);
-            currentQuestions.setQuestionOrder(newQuestionOrder);
-            if (provided) {
-                undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
-                redoStack.clear();
-            }
-        }
-    };
-
     return filteredAudienceViews.map((view, i, arr) => <tr key={`${question.id} ${i}`}>
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
                     {isAda && provided
-                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={handleCheckboxChange}/>
+                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={() => handleBuilderRowChange({ provided, question, currentQuestions, undoStack, redoStack, creationContext })}/>
                         : <StyledCheckbox
                             id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                             aria-label={!isSelected ? "Select question" : "Deselect question"}
                             title={!isSelected ? "Select question" : "Deselect question"}
                             color="primary"
                             checked={isSelected}
-                            onChange={handleCheckboxChange}
+                            onChange={() => handleBuilderRowChange({ provided, question, currentQuestions, undoStack, redoStack, creationContext })}
                         />}
                 </div>
             </td>

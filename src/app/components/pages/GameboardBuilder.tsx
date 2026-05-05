@@ -62,6 +62,7 @@ import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
 import {IconButton} from "../elements/AffixButton";
 import { ListView } from '../elements/list-groups/ListView';
+import { handleBuilderRowChange } from '../elements/GameboardBuilderRow';
 
 class GameboardBuilderQuestionsStack {
     questionOrderStack: string[][];
@@ -454,8 +455,13 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                 id="gameboard-builder-questions"
                                                 type="builder"
                                                 style="flat"
-                                                items={questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
-                                                onDelete={(id) => console.log("delete", id)}
+                                                items={currentQuestions.questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
+                                                onDelete={(id) => {
+                                                    const question= selectedQuestions.get(id);
+                                                    if (question) {
+                                                        handleBuilderRowChange({ provided: providedDrop, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
+                                                    }
+                                                }}
                                             />
                                             {providedDrop.placeholder}
                                         </div>

@@ -18,7 +18,6 @@ import {
     groupTagSelectionsByParent,
     isAda,
     isPhy,
-    isStaff,
     Item,
     logEvent,
     searchResultIsPublic,
@@ -30,8 +29,6 @@ import {
     useUserViewingContext,
     ISAAC_BOOKS,
     TAG_LEVEL,
-    below,
-    useDeviceSize,
     EXAM_BOARD, QUESTIONS_PER_GAMEBOARD
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
@@ -309,7 +306,6 @@ export const QuestionSearchModal = (
                                 thenRender={({results: questions}) => {
                                     if (!questions) return <></>;
                                     const sortedQuestions = sortAndFilterBySearch(questions);
-                                    console.log(sortedQuestions);
                                     return sortedQuestions?.map(question =>
                                         <GameboardBuilderRow
                                             key={`question-search-modal-row-${question.id}`}
