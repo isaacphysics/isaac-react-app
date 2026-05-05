@@ -189,8 +189,16 @@
   --forms-input-border-radius: 8rem;
 
   --buttons-font-size-btn-lg: 0.875rem;
-}
+  
+  &[data-ld-theme="dark"] {
+    background-color: #181a1b;
+    color-scheme: dark;
+  }
 
+  &[data-ld-theme="light"] {
+    color-scheme: light;
+  }
+}
 
 .text-theme {
   color: var(--subject-color-500);
