@@ -47,8 +47,8 @@ export const OnPageLoad = () => {
     }, [location, onPageLoad]);
 
     useEffect(() => {
-        document.getElementById("root")?.parentElement?.setAttribute("data-ld-theme", lightnessTheme.value);
-        document.getElementById("root")?.parentElement?.setAttribute("data-reduced-motion", reducedMotion ? "true" : "false");
+        document.documentElement?.setAttribute("data-ld-theme", lightnessTheme.value);
+        document.documentElement?.setAttribute("data-reduced-motion", reducedMotion ? "true" : "false");
     }, [lightnessTheme, reducedMotion]);
 
     return null;
