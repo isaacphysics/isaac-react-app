@@ -252,7 +252,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         <StatusDisplay status={typedProps.status} showText className="py-1" />
                     }
                     {isGameboard && stackedLayout && isDefined(typedProps.board) && <div className="d-flex pt-3 gap-3">
-                        {/* note order flipped relative to non-fullWidth to keep Assign at highest priority visually */}
+                        {/* note order flipped relative to non-stackedLayout to keep Assign at highest priority visually */}
                         {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
                         <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                     </div>}
