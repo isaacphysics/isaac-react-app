@@ -10,7 +10,7 @@ import {
     makeGraphSketcher
 } from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
-import {isDefined, isStaff, useModalWithScroll} from "../../services";
+import {ifKeyIsEnter, isDefined, isStaff, useModalWithScroll} from "../../services";
 
 const GraphSketcherPage = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -22,27 +22,6 @@ const GraphSketcherPage = () => {
     const previewRef = useRef(null);
     const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
 
-    const closeModal = useCallback(async () => {
-        if (currentAttempt?.value && isStaff(user)) {
-            await generateGraphSpec({ type: 'graphChoice', value: currentAttempt.value});
-        }
-        closeModalAndReturnToScrollPosition();
-    }, [currentAttempt?.value, user, generateGraphSpec, closeModalAndReturnToScrollPosition]);
-
-    useEffect(() => {
-        async function handleKeyPress(ev: KeyboardEvent) {
-            if (ev.code === 'Escape') {
-                await closeModal();
-            }
-        }
-
-        window.addEventListener('keyup', handleKeyPress);
-
-        return () => {
-            window.removeEventListener('keyup', handleKeyPress);
-        };
-    }, [closeModal]);
-
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
         setInitialState(newState);
         setCurrentAttempt({type: 'graphChoice', value: JSON.stringify(GraphSketcher.toExternalState(newState))});
@@ -51,6 +30,27 @@ const GraphSketcherPage = () => {
             previewSketch.state.curves = previewSketch.state.curves || [];
         }
     };
+
+    const closeModal = useCallback(async () => {
+        if (currentAttempt?.value && isStaff(user)) {
+            await generateGraphSpec({ type: 'graphChoice', value: currentAttempt.value});
+        }
+        closeModalAndReturnToScrollPosition();
+    }, [currentAttempt?.value, user, generateGraphSpec, closeModalAndReturnToScrollPosition]);
+
+    const handleKeyPress = useCallback(async (ev: KeyboardEvent) => {
+        if (ev.code === 'Escape') {
+            await closeModal();
+        }
+    }, [closeModal]);
+
+    useEffect(() => {
+        window.addEventListener('keyup', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keyup', handleKeyPress);
+        };
+    }, [closeModal, handleKeyPress]);
 
     useEffect(() => {
         if (previewSketch) return;
@@ -78,7 +78,7 @@ const GraphSketcherPage = () => {
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Graph Sketcher demo page" icon={{type: "icon", icon: "icon-concept"}} />
             <div className="graph-sketcher-question">
-                <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
+                <div className="sketch-preview" onClick={openModal} onKeyUp={ifKeyIsEnter(openModal)} role="button" tabIndex={0}>
                     <div ref={previewRef} className={`graph-sketcher-preview`} />
                 </div>
                 {modalVisible && <GraphSketcherModal
