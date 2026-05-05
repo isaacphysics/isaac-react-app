@@ -2,8 +2,11 @@
 @import "../common/list-groups.scss";
 
 .content-summary-item {
-  min-height: 88px;
   padding: 1rem;
+
+  &:not(.thin) {
+    min-height: 88px;
+  }
 
   &:has(a.alvi-title) {
     button {

@@ -207,7 +207,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const cardBody = <>
         <div className="w-100 d-flex flex-row">
             <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard})}>
-                <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
+                <div className={classNames("position-relative", {"question-progress-icon": isAda, "d-flex vertical-center": flatLayout})}>
                     {icon && <div className="inner-progress-icon">
                         <TitleIcon icon={icon} />
                         {icon.label && isAda && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
@@ -221,14 +221,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
                         {url && !isDisabled
                             ? (url.startsWith("http")
-                                ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                                ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
                                     <Markup encoding="latex">{title}</Markup>
                                 </ExternalLink>
-                                : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                                : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
                                     <Markup encoding="latex">{title}</Markup>
                                 </Link>
                             )
-                            : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                            : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
                                 <Markup encoding="latex">{title}</Markup>
                             </span>
                         }
@@ -242,12 +242,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             />
                         </>}
                     </div>
-                    {subtitle && <div className="small text-muted text-wrap">
-                        <Markup encoding="latex">{subtitle}</Markup>
-                    </div>}
-                    {breadcrumb && !(flatLayout && subtitle) && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
-                        <Breadcrumb breadcrumb={breadcrumb}/>
-                    </span>}
+                    {!flatLayout && <>
+                        {subtitle && <div className="small text-muted text-wrap">
+                            <Markup encoding="latex">{subtitle}</Markup>
+                        </div>}
+                        {breadcrumb && !subtitle && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                            <Breadcrumb breadcrumb={breadcrumb}/>
+                        </span>}
+                    </>}
                     {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                     </div>}
@@ -272,6 +274,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             {!stackedLayout &&
                 <>
                     {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
+                    {flatLayout && <div className="list-view-border wf-10 pe-3">
+                        {subtitle && <div className="small text-muted text-wrap">
+                            <Markup encoding="latex">{subtitle}</Markup>
+                        </div>}
+                        {breadcrumb && !subtitle && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                            <Breadcrumb breadcrumb={breadcrumb}/>
+                        </span>}
+                    </div>}
                     {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
@@ -295,7 +305,13 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     </>;
 
     return <ListGroupItem
-        className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
+        className={classNames(
+            "content-summary-item", 
+            {"thin": flatLayout},
+            {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT},
+            className, 
+            state
+        )} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
         data-testid={"list-view-item"}
         tag={componentTag}

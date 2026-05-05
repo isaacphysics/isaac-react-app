@@ -3,7 +3,7 @@ import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps 
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { ListGroup } from "reactstrap";
+import { Button, ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
@@ -13,6 +13,7 @@ import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 import { IconProps } from "../svg/HexIcon";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
+import { Draggable } from "@hello-pangea/dnd";
 
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
@@ -327,7 +328,63 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
     />;
 };
 
-export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
+type BuilderListViewItemProps = ListViewItemBaseProps<"builder", "list" | "card"> & {
+    item: ContentSummaryDTO;
+    index?: number;
+    onDelete?: (id: string) => void;
+}
+
+export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
+    const { item, index, onDelete, ...rest } = props;
+    // const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
+    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const pageSubject = useAppSelector(selectors.pageContext.subject);
+    const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
+    const state = item.state ?? CompletionState.NOT_ATTEMPTED;
+
+    const topic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[])?.title;
+
+    const icon: TitleIconProps = { type: "icon", label: "Question",
+        icon: isPhy
+            ? {name: "icon-question", size: "md"}
+            : {name: QUESTION_STATUS_TO_ICON[CompletionState.NOT_ATTEMPTED], size: "md", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
+    };
+
+    return <Draggable key={item.id} draggableId={item.id ?? ""} index={index ?? -1}>
+        {(providedDrag) => {
+            return <li 
+                ref={providedDrag.innerRef}
+                className="d-flex"
+                {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}
+            >
+                <div className="d-flex vertical-center bg-white">
+                    <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                </div>
+                <AbstractListViewItem
+                    {...rest}
+                    componentTag={"div"}
+                    icon={icon}
+                    title={item.title ?? ""}
+                    subject={itemSubject !== "neutral" ? itemSubject : undefined}
+                    tags={item.tags}
+                    deprecated={item.deprecated}
+                    supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
+                    style="flat"
+                    subtitle={topic}
+                    // subtitle={item.subtitle}
+                    // breadcrumb={breadcrumb}
+                    audienceViews={audienceViews}
+                    className="flex-grow-1"
+                />
+                <Button className="delete-button" color="solid" onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
+                    <img src="/assets/common/icons/bin.svg" alt="Delete board"/>
+                </Button>
+            </li>;
+        }}
+    </Draggable>;
+};
+
+export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "list" | "card"> & {
     item: Omit<Extract<AbstractListViewItemProps, {alviType: "item"}>, "alviType"> & {
         type?: string;
     }
@@ -356,6 +413,7 @@ type ListViewItemProps =
     | ShortcutListViewItemProps
     | BookIndexListViewItemProps
     | BookDetailListViewItemProps
+    | BuilderListViewItemProps
     | CustomListViewItemProps
 ;
 
@@ -459,6 +517,17 @@ export const ListView = <T extends {type?: string}, G extends alviTypes>(props: 
                         }
                     });
                 }
+                case "builder": {
+                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "list" as const};
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.QUESTION):
+                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                }
                 default:
                     return null;
             }
@@ -519,6 +588,17 @@ export const ListViewCards = <T extends {type?: string}, G extends alviTypes>(pr
                         switch (item.type) {
                             case (DOCUMENT_TYPE.QUIZ):
                                 return <QuizListViewItem key={index} item={item} {...lviProps} />;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                }
+                case "builder": {
+                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "card" as const};
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.QUESTION):
+                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
                             default:
                                 return failedToRender(item);
                         }

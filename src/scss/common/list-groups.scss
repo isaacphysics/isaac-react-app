@@ -1,7 +1,12 @@
 .list-group-links {
   border: 1px solid $gray-107;
   .question-link-title {
-    font-size: 1.25rem;
+    &.title-small {
+      font-size: 1.1rem;
+    }
+    &:not(.title-small) {
+      font-size: 1.25rem;
+    }
   }
 
   li {

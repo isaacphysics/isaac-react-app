@@ -61,8 +61,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
 import {IconButton} from "../elements/AffixButton";
-
-const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
+import { ListView } from '../elements/list-groups/ListView';
 
 class GameboardBuilderQuestionsStack {
     questionOrderStack: string[][];
@@ -449,54 +448,64 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <DragDropContext onDragEnd={reorder}>
                             <Droppable droppableId="droppable">
                                 {(providedDrop) => {
-                                    return (
-                                        <Table className={"mb-0"} id={"gameboard-builder-questions"} bordered
-                                            innerRef={providedDrop.innerRef}>
-                                            <thead>
-                                                <tr className="border-top-0">
-                                                    <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
-                                                    <th className={siteSpecific("w-40", "w-30")}>Question title</th>
-                                                    <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                                    <th className="w-15">Stage</th>
-                                                    <th className="w-15">Difficulty</th>
-                                                    {isAda && <th className="w-15">Exam boards</th>}
-                                                </tr>
-                                            </thead>
-                                            {questionOrder.map((questionId, index: number) => {
-                                                const question = selectedQuestions.get(questionId);
-                                                return question && question.id &&
-                                                        <Draggable key={question.id} draggableId={question.id}
-                                                            index={index}>
-                                                            {(providedDrag, snapshot) => {
-                                                                return <tbody
-                                                                    ref={providedDrag && providedDrag.innerRef}
-                                                                    className={classNames({"table-row-dragging": snapshot.isDragging})}
-                                                                    {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
-                                                                >
-                                                                    <GameboardBuilderRow
-                                                                        provided={providedDrag}
-                                                                        snapshot={snapshot}
-                                                                        key={`gameboard-builder-row-${question.id}`}
-                                                                        question={question}
-                                                                        currentQuestions={currentQuestions}
-                                                                        undoStack={undoStack}
-                                                                        redoStack={redoStack}
-                                                                        creationContext={question.creationContext}
-                                                                    />
-                                                                </tbody>;
-                                                            }}
-                                                        </Draggable>;
-                                            })}
-                                            <tbody>
-                                                {providedDrop.placeholder}
-                                                {selectedQuestions?.size === 0 && <tr>
-                                                    <td colSpan={20}>
-                                                    </td>
-                                                </tr>}
-                                            </tbody>
-                                        </Table>
+                                    return <>
+                                        <div ref={providedDrop.innerRef}>
+                                            <ListView 
+                                                id="gameboard-builder-questions"
+                                                type="builder"
+                                                style="flat"
+                                                items={questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
+                                                onDelete={(id) => console.log("delete", id)}
+                                            />
+                                            {providedDrop.placeholder}
+                                        </div>
+                                        {/* // <Table className={"mb-0"} id={"gameboard-builder-questions"} bordered
+                                        //     innerRef={providedDrop.innerRef}>
+                                        //     <thead>
+                                        //         <tr className="border-top-0">
+                                        //             <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
+                                        //             <th className={siteSpecific("w-40", "w-30")}>Question title</th>
+                                        //             <th className={siteSpecific("w-25", "w-20")}>Topic</th>
+                                        //             <th className="w-15">Stage</th>
+                                        //             <th className="w-15">Difficulty</th>
+                                        //             {isAda && <th className="w-15">Exam boards</th>}
+                                        //         </tr>
+                                        //     </thead>
+                                        //     {questionOrder.map((questionId, index: number) => {
+                                        //         const question = selectedQuestions.get(questionId);
+                                        //         return question && question.id &&
+                                        //                 <Draggable key={question.id} draggableId={question.id}
+                                        //                     index={index}>
+                                        //                     {(providedDrag, snapshot) => {
+                                        //                         return <tbody
+                                        //                             ref={providedDrag && providedDrag.innerRef}
+                                        //                             className={classNames({"table-row-dragging": snapshot.isDragging})}
+                                        //                             {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
+                                        //                         >
+                                        //                             <GameboardBuilderDraggable
+                                        //                                 provided={providedDrag}
+                                        //                                 snapshot={snapshot}
+                                        //                                 key={`gameboard-builder-row-${question.id}`}
+                                        //                                 question={question}
+                                        //                                 currentQuestions={currentQuestions}
+                                        //                                 undoStack={undoStack}
+                                        //                                 redoStack={redoStack}
+                                        //                                 creationContext={question.creationContext}
+                                        //                             />
+                                        //                         </tbody>;
+                                        //                     }}
+                                        //                 </Draggable>;
+                                        //     })}
+                                        //     <tbody>
+                                        //         {providedDrop.placeholder}
+                                        //         {selectedQuestions?.size === 0 && <tr>
+                                        //             <td colSpan={20}>
+                                        //             </td>
+                                        //         </tr>}
+                                        //     </tbody>
+                                        // </Table> */}
 
-                                    );
+                                    </>;
                                 }}
                             </Droppable>
                         </DragDropContext>
