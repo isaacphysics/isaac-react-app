@@ -150,7 +150,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             </div>
             <Row className="h-100 item-list-container">
                 {relevantEvents.map((event, i) =>
-                    <Col xs={12} key={i} className="mb-3 mb-sm-0">
+                    <Col xs={12} key={i} className={classNames({"mb-3": ['xs', 'md'].includes(deviceSize)})}>
                         {event && <EventCard event={event} layout={"landing-page"} className={classNames({"force-horizontal": !['xs', 'md'].includes(deviceSize)})} />}
                     </Col>
                 )}
