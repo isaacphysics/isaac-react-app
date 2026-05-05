@@ -293,6 +293,14 @@
   )
 }
 
+.icon-my-bookmarks {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-bookmarks-fg.svg',
+    '/assets/phy/icons/redesign/page-bookmarks-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%)
+  );
+}
+
 .icon-wildcard {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-revision-fg.svg',

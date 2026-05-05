@@ -4,7 +4,7 @@ import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined} from "../../services";
+import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -49,6 +49,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
     const query = queryString.parse(location.search);
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
+    const wildcard = (gameboard && showWildcard(gameboard)) ? gameboard.wildCard : undefined;
 
     useEffect(() => {
         if (pageContext) {
@@ -89,7 +90,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                     </>}
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
-                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={doc.id}/>
+                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={doc.id}/>
                             : <ConceptSidebar relatedContent={doc.relatedContent}/>,
                         undefined
                     )}

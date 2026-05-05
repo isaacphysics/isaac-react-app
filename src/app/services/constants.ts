@@ -310,7 +310,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
-    [EXAM_BOARD.SQA]: "SQA",
+    [EXAM_BOARD.SQA]: "Qualifications Scotland",
     [EXAM_BOARD.ADA]: "Ada CS",
     [EXAM_BOARD.ALL]: "All exam boards",
 };
@@ -1284,6 +1284,7 @@ export const PATHS = {
     MY_TESTS: "/tests",
     TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
+    BOOKMARKS: "/bookmarks",
 };
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";

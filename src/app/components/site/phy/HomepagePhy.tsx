@@ -214,7 +214,7 @@ export const HomepagePhy = () => {
                                 query={eventsQuery}
                                 ifError={(() => <p>There was an error loading the events list. Please try again later!</p>)}
                                 thenRender={({events}) => {
-                                    return <Row className="h-100 row-cols-1 row-cols-sm-2">
+                                    return <Row className="h-100 row-cols-1 row-cols-sm-2 gap-3 gap-sm-0">
                                         {events.length
                                             ? events.map(event => <Col key={event.id}>
                                                 <EventCard event={event} />
@@ -234,7 +234,7 @@ export const HomepagePhy = () => {
                                 query={newsQuery}
                                 ifError={(() => <p>There was an error loading the news list. Please try again later!</p>)}
                                 thenRender={(news) => {
-                                    return <Row className="h-100 row-cols-1 row-cols-sm-2">
+                                    return <Row className="h-100 row-cols-1 row-cols-sm-2 gap-3 gap-sm-0">
                                         {news.length
                                             ? news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
                                                 <NewsCard newsItem={newsItem} />

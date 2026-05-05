@@ -15,7 +15,8 @@ import {
     siteSpecific,
     Subject,
     useNavigation,
-    isDefined} from "../../services";
+    isDefined,
+    showWildcard} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
@@ -66,6 +67,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
+    const wildcard = (gameboard && showWildcard(gameboard)) ? gameboard.wildCard : undefined;
 
     return <ShowLoadingQuery
         query={questionQuery}
@@ -91,7 +93,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                     }
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
-                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={questionId}/>
+                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={questionId}/>
                             : <QuestionSidebar relatedContent={doc.relatedContent} />,
                         undefined
                     )}
