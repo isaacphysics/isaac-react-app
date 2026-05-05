@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {selectors, useAppSelector, useGenerateAnswerSpecificationMutation} from "../../state";
 import {Container} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
@@ -22,26 +22,26 @@ const GraphSketcherPage = () => {
     const previewRef = useRef(null);
     const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
 
-    function closeModal() {
+    const closeModal = useCallback(async () => {
         if (currentAttempt?.value && isStaff(user)) {
-            generateGraphSpec({ type: 'graphChoice', value: currentAttempt.value});
+            await generateGraphSpec({ type: 'graphChoice', value: currentAttempt.value});
         }
         closeModalAndReturnToScrollPosition();
-    }
-
-    function handleKeyPress(ev: KeyboardEvent) {
-        if (ev.code === 'Escape') {
-            closeModal();
-        }
-    }
+    }, [currentAttempt?.value, user, generateGraphSpec, closeModalAndReturnToScrollPosition]);
 
     useEffect(() => {
+        async function handleKeyPress(ev: KeyboardEvent) {
+            if (ev.code === 'Escape') {
+                await closeModal();
+            }
+        }
+
         window.addEventListener('keyup', handleKeyPress);
 
         return () => {
             window.removeEventListener('keyup', handleKeyPress);
         };
-    }, []);
+    }, [closeModal]);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
         setInitialState(newState);
