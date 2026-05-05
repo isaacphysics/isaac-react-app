@@ -8,6 +8,7 @@ import { AffixButton } from "../../elements/AffixButton";
 import { MenuOpenContext, NavigationSection } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
+import { useLightnessTheme } from "../../../services/theme";
 
 export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLButtonElement>) => {
     const user = useAppSelector(selectors.user.orNull);
@@ -28,6 +29,7 @@ export const HeaderPhy = () => {
     const deviceSize = useDeviceSize();
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(m => !m);
+    const lightnessTheme = useLightnessTheme();
 
     return <header className="bg-white" data-testid={"header"}>
         <Container>
@@ -35,7 +37,10 @@ export const HeaderPhy = () => {
                 <Col className="d-flex justify-content-between py-3">
                     <div className="header-logo align-content-center">
                         <Link to="/">
-                            <img src="/assets/phy/logo.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-none d-sm-block d-print-block"/>
+                            {lightnessTheme.value === "light"
+                                ? <img src="/assets/phy/logo.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-none d-sm-block d-print-block"/>
+                                : <img src="/assets/phy/logo-dark.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-none d-sm-block d-print-block"/>
+                            }
                             <img src="/assets/phy/logo-small.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-block d-sm-none d-print-none"/>
                         </Link>
                     </div>

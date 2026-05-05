@@ -3,7 +3,7 @@
 .bread {
     position: relative;
 
-    background-color: color-mix(in srgb, var(--subject-color-900) 50%, transparent 50%);
+    background-color: color-mix(in srgb, var(--breadcrumb-alt) 50%, transparent 50%);
     border-bottom: 1px solid color-mix(in srgb, white 20%, transparent 80%);
 
     .breadcrumb-item {
@@ -23,7 +23,7 @@
     .breadcrumb-item + .breadcrumb-item::before, .breadcrumb-item:last-child::after {
         @include no-print {
             @include pseudo-icon('/assets/common/icons/chevron-right.svg', 16px, 16px, 100%);
-            background-color: $color-neutral-white;
+            background-color: var(--color-neutral-white);
         }
 
         @include only-print {

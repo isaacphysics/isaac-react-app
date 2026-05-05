@@ -44,10 +44,12 @@
 
 .toast {
   max-width: unset;
-  background-color: rgba(255, 255, 255, 0.92);
+  background-color: color-mix(in srgb, var(--color-neutral-white) 90%, transparent);
+  backdrop-filter: blur(15px);
 }
 .toast-header {
   font-size: 1.6rem;
+  background-color: color-mix(in srgb, var(--color-neutral-200) 50%, transparent);
   > svg {
     min-width: 20px;
   }

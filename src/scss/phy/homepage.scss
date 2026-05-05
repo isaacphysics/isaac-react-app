@@ -6,7 +6,7 @@
   }
 
   .text-green {
-    color: $color-brand-700;
+    color: var(--color-brand-700);
   }
 }
 
@@ -22,7 +22,7 @@
   .news-events-link {
     text-wrap: nowrap;
     margin: 7px 16px 0px;
-    color: $color-neutral-600;
+    color: var(--color-neutral-600);
   }
 
   .section-divider {
@@ -95,7 +95,7 @@
 }
 
 .dashboard {
-  background-color: white;
+  background-color: var(--color-neutral-white);
 
   &.dashboard-outer { // avoids double-padding for teachers viewing student dashboard
     padding: 30px 30px 50px;
@@ -129,8 +129,8 @@ $dashboard-panel-padding: 30px;
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: $color-neutral-50;
-  border: 2px solid $color-neutral-200;
+  background-color: var(--color-neutral-50);
+  border: 2px solid var(--color-neutral-200);
   border-radius: 8px;
   height: 100%;
   max-height: 450px;
@@ -141,7 +141,7 @@ $dashboard-panel-padding: 30px;
   }
 
   h4 {
-    color: $color-brand-700;
+    color: var(--color-brand-700);
     font-size: 18px;
     font-family: $secondary-font;
     font-weight: bold;
@@ -149,13 +149,13 @@ $dashboard-panel-padding: 30px;
   }
 
   .streak-text {
-    color: $color-brand-700;
+    color: var(--color-brand-700);
     font-weight: 600;
     font-size: 14px;
   }
 
   .panel-link {
-    color: $color-neutral-800;
+    color: var(--color-neutral-800);
     width: max-content;
     background: transparent;
     font-size: 14px;
@@ -192,7 +192,7 @@ $dashboard-panel-padding: 30px;
     width: $dashboard-panel-size;
     height: $dashboard-panel-size;
     > b {
-      color: $color-brand-700;
+      color: var(--color-brand-700);
       font-size: 32px;
       line-height: 32px;
       font-weight: 700;
@@ -220,11 +220,11 @@ a:has(.assignment-card) {
 }
 
 .assignment-card {
-  border: 1.5px solid $color-neutral-300;
+  border: 1.5px solid var(--color-neutral-300);
   text-decoration: none;
   border-radius: 8px;
-  background-color: white;
-  color: $color-neutral-700;
+  background-color: var(--color-neutral-white);
+  color: var(--color-neutral-700);
   font-size: 13px;
   padding: 10px;
   transition: all 0.2s ease-out;
@@ -261,7 +261,7 @@ a:has(.assignment-card) {
     @include not-reduced-motion {
       transform: scale(1.02);
     }
-    border-color: $color-neutral-400;
+    border-color: var(--color-neutral-400);
   }
 }
 
@@ -273,7 +273,7 @@ a:has(.assignment-card) {
 }
 
 .random-question-panel {
-  background-color: $color-neutral-100;
+  background-color: var(--color-neutral-100);
 
   .content-summary-item {
     min-height: 100px;
@@ -295,17 +295,18 @@ a:has(.assignment-card) {
 
   &.left {
     left: 0;
-    background: linear-gradient(to right, $color-neutral-50 0%, color-mix(in srgb, $color-neutral-50, transparent 100%) 100%);
+    background: linear-gradient(to right, var(--color-neutral-50) 0%, color-mix(in srgb, var(--color-neutral-50), transparent 100%) 100%);
   }
 
   &.right {
-    left: 90%;
-    background: linear-gradient(to left, $color-neutral-50 0%, color-mix(in srgb, $color-neutral-50, transparent 100%) 100%);
+    left: calc(90% + 1px);
+    background: linear-gradient(to left, var(--color-neutral-50) 0%, color-mix(in srgb, var(--color-neutral-50), transparent 100%) 100%);
   }
 }
 
 .books-select {
   border: none;
-  border-bottom: 1px solid $color-neutral-300;
+  border-bottom: 1px solid var(--color-neutral-300);
   background-color: transparent;
+  color: inherit;
 }

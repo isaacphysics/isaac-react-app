@@ -22,14 +22,15 @@
 
 details.teacher-notes {
   margin-bottom: 1rem;
+  color: var(--color-neutral-900);
   summary {
     display: flex;
     align-items: center;
     position: relative;
     width: max-content;
     padding: 0.5rem 1rem;
-    background-color: $color-misc-pale-yellow;
-    border: 2px solid $color-neutral-900;
+    background-color: var(--color-misc-pale-yellow);
+    border: 2px solid var(--color-neutral-900);
     border-radius: 6px;
     z-index: 1;
     
@@ -51,8 +52,8 @@ details.teacher-notes {
 
   > div {
     padding: 1.5rem 2rem;
-    background-color: $color-misc-pale-yellow;
-    border: 2px solid $color-neutral-900;
+    background-color: var(--color-misc-pale-yellow);
+    border: 2px solid var(--color-neutral-900);
     border-radius: 6px;
     border-top-left-radius: 0;
     transform: translateY(-2px); // would prefer margin-top, but safari keeps rendering the top 2px in spite of any CSS blocking it
@@ -91,14 +92,30 @@ details.teacher-notes {
 }
 
 .pill-tag-outline {
-  @include pill-tag($color-neutral-600, white, $color-neutral-900);
+  @include pill-tag(var(--color-neutral-600), var(--color-neutral-white), var(--color-neutral-900));
 }
 
 .warning-tag {
-  @include pill-tag(white, $color-misc-orange-500, $color-misc-orange-500);
+  @include pill-tag(var(--color-neutral-white), $color-misc-orange-500, $color-misc-orange-500);
   padding: 0.03rem 0.6rem;
 }
 
 .tab-picker {
   @include tab-picker(left, 2px, var(--subject-color-100));
+}
+
+.theme-preview {
+  background: none;
+  color: inherit;
+
+  > img {
+    outline: 2px solid transparent;
+    outline-offset: 4px;
+    border-radius: 12px;
+    transition: border-color 0.1s ease-in-out;
+  }
+
+  &.active > img {
+    outline: 2px solid var(--border-medium);
+  }
 }
