@@ -60,12 +60,14 @@ const safeScrollTo = decorate(window.scrollTo, original => {
     }, 20);
 });
 
-export function useModalWithScroll({setModalVisible}: { setModalVisible: (v: boolean) => void; }) {
+export function useModalWithScroll({setModalVisible, readonly}: { setModalVisible: (v: boolean) => void; readonly?: boolean; }) {
     const scrollYRef = useRef<number>(0);
 
     const openModal = () => {
-        scrollYRef.current = window.scrollY;
-        setModalVisible(true);
+        if (!readonly) {
+            scrollYRef.current = window.scrollY;
+            setModalVisible(true);
+        }
     };
 
     const closeModalAndReturnToScrollPosition = () => {

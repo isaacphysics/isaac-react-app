@@ -39,7 +39,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
-    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible, readonly});
     const userPreferences = useAppSelector(selectors.user.preferences);
 
     const editorSeed: WidgetSpec[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
