@@ -175,7 +175,7 @@ const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "Eduqas", value: EXAM_BOARD.EDUQAS},
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
-    {label: "SQA", value: EXAM_BOARD.SQA},
+    {label: "Scotland", value: EXAM_BOARD.SQA},
 ];
 interface ExamBoardFilterOptions {
     byUser?: Immutable<PotentialUser> | null;

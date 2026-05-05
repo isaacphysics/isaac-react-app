@@ -3,7 +3,7 @@
 .isaac-tab {    
   &.tab-style-dropdowns {
     .tab-content .tab-pane {
-      background-color: $color-neutral-100;
+      background-color: var(--color-neutral-100);
     }
   }
 }

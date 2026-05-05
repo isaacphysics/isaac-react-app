@@ -7,6 +7,7 @@ import { useReducedMotion } from "./accessibility";
 import { focusMainContent } from "./focus";
 import { useLocation } from "react-router";
 import { trackPageview } from "./constants";
+import { useLightnessTheme } from "./theme";
 
 export const OnPageLoad = () => {
     const dispatch = useAppDispatch();
@@ -14,6 +15,7 @@ export const OnPageLoad = () => {
     // the location correctly even if there is a react-router <Redirect ...> before the useEffect is called.
     const location = useLocation();
     const reducedMotion = useReducedMotion();
+    const lightnessTheme = useLightnessTheme();
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const scrollTop = scrollTopOnPageLoad(reducedMotion);
@@ -43,6 +45,11 @@ export const OnPageLoad = () => {
         registerPageChange(location.pathname);
         onPageLoad(location);
     }, [location, onPageLoad]);
+
+    useEffect(() => {
+        document.documentElement?.setAttribute("data-ld-theme", lightnessTheme.value);
+        document.documentElement?.setAttribute("data-reduced-motion", reducedMotion ? "true" : "false");
+    }, [lightnessTheme, reducedMotion]);
 
     return null;
 };

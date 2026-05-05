@@ -17,7 +17,7 @@
 }
 
 .list-view-border {
-  border-left: 1px solid $color-neutral-200;
+  border-left: 1px solid var(--color-neutral-200);
   padding-left: 1rem;
   &.flex-column {
     min-width: 220px;
@@ -30,9 +30,9 @@
   $inner-border: 1px solid var(--border-light);
 
   > .list-group-item {
-    border: 1px solid $gray-107;
+    border: 2px solid var(--border-light);
     border-radius: 0;
-    background-color: white;
+    background-color: var(--color-neutral-white);
 
     @include media-breakpoint-down(lg) {
       &:not(:last-child)  { border-bottom: $inner-border }
@@ -72,7 +72,7 @@
 
 .status-tag {
   align-self: start;
-  color: $color-neutral-500;
+  color: var(--color-neutral-500);
   font-size: 0.825rem;
 }
 
@@ -86,7 +86,7 @@
 
 .list-group-links {
   .link-title {
-    color: var(--subject-color-900);
+    color: var(--subject-color-800);
   }
 
   .alvi-title {
@@ -114,7 +114,7 @@
   }
 
   li.list-group-item.correct {
-    background-color: $color-misc-correct;
+    background-color: var(--color-misc-correct);
   }
 }
 
@@ -145,7 +145,7 @@
 }
 
 .list-group-links li .card-tag {
-  @include pill-tag($color-neutral-900, var(--subject-color-100), var(--subject-color-700));
+  @include pill-tag(var(--color-neutral-900), var(--subject-color-100), var(--subject-color-700));
   width: auto;
   white-space: normal;
   text-align: center;
@@ -156,7 +156,7 @@
 }
 
 .list-results-container {
-  background-color: $color-neutral-100;
+  background-color: var(--color-neutral-100);
 }
 
 .list-view-status-indicator {
@@ -166,9 +166,9 @@
 
 .list-group-links li.disabled {
   .card-tag {
-    color: $color-neutral-500;
-    background-color: $color-neutral-50;
-    border-color: $color-neutral-100;
+    color: var(--color-neutral-500);
+    background-color: var(--color-neutral-50);
+    border-color: var(--color-neutral-100);
     pointer-events: none;
   }
 }

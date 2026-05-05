@@ -18,7 +18,7 @@
     padding-left: 1rem;
 
     &:hover {
-      background-color: $color-neutral-100;
+      background-color: var(--color-neutral-100);
     }
   }
 
@@ -46,12 +46,12 @@
   }
 
   .sidebar-key {
-    color: $color-neutral-700;
+    color: var(--color-neutral-700);
     font-size: 13px;
   }
 
   .sidebar-help {
-    color: $color-neutral-500;
+    color: var(--color-neutral-500);
     font-size: 15px;
   }
 
@@ -60,8 +60,8 @@
     border-left: solid 2px transparent;
 
     .badge.rounded-pill {
-      background-color: white;
-      color: var(--bs-body-color-rgb);
+      background-color: var(--color-neutral-white);
+      color: var(--color-neutral-900);
     }
 
     background-size: 205% 100%;
@@ -75,7 +75,7 @@
       
       .badge.rounded-pill {
         background-color: var(--subject-color-500);
-        color: white;
+        color: var(--color-neutral-white);
       }
     }
 
@@ -90,7 +90,7 @@
 
   .filter-question-text {
     margin-bottom: 1.25rem;
-    color: $color-neutral-700;
+    color: var(--color-neutral-700);
   }
 
   [type='search'] {
@@ -101,7 +101,7 @@
 }
 
 #content-sidebar-offcanvas {
-  background-color: $color-neutral-50;
+  background-color: var(--color-neutral-50);
 
   > div {
     padding: 0;
@@ -146,5 +146,5 @@
 }
 
 .btn.btn-keyline.sidebar-toggle {
-  background-color: $color-neutral-50;
+  background-color: var(--color-neutral-50);
 }

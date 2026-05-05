@@ -19,7 +19,7 @@
 
 .hierarchy-tags {
   font-size: 0.8125rem;
-  color: $color-neutral-600;
+  color: var(--color-neutral-600);
   min-width: max-content;
 }
 
@@ -65,7 +65,7 @@ button.btn.delete-button {
 
 .board-sidebar-content {
   &.selected-content {
-    background-color: $color-neutral-100;
+    background-color: var(--color-neutral-100);
     border-left: solid 3px var(--subject-color-500);
   }
   &:not(.selected-content) {

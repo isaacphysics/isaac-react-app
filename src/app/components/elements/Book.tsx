@@ -68,7 +68,7 @@ export const Book = () => {
                         }}
                     />
                     : <>
-                        <PageMetadata doc={definedBookIndexPage} showSidebarButton sidebarButtonText={book?.sidebar?.subtitle}/>
+                        <PageMetadata doc={definedBookIndexPage} />
                         {definedBookIndexPage.value && <div>
                             <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
                                 <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />

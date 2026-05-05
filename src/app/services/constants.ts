@@ -17,7 +17,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {ArrayElement, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -310,7 +310,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
-    [EXAM_BOARD.SQA]: "SQA",
+    [EXAM_BOARD.SQA]: "Qualifications Scotland",
     [EXAM_BOARD.ADA]: "Ada CS",
     [EXAM_BOARD.ALL]: "All exam boards",
 };
@@ -1044,7 +1044,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
+export enum ACCOUNT_TAB {account, customise, theme, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
 
 export interface AccountTabs {
     tab: ACCOUNT_TAB,
@@ -1057,6 +1057,7 @@ export interface AccountTabs {
 export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.account, title: "Profile"},
     {tab: ACCOUNT_TAB.customise, title: "Customise", hidden: isPhy},
+    {tab: ACCOUNT_TAB.theme, title: "Theme", hidden: isAda},
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
     {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
@@ -1240,6 +1241,8 @@ export const GRAY_120 = '#c9cad1';
 
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 
+export const CONTACT_FORM_CHAR_LENGTH_LIMIT = 5000;
+
 export const SEARCH_RESULTS_PER_PAGE = 30;
 
 export const GAMEBOARD_UNDO_STACK_SIZE_LIMIT = 10;
@@ -1281,6 +1284,7 @@ export const PATHS = {
     MY_TESTS: "/tests",
     TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
+    BOOKMARKS: "/bookmarks",
 };
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
