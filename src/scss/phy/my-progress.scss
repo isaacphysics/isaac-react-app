@@ -6,7 +6,7 @@
   height: 140px;
   width: 140px;
   :is(b) {
-    color: $color-brand-700;
+    color: var(--color-brand-700);
     font-size: 32px;
     line-height: 32px;
     font-weight: 700;

@@ -108,7 +108,7 @@ svg {
       }
 
       &.filter-count {
-        fill: $color-neutral-white;
+        fill: var(--color-neutral-white);
         stroke: none;
       }
 

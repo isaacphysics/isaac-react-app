@@ -67,7 +67,8 @@ div:has(> .pod) {
 }
 
 .pod {
-  background-color: white;
+  background-color: var(--color-neutral-white);
+  color: var(--color-neutral-800);
   box-shadow: 2px 4px 10px 0 $shadow-08;
   border-radius: 1rem;
   border: none;

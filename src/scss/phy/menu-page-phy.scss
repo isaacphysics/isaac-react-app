@@ -63,15 +63,15 @@
   }
 
   .card {
-    border: 2px solid $color-neutral-200;
+    border: 2px solid var(--color-neutral-200);
     border-radius: 0.75rem;
     min-height: 170px;
     transition: all 0.15s ease-out;
     &.disabled {
-      border-color: $color-neutral-300;
+      border-color: var(--color-neutral-300);
     }
     &:hover, &:focus {
-      border-color: $color-brand-500;
+      border-color: var(--color-brand-500);
     }
     &.teacher-features {
       img {

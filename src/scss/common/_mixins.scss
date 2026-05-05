@@ -184,7 +184,7 @@ $viewport-sizes: (
   height: $height;
   min-width: $width;
   min-height: $height;
-  background-color: black; // this has to be here, not inside the @supports, as that raises the specificity beyond that of background colours specified alongside @include svg-icon
+  background-color: var(--color-neutral-900, black); // this has to be here, not inside the @supports, as that raises the specificity beyond that of background colours specified alongside @include svg-icon
 
   @supports (mask: url($path) center center no-repeat) {
     mask: url($path) center center no-repeat;
