@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
 import { ShareLink } from "../ShareLink";
+import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -33,6 +34,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(gameboard), [gameboard]);
 
     const deviceSize = useDeviceSize();
+    const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
 
     const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
         if (isDefined(c.tags) && c.tags.length > 0) {
@@ -45,7 +47,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const isSetAssignments = isDefined(setAssignmentsDetails);
 
-    const boardLink = assignment
+    const boardLink = assignment && isAssignmentsV2Link
         ? `/assignment/${assignment.id}/view`
         : gameboard && (isSetAssignments 
             ? `/assignment/${gameboard.id}`
