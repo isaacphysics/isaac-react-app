@@ -331,11 +331,12 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
 type BuilderListViewItemProps = ListViewItemBaseProps<"builder", "list" | "card"> & {
     item: ContentSummaryDTO;
     index?: number;
+    onMove?: (id: string, adjustment: number) => void;
     onDelete?: (id: string) => void;
 }
 
 export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
-    const { item, index, onDelete, ...rest } = props;
+    const { item, index, onDelete, onMove, ...rest } = props;
     // const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
@@ -358,7 +359,15 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
                 {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}
             >
                 <div className="d-flex vertical-center bg-white">
-                    <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                    <div className="d-flex flex-column align-items-center">
+                        <button type="button" title="Move question up" className="btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)}>
+                            <i className="icon icon-chevron-up icon-color-muted-hoverable icon-color-theme-on-hover" />
+                        </button>
+                        <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                        <button type="button" title="Move question down" className="btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)}>
+                            <i className="icon icon-chevron-down icon-color-muted-hoverable icon-color-theme-on-hover" />
+                        </button>
+                    </div>
                 </div>
                 <AbstractListViewItem
                     {...rest}
@@ -374,7 +383,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
                     // subtitle={item.subtitle}
                     // breadcrumb={breadcrumb}
                     audienceViews={audienceViews}
-                    className="flex-grow-1"
+                    className="flex-grow-1 align-content-center"
                 />
                 <Button className="delete-button" color="solid" onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
                     <img src="/assets/common/icons/bin.svg" alt="Delete board"/>

@@ -274,7 +274,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             {!stackedLayout &&
                 <>
                     {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
-                    {flatLayout && <div className="list-view-border wf-10 pe-3">
+                    {flatLayout && (subtitle || breadcrumb) && <div className="list-view-border wf-10 pe-3">
                         {subtitle && <div className="small text-muted text-wrap">
                             <Markup encoding="latex">{subtitle}</Markup>
                         </div>}

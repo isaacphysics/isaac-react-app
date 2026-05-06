@@ -1,4 +1,4 @@
-import React, {lazy, useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
     closeActiveModal,
     logAction,
@@ -23,12 +23,11 @@ import {
     Label,
     Row,
     Spinner,
-    Table
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
-import {DragDropContext, Draggable, Droppable, DropResult} from "@hello-pangea/dnd";
+import {DragDropContext, Droppable, DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
@@ -449,69 +448,30 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <DragDropContext onDragEnd={reorder}>
                             <Droppable droppableId="droppable">
                                 {(providedDrop) => {
-                                    return <>
-                                        <div ref={providedDrop.innerRef}>
-                                            <ListView 
-                                                id="gameboard-builder-questions"
-                                                type="builder"
-                                                style="flat"
-                                                items={currentQuestions.questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
-                                                onDelete={(id) => {
-                                                    const question= selectedQuestions.get(id);
-                                                    if (question) {
-                                                        handleBuilderRowChange({ provided: providedDrop, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
-                                                    }
-                                                }}
-                                            />
-                                            {providedDrop.placeholder}
-                                        </div>
-                                        {/* // <Table className={"mb-0"} id={"gameboard-builder-questions"} bordered
-                                        //     innerRef={providedDrop.innerRef}>
-                                        //     <thead>
-                                        //         <tr className="border-top-0">
-                                        //             <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
-                                        //             <th className={siteSpecific("w-40", "w-30")}>Question title</th>
-                                        //             <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                        //             <th className="w-15">Stage</th>
-                                        //             <th className="w-15">Difficulty</th>
-                                        //             {isAda && <th className="w-15">Exam boards</th>}
-                                        //         </tr>
-                                        //     </thead>
-                                        //     {questionOrder.map((questionId, index: number) => {
-                                        //         const question = selectedQuestions.get(questionId);
-                                        //         return question && question.id &&
-                                        //                 <Draggable key={question.id} draggableId={question.id}
-                                        //                     index={index}>
-                                        //                     {(providedDrag, snapshot) => {
-                                        //                         return <tbody
-                                        //                             ref={providedDrag && providedDrag.innerRef}
-                                        //                             className={classNames({"table-row-dragging": snapshot.isDragging})}
-                                        //                             {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
-                                        //                         >
-                                        //                             <GameboardBuilderDraggable
-                                        //                                 provided={providedDrag}
-                                        //                                 snapshot={snapshot}
-                                        //                                 key={`gameboard-builder-row-${question.id}`}
-                                        //                                 question={question}
-                                        //                                 currentQuestions={currentQuestions}
-                                        //                                 undoStack={undoStack}
-                                        //                                 redoStack={redoStack}
-                                        //                                 creationContext={question.creationContext}
-                                        //                             />
-                                        //                         </tbody>;
-                                        //                     }}
-                                        //                 </Draggable>;
-                                        //     })}
-                                        //     <tbody>
-                                        //         {providedDrop.placeholder}
-                                        //         {selectedQuestions?.size === 0 && <tr>
-                                        //             <td colSpan={20}>
-                                        //             </td>
-                                        //         </tr>}
-                                        //     </tbody>
-                                        // </Table> */}
-
-                                    </>;
+                                    return <div ref={providedDrop.innerRef}>
+                                        <ListView 
+                                            id="gameboard-builder-questions"
+                                            type="builder"
+                                            style="flat"
+                                            items={currentQuestions.questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
+                                            onMove={(id, adjustment) => {
+                                                const index = currentQuestions.questionOrder.findIndex(qId => qId === id);
+                                                if (index === -1) return;
+                                                if (index + adjustment < 0 || index + adjustment >= currentQuestions.questionOrder.length) return;
+                                                const newQuestionOrder = [...currentQuestions.questionOrder];
+                                                const [removed] = newQuestionOrder.splice(index, 1);
+                                                newQuestionOrder.splice(index + adjustment, 0, removed);
+                                                currentQuestions.setQuestionOrder(newQuestionOrder);
+                                            }}
+                                            onDelete={(id) => {
+                                                const question= selectedQuestions.get(id);
+                                                if (question) {
+                                                    handleBuilderRowChange({ provided: providedDrop, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
+                                                }
+                                            }}
+                                        />
+                                        {providedDrop.placeholder}
+                                    </div>;
                                 }}
                             </Droppable>
                         </DragDropContext>
