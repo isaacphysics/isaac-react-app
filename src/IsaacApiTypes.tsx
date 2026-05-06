@@ -457,6 +457,7 @@ export interface ContentSummaryDTO {
     tags?: string[];
     url?: string;
     state?: CompletionState;
+    bookmarked?: Date;
     supersededBy?: string;
     deprecated?: boolean;
     difficulty?: string;
@@ -775,8 +776,6 @@ export interface AdminSearchEndpointParams {
     familyName?: string;
     role?: UserRole;
     schoolOther?: string;
-    postcode?: string;
-    postcodeRadius?: string;
     schoolURN?: string;
     emailVerificationStatus?: EmailVerificationStatus;
     subjectOfInterest?: string;

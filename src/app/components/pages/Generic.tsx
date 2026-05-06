@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Col, Row} from "reactstrap";
 import {ContentSummaryDTO, GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {isAda, isPhy, siteSpecific, useUrlHashValue} from "../../services";
+import {isAda, isPhy, showWildcard, siteSpecific, useUrlHashValue} from "../../services";
 import {useParams} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -46,7 +46,7 @@ const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: 
     if (tags?.includes("news")) {
         return <NewsSidebar {...sidebarProps} />;
     }
-    if (gameboard?.id && gameboard.wildCard?.url === window.location.pathname) {
+    if (gameboard?.id && showWildcard(gameboard) && gameboard.wildCard?.url === window.location.pathname) {
         return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} {...sidebarProps} />;
     }
     if (relatedContent) {

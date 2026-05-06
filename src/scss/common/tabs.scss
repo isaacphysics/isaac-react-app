@@ -45,7 +45,7 @@
         font-family: $secondary-font;
         font-weight: 600;
         background-color: var(--tab-active, $black);
-        color: $white;
+        color: white;
         text-decoration: none;
         cursor: default;
       }
@@ -54,7 +54,7 @@
       background-color: transparent;
       border-radius: 8px;
       border-width: 0;
-      color: $black;
+      color: var(--color-neutral-900, black);
       font-family: $secondary-font;
       font-size: 1rem;
       cursor: pointer;

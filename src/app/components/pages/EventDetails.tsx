@@ -95,7 +95,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
     const KeyInfo = siteSpecific("div", Card);
 
     return <>
-        <MetadataContainer className={classNames("overflow-scroll", {"mt-3": isAda})}>
+        <MetadataContainer className={classNames("overflow-auto", {"mt-3": isAda})}>
             <KeyInfo className={classNames("event-key-info", siteSpecific("px-4", "gap-3 p-4"))}>
                 <Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
@@ -397,19 +397,16 @@ const EventDetails = () => {
                         </span>}
                     </>}
                 >
-                    <KeyEventInfo {...eventBookingProps} />
+                    {isPhy && <KeyEventInfo {...eventBookingProps} />}
                 </PageMetadata>
+                {isAda && <KeyEventInfo {...eventBookingProps} />}
                 <div className={siteSpecific("", "mt-4 pt-2 card")}>
                     <div className={siteSpecific("", "card-body")}>
-                        <Row> 
-                            <Col>
-                                <div className="d-flex flex-column-reverse d-md-block">
-                                    <ImageAndMap {...eventBookingProps} />
-                                    <IsaacContent doc={event}/>
-                                </div>
-                                <BookingForm {...eventBookingProps} />
-                            </Col>
-                        </Row>
+                        <div className="d-flex flex-column-reverse d-md-block">
+                            <ImageAndMap {...eventBookingProps} />
+                            <IsaacContent doc={event}/>
+                        </div>
+                        <BookingForm {...eventBookingProps} />
                     </div>
                 </div>
                 <Button tag={Link} to="/events" color="keyline" className="float-end my-4">

@@ -1,5 +1,5 @@
 import React from "react";
-import {KEY, persistence} from "../../services";
+import {KEY, persistence, siteSpecific} from "../../services";
 import { Input, Label } from "reactstrap";
 
 interface AnonymisationCheckboxesProps {
@@ -19,7 +19,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                     }
                     window.location.reload();
                 }}
-                className="mt-1"
+                className={siteSpecific("mb-1", "mt-1")}
             />
             <Label for="anonymise-users-checkbox" className="ms-2 mb-0">Disguise only user names and emails in teacher tools</Label>
         </div>
@@ -34,7 +34,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                     }
                     window.location.reload();
                 }}
-                className="mt-1"
+                className={siteSpecific("", "mt-1")}
             />
             <Label for="anonymise-groups-checkbox" className="ms-2 mb-0">Disguise both user and group details in teacher tools</Label>
         </div>

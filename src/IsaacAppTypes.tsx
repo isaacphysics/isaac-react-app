@@ -225,6 +225,7 @@ export interface BooleanNotation {
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
     CHEM_TEXT_ENTRY?: boolean;
+    DARK_MODE?: boolean;
 }
 
 export interface AccessibilitySettings {
@@ -312,6 +313,20 @@ export interface ActiveModalProps {
     buttons?: ReactNode;
     bodyContainerClassName?: string;
 }
+
+export enum BookmarksOrder {
+    "date" = "date",
+    "-date" = "-date",
+    "title" = "title",
+    "-title" = "-title"
+}
+
+export const BOOKMARKS_ORDER_NAMES: Record<BookmarksOrder, string> = {
+    [BookmarksOrder.date]: "Date added (newest first)",
+    [BookmarksOrder["-date"]]: "Date added (oldest first)",
+    [BookmarksOrder.title]: "Title (A-Z)",
+    [BookmarksOrder["-title"]]: "Title (Z-A)"
+};
 
 export type ProgressSortOrder = number | "name" | "totalPartPercentage" | "totalAttemptedPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 

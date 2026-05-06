@@ -1,21 +1,29 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AppState, useAppSelector } from "../state";
 import { isTeacherOrAbove } from "./user";
 
 export const useReducedMotion = () => {
     const { ACCESSIBILITY: accessibilitySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
-    const [reducedMotion, setReducedMotion] = useState<boolean>(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || (accessibilitySettings?.REDUCED_MOTION ?? false));
+    const [reducedMotion, setReducedMotion] = useState<boolean>(false);
+
+    const updateReducedMotion = useCallback(() => {
+        setReducedMotion(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || (accessibilitySettings?.REDUCED_MOTION ?? false));
+    }, [accessibilitySettings?.REDUCED_MOTION]);
 
     useEffect(() => {
+        // update reduced motion on accessibility settings' first load & on change
+        updateReducedMotion();
+    }, [updateReducedMotion]);
+
+    useEffect(() => {
+        // listen for browser media query changes to update setting
         const mediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-        const listener = (e: MediaQueryListEvent) => {
-            setReducedMotion(e.matches || (accessibilitySettings?.REDUCED_MOTION ?? false));
-        };
+        const listener = updateReducedMotion;
         mediaQuery?.addEventListener('change', listener);
         return () => {
             mediaQuery?.removeEventListener('change', listener);
         };
-    }, [accessibilitySettings?.REDUCED_MOTION]);
+    }, [updateReducedMotion]);
 
     return reducedMotion;
 };

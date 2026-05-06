@@ -1,0 +1,23 @@
+// the default color-mode mixin used by bootstrap compiles to a [data-bs-theme="..."] selector, which we use for subject theming.
+// instead, we'll override this mixin (which bootstrap uses internally to generate light / dark mode colours) to [data-ld-theme="..."].
+
+// bootstrap/scss/mixins/_color-mode.scss
+@mixin color-mode($mode: light, $root: false) {
+  @if $color-mode-type == "media-query" {
+    @if $root == true {
+      @media (prefers-color-scheme: $mode) {
+        :root {
+          @content;
+        }
+      }
+    } @else {
+      @media (prefers-color-scheme: $mode) {
+        @content;
+      }
+    }
+  } @else {
+    [data-ld-theme="#{$mode}"] {
+      @content;
+    }
+  }
+}
