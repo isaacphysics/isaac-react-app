@@ -40,7 +40,7 @@
 
   &:hover, &.btn-dropdown.active {
     background: var(--buttons-dark-hover);
-    color: var(--buttons-dark-hover-icon);
+    color: var(--buttons-dark-text);
     text-decoration: none;
   }
 
@@ -141,6 +141,30 @@
   i.icon {
     --icon-foreground: var(--buttons-light-icon);
   }
+}
+
+.btn-blank {
+  background: none;
+  border: none;
+  color: var(--buttons-light-text);
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--buttons-dark-text);
+  }
+
+  &:disabled, &.disabled {
+    color: var(--buttons-light-disabled-text);
+  }
+
+  i.icon {
+    --icon-foreground: var(--buttons-light-icon);
+  }
+}
+
+.btn:hover > i.icon:not(.icon-raw), .btn-blank:hover > i.icon:not(.icon-raw) {
+  --icon-foreground: var(--icon-hover);
+  --icon-background: var(--icon-hover);
 }
 
 .icon-button-sm {
