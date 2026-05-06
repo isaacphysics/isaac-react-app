@@ -83,7 +83,7 @@ export const Gameboard = () => {
                     <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                             
-                    <GameboardContents gameboard={gameboard} />;
+                    <GameboardContents gameboard={gameboard} />
                 </PageContainer>;
             }}
         />;
