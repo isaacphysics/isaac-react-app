@@ -358,13 +358,13 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
                 className="d-flex"
                 {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}
             >
-                <div className="d-flex vertical-center bg-white">
+                <div className="d-flex vertical-center bg-white rounded-2">
                     <div className="d-flex flex-column align-items-center">
-                        <button type="button" title="Move question up" className="btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)}>
+                        <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)}>
                             <i className="icon icon-chevron-up icon-color-muted-hoverable icon-color-theme-on-hover" />
                         </button>
                         <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
-                        <button type="button" title="Move question down" className="btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)}>
+                        <button type="button" title="Move question down" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)}>
                             <i className="icon icon-chevron-down icon-color-muted-hoverable icon-color-theme-on-hover" />
                         </button>
                     </div>

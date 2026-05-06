@@ -11,6 +11,10 @@
   line-height: normal;
   opacity: 100%;
 
+  // WCAG 2.2: click targets must be at least 24x24px
+  min-width: 24px;
+  min-height: 24px;
+
   &:focus:not(:focus-visible) {
     outline: 1px solid var(--buttons-focus-ring) !important;
     outline-offset: 3px;
