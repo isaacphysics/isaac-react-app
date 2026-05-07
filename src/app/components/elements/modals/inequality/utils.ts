@@ -340,7 +340,8 @@ export function generateChemicalElementMenuItem(symbol: string): MenuItemProps |
         return {
             type: "Particle",
             properties: CHEMICAL_PARTICLES[symbol].properties,
-            menu: {...CHEMICAL_PARTICLES[symbol].menu, className: `chemical-particle ${symbol}`}
+            menu: {...CHEMICAL_PARTICLES[symbol].menu, className: `chemical-particle ${symbol}`},
+            children: CHEMICAL_PARTICLES[symbol].children
         };
     }
     return undefined;

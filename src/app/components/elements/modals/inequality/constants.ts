@@ -71,8 +71,9 @@ export const CHEMICAL_PARTICLES: {[key: string]: MenuItemProps} = {
     },
     electron: {
         type: 'Particle',
-        menu: { label: '\\text{e}', texLabel: true },
-        properties: { particle: 'e', type: 'electron' }
+        menu: { label: '\\text{e}^{-}', texLabel: true },
+        properties: { particle: 'e', type: 'electron' },
+        children: { superscript: { type: "BinaryOperation", properties: { operation: "-" } } }
     }
 };
 export const CHEMICAL_STATES = ["(g)", "(l)", "(aq)", "(s)"];
