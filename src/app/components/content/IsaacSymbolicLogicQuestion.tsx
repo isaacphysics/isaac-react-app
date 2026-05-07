@@ -37,7 +37,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const [hasStartedEditing, setHasStartedEditing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
-    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible, readonly});
     
     const editorSeed: WidgetSpec[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
     const initialEditorSymbols = useRef(editorSeed ?? []);
