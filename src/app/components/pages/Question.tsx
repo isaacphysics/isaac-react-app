@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Col, Row} from "reactstrap";
 import {useLocation, useParams} from "react-router-dom";
-import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetQuestionQuery} from "../../state";
+import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery, useGetQuestionQuery} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {
     determineAudienceViews,
@@ -42,6 +42,8 @@ import { getAccessibilityTags, useAccessibilitySettings } from "../../services/a
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../navigation/AssignedQuestionWarningBanner";
+
 interface QuestionPageProps{
     questionIdOverride?: string;
     preview?: boolean;
@@ -60,14 +62,20 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
     const navigation = useNavigation(doc ?? null);
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
     const query = queryString.parse(location.search);
-    const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
-    const dispatch = useAppDispatch();
-    const accessibilitySettings = useAccessibilitySettings();
+    const {data: assignments} = useGetMyAssignmentsQuery(params.assignmentId ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    const assignment = assignments?.find(a => a.id?.toString() === params.assignmentId);
+
+    const gameboardId = assignment
+        ? assignment.gameboardId 
+        : query.board instanceof Array ? query.board[0] : query.board;
 
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
     const wildcard = (gameboard && showWildcard(gameboard)) ? gameboard.wildCard : undefined;
+
+    const dispatch = useAppDispatch();
+    const accessibilitySettings = useAccessibilitySettings();
 
     return <ShowLoadingQuery
         query={questionQuery}
@@ -113,6 +121,8 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
                     <Row className="question-content-container">
                         <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
+
+                            <AccessingAssignedQuestionOutsideAssignmentWarning question={doc} assignment={assignment} />
 
                             <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
