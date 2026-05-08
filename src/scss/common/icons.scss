@@ -246,6 +246,7 @@ img[aria-disabled="true"] {
 }
 
 i.icon:not(.icon-raw) {
+  position: relative;
   background-color: var(--layered-icon-parent-bg-override, var(--icon-foreground));
   @include not-reduced-motion {
     transition: all 0.15s ease-in-out; // mirrors BS's $btn-transition
