@@ -165,7 +165,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </SortItemHeader>
         <th>Manage</th>
         <th>Share</th>
-        <th>Unlink</th>
+        <th>Unsave</th>
     </tr>;
 
     return <div className={"mb-7 mt-4"}>

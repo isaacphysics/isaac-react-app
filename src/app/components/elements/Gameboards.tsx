@@ -78,16 +78,16 @@ const CSTable = (props: GameboardsTableProps) => {
         </SortItemHeader>
         {siteSpecific(
             <>
-                <th className="text-center align-middle">Unlink</th>
+                <th className="text-center align-middle">Unsave</th>
             </>,
             <>
                 <th>Share</th>
                 <th>
                     {selectedBoards.length
                         ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                            Unlink ({selectedBoards.length})
+                            Unsave ({selectedBoards.length})
                         </Button>
-                        : "Unlink"
+                        : "Unsave"
                     }
                 </th>
             </>
