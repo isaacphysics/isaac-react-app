@@ -139,6 +139,9 @@
 .action-button {
   &:not(.outline) {
     @include ada-icon-button-base(48px, 48px, false);
+    &:focus-visible {
+      @include focus-outline;
+    }
   }
   &.outline {
     @include ada-icon-button-base(48px, 48px, true);
