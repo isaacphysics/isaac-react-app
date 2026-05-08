@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
 import { ShareLink } from "../ShareLink";
+import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 
 export enum GameboardLinkLocation {
@@ -79,6 +80,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 </div>
 
                 {children}
+
+                <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
 
                 <Spacer/>
                 

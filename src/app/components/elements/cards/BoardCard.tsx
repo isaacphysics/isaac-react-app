@@ -295,7 +295,6 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
                             Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
                         </p>}
-                        {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board} />}
                     </Col>
                 </Row>
             </GameboardCard>,
