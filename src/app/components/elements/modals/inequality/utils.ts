@@ -512,7 +512,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 if (["chemistry", "nuclear"].includes(editorMode)) {
                     // Available chemical elements
                     if (CHEMICAL_ELEMENTS.includes(availableSymbol) || CHEMICAL_PARTICLES.hasOwnProperty(availableSymbol)) {
-                        const item = generateChemicalElementMenuItem(availableSymbol);
+                        const item = generateChemicalElementMenuItem(availableSymbol, editorMode);
                         if (item) {
                             customMenuItems.chemicalElements.push(item);
                         }
