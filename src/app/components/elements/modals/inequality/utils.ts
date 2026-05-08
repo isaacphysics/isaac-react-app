@@ -327,7 +327,7 @@ export function generateChemicalOperationsMenuItems() {
     ];
 }
 
-export function generateChemicalElementMenuItem(symbol: string): MenuItemProps | undefined {
+export function generateChemicalElementMenuItem(symbol: string, editorMode?: EditorMode): MenuItemProps | undefined {
     if (CHEMICAL_ELEMENTS.includes(symbol)) {
         return {
             type: "ChemicalElement",
@@ -337,10 +337,12 @@ export function generateChemicalElementMenuItem(symbol: string): MenuItemProps |
             menu: {label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}`}
         };
     } else if (CHEMICAL_PARTICLES.hasOwnProperty(symbol)) {
+        if (editorMode === "nuclear" && symbol === "electron") symbol = "electron_nuclear";
         return {
             type: "Particle",
             properties: CHEMICAL_PARTICLES[symbol].properties,
-            menu: {...CHEMICAL_PARTICLES[symbol].menu, className: `chemical-particle ${symbol}`}
+            menu: {...CHEMICAL_PARTICLES[symbol].menu, className: `chemical-particle ${symbol}`},
+            children: CHEMICAL_PARTICLES[symbol].children
         };
     }
     return undefined;
@@ -510,7 +512,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 if (["chemistry", "nuclear"].includes(editorMode)) {
                     // Available chemical elements
                     if (CHEMICAL_ELEMENTS.includes(availableSymbol) || CHEMICAL_PARTICLES.hasOwnProperty(availableSymbol)) {
-                        const item = generateChemicalElementMenuItem(availableSymbol);
+                        const item = generateChemicalElementMenuItem(availableSymbol, editorMode);
                         if (item) {
                             customMenuItems.chemicalElements.push(item);
                         }
@@ -568,8 +570,8 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
         } else if (["chemistry", "nuclear"].includes(editorMode)) {
             return [{
                 ...baseItems,
-                chemicalElements: CHEMICAL_ELEMENTS.map(generateChemicalElementMenuItem),
-                chemicalParticles: Object.keys(CHEMICAL_PARTICLES).map(generateChemicalElementMenuItem),
+                chemicalElements: CHEMICAL_ELEMENTS.map(symbol => generateChemicalElementMenuItem(symbol, editorMode)),
+                chemicalParticles: Object.keys(CHEMICAL_PARTICLES).filter(symbol => symbol !== "electron_nuclear").map(symbol => generateChemicalElementMenuItem(symbol, editorMode)),
             }, true] as [MenuItems, boolean];
         } else {
             // Assuming editorMode === 'maths'
