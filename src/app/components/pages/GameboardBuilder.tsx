@@ -469,6 +469,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                     handleBuilderRowChange({ provided: providedDrop, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
                                                 }
                                             }}
+                                            allowBookmarking
                                         />
                                         {providedDrop.placeholder}
                                     </div>;

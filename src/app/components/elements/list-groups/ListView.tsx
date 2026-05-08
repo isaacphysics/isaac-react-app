@@ -375,6 +375,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
                     icon={icon}
                     title={item.title ?? ""}
                     subject={itemSubject !== "neutral" ? itemSubject : undefined}
+                    url={item.url}
                     tags={item.tags}
                     deprecated={item.deprecated}
                     supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}

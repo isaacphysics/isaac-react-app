@@ -154,6 +154,7 @@ type ALVIType = {
     deprecated?: boolean;
     supersededByPath?: string;
     audienceViews?: ViewingContext[];
+    allowBookmarking?: boolean; // as in item type
 };
 
 type ALVILayout = {
@@ -291,9 +292,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
-                    {isItem && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <button 
+                    {(isItem || isBuilder) && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <button 
                         className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
                         onClick={() => bookmarkItem(contentId)}
+                        type="button"
                     /> }
                 </>
             }
