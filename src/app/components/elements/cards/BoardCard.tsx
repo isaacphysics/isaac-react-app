@@ -208,9 +208,12 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
                 <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
                 <td className={"align-middle text-center"}>
-                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "solid")} size="sm" onClick={openAssignModal}>
-                        {isSetAssignments ? "Assign / Unassign" : "Assign"}
-                    </Button>
+                    <div className="d-flex gap-2 align-items-center">
+                        <SaveBoardButton board={board} color="keyline" size="sm" />
+                        <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
+                            {isSetAssignments ? "Assign / Unassign" : "Assign"}
+                        </Button>
+                    </div>
                 </td>
                 {isAda && <td className={"align-middle text-center"}>
                     <div className="table-share-link">
