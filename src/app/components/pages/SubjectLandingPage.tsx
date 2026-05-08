@@ -148,7 +148,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                 <h4 className="m-0">Events <span className="text-theme">({relevantEvents.length})</span></h4>
                 <div className="section-divider-bold flex-grow-1"/>
             </div>
-            <Row className="h-100 item-list-container">
+            <Row className={classNames("h-100 item-list-container", {"overflow-hidden": relevantEvents.length === 1})}>
                 {relevantEvents.map((event, i) =>
                     <Col xs={12} key={i} className={classNames({"mb-3": ['xs', 'md'].includes(deviceSize)})}>
                         {event && <EventCard event={event} layout={"landing-page"} className={classNames({"force-horizontal": !['xs', 'md'].includes(deviceSize)})} />}
