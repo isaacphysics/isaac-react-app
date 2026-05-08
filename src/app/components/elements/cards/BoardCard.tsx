@@ -142,8 +142,6 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
 
     const { openAssignModal, assignees } = useSetAssignment(board);
 
-    const hasAssignedGroups = isDefined(assignees?.length) && assignees.length > 0;
-
     const deviceSize = useDeviceSize();
 
     const updateBoardSelection = (board: GameboardDTO, checked: boolean) => {
@@ -166,7 +164,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
         hexagonId,
         boardSubjects,
         assignees,
-        toggleAssignModal: openAssignModal,
+        toggleAssignModal: isSetAssignments ? openAssignModal : undefined,
         isTable,
     };
 
@@ -211,7 +209,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
                 <td className={"align-middle text-center"}>
                     <Button className="set-assignments-button" color={siteSpecific("tertiary", "solid")} size="sm" onClick={openAssignModal}>
-                        Assign{hasAssignedGroups && "\u00a0/ Unassign"}
+                        {isSetAssignments ? "Assign / Unassign" : "Assign"}
                     </Button>
                 </td>
                 {isAda && <td className={"align-middle text-center"}>
@@ -251,7 +249,12 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     </td>}
                     {siteSpecific(
                         <td className={"text-center align-middle"}>
-                            <SaveBoardButton board={board} color="keyline" size="sm" />
+                            <div className="d-flex gap-2">
+                                <SaveBoardButton board={board} color="keyline" size="sm" />
+                                <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
+                                    {isSetAssignments ? "Assign / Unassign" : "Assign"}
+                                </Button>
+                            </div>
                         </td>,
                         <td className={"text-center align-middle overflow-hidden"}>
                             <Input
@@ -273,7 +276,8 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
             // sci
             <GameboardCard 
                 gameboard={board} linkLocation={GameboardLinkLocation.Card} data-testid="gameboard-card"
-                openAssignModal={openAssignModal} groupCount={isSetAssignments ? assignees?.length : undefined}>
+                openAssignModal={openAssignModal} groupCount={isSetAssignments ? assignees?.length : undefined}
+            >
                 <Row>
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
@@ -343,7 +347,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <SaveBoardButton board={board} color="keyline" size="sm" />
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={openAssignModal}>
-                            Assign{hasAssignedGroups && " / Unassign"}
+                            Assign / Unassign
                         </Button>}
                     </CardFooter>
                 </CardBody>

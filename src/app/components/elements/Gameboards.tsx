@@ -78,7 +78,9 @@ const CSTable = (props: GameboardsTableProps) => {
         </SortItemHeader>
         {siteSpecific(
             <>
-                <th className="text-center align-middle">Unsave</th>
+                <th className="text-center align-middle">
+                    {boardView === BoardViews.card ? "Unsave" : "Manage"}
+                </th>
             </>,
             <>
                 <th>Share</th>
