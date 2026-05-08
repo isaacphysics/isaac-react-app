@@ -1,6 +1,5 @@
 import {
     getValue,
-    isAdminOrEventManager,
     isDefined,
     isStudent,
     isTutorOrAbove,
@@ -215,9 +214,10 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                     void navigateComponentless(`${PATHS.MY_GAMEBOARDS}#${boardId}`);
                 }
             }
+            dispatch(showSuccessToast("Deck saved", `The deck '${boardTitle}' has successfully been saved to your account.`) as any);
             return {boardId, boardTitle};
         } catch (e) {
-            dispatch(showRTKQueryErrorToastIfNeeded("Error saving gameboard", e) as any);
+            dispatch(showRTKQueryErrorToastIfNeeded("Error saving question deck", e) as any);
             return rejectWithValue(null);
         }
     }
