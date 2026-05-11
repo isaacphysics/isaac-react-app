@@ -238,8 +238,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const reorder = (result: DropResult) => {
         if (result.destination) {
-            const [removed] = questionOrder.splice(result.source.index, 1);
-            questionOrder.splice(result.destination.index, 0, removed);
+            const newQuestionOrder = [...questionOrder];
+            const [removed] = newQuestionOrder.splice(result.source.index, 1);
+            newQuestionOrder.splice(result.destination.index, 0, removed);
+            setQuestionOrder(newQuestionOrder);
         }
     };
 
@@ -448,11 +450,12 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
                     <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-2 responsive vertical-scroll-shadow")}>
                         <DraggableListViewContainer reorder={reorder}>
+                            {/* dragging here can be a little choppy on local development if browser cache is disabled! */}
                             <ListView 
                                 id="gameboard-builder-questions"
                                 type="builder"
                                 style="flat"
-                                items={currentQuestions.questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
+                                items={questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
                                 onMove={(id, adjustment) => {
                                     const index = currentQuestions.questionOrder.findIndex(qId => qId === id);
                                     if (index === -1) return;
@@ -469,7 +472,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     }
                                 }}
                                 allowBookmarking
-                            />;
+                            />
                         </DraggableListViewContainer>
                     </div>
                     <div className={"invalid-feedback"}>
