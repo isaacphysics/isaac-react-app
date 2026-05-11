@@ -124,10 +124,10 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <Col className={classNames("item-list-container", {"flex-column": !fullWidthBooks})}>
-                        <Row className={classNames("mx-0", {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
+                        <Row className={classNames("mx-0", {"row-cols-1 row-cols-md-2": fullWidthBooks})}>
                             {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
                         </Row>
-                        <Row className="px-4 mx-0">
+                        <Row className="px-7 mx-0">
                             {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">View more books</Button>}
                         </Row>
                     </Col>

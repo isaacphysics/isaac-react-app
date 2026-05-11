@@ -76,12 +76,6 @@ svg.book-page-icon {
   }
 }
 
-.book-card {
-  padding: 0.25rem;
-  margin: 0.25rem;
-  max-width: calc(100% - 0.5rem);
-}
-
 .book-container {
   border-radius: 8px;
   text-decoration: none;
@@ -96,6 +90,16 @@ svg.book-page-icon {
     h5 {
       text-decoration: underline;
     }
+  }
+}
+
+.book-card {
+  padding: 0;
+
+  .book-container {
+    padding: 0.25rem;
+    margin: 0.25rem;
+    max-width: calc(100% - 0.5rem);
   }
 }
 
