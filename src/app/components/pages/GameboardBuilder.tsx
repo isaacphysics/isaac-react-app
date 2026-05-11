@@ -34,6 +34,7 @@ import {
     EXAM_BOARD,
     GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
+    handleBuilderRowChange,
     isAda,
     isDefined,
     isStaff,
@@ -61,7 +62,6 @@ import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
 import {IconButton} from "../elements/AffixButton";
 import { ListView } from '../elements/list-groups/ListView';
-import { handleBuilderRowChange } from '../elements/GameboardBuilderRow';
 
 class GameboardBuilderQuestionsStack {
     questionOrderStack: string[][];

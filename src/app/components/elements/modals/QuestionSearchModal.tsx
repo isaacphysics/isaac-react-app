@@ -47,9 +47,9 @@ import { HorizontalScroller } from "../inputs/HorizontalScroller";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 
-// Immediately load GameboardBuilderRow, but allow splitting
-const importGameboardBuilderRow = import("../GameboardBuilderRow");
-const GameboardBuilderRow = lazy(() => importGameboardBuilderRow);
+// Immediately load GameboardBuilderTableRow, but allow splitting
+const importGameboardBuilderTableRow = import("../GameboardBuilderTableRow");
+const GameboardBuilderTableRow = lazy(() => importGameboardBuilderTableRow);
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -307,7 +307,7 @@ export const QuestionSearchModal = (
                                     if (!questions) return <></>;
                                     const sortedQuestions = sortAndFilterBySearch(questions);
                                     return sortedQuestions?.map(question =>
-                                        <GameboardBuilderRow
+                                        <GameboardBuilderTableRow
                                             key={`question-search-modal-row-${question.id}`}
                                             question={question}
                                             currentQuestions={modalQuestions}

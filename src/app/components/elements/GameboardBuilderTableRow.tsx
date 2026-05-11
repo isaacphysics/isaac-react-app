@@ -10,14 +10,13 @@ import {
     stageLabelMap,
     TAG_ID,
     TAG_LEVEL,
-    isPhy
+    isPhy,
+    GameboardBuilderRowInterface,
+    handleBuilderRowChange
 } from "../../services";
 import React from "react";
-import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
-import {DraggableProvided, DraggableStateSnapshot, DroppableProvided} from "@hello-pangea/dnd";
 import {Question} from "../pages/Question";
-import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import { Spacer } from "./Spacer";
@@ -28,37 +27,7 @@ import { ContentPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 
-interface GameboardBuilderRowInterface {
-    provided?: DraggableProvided | DroppableProvided;
-    snapshot?: DraggableStateSnapshot;
-    question: ContentSummary;
-    currentQuestions: GameboardBuilderQuestions;
-    undoStack: GameboardBuilderQuestionsStackProps;
-    redoStack: GameboardBuilderQuestionsStackProps;
-    creationContext?: AudienceContext;
-}
-
-export const handleBuilderRowChange = ({ provided, question, currentQuestions, undoStack, redoStack, creationContext }: GameboardBuilderRowInterface) => {
-    if (question.id) {
-        const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
-        const newQuestionOrder = [...currentQuestions.questionOrder];
-        if (newSelectedQuestions.has(question.id)) {
-            newSelectedQuestions.delete(question.id);
-            newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-        } else {
-            newSelectedQuestions.set(question.id, {...question, creationContext});
-            newQuestionOrder.push(question.id);
-        }
-        currentQuestions.setSelectedQuestions(newSelectedQuestions);
-        currentQuestions.setQuestionOrder(newQuestionOrder);
-        if (provided) {
-            undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
-            redoStack.clear();
-        }
-    }
-};
-
-const GameboardBuilderRow = (
+const GameboardBuilderTableRow = (
     {provided, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
@@ -143,4 +112,4 @@ const GameboardBuilderRow = (
     </tr>);
 };
 
-export default GameboardBuilderRow;
+export default GameboardBuilderTableRow;
