@@ -201,7 +201,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isCrossTopic = isAda && tags?.includes("cross_topic");
     const isLLM = tags?.includes("llm_question_page");
 
-    const flatLayout = style === "flat" && above['md'](deviceSize);
+    const flatLayout = style === "flat" && above['lg'](deviceSize);
     const stackedLayout = style === "stacked" || below["sm"](deviceSize);
     const wrapTitleTags = below["xs"](deviceSize);
 
@@ -292,11 +292,16 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
-                    {(isItem || isBuilder) && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <button 
-                        className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
-                        onClick={() => bookmarkItem(contentId)}
-                        type="button"
-                    /> }
+                    {(isItem || isBuilder) && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <div
+                        className="alvi-bookmark-container"
+                    >
+                        <button 
+                            className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
+                            onClick={() => bookmarkItem(contentId)}
+                            type="button"
+                        /> 
+                    </div>
+                    }
                 </>
             }
             {isItem && typedProps.hasCaret && <div className="list-caret align-content-center" aria-hidden="true">

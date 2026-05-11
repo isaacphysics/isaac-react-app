@@ -23,12 +23,19 @@
   }
 }
 
+.alvi-bookmark-container {
+  width: 16px;
+  height: 16px;
+  margin-left: 1rem;
+}
+
 .alvi-bookmark {
   display: flex;
+  position: absolute;
+  top: 0;
+  right: 1rem;
   padding: 0;
   background: none;
-  margin-left: 1rem;
-  margin-top: -1rem;
   overflow: hidden;
 
   &::after {
