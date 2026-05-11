@@ -380,6 +380,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             // breadcrumb={breadcrumb}
             audienceViews={audienceViews}
             className="flex-grow-1 align-content-center"
+            disableRedirect
         />
         <Button className="delete-button" color="solid" onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
             <img src="/assets/common/icons/bin.svg" alt="Delete board"/>

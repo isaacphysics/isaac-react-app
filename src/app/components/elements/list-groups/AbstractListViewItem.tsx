@@ -137,6 +137,7 @@ type ALVIType = {
     hasCaret?: boolean;
     linkTags?: ListViewTagProps[];
     allowBookmarking?: boolean; // if set, displays a bookmark for logged-in users that will save the alvi to the user's bookmarks on click
+    disableRedirect?: boolean; // the URL is required for bookmarks to show; if we do not want the item to redirect on click, enable
 } | {
     // quizzes – have exclusive "preview" and "view test" buttons
     alviType: "quiz";
@@ -155,6 +156,7 @@ type ALVIType = {
     supersededByPath?: string;
     audienceViews?: ViewingContext[];
     allowBookmarking?: boolean; // as in item type
+    disableRedirect?: boolean; // as in item type
 };
 
 type ALVILayout = {
@@ -220,7 +222,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </div>
                 <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
-                        {url && !isDisabled
+                        {url && !isDisabled && !("disableRedirect" in typedProps && typedProps.disableRedirect)
                             ? (url.startsWith("http")
                                 ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
                                     <Markup encoding="latex">{title}</Markup>
