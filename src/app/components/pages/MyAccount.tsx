@@ -63,6 +63,7 @@ import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
+import { UserTheme } from '../elements/panels/UserTheme';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -379,6 +380,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
+                            </TabPane>}
+                            {isPhy && <TabPane tabId={ACCOUNT_TAB.theme}>
+                                <UserTheme setDisplaySettings={setDisplaySettings} />
                             </TabPane>}
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword

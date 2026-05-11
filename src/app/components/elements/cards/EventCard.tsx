@@ -54,20 +54,23 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
         {eventThumbnail &&
             <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`}/>
-                {hasExpired &&
-                    <div className="event-pod-badge align-self-end right expired-badge">
-                        <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
-                    </div>}
-                {isVirtualEvent &&
-                    <div className="event-pod-badge align-self-end">
-                        <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
-                    </div>}
-                {bookingDeadlineSoon &&
-                    <div className="event-pod-badge align-self-end right">
-                        {<span className="warning-tag px-2 fw-semibold">
-                            Booking deadline soon!
+                <span className="event-pod-badges align-self-end">
+                    {isVirtualEvent &&
+                        <span>
+                            <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
+                        </span>
+                    }
+                    {hasExpired &&
+                        <span className="expired-badge">
+                            <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
                         </span>}
-                    </div>}
+                    {bookingDeadlineSoon &&
+                        <span>
+                            <span className="warning-tag px-2 fw-semibold">
+                                Booking deadline soon!
+                            </span>
+                        </span>}
+                </span>
                 {isTeacherEvent &&
                     <div className="event-pod-hex">
                         <b>TEACHER EVENT</b>

@@ -71,6 +71,12 @@ export const CHEMICAL_PARTICLES: {[key: string]: MenuItemProps} = {
     },
     electron: {
         type: 'Particle',
+        menu: { label: '\\text{e}^{-}', texLabel: true },
+        properties: { particle: 'e', type: 'electron' },
+        children: { superscript: { type: "BinaryOperation", properties: { operation: "-" } } }
+    },
+    electron_nuclear: {
+        type: 'Particle',
         menu: { label: '\\text{e}', texLabel: true },
         properties: { particle: 'e', type: 'electron' }
     }

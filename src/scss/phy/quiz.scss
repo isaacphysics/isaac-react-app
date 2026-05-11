@@ -9,10 +9,10 @@
   table-layout: auto;
   background-color: white;
   color: black;
-  border: 1px solid $color-neutral-200;
+  border: 1px solid var(--color-neutral-200);
 
   tbody tr {
-      background-color: $color-neutral-50;
+      background-color: var(--color-neutral-50);
   }
 
   btn {

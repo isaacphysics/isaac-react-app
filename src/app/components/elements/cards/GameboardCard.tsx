@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { GameboardDTO } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse } from "reactstrap";
 import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
 import { ShareLink } from "../ShareLink";
+import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -18,6 +19,7 @@ interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
     gameboard?: GameboardDTO;
     linkLocation?: GameboardLinkLocation;
     onDelete?: () => void; // if this exists, a delete button will be shown calling this function
+    assignment?: AssignmentDTO; // if this exists, the link will point to the assignment page instead
     setAssignmentsDetails?: {
         groupCount?: number;
         toggleAssignModal?: () => void;
@@ -26,12 +28,13 @@ interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, onDelete, children, setAssignmentsDetails, ...rest} = props;
+    const {gameboard, linkLocation, onDelete, children, assignment, setAssignmentsDetails, ...rest} = props;
 
     const [showMore, setShowMore] = useState(false);
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(gameboard), [gameboard]);
 
     const deviceSize = useDeviceSize();
+    const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
 
     const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
         if (isDefined(c.tags) && c.tags.length > 0) {
@@ -44,10 +47,12 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const isSetAssignments = isDefined(setAssignmentsDetails);
 
-    const boardLink = gameboard && (isSetAssignments 
-        ? `/assignment/${gameboard.id}`
-        : `${PATHS.GAMEBOARD}#${gameboard.id}`
-    );
+    const boardLink = assignment && isAssignmentsV2Link
+        ? `/assignment/${assignment.id}/view`
+        : gameboard && (isSetAssignments 
+            ? `/assignment/${gameboard.id}`
+            : `${PATHS.GAMEBOARD}#${gameboard.id}`
+        );
 
     const card = <div className="px-3 py-2 flex-grow-1">
         <Row data-testid="my-assignment">
@@ -116,7 +121,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                         </Button> 
                     </div>
                     : boardLink && <div className="d-flex justify-content-end card-share-link">
-                        <ShareLink linkUrl={boardLink} gameboardId={gameboard.id} reducedWidthLink clickAwayClose />
+                        <ShareLink linkUrl={boardLink} gameboardId={gameboard?.id} reducedWidthLink clickAwayClose />
                     </div>
                 }
 

@@ -79,8 +79,9 @@ import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
-import { FeatureFlagProvider } from '../../services/featureFlag';
+import { FeatureFlag, FeatureFlagProvider, FeatureFlagWrapper } from '../../services/featureFlag';
 import { NewAdaNavigationBanner } from './NewAdaNavigationBanner';
+import { Assignment } from '../pages/Assignment';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -88,7 +89,6 @@ const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 
 const RootLayout = () => {
     const mainContentRef = useRef(null);
-    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
 
     return <FeatureFlagProvider>
         <SiteSpecific.Header />
@@ -101,7 +101,7 @@ const RootLayout = () => {
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
         <OnPageLoad />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={accessibilitySettings?.REDUCED_MOTION ? "true" : "false"}>
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <FigureNumberingProvider>
                     <Suspense fallback={<Loading/>}>
@@ -157,6 +157,16 @@ const routes = createRoutesFromElements(
         <Route path="/progress/:userIdOfInterest" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
         <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
         <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
+
+        {/* Assignments V2 links */}
+        <Route path="/assignment/:assignmentId/view" element={<FeatureFlagWrapper flag={FeatureFlag.ASSIGNMENTS_V2}
+            onSet={<RequireAuth auth={isLoggedIn} element={<Assignment />} />}
+            onUnset={<NotFound />}
+        />} />
+        <Route path="/assignment/:assignmentId/question/:questionId" element={<FeatureFlagWrapper flag={FeatureFlag.ASSIGNMENTS_V2}
+            onSet={<RequireAuth auth={isLoggedIn} element={<Question />} />}
+            onUnset={<NotFound />}
+        />} />
 
         {/* Teacher pages */}
         {/* Tutors can set and manage assignments, but not tests/quizzes */}

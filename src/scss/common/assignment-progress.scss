@@ -11,7 +11,7 @@
   border: 1px solid $gray-118;
   border-radius: 0.5rem;
   cursor: pointer;
-  background: white;
+  background: var(--color-neutral-white, white);
   font-size: 1rem;
   transition: transform 0.2s ease-out, border-color 0.2s ease-out;
 

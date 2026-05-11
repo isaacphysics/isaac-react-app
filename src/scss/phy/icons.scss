@@ -63,7 +63,7 @@
 
 .icon-initials {
   // background hex
-  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 28px, 28px, 100%);
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--color-brand-400), 28px, 28px, 100%);
   opacity: 0.2;
   // initials text
   + * {
@@ -335,13 +335,13 @@ svg {
 
 // These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
 
-// the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
+// the default icon colour for `neutral` is var(--color-theme-500) (green), but we use black icons in a few places across e.g. navigation
 
 $icon-color-themes: (
-  "black": $color-neutral-900,
-  "grey": $color-neutral-500,
-  "muted": $color-neutral-300,
-  "white": $color-neutral-white,
+  "black": var(--color-neutral-900),
+  "grey": var(--color-neutral-500),
+  "muted": var(--color-neutral-300),
+  "white": var(--color-neutral-white),
   "theme": var(--subject-color-500),
   "alert": var(--bs-alert-color),
 );

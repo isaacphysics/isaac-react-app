@@ -109,7 +109,7 @@
 }
 
 .assignment-card-footer {
-  background-color: white;
+  background-color: var(--color-neutral-white, white);
   button, a {
     &:focus {
       outline: none;
@@ -127,7 +127,7 @@
   }
 
   &:has(+ div .my-quizzes-table) {
-    background-color: $gray-103;
+    background-color: var(--color-neutral-300, $gray-103);
     border-top-left-radius: 0.375rem;
     border-top-right-radius: 0.375rem;
   }

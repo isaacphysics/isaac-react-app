@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useRef, useCallback} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
-import {isDefined, useCurrentQuestionAttempt} from "../../services";
+import {ifKeyIsEnter, isDefined, useCurrentQuestionAttempt, useModalWithScroll} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {selectors, useAppSelector} from "../../state";
@@ -14,6 +14,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<GraphChoiceDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible, readonly});
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher | null>();
     // IMPORTANT - initial state will be defined on the first render if it exists, because currentAttempt is loaded in
     // with the question page data.
@@ -25,26 +26,14 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     // This is used to defer the updating of the current attempt until the user closes the modal.
     const [pendingAttemptState, setPendingAttemptState] = useState<GraphSketcherState | undefined>(initialState);
 
-    function openModal() {
-        !readonly && setModalVisible(true);
-    }
-
-    const returnToScrollYPosition = useCallback(function(previousYPosition: number) {
-        return function() {
-            document.body.style.overflow = "initial";
-            window.scrollTo(0, previousYPosition);
-        };
-    }(window.scrollY), [modalVisible]); // Capture y position whenever modalVisible changes.
-
-    function closeModal() {
+    const closeGraphSketcher = () => {
         dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(pendingAttemptState ? GraphSketcher.toExternalState(pendingAttemptState) : undefined)});
-        returnToScrollYPosition();
-        setModalVisible(false);
-    }
+        closeModalAndReturnToScrollPosition();
+    };
 
     function handleKeyPress(ev: KeyboardEvent) {
         if (ev.code === 'Escape') {
-            closeModal();
+            closeGraphSketcher();
         }
     }
 
@@ -91,14 +80,15 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        <div className="sketch-preview d-flex justify-content-center overflow-auto" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <div className="sketch-preview d-flex justify-content-center overflow-auto" onClick={openModal} onKeyUp={ifKeyIsEnter(openModal)} role={readonly ? undefined : "button"}
             tabIndex={readonly ? undefined : 0}
         >
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
         </div>
         {modalVisible && <GraphSketcherModal
             user={user}
-            close={closeModal}
+            close={closeGraphSketcher}
             onGraphSketcherStateChange={setPendingAttemptState}
             initialState={initialState}
             question={doc}

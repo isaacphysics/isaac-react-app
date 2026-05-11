@@ -68,7 +68,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             className={classNames(innerClassName, "w-max-content h-max-content action-button", {"icon-button-sm": size == "sm"})}
             aria-label={buttonAriaLabel}
             title="Share page"
-            color="tint"
+            color={siteSpecific("tint", "primary")}
             data-bs-theme="neutral"
             onClick={(e) => { e.preventDefault(); toggleShareLink(); }}
             {...buttonProps}

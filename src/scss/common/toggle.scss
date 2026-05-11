@@ -11,7 +11,7 @@
     white-space: nowrap;
     border-radius: 3rem;
     padding: 1px;
-    background: darken(white, 15%);
+    background: var(--color-neutral-300);
 
     > input {
         appearance: none;
@@ -28,9 +28,9 @@
         border-radius: 3rem;
 
         &:checked ~ span:last-of-type, &:not(:checked) ~ span:first-of-type {
-            background: white;
+            background: var(--color-neutral-white);
             box-shadow: $shadow-25 0px 0px 2px;
-            color: black;
+            color: var(--color-neutral-900);
             padding: 7px $toggle-span-normal-x-padding;
         }
 
@@ -53,7 +53,7 @@
         user-select: none;
         border-radius: 3rem;
         background: transparent;
-        color: lighten(black, 40%);
+        color: var(--color-neutral-600);
     }
 
     > span:first-of-type {

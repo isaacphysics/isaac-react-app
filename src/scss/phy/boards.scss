@@ -50,7 +50,7 @@
   line-height: 110%;
   font-family: $secondary-font;
   font-weight: 600;
-  color: $color-neutral-900;
+  color: var(--color-neutral-900);
   text-align: center;
 }
 
@@ -88,15 +88,15 @@ label:has(> .board-percent-completed) {
   height: 72px;
 
   &.subject-physics {
-    background-color: $color-physics-500;
+    background-color: var(--color-physics-500);
   }
   &.subject-maths {
-    background-color: $color-maths-500;
+    background-color: var(--color-maths-500);
   }
   &.subject-chemistry {
-    background-color: $color-chemistry-500;
+    background-color: var(--color-chemistry-500);
   }
   &.subject-biology {
-    background-color: $color-biology-500;
+    background-color: var(--color-biology-500);
   }
 }

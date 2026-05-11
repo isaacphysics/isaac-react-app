@@ -1,14 +1,14 @@
 @import "../common/accordions";
 
 .isaac-accordion {
-  background: #FBFBFB;
-  border: 2px solid $color-neutral-300;
+  background: var(--color-neutral-50);
+  border: 2px solid var(--color-neutral-300);
   border-radius: 8px;
   margin-bottom: 8px;
   transition: border-color 0.2s ease-in-out, outline 0.2s ease-in-out;
 
   &:not(:has(> .accordion-header.active)):hover {
-    border-color: $color-neutral-400;
+    border-color: var(--color-neutral-400);
     transition: border-color 0.05s ease-out;
   }
 
@@ -17,7 +17,7 @@
     border-radius: 8px;
 
     &:has(.de-emphasised) {
-      border-color: $color-neutral-500;
+      border-color: var(--color-neutral-500);
     }
   }
 
@@ -27,7 +27,7 @@
   }
 
   .accordion-header {
-    background: rgba(white, 1);
+    background: var(--color-neutral-white);
     border-radius: 8px;
 
     z-index: 1; // so that bottom of :focus-visible outline is visible
@@ -45,7 +45,7 @@
 
       > span.inline-stage-label {
         font-size: 13px;
-        color: $color-neutral-400;
+        color: var(--color-neutral-400);
         font-family: $primary-font;
       }
     }
@@ -57,7 +57,7 @@
 
     &.de-emphasised {
       .accordion-title {
-        color: $color-neutral-800;
+        color: var(--color-neutral-800);
       }
     }
   
@@ -69,13 +69,13 @@
   }
 
   .accordion-body {
-    background-color: rgba(white, 1);
+    background-color: var(--color-neutral-white);
     border-radius: 0 0 8px 8px;
     padding-top: 0;
   }
 }
 
 .accordion-background {
-  background-color: $color-neutral-100;
+  background-color: var(--color-neutral-100);
   padding: 8px;
 }

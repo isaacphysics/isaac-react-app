@@ -15,7 +15,7 @@
 }
 
 .event-bg-grey {
-  background-color: $color-neutral-100;
+  background-color: var(--color-neutral-100);
   .event-key-info {
     tr {
       td {
@@ -41,5 +41,5 @@
   font-family: $primary-font;
   font-size: 17px;
   font-weight: 400;
-  color: $color-neutral-700;
+  color: var(--color-neutral-700);
 }
