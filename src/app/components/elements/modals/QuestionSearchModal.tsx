@@ -1,9 +1,10 @@
-import React, {lazy, useEffect, useMemo, useReducer, useState} from "react";
+import React, {lazy, startTransition, useEffect, useMemo, useReducer, useState} from "react";
 import {
     AppState,
     closeActiveModal,
     useAppDispatch,
     useAppSelector,
+    useGetBookmarksQuery,
     useSearchQuestionsQuery
 } from "../../../state";
 import debounce from "lodash/debounce";
@@ -46,6 +47,7 @@ import { updateTopicChoices, initialiseListState, listStateReducer } from "../..
 import { HorizontalScroller } from "../inputs/HorizontalScroller";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
 
 // Immediately load GameboardBuilderTableRow, but allow splitting
 const importGameboardBuilderTableRow = import("../GameboardBuilderTableRow");
@@ -70,6 +72,7 @@ export const QuestionSearchModal = (
 
     const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
     const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
+    const searchBookmarksQuery = useGetBookmarksQuery();
 
     const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
@@ -93,6 +96,7 @@ export const QuestionSearchModal = (
     } : {}, [isBookSearch, searchStages, searchDifficulties, searchExamBoards]);
 
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
+    const [searchBookmarks, setSearchBookmarks] = useState<boolean>(false);
 
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(currentQuestions.selectedQuestions));
@@ -239,11 +243,21 @@ export const QuestionSearchModal = (
             </Col>}
         </Row>
         <Row>
-            <Col className="d-flex flex-column col-12 col-xl-3 mt-4">
+            <Col className="d-flex flex-column col-12 col-xl-3 mt-2">
 
-                <Form>
-                    {<Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>}
-                </Form>
+                <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
+                    <StyledCheckbox color="primary" checked={searchBookmarks} label={<span>Show bookmarked only</span>} onChange={e => {
+                        startTransition(() => {
+                            setSearchBookmarks(e.target.checked);
+                        });
+                    }} />
+                </FeatureFlagWrapper>
+                
+                <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack questions</span>} onChange={e => {
+                    startTransition(() => {
+                        setSearchFastTrack(e.target.checked);
+                    });
+                }} />
 
                 <div className="section-divider" />
 
@@ -299,25 +313,47 @@ export const QuestionSearchModal = (
                             </tr>
                         </thead>
                         <tbody>
-                            <ShowLoadingQuery
-                                query={searchQuestionsQuery}
-                                placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
-                                defaultErrorTitle="Failed to load questions."
-                                thenRender={({results: questions}) => {
-                                    if (!questions) return <></>;
-                                    const sortedQuestions = sortAndFilterBySearch(questions);
-                                    return sortedQuestions?.map(question =>
-                                        <GameboardBuilderTableRow
-                                            key={`question-search-modal-row-${question.id}`}
-                                            question={question}
-                                            currentQuestions={modalQuestions}
-                                            undoStack={undoStack}
-                                            redoStack={redoStack}
-                                            creationContext={creationContext}
-                                        />
-                                    );
-                                }}
-                            />
+                            {searchBookmarks
+                                ? <ShowLoadingQuery
+                                    query={searchBookmarksQuery}
+                                    placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
+                                    defaultErrorTitle="Failed to load bookmarks."
+                                    thenRender={(bookmarks) => {
+                                        const questions = bookmarks.filter(b => b.type === "isaacQuestionPage");
+                                        questions.sort((a, b) => new Date(b?.bookmarked ?? 0).getTime() - new Date(a?.bookmarked ?? 0).getTime());
+                                        const sortedQuestions = sortAndFilterBySearch(questions);
+                                        return sortedQuestions?.map(question =>
+                                            <GameboardBuilderTableRow
+                                                key={`question-search-modal-row-${question.id}`}
+                                                question={question}
+                                                currentQuestions={modalQuestions}
+                                                undoStack={undoStack}
+                                                redoStack={redoStack}
+                                                creationContext={creationContext}
+                                            />
+                                        );
+                                    }}
+                                />
+                                : <ShowLoadingQuery
+                                    query={searchQuestionsQuery}
+                                    placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
+                                    defaultErrorTitle="Failed to load questions."
+                                    thenRender={({results: questions}) => {
+                                        if (!questions) return <></>;
+                                        const sortedQuestions = sortAndFilterBySearch(questions);
+                                        return sortedQuestions?.map(question =>
+                                            <GameboardBuilderTableRow
+                                                key={`question-search-modal-row-${question.id}`}
+                                                question={question}
+                                                currentQuestions={modalQuestions}
+                                                undoStack={undoStack}
+                                                redoStack={redoStack}
+                                                creationContext={creationContext}
+                                            />
+                                        );
+                                    }}
+                                />
+                            }
                         </tbody>
                     </Table>
                 </HorizontalScroller>
