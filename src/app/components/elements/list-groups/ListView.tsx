@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
@@ -13,7 +13,8 @@ import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 import { IconProps } from "../svg/HexIcon";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
-import { Draggable } from "@hello-pangea/dnd";
+
+const DraggableListViewWrapper = lazy(() => import("../DraggableListViewItemWrapper"));
 
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
@@ -351,47 +352,39 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             : {name: QUESTION_STATUS_TO_ICON[CompletionState.NOT_ATTEMPTED], size: "md", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
     };
 
-    return <Draggable key={item.id} draggableId={item.id ?? ""} index={index ?? -1}>
-        {(providedDrag) => {
-            return <li 
-                ref={providedDrag.innerRef}
-                className="d-flex"
-                {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}
-            >
-                <div className="d-flex vertical-center bg-white rounded-2">
-                    <div className="d-flex flex-column align-items-center">
-                        <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)}>
-                            <i className="icon icon-chevron-up icon-color-muted-hoverable icon-color-theme-on-hover" />
-                        </button>
-                        <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
-                        <button type="button" title="Move question down" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)}>
-                            <i className="icon icon-chevron-down icon-color-muted-hoverable icon-color-theme-on-hover" />
-                        </button>
-                    </div>
-                </div>
-                <AbstractListViewItem
-                    {...rest}
-                    componentTag={"div"}
-                    icon={icon}
-                    title={item.title ?? ""}
-                    subject={itemSubject !== "neutral" ? itemSubject : undefined}
-                    url={item.url}
-                    tags={item.tags}
-                    deprecated={item.deprecated}
-                    supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
-                    style="flat"
-                    subtitle={topic}
-                    // subtitle={item.subtitle}
-                    // breadcrumb={breadcrumb}
-                    audienceViews={audienceViews}
-                    className="flex-grow-1 align-content-center"
-                />
-                <Button className="delete-button" color="solid" onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
-                    <img src="/assets/common/icons/bin.svg" alt="Delete board"/>
-                </Button>
-            </li>;
-        }}
-    </Draggable>;
+    return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
+        <div className="d-flex vertical-center bg-white rounded-2">
+            <div className="d-flex flex-column align-items-center">
+                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)}>
+                    <i className="icon icon-chevron-up icon-color-muted-hoverable icon-color-theme-on-hover" />
+                </button>
+                <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)}>
+                    <i className="icon icon-chevron-down icon-color-muted-hoverable icon-color-theme-on-hover" />
+                </button>
+            </div>
+        </div>
+        <AbstractListViewItem
+            {...rest}
+            componentTag={"div"}
+            icon={icon}
+            title={item.title ?? ""}
+            subject={itemSubject !== "neutral" ? itemSubject : undefined}
+            url={item.url}
+            tags={item.tags}
+            deprecated={item.deprecated}
+            supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
+            style="flat"
+            subtitle={topic}
+            // subtitle={item.subtitle}
+            // breadcrumb={breadcrumb}
+            audienceViews={audienceViews}
+            className="flex-grow-1 align-content-center"
+        />
+        <Button className="delete-button" color="solid" onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
+            <img src="/assets/common/icons/bin.svg" alt="Delete board"/>
+        </Button>
+    </DraggableListViewWrapper>;
 };
 
 export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "list" | "card"> & {

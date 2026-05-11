@@ -28,7 +28,7 @@ import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 
 const GameboardBuilderTableRow = (
-    {provided, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
+    {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -53,21 +53,21 @@ const GameboardBuilderTableRow = (
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
-                    {isAda && provided
-                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={() => handleBuilderRowChange({ provided, question, currentQuestions, undoStack, redoStack, creationContext })}/>
+                    {isAda && isDnd
+                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}/>
                         : <StyledCheckbox
-                            id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
+                            id={`${isDnd ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                             aria-label={!isSelected ? "Select question" : "Deselect question"}
                             title={!isSelected ? "Select question" : "Deselect question"}
                             color="primary"
                             checked={isSelected}
-                            onChange={() => handleBuilderRowChange({ provided, question, currentQuestions, undoStack, redoStack, creationContext })}
+                            onChange={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}
                         />}
                 </div>
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
                 <div className="d-flex">
-                    {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
+                    {isDnd && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
                     <div>
                         <div className="d-flex">
                             <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">

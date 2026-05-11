@@ -104,7 +104,7 @@ export const logEvent = (eventsLog: any[], event: string, params: any) => {
 };
 
 export interface GameboardBuilderRowInterface {
-    provided?: DraggableProvided | DroppableProvided;
+    isDnd?: boolean;
     snapshot?: DraggableStateSnapshot;
     question: ContentSummary;
     currentQuestions: GameboardBuilderQuestions;
@@ -113,7 +113,7 @@ export interface GameboardBuilderRowInterface {
     creationContext?: AudienceContext;
 }
 
-export const handleBuilderRowChange = ({ provided, question, currentQuestions, undoStack, redoStack, creationContext }: GameboardBuilderRowInterface) => {
+export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext }: GameboardBuilderRowInterface) => {
     if (question.id) {
         const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
         const newQuestionOrder = [...currentQuestions.questionOrder];
@@ -126,7 +126,7 @@ export const handleBuilderRowChange = ({ provided, question, currentQuestions, u
         }
         currentQuestions.setSelectedQuestions(newSelectedQuestions);
         currentQuestions.setQuestionOrder(newQuestionOrder);
-        if (provided) {
+        if (isDnd) {
             undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
             redoStack.clear();
         }

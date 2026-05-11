@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {lazy, useCallback, useEffect, useRef, useState} from 'react';
 import {
     closeActiveModal,
     logAction,
@@ -27,7 +27,7 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
-import {DragDropContext, Droppable, DropResult} from "@hello-pangea/dnd";
+import {DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
@@ -62,6 +62,8 @@ import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
 import {IconButton} from "../elements/AffixButton";
 import { ListView } from '../elements/list-groups/ListView';
+
+const DraggableListViewContainer = lazy(() => import('../elements/DraggableListViewContainer'));
 
 class GameboardBuilderQuestionsStack {
     questionOrderStack: string[][];
@@ -445,37 +447,30 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </div>
 
                     <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-2 responsive vertical-scroll-shadow")}>
-                        <DragDropContext onDragEnd={reorder}>
-                            <Droppable droppableId="droppable">
-                                {(providedDrop) => {
-                                    return <div ref={providedDrop.innerRef}>
-                                        <ListView 
-                                            id="gameboard-builder-questions"
-                                            type="builder"
-                                            style="flat"
-                                            items={currentQuestions.questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
-                                            onMove={(id, adjustment) => {
-                                                const index = currentQuestions.questionOrder.findIndex(qId => qId === id);
-                                                if (index === -1) return;
-                                                if (index + adjustment < 0 || index + adjustment >= currentQuestions.questionOrder.length) return;
-                                                const newQuestionOrder = [...currentQuestions.questionOrder];
-                                                const [removed] = newQuestionOrder.splice(index, 1);
-                                                newQuestionOrder.splice(index + adjustment, 0, removed);
-                                                currentQuestions.setQuestionOrder(newQuestionOrder);
-                                            }}
-                                            onDelete={(id) => {
-                                                const question= selectedQuestions.get(id);
-                                                if (question) {
-                                                    handleBuilderRowChange({ provided: providedDrop, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
-                                                }
-                                            }}
-                                            allowBookmarking
-                                        />
-                                        {providedDrop.placeholder}
-                                    </div>;
+                        <DraggableListViewContainer reorder={reorder}>
+                            <ListView 
+                                id="gameboard-builder-questions"
+                                type="builder"
+                                style="flat"
+                                items={currentQuestions.questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
+                                onMove={(id, adjustment) => {
+                                    const index = currentQuestions.questionOrder.findIndex(qId => qId === id);
+                                    if (index === -1) return;
+                                    if (index + adjustment < 0 || index + adjustment >= currentQuestions.questionOrder.length) return;
+                                    const newQuestionOrder = [...currentQuestions.questionOrder];
+                                    const [removed] = newQuestionOrder.splice(index, 1);
+                                    newQuestionOrder.splice(index + adjustment, 0, removed);
+                                    currentQuestions.setQuestionOrder(newQuestionOrder);
                                 }}
-                            </Droppable>
-                        </DragDropContext>
+                                onDelete={(id) => {
+                                    const question= selectedQuestions.get(id);
+                                    if (question) {
+                                        handleBuilderRowChange({ isDnd: true, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
+                                    }
+                                }}
+                                allowBookmarking
+                            />;
+                        </DraggableListViewContainer>
                     </div>
                     <div className={"invalid-feedback"}>
                         {`${tooManyQuestions ? `Only ${QUESTIONS_PER_GAMEBOARD} questions can be added, please remove some.` : "Please add some questions."}`}
