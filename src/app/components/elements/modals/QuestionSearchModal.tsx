@@ -37,7 +37,7 @@ import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../.
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";
-import { Input, Row, Col, Label, Form, Table } from "reactstrap";
+import { Input, Row, Col, Label, Table } from "reactstrap";
 import classNames from "classnames";
 import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
 import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
@@ -252,7 +252,7 @@ export const QuestionSearchModal = (
                         });
                     }} />
                 </FeatureFlagWrapper>
-                
+
                 <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack questions</span>} onChange={e => {
                     startTransition(() => {
                         setSearchFastTrack(e.target.checked);

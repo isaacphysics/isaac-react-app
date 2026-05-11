@@ -2,7 +2,7 @@ import {determineAudienceViews, difficultiesOrdered, sortByStringValue, SortOrde
 import orderBy from "lodash/orderBy";
 import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, Tag} from "../../IsaacAppTypes";
-import { DraggableProvided, DroppableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
+import { DraggableStateSnapshot } from "@hello-pangea/dnd";
 
 export const sortQuestions = (sortState: {[s: string]: string}, creationContext?: AudienceContext) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
