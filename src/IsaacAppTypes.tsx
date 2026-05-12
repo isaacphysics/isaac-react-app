@@ -463,6 +463,7 @@ export const DragAndDropRegionContext = React.createContext<(
     nonSelectedItems: Immutable<ReplaceableItem>[],
     allItems: Immutable<ReplaceableItem>[],
     zoneIds: Set<string>,
+    dragAndDropEnabled: boolean;
 } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{

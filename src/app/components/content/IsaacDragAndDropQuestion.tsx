@@ -12,8 +12,11 @@ import {
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM_ID,
+    below,
     isDefined,
-    useCurrentQuestionAttempt
+    isTouchDevice,
+    useCurrentQuestionAttempt,
+    useDeviceSize
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -39,7 +42,8 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { useNonDraggingDropZones } from "../elements/markup/portals/InlineDropZones";
+import StyledToggle from "../elements/inputs/StyledToggle";
+import { useAccessibilitySettings } from "../../services/accessibility";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -132,6 +136,13 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
     }, [active]);
 };
 
+export const useDefaultDragAndDropInputMode = () => {
+    const accessibilitySettings = useAccessibilitySettings();
+    const deviceSize = useDeviceSize();
+
+    return !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_MOVEMENT || false);
+};
+
 const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacDragAndDropQuestionDTO, DndValidationResponseDTO>) => {
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<DndChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
@@ -152,7 +163,9 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
             .map(({replacementId: _, ...item}) => item);
     };
 
-    const nonDraggingDropZones = useNonDraggingDropZones();
+    const defaultDragAndDropInputMode = useDefaultDragAndDropInputMode();
+    const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(defaultDragAndDropInputMode);
+
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
 
@@ -509,6 +522,7 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
             nonSelectedItems,
             allItems,
             zoneIds: new Set<string>(),
+            dragAndDropEnabled
         }}>
             <DndContext
                 sensors={sensors}
@@ -519,11 +533,18 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
                 collisionDetection={customCollision}
                 accessibility={accessibility}
             >
+                <StyledToggle
+                    checked={dragAndDropEnabled}
+                    falseLabel="Dropdowns"
+                    trueLabel="Drag and drop"
+                    onChange={() => setDragAndDropEnabled(!dragAndDropEnabled)}
+                />
+
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {!nonDraggingDropZones && <>
+                {dragAndDropEnabled && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
                         {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">

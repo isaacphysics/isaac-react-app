@@ -39,7 +39,8 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { useNonDraggingDropZones } from "../elements/markup/portals/InlineDropZones";
+import { useDefaultDragAndDropInputMode } from "./IsaacDragAndDropQuestion";
+import StyledToggle from "../elements/inputs/StyledToggle";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -135,7 +136,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
 
-    const nonDraggingDropZones = useNonDraggingDropZones();
+    const defaultDragAndDropInputMode = useDefaultDragAndDropInputMode();
+    const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(defaultDragAndDropInputMode);
+
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
 
@@ -486,6 +489,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             nonSelectedItems,
             allItems,
             zoneIds: new Set<string>(),
+            dragAndDropEnabled,
         }}>
             <DndContext
                 sensors={sensors}
@@ -496,11 +500,18 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 collisionDetection={customCollision}
                 accessibility={accessibility}
             >
+                <StyledToggle
+                    checked={dragAndDropEnabled}
+                    falseLabel="Dropdowns"
+                    trueLabel="Drag and drop"
+                    onChange={() => setDragAndDropEnabled(!dragAndDropEnabled)}
+                />
+
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {!nonDraggingDropZones && <>
+                {dragAndDropEnabled && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
                         {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">
