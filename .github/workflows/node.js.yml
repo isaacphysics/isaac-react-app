@@ -27,6 +27,7 @@ jobs:
         cache: 'yarn'
     - name: Use Yarn 4
       run: |
+        corepack enable
         yarn policies set-version
         yarn --immutable
     - name: Run ESLint
