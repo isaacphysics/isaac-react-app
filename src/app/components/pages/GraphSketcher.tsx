@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {lazy, useCallback, useEffect, useRef, useState} from 'react';
 import {selectors, useAppSelector, useGenerateAnswerSpecificationMutation} from "../../state";
 import {Container} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
@@ -9,8 +9,9 @@ import {
     LineType,
     makeGraphSketcher
 } from "isaac-graph-sketcher";
-import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
 import {ifKeyIsEnter, isDefined, isStaff, useModalWithScroll} from "../../services";
+
+const GraphSketcherModal = lazy(() => import('../elements/modals/GraphSketcherModal'));
 
 const GraphSketcherPage = () => {
     const user = useAppSelector(selectors.user.orNull);

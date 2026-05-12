@@ -5,10 +5,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     jsonHelper,
-    sanitiseInequalityState,
     useCurrentQuestionAttempt,
-    parsePseudoSymbolicAvailableSymbols,
-    initialiseInequality,
     useModalWithScroll,
     isDefined,
 } from "../../services";
@@ -21,6 +18,7 @@ import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../eleme
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 import { InequalityState, SeedExpressions, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { initialiseInequality, parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState } from "../../services/inequalityUtils";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 

@@ -1,7 +1,7 @@
 import React, {ChangeEvent, lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
-import {ifKeyIsEnter, isStaff, siteSpecific, sanitiseInequalityState, jsonHelper, useModalWithScroll, initialiseInequality} from "../../services";
+import {ifKeyIsEnter, isStaff, siteSpecific, jsonHelper, useModalWithScroll} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useLocation} from "react-router";
@@ -10,6 +10,7 @@ import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../stat
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import { Loading } from "../handlers/IsaacSpinner";
 import { GeneralFormulaDTO, InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { initialiseInequality, sanitiseInequalityState } from "../../services/inequalityUtils";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 

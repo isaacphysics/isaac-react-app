@@ -3,8 +3,7 @@ import {Inequality, WidgetSpec} from "inequality";
 import {
     isDefined,
     isStaff,
-    parsePseudoSymbolicAvailableSymbols,
-    sanitiseInequalityState, siteSpecific
+    siteSpecific
 } from "../../../../services";
 import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
 import {ContentDTO} from "../../../../../IsaacApiTypes";
@@ -27,10 +26,10 @@ import {
     generateMenuItems,
     handleMoveCallback,
     onCursorMoveEndCallback,
-    prepareInequality,
     setupAndTeardownDocStyleAndListeners
 } from "./utils";
 import { InequalityState } from "../../inputs/SymbolicTextInput";
+import { parsePseudoSymbolicAvailableSymbols, prepareInequality, sanitiseInequalityState } from "../../../../services/inequalityUtils";
 
 // This file contains the React components associated with the Inequality modal
 
