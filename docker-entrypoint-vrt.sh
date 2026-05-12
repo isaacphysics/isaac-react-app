@@ -1,4 +1,4 @@
 #!/bin/bash
 
-yarn install --frozen-lockfile
+yarn install --immutable
 yarn cypress run --component --browser chrome "$@"

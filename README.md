@@ -4,7 +4,7 @@
 
 - `yarn` instead of `npm install`
 - `yarn add <package>` instead of `npm install <package>`
-- `yarn --frozen-lockfile` instead of `npm ci` (sometimes it may be necessary to nuke `node_modules` too)
+- `yarn --immutable` instead of `npm ci` (sometimes it may be necessary to nuke `node_modules` too)
 - Running scripts works in the same way
 
 [![Node.js CI](https://github.com/isaacphysics/isaac-react-app/actions/workflows/node.js.yml/badge.svg)](https://github.com/isaacphysics/isaac-react-app/actions/workflows/node.js.yml)

@@ -25,7 +25,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - run: yarn --frozen-lockfile
+    - name: Use Yarn 4
+      run: |
+        yarn policies set-version
+        yarn --immutable
     - name: Run ESLint
       run: yarn run lint:ci
     - run: yarn run build-ada
