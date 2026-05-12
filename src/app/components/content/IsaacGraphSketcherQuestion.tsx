@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
-import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
 import {ifKeyIsEnter, isDefined, useCurrentQuestionAttempt, useModalWithScroll} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";

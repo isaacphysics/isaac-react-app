@@ -4,10 +4,8 @@ import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiT
 import katex from "katex";
 import {
     ifKeyIsEnter,
-    initialiseInequality,
     isDefined,
     jsonHelper,
-    sanitiseInequalityState,
     useCurrentQuestionAttempt,
     useModalWithScroll,
     useUserPreferences
@@ -19,6 +17,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 import { InequalityState, SeedExpressions, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { initialiseInequality, sanitiseInequalityState } from "../../services/inequalityUtils";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 

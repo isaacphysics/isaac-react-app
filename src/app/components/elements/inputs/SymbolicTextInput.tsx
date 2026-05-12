@@ -4,11 +4,11 @@ import { FormulaDTO, LogicFormulaDTO, ChemicalFormulaDTO } from "../../../../Isa
 import { EditorMode } from "../modals/inequality/constants";
 import { parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError } from "inequality-grammar";
 import { ValidatedChoice } from "../../../../IsaacAppTypes";
-import { sanitiseInequalityState } from "../../../services/questions";
 import { isPhy, siteSpecific } from "../../../services";
 import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
 import QuestionInputValidation from "./QuestionInputValidation";
 import classNames from "classnames";
+import { sanitiseInequalityState } from "../../../services/inequalityUtils";
 
 interface ModeConstantTypes {
     badInputCharacters: RegExp;
