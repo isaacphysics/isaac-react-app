@@ -7,6 +7,14 @@ import classNames from "classnames";
 import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
 import DropZoneItem from "../../DnDItem";
+import { useAccessibilitySettings } from "../../../../services/accessibility";
+
+export const useNonDraggingDropZones = () => {
+    const accessibilitySettings = useAccessibilitySettings();
+    const deviceSize = useDeviceSize();
+
+    return (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_MOVEMENT);
+};
 
 interface InlineDropRegionProps {
     divId: string;
@@ -20,7 +28,7 @@ interface InlineDropRegionProps {
 // Inline droppables rendered for each registered drop region
 function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling}: InlineDropRegionProps) {
     const dropRegionContext = useContext(DragAndDropRegionContext);
-    const deviceSize = useDeviceSize();
+    const nonDraggingDropZones = useNonDraggingDropZones();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + zoneId;
     const dropdownItems = dropRegionContext?.allItems ?? [];
@@ -114,8 +122,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     </Dropdown>;
 
     if (dropRegionContext && droppableTarget) {
-        const result = (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) 
-            ? dropdownZone : draggableDropZone;
+        const result = nonDraggingDropZones ? dropdownZone : draggableDropZone;
         return skipPortalling ? result : ReactDOM.createPortal(result, droppableTarget);
     }
     return null;
