@@ -30,6 +30,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Use Yarn 4
         run: |
+          npm install -g corepack
           corepack enable
           yarn policies set-version
           yarn --immutable
