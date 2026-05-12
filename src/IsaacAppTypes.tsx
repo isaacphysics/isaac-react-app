@@ -232,6 +232,7 @@ export interface AccessibilitySettings {
     PREFER_MATHML?: boolean;
     REDUCED_MOTION?: boolean;
     SHOW_INACCESSIBLE_WARNING?: boolean;
+    NON_DRAGGING_MOVEMENT?: boolean;
 }
 
 export interface UserConsent {
