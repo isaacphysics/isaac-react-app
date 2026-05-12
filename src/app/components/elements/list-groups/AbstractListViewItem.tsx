@@ -249,7 +249,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         {subtitle && <div className="small text-muted text-wrap">
                             <Markup encoding="latex">{subtitle}</Markup>
                         </div>}
-                        {breadcrumb && !subtitle && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                        {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                             <Breadcrumb breadcrumb={breadcrumb}/>
                         </span>}
                     </>}
@@ -281,6 +281,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         {subtitle && <div className="small text-muted text-wrap">
                             <Markup encoding="latex">{subtitle}</Markup>
                         </div>}
+                        {/* additional `&& !subtitle` as compared to stacked, as flat layout only has room for one */}
                         {breadcrumb && !subtitle && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                             <Breadcrumb breadcrumb={breadcrumb}/>
                         </span>}
