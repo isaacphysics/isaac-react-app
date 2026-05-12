@@ -44,6 +44,7 @@ import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { useAccessibilitySettings } from "../../services/accessibility";
+import { Spacer } from "../elements/Spacer";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -143,6 +144,19 @@ export const useDefaultDragAndDropInputMode = () => {
     return !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_MOVEMENT || false);
 };
 
+export const InputModeToggle = ({dragAndDropEnabled, setDragAndDropEnabled}: {dragAndDropEnabled: boolean, setDragAndDropEnabled: (enabled: boolean) => void}) => {
+    return <div className="d-flex flex-column align-items-center w-min-content">
+        <span>Question input mode</span>
+        <Spacer />
+        <StyledToggle
+            checked={dragAndDropEnabled}
+            falseLabel="Dropdown"
+            trueLabel="Drag and drop"
+            onChange={() => setDragAndDropEnabled(!dragAndDropEnabled)}
+        />
+    </div>;
+};
+
 const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacDragAndDropQuestionDTO, DndValidationResponseDTO>) => {
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<DndChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
@@ -164,7 +178,11 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
     };
 
     const defaultDragAndDropInputMode = useDefaultDragAndDropInputMode();
-    const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(defaultDragAndDropInputMode);
+    const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(true);
+    useEffect(() => {
+        // Portals need a drop zone to attach to on first render, so we start with drag and drop enabled to ensure these are created, then disable here if needed
+        setDragAndDropEnabled(defaultDragAndDropInputMode);
+    }, [defaultDragAndDropInputMode]);
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -533,12 +551,7 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
                 collisionDetection={customCollision}
                 accessibility={accessibility}
             >
-                <StyledToggle
-                    checked={dragAndDropEnabled}
-                    falseLabel="Dropdowns"
-                    trueLabel="Drag and drop"
-                    onChange={() => setDragAndDropEnabled(!dragAndDropEnabled)}
-                />
+                <InputModeToggle dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />
 
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
