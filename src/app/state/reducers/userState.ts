@@ -40,3 +40,15 @@ export const totpChallengePending = (totpChallengePending: TotpChallengePendingS
             return totpChallengePending;
     }
 };
+
+type AccessibilityTypeState = UserPreferencesDTO | null;
+export const accessibilityType = (accessibilityType: AccessibilityTypeState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
+            return action.userPreferences;
+        case ACTION_TYPE.ACCESSIBILITY_TYPE_SET:
+            return action.accessibilityType;
+        default:
+            return accessibilityType;
+    }
+};

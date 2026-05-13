@@ -94,6 +94,10 @@ export const selectors = {
         previousContext: (state: AppState) => state?.pageContext?.previousContext ?? undefined,
         stage: (state: AppState) => state?.pageContext?.stage,
         subject: (state: AppState) => state?.pageContext?.subject,
+    },
+
+    accessibility: {
+        type: (state: AppState) => state?.accessibilityType
     }
 };
 
