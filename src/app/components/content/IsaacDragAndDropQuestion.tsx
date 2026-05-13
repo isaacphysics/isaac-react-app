@@ -141,7 +141,7 @@ export const useDefaultDragAndDropInputMode = () => {
     const accessibilitySettings = useAccessibilitySettings();
     const deviceSize = useDeviceSize();
 
-    return !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_MOVEMENT || false);
+    return !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_INPUTS || false);
 };
 
 export const InputModeToggle = ({dragAndDropEnabled, setDragAndDropEnabled}: {dragAndDropEnabled: boolean, setDragAndDropEnabled: (enabled: boolean) => void}) => {

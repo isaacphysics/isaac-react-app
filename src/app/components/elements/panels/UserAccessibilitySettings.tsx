@@ -49,9 +49,9 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 <p id="show-inaccessible-helptext">{`Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.`}</p>
             </WithLinkableSetting>
             <WithLinkableSetting id={"non-dragging-movement-feature"}>
-                <b><StyledCheckbox checked={accessibilitySettings.NON_DRAGGING_MOVEMENT ?? false}
+                <b><StyledCheckbox checked={accessibilitySettings.NON_DRAGGING_INPUTS ?? false}
                     onChange={e => {
-                        setAccessibilitySettings((oldDs) => ({...oldDs, NON_DRAGGING_MOVEMENT: e.target.checked}));
+                        setAccessibilitySettings((oldDs) => ({...oldDs, NON_DRAGGING_INPUTS: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
                     label={<p>Enable non-dragging alternative inputs</p>}
