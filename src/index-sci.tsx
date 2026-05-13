@@ -7,6 +7,7 @@ import {store} from "./app/state";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
 import {printAsciiArtLogoToConsolePhy} from "./app/services";
 import {Helmet} from "react-helmet";
+import i18next from 'i18next'
 
 printAsciiArtLogoToConsolePhy();
 
@@ -25,9 +26,9 @@ root.render(
                     or else they will be removed on pages that do not override them. But only specifying the
                     values here will stop most sites seeing them at all!
                  */}
-                <meta name="description" content="Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists." />
-                <meta property="og:title" content="Isaac Science" />
-                <meta property="og:description" content="Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists." />
+                <meta name="description" content={i18next.t('meta.description', 'Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.')} />
+                <meta property="og:title" content={i18next.t('site.title.isaac', 'Isaac Science')} />
+                <meta property="og:description" content={i18next.t('meta.og.description', 'Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.')} />
             </Helmet>
             <IsaacApp />
         </Provider>

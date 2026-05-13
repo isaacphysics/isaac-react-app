@@ -7,6 +7,7 @@ import {store} from "./app/state";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
 import {printAsciiArtLogoToConsoleAda} from "./app/services";
 import {Helmet} from "react-helmet";
+import i18next from 'i18next'
 
 printAsciiArtLogoToConsoleAda();
 
@@ -25,9 +26,9 @@ root.render(
                     or else they will be removed on pages that do not override them. But only specifying the
                     values here will stop most sites seeing them at all!
                  */}
-                <meta name="description" content="Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions." />
-                <meta property="og:title" content="Ada Computer Science" />
-                <meta property="og:description" content="Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions." />
+                <meta name="description" content={i18next.t('meta.description', 'Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.')} />
+                <meta property="og:title" content={i18next.t('site.title.ada', 'Ada Computer Science')} />
+                <meta property="og:description" content={i18next.t('meta.og.description', 'Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.')} />
             </Helmet>
             <IsaacApp />
         </Provider>

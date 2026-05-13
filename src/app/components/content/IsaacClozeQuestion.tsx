@@ -42,6 +42,7 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
+import { useTranslation } from 'react-i18next';
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -54,6 +55,7 @@ const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ItemDTO>
 const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
 
 const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>[]}) => {
+    const { t } = useTranslation()
     const itemIds = items.map(i => i.replacementId as string);
     const { over, isOver, setNodeRef } = useDroppable({
         id,
@@ -62,15 +64,17 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>
     const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
 
     return <div className={"mb-3"}>
-        <Label className="mt-3">Items: </Label>
+        <Label className="mt-3">{t('items', 'Items:')} </Label>
         <Label className={"visually-hidden"} id={"item-section-info"}>
-            To pick up an item, press space or enter.
-            Use the up and down arrow keys to navigate between drop zones and items in the question.
-            Press space or enter again to drop the item into a new position, or to swap it with another
-            item being hovered over.
+            {t('question.cloze.instructions.general', 
+                "To pick up an item, press space or enter.\n" +
+                "Use the up and down arrow keys to navigate between drop zones and items in the question.\n" +
+                "Press space or enter again to drop the item into a new position, or to swap it with another\n" +
+                "item being hovered over."
+            )}
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={t('nonselectedItems', 'Non-selected items')} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <DropZoneItem key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
@@ -134,6 +138,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 };
 
 const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ItemValidationResponseDTO>) => {
+    const { t } = useTranslation()
     const deviceSize = useDeviceSize();
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
@@ -438,38 +443,38 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         restoreFocus: false,
         announcements: {
             onDragStart({active}) {
-                return `Picked up draggable item ${active.data.current?.text}.`;
+                return t('question.cloze.screenreader.pickedUpItem', 'Picked up draggable item') + ` ${active.data.current?.text}.`;
             },
             onDragOver({active, over}) {
-                if (!over) return usingKeyboard ? undefined : `Draggable item ${active.data.current?.text} is no longer over a droppable area.`;
+                if (!over) return usingKeyboard ? undefined : t('question.cloze.screenreader.draggableLeftDroppableArea', 'Draggable item {{val}} is no longer over a droppable area.', { val: active.data.current?.text });
 
-                if (active.id === over.id) return `Draggable item ${active.data.current?.text} is over it's previous position.`;
+                if (active.id === over.id) return t('question.cloze.screenreader.draggableOverPreviousPosition', 'Draggable item {{val}} is over its previous position.', { val: active.data.current?.text });
 
                 if (!isDropZone(over)) {
-                    return `Swap draggable item ${active.data.current?.text} with item ${over.data.current?.text}.`;
+                    return t('question.cloze.screenreader.swapTwoDraggableItems', 'Swap draggable item {{val}} with item {{val2}}.', { val: active.data.current?.text, val2: over.data.current?.text });
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
-                    return `Draggable item is over the items section`;
+                    return t('question.cloze.screenreader.draggableOverItemsSection', 'Draggable item is over the items section');
                 } else {
                     const dropZoneIndex = (over.id as string).replace(CLOZE_DROP_ZONE_ID_PREFIX, "");
-                    return `Draggable item is over drop zone number ${dropZoneIndex}`;
+                    return t('question.cloze.screenreader.draggableOverDropZone', 'Draggable item is over drop zone number {{dropZoneIndex}}', { dropZoneIndex });
                 }
             },
             onDragEnd({active, over}) {
-                if (!over) return `Draggable item ${active.data.current?.text} was dropped.`;
+                if (!over) return t('question.cloze.screenreader.draggableWasDropped', 'Draggable item {{val}} was dropped.', { val: active.data.current?.text });
 
-                if (active.id === over.id) return `Draggable item ${active.data.current?.text} was returned to it's previous position.`;
+                if (active.id === over.id) return t('question.cloze.screenreader.draggableWasReturnedToItsPreviousPosition', 'Draggable item {{val}} was returned to it\'s previous position.', { val: active.data.current?.text });
 
                 if (!isDropZone(over)) {
-                    return `Draggable item ${active.data.current?.text} was swapped with ${over.data.current?.text}.`;
+                    return t('question.cloze.screenreader.draggableSwappedWithVal2', 'Draggable item {{val}} was swapped with {{val2}}.', { val: active.data.current?.text, val2: over.data.current?.text });
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
-                    return `Draggable item was dropped into the items section`;
+                    return t('question.cloze.screenreader.draggableDroppedIntoItemsSection', 'Draggable item was dropped into the items section');
                 } else {
                     const dropZoneIndex = (over.id as string).replace(CLOZE_DROP_ZONE_ID_PREFIX, "");
-                    return `Draggable item ${active.data.current?.text} was dropped into drop zone number ${dropZoneIndex}`;
+                    return t('question.cloze.screenreader.draggableDroppedIntoDropZone', 'Draggable item {{val}} was dropped into drop zone number {{dropZoneIndex}}', { val: active.data.current?.text, dropZoneIndex });
                 }
             },
             onDragCancel({active}) {
-                return `Dragging was cancelled. Draggable item ${active.data.current?.text} was returned to it's previous position.`;
+                return t('question.cloze.screenreader.draggingCancelled', 'Dragging was cancelled. Draggable item {{val}} was returned to it\'s previous position.', { val: active.data.current?.text });
             }
         },
         screenReaderInstructions: { draggable: "" }
