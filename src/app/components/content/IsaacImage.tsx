@@ -5,6 +5,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Markup} from "../elements/markup";
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
 import { ActiveModalProps } from '../../../IsaacAppTypes';
+import { useTranslation } from 'react-i18next'
 
 interface FigureModalProps {
     path?: string;
@@ -14,10 +15,11 @@ interface FigureModalProps {
 }
 
 export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) : ActiveModalProps => {
+    const { t } = useTranslation()
     return {
         closeAction: toggle,
         size: "xxl",
-        title: "Image preview",
+        title: t('image.preview', 'Image preview'),
         body: <div className="figure-panel">
             <figure className="text-center">
                 <img src={path} alt={altText} />
@@ -45,13 +47,14 @@ const IsaacImageCaption = ({doc}: {doc: ImageDTO}) => {
 };
 
 export const IsaacImage = ({doc}: IsaacImageProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const path = doc.src && apiHelper.determineImageUrl(doc.src);
 
     return <div className="figure-panel">
         <figure>
             <div className="text-center position-relative p-3 pb-5">
-                <button className="figure-fullscreen" aria-label="Expand image" onClick={() => {
+                <button className="figure-fullscreen" aria-label={t('image.expand', 'Expand image')} onClick={() => {
                     dispatch(openActiveModal(FigureModal({
                         path, 
                         altText: doc.altText, 

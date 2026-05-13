@@ -7,8 +7,10 @@ import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
 import queryString from "query-string";
+import { useTranslation } from 'react-i18next'
 
 export const EventsSidebar = (props: SidebarProps) => {
+    const { t } = useTranslation()
     const deviceSize = useDeviceSize();
     const navigate = useNavigate();
     const location = useLocation();
@@ -18,7 +20,7 @@ export const EventsSidebar = (props: SidebarProps) => {
     return <ContentSidebar buttonTitle="Filter events" {...props}>
         <Form tag={"search"}>
             {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
-            <h5 className="mb-3">Event type</h5>
+            <h5 className="mb-3">{t('eventType', 'Event type')}</h5>
             <ul>
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
@@ -47,7 +49,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h5 className="mb-3">Groups</h5>
+            <h5 className="mb-3">{t('groups', 'Groups')}</h5>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li key={typeValue}>
@@ -65,7 +67,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h5 className="mb-3">Stages</h5>
+            <h5 className="mb-3">{t('stages', 'Stages')}</h5>
             <ul>
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li key={value}>

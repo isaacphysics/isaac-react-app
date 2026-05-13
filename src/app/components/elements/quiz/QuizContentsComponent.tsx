@@ -37,6 +37,8 @@ import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 import { QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps } from "../sidebar/QuizSidebar";
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 type PageLinkCreator = (page?: number) => string;
 export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId?: SUBJECTS | TAG_ID }, quizId: string | undefined };
@@ -71,20 +73,21 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
 }
 
 function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps) {
+    const { t } = useTranslation()
     if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
-            <h4>No feedback available</h4>
+            <h4>{t('noFeedbackAvailable', 'No feedback available')}</h4>
             : attempt.feedbackMode === "OVERALL_MARK" ?
-                <h4>Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</h4>
+                <h4>{t('yourMarkIs', 'Your mark is')} {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</h4>
                 :
                 <table className="quiz-marks-table">
                     <tbody>
                         <tr>
-                            <th>Overall mark</th>
+                            <th>{t('overallMark', 'Overall mark')}</th>
                             <td>{attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</td>
                         </tr>
                         <tr>
-                            <th colSpan={2}>Section mark breakdown</th>
+                            <th colSpan={2}>{t('sectionMarkBreakdown', 'Section mark breakdown')}</th>
                         </tr>
                         {Object.keys(sections).map((k, index) => {
                             const section = sections[k];
@@ -95,7 +98,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
                                 }
                                 <td>
                                     {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
-                                    {" / "}
+                                    {t('key6', ' / ')}
                                     {attempt.quiz?.sectionTotals?.[section.id as string]}
                                 </td>
                             </tr>;
@@ -105,7 +108,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
         return <div>
-            <h4>Test section(s)</h4>
+            <h4>{t('testSections', 'Test section(s)')}</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
                     const section = sections[k];
@@ -124,17 +127,18 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
 }
 
 function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     if (view) {
-        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: view.quiz!})))}>Set test</Button>;
+        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: view.quiz!})))}>{t('setTest', 'Set test')}</Button>;
     }
     else if (preview) {
         return <>
             <EditContentButton doc={attempt.quiz} />
             <div data-testid="quiz-action" className="d-flex">
-                <p>You are previewing this test.</p>
+                <p>{t('youArePreviewingThisTest', 'You are previewing this test.')}</p>
                 <Spacer />
-                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: attempt.quiz!})))}>Set test</Button>}
+                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: attempt.quiz!})))}>{t('setTest', 'Set test')}</Button>}
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
@@ -142,22 +146,23 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewP
         return <>
             <p className="d-flex">
                 <span>
-                    Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
-                    {isDefined(attempt.completedDate) && <><br />Completed:&nbsp;{formatDate(attempt.completedDate)}</>}
+                    {t('setBy2', 'Set by:')} {extractTeacherName(assignment.assignerSummary ?? null)}
+                    {isDefined(attempt.completedDate) && <><Trans i18nKey="brCompletednbsp"><br />Completed:&nbsp;</Trans>{formatDate(attempt.completedDate)}</>}
                 </span>
-                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
+                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}{t('nbsp', '&nbsp;')}{formatDate(assignment.dueDate)}</>}
             </p>
             {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && !isDefined(attempt.completedDate) && <Alert color={siteSpecific("info", "warning")}>
-                {siteSpecific(<>
-                    Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
-                    you submit your test</b> so that they can provide further feedback and support if they wish to do so.
+                {siteSpecific(<Trans key="test.instructions.answersVisibleSci">
+                    Please be aware that for tests your answer to each question{" "}
+                    <b>will be visible to your teacher(s) after you submit your test</b>{" "}
+                    so that they can provide further feedback and support if they wish to do so.
                     <br />
                     Assignments are different. We do not share with your teachers any of your entered answers or the
                     number of your attempts to questions in assignments.
-                </>, <>
+                </Trans>, <Trans key="test.instructions.answersVisibleAda">
                     Please be aware that your answer to each test question will be visible to your teacher(s) after you submit your test.
                     This is to allow them to provide further feedback and support.
-                </>)}
+                </Trans>)}
             </Alert>}
         </>;
     } else {
@@ -178,6 +183,7 @@ function QuizRubric({attempt, view}: Pick<QuizAttemptProps | QuizViewProps, "att
 }
 
 export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const rubric = attempt.quiz?.rubric;
     const renderRubric = (rubric?.children || []).length > 0 && (isPhy || !isDefined(attempt.completedDate));
@@ -185,18 +191,19 @@ export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal());}, size: "lg",
-            title: "Test Instructions", body: <QuizRubric attempt={attempt} />
+            title: t('testInstructions', 'Test Instructions'), body: <QuizRubric attempt={attempt} />
         }));
     };
 
     if (rubric && renderRubric) {
         return <Button color={siteSpecific("keyline", "tertiary")} outline={isAda} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
-            alt="Show instructions" title="Show instructions in a modal" onClick={() => {openQuestionModal(attempt);}}> Show instructions
+            alt={t('showInstructions', 'Show instructions')} title={t('showInstructionsInAModal', 'Show instructions in a modal')} onClick={() => {openQuestionModal(attempt);}}> {t('showInstructions', 'Show instructions')}
         </Button>;
     }
 }
 
 function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
+    const { t } = useTranslation()
     const deviceSize = useDeviceSize();
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
@@ -229,13 +236,13 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
             </Col>
         </Row>
         :
-        <Alert color="danger">Test section {page} not found</Alert>
+        <Alert color="danger">{t('testSectionPageNotFound', 'Test section {{page}} not found', { page })}</Alert>
     ;
 }
 
 export const myQuizzesCrumbs = [{title: siteSpecific("My tests", "Tests"), to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage tests", "Tests"), to: `/set_tests`}];
-export const rubricCrumbs = [{title: "Practice tests", to: "/practice_tests"}];
+export const teacherQuizzesCrumbs = [{title: siteSpecific(i18next.t('setManageTests', 'Set / manage tests'), "Tests"), to: `/set_tests`}];
+export const rubricCrumbs = [{title: i18next.t('practiceTests', 'Practice tests'), to: "/practice_tests"}];
 const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user: RegisteredUserDTO) => {
     if (preview && isTeacherOrAbove(user)) {
         return teacherQuizzesCrumbs;
@@ -246,6 +253,7 @@ const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user
 };
 
 const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps | QuizViewProps) => {
+    const { t } = useTranslation()
     const quiz = attempt ? attempt.quiz : view.quiz;
     let quizTitle = quiz?.title || quiz?.id || "Test";
     if (isDefined(attempt?.completedDate)) {

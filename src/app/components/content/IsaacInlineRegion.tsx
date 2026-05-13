@@ -4,6 +4,7 @@ import { AppQuestionDTO, InlineQuestionDTO, InlineContext, QuestionCorrectness }
 import { ContentDTO, GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
 import { selectors, useAppSelector } from "../../state";
 import { submitCurrentAttempt } from "../../services";
+import i18next from 'i18next'
 
 // TODO: generify this (IsaacContentProps?), reuse also for IsaacCardDeck
 interface IsaacInlineRegionProps {
@@ -29,10 +30,10 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
 
     const defaultFeedback = (correctness: QuestionCorrectness) : ContentDTO => {
         const feedbackMap : {[key in QuestionCorrectness]: string} = {
-            "CORRECT" : "Correct!",
-            "INCORRECT" : "Check your working.",
-            "NOT_ANSWERED" : "You did not provide an answer.",
-            "NOT_SUBMITTED" : "This answer is missing a unit.", // this is a special case for numeric questions, may need to be updated if we add more inline q types
+            "CORRECT" : i18next.t('feedback.correct', 'Correct!'),
+            "INCORRECT" : i18next.t('feedback.incorrect', 'Check your working.'),
+            "NOT_ANSWERED" : i18next.t('feedback.notAnswered', 'You did not provide an answer.'),
+            "NOT_SUBMITTED" : i18next.t('feedback.notSubmitted', 'This answer is missing a unit.'), // this is a special case for numeric questions, may need to be updated if we add more inline q types
         };
 
         return {

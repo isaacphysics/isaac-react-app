@@ -4,6 +4,7 @@ import {IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes"
 import {Alert, FormGroup, Input} from "reactstrap";
 import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
+import { useTranslation } from 'react-i18next'
 
 interface Limit {
     exceeded: boolean;
@@ -51,17 +52,19 @@ function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>)
 }
 
 const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
+    const { t } = useTranslation()
     return validValue ? null
         : <Alert color="warning" className={"no-print"}>
-            <strong>Warning:</strong>
+            <strong>{t('warning', 'Warning:')}</strong>
             <ul>
-                {charLimit.exceeded && <li>Character limit exceeded ({charLimit.current}/{charLimit.limit})</li>}
-                {wordLimit.exceeded && <li>Word limit exceeded ({wordLimit.current}/{wordLimit.limit})</li>}
+                {charLimit.exceeded && <li>{t("errors.charsExceeded", "Character limit exceeded")} ({charLimit.current}/{charLimit.limit})</li>}
+                {wordLimit.exceeded && <li>{t("errors.wordsExceeded", "Word limit exceeded")} ({wordLimit.current}/{wordLimit.limit})</li>}
             </ul>
         </Alert>;
 };
 
 const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacFreeTextQuestionDTO>) => {
+    const { t } = useTranslation()
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
@@ -77,7 +80,7 @@ const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </div>
             <FormGroup className="form-group mb-4">
                 <Input type="textarea"
-                    placeholder="Type your answer here."
+                    placeholder={t('typeYourAnswerHere', 'Type your answer here.')}
                     spellCheck={true}
                     rows={3}
                     value={currentAttemptValue}

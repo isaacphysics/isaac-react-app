@@ -19,6 +19,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { Row, Button, Form, Input, Label, Col } from "reactstrap";
 import { EventsSidebar } from "../elements/sidebar/EventsSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 export interface EventsPageQueryParams {
     show_booked_only?: boolean;
@@ -31,6 +32,7 @@ export interface EventsPageQueryParams {
 const EVENTS_PER_PAGE = 6;
 
 export const Events = () => {
+    const { t } = useTranslation()
     const location = useLocation();
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
@@ -57,7 +59,7 @@ export const Events = () => {
     }, [typeFilter, statusFilter, stageFilter, getEventsList]);
 
     const pageHelp = <span>
-        Follow the links below to find out more about our FREE events.
+        {t('events.findOutMore', 'Follow the links below to find out more about our FREE events.')}
     </span>;
 
     const AdaEventFilters = () => {
@@ -69,7 +71,7 @@ export const Events = () => {
 
         return <div className="my-4">
             <Form className="form-inline d-flex justify-content-end">
-                <Label>Filter by
+                <Label>{t('filterBy', 'Filter by')}
                     <Input id="event-status-filter" className="ms-3" type="select" value={statusFilter} onChange={e => {
                         const selectedFilter = e.target.value as EventStatusFilter;
                         query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
@@ -128,14 +130,12 @@ export const Events = () => {
             {isAda && <AdaEventFilters/>}
             <ShowLoadingQuery
                 query={eventsQuery}
-                defaultErrorTitle={"Error loading events list"}
+                defaultErrorTitle={t('errorLoadingEventsList', 'Error loading events list')}
                 thenRender={({events, total}) => {
                     const numberOfLoadedEvents = events.length;
 
                     return <div className="my-4">
-                        <div className="d-flex flex-col justify-content-end mb-2">
-                            Showing {numberOfLoadedEvents} of {total}
-                        </div>
+                        <div className="d-flex flex-col justify-content-end mb-2">{t('values.showingXofY', 'Showing {{numberOfLoadedEvents}} of {{total}}', { numberOfLoadedEvents, total })}</div>
 
                         <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
                             {events.map(event => <Col key={event.id} className={siteSpecific("g-4", "p-3")}>
@@ -149,13 +149,13 @@ export const Events = () => {
                                 onClick={() => {
                                     void getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
                                 }}>
-                                Load more events
+                                {t('loadMoreEvents', 'Load more events')}
                             </Button>
                         </div>}
 
                         {/* No Results */}
                         {total === 0 && <div className="text-center">
-                            <p>Sorry, we cannot find any events that match your filter settings.</p>
+                            <p>{t('sorryWeCannotFindAnyEventsThatMatchYourFilterSettings', 'Sorry, we cannot find any events that match your filter settings.')}</p>
                         </div>}
                     </div>;
                 }}

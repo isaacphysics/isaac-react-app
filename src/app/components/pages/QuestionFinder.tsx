@@ -62,6 +62,7 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { QuestionFinderSidebar } from "../elements/sidebar/QuestionFinderSidebar";
 import {Immutable} from "immer";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation, Trans } from 'react-i18next'
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -156,13 +157,14 @@ interface FilterSummaryProps {
 }
 
 export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: FilterSummaryProps) => {
+    const { t } = useTranslation()
     return <div className="d-flex flex-wrap mt-2">
-        {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
-            {t.label}
-            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
+        {filterTags.map(ft => <div key={ft.value} data-bs-theme="neutral" data-testid={`filter-tag-${ft.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
+            {ft.label}
+            <button className="icon icon-close" onClick={() => removeFilterTag(ft.value)} aria-label={t('close', 'Close')}/>
         </div>)}
         {filterTags.length > 0 && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
-            Clear all filters
+            {t('clearAllFilters', 'Clear all filters')}
         </button>}
     </div>;
 };
@@ -175,6 +177,7 @@ const loadingPlaceholder = <ResultsListContainer>
 </ResultsListContainer>;
 
 export const QuestionFinder = () => {
+    const { t } = useTranslation()
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const navigate = useNavigate();
@@ -419,15 +422,13 @@ export const QuestionFinder = () => {
         }, 500),
     []);
 
-    const pageHelp = siteSpecific(<span>
-        You can find a question by selecting the areas of interest, stage and difficulties.
+    const pageHelp = siteSpecific(<span><Trans i18nKey="questionFinder.help">You can find a question by selecting the areas of interest, stage and difficulties.
         <br/>
-        You can select more than one entry in each area.
-    </span>, undefined);
+        You can select more than one entry in each area.</Trans></span>, undefined);
 
     const metaDescription = siteSpecific(
-        "Find physics, maths, chemistry and biology questions by topic and difficulty.",
-        "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
+        t('meta.isaac.questionFinder', 'Find physics, maths, chemistry and biology questions by topic and difficulty.'),
+        t('meta.ada.questionFinder', 'Search for the perfect computer science questions to study. For revision. For homework. For the classroom.')
     );
 
     function removeFilterTag(filter: string) {
@@ -456,7 +457,7 @@ export const QuestionFinder = () => {
         searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
         statusList.map(s => {return {value: s, label: statusLabelMap[s]};}),
-        excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
+        excludeBooks ? [{value: "excludeBooks", label: t('excludeSkillsBooksQuestions', 'Exclude skills books questions')}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
         selectionList,
     ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
 
@@ -499,12 +500,11 @@ export const QuestionFinder = () => {
                     {(pageContext?.subject && pageContext.stage)
                         ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
                             <p className="me-0 me-lg-3">
-                                The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                                {t('theQuestionsShownOnThisPageHaveBeenFilteredToOnlyShowThoseThatAreRelevantTo', 'The questions shown on this page have been filtered to only show those that are relevant to')} {getHumanContext(pageContext)}.
                                 You can browse all questions <Link to="/questions">here</Link>.
                             </p>
                         </div>
-                        : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
-                            Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
+                        : <>{t('useOurQuestionFinderToFindQuestionsToTryOnTopicsInPhysicsMathsChemistryAndBiologyUseOurPracticeQuestionsToBecomeFluentInTopicsAndThenTakeYourUnderstandingAndProblemSolvingSkillsToTheNextLevelWithOurChallengeQuestions', 'Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.\n                            Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.')}</>}
                 </div>,
                 <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
             )}
@@ -513,10 +513,10 @@ export const QuestionFinder = () => {
 
         {isAda && <Row>
             <Col lg={6} md={12} xs={12} className="finder-search">
-                <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
+                <Label htmlFor="question-search-title" className="mt-2"><b>{t('searchForAQuestion', 'Search for a question')}</b></Label>
                 <SearchInputWithIcon
                     defaultValue={searchQuery}
-                    placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
+                    placeholder={siteSpecific(t('egVal', 'e.g. {{val}}', { val: getQuestionPlaceholder(pageContext) }), "e.g. Creating an AST")}
                     onChange={(e) => debouncedSearchHandler(e.target.value)}
                     onSearch={searchAndUpdateURL}
                 />
@@ -574,11 +574,11 @@ export const QuestionFinder = () => {
                                     <div className="flex-grow-1" data-testid="question-finder-results-header">
                                         {questions && questions.length > 0 
                                             ? <>
-                                                Showing <b>{questions.length}</b>
+                                                {t('showing', 'Showing')} <b>{questions.length}</b>
                                                 {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                                 .
                                             </>
-                                            : isPhy && <>No results.</>
+                                            : isPhy && <>{t('noResults', 'No results.')}</>
                                         }
                                     </div>
                                     <button 
@@ -589,7 +589,7 @@ export const QuestionFinder = () => {
                                         onClick={() => setRandomSeed(nextSeed())}
                                         disabled={questions?.length === 0}
                                     >
-                                        <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                        <span><Trans i18nKey="questionFinder.shuffle">Shuffle <span className="d-none d-sm-inline">questions</span></Trans></span>
                                         {isPhy && <i className={classNames("icon icon-refresh", questions?.length === 0 ? "icon-color-grey" : "icon-color-black")}></i>}
                                     </button>
                                 </ResultsListHeader>
@@ -597,8 +597,8 @@ export const QuestionFinder = () => {
                                     {questions?.length
                                         ? <ListView type="item" items={questions} allowBookmarking hideIconLabel/>
                                         : isAda && (filteringByStatus 
-                                            ? <span>Could not load any results matching the requested filters.</span>
-                                            : <span>No results match the requested filters.</span>
+                                            ? <span>{t('couldNotLoadAnyResultsMatchingTheRequestedFilters', 'Could not load any results matching the requested filters.')}</span>
+                                            : <span>{t('noResultsMatchTheRequestedFilters', 'No results match the requested filters.')}</span>
                                         )
                                     }
                                 </CardBody>
@@ -626,7 +626,7 @@ export const QuestionFinder = () => {
                                             disabled={!moreResultsAvailable || isStale}
                                             outline={isAda}
                                         >
-                                            Load more
+                                            {t('loadMore', 'Load more')}
                                         </Button>
                                     </Col>
                                 </Row>

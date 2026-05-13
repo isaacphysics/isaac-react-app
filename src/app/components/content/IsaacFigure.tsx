@@ -7,6 +7,7 @@ import {Markup} from "../elements/markup";
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
 import { FigureModal } from './IsaacImage';
 import InlineEntryZoneBase from '../elements/markup/portals/InlineEntryZone';
+import { useTranslation } from 'react-i18next'
 
 const InlineDropRegion = lazy(() => import("../elements/markup/portals/InlineDropZones"));
 
@@ -40,6 +41,7 @@ const IsaacFigureCaption = ({doc, figId, figureString}: {doc: FigureDTO, figId?:
 };
 
 export const IsaacFigure = ({doc}: IsaacFigureProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const path = doc.src && apiHelper.determineImageUrl(doc.src);
 
@@ -128,7 +130,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
     }, [doc.condensedMaxWidth]);
 
     const fullscreenButton = useCallback((figureString: string) => {
-        return <button className="figure-fullscreen" aria-label="Expand figure" type="button" onClick={() => {
+        return <button className="figure-fullscreen" aria-label={t('figure.expand', 'Expand figure')} type="button" onClick={() => {
             dispatch(openActiveModal(FigureModal({
                 path, 
                 altText: doc.altText,
@@ -144,7 +146,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
         <FigureNumberingContext.Consumer>
             {figureNumbers => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
-                    `Figure\u00A0${figureNumbers[figId]}` : "Figure";
+                    t("figure.figure", "Figure") + "\u00A0" + figureNumbers[figId] : t("figure.figure", "Figure");
                 return <figure>
                     <div className="w-100 d-flex flex-column align-items-center justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
                         {(doc.figureRegions && contextType && path)

@@ -6,6 +6,7 @@ import {logAction, useAppDispatch} from "../../state";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {siteSpecific} from "../../services";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
 
 interface HintModalProps {
     label: string;
@@ -16,6 +17,7 @@ interface HintModalProps {
     hintIndex: number;
 }
 export const IsaacHintModal = (props: HintModalProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const {questionPartId, hintIndex, label, title, body, ...restOfProps} = props;
     const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +42,7 @@ export const IsaacHintModal = (props: HintModalProps) => {
         }
     };
 
-    const closeButton = <button className={siteSpecific("close", "btn-link bg-transparent")} onClick={toggle}>Close</button>;
+    const closeButton = <button className={siteSpecific("close", "btn-link bg-transparent")} onClick={toggle}>{t('button.close', 'Close')}</button>;
 
     return <div>
         <Button color="link" size="sm" className="a-alt" onClick={toggle}>

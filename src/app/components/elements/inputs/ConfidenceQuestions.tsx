@@ -6,6 +6,8 @@ import classNames from "classnames";
 import {isAda, isPhy, SITE_TITLE_SHORT} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -27,43 +29,43 @@ interface ConfidenceVariables {
 // "color" only applies to Physics.
 const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
     "question": {
-        title: "Click a button to check your answer",
+        title: i18next.t('confidence.question.instructions', 'Click a button to check your answer'),
         states: {
             initial: {
-                question: "What is your level of confidence that your answer is correct?",
+                question: i18next.t('confidence.question.initial', 'What is your level of confidence that your answer is correct?'),
                 options: [
-                    {label: "Low", color: "negative"},
-                    {label: "Medium", color: "neutral"},
-                    {label: "High", color: "positive"}
+                    {label: i18next.t('confidence.low', 'Low'), color: "negative"},
+                    {label: i18next.t('confidence.medium', 'Medium'), color: "neutral"},
+                    {label: i18next.t('confidence.high', 'High'), color: "positive"}
                 ]
             },
             followUp: {
-                question: "Having read the feedback, what is your level of confidence in answering this question correctly now?",
+                question: i18next.t('confidence.question.followUp', 'Having read the feedback, what is your level of confidence in answering this question correctly now?'),
                 options: [
-                    {label: "Low", color: "negative"},
-                    {label: "Medium", color: "neutral"},
-                    {label: "High", color: "positive"}
+                    {label: i18next.t('confidence.low', 'Low'), color: "negative"},
+                    {label: i18next.t('confidence.medium', 'Medium'), color: "neutral"},
+                    {label: i18next.t('confidence.high', 'High'), color: "positive"}
                 ]
             }
         }
     },
     "quick_question": {
-        title: "Click a button to show the answer",
+        title: i18next.t('confidence.quick_question.instructions', 'Click a button to show the answer'),
         states: {
             initial: {
-                question: "What is your level of confidence that your own answer is correct?",
+                question: i18next.t('confidence.quick_question.initial', 'What is your level of confidence that your own answer is correct?'),
                 options: [
-                    {label: "Low", color: "negative"},
-                    {label: "Medium", color: "neutral"},
-                    {label: "High", color: "positive"}
+                    {label: i18next.t('confidence.low', 'Low'), color: "negative"},
+                    {label: i18next.t('confidence.medium', 'Medium'), color: "neutral"},
+                    {label: i18next.t('confidence.high', 'High'), color: "positive"}
                 ]
             },
             followUp: {
-                question: "Is your own answer correct?",
+                question: i18next.t('confidence.quick_question.followUp', 'Is your own answer correct?'),
                 options: [
-                    {label: "No", color:"negative"},
-                    {label: "Partly", color: "neutral"},
-                    {label: "Yes", color: "secondary"}
+                    {label: i18next.t('confidence.no', 'No'), color:"negative"},
+                    {label: i18next.t('confidence.partly', 'Partly'), color: "neutral"},
+                    {label: i18next.t('confidence.yes', 'Yes'), color: "secondary"}
                 ]
             }
         }
@@ -84,12 +86,8 @@ interface ConfidenceQuestionsProps {
 
 const confidenceInformationModal = () => openActiveModal({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: "Information",
-    body: <div className="mb-4">
-        We regularly review and update the {SITE_TITLE_SHORT} platform’s content and would like your input in order to
-        prioritise content and assess the impact of updates. Data captured with these buttons will help us
-        identify priority areas.
-    </div>
+    title: i18next.t('information', 'Information'),
+    body: <div className="mb-4">{i18next.t('weRegularlyReviewAndUpdateTheSite_title_shortPlatformsContentAndWouldLikeYourInputInOrderToPrioritiseContentAndAssessTheImpactOfUpdatesDataCapturedWithTheseButtonsWillHelpUsIdentifyPriorityAreas', 'We regularly review and update the {{SITE_TITLE_SHORT}} platform’s content and would like your input in order to\n        prioritise content and assess the impact of updates. Data captured with these buttons will help us\n        identify priority areas.', { SITE_TITLE_SHORT })}</div>
 });
 
 type ValidationPendingState =
@@ -102,6 +100,7 @@ type ValidationPendingState =
 }
 
 export const ConfidenceQuestions = ({state, setState, validationPending, setValidationPending, disableInitialState, identifier, type, validationResponse}: ConfidenceQuestionsProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     const toggle = (confidence: string, state: ActiveConfidenceState) => {

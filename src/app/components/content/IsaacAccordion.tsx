@@ -23,6 +23,7 @@ import {
 } from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const defaultConceptDisplay = siteSpecific(
     {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -37,15 +38,16 @@ interface SectionWithDisplaySettings extends ContentDTO {
 }
 
 const StageInsert = ({stage}: {stage: string}) => {
+    const { t } = useTranslation();
     const isAdditional = stage.startsWith("additional");
     return <>
         <div className="section-divider mt-4 mb-3"/>
         <h4>{isAdditional 
-            ? "Additional learning stages" 
+            ? t('stage.additional', 'Additional learning stages') 
             : stageLabelMap[stage as keyof typeof stageLabelMap]
         }</h4>
         {isAdditional && <p className="small text-muted">
-            You may also be interested in exploring additional material relevant to other learning stages:
+            {t('stage.additional.description', 'You may also be interested in exploring additional material relevant to other learning stages:')}
         </p>}
     </>;
 };

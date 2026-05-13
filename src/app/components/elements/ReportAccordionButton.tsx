@@ -1,5 +1,6 @@
 import React from "react";
 import {logAction, useAppDispatch} from "../../state";
+import { useTranslation } from 'react-i18next'
 
 interface ReportAccordionButtonProps {
     pageId?: string,
@@ -9,6 +10,7 @@ interface ReportAccordionButtonProps {
 }
 
 export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionIndex} : ReportAccordionButtonProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     const getContactFormParams = () => {
@@ -40,8 +42,8 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
 
     return <button
         className="accordion-icon accordion-icon-report btn-action"
-        aria-label="Report a problem (opens in new tab)"
-        title="Report a problem (opens in new tab)"
+        aria-label={t('reportAProblemOpensInNewTab', 'Report a problem (opens in new tab)')}
+        title={t('reportAProblemOpensInNewTab', 'Report a problem (opens in new tab)')}
         onClick={() => {
             logAccordionReport();
             window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");

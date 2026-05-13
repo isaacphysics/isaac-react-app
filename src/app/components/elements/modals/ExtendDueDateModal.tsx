@@ -10,6 +10,7 @@ import {
 } from "../../../services";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import range from "lodash/range";
+import { useTranslation } from 'react-i18next';
 import {
     Modal,
     ModalBody,
@@ -26,6 +27,7 @@ type ExtendDueDateModalProps = {
     numericQuizAssignmentId: number;
 }
 export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
+    const { t } = useTranslation()
     const {isOpen, toggle, currDueDate, numericQuizAssignmentId} = props;
     const yearRange = range(currentYear, currentYear + 5);
     const [dueDate, setDueDate] = useState<Date>(new Date(currDueDate));
@@ -42,7 +44,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
                 .then((result) => {
                     if (mutationSucceeded(result)) {
                         dispatch(showSuccessToast(
-                            "Due date extended successfully", `This test is now due by ${dueDate.toLocaleDateString()}.`
+                            t('dueDateExtendedSuccessfully', 'Due date extended successfully. '), t('thisTestIsNowDueByVal', 'This test is now due by') + ' ' + dueDate.toLocaleDateString()
                         ));
                         toggle();
                     }
@@ -53,16 +55,16 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
     return <Modal isOpen={isOpen} toggle={toggle} data-bs-theme="neutral">
         <ModalHeader role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={"text-nowrap close"} onClick={toggle}>
-                Close
+                {t('close', 'Close')}
             </button>
         }>
-            Extend due date?
+            {t('extendDueDate2', 'Extend due date?')}
         </ModalHeader>
         <ModalBody>
-            <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.`}</p>
+            <p className="px-1">{t('areYouSureYouWantToChangeTheDueDateThisWillExtendTheDueDateForAllUsersThisTestIsAssignedTo', 'Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.')}</p>
             <hr className="text-center"/>
             <div className="p-2">
-                <Label for="dueDate" className="pe-1">Extend the due date:
+                <Label for="dueDate" className="pe-1">{t('extendTheDueDate', 'Extend the due date:')}
                     <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
                         yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
                         onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}
@@ -70,7 +72,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
                 </Label>
                 {dueDate && (dueDate < currDueDate || dueDate <= TODAY()) && 
                 <p className={"text-danger"}>
-                    You cannot set the due date to be earlier than the current due date or today.
+                    {t('youCannotSetTheDueDateToBeEarlierThanTheCurrentDueDateOrToday', 'You cannot set the due date to be earlier than the current due date or today.')}
                 </p>}
                 <Button
                     className="mt-2 mb-2"
@@ -78,7 +80,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
                     onClick={setValidDueDate}
                     role={"button"}
                     disabled={isUpdatingQuiz && dueDate && (dueDate < currDueDate)}>
-                    {`Extend due date`}
+                    {t('extendDueDate3', 'Extend due date')}
                 </Button>
             </div>
         </ModalBody>

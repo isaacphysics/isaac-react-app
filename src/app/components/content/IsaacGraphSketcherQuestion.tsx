@@ -6,8 +6,10 @@ import {ifKeyIsEnter, isDefined, useCurrentQuestionAttempt, useModalWithScroll} 
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {selectors, useAppSelector} from "../../state";
+import { useTranslation } from 'react-i18next'
 
 const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {
+    const { t } = useTranslation()
 
     const user = useAppSelector(selectors.user.orNull);
 
@@ -94,7 +96,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             question={doc}
         />}
         <div className="question-content d-flex justify-content-center d-print-none">
-            <div><i>{isDefined(currentAttempt?.value) ? "Click on the grid to edit your sketch." : "Click on the grid to start your sketch."}</i></div>
+            <div><i>{isDefined(currentAttempt?.value) ? t('question.graphSketch.clickToEdit', 'Click on the grid to edit your sketch.') : t('clickOnTheGridToStartYourSketch', 'Click on the grid to start your sketch.')}</i></div>
         </div>
     </div>;
 };

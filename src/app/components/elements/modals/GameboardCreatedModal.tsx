@@ -5,6 +5,7 @@ import {Button, Col, Label, Row} from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {PATHS, siteSpecific} from "../../../services";
+import { useTranslation } from 'react-i18next'
 
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Label className="mx-3 mb-2">
@@ -19,6 +20,7 @@ const GameboardSuccessfullyCreated = () =>
     </Label>;
 
 const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
     return <Row className={"my-3 d-flex justify-content-center"}>
@@ -27,7 +29,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100" tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
             >
-                Set as assignment
+                {t('assignment.setAsAssignment', 'Set as assignment')}
             </Button>
         </Col>
         <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
@@ -35,7 +37,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100" color="keyline"
                 onClick={() => {resetBuilder(); closeModal();}}
             >
-                Create another {siteSpecific("question deck", "quiz")}
+                {t('assignment.createAnother', `Create another ${siteSpecific("question deck", "quiz")}`)}
             </Button>
         </Col>
         <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
@@ -43,7 +45,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color="keyline"
                 onClick={closeModal}
             >
-                View all of your {siteSpecific("question decks", "quizzes")}
+                {t('assignment.viewAll', `View all of your ${siteSpecific("question decks", "quizzes")}`)}
             </Button>
         </Col>
     </Row>;

@@ -8,6 +8,7 @@ import classNames from "classnames";
 import {useExpandContent} from "../elements/markup/portals/Tables";
 import {useStatefulElementRef} from "../elements/markup/portals/utils";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import { useTranslation } from 'react-i18next'
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -16,6 +17,7 @@ interface IsaacCodeProps {
 void highlightJsService.registerLanguages();
 
 const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const rootDoc = useAppSelector(selectors.doc.get);
 
@@ -59,7 +61,7 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         </div>
         {doc.url && <Row>
             <Col className="text-center mb-2">
-                <a className="no-print" href={doc.url} onClick={logViewOnGitHub} target="_blank" rel="noopener noreferrer">View on GitHub</a>
+                <a className="no-print" href={doc.url} onClick={logViewOnGitHub} target="_blank" rel="noopener noreferrer">{t('question.code.viewOnGithub', 'View on GitHub')}</a>
                 <a className="only-print" href={doc.url} target="_blank" rel="noopener noreferrer">{doc.url}</a>
             </Col>
         </Row>}

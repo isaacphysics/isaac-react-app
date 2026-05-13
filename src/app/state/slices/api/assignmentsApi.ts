@@ -3,6 +3,7 @@ import {AssignmentDTO, AssignmentProgressDTO, AssignmentStatusDTO, QuizAssignmen
 import {EnhancedAssignment} from "../../../../IsaacAppTypes";
 import {anonymisationFunctions, anonymiseIfNeededWith, onQueryLifecycleEvents} from "./utils";
 import {siteSpecific} from "../../../services";
+import i18next from 'i18next'
 
 export const assignmentsApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -42,7 +43,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
             }),
             providesTags: ["AssignmentProgress"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading assignment progress failed"
+                errorTitle: i18next.t('errors.loadingAssignmentProgressFailed', 'Loading assignment progress failed')
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.progressState)
         }),

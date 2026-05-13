@@ -3,12 +3,14 @@ import {Tabs} from "../elements/Tabs";
 import { CodeSnippetDTO, ContentDTO } from "../../../IsaacApiTypes";
 import {isDefined, programmingLanguagesMap, useUserPreferences} from "../../services";
 import { IsaacContent } from "./IsaacContent";
+import { useTranslation } from 'react-i18next'
 
 interface IsaacCodeTabsProps {
     doc: {children: {title?: string; children?: ContentDTO[]}[]};
 }
 
 export const IsaacCodeTabs = (props: any) => {
+    const { t } = useTranslation()
     const {doc: {children}} = props as IsaacCodeTabsProps;
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
     const {preferredProgrammingLanguage} = useUserPreferences();
@@ -17,7 +19,7 @@ export const IsaacCodeTabs = (props: any) => {
     children.forEach((child, index) => {
         const codeSnippetChildren: CodeSnippetDTO[] = child.children && child.children?.filter(c => c.type === "codeSnippet") || [];
         const titleFromSnippet = codeSnippetChildren.length > 0 && codeSnippetChildren[0].language && programmingLanguagesMap[codeSnippetChildren[0].language.toUpperCase()];
-        const tabTitle = titleFromSnippet || child.title || `Tab ${index + 1}`;
+        const tabTitle = titleFromSnippet || child.title || t("tab.tab", "Tab") + (index + 1);
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 

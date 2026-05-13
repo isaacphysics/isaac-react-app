@@ -37,6 +37,7 @@ import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
+import i18next from 'i18next'
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -91,11 +92,11 @@ export const RoutesCS = [
     <Route key={key++} path="/topics" element={<AllTopics />} />,
     <Route key={key++} path="/topics/projects_link_pseudo_project" element={<Navigate to="/projects" replace />} />,
     <Route key={key++} path="/topics/:topicName" element={<Topic />} />,
-    <Route key={key++} path="/exam_specifications_england" element={<ExamSpecifications title="English qualifications" />} />,
-    <Route key={key++} path="/exam_specifications_wales" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.WJEC]} title="Welsh qualifications" />} />,
-    <Route key={key++} path="/exam_specifications_ada" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.ADA]} stageFilter={[STAGE.CORE, STAGE.ADVANCED]} title="Ada CS Curriculum" />} />,
+    <Route key={key++} path="/exam_specifications_england" element={<ExamSpecifications title={i18next.t('qualifications.group.english', 'English qualifications')} />} />,
+    <Route key={key++} path="/exam_specifications_wales" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.WJEC]} title={i18next.t('qualifications.group.welsh', 'Welsh qualifications')} />} />,
+    <Route key={key++} path="/exam_specifications_ada" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.ADA]} stageFilter={[STAGE.CORE, STAGE.ADVANCED]} title={i18next.t('qualifications.group.ada', 'Ada CS Curriculum')} />} />,
     <Route key={key++} path="/concepts/sqa_computing_science" element={<Navigate to="/exam_specifications_scotland" replace />} />,
-    <Route key={key++} path="/exam_specifications_scotland" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.SQA]} stageFilter={[STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]} title="Scottish qualifications" />} />,
+    <Route key={key++} path="/exam_specifications_scotland" element={<ExamSpecifications examBoardFilter={[EXAM_BOARD.SQA]} stageFilter={[STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]} title={i18next.t('qualifications.group.scottish', 'Scottish qualifications')} />} />,
     <Route key={key++} path="/exam_specifications" element={<ExamSpecificationsDirectory />} />,
     <Route key={key++} path="/teaching_order" element={<TeachingOrders />}/>,
 
