@@ -39,7 +39,7 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { InputModeToggle, useDefaultDragAndDropInputMode } from "./IsaacDragAndDropQuestion";
+import { DragAndDropInputModeToggle, useDefaultDragAndDropInputMode } from "./IsaacDragAndDropQuestion";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -503,7 +503,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 collisionDetection={customCollision}
                 accessibility={accessibility}
             >
-                <InputModeToggle dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />
+                {/*<DragAndDropInputModeToggle className="float-end" dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />*/}
 
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}

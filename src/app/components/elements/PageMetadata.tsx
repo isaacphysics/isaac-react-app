@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { ShareLink } from './ShareLink';
 import { PrintButton } from './PrintButton';
 import { ReportButton } from './ReportButton';
@@ -18,6 +18,8 @@ import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { selectors, useAppSelector } from '../../state';
 import { BookmarkButton } from './BookmarkButton';
 import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
+import { DragAndDropInputModeToggle, useDefaultDragAndDropInputMode } from '../content/IsaacDragAndDropQuestion';
+import { Spacer } from './Spacer';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -117,6 +119,15 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
 
+    const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
+    const defaultDragAndDropInputMode = useDefaultDragAndDropInputMode();
+    const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(true);
+    useEffect(() => {
+        // Portals need a drop zone to attach to on first render, so we start with drag and drop enabled to ensure these are created, then disable here if needed
+        setDragAndDropEnabled(defaultDragAndDropInputMode);
+    }, [defaultDragAndDropInputMode]);
+    
+
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
         <div className="page-metadata">
@@ -140,6 +151,12 @@ export const PageMetadata = (props: PageMetadataProps) => {
             <div className="d-flex align-items-end">
                 {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
+                {pageContainsClozeOrDragAndDropQuestion && (
+                    <>
+                        <Spacer />
+                        <DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />
+                    </>
+                )}
             </div>
 
             {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}

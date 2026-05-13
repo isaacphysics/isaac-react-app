@@ -45,6 +45,7 @@ import {arraySwap, SortableContext} from "@dnd-kit/sortable";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { useAccessibilitySettings } from "../../services/accessibility";
 import { Spacer } from "../elements/Spacer";
+import classNames from "classnames";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -144,8 +145,8 @@ export const useDefaultDragAndDropInputMode = () => {
     return !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_INPUTS || false);
 };
 
-export const InputModeToggle = ({dragAndDropEnabled, setDragAndDropEnabled}: {dragAndDropEnabled: boolean, setDragAndDropEnabled: (enabled: boolean) => void}) => {
-    return <div className="d-flex flex-column align-items-center w-min-content">
+export const DragAndDropInputModeToggle = ({dragAndDropEnabled, setDragAndDropEnabled, className}: {dragAndDropEnabled: boolean, setDragAndDropEnabled: (enabled: boolean) => void, className?: string}) => {
+    return <div className={classNames("d-flex flex-column align-items-center w-min-content", className)}>
         <span>Question input mode</span>
         <Spacer />
         <StyledToggle
@@ -551,7 +552,7 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
                 collisionDetection={customCollision}
                 accessibility={accessibility}
             >
-                <InputModeToggle dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />
+                {/*<DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />*/}
 
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
