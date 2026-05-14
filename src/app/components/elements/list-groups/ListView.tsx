@@ -332,12 +332,13 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
 type BuilderListViewItemProps = ListViewItemBaseProps<"builder", "list" | "card"> & {
     item: ContentSummaryDTO;
     index?: number;
+    totalItems?: number;
     onMove?: (id: string, adjustment: number) => void;
     onDelete?: (id: string) => void;
 }
 
 export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
-    const { item, index, onDelete, onMove, ...rest } = props;
+    const { item, index, onDelete, onMove, totalItems, ...rest } = props;
     // const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
@@ -355,12 +356,12 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
         <div className="d-flex vertical-center bg-white rounded-2">
             <div className="d-flex flex-column align-items-center">
-                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)}>
-                    <i className="icon icon-chevron-up icon-color-muted-hoverable icon-color-theme-on-hover" />
+                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
+                    <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
                 <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
-                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)}>
-                    <i className="icon icon-chevron-down icon-color-muted-hoverable icon-color-theme-on-hover" />
+                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
+                    <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
             </div>
         </div>

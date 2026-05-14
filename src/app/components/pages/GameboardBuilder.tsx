@@ -456,6 +456,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 type="builder"
                                 style="flat"
                                 items={questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
+                                totalItems={questionOrder.length}
                                 onMove={(id, adjustment) => {
                                     const index = currentQuestions.questionOrder.findIndex(qId => qId === id);
                                     if (index === -1) return;
