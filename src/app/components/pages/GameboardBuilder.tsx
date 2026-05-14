@@ -448,7 +448,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </div>
                     </div>
 
-                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-2 responsive vertical-scroll-shadow")}>
+                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-2 gameboard-builder-container vertical-scroll-shadow")}>
                         <DraggableListViewContainer reorder={reorder}>
                             {/* dragging here can be a little choppy on local development if browser cache is disabled! */}
                             <ListView 

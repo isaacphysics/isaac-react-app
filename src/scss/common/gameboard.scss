@@ -54,32 +54,6 @@
   }
 }
 
-.responsive {
-  overflow: auto;
-  display: block;
-  .table.table-bordered {
-    tr {
-      td {
-        .custom-control-label {
-          &:before, &:after {
-            width: 1.5rem;
-            height: 1.5rem;
-            margin-top: -0.25rem;
-          }
-        }
-
-        .img-center {
-          display: flex;
-          justify-content: center;
-          input {
-            height: 2rem;
-          }
-        }
-      }
-    }
-  }
-}
-
 .my-gameboards-filters {
   overflow: hidden;
   max-height: 0;

@@ -13,7 +13,7 @@ const DraggableListViewWrapper = ({ id, index, className, children, ...rest }: D
             return <li 
                 {...rest}
                 ref={providedDrag.innerRef}
-                className={classNames("d-flex", className)}
+                className={classNames("d-flex draggable-list-view-accessible", className)}
                 {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}
             >
                 {children}
