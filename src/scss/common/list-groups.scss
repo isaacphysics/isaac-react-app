@@ -59,6 +59,14 @@
   }
 }
 
+.list-view-border {
+  border-left: 1px solid var(--color-neutral-200, $gray-107);
+  padding-left: 1rem;
+  &.flex-column {
+    min-width: 220px;
+  }
+}
+
 .draggable-list-view-accessible {
   @extend .focus-visible-z-index;
 

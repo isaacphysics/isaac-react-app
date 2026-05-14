@@ -19,14 +19,6 @@
   }
 }
 
-.list-view-border {
-  border-left: 1px solid var(--color-neutral-200);
-  padding-left: 1rem;
-  &.flex-column {
-    min-width: 220px;
-  }
-}
-
 .list-view-card-container {
   border: none;
   background: transparent;

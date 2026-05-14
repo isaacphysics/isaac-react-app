@@ -40,6 +40,7 @@
 
 .gameboard-builder-container {
   max-height: 60vh;
+  overflow-y: auto;
 }
 
 button.btn.delete-button {

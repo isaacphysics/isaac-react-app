@@ -2,7 +2,7 @@ import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
 import { Button, ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -385,7 +385,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             className="flex-grow-1 align-content-center"
             disableRedirect
         />
-        <Button className="delete-button" color="solid" onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
+        <Button className="delete-button" color={siteSpecific("solid", "keyline")} onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
             <img src="/assets/common/icons/bin.svg" alt="Delete board"/>
         </Button>
     </DraggableListViewWrapper>;
