@@ -2,7 +2,7 @@ import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
 import { Button, ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -353,8 +353,10 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             : {name: QUESTION_STATUS_TO_ICON[CompletionState.NOT_ATTEMPTED], size: "md", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
     };
 
+    const deviceSize = useDeviceSize();
+
     return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
-        <div className="d-flex vertical-center bg-white rounded-2">
+        {deviceSize !== "xs" && <div className="d-flex vertical-center bg-white rounded-2">
             <div className="d-flex flex-column align-items-center">
                 <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
                     <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
@@ -364,11 +366,11 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
                     <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
             </div>
-        </div>
+        </div>}
         <AbstractListViewItem
             {...rest}
             componentTag={"div"}
-            icon={icon}
+            icon={deviceSize !== "xs" ? icon : undefined}
             title={item.title ?? ""}
             subject={itemSubject !== "neutral" ? itemSubject : undefined}
             url={item.url}
