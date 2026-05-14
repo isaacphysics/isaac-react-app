@@ -7,7 +7,8 @@ import {store} from "./app/state";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
 import {printAsciiArtLogoToConsolePhy} from "./app/services";
 import {Helmet} from "react-helmet";
-import i18next from 'i18next'
+import "./i18n.ts";
+import i18next from 'i18next';
 
 printAsciiArtLogoToConsolePhy();
 
