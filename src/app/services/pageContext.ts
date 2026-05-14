@@ -6,6 +6,7 @@ import { useLocation } from "react-router";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
 import { pageContextSlice, selectors, useAppDispatch, useAppSelector } from "../state";
 import { useEffect, useState } from "react";
+import i18next from 'i18next'
 
 const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
     // filtering this const list against the passed-in tags maintains the order (and thus precedence) of the subjects
@@ -173,7 +174,7 @@ export const usePreviousPageContext = (userContexts: readonly UserContext[] | un
  * @returns A human-readable string.
  */
 export function getHumanContext(pageContext?: PageContextState): string {
-    return `${pageContext?.stage && isSingleStageContext(pageContext) ? (HUMAN_STAGES[pageContext.stage[0]] + " ") : ""}${pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : ""}`;
+    return i18next.t('valval2', '{{val}}{{val2}}', { val: pageContext?.stage && isSingleStageContext(pageContext) ? (HUMAN_STAGES[pageContext.stage[0]] + " ") : "", val2: pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : "" });
 }
 
 function isValidIsaacSubject(subject?: string): subject is Subject {

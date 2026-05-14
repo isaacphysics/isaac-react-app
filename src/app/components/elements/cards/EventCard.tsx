@@ -9,6 +9,7 @@ import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
 import { ContentPropertyTags } from "../ContentPropertyTags";
+import { useTranslation } from 'react-i18next'
 
 const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
     return <div className="d-inline-flex">
@@ -18,30 +19,32 @@ const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) =
 };
 
 const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
+    const { t } = useTranslation()
     const {location} = event;
     return <>
         <IconText icon="icon-events">
             <span>{formatEventCardDateSlim(event)}</span>
         </IconText>
         {location && location.address && <IconText icon="icon-location">
-            {!event.isVirtual ? <>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</> : "Online"}
+            {!event.isVirtual ? <>{location.address.addressLine1}{location.address.town && t('town', ', {{town}}', { town: location.address.town })}</> : "Online"}
         </IconText>}
         {event.userBookingStatus === "CONFIRMED"
-            ? <IconText icon="icon-tick">You are booked on this event.</IconText>
+            ? <IconText icon="icon-tick">{t('youAreBookedOnThisEvent2', 'You are booked on this event.')}</IconText>
             : event.userBookingStatus === "RESERVED"
-                ? <IconText icon="icon-tick">You have a reservation for this event.</IconText>
+                ? <IconText icon="icon-tick">{t('youHaveAReservationForThisEvent', 'You have a reservation for this event.')}</IconText>
                 : event.userBookingStatus === "WAITING_LIST"
-                    ? <IconText icon="icon-tick">You are on the waiting list for this event.</IconText>
+                    ? <IconText icon="icon-tick">{t('youAreOnTheWaitingListForThisEvent', 'You are on the waiting list for this event.')}</IconText>
                     : event.hasExpired 
-                        ? <IconText icon="icon-cross">Event has expired</IconText> 
+                        ? <IconText icon="icon-cross">{t('eventHasExpired', 'Event has expired')}</IconText> 
                         : event.isWithinBookingDeadline 
-                            ? <IconText icon="icon-tick">Available to book</IconText>
-                            : <IconText icon="icon-cross">Booking closed</IconText>
+                            ? <IconText icon="icon-tick">{t('availableToBook', 'Available to book')}</IconText>
+                            : <IconText icon="icon-cross">{t('bookingClosed', 'Booking closed')}</IconText>
         }
     </>;
 };
 
 export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
+    const { t } = useTranslation()
     const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
@@ -57,29 +60,29 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                 <span className="event-pod-badges align-self-end">
                     {isVirtualEvent &&
                         <span>
-                            <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
+                            <Badge className="badge rounded-pill" color="primary">{t('online2', 'ONLINE')}</Badge>
                         </span>
                     }
                     {hasExpired &&
                         <span className="expired-badge">
-                            <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
+                            <Badge className="badge rounded-pill" color="failed">{t('expired', 'EXPIRED')}</Badge>
                         </span>}
                     {bookingDeadlineSoon &&
                         <span>
                             <span className="warning-tag px-2 fw-semibold">
-                                Booking deadline soon!
+                                {t('bookingDeadlineSoon', 'Booking deadline soon!')}
                             </span>
                         </span>}
                 </span>
                 {isTeacherEvent &&
                     <div className="event-pod-hex">
-                        <b>TEACHER EVENT</b>
-                        <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
+                        <b>{t('teacherEvent', 'TEACHER EVENT')}</b>
+                        <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={t('teacherEventIcon', 'teacher event icon')}/>
                     </div>}
                 {isStudentEvent &&
                     <div className="event-pod-hex">
-                        <b>STUDENT EVENT</b>
-                        <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
+                        <b>{t('studentEvent', 'STUDENT EVENT')}</b>
+                        <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={t('studentEventIcon', 'student event icon')}/>
                     </div>}
             </Link>}
         <CardBody className="d-flex flex-column">
@@ -95,9 +98,9 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                 <PhysicsCardContents event={event} />
             </CardText>
             {layout !== "landing-page" && <CardText>
-                <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`/events/${id}`}>
-                    Read more
-                    <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
+                <Link aria-label={t('titleReadMore', '{{title}} read more', { title })} className="focus-target btn btn-keyline" to={`/events/${id}`}>
+                    {t('readMore', 'Read more')}
+                    <span className='visually-hidden'>{t('ofTheEventTitle', 'of the event: {{title}}', { title })}{t('key8', ' - ')} <DateString>{date}</DateString></span>
                 </Link>
             </CardText>}
         </CardBody>
@@ -105,6 +108,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
 };
 
 const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
+    const { t } = useTranslation()
     const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled, userBookingStatus}
         = event;
 
@@ -112,32 +116,32 @@ const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolea
         title: title || "Untitled event",
         image: {src: eventThumbnail?.src ?? ""},
         buttonText: "View details",
-        buttonAltText: `View details of the event: ${title} - ${formatDate(date, FRIENDLY_DATE_AND_TIME)}`,
+        buttonAltText: t('viewDetailsOfTheEventTitleVal', 'View details of the event: {{title}} - {{val}}', { title, val: formatDate(date, FRIENDLY_DATE_AND_TIME) }),
         clickUrl: `/events/${id}`,
         className: classnames({'disabled text-muted': hasExpired || isCancelled}),
     }} className="h-100">
         <div>
-            {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color="perfect" outline>Booked</Badge></>}
-            {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color="in-progress" outline>On waiting list</Badge></>}
-            {userBookingStatus === "RESERVED" && <>{" "}<Badge color="in-progress" outline>Reserved</Badge></>}
+            {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color="perfect" outline>{t('booked', 'Booked')}</Badge></>}
+            {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color="in-progress" outline>{t('onWaitingList', 'On waiting list')}</Badge></>}
+            {userBookingStatus === "RESERVED" && <>{" "}<Badge color="in-progress" outline>{t('reserved', 'Reserved')}</Badge></>}
             {isCancelled
-                ? <>{" "}<Badge color="failed">Cancelled</Badge></>
-                : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<Badge>Full</Badge></>
+                ? <>{" "}<Badge color="failed">{t('cancelled', 'Cancelled')}</Badge></>
+                : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<Badge>{t('full2', 'Full')}</Badge></>
             }
         </div>
         {subtitle && <CardText className='m-0 my-auto card-date-time'>{subtitle}</CardText>}
         <CardText className="m-0 my-auto card-date-time">
             <span className="d-block my-2">
-                <span className="fw-bold">When:</span>
+                <span className="fw-bold">{t('when', 'When:')}</span>
                 <span className="d-block">
                     {formatEventCardDate(event, pod)}
                 </span>
             </span>
             {location && location.address && <span className='d-block my-2'>
-                <span className="fw-bold">Location:</span> {" "}
+                <span className="fw-bold">{t('location', 'Location:')}</span> {" "}
                 {!event.isVirtual ?
-                    <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
-                    <span>Online</span>
+                    <span>{location.address.addressLine1}{location.address.town && t('town', ', {{town}}', { town: location.address.town })}</span> :
+                    <span>{t('online', 'Online')}</span>
                 }
             </span>}
         </CardText>

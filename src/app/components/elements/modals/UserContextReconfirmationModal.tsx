@@ -34,34 +34,37 @@ import {UserContext} from "../../../../IsaacApiTypes";
 import {RevisionModeInput} from "../panels/UserBetaFeatures";
 import classNames from "classnames";
 import {ExigentAlert} from "../ExigentAlert";
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 const adaModalText = (isTeacher: boolean) => {
     return {
-        intro: <span>We use this information to show you relevant content. We recommend checking your details occasionally and updating them if anything has changed.</span>,
-        connections: <span>At the start of the new school year, you might also want to review your {isTeacher ? "student" : "teacher"} connections.</span>,
+        intro: <span>{i18next.t('weUseThisInformationToShowYouRelevantContentWeRecommendCheckingYourDetailsOccasionallyAndUpdatingThemIfAnythingHasChanged', 'We use this information to show you relevant content. We recommend checking your details occasionally and updating them if anything has changed.')}</span>,
+        connections: <span>{i18next.t('atTheStartOfTheNewSchoolYearYouMightAlsoWantToReviewYour', 'At the start of the new school year, you might also want to review your')} {isTeacher ? "student" : "teacher"} connections.</span>,
         privacyPolicy: <span>Updating this information helps us continue to show you relevant content. Full details on how we use your personal information can be found in our <a target={"_blank"} rel={"noopener"} href={"/privacy"}>privacy policy</a>.</span>
     };
 };
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
-        intro: <span>So that {SITE_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
-        connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
-        privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+        intro: <span>{i18next.t('modal.contextReconfirmation.teacher.intro', 'So that {{SITE_TITLE}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.', { SITE_TITLE })}</span>,
+        connections: <span>{i18next.t('modal.contextReconfirmation.teacher.connections', 'If you have changed school or have a different class group, you might also want to {{LINK}}', { link: buildConnectionsLink("review your student and group connections") })}</span>,
+        privacyPolicy: <span>{i18next.t('modal.contextReconfirmation.teacher.privacyPolicy', 'Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {{LINK}}', { link: buildPrivacyPolicyLink("privacy policy") })}</span>
     },
     tutor: {
-        intro: <span>So that {SITE_TITLE} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year.</span>,
-        connections: <span>If you have recently changed which students you tutor, might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
-        privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+        intro: <span>{i18next.t('modal.contextReconfirmation.tutor.intro', 'So that {{SITE_TITLE}} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year.', { SITE_TITLE })}</span>,
+        connections: <span>{i18next.t('modal.contextReconfirmation.tutor.connections', 'If you have recently changed which students you tutor, you might also want to {{LINK}}', { link: buildConnectionsLink("review your student and group connections") })}</span>,
+        privacyPolicy: <span>{i18next.t('modal.contextReconfirmation.tutor.privacyPolicy', 'Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {{LINK}}', { link: buildPrivacyPolicyLink("privacy policy") })}</span>
     },
     student: {
-        intro: <span>So that {SITE_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
-        connections: <span>If you have changed school or have a different teacher, you might also want to {buildConnectionsLink("review your teacher connections")}.</span>,
-        privacyPolicy: <span>Updating this information helps us continue to show you relevant content throughout your educational journey. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+        intro: <span>{i18next.t('modal.contextReconfirmation.student.intro', 'So that {{SITE_TITLE}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.', { SITE_TITLE })}</span>,
+        connections: <span>{i18next.t('modal.contextReconfirmation.student.connections', 'If you have changed school or have a different teacher, you might also want to {{LINK}}', { link: buildConnectionsLink("review your teacher connections") })}</span>,
+        privacyPolicy: <span>{i18next.t('modal.contextReconfirmation.student.privacyPolicy', 'Updating this information helps us continue to show you relevant content throughout your educational journey. Full details on how we use your personal information can be found in our {{LINK}}', { link: buildPrivacyPolicyLink("privacy policy") })}</span>
     }
 });
 
 const UserContextReconfirmationModalBody = () => {
+    const { t } = useTranslation()
     const dispatch = useDispatch();
     const user: Immutable<PotentialUser> | null = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
@@ -102,14 +105,14 @@ const UserContextReconfirmationModalBody = () => {
                     href={"/account#teacherconnections"}
                 >
                     {text}
-                    <span className={"visually-hidden"}> (opens in new tab) </span>
+                    <span className={"visually-hidden"}> {t('opensInNewTab', '(opens in new tab)')} </span>
                 </a>;
             },
 
             function buildPrivacyPolicyLink(text: string) {
                 return <a target={"_blank"} rel={"noopener noreferrer"} href={"/privacy"}>
                     {text}
-                    <span className={"visually-hidden"}> (opens in new tab) </span>
+                    <span className={"visually-hidden"}> {t('opensInNewTab', '(opens in new tab)')} </span>
                 </a>;
             })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"],
 
@@ -144,20 +147,20 @@ const UserContextReconfirmationModalBody = () => {
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         {submissionAttempted && !allFieldsAreValid &&
             <ExigentAlert color="warning">
-                <p className="alert-heading fw-bold">Unable to update your account</p>
-                <p>Please fill in all required fields.</p>
+                <p className="alert-heading fw-bold">{t('unableToUpdateYourAccount', 'Unable to update your account')}</p>
+                <p>{t('pleaseFillInAllRequiredFields', 'Please fill in all required fields.')}</p>
             </ExigentAlert>
         }
         {updateCurrentUserError &&
             <ExigentAlert color="warning">
-                <p className="alert-heading fw-bold">Unable to update your account</p>
+                <p className="alert-heading fw-bold">{t('unableToUpdateYourAccount', 'Unable to update your account')}</p>
                 <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
             </ExigentAlert>
         }
         <p>{modalText.intro}</p>
         <p>{modalText.connections}</p>
         {isPhy && <div className="text-end text-muted required-before">
-            Required
+            {t('required', 'Required')}
         </div>}
         <Col>
             {isAda &&
@@ -203,19 +206,19 @@ const UserContextReconfirmationModalBody = () => {
 
         {submissionAttempted && !allFieldsAreValid && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
-                Not all required fields have been correctly filled.
+                {t('notAllRequiredFieldsHaveBeenCorrectlyFilled', 'Not all required fields have been correctly filled.')}
             </h4>
         </div>}
 
         <div className="text-center pb-3 pt-1">
             <Button type="submit" color="secondary" className="my-1 w-lg-50 w-100">
-                Update details
+                {t('updateDetails', 'Update details')}
             </Button>
         </div>
     </Form>;
 };
 
 export const userContextReconfirmationModal = {
-    title: "Review your details",
+    title: i18next.t('reviewYourDetails', 'Review your details'),
     body: <UserContextReconfirmationModalBody />,
 };

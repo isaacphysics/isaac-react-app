@@ -2,6 +2,7 @@ import React from 'react';
 import {UserSnapshot} from "../../../../IsaacAppTypes";
 import {buildStyles, CircularProgressbarWithChildren} from "react-circular-progressbar";
 import {GRAY_120, progressColour} from "../../../services";
+import { Trans } from 'react-i18next'
 
 interface StreakGaugeProps {
     streakRecord: UserSnapshot | null | undefined;
@@ -21,7 +22,7 @@ export const StreakGauge = (props: StreakGaugeProps) => {
 
         })}>
         <div className="align-content-center">
-            <b>{currentStreak}</b><br/>WEEK{currentStreak !== 1 && "S"}
+            <b>{currentStreak}</b><Trans i18nKey="brweek"><br/>WEEK</Trans>{currentStreak !== 1 && "S"}
         </div>
     </CircularProgressbarWithChildren>;
 };
@@ -59,7 +60,7 @@ export const DashboardStreakGauge = (props: StreakGaugeProps) => {
             backgroundColor: "#FFFFFF"
         })}>
         <div className="streak-panel-gauge m-0 align-content-center">
-            <b>{currentStreak}</b><br/>WEEK{currentStreak !== 1 && "S"}
+            <b>{currentStreak}</b><Trans i18nKey="brweek"><br/>WEEK</Trans>{currentStreak !== 1 && "S"}
         </div>
     </CircularProgressbarWithChildren>;
 };

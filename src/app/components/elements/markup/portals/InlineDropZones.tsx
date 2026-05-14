@@ -7,6 +7,7 @@ import classNames from "classnames";
 import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
 import DropZoneItem from "../../DnDItem";
+import { useTranslation } from 'react-i18next'
 
 interface InlineDropRegionProps {
     divId: string;
@@ -19,6 +20,7 @@ interface InlineDropRegionProps {
 
 // Inline droppables rendered for each registered drop region
 function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling}: InlineDropRegionProps) {
+    const { t } = useTranslation()
     const dropRegionContext = useContext(DragAndDropRegionContext);
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -66,7 +68,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     >
         {item
             ? <DropZoneItem item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
-            : <>&nbsp;<span className={"visually-hidden"}>drop zone</span></>
+            : <>{t('nbsp', '&nbsp;')}<span className={"visually-hidden"}>{t('dropZone', 'drop zone')}</span></>
         }
     </span>;
 
@@ -79,7 +81,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     >
         <DropdownToggle className={classNames("py-1 px-3", {"empty": !item, "pe-2": isDefined(isCorrect)})} outline={isAda} style={{minHeight: height, width: width}} innerRef={zoneRef}>
             <div className={classNames("d-flex cloze-item feedback-zone", {"cloze-bg": !!item && isPhy, "feedback-showing": isDefined(isCorrect)})}>
-                <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
+                <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? t('clozeItemWithoutADescription', 'cloze item without a description')}</span>
                 <span aria-hidden={true}>
                     <Markup trusted-markup-encoding={"html"}>
                         {item?.value ?? ""}
@@ -97,7 +99,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
                 data-unit={'None'}
                 onClick={() => {dropRegionContext?.onSelect(NULL_CLOZE_ITEM, droppableId, true);}}
             >
-                <span className="fst-italic">Clear</span>
+                <span className="fst-italic">{t('clear2', 'Clear')}</span>
             </DropdownItem>
             {dropdownItems.map((item, i) => {
                 return <DropdownItem key={i}

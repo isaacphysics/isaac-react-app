@@ -7,6 +7,7 @@ import { BoardCard } from "./cards/BoardCard";
 import { RegisteredUserDTO, GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
 import { HorizontalScroller } from "./inputs/HorizontalScroller";
+import { useTranslation, Trans } from 'react-i18next'
 
 export interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -48,6 +49,7 @@ const PhyTable = (props: GameboardsTableProps) => {
 };
 
 const CSTable = (props: GameboardsTableProps) => {
+    const { t } = useTranslation()
     const {
         user,
         boards, selectedBoards, setSelectedBoards, confirmDeleteMultipleBoards,
@@ -57,36 +59,32 @@ const CSTable = (props: GameboardsTableProps) => {
 
     const tableHeader = <tr>
         <SortItemHeader<AssignmentBoardOrder> colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
-            {siteSpecific("Question deck name", "Quiz name")}
+            {siteSpecific(t('questionDeckName', 'Question deck name'), "Quiz name")}
         </SortItemHeader>
-        <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
-            Stages and Difficulties <i id={`difficulties-help`} className={classNames("icon icon-info icon-inline mx-1", siteSpecific("icon-color-grey position-relative", "icon-color-black"))} />
-            <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
+        <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}><Trans i18nKey="stagesAndDifficultiesIIddifficultieshelpClassnameclassnamesiconIconinfoIconinlineMx1SitespecificiconcolorgreyPositionrelativeIconcolorblack">Stages and Difficulties <i id={`difficulties-help`} className={classNames("icon icon-info icon-inline mx-1", siteSpecific("icon-color-grey position-relative", "icon-color-black"))} /></Trans><UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                {t('practice2', 'Practice:')} {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<Trans i18nKey="brChallenge2"><br />
+                Challenge:</Trans>{difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
             </UncontrolledTooltip>
         </th>
-        {isAda && <th>Creator</th>}
+        {isAda && <th>{t('creator', 'Creator')}</th>}
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.created} reverseOrder={AssignmentBoardOrder["-created"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            Created
+            {t('created', 'Created')}
         </SortItemHeader>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.attempted} reverseOrder={AssignmentBoardOrder["-attempted"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            Attempted
+            {t('attempted', 'Attempted')}
         </SortItemHeader>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.correct} reverseOrder={AssignmentBoardOrder["-correct"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            Correct
+            {t('correct', 'Correct')}
         </SortItemHeader>
         {siteSpecific(
             <>
-                <th className="text-center align-middle">Delete</th>
+                <th className="text-center align-middle">{t('delete', 'Delete')}</th>
             </>,
             <>
-                <th>Share</th>
+                <th>{t('share', 'Share')}</th>
                 <th>
                     {selectedBoards.length
-                        ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                            Delete ({selectedBoards.length})
-                        </Button>
+                        ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>{t('deleteLength', 'Delete ({{length}})', { length: selectedBoards.length })}</Button>
                         : "Delete"
                     }
                 </th>
@@ -124,6 +122,7 @@ const CSTable = (props: GameboardsTableProps) => {
 };
 
 const Cards = (props: GameboardsCardsProps) => {
+    const { t } = useTranslation()
     const {
         user, boards, selectedBoards, setSelectedBoards, boardView, 
         boardTitleFilter, boardCreator, boardCompletion, loading, viewMore

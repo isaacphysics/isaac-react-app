@@ -2,9 +2,11 @@ import React from "react";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {siteSpecific} from "../../services";
 import { useNavigate } from "react-router";
+import { useTranslation } from 'react-i18next'
 
 
 export const RegistrationSuccess = () => {
+    const { t } = useTranslation()
     const navigate = useNavigate();
 
     const myAccount = (event: React.MouseEvent) => {
@@ -27,7 +29,7 @@ export const RegistrationSuccess = () => {
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
-                        <h3>Account created!</h3>
+                        <h3>{t('accountCreated', 'Account created!')}</h3>
                     </Col>
                 </Row>
                 <Row className="justify-content-center">
@@ -41,8 +43,8 @@ export const RegistrationSuccess = () => {
                 <Row className="justify-content-center">
                     <Col xs={12} sm={6} lg={3}>
                         {siteSpecific(
-                            <Button className={"my-2"} color="solid" onClick={returnToHomepage}>Home</Button>,
-                            <Button className={"my-2"} color="keyline" onClick={myAccount}>Your account</Button>
+                            <Button className={"my-2"} color="solid" onClick={returnToHomepage}>{t('home', 'Home')}</Button>,
+                            <Button className={"my-2"} color="keyline" onClick={myAccount}>{t('yourAccount', 'Your account')}</Button>
                         )}
                     </Col>
                     <Col xs={12} sm={6} lg={3}>

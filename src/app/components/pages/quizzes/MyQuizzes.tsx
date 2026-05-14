@@ -47,6 +47,7 @@ import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
+import { useTranslation, Trans } from 'react-i18next'
 
 export interface QuizzesPageProps {
     user: RegisteredUserDTO;
@@ -57,54 +58,56 @@ interface QuizAssignmentProps {
 }
 
 const QuizButton = ({quiz}: QuizAssignmentProps) => {
+    const { t } = useTranslation()
     return quiz.isAssigned ? <>
         {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
-            Start test
+            {t('startTest', 'Start test')}
         </Button>}
         {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-            Continue test
+            {t('continueTest', 'Continue test')}
         </Button>}
         {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
-            Overdue
+            {t('overdue', 'Overdue')}
         </Button>}
         {quiz.status === QuizStatus.Complete && (
             <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
+                {quiz.quizFeedbackMode === "NONE" ? t('noFeedback', 'No feedback') : "View feedback"}
             </Button>
         )}
     </> : 
         quiz.attempt && <>
             {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-                Continue test
+                {t('continueTest', 'Continue test')}
             </Button>}
             {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
+                {quiz.quizFeedbackMode === "NONE" ? t('noFeedback', 'No feedback') : "View feedback"}
             </Button>
             }
         </>;
 };
 
 const QuizInfo = ({quiz}: QuizAssignmentProps) => {
+    const { t } = useTranslation()
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
     const siteFormatDate = (date: number | Date) => <strong>{`${siteSpecific(getFriendlyDaysUntil(date), formatDate(date))}`}</strong>;
     return <>
         {<p>
             {quiz.isAssigned ? 
-                quiz.dueDate && <> Due date: {siteFormatDate(quiz.dueDate)} </> : 
+                quiz.dueDate && <> {t('dueDate', 'Due date:')} {siteFormatDate(quiz.dueDate)} </> : 
                 quiz.attempt && siteSpecific(
-                    `Freely ${quiz.status === QuizStatus.Started ? "attempting" : "attempted"}`,
-                    `${quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently`
+                    t('freelyVal', 'Freely {{val}}', { val: quiz.status === QuizStatus.Started ? "attempting" : "attempted" }),
+                    t('valIndependently', '{{val}} independently', { val: quiz.status === QuizStatus.Started ? "Attempting" : "Attempted" })
                 )
             }
         </p>}
         {quiz.isAssigned && <p>
-            {assignmentStartDate && <> Set: {siteFormatDate(assignmentStartDate)} </>}
-            {quiz.assignerSummary && `by ${extractTeacherName(quiz.assignerSummary)}`}
+            {assignmentStartDate && <> {t('set', 'Set:')} {siteFormatDate(assignmentStartDate)} </>}
+            {quiz.assignerSummary && t('byVal', 'by {{val}}', { val: extractTeacherName(quiz.assignerSummary) })}
         </p>}
         {quiz.attempt && <p>
             {quiz.status === QuizStatus.Complete ?
-                quiz.attempt.completedDate && <> Completed: {siteFormatDate(quiz.attempt.completedDate)} </> :
-                quiz.attempt.startDate && <> Started: {siteFormatDate(quiz.attempt.startDate)} </>
+                quiz.attempt.completedDate && <> {t('completed', 'Completed:')} {siteFormatDate(quiz.attempt.completedDate)} </> :
+                quiz.attempt.startDate && <> {t('started', 'Started:')} {siteFormatDate(quiz.attempt.startDate)} </>
             }
         </p>}
     </>;
@@ -181,6 +184,7 @@ function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
 
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
 const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
+    const { t } = useTranslation()
     return <HorizontalScroller enabled={quizzes.length > 6}>
         <Table className="my-quizzes-table mb-0">
             <colgroup>
@@ -192,10 +196,10 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
             </colgroup>
             <thead className="my-quizzes-table-header">
                 <tr>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set by</SortItemHeader>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.dueDate} reverseOrder={QuizzesBoardOrder["-dueDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Due Date</SortItemHeader>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setDate} reverseOrder={QuizzesBoardOrder["-setDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set Date</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t('title', 'Title')}</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t('setBy', 'Set by')}</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.dueDate} reverseOrder={QuizzesBoardOrder["-dueDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t('dueDate3', 'Due Date')}</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setDate} reverseOrder={QuizzesBoardOrder["-setDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t('setDate', 'Set Date')}</SortItemHeader>
                     {/* extra th for chevrons */}
                     <th/>
                 </tr>
@@ -206,13 +210,13 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                         <td>
                             <div>
                                 {quiz.title || quiz.id}<br/>
-                                {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">Overdue</span>}
-                                {quiz.status === QuizStatus.Started && <span className="small text-muted mt-1">Started</span>}
-                                {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">Not started</span>}
+                                {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">{t('overdue', 'Overdue')}</span>}
+                                {quiz.status === QuizStatus.Started && <span className="small text-muted mt-1">{t('started2', 'Started')}</span>}
+                                {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">{t('notStarted', 'Not started')}</span>}
                                 {quiz.status === QuizStatus.Complete && <>
-                                    <span className="small text-muted mt-1">Completed &middot; </span>
-                                    {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">No feedback available</span> 
-                                        : <span className="small text-muted mt-1">Feedback available</span>
+                                    <span className="small text-muted mt-1">{t('completedMiddot', 'Completed &middot;')} </span>
+                                    {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">{t('noFeedbackAvailable', 'No feedback available')}</span> 
+                                        : <span className="small text-muted mt-1">{t('feedbackAvailable', 'Feedback available')}</span>
                                     }
                                 </>}
                             </div>
@@ -234,6 +238,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
 };
 
 const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
+    const { t } = useTranslation()
     return <HorizontalScroller enabled={quizzes.length > 6}>
         <Table className="my-quizzes-table mb-0">
             <colgroup>
@@ -243,8 +248,8 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
             </colgroup>
             <thead className="my-quizzes-table-header">
                 <tr>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Start Date</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t('title', 'Title')}</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t('startDate3', 'Start Date')}</SortItemHeader>
                     {/* extra th for chevrons */}
                     <th/>
                 </tr>
@@ -255,7 +260,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                         <td>
                             <div className="d-flex flex-column align-items-start">
                                 {quiz.title || quiz.id}
-                                {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">Completed</span>}
+                                {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">{t('completed2', 'Completed')}</span>}
                             </div>
                         </td>
                         <td>{formatDate(quiz.startDate)}</td>
@@ -282,17 +287,18 @@ interface AdaQuizFiltersProps {
 }
 
 const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, showFilters}: AdaQuizFiltersProps) => {
+    const { t } = useTranslation()
     return <CollapsibleContainer expanded={showFilters}>
         <Row>
             <Col xs={6}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by quiz title</span>
+                    <span className={"text-nowrap"}>{t('filterByQuizTitle', 'Filter by quiz title')}</span>
                     <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)}/>
                 </Label>
             </Col>
             <Col xs={6}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by assigner</span>
+                    <span className={"text-nowrap"}>{t('filterByAssigner', 'Filter by assigner')}</span>
                     <Input type="text" data-testid="title-filter" onChange={(e) => setQuizCreatorFilter(e.target.value)} />
                 </Label>
             </Col>
@@ -300,7 +306,7 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
         <Row className="pb-3">
             <Col xs={12}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by status</span>
+                    <span className={"text-nowrap"}>{t('filterByStatus2', 'Filter by status')}</span>
                     <StyledSelect
                         isMulti
                         value={quizStatusFilter.map(status => ({value: status, label: status}))}
@@ -319,8 +325,9 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
 };
 
 export const DisplayModeToggle = ({displayMode, setDisplayMode}: {displayMode: "table" | "cards", setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>}) => {
+    const { t } = useTranslation()
     return <div className={classNames("d-flex flex-column align-items-start", {"pb-3 pe-3 col-8 col-sm-6 col-md-3": isAda})}>
-        {isAda && <span>Display in</span>}
+        {isAda && <span>{t('displayIn', 'Display in')}</span>}
         <div className="d-flex flex-column align-items-center align-self-start w-max-content pb-3 pe-3">
             <StyledToggle
                 checked={displayMode === "cards"}
@@ -333,8 +340,9 @@ export const DisplayModeToggle = ({displayMode, setDisplayMode}: {displayMode: "
 };
 
 export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusFilter}: {showCompleted: boolean, setShowCompleted: (show: boolean) => void, setQuizStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>}) => {
+    const { t } = useTranslation()
     return <div className={classNames("d-flex flex-column align-items-start w-max-content", {"pb-3": isAda})}>
-        <span>Past tests</span>
+        <span>{t('pastTests', 'Past tests')}</span>
         <div className="h-100 align-content-center">
             <StyledToggle
                 checked={showCompleted}
@@ -351,6 +359,7 @@ export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusF
 };
 
 export const MyQuizzes = ({user}: QuizzesPageProps) => {
+    const { t } = useTranslation()
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
@@ -382,11 +391,9 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
         ], ["asc", "asc", "asc"]);
     }, [boardOrder, displayMode]);
 
-    const pageHelp = <span>
-        Use this page to see tests you need to take and your test results.
+    const pageHelp = <span><Trans i18nKey="useThisPageToSeeTestsYouNeedToTakeAndYourTestResultsBrYouCanAlsoTakeSomeTestsFreelyWheneverYouWantToTestYourKnowledge">Use this page to see tests you need to take and your test results.
         <br />
-        You can also take some tests freely whenever you want to test your knowledge.
-    </span>;
+        You can also take some tests freely whenever you want to test your knowledge.</Trans></span>;
 
     const quizMatchesFilters = (quiz: DisplayableQuiz | undefined) : quiz is DisplayableQuiz => {
         if (!quiz) return false;
@@ -424,7 +431,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
     const filtersToggle = <Col xs={3} sm={2} md={1} className="pb-3 ms-3">
         <Label className="w-100 d-flex flex-column align-items-center mb-0">
             <span className="text-nowrap">
-                Filters
+                {t('filters', 'Filters')}
                 {<FilterCount count={filterCount ?? 0} widthPx={20} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
             </span>
             <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown d-flex justify-content-center align-items-center", {"selected": showFilters})}
@@ -449,13 +456,13 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
     </>;
 
     const emptyAssignedMessage = <span className="text-muted">{!quizAssignments || quizAssignments.length === 0
-        ? "You have no tests in progress."
-        : <>No tests match your filters. Are you looking for <button className="btn-link text-muted p-0 m-0 bg-transparent" onClick={() => setQuizStatusFilter([QuizStatus.All])}>past tests</button>?</>
+        ? t('youHaveNoTestsInProgress', 'You have no tests in progress.')
+        : <><Trans i18nKey="noTestsMatchYourFiltersAreYouLookingForButtonClassnamebtnlinkTextmutedP0M0BgtransparentOnclickSetquizstatusfilterquizstatusallpastTestsbutton">No tests match your filters. Are you looking for <button className="btn-link text-muted p-0 m-0 bg-transparent" onClick={() => setQuizStatusFilter([QuizStatus.All])}>past tests</button>?</Trans></>
     }</span>;
 
     const emptyPracticeMessage = <span className="text-muted">{!freeAttempts || freeAttempts.length === 0
-        ? <>You have no practice tests. Take some new tests <Link to="/practice_tests">here</Link>!</>
-        : "No practice tests match your filters."
+        ? <>{t('youHaveNoPracticeTestsTakeSomeNewTests', 'You have no practice tests. Take some new tests')} <Link to="/practice_tests">here</Link>!</>
+        : t('noPracticeTestsMatchYourFilters', 'No practice tests match your filters.')
     }</span>;
 
     return <PageContainer
@@ -478,10 +485,10 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
             setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
         }}>
             {{
-                ["Assigned tests"]:
+                [t('assignedTests', 'Assigned tests')]:
                     <ShowLoading
                         until={quizAssignments}
-                        ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
+                        ifNotFound={<Alert color="warning">{t('yourTestAssignmentsFailedToLoadPleaseTryRefreshingThePage', 'Your test assignments failed to load, please try refreshing the page.')}</Alert>}
                     >
                         <div className="d-flex flex-column">
                             {tabTopContent}
@@ -495,10 +502,10 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
                             </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
                         </div>
                     </ShowLoading>,
-                ["My practice tests"]:
+                [t('myPracticeTests', 'My practice tests')]:
                     <ShowLoading
                         until={freeAttempts}
-                        ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
+                        ifNotFound={<Alert color="warning">{t('yourPracticeTestAttemptsFailedToLoadPleaseTryRefreshingThePage', 'Your practice test attempts failed to load, please try refreshing the page.')}</Alert>}
                     >
                         <div className="d-flex flex-column">
                             {tabTopContent}

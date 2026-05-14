@@ -6,6 +6,7 @@ import {isDefined, isFound, NO_CONTENT, NOT_FOUND, SITE_TITLE, WEBMASTER_EMAIL} 
 import {getRTKQueryErrorMessage} from "../../state";
 import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import { useTranslation, Trans } from 'react-i18next'
 
 export const LoadingPlaceholder = () => <div className="w-100 text-center pb-2">
     <h2 aria-hidden="true" className="pt-7">Loading...</h2>
@@ -13,16 +14,14 @@ export const LoadingPlaceholder = () => <div className="w-100 text-center pb-2">
 </div>;
 
 export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError | SerializedError, title: string}) => {
+    const { t } = useTranslation()
     const errorDetails = getRTKQueryErrorMessage(error);
     return <Alert color={"warning"} className={"my-2"}>
-        {title ?? "Error fetching data from server"}: {window.navigator.onLine ? errorDetails.message : "You appear to be offline."}
-        {errorDetails.status ? <><br/>Status code: {errorDetails.status}</> : ""}
-        <br/>
-        You may want to{!window.navigator.onLine && " check your internet connection,"} refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
+        {title ?? t('errorFetchingDataFromServer', 'Error fetching data from server')}: {window.navigator.onLine ? errorDetails.message : t('youAppearToBeOffline', 'You appear to be offline.')}
+        {errorDetails.status ? <><Trans i18nKey="brstatusCodeStatusErrordetailsstatus"><br/>Status code: {{ status: errorDetails.status }}</Trans></> : ""}<Trans i18nKey="brYouMayWantTo"><br/>
+        You may want to</Trans>{!window.navigator.onLine && t('checkYourInternetConnection', ' check your internet connection,')}<Trans i18nKey="refreshThePageOrAHrefmailtowebmaster_emailemailaUsIfThisContinuesToHappenPleaseIncludeInYourEmailTheNameAndEmailAssociatedWithThis">refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
         this continues to happen.
-        Please include in your email the name and email associated with this{" "}
-        {SITE_TITLE} account, alongside the details of the error given above.
-    </Alert>;
+        Please include in your email the name and email associated with this</Trans>{" "}{t('site_titleAccountAlongsideTheDetailsOfTheErrorGivenAbove', '{{SITE_TITLE}} account, alongside the details of the error given above.', { SITE_TITLE })}</Alert>;
 };
 
 interface ShowLoadingQueryInfo<T> {

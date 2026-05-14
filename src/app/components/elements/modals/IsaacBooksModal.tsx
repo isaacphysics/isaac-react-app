@@ -3,6 +3,7 @@ import React from "react";
 import { Col, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { BookHiddenState, BookInfo, ISAAC_BOOKS } from "../../../services";
+import i18next from 'i18next'
 
 export const BookModalBody = () => {
     const dispatch = useAppDispatch();
@@ -19,6 +20,6 @@ export const BookModalBody = () => {
 
 export const isaacBooksModal = () => ({
     closeAction: () => {store.dispatch(closeActiveModal());},
-    title: "Isaac Skills Books",
+    title: i18next.t('isaacSkillsBooks', 'Isaac Skills Books'),
     body: <BookModalBody/>
 });

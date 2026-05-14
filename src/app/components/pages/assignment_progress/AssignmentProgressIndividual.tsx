@@ -33,6 +33,7 @@ import { downloadLinkModal } from "../../elements/modals/AssignmentProgressModal
 import { DetailedMarksTab, GroupAssignmentTab, isQuestionFullyAttempted } from "./AssignmentProgressIndividualTabs";
 import { formatDate } from "../../elements/DateString";
 import { Tabs } from "../../elements/Tabs";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface AssignmentSummaryCardProps {
     studentsAttempted?: number;
@@ -43,25 +44,23 @@ interface AssignmentSummaryCardProps {
 }
 
 export const AssignmentSummaryCard = ({studentsAttempted, studentsCompleted, totalStudents, dueDate, isQuiz}: AssignmentSummaryCardProps) => {
+    const { t } = useTranslation()
     return <Card className="my-4">
         <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
-            <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                <i className={classNames("icon me-2", dueDate && dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                Due: {formatDate(dueDate)}
+            <div className="d-flex align-items-center flex-grow-1 fw-bold"><Trans i18nKey="iClassnameclassnamesiconMe2DuedateDuedateNewDateIconeventcompleteIconeventupcomingSitespecificiconmdIconsmColorsecondaryDue"><i className={classNames("icon me-2", dueDate && dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                Due:</Trans>{formatDate(dueDate)}
             </div>
-            <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                {studentsAttempted} of {totalStudents} {isQuiz ? "submitted their test" : "attempted all questions"}
+            <div className="d-flex align-items-center flex-grow-1 fw-bold"><Trans i18nKey="iClassnameclassnamesiconIcongroupMe2SitespecificiconmdIconsmColorsecondaryStudentsattemptedOfTotalstudents"><i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                {{ studentsAttempted }} of {{ totalStudents }}</Trans>{isQuiz ? t('submittedTheirTest', 'submitted their test') : t('attemptedAllQuestions', 'attempted all questions')}
             </div>
-            <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                {studentsCompleted} of {totalStudents} got full marks
-            </div>
+            <div className="d-flex align-items-center flex-grow-1 fw-bold"><Trans i18nKey="iClassnameclassnamesiconIcontaskcompleteMe2SitespecificiconmdIconsmColorsecondaryStudentscompletedOfTotalstudentsGotFullMarks"><i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                {{ studentsCompleted }} of {{ totalStudents }} got full marks</Trans></div>
         </CardBody>
     </Card>;
 };
 
 const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const questions = assignment.gameboard.contents;
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
@@ -104,11 +103,11 @@ const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgr
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
             {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
                 <i className="icon icon-arrow-left me-2"/>
-                Back to group assignments and tests
+                {t('markbook.backToGroupAssignmentsAndTests', 'Back to group assignments and tests')}
             </Link>}
             {isPhy && <Spacer/>}
             <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentProgressCSVDownloadLink(assignment.id))))}>
-                Download CSV
+                {t('markbook.downloadCsv', 'Download CSV')}
                 <i className="icon icon-download ms-2" color="white"/>
             </Button>
         </div>
@@ -132,6 +131,7 @@ const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgr
 };
 
 export const AssignmentProgressIndividual = ({user, group}: {user: RegisteredUserDTO, group?: AppGroup}) => {
+    const { t } = useTranslation()
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
     const assignmentQuery = useGetSingleSetAssignmentQuery(assignmentId || skipToken);
@@ -148,7 +148,7 @@ export const AssignmentProgressIndividual = ({user, group}: {user: RegisteredUse
         pageTitle={
             <TitleAndBreadcrumb
                 intermediateCrumbs={groupCrumb ? [ASSIGNMENT_PROGRESS_CRUMB, groupCrumb] : [ASSIGNMENT_PROGRESS_CRUMB]}
-                currentPageTitle={assignment?.gameboard?.title ?? siteSpecific("Assignment progress", "Markbook")}
+                currentPageTitle={assignment?.gameboard?.title ?? siteSpecific(t('assignmentProgress', 'Assignment progress'), "Markbook")}
                 className="mb-4"
                 icon={{type: "icon", icon: "icon-revision"}}
             />
@@ -157,7 +157,7 @@ export const AssignmentProgressIndividual = ({user, group}: {user: RegisteredUse
     >
         <ShowLoadingQuery
             query={combineQueries(assignmentQuery, assignmentProgressQuery, augmentAssignmentWithProgress)}
-            defaultErrorTitle={"Error fetching assignment progress"}
+            defaultErrorTitle={t('errorFetchingAssignmentProgress', 'Error fetching assignment progress')}
             thenRender={(assignmentWithProgress) =>
                 <div className="assignment-progress-container mb-7">
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>

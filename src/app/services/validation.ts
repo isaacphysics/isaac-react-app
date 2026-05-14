@@ -9,6 +9,7 @@ import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {EXAM_BOARD, isAda, isPhy, isStudent, isTutor, siteSpecific, STAGE} from "./";
 import {Immutable} from "immer";
+import i18next from 'i18next'
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0;}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0;}
@@ -136,23 +137,23 @@ export function validateRequiredFields(user?: Immutable<ValidationUser> | null, 
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {
     if (!validateUserSchool(Object.assign({password: null}, user))) {
-        return Object.assign({}, FAILURE_TOAST, {title: "School information required", body: "You must enter a school in order to book on to this event."});
+        return Object.assign({}, FAILURE_TOAST, {title: i18next.t('schoolInformationRequired', 'School information required'), body: i18next.t('youMustEnterASchoolInOrderToBookOnToThisEvent', 'You must enter a school in order to book on to this event.')});
     }
 
     // validation for users / forms that indicate the booker is not a teacher
     if (isStudent(user) && !(additionalInformation.yearGroup == 'TEACHER' || additionalInformation.yearGroup == 'OTHER')) {
         if (!additionalInformation.yearGroup) {
-            return Object.assign({}, FAILURE_TOAST, {title:"Year group required", body: "You must enter a year group to proceed."});
+            return Object.assign({}, FAILURE_TOAST, {title:i18next.t('yearGroupRequired', 'Year group required'), body: i18next.t('youMustEnterAYearGroupToProceed', 'You must enter a year group to proceed.')});
         }
 
         if (!event.isVirtual && (!additionalInformation.emergencyName || !additionalInformation.emergencyNumber)) {
-            return Object.assign({}, FAILURE_TOAST, {title: "Emergency contact details required", body: "You must enter a emergency contact details in order to book on to this event."});
+            return Object.assign({}, FAILURE_TOAST, {title: i18next.t('emergencyContactDetailsRequired', 'Emergency contact details required'), body: i18next.t('youMustEnterAEmergencyContactDetailsInOrderToBookOnToThisEvent', 'You must enter a emergency contact details in order to book on to this event.')});
         }
     }
 
     // validation for users that are teachers or tutors
     if (!isStudent(user) && !additionalInformation.jobTitle) {
-        return Object.assign({}, FAILURE_TOAST, {title: "Job title required", body: "You must enter a job title to proceed."});
+        return Object.assign({}, FAILURE_TOAST, {title: i18next.t('jobTitleRequired', 'Job title required'), body: i18next.t('youMustEnterAJobTitleToProceed', 'You must enter a job title to proceed.')});
     }
 
     return true;

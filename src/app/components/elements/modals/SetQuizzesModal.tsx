@@ -20,14 +20,16 @@ import {StyledSelect} from "../inputs/StyledSelect";
 import {Button, Form, FormFeedback, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import { ActiveModalProps, AppGroup } from "../../../../IsaacAppTypes";
 import classNames from "classnames";
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
-    NONE: "No feedback",
+    NONE: i18next.t('noFeedback', 'No feedback'),
     OVERALL_MARK: "Overall mark",
-    SECTION_MARKS: "Mark for each test section",
-    DETAILED_FEEDBACK: "Detailed feedback on each question",
+    SECTION_MARKS: i18next.t('markForEachTestSection', 'Mark for each test section'),
+    DETAILED_FEEDBACK: i18next.t('detailedFeedbackOnEachQuestion', 'Detailed feedback on each question'),
 };
 
 const feedbackOptionsList: QuizFeedbackOption[] = Object.keys(feedbackOptions).map(key => {
@@ -49,6 +51,7 @@ interface SetQuizzesModalProps {
 }
 
 function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: SetQuizzesModalProps) {
+    const { t } = useTranslation()
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -124,17 +127,17 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
     return <Form className="mb-4" onSubmit={e => {e.preventDefault(); attemptAssign();}}>
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">Set test to the following group(s):</span>
+                <span className="form-required">{t('setTestToTheFollowingGroups', 'Set test to the following group(s):')}</span>
                 <ShowLoadingQuery
                     query={groupsQuery}
-                    defaultErrorTitle={"Error fetching groups"}
+                    defaultErrorTitle={t('errorFetchingGroups', 'Error fetching groups')}
                     thenRender={groups => {
                         const groupOptions = groups
                             .map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; })
                             .sort((a, b) => a.label.localeCompare(b.label));
 
                         return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
-                            <StyledSelect isMulti placeholder="Select groups"
+                            <StyledSelect isMulti placeholder={t('selectGroups', 'Select groups')}
                                 value={selectedGroups}
                                 closeMenuOnSelect={false}
                                 onChange={selectOnChange(setSelectedGroups, false)}
@@ -144,12 +147,11 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                     }}
                 />
                 {(selectedGroups.length === 0 
-                    ? <FormFeedback>Please select a group</FormFeedback> 
+                    ? <FormFeedback>{t('pleaseSelectAGroup', 'Please select a group')}</FormFeedback> 
                     : <FormFeedback>
-                        {`${siteSpecific(
+                        {t('valVal22', '{{val}}\n                        {{val2}}', { val: siteSpecific(
                             `You cannot reassign a test to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
-                            `This test has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`)}
-                        ${selectedGroups.filter(g => currentAssignments.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}`}
+                            `This test has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`), val2: selectedGroups.filter(g => currentAssignments.some(a => a.groupId === g.value)).map(g => g.label).join(", ") })}
                     </FormFeedback>
                 )}
             </Label>
@@ -157,7 +159,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">What level of feedback should students get:</span>
+                <span className="form-required">{t('whatLevelOfFeedbackShouldStudentsGet', 'What level of feedback should students get:')}</span>
                 <div className={classNames({"is-invalid": validationAttempted && feedbackModeInvalid})}>
                     <StyledSelect
                         value={feedbackMode && feedbackOptionsMap[feedbackMode]}
@@ -170,14 +172,14 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                         options={feedbackOptionsList}
                     />
                 </div>
-                <FormFeedback>Please select a feedback mode</FormFeedback>
+                <FormFeedback>{t('pleaseSelectAFeedbackMode', 'Please select a feedback mode')}</FormFeedback>
             </Label>
         </FormGroup>
 
         <FormGroup>
             <Label className="w-100">
                 <div className={siteSpecific("d-flex align-items-center", "")}>
-                    <span className="form-optional">Start date:</span>
+                    <span className="form-optional">{t('startDate2', 'Start date:')}</span>
                     <i id={scheduledQuizHelpTooltipId} className={classNames("icon icon-info icon-inline ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </div>
                 <DateInput 
@@ -186,18 +188,16 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                     yearRange={yearRange}
                     onChange={setScheduledStartDateAtSevenAM}
                 />
-                <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
-                    You can schedule a test to appear in the future by setting a start date.
+                <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}><Trans i18nKey="youCanScheduleATestToAppearInTheFutureBySettingAStartDateTheTestWillBeVisibleToStudentsFromThisDateOnwardsbrIfYouDoNotSetAStartDateTheTestWillBeVisibleImmediately">You can schedule a test to appear in the future by setting a start date.
                     The test will be visible to students from this date onwards.<br/>
-                    If you do not set a start date, the test will be visible immediately.
-                </UncontrolledTooltip>
-                <FormFeedback>Start date must be today or in the future.</FormFeedback>
+                    If you do not set a start date, the test will be visible immediately.</Trans></UncontrolledTooltip>
+                <FormFeedback>{t('startDateMustBeTodayOrInTheFuture', 'Start date must be today or in the future.')}</FormFeedback>
             </Label>
         </FormGroup>
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">Due date:</span>
+                <span className="form-required">{t('dueDate', 'Due date:')}</span>
                 <DateInput 
                     invalid={validationAttempted && dueDateInvalid} 
                     value={dueDate} 
@@ -206,10 +206,10 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 />
                 <FormFeedback>
                     {!isDefined(dueDate) 
-                        ? "Select a due date for the assignment."
+                        ? t('selectADueDateForTheAssignment', 'Select a due date for the assignment.')
                         : dueDate.valueOf() > TODAY().valueOf() 
-                            ? "Due date must be on or after the start date." 
-                            : "Due date must be after today."}
+                            ? t('dueDateMustBeOnOrAfterTheStartDate', 'Due date must be on or after the start date.') 
+                            : t('dueDateMustBeAfterToday', 'Due date must be after today.')}
                 </FormFeedback>
             </Label>
         </FormGroup>
@@ -221,7 +221,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 disabled={isAssigning}
                 onClick={() => dispatch(closeActiveModal())}
             >
-                Close
+                {t('close', 'Close')}
             </Button>
             <Button
                 className={"float-end w-100 w-sm-auto"}
@@ -235,10 +235,11 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
 }
 
 export const SetQuizzesModal = (props: SetQuizzesModalProps): ActiveModalProps => {
+    const { t } = useTranslation()
     const {quiz} = props;
 
     return {
-        title: `Setting test '${quiz.title ?? quiz.id}'`,
+        title: t('settingTestVal', 'Setting test \'{{val}}\'', { val: quiz.title ?? quiz.id }),
         body: <SetQuizzesModalContent {...props}/>
     };
 };

@@ -10,8 +10,10 @@ import classNames from "classnames";
 import React from "react";
 import { isDefined } from "../../services";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
+import { useTranslation } from 'react-i18next'
 
 function DropZoneItem({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
+    const { t } = useTranslation()
     const {attributes, listeners, setNodeRef, isDragging, isOver, transform, transition} = useSortable({
         id,
         attributes: {
@@ -38,7 +40,7 @@ function DropZoneItem({item, id, type, overrideOver, isCorrect}: {item: Immutabl
     }, [dropRegionContext?.shouldGetFocus]);
 
     return <Badge id={id} className={classNames("p-1 cloze-item feedback-zone", {"cloze-bg": !!item, "m-2": type === "item-section", "feedback-showing": isDefined(isCorrect)})} color="theme" style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
-        <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
+        <span className={"visually-hidden"}>{item.altText ?? item.value ?? t('question.cloze.emptyItem', 'cloze item without a description')}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
                 {item.children as ContentDTO[]}

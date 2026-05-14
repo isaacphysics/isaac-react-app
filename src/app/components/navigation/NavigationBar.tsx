@@ -17,6 +17,7 @@ import {
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
+import i18next from 'i18next'
 
 export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
@@ -35,7 +36,7 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     <LinkItem to="/coming_soon" aria-disabled="true">
         <span className="me-2 text-muted">{children}</span>
-        <Badge  color="light" className="border-theme border bg-white ms-auto me-1">Coming soon</Badge>
+        <Badge color="light" className="border-theme border bg-white ms-auto me-1">{i18next.t('comingSoon', 'Coming soon')}</Badge>
     </LinkItem>
 );
 

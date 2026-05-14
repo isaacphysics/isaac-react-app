@@ -9,6 +9,7 @@ import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../st
 import {FormFeedback, FormGroup, Label} from "reactstrap";
 import { components, ControlProps, InputProps, SingleValueProps, ValueContainerProps } from "react-select";
 import { StyledCheckbox } from "./StyledCheckbox";
+import { useTranslation } from 'react-i18next'
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -40,6 +41,7 @@ const customComponents = {
     Input: ((props: InputProps) => <components.Input {...props} className="ms-1" />) as () => React.JSX.Element };
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
+    const { t } = useTranslation()
     const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     const [searchSchools] = useLazySearchSchoolsQuery();
@@ -102,7 +104,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         (selectedSchoolObject && selectedSchoolObject.urn ?
             {value: selectedSchoolObject.urn, label: schoolNameWithPostcode(selectedSchoolObject)} :
             (userToUpdate.schoolOther ?
-                {value: "manually entered school", label: userToUpdate.schoolOther} :
+                {value: t('manuallyEnteredSchool', 'manually entered school'), label: userToUpdate.schoolOther} :
                 undefined))
     );
 
@@ -110,16 +112,16 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <FormGroup className={`school mb-4 ${className} `}>
-        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
+        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t('school', 'School')}</Label>
         <p className="d-block input-description">
-            {siteSpecific("This helps us promote events near you.", "This helps us measure our reach and impact.")}
+            {siteSpecific(t('thisHelpsUsPromoteEventsNearYou', 'This helps us promote events near you.'), "This helps us measure our reach and impact.")}
         </p>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable
                 isDisabled={disableInput}
-                inputId={`school-input-${randomNumber}`}
-                placeholder={"Type your school name"}
+                inputId={t('schoolinputrandomnumber', 'school-input-{{randomNumber}}', { randomNumber })}
+                placeholder={t('typeYourSchoolName', 'Type your school name')}
                 value={schoolValue}
                 components={customComponents}
                 className={classNames("basic-multi-select", {"react-select-error": isInvalid})}
@@ -127,7 +129,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 onChange={handleSetSchool}
                 loadOptions={searchSchoolsFn}
                 filterOption={() => true}
-                formatCreateLabel={(input) => `Use "${input}" as your school name`}
+                formatCreateLabel={(input) => t('useInputAsYourSchoolName', 'Use "{{input}}" as your school name', { input })}
             />
         </React.Fragment>}
 
@@ -146,11 +148,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                         setUserToUpdate?.(userWithoutSchoolInfo);
                     }
                 })}
-                label={<span>Not associated with a {siteSpecific("","UK ")}school</span>} 
+                label={<span>{t('notAssociatedWithA', 'Not associated with a')} {siteSpecific("","UK ")}school</span>} 
             >
             </StyledCheckbox>
             <FormFeedback>
-                Please specify your school association.
+                {t('pleaseSpecifyYourSchoolAssociation', 'Please specify your school association.')}
             </FormFeedback>
         </div>}
     </FormGroup>;

@@ -2,9 +2,11 @@ import React from "react";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {siteSpecific} from "../../services";
 import { useNavigate } from "react-router";
+import { useTranslation } from 'react-i18next'
 
 
 export const AccountDeletionSuccess = () => {
+    const { t } = useTranslation()
     const navigate = useNavigate();
     const returnToHomepage = (event: React.MouseEvent) => {
         event.preventDefault();
@@ -16,7 +18,7 @@ export const AccountDeletionSuccess = () => {
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
-                        <h3>Account deleted!</h3>
+                        <h3>{t('accountDeleted', 'Account deleted!')}</h3>
                     </Col>
                 </Row>
                 <Row className="justify-content-center">
@@ -29,7 +31,7 @@ export const AccountDeletionSuccess = () => {
                 </Row>
                 <Row className="justify-content-center">
                     <Col xs={12} sm={6} lg={4}>
-                        <Button className={"my-2 w-100"} color="solid" onClick={returnToHomepage}>Home</Button>
+                        <Button className={"my-2 w-100"} color="solid" onClick={returnToHomepage}>{t('home', 'Home')}</Button>
                     </Col>
                 </Row>
             </CardBody>

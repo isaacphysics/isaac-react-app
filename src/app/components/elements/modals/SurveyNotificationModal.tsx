@@ -5,8 +5,10 @@ import {api} from "../../../services";
 import {IsaacContent} from "../../content/IsaacContent";
 import { ActiveModalProps } from '../../../../IsaacAppTypes';
 import { NotificationDTO } from '../../../../IsaacApiTypes';
+import { useTranslation } from 'react-i18next'
 
 const SurveyNotificationModalBody = (notification: { notification: NotificationDTO }) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user || null);
 
@@ -36,23 +38,23 @@ const SurveyNotificationModalBody = (notification: { notification: NotificationD
         <Col>
             <Row className="justify-content-md-center mb-3">
                 <Col>
-                    {currentNotification ? <IsaacContent doc={currentNotification}/> : "Would you like to complete a survey?"}
+                    {currentNotification ? <IsaacContent doc={currentNotification}/> : t('wouldYouLikeToCompleteASurvey', 'Would you like to complete a survey?')}
                 </Col>
             </Row>
             <Row className="mb-3">
                 <Col className="d-inline-flex p-2">
                     <Button color="secondary" block onClick={() => respond("ACKNOWLEDGED")}>
-                        Yes, view questionnaire
+                        {t('yesViewQuestionnaire', 'Yes, view questionnaire')}
                     </Button>
                 </Col>
                 <Col className="d-inline-flex p-2">
                     <Button color="secondary" block onClick={() => respond("DISABLED")}>
-                        No thanks
+                        {t('noThanks', 'No thanks')}
                     </Button>
                 </Col>
                 <Col className="d-inline-flex p-2">
                     <Button color="secondary" block onClick={() => respond("POSTPONED")}>
-                        Ask me later
+                        {t('askMeLater', 'Ask me later')}
                     </Button>
                 </Col>
             </Row>

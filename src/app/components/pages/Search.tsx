@@ -36,6 +36,7 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import debounce from "lodash/debounce";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useLocation, useNavigate } from "react-router";
+import { useTranslation } from 'react-i18next'
 
 interface Item<T> {
     value: T;
@@ -63,6 +64,7 @@ const selectStyle: StylesConfig<Item<SearchableDocumentType>, true, GroupBase<It
 // Interacting with the page's filters change the query parameters.
 // Whenever the query parameters change we send a search request to the API.
 export const Search = () => {
+    const { t } = useTranslation()
     const location = useLocation();
     const navigate = useNavigate();
     const user = useAppSelector(selectors.user.orNull);
@@ -111,7 +113,7 @@ export const Search = () => {
                 <CardHeader className="search-header p-3">
                     <Col xs={12}>
                         <h3 className="me-2">
-                            Search Results {urlQuery != "" && isDefined(searchResult?.currentData?.results) ? <Badge color="primary">{searchResult?.currentData?.results.length}</Badge> : null}
+                            {t('searchResults', 'Search Results')} {urlQuery != "" && isDefined(searchResult?.currentData?.results) ? <Badge color="primary">{searchResult?.currentData?.results.length}</Badge> : null}
                         </h3>
                     </Col>
                     <Col className="d-flex justify-content-end flex-grow-1">
@@ -120,7 +122,7 @@ export const Search = () => {
                                 <div className={classNames("flex-grow-1 w-100 w-md-75 w-lg-50")}>
                                     <StyledSelect
                                         inputId="document-filter" isMulti
-                                        placeholder="Select page type filter..."
+                                        placeholder={t('selectPageTypeFilter', 'Select page type filter...')}
                                         value={filtersState}
                                         options={
                                             ([DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC] as SearchableDocumentType[])
@@ -146,7 +148,7 @@ export const Search = () => {
                             const shortcutAndFilteredSearchResults = shortcutAndFilterResults(results);
                             return shortcutAndFilteredSearchResults.length > 0
                                 ? <ListView type="item" items={shortcutAndFilteredSearchResults} hasCaret={isAda}/>
-                                : <div className={classNames({"p-4": isAda})}><em>No results found</em></div>;
+                                : <div className={classNames({"p-4": isAda})}><em>{t('noResultsFound', 'No results found')}</em></div>;
                         }}
                     />
                 </CardBody>}

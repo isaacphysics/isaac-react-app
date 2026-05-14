@@ -10,6 +10,7 @@ import { SortItemHeader } from "../SortableItemHeader";
 import { AssignmentProgressDTO, CompletionState, QuestionPartState } from "../../../../IsaacApiTypes";
 import classNames from "classnames";
 import { Markup } from "../markup";
+import { useTranslation } from 'react-i18next'
 
 export const ICON = {
     correct: <i className={classNames("icon-md", siteSpecific("icon-correct", "icon-correctness-correct"))}/>,
@@ -147,6 +148,7 @@ export function ResultsTable<Q extends QuestionType>({
     isAssignment,
     boardId,
 } : ResultsTableProps<Q>) {
+    const { t } = useTranslation()
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const deviceSize = useDeviceSize();
@@ -164,18 +166,18 @@ export function ResultsTable<Q extends QuestionType>({
         const confirm = () => {
             void returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
                 .then(() => dispatch(closeActiveModal()));
-            void navigate({...location, hash: `${userId}`});
+            void navigate({...location, hash: t('userid', '{{userId}}', { userId })});
         };
         dispatch(openActiveModal({
             closeAction: () => dispatch(closeActiveModal()),
-            title: "Allow another attempt?",
-            body: "This will allow the student to attempt the test again.",
+            title: t('allowAnotherAttempt', 'Allow another attempt?'),
+            body: t('thisWillAllowTheStudentToAttemptTheTestAgain', 'This will allow the student to attempt the test again.'),
             buttons: [
                 <Button key={1} color="keyline" target="_blank" onClick={() => dispatch(closeActiveModal())}>
-                    Cancel
+                    {t('cancel', 'Cancel')}
                 </Button>,
                 <Button key={0} color="solid" target="_blank" onClick={confirm}>
-                    Confirm
+                    {t('confirm', 'Confirm')}
                 </Button>,
             ]
         }));
@@ -257,12 +259,12 @@ export function ResultsTable<Q extends QuestionType>({
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={"Total correct questions"}
+                label={t('totalCorrectQuestions', 'Total correct questions')}
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
-                        <span>Questions</span>
-                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                        <span>{t('questions', 'Questions')}</span>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t('total', '(total)')}</span>
                     </div>,
                     "Correct"
                 )}
@@ -273,12 +275,12 @@ export function ResultsTable<Q extends QuestionType>({
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={"Total attempted questions"}
+                label={t('totalAttemptedQuestions', 'Total attempted questions')}
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
-                        <span>Questions</span>
-                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                        <span>{t('questions', 'Questions')}</span>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t('total', '(total)')}</span>
                     </div>,
                     "Attempted"
                 )}
@@ -292,12 +294,12 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total correct parts"}
+                    label={t('totalCorrectParts', 'Total correct parts')}
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                            <span>{t('parts', 'Parts')}</span>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t('total', '(total)')}</span>
                         </div>,
                         "Correct"
                     )}
@@ -308,12 +310,12 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalAttemptedPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total attempted parts"}
+                    label={t('totalAttemptedParts', 'Total attempted parts')}
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                            <span>{t('parts', 'Parts')}</span>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t('total', '(total)')}</span>
                         </div>,
                         "Attempted"
                     )}
@@ -328,7 +330,7 @@ export function ResultsTable<Q extends QuestionType>({
                 reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(index)}
                 className={classNames({"selected": index === selectedQuestionIndex})}
-                label={`Question ${index + 1}`}
+                label={t('questionVal', 'Question {{val}}', { val: index + 1 })}
                 key={index}
             >
                 <span>{index + 1}</span>
@@ -374,15 +376,15 @@ export function ResultsTable<Q extends QuestionType>({
                                     {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
                                             <Markup encoding="latex">
-                                                {`Q${selectedQuestionIndex + 1}${questionTitle ? ` : ${questionTitle}` : ""}`}
+                                                {t('qvalval2', 'Q{{val}}{{val2}}', { val: selectedQuestionIndex + 1, val2: questionTitle ? ` : ${questionTitle}` : "" })}
                                             </Markup>
                                         </a>
                                         : <Markup encoding="latex">
-                                            {`Q${selectedQuestionIndex + 1}${questionTitle ? ` : ${questionTitle}` : ""}`}
+                                            {t('qvalval2', 'Q{{val}}{{val2}}', { val: selectedQuestionIndex + 1, val2: questionTitle ? ` : ${questionTitle}` : "" })}
                                         </Markup>
                                     }
                                 </div>
-                                &nbsp;
+                                {t('nbsp', '&nbsp;')}
                             </th>
                         </tr>}
                     </thead>
@@ -418,10 +420,10 @@ export function ResultsTable<Q extends QuestionType>({
                                                         {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
                                                         studentProgress.completed &&
                                                         <div className="py-2 px-3">
-                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>Allow another attempt</Button>
+                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>{t('allowAnotherAttempt2', 'Allow another attempt')}</Button>
                                                         </div>}
                                                         <div className="py-2 px-3">
-                                                            <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>View answers</Button>
+                                                            <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>{t('viewAnswers', 'View answers')}</Button>
                                                         </div>
                                                     </>}
                                                 </>
@@ -430,7 +432,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total questions */}
-                                <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
+                                <th title={fullAccess ? undefined : t('notSharing2', 'Not Sharing')} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             isAssignment
@@ -447,7 +449,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total parts */}
-                                {isPhy && isAssignment && <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
+                                {isPhy && isAssignment && <th title={fullAccess ? undefined : t('notSharing2', 'Not Sharing')} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             pageSettings?.attemptedOrCorrect === "CORRECT"
@@ -488,8 +490,8 @@ export function ResultsTable<Q extends QuestionType>({
                         <tr>
                             <th className="sticky-left text-start p-3 fw-bold">
                                 {siteSpecific(
-                                    `${pageSettings?.formatAsPercentage ? "%" : "No."} of students fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`,
-                                    `Total fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`
+                                    t('valOfStudentsFullyVal2', '{{val}} of students fully {{val2}}', { val: pageSettings?.formatAsPercentage ? "%" : "No.", val2: pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted" }),
+                                    t('totalFullyVal', 'Total fully {{val}}', { val: pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted" })
                                 )}
                             </th>
                             <th className={classNames({"sticky-ca-col": isPhy})} />{/* questions column */}
@@ -504,7 +506,7 @@ export function ResultsTable<Q extends QuestionType>({
                 </table>
             </div>
         </> : <div className="w-100 text-center p-3">
-            This group is empty, so has no progress data available. You can invite users through the <Link to="/groups">Manage groups</Link> page.
+            {t('thisGroupIsEmptySoHasNoProgressDataAvailableYouCanInviteUsersThroughThe', 'This group is empty, so has no progress data available. You can invite users through the')} <Link to="/groups">{t('manageGroups', 'Manage groups')}</Link> page.
         </div>}
     </div>;
 }
@@ -519,6 +521,7 @@ export function ResultsTablePartBreakdown({
     questionIndex,
     ...rest
 }: ResultsTablePartBreakdownProps) {
+    const { t } = useTranslation()
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const deviceSize = useDeviceSize();
@@ -590,8 +593,8 @@ export function ResultsTablePartBreakdown({
                             >
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
-                                        <span>Parts</span>
-                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                                        <span>{t('parts', 'Parts')}</span>
+                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t('total', '(total)')}</span>
                                     </div>,
                                     "Correct"
                                 )}
@@ -605,8 +608,8 @@ export function ResultsTablePartBreakdown({
                             >
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
-                                        <span>Parts</span>
-                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                                        <span>{t('parts', 'Parts')}</span>
+                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t('total', '(total)')}</span>
                                     </div>,
                                     "Attempted"
                                 )}
@@ -622,7 +625,7 @@ export function ResultsTablePartBreakdown({
                                 reversed={reverseOrder}
                                 key={i}
                             >
-                                Part {i + 1}
+                                {t('part', 'Part')} {i + 1}
                             </SortItemHeader>
                             // </th>
                         )}
@@ -672,8 +675,8 @@ export function ResultsTablePartBreakdown({
                     <tr>
                         <th className="sticky-left text-start p-3 fw-bold">
                             {siteSpecific(
-                                `No. of students fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`,
-                                `Total fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`
+                                t('noOfStudentsFullyVal', 'No. of students fully {{val}}', { val: pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted" }),
+                                t('totalFullyVal', 'Total fully {{val}}', { val: pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted" })
                             )}
                         </th>
                         {isPhy && <th className={classNames({"sticky-ca-col": isPhy})}/> /* correct column */}
@@ -685,6 +688,6 @@ export function ResultsTablePartBreakdown({
             </table>
         </div>
         : <div className="w-100 text-center p-3">
-            This group is empty, so has no progress data available. You can invite users through the <Link to="/groups">Manage groups</Link> page.
+            {t('thisGroupIsEmptySoHasNoProgressDataAvailableYouCanInviteUsersThroughThe', 'This group is empty, so has no progress data available. You can invite users through the')} <Link to="/groups">{t('manageGroups', 'Manage groups')}</Link> page.
         </div>;
 }

@@ -41,6 +41,7 @@ import {
 import {DisplaySettings, GameboardContext, PageContextState, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {useContext, useEffect, useState} from "react";
 import {Immutable} from "immer";
+import i18next from 'i18next'
 
 export interface UseUserContextReturnType {
     contexts: UserContext[];

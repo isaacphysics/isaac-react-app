@@ -6,6 +6,7 @@ import {ISAAC_BOOKS_BY_TAG, isAQuestionLikeDoc, isStudent, isTutorOrAbove, PATHS
 import { UncontrolledTooltip, Alert, Button, AlertProps } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface SupersededOrDeprecatedContentWarningProps extends AlertProps {
     gameboard?: GameboardDTO;
@@ -14,6 +15,7 @@ interface SupersededOrDeprecatedContentWarningProps extends AlertProps {
 
 // a warning banner to be used on / around gameboards that contain superseded or deprecated content
 export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDeprecatedContentWarningProps) => {
+    const { t } = useTranslation()
     const {gameboard, hideFullDetails, ...rest} = props;
     const user = useAppSelector(selectors.user.orNull);
 
@@ -34,7 +36,7 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
             {!hideFullDetails && <p className="small mb-0">
                 This assignment contains {containsDeprecated ? "content that we no longer maintain" : "content that has a newer version"}.{" "}
                 {isBookBoard
-                    ? <>If you want to set this work again, you should use the most up-to-date version from our book page.</>
+                    ? <>{t('ifYouWantToSetThisWorkAgainYouShouldUseTheMostUptodateVersionFromOurBookPage', 'If you want to set this work again, you should use the most up-to-date version from our book page.')}</>
                     : containsDeprecated
                         ? <>Please <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to remove or replace the deprecated question(s).</>
                         : <>We recommend that you <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to replace them with their newer version.</>
@@ -46,6 +48,7 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
 
 // a warning banner to be used above *standalone content* such as individual questions or concept pages. 
 export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SeguePageDTO}) {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
 
@@ -69,15 +72,12 @@ export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SegueP
         <i id="superseded-help" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
         <UncontrolledTooltip placement="bottom" target="superseded-help">
             <div className="text-start">
-                {supersededBy && <>
-                    We periodically update questions into new formats.<br />
-                    If this question appears on one of your <>{siteSpecific("question decks", "quizzes")}</>, you may want to update the <>{siteSpecific("question deck", "quiz")}</>.<br />
+                {supersededBy && <><Trans i18nKey="wePeriodicallyUpdateQuestionsIntoNewFormatsbrIfThisQuestionAppearsOnOneOfYour">We periodically update questions into new formats.<br />
+                    If this question appears on one of your</Trans><>{siteSpecific("question decks", "quizzes")}</>{t('youMayWantToUpdateThe', ', you may want to update the')} <>{siteSpecific("question deck", "quiz")}</><Trans i18nKey="brYouCanFindHelpForThisAtHelpAndSupportGtTeacherSupportGtAssigningWorkbrBrStudentsWillNotSeeThisMessageButWillSeeASmallerNoteAtTheBottomOfThePage">.<br />
                     You can find help for this at Help and support &gt; Teacher Support &gt; Assigning Work.<br /><br />
-                    Students will not see this message, but will see a smaller note at the bottom of the page.{doc.deprecated && <br/>}
+                    Students will not see this message, but will see a smaller note at the bottom of the page.</Trans>{doc.deprecated && <br/>}
                 </>}
-                {doc.deprecated && <>
-                    As this {contentType} is unsupported, we do not recommend using it with your students.
-                </>}
+                {doc.deprecated && <>{t('asThisContenttypeIsUnsupportedWeDoNotRecommendUsingItWithYourStudents', 'As this {{contentType}} is unsupported, we do not recommend using it with your students.', { contentType })}</>}
             </div>
         </UncontrolledTooltip>
     </React.Fragment>;
@@ -85,14 +85,13 @@ export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SegueP
     // First check if question is deprecated, if so amalgamate deprecated and superseded messages
     return <Alert color="warning">
         {isTutorOrAbove(user) && <strong>
-            Teacher note: {" "}
+            {t('teacherNote', 'Teacher note:')} {" "}
         </strong>}
         {doc.deprecated ? <div className="d-flex align-items-center">
-            <span>
-                This {contentType} is no longer supported, and may contain errors. {" "}
+            <span>{t('thisContenttypeIsNoLongerSupportedAndMayContainErrors', 'This {{contentType}} is no longer supported, and may contain errors.', { contentType })}{" "}
                 {supersededBy && <>
-                    It has been replaced by {" "} <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                        this question
+                    {t('itHasBeenReplacedBy', 'It has been replaced by')} {" "} <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                        {t('thisQuestion', 'this question')}
                     </Button>.
                 </>} 
             </span>
@@ -101,9 +100,9 @@ export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SegueP
         // If question is superseded but not deprecated
             (supersededBy && !isStudent(user) ? <div className="d-flex align-items-center">
                 <span>
-                    This question has been replaced by {" "}
+                    {t('thisQuestionHasBeenReplacedBy', 'This question has been replaced by')} {" "}
                     <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                        this question
+                        {t('thisQuestion', 'this question')}
                     </Button>.
                 </span>
                 {teacherMessage}

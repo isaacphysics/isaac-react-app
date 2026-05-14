@@ -6,6 +6,7 @@ import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSele
 import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { SidebarButton } from "../SidebarButton";
+import { useTranslation } from 'react-i18next'
 
 interface SidebarLayoutProps extends RowProps {
     show?: boolean;
@@ -51,6 +52,7 @@ export interface ContentSidebarProps extends SidebarProps {
 }
 
 export const ContentSidebar = (props: ContentSidebarProps) => {
+    const { t } = useTranslation()
     // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
     // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
     const deviceSize = useDeviceSize();
@@ -86,7 +88,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                                 position: "prefix",
                                 type: "icon"
                             }}>
-                                Close
+                                {t('close', 'Close')}
                             </AffixButton>
                         </div>
                     }/>

@@ -27,6 +27,7 @@ import { Markup } from "./markup";
 import { ContentPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
+import { useTranslation } from 'react-i18next'
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -41,6 +42,7 @@ interface GameboardBuilderRowInterface {
 const GameboardBuilderRow = (
     {provided, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     const tagIcon = (tag: string) => {
@@ -50,7 +52,7 @@ const GameboardBuilderRow = (
     const openQuestionModal = (urlQuestionId: string) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal());}, size: "xl",
-            title: "Question preview", body: <Question questionIdOverride={urlQuestionId} preview />
+            title: t('questionPreview', 'Question preview'), body: <Question questionIdOverride={urlQuestionId} preview />
         }));
     };
 
@@ -85,7 +87,7 @@ const GameboardBuilderRow = (
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
                     {isAda && provided
-                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={handleCheckboxChange}/>
+                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label={t('deleteQuiz', 'Delete quiz')} title={t('deleteQuiz', 'Delete quiz')} onClick={handleCheckboxChange}/>
                         : <StyledCheckbox
                             id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                             aria-label={!isSelected ? "Select question" : "Deselect question"}
@@ -98,17 +100,17 @@ const GameboardBuilderRow = (
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
                 <div className="d-flex">
-                    {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
+                    {provided && <img src="/assets/common/icons/drag_indicator.svg" alt={t('dragToReorder', 'Drag to reorder')} className="me-1 grab-cursor" />}
                     <div>
                         <div className="d-flex">
-                            <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                            <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={t('previewQuestionInNewTab', 'Preview question in new tab')}>
                                 <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
                             <button
-                                type="button" title="Preview question in modal" className="pointer-cursor align-middle new-tab p-0" 
+                                type="button" title={t('previewQuestionInModal', 'Preview question in modal')} className="pointer-cursor align-middle new-tab p-0" 
                                 onClick={() => question.id && openQuestionModal(question.id)}
                             >
-                                <img src="/assets/common/icons/new-tab.svg" alt="Preview question" />
+                                <img src="/assets/common/icons/new-tab.svg" alt={t('previewQuestion', 'Preview question')} />
                             </button>
                             <Spacer />
                         </div>

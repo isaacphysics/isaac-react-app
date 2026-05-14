@@ -3,8 +3,10 @@ import {ProgressBar} from "../views/ProgressBar";
 import {UserProgress} from "../../../../IsaacAppTypes";
 import {safePercentage} from "../../../services";
 import { Row, Col } from "reactstrap";
+import { useTranslation } from 'react-i18next'
 
 export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgress | null}) => {
+    const { t } = useTranslation()
     const fullCorrect = userProgress?.totalQuestionsCorrect;
     const fullAttempt = userProgress?.totalQuestionsAttempted;
     const fullCorrectThisYear = userProgress?.totalQuestionsCorrectThisAcademicYear;
@@ -19,34 +21,34 @@ export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgr
     const partPercentageThisYear = safePercentage(partCorrectThisYear, partAttemptThisYear);
 
     return <div>
-        <strong>Correct questions</strong>
+        <strong>{t('correctQuestions', 'Correct questions')}</strong>
         <Row className="mb-3">
             <Col md={6}>
-                <p className="mb-0">This academic year:</p>
+                <p className="mb-0">{t('thisAcademicYear', 'This academic year:')}</p>
                 <ProgressBar percentage={fullPercentageThisYear || 0}>
-                    {fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}
+                    {fullPercentageThisYear == null ? t('noData', 'No data') : t('fullcorrectthisyearOfFullattemptthisyear', '{{fullCorrectThisYear}} of {{fullAttemptThisYear}}', { fullCorrectThisYear, fullAttemptThisYear })}
                 </ProgressBar>
             </Col>
             <Col md={6}>
-                <p className="mb-0">Since account creation:</p>
+                <p className="mb-0">{t('sinceAccountCreation', 'Since account creation:')}</p>
                 <ProgressBar percentage={fullPercentage || 0}>
-                    {fullPercentage == null ? "No data" : `${fullCorrect} of ${fullAttempt}`}
+                    {fullPercentage == null ? t('noData', 'No data') : t('fullcorrectOfFullattempt', '{{fullCorrect}} of {{fullAttempt}}', { fullCorrect, fullAttempt })}
                 </ProgressBar>
             </Col>
         </Row>
 
-        <strong>Correct question parts</strong>
+        <strong>{t('correctQuestionParts', 'Correct question parts')}</strong>
         <Row className="mb-3">
             <Col md={6}>
-                <p className="mb-0">This academic year:</p>
+                <p className="mb-0">{t('thisAcademicYear', 'This academic year:')}</p>
                 <ProgressBar percentage={partPercentageThisYear || 0}>
-                    {partPercentageThisYear == null ? "No data" : `${partCorrectThisYear} of ${partAttemptThisYear}`}
+                    {partPercentageThisYear == null ? t('noData', 'No data') : t('partcorrectthisyearOfPartattemptthisyear', '{{partCorrectThisYear}} of {{partAttemptThisYear}}', { partCorrectThisYear, partAttemptThisYear })}
                 </ProgressBar>
             </Col>
             <Col md={6}>
-                <p className="mb-0">Since account creation:</p>
+                <p className="mb-0">{t('sinceAccountCreation', 'Since account creation:')}</p>
                 <ProgressBar percentage={partPercentage || 0}>
-                    {partPercentage == null ? "No data" : `${partCorrect} of ${partAttempt}`}
+                    {partPercentage == null ? t('noData', 'No data') : t('partcorrectOfPartattempt', '{{partCorrect}} of {{partAttempt}}', { partCorrect, partAttempt })}
                 </ProgressBar>
             </Col>
         </Row>

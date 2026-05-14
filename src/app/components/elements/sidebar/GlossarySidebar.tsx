@@ -7,6 +7,7 @@ import { GlossarySearch } from "../../pages/Glossary";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Tag } from "../../../../IsaacAppTypes";
+import { useTranslation } from 'react-i18next'
 
 interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
@@ -22,6 +23,7 @@ interface GlossarySidebarProps extends ContentSidebarProps {
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
+    const { t } = useTranslation()
     const { searchText, setSearchText, filterSubject, setFilterSubject, filterStages, setFilterStages,
         subjects, stages, subjectCounts, stageCounts, optionBar, ...rest } = props;
 
@@ -52,12 +54,12 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search glossary</h5>
+            <h5>{t('searchGlossary', 'Search glossary')}</h5>
             <GlossarySearch searchText={searchText} setSearchText={setSearchText} />
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>
-                <h5>Select subject</h5>
+                <h5>{t('selectSubject', 'Select subject')}</h5>
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
@@ -70,7 +72,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             {!pageContext?.subject && !pageContext?.stage?.length && <div className="section-divider"/>}
 
             {!pageContext?.stage?.length && <>
-                <h5 className="mt-4">Select stage</h5>
+                <h5 className="mt-4">{t('selectStage', 'Select stage')}</h5>
                 <ul>
                     <li>
                         <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id}
@@ -86,7 +88,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             </>}
 
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
-                <h5>Switch learning stage</h5>
+                <h5>{t('switchLearningStage', 'Switch learning stage')}</h5>
                 <ul>
                     {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) =>
                         <li key={index}>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AppState, useAppSelector } from "../state";
 import { isTeacherOrAbove } from "./user";
+import i18next from 'i18next'
 
 export const useReducedMotion = () => {
     const { ACCESSIBILITY: accessibilitySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
@@ -38,13 +39,13 @@ interface AccessibilityWarning {
 
 export const ACCESSIBILITY_WARNINGS: Record<typeof ACCESSIBILITY_TAGS[number], AccessibilityWarning> = {
     "access:visual": {
-        label: "Visual interpretation",
-        description: "This content uses visual elements that may be inaccessible to screen readers.",
+        label: i18next.t('visualInterpretation', 'Visual interpretation'),
+        description: i18next.t('thisContentUsesVisualElementsThatMayBeInaccessibleToScreenReaders', 'This content uses visual elements that may be inaccessible to screen readers.'),
         icon: "icon-access-visual",
     },
     "access:motor": {
-        label: "Fine motor skills",
-        description: "This content uses interactive elements that may be inaccessible to some users.",
+        label: i18next.t('fineMotorSkills', 'Fine motor skills'),
+        description: i18next.t('thisContentUsesInteractiveElementsThatMayBeInaccessibleToSomeUsers', 'This content uses interactive elements that may be inaccessible to some users.'),
         icon: "icon-access-motor",
     },
 };

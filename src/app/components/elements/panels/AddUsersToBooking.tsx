@@ -14,12 +14,14 @@ import {AdminSearchEndpointParams} from "../../../../IsaacApiTypes";
 import {produce} from "immer";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import { Form, Row, Col, Label, Input, Table, Button } from "reactstrap";
+import { useTranslation } from 'react-i18next'
 
 interface AddUsersToBookingProps {
     event: AugmentedEvent;
     eventBookingUserIds: number[];
 }
 export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookingProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     const [searchUsers, {isUninitialized}] = useAdminSearchUsersMutation();
@@ -44,46 +46,46 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
         }));
     }, [setQueryParams]);
 
-    return <Accordion trustedTitle="Add users to booking" disabled={event?.isCancelled && "You cannot add users to a cancelled event"}>
+    return <Accordion trustedTitle="Add users to booking" disabled={event?.isCancelled && t('youCannotAddUsersToACancelledEvent', 'You cannot add users to a cancelled event')}>
         <Form onSubmit={userSearch}>
             <Row>
                 <Col md={6}>
                     <div className="mb-3">
-                        <Label htmlFor="user-search-familyName">Find a user by family name:</Label>
+                        <Label htmlFor="user-search-familyName">{t('findAUserByFamilyName', 'Find a user by family name:')}</Label>
                         <Input
-                            id="user-search-familyName" type="text" placeholder="Enter user family name" value={queryParams.familyName || ""}
+                            id="user-search-familyName" type="text" placeholder={t('enterUserFamilyName', 'Enter user family name')} value={queryParams.familyName || ""}
                             onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
                         />
                     </div>
                 </Col>
                 <Col md={6}>
                     <div className="mb-3">
-                        <Label htmlFor="user-search-email">Find a user by email:</Label>
+                        <Label htmlFor="user-search-email">{t('findAUserByEmail', 'Find a user by email:')}</Label>
                         <Input
-                            id="user-search-email" type="text" placeholder="Enter user email" value={queryParams.email || ""}
+                            id="user-search-email" type="text" placeholder={t('enterUserEmail', 'Enter user email')} value={queryParams.email || ""}
                             onChange={e => setParamIfNotDefault("email", e.target.value, "")}
                         />
                     </div>
                 </Col>
                 <Col md={6}>
                     <div className="mb-3">
-                        <Label htmlFor="user-search-role">Find by user role:</Label>
+                        <Label htmlFor="user-search-role">{t('findByUserRole', 'Find by user role:')}</Label>
                         <Input
                             type="select" id="user-search-role" value={queryParams.role || "NO_ROLE"}
                             onChange={e => setParamIfNotDefault("role", e.target.value, "NO_ROLE")}
                         >
-                            <option value="NO_ROLE">Any Role</option>
-                            <option value="TUTOR">Tutor</option>
-                            <option value="TEACHER">Teacher</option>
-                            <option value="CONTENT_EDITOR">Content editor</option>
-                            <option value="ADMIN">Admin</option>
+                            <option value="NO_ROLE">{t('anyRole2', 'Any Role')}</option>
+                            <option value="TUTOR">{t('tutor2', 'Tutor')}</option>
+                            <option value="TEACHER">{t('teacher', 'Teacher')}</option>
+                            <option value="CONTENT_EDITOR">{t('contentEditor', 'Content editor')}</option>
+                            <option value="ADMIN">{t('admin', 'Admin')}</option>
                         </Input>
                     </div>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Button type="submit" color="secondary" className="w-100 my-2">Find user</Button>
+                    <Button type="submit" color="secondary" className="w-100 my-2">{t('findUser', 'Find user')}</Button>
                 </Col>
             </Row>
         </Form>
@@ -94,13 +96,13 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
             <Table bordered className="mb-0 bg-white" data-testid="user-search-table">
                 <thead>
                     <tr>
-                        <th className="align-middle">Actions</th>
+                        <th className="align-middle">{t('actions', 'Actions')}</th>
                         <th className="align-middle">Name</th>
-                        <th className="align-middle">Email</th>
-                        <th className="align-middle">User role</th>
-                        <th className="align-middle">School set</th>
-                        <th className="align-middle">Member since</th>
-                        <th className="align-middle">Last seen</th>
+                        <th className="align-middle">{t('email2', 'Email')}</th>
+                        <th className="align-middle">{t('userRole', 'User role')}</th>
+                        <th className="align-middle">{t('schoolSet', 'School set')}</th>
+                        <th className="align-middle">{t('memberSince', 'Member since')}</th>
+                        <th className="align-middle">{t('lastSeen', 'Last seen')}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,12 +113,12 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                                 {formatManageBookingActionButtonMessage(event)}
                             </Button>
                             }
-                            {eventBookingUserIds.includes(result.id as number) && <div className="text-center">Booking exists</div>}
+                            {eventBookingUserIds.includes(result.id as number) && <div className="text-center">{t('bookingExists', 'Booking exists')}</div>}
                         </td>
-                        <td className="align-middle">{result.familyName}, {result.givenName}</td>
+                        <td className="align-middle">{t('familynameGivenname', '{{familyName}}, {{givenName}}', { familyName: result.familyName, givenName: result.givenName })}</td>
                         <td className="align-middle">{result.email}</td>
                         <td className="align-middle">{result.role}</td>
-                        <td className="align-middle">{result.schoolId != null ? 'Yes' : result.schoolOther != null ? 'Yes (Other)' : 'None Set'}</td>
+                        <td className="align-middle">{result.schoolId != null ? 'Yes' : result.schoolOther != null ? t('yesOther', 'Yes (Other)') : t('noneSet', 'None Set')}</td>
                         <td className="align-middle"><DateString>{result.registrationDate}</DateString></td>
                         <td className="align-middle"><DateString>{result.lastSeen}</DateString></td>
                     </tr>)}
@@ -125,7 +127,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
         </div>}
 
         {searchRequested && userSearchResults && zeroOrLess(userSearchResults.length) && <div className="text-center">
-            <strong>No users returned from query</strong>
+            <strong>{t('noUsersReturnedFromQuery', 'No users returned from query')}</strong>
         </div>}
     </Accordion>;
 };

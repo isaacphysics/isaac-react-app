@@ -4,6 +4,7 @@ import { PageContextState } from "../../../../IsaacAppTypes";
 import { PHY_NAV_SUBJECTS, ArrayElement, LEARNING_STAGE, HUMAN_STAGES, HUMAN_SUBJECTS } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
+import { useTranslation } from 'react-i18next'
 
 interface QuestionDecksSidebarProps extends ContentSidebarProps {
     validStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]};
@@ -11,6 +12,7 @@ interface QuestionDecksSidebarProps extends ContentSidebarProps {
 };
 
 export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
+    const { t } = useTranslation()
     const { validStageSubjectPairs, context, ...rest } = props;
 
     const navigate = useNavigate();
@@ -26,7 +28,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
     return <ContentSidebar buttonTitle="Switch stage/subject" {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Decks by stage</h5>
+            <h5>{t('decksByStage', 'Decks by stage')}</h5>
             <ul>
                 {[...new Set(Object.values(validStageSubjectPairs).flat())].map((stage, index) =>
                     <li key={index}>
@@ -40,7 +42,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
                 )}
             </ul>
             <div className="section-divider"/>
-            <h5>Decks by subject</h5>
+            <h5>{t('decksBySubject', 'Decks by subject')}</h5>
             <ul>
                 {Object.entries(validStageSubjectPairs)
                     .map(([subject, stages], index) =>

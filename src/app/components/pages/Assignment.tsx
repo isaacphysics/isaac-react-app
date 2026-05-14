@@ -25,11 +25,13 @@ import { SupersededDeprecatedBoardContentWarning } from "../navigation/Supersede
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GameboardContents } from "./Gameboard";
 import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
+import { useTranslation } from 'react-i18next'
 
 // this is fairly similar to <Gameboard />, but coming directly from an assignment URL requires that we load the assignment before
 // we can request the gameboard by ID, so the order of operations is a bit different.
 
 export const Assignment = () => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const location = useLocation();
     // pathname: /assignment/:assignmentId/view
@@ -60,17 +62,17 @@ export const Assignment = () => {
     const notFoundComponent = <>
         <TitleAndBreadcrumb
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
-            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
+            currentPageTitle={t('valNotFound', '{{val}} not found', { val: siteSpecific("Question deck", "Quiz") })}
             icon={{type: "icon", icon: "icon-error"}}
         />
         <h3 className="my-4">
-            {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboard?.id}</code>{"."}
+            {t('wereSorryWeWereNotAbleToFindAValWithTheId', 'We\'re sorry, we were not able to find a {{val}} with the id', { val: siteSpecific("question deck", "quiz") })}<code>{gameboard?.id}</code>{"."}
         </h3>
     </>;
 
     return <ShowLoadingQuery
         query={gameboardQuery}
-        defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboard?.id}`}
+        defaultErrorTitle={t('errorFetchingValWithIdVal2', 'Error fetching {{val}} with id: {{val2}}', { val: siteSpecific("question deck", "quiz"), val2: gameboard?.id })}
         ifNotFound={notFoundComponent}
         placeholder={<Container><LoadingPlaceholder /></Container>}
         thenRender={(gameboard) => {
@@ -78,7 +80,7 @@ export const Assignment = () => {
                 pageTitle={
                     <TitleAndBreadcrumb
                         currentPageTitle={gameboard && gameboard.title || siteSpecific("Question deck", "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
-                        intermediateCrumbs={isPhy ? [{title: "Assignments", to: "/assignments"}] : []}
+                        intermediateCrumbs={isPhy ? [{title: t('assignments', 'Assignments'), to: "/assignments"}] : []}
                     />
                 }
                 sidebar={siteSpecific(

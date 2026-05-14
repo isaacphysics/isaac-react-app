@@ -13,6 +13,8 @@ import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 const renderTopic = (topic: Tag) => {
     if (!topic.hidden) {
@@ -28,8 +30,8 @@ const renderTopic = (topic: Tag) => {
             }
             {" "}
             {topic.comingSoonDate && !topic.new &&
-            <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}
-            {topic.new && !topic.comingSoonDate && <Badge color="secondary">New</Badge>}
+            <Badge color="light" className="border bg-white">{i18next.t('comingComingsoondate2', 'Coming {{comingSoonDate}}', { comingSoonDate: topic.comingSoonDate })}</Badge>}
+            {topic.new && !topic.comingSoonDate && <Badge color="secondary">{i18next.t('new', 'New')}</Badge>}
         </>;
     }
 };
@@ -62,13 +64,14 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
 };
 
 export const AllTopics = () => {
+    const { t } = useTranslation()
     const subcategoryTags = tags.allSubcategoryTags;
 
     const charToCutAt = "D";
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt;});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt;});
 
-    const metaDescription = "Discover our free computer science topics and questions. Learn or revise for your exams with us today.";
+    const metaDescription = t('discoverOurFreeComputerScienceTopicsAndQuestionsLearnOrReviseForYourExamsWithUsToday', 'Discover our free computer science topics and questions. Learn or revise for your exams with us today.');
 
     return <div id={"topics-bg"}>
         <Container className={"mb-4"}>
@@ -90,17 +93,16 @@ export const AllTopics = () => {
             <Container className={"mb-7 p-7 mx-auto"}>
                 <Row className={"align-items-center justify-content-center"}>
                     <Col xs={12} lg={6}>
-                        <h2 className={"font-size-1-75 mb-4"}>Check your understanding</h2>
+                        <h2 className={"font-size-1-75 mb-4"}>{t('checkYourUnderstanding', 'Check your understanding')}</h2>
                         <p>
-                            Using the question finder you can select topics and concepts and we’ll generate a random
-                            selection of questions for you to use. You can also specify your level and exam board.
+                            {t('usingTheQuestionFinderYouCanSelectTopicsAndConceptsAndWellGenerateARandomSelectionOfQuestionsForYouToUseYouCanAlsoSpecifyYourLevelAndExamBoard', 'Using the question finder you can select topics and concepts and we’ll generate a random\n                            selection of questions for you to use. You can also specify your level and exam board.')}
                         </p>
-                        <p><b>Students</b> might want to try our question finder to revise and get feedback on any
-                            mistakes.</p>
-                        <p><b>Teachers</b> might want to try our question finder to create quizzes and assign them to
-                            students.</p>
+                        <p><Trans i18nKey="bstudentsbMightWantToTryOurQuestionFinderToReviseAndGetFeedbackOnAnyMistakes"><b>Students</b> might want to try our question finder to revise and get feedback on any
+                            mistakes.</Trans></p>
+                        <p><Trans i18nKey="bteachersbMightWantToTryOurQuestionFinderToCreateQuizzesAndAssignThemToStudents"><b>Teachers</b> might want to try our question finder to create quizzes and assign them to
+                            students.</Trans></p>
                         <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='dark-primary'>
-                            Try our question finder
+                            {t('tryOurQuestionFinder', 'Try our question finder')}
                         </Button>
                     </Col>
                     <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>

@@ -1,6 +1,7 @@
 import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react';
 import {Input, InputGroup, InputProps} from "reactstrap";
 import range from 'lodash/range';
+import { useTranslation } from 'react-i18next'
 
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
@@ -93,6 +94,7 @@ function extractYear(date: Date | undefined) {
 }
 
 export const DateInput = (props: DateInputProps) => {
+    const { t } = useTranslation()
     const hiddenRef = useRef<HTMLInputElement>(null);
 
     const controlProps = {
@@ -259,7 +261,7 @@ export const DateInput = (props: DateInputProps) => {
                 </Input>
             </div>
             {(props.noClear === undefined || !props.noClear) && <button {...controlPropsWithValidationStripped} className="btn-close mx-1" 
-                aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={(e) => {e.preventDefault(); clear(e);}} />}
+                aria-label={t('clearDateval', 'Clear date{{val}}', { val: props.labelSuffix ? props.labelSuffix : "" })} onClick={(e) => {e.preventDefault(); clear(e);}} />}
         </InputGroup>
         <Input data-testid='date-input' innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
     </React.Fragment>;

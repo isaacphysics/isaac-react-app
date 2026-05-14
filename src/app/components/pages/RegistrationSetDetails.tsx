@@ -38,12 +38,14 @@ import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/mo
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface RegistrationSetDetailsProps {
     userRole: UserRole
 }
 
 export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) => {
+    const { t } = useTranslation()
 
     // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
     const user = useAppSelector(selectors.user.orNull);
@@ -113,19 +115,19 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const goBack = () => {
         if (isPhy || userRole === "STUDENT") {
             confirmThen(
-                "Are you sure you want go back? Any information you have entered will be lost.",
+                t('areYouSureYouWantGoBackAnyInformationYouHaveEnteredWillBeLost', 'Are you sure you want go back? Any information you have entered will be lost.'),
                 () => navigate("age"));
         }
         else { // teachers skip age check on Ada
             confirmThen(
-                "Are you sure you want go back? Any information you have entered will be lost.",
+                t('areYouSureYouWantGoBackAnyInformationYouHaveEnteredWillBeLost', 'Are you sure you want go back? Any information you have entered will be lost.'),
                 () => navigate("/register"));
         }
     };
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t('createAnSite_titleAccount', 'Create an {{SITE_TITLE}} account', { SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={2}/>,
@@ -136,12 +138,12 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             <CardBody>
                 {createNewUserError &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading fw-bold">Unable to create your account</p>
+                        <p className="alert-heading fw-bold">{t('unableToCreateYourAccount', 'Unable to create your account')}</p>
                         <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>
                     </ExigentAlert>
                 }
                 <SignupTab
-                    leftColumn = {<div className={siteSpecific("h4", "h3")}>Create your{siteSpecific("", ` ${userRole.toLowerCase()}`)} account</div>}
+                    leftColumn = {<div className={siteSpecific("h4", "h3")}>{t('createYour', 'Create your')}{siteSpecific("", ` ${userRole.toLowerCase()}`)} account</div>}
                     rightColumn = {<Form onSubmit={register}>
                         <div className={siteSpecific("row row-cols-2", "")}>
                             <GivenNameInput
@@ -215,19 +217,19 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                                 color={siteSpecific("primary", "")}
                                 onChange={(e) => setTosAccepted(e?.target.checked)}
                                 invalid={attemptedSignUp && !tosAccepted}
-                                label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
+                                label={<span className={classNames({"form-required": isPhy})}><Trans i18nKey="iAcceptTheAHreftermsTarget_blanktermsOfUsea">I accept the <a href="/terms" target="_blank">terms of use</a>.</Trans></span>}
                             />
                             <FormFeedback className="mt-0">
-                                You must accept the terms to continue.
+                                {t('youMustAcceptTheTermsToContinue', 'You must accept the terms to continue.')}
                             </FormFeedback>
                         </FormGroup>
                         {isAda && <hr className="text-center"/>}
                         <Row className="justify-content-end">
                             <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                <Button className="mt-2 w-100" color="keyline" onClick={goBack}>Back</Button>
+                                <Button className="mt-2 w-100" color="keyline" onClick={goBack}>{t('back', 'Back')}</Button>
                             </Col>
                             <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
-                                <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">Continue</Button>
+                                <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">{t('continue', 'Continue')}</Button>
                             </Col>
                         </Row>
                     </Form>}

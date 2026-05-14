@@ -18,6 +18,7 @@ import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { useBookmarks } from "../../../services/bookmarks";
 import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
+import { useTranslation } from 'react-i18next'
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -96,6 +97,7 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUr
 };
 
 const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const [ getGroups ] = useLazyGetGroupsQuery();
     const [ getAssignments ] = useLazyGetMySetAssignmentsQuery();
@@ -117,7 +119,7 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
             })));
         }}
     >
-        Assign
+        {t('assign', 'Assign')}
     </Button>;
 };
 

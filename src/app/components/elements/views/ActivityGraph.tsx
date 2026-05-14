@@ -3,8 +3,10 @@ import {areaSpline, bb, zoom} from "billboard.js";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
 import {siteSpecific} from "../../../services";
+import { useTranslation } from 'react-i18next'
 
 export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
+    const { t } = useTranslation()
 
     let selectedDates: string[] = [];
     const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
@@ -55,5 +57,5 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
         });
     }, [answeredQuestionsByDate, selectedDates]);
 
-    return selectedDates.length > 0 ? <div id="activityGraph"/> : <div className="text-center-width"><strong>No data</strong></div>;
+    return selectedDates.length > 0 ? <div id="activityGraph"/> : <div className="text-center-width"><strong>{t('noData', 'No data')}</strong></div>;
 };

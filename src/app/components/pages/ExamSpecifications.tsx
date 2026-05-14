@@ -8,6 +8,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {ExamBoard} from "../../../IsaacApiTypes";
 import { selectors } from "../../state";
 import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next'
 
 interface ExamSpecificationsProps {
     // Show only tabs for the following stages
@@ -40,6 +41,7 @@ export const getFilteredExamBoardsByStage = (stages: STAGE[], examBoards: ExamBo
 };
 
 export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSpecificationsProps) => {
+    const { t } = useTranslation()
     const STAGES: STAGE[] = stageFilter ?? [STAGE.A_LEVEL, STAGE.GCSE];
     const EXAM_BOARDS: ExamBoard[] = examBoardFilter ?? [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.EDEXCEL];
     const FILTERED_EXAM_BOARDS_BY_STAGE = getFilteredExamBoardsByStage(STAGES, EXAM_BOARDS);
@@ -72,14 +74,14 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSp
     const stageExamBoards = FILTERED_EXAM_BOARDS_BY_STAGE[stageTab];
 
     const metaDescription = ({
-        [STAGE.A_LEVEL]: "Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.",
-        [STAGE.GCSE]: "Discover our free GCSE computer science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn or revise for your exams with us today.",
-        [STAGE.SCOTLAND_NATIONAL_5]: "Discover our free National 5 computer science topics and questions. Learn or revise for your exams with us today.",
-        [STAGE.SCOTLAND_HIGHER]: "Discover our free Higher computer science topics and questions. Learn or revise for your exams with us today.",
-        [STAGE.SCOTLAND_ADVANCED_HIGHER]: "Discover our free Advanced Higher computer science topics and questions. Learn or revise for your exams with us today.",
-        [STAGE.CORE]: "Discover our free Core computer science topics and questions. Learn or revise for your exams with us today.",
-        [STAGE.ADVANCED]: "Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.",
-        [STAGE.POST_18]: "Discover our free Post-18 computer science topics and questions. Learn or revise for your exams with us today.", // Not used, but needed for typing
+        [STAGE.A_LEVEL]: t('discoverOurFreeALevelComputerScienceTopicsAndQuestionsWeCoverAqaCieOcrEduqasAndWjecLearnOrReviseForYourExamsWithUsToday', 'Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.'),
+        [STAGE.GCSE]: t('discoverOurFreeGcseComputerScienceTopicsAndQuestionsWeCoverAqaEdexcelEduqasOcrAndWjecLearnOrReviseForYourExamsWithUsToday', 'Discover our free GCSE computer science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn or revise for your exams with us today.'),
+        [STAGE.SCOTLAND_NATIONAL_5]: t('discoverOurFreeNational5ComputerScienceTopicsAndQuestionsLearnOrReviseForYourExamsWithUsToday', 'Discover our free National 5 computer science topics and questions. Learn or revise for your exams with us today.'),
+        [STAGE.SCOTLAND_HIGHER]: t('discoverOurFreeHigherComputerScienceTopicsAndQuestionsLearnOrReviseForYourExamsWithUsToday', 'Discover our free Higher computer science topics and questions. Learn or revise for your exams with us today.'),
+        [STAGE.SCOTLAND_ADVANCED_HIGHER]: t('discoverOurFreeAdvancedHigherComputerScienceTopicsAndQuestionsLearnOrReviseForYourExamsWithUsToday', 'Discover our free Advanced Higher computer science topics and questions. Learn or revise for your exams with us today.'),
+        [STAGE.CORE]: t('discoverOurFreeCoreComputerScienceTopicsAndQuestionsLearnOrReviseForYourExamsWithUsToday', 'Discover our free Core computer science topics and questions. Learn or revise for your exams with us today.'),
+        [STAGE.ADVANCED]: t('discoverOurFreeAdvancedComputerScienceTopicsAndQuestionsLearnOrReviseForYourExamsWithUsToday', 'Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.'),
+        [STAGE.POST_18]: t('discoverOurFreePost18ComputerScienceTopicsAndQuestionsLearnOrReviseForYourExamsWithUsToday', 'Discover our free Post-18 computer science topics and questions. Learn or revise for your exams with us today.'), // Not used, but needed for typing
     })[stageTab];
 
     const examBoardTabs = Object.keys(FILTERED_EXAM_BOARDS_BY_STAGE).reduce((acc: {[stage: string]: React.JSX.Element}, stage) => ({
@@ -116,7 +118,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSp
     }, [examBoardTab, stageTab]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={title ?? "Exam specification"} intermediateCrumbs={[{title: "Exam specifications", to: "/exam_specifications"}]} />
+        <TitleAndBreadcrumb currentPageTitle={title ?? "Exam specification"} intermediateCrumbs={[{title: t('examSpecifications', 'Exam specifications'), to: "/exam_specifications"}]} />
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>

@@ -9,8 +9,10 @@ import {NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 export const News = () => {
+    const { t } = useTranslation()
     const [page, setPage] = React.useState(0);
     const [allNews, setAllNews] = React.useState([] as IsaacPodDTO[]); // each query fetches a new page; this acts as a cache for all the news fetched so far
     const [disableLoadMore, setDisableLoadMore] = React.useState(false);
@@ -29,7 +31,7 @@ export const News = () => {
     }, [page]);
 
     const metaDescription = siteSpecific(
-        "Get all the latest news about Isaac Science.",
+        t('getAllTheLatestNewsAboutIsaacScience', 'Get all the latest news about Isaac Science.'),
         "Get all the latest news about Ada Computer Science, and read the stories of recent graduates who now have exciting careers in computer science.");
 
     return <PageContainer
@@ -45,8 +47,8 @@ export const News = () => {
         {allNews.length === 0 ? 
             <ShowLoadingQuery
                 query={newsQuery}
-                thenRender={() => <div className={"w-100 text-start"}><h4>No news to display...</h4></div>}
-                defaultErrorTitle={"Error fetching news stories"}
+                thenRender={() => <div className={"w-100 text-start"}><h4>{t('noNewsToDisplay', 'No news to display...')}</h4></div>}
+                defaultErrorTitle={t('errorFetchingNewsStories', 'Error fetching news stories')}
             /> : 
             <>
                 <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3 mt-4")}`}>
@@ -55,7 +57,7 @@ export const News = () => {
                     </Col>)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-7">
-                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{siteSpecific("Load older news", "Load more")}</Button>
+                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{siteSpecific(t('loadOlderNews', 'Load older news'), "Load more")}</Button>
                 </div>
             </>
         }

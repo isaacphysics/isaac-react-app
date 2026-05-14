@@ -63,6 +63,7 @@ import classNames from "classnames";
 import markerIconUrl from "leaflet/dist/images/marker-icon.png";
 import markerIconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
+import { useTranslation, Trans } from 'react-i18next'
 
 L.Icon.Default.prototype.options.iconUrl = markerIconUrl;
 L.Icon.Default.prototype.options.iconRetinaUrl = markerIconRetinaUrl;
@@ -82,13 +83,14 @@ interface EventBookingProps {
 }
 
 const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, bookingFormOpen, setBookingFormOpen}: EventBookingProps) => {
+    const { t } = useTranslation()
 
     function openAndScrollToBookingForm() {
         document.getElementById("booking_form")?.scrollIntoView({behavior: 'smooth'});
         setBookingFormOpen(true);
     }
 
-    const firstColumnWidths = siteSpecific("col-4 col-sm-3 col-md-2", "col-4 col-xl-3");
+    const firstColumnWidths = siteSpecific(t('col4Colsm3Colmd2', 'col-4 col-sm-3 col-md-2'), "col-4 col-xl-3");
     const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event);
     const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event);
 
@@ -100,44 +102,42 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                 <Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
                         {siteSpecific(
-                            <b>When:</b>, 
-                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-upcoming me-2" color="secondary"/><b>When</b></span>
+                            <b>{t('when', 'When:')}</b>, 
+                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-upcoming me-2" color="secondary"/><b>{t('when2', 'When')}</b></span>
                         )}
                     </Col>
                     <Col className="d-md-flex flex-wrap">
                         <div>
                             <span className="me-1">{formatEventDetailsDate(event)}</span>
-                            {event.hasExpired && <span className="text-danger">(This event is in the past.)</span>}
+                            {event.hasExpired && <span className="text-danger">{t('thisEventIsInThePast', '(This event is in the past.)')}</span>}
                         </div>
                     </Col>
                 </Row>
                 {<Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
                         {siteSpecific(
-                            <b>Location:</b>, 
-                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-location me-2" color="secondary"/><b>Location</b></span>
+                            <b>{t('location', 'Location:')}</b>, 
+                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-location me-2" color="secondary"/><b>{t('location2', 'Location')}</b></span>
                         )}
                     </Col>
-                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <Col>
-                        {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
-                    </Col>}
-                    {isVirtual && <Col>Online</Col>}
+                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <Col>{t('addressline1Addressline2TownPostalcode', '{{addressLine1}}, {{addressLine2}}, {{town}}, {{postalCode}}', { addressLine1: event.location.address.addressLine1, addressLine2: event.location.address.addressLine2, town: event.location.address.town, postalCode: event.location.address.postalCode })}</Col>}
+                    {isVirtual && <Col>{t('online', 'Online')}</Col>}
                 </Row>}
                 {event.isNotClosed && !event.hasExpired &&
                     <Row>
                         <Col className={classNames(firstColumnWidths, "align-items-start")}>
                             {siteSpecific(
-                                <b>Availability:</b>, 
-                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-person me-2" color="secondary"/><b>Availability</b></span>
+                                <b>{t('availability', 'Availability:')}</b>, 
+                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-person me-2" color="secondary"/><b>{t('availability2', 'Availability')}</b></span>
                             )}
                         </Col>
                         <Col>
                             <div className="text-start">
-                                {atLeastOne(event.placesAvailable) && <>{event.placesAvailable} spaces</>}
+                                {atLeastOne(event.placesAvailable) && <>{t('placesavailableSpaces', '{{placesAvailable}} spaces', { placesAvailable: event.placesAvailable })}</>}
                                 {zeroOrLess(event.placesAvailable) && <>
-                                    <strong className="text-danger">FULL</strong>
+                                    <strong className="text-danger">{t('full', 'FULL')}</strong>
                                     {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <> for student bookings</>}
+                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <> {t('forStudentBookings', 'for student bookings')}</>}
                                 </>}
                                 
                                 {canBeAddedToWaitingList && <>. {formatAvailabilityMessage(event)}</>}
@@ -155,8 +155,8 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                     <Row>
                         <Col className={classNames(firstColumnWidths, "align-items-start")}>
                             {siteSpecific(
-                                <b>Booking deadline:</b>, 
-                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-complete me-2" color="secondary"/><b>Booking deadline</b></span>
+                                <b>{t('bookingDeadline', 'Booking deadline:')}</b>, 
+                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-complete me-2" color="secondary"/><b>{t('bookingDeadline2', 'Booking deadline')}</b></span>
                             )}
                         </Col>
                         <Col className="d-md-flex flex-wrap">
@@ -164,18 +164,18 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                                 <DateString>{event.bookingDeadline}</DateString>
                             </div>
                             {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                <div className="text-danger">(The booking deadline for this event has passed.)</div>
+                                <div className="text-danger">{t('theBookingDeadlineForThisEventHasPassed', '(The booking deadline for this event has passed.)')}</div>
                             }
                         </Col>
                     </Row>
                 }
                 {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "RESERVED") &&
                     <Row className="mt-2">
-                        {event.userBookingStatus === "CONFIRMED" && <strong className="text-success fs-6">You are booked on this event!</strong>}
+                        {event.userBookingStatus === "CONFIRMED" && <strong className="text-success fs-6">{t('youAreBookedOnThisEvent', 'You are booked on this event!')}</strong>}
                         {event.userBookingStatus === 'RESERVED' && <span className="text-success">
-                            <strong className="fs-6">You have been reserved a place on this event!</strong>
+                            <strong className="fs-6">{t('youHaveBeenReservedAPlaceOnThisEvent', 'You have been reserved a place on this event!')}</strong>
                             <Button color="link text-success" className="d-block" onClick={openAndScrollToBookingForm}>
-                                <u>Complete your registration below</u>
+                                <u>{t('completeYourRegistrationBelow', 'Complete your registration below')}</u>
                             </Button>
                         </span>}
                     </Row>}
@@ -190,6 +190,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
 };
 
 const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFormOpen, setBookingFormOpen}: EventBookingProps) => {
+    const { t } = useTranslation()
     function loginAndReturn() {
         persistence.save(KEY.AFTER_AUTH_PATH, pathname);
         void navigateComponentless("/login");
@@ -237,7 +238,7 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
         {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
             <Card className="mb-4">
                 <CardBody>
-                    <h3>Event booking form</h3>
+                    <h3>{t('eventBookingForm', 'Event booking form')}</h3>
                     <Form onSubmit={checkTeacherStatus ? checkTeacherStatusThenSubmitBooking : submitBooking}>
                         <EventBookingForm
                             event={event} targetUser={user}
@@ -246,14 +247,12 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                         />
                         <div>
                             <p className="mb-3">
-                                By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
-                                You are also giving them permission to set you pre-event work and view your progress.
-                                You can manage access to your progress data in your <Link to="/account#teacherconnections" target="_blank">account settings</Link>.
+                                {t('byRequestingToBookOnThisEventYouAreGrantingEventOrganisersAccessToTheInformationProvidedInTheFormAboveYouAreAlsoGivingThemPermissionToSetYouPreeventWorkAndViewYourProgressYouCanManageAccessToYourProgressDataInYour', 'By requesting to book on this event, you are granting event organisers access to the information provided in the form above.\n                                You are also giving them permission to set you pre-event work and view your progress.\n                                You can manage access to your progress data in your')} <Link to="/account#teacherconnections" target="_blank">{t('accountSettings', 'account settings')}</Link><Trans i18nKey="brYourDataWillBeProcessedInAccordanceWithSite_titleAposs">.
                                 <br/>
-                                Your data will be processed in accordance with {SITE_TITLE}&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
+                                Your data will be processed in accordance with {{ SITE_TITLE }}&apos;s</Trans><Link to="/privacy" target="_blank">{t('privacyPolicy', 'privacy policy')}</Link><Trans i18nKey="brIfYouHaveUnsubscribedFromAssignmentEmailNotificationsYouMayMissOutOnPreworkSetForTheEventYouCanEnableThisInYour">.
                                 <br/>
                                 If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event.
-                                You can enable this in your <Link to="/account#emailpreferences" target="_blank">account settings</Link>.
+                                You can enable this in your</Trans><Link to="/account#emailpreferences" target="_blank">{t('accountSettings', 'account settings')}</Link>.
                             </p>
 
                             <div className="mt-4 mb-2 d-flex justify-content-center">
@@ -276,8 +275,8 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                 {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
                     <Button onClick={loginAndReturn}>
                         {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
-                            "Login to book" :
-                            "Login to apply"
+                            t('loginToBook', 'Login to book') :
+                            t('loginToApply', 'Login to apply')
                         }
                     </Button>
                 }
@@ -285,9 +284,9 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                 {/* Options for logged-in users */}
                 {isLoggedIn(user) && !event.hasExpired && <>
                     {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
-                        Places on this event can only be reserved by teachers.{" "}
-                        Please ask your teacher to reserve a place for you.{" "}
-                        You will need to be accompanied by a teacher to the event.{" "}
+                        {t('placesOnThisEventCanOnlyBeReservedByTeachers', 'Places on this event can only be reserved by teachers.')}{" "}
+                        {t('pleaseAskYourTeacherToReserveAPlaceForYou', 'Please ask your teacher to reserve a place for you.')}{" "}
+                        {t('youWillNeedToBeAccompaniedByATeacherToTheEvent', 'You will need to be accompanied by a teacher to the event.')}{" "}
                     </Alert>
                     }
                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
@@ -301,7 +300,7 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                     <Button className="mb-3 me-3" onClick={() => {
                         dispatch(openActiveModal(reservationsModal({event})));
                     }}>
-                        Manage reservations
+                        {t('manageReservations', 'Manage reservations')}
                     </Button>
                     }
                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
@@ -350,6 +349,7 @@ const ImageAndMap = ({event}: EventBookingProps) => {
 };
 
 const EventDetails = () => {
+    const { t } = useTranslation()
     const { eventId = "" } = useParams();
     const location = useLocation();
     const user = useAppSelector(selectors.user.orNull);
@@ -358,7 +358,7 @@ const EventDetails = () => {
 
     return <ShowLoadingQuery
         query={eventQuery}
-        defaultErrorTitle={"Event not found"}
+        defaultErrorTitle={t('eventNotFound', 'Event not found')}
         thenRender={event => {
 
             const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
@@ -390,10 +390,10 @@ const EventDetails = () => {
                             {isTeacherEvent ? "Teacher event" : "Student event"}
                         </Badge>
                         {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
-                            EXPIRED
+                            {t('expired', 'EXPIRED')}
                         </Badge>}
                         {bookingDeadlineSoon && <span className="fs-6 warning-tag">
-                            Booking deadline soon!
+                            {t('bookingDeadlineSoon', 'Booking deadline soon!')}
                         </span>}
                     </>}
                 >
@@ -410,7 +410,7 @@ const EventDetails = () => {
                     </div>
                 </div>
                 <Button tag={Link} to="/events" color="keyline" className="float-end my-4">
-                    More events
+                    {t('moreEvents', 'More events')}
                 </Button>
             </Container>;
         }}/>;

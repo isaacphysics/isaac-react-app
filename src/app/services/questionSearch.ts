@@ -7,8 +7,9 @@ import { tags } from "./tags";
 import { getContextSpecificTags, STAGE_SPECIFIC_EXCLUSIONS_MAP, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
 import { mapObject } from "./miscUtils";
+import i18next from 'i18next'
 
-export const sublistDelimiter = " >>> ";
+export const sublistDelimiter = i18next.t('key2', ' >>> ');
 
 type OpenListsState = TopLevelListsState & {
     [sublistId: string]: {state: boolean, subList: boolean}
@@ -65,7 +66,7 @@ export function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsS
     const subListState = Object.fromEntries(
         tags.filter(tag => tag.label)
             .map(tag => [
-                `topics ${sublistDelimiter} ${tag.label}`,
+                i18next.t('topicsSublistdelimiterLabel', 'topics {{sublistDelimiter}} {{label}}', { sublistDelimiter, label: tag.label }),
                 {state: false, subList: true}
             ])
     );

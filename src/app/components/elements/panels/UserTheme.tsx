@@ -4,6 +4,7 @@ import { MyAccountTab } from "./MyAccountTab";
 import { Label } from "reactstrap";
 import { LightnessTheme, lightnessThemes, useLightnessTheme } from "../../../services/theme";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
 
 interface UserThemeProps {
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
@@ -23,14 +24,15 @@ const ThemeSelector = ({theme, isCurrentTheme, onChange}: ThemeSelectorProps) =>
 };
 
 export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
+    const { t } = useTranslation()
     const currentTheme = useLightnessTheme();
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Theme</h3>
+            <h3>{t('theme', 'Theme')}</h3>
         </>}
         rightColumn={<>
-            <span>Here you can select your preferred site theme.</span>
+            <span>{t('hereYouCanSelectYourPreferredSiteTheme', 'Here you can select your preferred site theme.')}</span>
             <div className="d-flex gap-4 mt-4">
                 {Object.values(lightnessThemes).map((theme) => <ThemeSelector 
                     key={theme.value}

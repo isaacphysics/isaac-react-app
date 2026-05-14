@@ -10,6 +10,7 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Tag } from "../../../../IsaacAppTypes";
 import { FilterCheckbox, AllFiltersCheckbox } from "./SidebarElements";
+import { useTranslation } from 'react-i18next'
 
 interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
     filterText: string;
@@ -23,6 +24,7 @@ interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
 }
 
 export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
+    const { t } = useTranslation()
     const { filterText, setFilterText, filterTags, setFilterTags, tagCounts, filterStages, setFilterStages, stageCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
     const subjectTag = tags.getById(pageContext?.subject as TAG_ID);
@@ -45,13 +47,13 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search practice tests</h5>
-            <Input type="search" placeholder="e.g. Practice" value={filterText} className="search--filter-input my-3"
+            <h5>{t('searchPracticeTests', 'Search practice tests')}</h5>
+            <Input type="search" placeholder={t('egPractice', 'e.g. Practice')} value={filterText} className="search--filter-input my-3"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
 
             {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h5>Filter by subject and topic</h5>
+                <h5>{t('filterBySubjectAndTopic', 'Filter by subject and topic')}</h5>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -81,7 +83,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
 
             {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h5>Filter by topic</h5>
+                <h5>{t('filterByTopic', 'Filter by topic')}</h5>
                 <ul className="ps-2">
                     <li>
                         <AllFiltersCheckbox
@@ -101,7 +103,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
 
             {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h5>Filter by stage</h5>
+                <h5>{t('filterByStage', 'Filter by stage')}</h5>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
                         <li key={i}>
@@ -116,13 +118,13 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
 
         <div className="section-divider"/>
         <div className="sidebar-help">
-            <p>You can see all of the tests that you have in progress or have completed in your My Isaac:</p>
+            <p>{t('youCanSeeAllOfTheTestsThatYouHaveInProgressOrHaveCompletedInYourMyIsaac', 'You can see all of the tests that you have in progress or have completed in your My Isaac:')}</p>
             <AffixButton size="md" color="keyline" tag={Link} to="/tests" affix={{
                 affix: "icon-arrow-right",
                 position: "suffix",
                 type: "icon"
             }}>
-                My tests
+                {t('myTests', 'My tests')}
             </AffixButton>
         </div>
     </ContentSidebar>;

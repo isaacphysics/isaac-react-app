@@ -7,6 +7,7 @@ import {usePortalsInHtml} from "./portals/utils";
 import {compose} from "redux";
 import {isDefined} from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
+import { useTranslation } from 'react-i18next'
 
 // This component renders the HTML given to it inside a React element.
 //
@@ -15,6 +16,7 @@ import { selectors, useAppSelector } from "../../../state";
 // html of that element (i.e. in this case `tooltips` are rendered next to `ElementType`, whose `dangerouslySetInnerHTML`
 // contains the `span`s that those `UncontrolledTooltip`s refer to).
 const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
+    const { t } = useTranslation()
     const htmlRef = useRef<HTMLDivElement>(null);
 
     // attempt to determine a unique id for the parent container of this HTML.
@@ -32,10 +34,10 @@ const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
     const uniqueParentId = htmlRef.current
         ? accordionIndex !== undefined
             ? tabIndex !== undefined
-                ? `${accordionIndex}-${tabIndex}` 
-                : `${accordionIndex}` 
+                ? t('accordionindextabindex', '{{accordionIndex}}-{{tabIndex}}', { accordionIndex, tabIndex }) 
+                : t('accordionindex', '{{accordionIndex}}', { accordionIndex }) 
             : tabIndex !== undefined
-                ? `t${tabIndex}` 
+                ? t('ttabindex', 't{{tabIndex}}', { tabIndex }) 
                 : "root"
         : undefined;
             
@@ -103,6 +105,7 @@ type TrustedMarkupProps = {
 //
 // You can pass in an encoding other than these, and the encoding will be treated the same as as `unknown`.
 export function Markup<T extends string>({encoding, "trusted-markup-encoding": trustedMarkupEncoding, forceMathsAltText, className, children}: MarkupProps<T> | TrustedMarkupProps) {
+    const { t } = useTranslation()
     const renderKaTeX = useRenderKatex(forceMathsAltText);
 
     if (!isDefined(children)) return null;
@@ -119,6 +122,6 @@ export function Markup<T extends string>({encoding, "trusted-markup-encoding": t
             return <span className={className}>{utils.escapeHtml(children)}</span>;
         case "unknown":
         default:
-            return <div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {utils.escapeHtml(children)} </i>]</div>;
+            return <div>{t('contentWithUnknownEncoding', '[CONTENT WITH UNKNOWN ENCODING:')} <i>{t('encoding', '{{encoding}} |', { encoding })}{utils.escapeHtml(children)} </i>]</div>;
     }
 }

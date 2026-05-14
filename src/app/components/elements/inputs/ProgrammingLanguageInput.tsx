@@ -4,6 +4,7 @@ import {ProgrammingLanguage} from "../../../../IsaacAppTypes";
 import React from "react";
 import {StyledDropdown} from "./DropdownInput";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
 
 
 interface ProgrammingLanguageInputProps {
@@ -13,6 +14,7 @@ interface ProgrammingLanguageInputProps {
 }
 
 export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLanguage, isRequired = false} : ProgrammingLanguageInputProps) => {
+    const { t } = useTranslation()
     const onChange = (event: any) => {
         const newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, _v]) => ({...acc, [k]: false}), {});
         setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
@@ -20,7 +22,7 @@ export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLan
 
     return <FormGroup className="form-group me-lg-7">
         <Label className={classNames("fw-bold", (isRequired ? "form-required" : "form-optional"))} htmlFor="programming-language-select">
-            Preferred programming language
+            {t('preferredProgrammingLanguage', 'Preferred programming language')}
         </Label>
         <StyledDropdown
             id="programming-language-select"

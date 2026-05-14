@@ -10,6 +10,7 @@ import {DateString, FRIENDLY_DATE, SHORT_FRIENDLY_DATE, TIME_ONLY} from "../comp
 import React from "react";
 import {Link} from "react-router-dom";
 import {Immutable} from "immer";
+import i18next from 'i18next'
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     {"This event is aimed at students. If you are not a student but still wish to attend, please "}
@@ -59,58 +60,58 @@ export const formatEventCardDateSlim = (event: AugmentedEvent) => {
 export const formatAvailabilityMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {
         //  in this case, the waiting list is for booking requests that must be approved
-        return "Bookings available by request!";
+        return i18next.t('bookingsAvailableByRequest', 'Bookings available by request!');
     }
     // this is an event which can be freely joined, however it happens to be full
-    return "Waiting list booking is available!";
+    return i18next.t('waitingListBookingIsAvailable', 'Waiting list booking is available!');
 };
 
 export const formatWaitingListBookingStatusMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {
-        return "You have requested a place on this event.";
+        return i18next.t('youHaveRequestedAPlaceOnThisEvent', 'You have requested a place on this event.');
     }
-    return "You are on the waiting list for this event.";
+    return i18next.t('youAreOnTheWaitingListForThisEvent', 'You are on the waiting list for this event.');
 };
 
 export const formatMakeBookingButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus === "RESERVED") {
-        return "Confirm your reservation";
+        return i18next.t('confirmYourReservation', 'Confirm your reservation');
     }
     if (event.isWaitingListOnly) {
-        return "Request a place";
+        return i18next.t('requestAPlace', 'Request a place');
     }
     if (zeroOrLess(event.placesAvailable)) {
-        return "Join waiting list";
+        return i18next.t('joinWaitingList', 'Join waiting list');
     }
     if (isAda) {
-        return "Book a place";
+        return i18next.t('bookAPlace', 'Book a place');
     }
     return "Book event";
 };
 
 export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus == "CONFIRMED") {
-        return "Cancel your booking";
+        return i18next.t('cancelYourBooking', 'Cancel your booking');
     }
     else if (event.userBookingStatus == "RESERVED") {
-        return "Cancel your reservation";
+        return i18next.t('cancelYourReservation', 'Cancel your reservation');
     }
     else if (event.userBookingStatus == "WAITING_LIST") {
-        return event.isWaitingListOnly ? "Cancel booking request" : "Leave waiting list";
+        return event.isWaitingListOnly ? i18next.t('cancelBookingRequest', 'Cancel booking request') : i18next.t('leaveWaitingList', 'Leave waiting list');
     }
 };
 
 export const formatManageBookingActionButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus === "RESERVED") {
-        return "Confirm reservation";
+        return i18next.t('confirmReservation', 'Confirm reservation');
     }
     if (event.isWaitingListOnly) {
-        return "Make booking request";
+        return i18next.t('makeBookingRequest', 'Make booking request');
     }
     if (zeroOrLess(event.placesAvailable)) {
-        return "Add to waiting list";
+        return i18next.t('addToWaitingList', 'Add to waiting list');
     }
-    return "Book a place";
+    return i18next.t('bookAPlace', 'Book a place');
 };
 
 export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanMakeEventBooking?: boolean) => {
@@ -118,7 +119,7 @@ export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanM
         return "Book now";
     }
     else {
-        return event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
+        return event.isWithinBookingDeadline ? i18next.t('apply', 'Apply') : i18next.t('applyDeadlinePast', 'Apply - deadline past');
     }
 };
 

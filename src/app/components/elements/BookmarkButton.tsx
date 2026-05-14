@@ -4,8 +4,10 @@ import { useBookmarks } from "../../services/bookmarks";
 import classNames from "classnames";
 import { ContentDTO } from "../../../IsaacApiTypes";
 import { Tooltip } from "reactstrap";
+import { useTranslation } from 'react-i18next'
 
 export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
+    const { t } = useTranslation()
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const isQuestionBookmarked = doc?.type === "isaacQuestionPage" && doc.id ? isBookmarked(doc.id) : false;
     const [showBookmarkTooltip, setShowBookmarkTooltip] = useState(false);
@@ -32,7 +34,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
             toggle={() => setShowBookmarkTooltip(!showBookmarkTooltip)}
             trigger="manual"
         >
-            <div className="popover-header">Saved!</div>
+            <div className="popover-header">{t('bookmark.saved', 'Saved!')}</div>
         </Tooltip>
     </>;
 };

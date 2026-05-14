@@ -8,6 +8,7 @@ import {
     showAxiosErrorToastIfNeeded
 } from "../index";
 import debounce from "lodash/debounce";
+import i18next from 'i18next'
 
 export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST, quizAssignmentId});
@@ -15,7 +16,7 @@ export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (di
         const attempt = await api.quizzes.loadQuizAssignmentAttempt(quizAssignmentId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading assigned quiz attempt failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t('loadingAssignedQuizAttemptFailed', 'Loading assigned quiz attempt failed'), e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -52,7 +53,7 @@ export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch
         const attempt = await api.quizzes.loadFreeQuizAttempt(quizId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading quiz failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t('loadingQuizFailed', 'Loading quiz failed'), e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };

@@ -4,6 +4,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {isAda, isDefined, isPhy} from "../../services";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
 
 interface IsaacTabsProps {
     doc: {
@@ -20,6 +21,7 @@ export const isTabs = (layout?: string) => {
 };
 
 export const IsaacTabs = (props: any) => {
+    const { t } = useTranslation()
     const { doc: { children: tabs, expandable}, style } = props as IsaacTabsProps;
     const [ tabTitlesToContent , setTabTitlesToContent ] = useState<IsaacTabChildren>({});
 
@@ -28,7 +30,7 @@ export const IsaacTabs = (props: any) => {
 
         const newTabTitlesToContent: IsaacTabChildren = {};
         tabs.forEach((child, index) => {
-            const tabTitle = child.title || `Tab ${index + 1}`;
+            const tabTitle = child.title || t('tab.tab', 'Tab') + ` ${index + 1}`;
             newTabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
         });
         setTabTitlesToContent(newTabTitlesToContent);

@@ -12,27 +12,29 @@ import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { useStatefulElementRef } from './markup/portals/utils';
 import { ScrollShadows } from './ScrollShadows';
 import { ShowLoading } from '../handlers/ShowLoading';
+import { useTranslation } from 'react-i18next'
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
 }
 
 const GroupsPanel = ({ groups }: GroupsPanelProps) => {
+    const { t } = useTranslation()
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h4>View group progress</h4>
+        <h4>{t('viewGroupProgress', 'View group progress')}</h4>
         {sortedGroups.length ?
             <>
                 <div>
                     {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress/group/${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
-                <Link to="/assignment_progress" className="d-inline panel-link mt-3">See all groups&apos; progress</Link>
+                <Link to="/assignment_progress" className="d-inline panel-link mt-3">{t('seeAllGroupsaposProgress', 'See all groups&apos; progress')}</Link>
             </> :
             <>
-                <div className="text-center mt-lg-3">You have no active groups.</div>
-                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>
+                <div className="text-center mt-lg-3">{t('youHaveNoActiveGroups', 'You have no active groups.')}</div>
+                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">{t('createNewGroup', 'Create new group')}</Button></div>
             </>}
     </div>;
 };
@@ -44,6 +46,7 @@ interface AssignmentsPanelProps {
 };
 
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull);
     
     const upcomingAssignments = assignments?.filter(a => a.dueDate && !isOverdue(a) ); // Filter out past assignments
@@ -59,7 +62,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <h4>View scheduled work</h4>
+        <h4>{t('viewScheduledWork', 'View scheduled work')}</h4>
         <ShowLoading
             until={assignments && quizzes}
             thenRender={() => {
@@ -70,58 +73,59 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
                                 <AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} />
                             </div>)}
                     </div>
-                    : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>;
+                    : <div className="text-center mt-lg-3">{t('youHaveNoAssignmentsWithUpcomingDueDates', 'You have no assignments with upcoming due dates.')}</div>;
             }}
         />
         <Spacer/>
         <div className="d-flex align-items-center mt-3">
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
-                See assignment schedule
+                {t('seeAssignmentSchedule', 'See assignment schedule')}
             </Link>
             {!isTutor(user) && <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
-                See all set tests
+                {t('seeAllSetTests', 'See all set tests')}
             </Link>}
         </div>
     </div>;
 };
 
 const MyIsaacPanel = () => {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull);
     return <div className='dashboard-panel'>
-        <h4>More in My Isaac</h4>
+        <h4>{t('moreInMyIsaac', 'More in My Isaac')}</h4>
         <div className="d-flex flex-column">
             <div className="col">
                 {isTutor(user) 
                     ? <Link to="/tutor_features" className='d-block panel-my-isaac-link'>
-                        Tutor features
+                        {t('tutorFeatures', 'Tutor features')}
                     </Link>
                     : <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
-                        Teacher features
+                        {t('teacherFeatures', 'Teacher features')}
                     </Link>}
                 <Link to="/groups" className='d-block panel-my-isaac-link'>
-                    Manage groups
+                    {t('manageGroups', 'Manage groups')}
                 </Link>
                 <Link to="/question_deck_builder" className='d-block panel-my-isaac-link'>
-                    Create a question deck
+                    {t('createAQuestionDeck2', 'Create a question deck')}
                 </Link>
                 <Link to="/set_assignments" className='d-block panel-my-isaac-link'>
-                    Set assignments
+                    {t('setAssignments', 'Set assignments')}
                 </Link>
                 <Link to="/assignment_schedule" className='d-block panel-my-isaac-link'>
-                    Assignment schedule
+                    {t('assignmentSchedule3', 'Assignment schedule')}
                 </Link>
                 <Link to="/assignment_progress" className='d-block panel-my-isaac-link'>
-                    Assignment progress
+                    {t('assignmentProgress', 'Assignment progress')}
                 </Link>
                 {!isTutor(user) &&
                     <Link to="/set_tests" className='d-block panel-my-isaac-link'>
-                        Set / manage tests
+                        {t('setManageTests', 'Set / manage tests')}
                     </Link>}
             </div>
         </div>
         <div className="section-divider" />
         <Link to="/account" className="panel-my-isaac-link">
-            My account
+            {t('myAccount', 'My account')}
         </Link>
     </div>;
 };
@@ -138,19 +142,20 @@ export const BookCardSmall = ({title, image, path}: BookInfo) => {
 };
 
 const BooksPanel = () => {
+    const { t } = useTranslation()
     const [subject, setSubject] = useState<Subject | "all">("all");
     const [scrollRef, setScrollRef] = useStatefulElementRef<HTMLElement>();
 
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
-            <h4>Explore our books</h4>
+            <h4>{t('exploreOurBooks', 'Explore our books')}</h4>
             <Spacer/>
             <select className="books-select ms-2 mb-3" value={subject}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
-                <option value="all">All</option>
-                <option value="physics">Physics</option>
-                <option value="maths">Maths</option>
-                <option value="chemistry">Chemistry</option>
+                <option value="all">{t('all', 'All')}</option>
+                <option value="physics">{t('physics', 'Physics')}</option>
+                <option value="maths">{t('maths', 'Maths')}</option>
+                <option value="chemistry">{t('chemistry', 'Chemistry')}</option>
                 {/* No biology books */}
             </select>
         </div>
@@ -164,7 +169,7 @@ const BooksPanel = () => {
                     </Col>)}
         </div>
         <Spacer/>
-        <Link to="/books" className="d-inline panel-link">See all books</Link>
+        <Link to="/books" className="d-inline panel-link">{t('seeAllBooks', 'See all books')}</Link>
     </div>;
 };
 
@@ -180,15 +185,16 @@ interface TeacherDashboardProps {
 }
 
 export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignments, myQuizAssignments, groups, streakRecord, dashboardView, setDashboardView }: TeacherDashboardProps) => {
+    const { t } = useTranslation()
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex flex-wrap">
-            {nameToDisplay && <h3 className="text-wrap">Welcome back, {nameToDisplay}!</h3>}
+            {nameToDisplay && <h3 className="text-wrap">{t('welcomeBackNametodisplay', 'Welcome back, {{nameToDisplay}}!', { nameToDisplay })}</h3>}
             <span className="ms-auto">
-                <div className="text-center">Dashboard view</div>
+                <div className="text-center">{t('dashboardView', 'Dashboard view')}</div>
                 <StyledToggle
                     checked={dashboardView === "student"}
                     falseLabel={isTutor(user) ? "Tutor" : "Teacher"}

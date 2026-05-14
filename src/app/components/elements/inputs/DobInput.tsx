@@ -5,6 +5,7 @@ import {currentYear, DateInput} from "./DateInput";
 import {Immutable} from "immer";
 import range from "lodash/range";
 import { FormGroup, Label, FormFeedback } from "reactstrap";
+import { useTranslation } from 'react-i18next'
 
 interface DobInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -13,8 +14,9 @@ interface DobInputProps {
     editingOtherUser?: boolean;
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
+    const { t } = useTranslation()
     return <FormGroup className="form-group">
-        <Label className="fw-bold" htmlFor="dob-input">Date of birth</Label>
+        <Label className="fw-bold" htmlFor="dob-input">{t('dateOfBirth', 'Date of birth')}</Label>
         <DateInput
             invalid={isDefined(userToUpdate.dateOfBirth) && !isDobOldEnoughForSite(userToUpdate.dateOfBirth)}
             id="dob-input"
@@ -30,7 +32,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
             labelSuffix=" of birth"
         />
         <FormFeedback id="age-validation-message">
-            {`${editingOtherUser ? "The user" : "You"} must be over ${siteSpecific("10", "13")} years old to create an account.`}
+            {t('valMustBeOverVal2YearsOldToCreateAnAccount', '{{val}} must be over {{val2}} years old to create an account.', { val: editingOtherUser ? "The user" : "You", val2: siteSpecific("10", "13") })}
         </FormFeedback>
     </FormGroup>;
 };

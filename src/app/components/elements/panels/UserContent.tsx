@@ -5,6 +5,7 @@ import { UserContextAccountInput } from '../inputs/UserContextAccountInput';
 import { BooleanNotationInput } from '../inputs/BooleanNotationInput';
 import { UserContext, UserAuthenticationSettingsDTO } from '../../../../IsaacApiTypes';
 import { ProgrammingLanguageInput } from '../inputs/ProgrammingLanguageInput';
+import { useTranslation } from 'react-i18next'
 
 interface UserContentProps {
     userToUpdate: ValidationUser;
@@ -22,6 +23,7 @@ interface UserContentProps {
     userAuthSettings: UserAuthenticationSettingsDTO | undefined;
 }
 export const UserContent = (props: UserContentProps) => {
+    const { t } = useTranslation()
     const {
         userToUpdate, setUserToUpdate,
         userContexts, setUserContexts,
@@ -33,8 +35,8 @@ export const UserContent = (props: UserContentProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Customise what content you see</h3>
-            <p>Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time.</p>
+            <h3>{t('customiseWhatContentYouSee', 'Customise what content you see')}</h3>
+            <p>{t('answeringTheseQuestionsWillHelpUsPersonaliseThePlatformForYouYouCanSkipThisOrChangeYourAnswersAtAnyTime', 'Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time.')}</p>
         </>}
         rightColumn={<>
             <UserContextAccountInput

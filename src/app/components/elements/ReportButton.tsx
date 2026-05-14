@@ -2,8 +2,10 @@ import React from "react";
 import {logAction, useAppDispatch} from "../../state";
 import { siteSpecific } from "../../services";
 import { IconButton } from "./AffixButton";
+import { useTranslation } from 'react-i18next'
 
 export const ReportButton = ({pageId} : {pageId?: string}) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     function logPageReport() {
@@ -15,10 +17,10 @@ export const ReportButton = ({pageId} : {pageId?: string}) => {
     }
 
     return <IconButton
-        icon={{name: "icon-flag icon-color-black-hoverable", color: "white"}}
+        icon={{name: t('iconflagIconcolorblackhoverable', 'icon-flag icon-color-black-hoverable'), color: "white"}}
         className="w-max-content h-max-content action-button"
-        aria-label="Report a problem (opens in new tab)" 
-        title="Report a problem (opens in new tab)"
+        aria-label={t('reportAProblemOpensInNewTab', 'Report a problem (opens in new tab)')} 
+        title={t('reportAProblemOpensInNewTab', 'Report a problem (opens in new tab)')}
         color={siteSpecific("tint", "primary")}
         data-bs-theme="neutral"
         onClick={() => {

@@ -27,8 +27,11 @@ import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/User
 import {Button, CardBody, Col, Form, Row} from "reactstrap";
 import {CountryInput} from "../inputs/CountryInput";
 import {ExigentAlert} from "../ExigentAlert";
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 const RequiredAccountInfoBody = () => {
+    const { t } = useTranslation()
     // Redux state
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
@@ -95,13 +98,13 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) &&
                 <ExigentAlert color="warning">
-                    <p className="alert-heading fw-bold">Unable to update your account</p>
-                    <p>Please fill in all required fields.</p>
+                    <p className="alert-heading fw-bold">{t('unableToUpdateYourAccount', 'Unable to update your account')}</p>
+                    <p>{t('pleaseFillInAllRequiredFields', 'Please fill in all required fields.')}</p>
                 </ExigentAlert>
             }
             {updateCurrentUserError &&
                 <ExigentAlert color="warning">
-                    <p className="alert-heading fw-bold">Unable to update your account</p>
+                    <p className="alert-heading fw-bold">{t('unableToUpdateYourAccount', 'Unable to update your account')}</p>
                     <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                 </ExigentAlert>
             }
@@ -112,7 +115,7 @@ const RequiredAccountInfoBody = () => {
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
-                        textOverride={siteSpecific("This is now required information to better help us measure our reach and impact.", undefined)}
+                        textOverride={siteSpecific(t('thisIsNowRequiredInformationToBetterHelpUsMeasureOurReachAndImpact', 'This is now required information to better help us measure our reach and impact.'), undefined)}
                     />}
                 </Col>
                 <Col xs={12}>
@@ -132,10 +135,8 @@ const RequiredAccountInfoBody = () => {
                     />}
                 </Col>
             </Row>
-            <div className="text-muted small pb-2">
-                Providing a few extra pieces of information helps us understand the usage of {SITE_TITLE} across the UK and beyond.
-                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
-            </div>
+            <div className="text-muted small pb-2"><Trans i18nKey="providingAFewExtraPiecesOfInformationHelpsUsUnderstandTheUsageOfSite_titleAcrossTheUkAndBeyondFullDetailsOnHowWeUseYourPersonalInformationCanBeFoundInOurATarget_blankHrefprivacyprivacyPolicya">Providing a few extra pieces of information helps us understand the usage of {{ SITE_TITLE }} across the UK and beyond.
+                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.</Trans></div>
         </CardBody>
 
         {!validity.emailPreferences &&
@@ -144,14 +145,13 @@ const RequiredAccountInfoBody = () => {
                     <hr className="text-center" />
                 </CardBody>
                 <div>
-                    <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
+                    <p>{t('getImportantInformationAboutTheSite_titleProgrammeDeliveredToYourInboxTheseSettingsCanBeChangedAtAnyTime', 'Get important information about the {{SITE_TITLE}} programme delivered to your inbox. These settings can be changed at any time.', { SITE_TITLE })}</p>
                     <UserEmailPreferencesInput
                         emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                         submissionAttempted={submissionAttempted} idPrefix="modal-"
                     />
                     <div>
-                        <small>
-                            <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
+                        <small><Trans i18nKey="bfrequencybExpectOneEmailPerTermForNews"><b>Frequency</b>: expect one email per term for News</Trans>{siteSpecific(t('andAMonthlyBulletinForEvents', ' and a monthly bulletin for Events'), "")}{t('assignmentNotificationsWillBeSentAsNeededByYourTeacher', '. Assignment notifications will be sent as needed by your teacher.')}
                         </small>
                     </div>
                 </div>
@@ -161,7 +161,7 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             <Row className="text-center pb-3">
                 <Col md={{size: 6, offset: 3}}>
-                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? "Update" : "Update account"}</Button>
+                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? "Update" : t('updateAccount', 'Update account')}</Button>
                 </Col>
             </Row>
         </CardBody>
@@ -169,7 +169,7 @@ const RequiredAccountInfoBody = () => {
 };
 
 export const requiredAccountInformationModal: ActiveModalProps = {
-    title: "Required account information",
+    title: i18next.t('requiredAccountInformation', 'Required account information'),
     body: <RequiredAccountInfoBody />,
     size: "lg"
 };

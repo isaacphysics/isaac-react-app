@@ -21,10 +21,12 @@ import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../eleme
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 import { InequalityState, SeedExpressions, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { useTranslation } from 'react-i18next'
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
+    const { t } = useTranslation()
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt && currentAttempt.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
     const questionAttemptLoaded = useRef(!!currentAttemptValue);
@@ -117,8 +119,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             </IsaacContentValueOrChildren>
         </div>
         {showTextEntry
-            ? <i className="text-muted small d-print-none">Click in either box below to edit your answer.</i>
-            : previewText && <i className="text-muted small d-print-none">Click in the box below to edit your answer.</i>
+            ? <i className="text-muted small d-print-none">{t('clickInEitherBoxBelowToEditYourAnswer', 'Click in either box below to edit your answer.')}</i>
+            : previewText && <i className="text-muted small d-print-none">{t('clickInTheBoxBelowToEditYourAnswer', 'Click in the box below to edit your answer.')}</i>
         }
         {showTextEntry && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeed.mhchem}

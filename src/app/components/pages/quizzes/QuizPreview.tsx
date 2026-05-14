@@ -10,6 +10,7 @@ import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
 import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
+import i18next from 'i18next'
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
     <QuizSidebarLayout>
@@ -22,7 +23,7 @@ const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
     </QuizSidebarLayout>;
 
 const pageHelp = <span>
-    Preview the questions on this test.
+    {i18next.t('previewTheQuestionsOnThisTest', 'Preview the questions on this test.')}
 </span>;
 
 const Error = buildErrorComponent("Test Preview", "Error loading test preview", myQuizzesCrumbs);

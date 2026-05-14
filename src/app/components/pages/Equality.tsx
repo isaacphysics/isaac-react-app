@@ -10,10 +10,12 @@ import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../stat
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import { Loading } from "../handlers/IsaacSpinner";
 import { GeneralFormulaDTO, InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { useTranslation } from 'react-i18next'
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const Equality = () => {
+    const { t } = useTranslation()
     const location = useLocation();
     const queryParams = queryString.parse(location.search);
     const user = useAppSelector(selectors.user.orNull);
@@ -78,22 +80,22 @@ const Equality = () => {
             {/* Editor Mode and Logic Syntax settings */}
             <Col md={3} className="py-4 syntax-picker mode-picker">
                 <div>
-                    <Label for="inequality-mode-select">Editor mode:</Label>
+                    <Label for="inequality-mode-select">{t('editorMode', 'Editor mode:')}</Label>
                     <Input type="select" name="mode" id="inequality-mode-select" value={editorMode} onChange={updateEditor}> 
-                        <option value="maths">Maths</option>
-                        <option value="chemistry">Chemistry</option>
-                        <option value="nuclear">Nuclear Physics</option>
-                        <option value="logic">Boolean Logic</option>
+                        <option value="maths">{t('maths', 'Maths')}</option>
+                        <option value="chemistry">{t('chemistry', 'Chemistry')}</option>
+                        <option value="nuclear">{t('nuclearPhysics', 'Nuclear Physics')}</option>
+                        <option value="logic">{t('booleanLogic2', 'Boolean Logic')}</option>
                     </Input>
                 </div>
                 {editorMode === 'logic' && <div className="mt-4">
-                    <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
+                    <Label for="inequality-syntax-select">{t('booleanLogicSyntax', 'Boolean Logic Syntax')}</Label>
                     <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e) => { 
                         setEditorSyntax(e.target.value as LogicSyntax);
                         if (sketchRef.current) sketchRef.current.logicSyntax = editorSyntax;
                     }}> 
-                        <option value="logic">Boolean Logic</option>
-                        <option value="binary">Digital Electronics</option>
+                        <option value="logic">{t('booleanLogic2', 'Boolean Logic')}</option>
+                        <option value="binary">{t('digitalElectronics', 'Digital Electronics')}</option>
                     </Input>
                 </div>}
             </Col>
@@ -130,22 +132,22 @@ const Equality = () => {
         {currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex && <Row>
             {/* Result Summary */}
             <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
-                <h4>LaTeX</h4>
+                <h4>{t('latex', 'LaTeX')}</h4>
                 <pre>${currentAttemptValue?.result?.tex}$</pre>
                 {["chemistry", "nuclear"].includes(editorMode) && <>
-                    <h4>MhChem</h4>
+                    <h4>{t('mhchem', 'MhChem')}</h4>
                     <pre>{currentAttemptValue?.result?.mhchem}</pre>
                 </>}
                 {!["chemistry", "nuclear"].includes(editorMode) && <>
-                    <h4>Python</h4>
+                    <h4>{t('python', 'Python')}</h4>
                     <pre>{currentAttemptValue?.result?.python}</pre>
-                    <h4>MathML</h4>
+                    <h4>{t('mathml', 'MathML')}</h4>
                     <pre>{currentAttemptValue?.result?.mathml}</pre>
                 </>}
-                <h4>Available symbols</h4>
+                <h4>{t('availableSymbols', 'Available symbols')}</h4>
                 <pre>{currentAttemptValue?.result?.uniqueSymbols}</pre>
                 {(segueEnvironment === "DEV" || isStaff(user)) && <>
-                    <h4>Inequality seed</h4>
+                    <h4>{t('inequalitySeed', 'Inequality seed')}</h4>
                     <pre>{currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
                 </>}
             </Col>

@@ -9,6 +9,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Markup} from "../elements/markup";
 import {Immutable} from "immer";
+import { useTranslation } from 'react-i18next'
 
 const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: Immutable<ItemDTO>; index: number; inAvailableItems?: boolean; readonly?: boolean}) => {
     return <Draggable
@@ -35,6 +36,7 @@ const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: 
 };
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
+    const { t } = useTranslation()
 
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
@@ -132,7 +134,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd}>
                 <Col md={{size: 6}} className="parsons-available-items">
-                    <h4>Available items</h4>
+                    <h4>{t('question.reorder.availableItems', 'Available items')}</h4>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
                             <div ref={provided.innerRef}
@@ -141,14 +143,14 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                 {availableItems && availableItems.map((item, index) =>
                                     <ReorderDraggableItem key={item.id} item={item} index={index} inAvailableItems readonly={readonly}/>)}
                                 {(!availableItems || availableItems.length === 0)
-                                    ? <div>&nbsp;</div>
+                                    ? <div>{t('nbsp', '&nbsp;')}</div>
                                     : provided.placeholder}
                             </div>
                         }
                     </Droppable>
                 </Col>
                 <Col md={{size: 6}} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
-                    <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
+                    <h4 className="mt-sm-4 mt-md-0">{t('yourAnswer', 'Your answer')}</h4>
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>
                             <div id="parsons-choice-area" ref={provided.innerRef}
@@ -158,7 +160,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                     <ReorderDraggableItem key={item.id} item={item} index={index} readonly={readonly}/>)}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0)
                                     ? <div className="text-muted text-center">
-                                        {readonly ? "No answer entered" : "Drag items across to build your answer"}
+                                        {readonly ? t('noAnswerEntered', 'No answer entered') : t('dragItemsAcrossToBuildYourAnswer', 'Drag items across to build your answer')}
                                     </div>
                                     : provided.placeholder}
                             </div>

@@ -8,6 +8,7 @@ import {
 } from "../../IsaacAppTypes";
 import {API_PATH, SortOrder} from "./constants";
 import {AssignmentProgressDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import i18next from 'i18next'
 
 // TODO: move to app types without creating circular deps
 export enum GroupSortOrder {

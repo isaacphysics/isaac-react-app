@@ -73,6 +73,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {formatDate} from "../elements/DateString";
 import { ListView } from "../elements/list-groups/ListView";
 import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -86,6 +87,7 @@ interface HeaderProps {
     collapse: () => void;
 }
 const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, openAssignmentModal, collapse}: HeaderProps) => {
+    const { t } = useTranslation()
 
     const headerScrollerSentinel = useRef<HTMLDivElement>(null);
     const headerScrollerFlag = useRef(false);
@@ -133,8 +135,8 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
             <Col xs={6}>
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0
                     ? <>
-                        <Label className={"w-100"}>Filter by group:
-                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
+                        <Label className={"w-100"}>{t('filterByGroup', 'Filter by group:')}
+                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder={t('all', 'All')}
                                 value={groupsToInclude}
                                 closeMenuOnSelect={!isStaff(user)}
                                 onChange={selectOnChange(setGroupsToInclude, false)}
@@ -147,10 +149,10 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                                 headerScrollerSentinel.current?.scrollIntoView();
                             }
                         }}>
-                            Collapse schedule
+                            {t('collapseSchedule', 'Collapse schedule')}
                         </Button>
                     </>
-                    : <div className={"mt-2"}>You have no assignments</div>
+                    : <div className={"mt-2"}>{t('youHaveNoAssignments', 'You have no assignments')}</div>
                 }
             </Col>
             <Col xs={6} className={"py-2"}>
@@ -164,13 +166,13 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                             color={viewBy === "startDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("startDate")}
                         >
-                            By start date
+                            {t('byStartDate', 'By start date')}
                         </Button>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
                             color={viewBy === "dueDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("dueDate")}
                         >
-                            By due date
+                            {t('byDueDate', 'By due date')}
                         </Button>
                     </ButtonGroup>
                 </>}
@@ -179,7 +181,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
     </Card>;
 
     return <div className="no-print">
-        <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
+        <div id="header-sentinel" ref={headerScrollerSentinel}>{t('nbsp', '&nbsp;')}</div>
         <div ref={stickyHeaderListContainer} id="stickyheader">
             {header}
         </div>
@@ -191,6 +193,7 @@ interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
 }
 const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
     const {openAssignmentModal, boardsById} = useContext(AssignmentScheduleContext);
@@ -198,7 +201,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const [showMore, setShowMore] = useState(false);
     const [showGameboardPreview, setShowGameboardPreview] = useState(false);
     const deleteAssignment = () => {
-        if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? `this ${siteSpecific("question deck", "quiz")}`} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
+        if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? t('thisVal', 'this {{val}}', { val: siteSpecific("question deck", "quiz") })} from ${assignment.groupName ? t('groupGroupname', 'group {{groupName}}', { groupName: assignment.groupName }) : "this group"}?`)) {
             unassignGameboard({boardId: assignment.gameboardId, groupId: assignment.groupId});
         }
     };
@@ -207,7 +210,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const gameboardLink = assignment.gameboardId 
         ? isAssignmentsV2Link ? `/assignment/${assignment.id}/view` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`
         : undefined;
-    const gameboardTitle = assignment.gameboard?.title ?? `Unknown ${siteSpecific("question deck", "quiz")} (may belong to another user)`;
+    const gameboardTitle = assignment.gameboard?.title ?? t('unknownValMayBelongToAnotherUser', 'Unknown {{val}} (may belong to another user)', { val: siteSpecific("question deck", "quiz") });
     const gameboard = boardsById[assignment.gameboardId];
     const boardSubjects = determineGameboardSubjects(gameboard);
 
@@ -230,29 +233,29 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             <h4><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></h4>
             <div className={"ms-auto text-end"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
-                    Set again
+                    {t('setAgain', 'Set again')}
                 </Button>
                 {(assignmentOwnedByMe || assignment.additionalManagerPrivileges) && <Button color="link" size="sm" onClick={deleteAssignment}>
-                    Unassign
+                    {t('unassign', 'Unassign')}
                 </Button>}
             </div>
         </CardHeader>
         <CardBody>
-            <div>Assigned to: <strong>{assignment.groupName}</strong></div>
-            {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
-            {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
+            <div>{t('assignedTo', 'Assigned to:')} <strong>{assignment.groupName}</strong></div>
+            {assignmentStartDate && <div>{t('startDate2', 'Start date:')} <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> {t('notStarted4', '(not started)')}</span>}</div>}
+            {assignment.dueDate && <div>{t('dueDate', 'Due date:')} <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
             {showMore && <>
                 {assignment.notes && <div>
-                    Notes
+                    {t('notes', 'Notes')}
                     <div className={"ms-1 mt-1 mb-2 ps-3 border-start"}>{assignment.notes}</div>
                 </div>}
-                <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>
+                <div>{t('assignedBy', 'Assigned by:')} <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>
                 {assignment.gameboard && <div className={"mt-2 border-top pt-2"}>
                     <Row>
                         <Col xs={12} md={boardStagesAndDifficulties.length === 0 ? 12 : 6}>
-                            <div>Question deck: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"visually-hidden"}>(opens in new tab)</span></a></strong></div>
-                            <div>Question deck created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
-                            <div className={"mb-1"}>Subject(s): <strong>{boardSubjects.map(subj => tags.getSpecifiedTag(TAG_LEVEL.subject, [subj as TAG_ID])?.title).join(", ")}</strong></div>
+                            <div>{t('questionDeck', 'Question deck:')} <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"visually-hidden"}>{t('opensInNewTab', '(opens in new tab)')}</span></a></strong></div>
+                            <div>{t('questionDeckCreatedBy', 'Question deck created by:')} <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
+                            <div className={"mb-1"}>{t('subjects2', 'Subject(s):')} <strong>{boardSubjects.map(subj => tags.getSpecifiedTag(TAG_LEVEL.subject, [subj as TAG_ID])?.title).join(", ")}</strong></div>
                         </Col>
                         {boardStagesAndDifficulties.length > 0 && <Col xs={12} md={6}>
                             <Table>
@@ -288,12 +291,10 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 e.preventDefault();
                 setShowMore(sm => !sm);
             }}>
-                Show {showMore ? "less" : "more"}
+                {t('show', 'Show')} {showMore ? "less" : "more"}
             </a>
             {assignment.listingDate <= TODAY() &&
-                <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`}>
-                    View assignment progress <span className={"visually-hidden"}>(opens in new tab)</span>
-                </a>}
+                <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`}><Trans i18nKey="viewAssignmentProgressSpanClassnamevisuallyhiddenopensInNewTabspan">View assignment progress <span className={"visually-hidden"}>(opens in new tab)</span></Trans></a>}
         </CardFooter>
     </Card>;
 };
@@ -301,13 +302,14 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
 // If the hexagon proportions change, the CSS class bg-timeline needs revisiting
 const dateHexagon = calculateHexagonProportions(20, 1);
 const DateAssignmentList = ({date, assignments}: {date: number; assignments: ValidAssignmentWithListingDate[]}) => {
+    const { t } = useTranslation()
     const [open, setOpen] = useState<boolean>(false);
     const {boardsById, collapsed, setCollapsed, viewBy} = useContext(AssignmentScheduleContext);
     useEffect(() => {
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyPress={(e) => {
+        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + t('listForDayDate', 'list for day {{date}}', { date })} onKeyPress={(e) => {
             if (e.key === "Enter") {
                 setOpen(o => !o);
                 setCollapsed(false);
@@ -325,7 +327,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
                 </foreignObject>}
                 <svg x={2.5 * dateHexagon.halfWidth - (open ? 7 : 3)} y={dateHexagon.quarterHeight * 2 - (open ? 3 : 6.5)}>
                     <polygon className={classNames("date-toggle-arrow fill-secondary", {"open": open})} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
-                        transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}
+                        transform={open ? t('rotate90775', 'rotate(90 7 7.5)') : t('rotate0775', 'rotate(0 7 7.5)')}
                     />
                 </svg>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
@@ -346,6 +348,7 @@ const shouldOpenMonth = (year: number, month: number) => {
     return (new Date()).getMonth() === month && (new Date()).getFullYear() === year;
 };
 const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
+    const { t } = useTranslation()
     const [open, setOpen] = useState<boolean>(shouldOpenMonth(year, month));
     const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [_, as]) => n + as.length, 0), [datesAndAssignments]);
     const {collapsed, setCollapsed, viewBy} = useContext(AssignmentScheduleContext);
@@ -353,7 +356,7 @@ const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, 
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
+        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + t('listForVal', 'list for {{val}}', { val: MONTH_NAMES[month] })}
             className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -369,20 +372,21 @@ const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, 
                     <Hexagon className={"fill-secondary"} {...monthHexagon}/>
                     <svg x={monthHexagon.halfWidth - (open ? 7.4 : 3)} y={monthHexagon.quarterHeight * 2 - (open ? 4 : 6.5)}>
                         <polygon fill={"#ffffff"} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
-                            transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}
+                            transform={open ? t('rotate90775', 'rotate(90 7 7.5)') : t('rotate0775', 'rotate(0 7 7.5)')}
                         />
                     </svg>
                 </svg>
             </div>
             <h4>{`${MONTH_NAMES[month]}`}</h4>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
-            <span className={"pt-1 month-assignment-count"}>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}</span>
+            <span className={"pt-1 month-assignment-count"}>{t('assignmentcountAssignment', '{{assignmentCount}} assignment', { assignmentCount })}{assignmentCount > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}</span>
         </div>
         {open && datesAndAssignments.map(([d, as]) => <DateAssignmentList key={d} date={d} assignments={as}/>)}
     </>;
 };
 
 const GameboardPreviewCard = ({showGameboardPreview, toggleGameboardPreview, gameboardToPreview}: {showGameboardPreview: boolean, toggleGameboardPreview: () => void, gameboardToPreview: GameboardDTO}) => {
+    const { t } = useTranslation()
     const displayQuestions: ContentSummaryDTO[] = gameboardToPreview?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
 
     return displayQuestions.length > 0 && <Card className="my-1">
@@ -395,7 +399,7 @@ const GameboardPreviewCard = ({showGameboardPreview, toggleGameboardPreview, gam
             <ListView type="item" items={displayQuestions} linkedBoardId={gameboardToPreview.id} hasCaret={isAda}/>
             <CardFooter className="text-end">
                 <Button color={"link"} onClick={toggleGameboardPreview}>
-                    Hide {siteSpecific("question deck", "quiz")} preview
+                    {t('hide', 'Hide')} {siteSpecific("question deck", "quiz")} preview
                 </Button>
             </CardFooter>
         </>}
@@ -409,6 +413,7 @@ interface AssignmentModalProps {
     assignmentToCopy: AssignmentDTO | undefined;
 }
 const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assignmentToCopy}: AssignmentModalProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
@@ -489,54 +494,53 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
     
     return <>
         <h3>
-            Set new assignment{assignmentToCopy ? " (from existing)" : ""}
+            {t('setNewAssignment', 'Set new assignment')}{assignmentToCopy ? t('fromExisting', ' (from existing)') : ""}
         </h3>
-        <Label className="w-100 pb-2">Group(s):
-            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
+        <Label className="w-100 pb-2">{t('groups3', 'Group(s):')}
+            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder={t('none', 'None')}
                 value={selectedGroups}
                 closeMenuOnSelect={false}
                 onChange={selectOnChange(setSelectedGroups, false)}
                 options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
-        <Label className="w-100 pb-2">Gameboard:
-            <StyledSelect inputId="gameboard-to-assign" isClearable placeholder="None"
+        <Label className="w-100 pb-2">{t('gameboard', 'Gameboard:')}
+            <StyledSelect inputId="gameboard-to-assign" isClearable placeholder={t('none', 'None')}
                 value={selectedGameboard}
                 onChange={selectOnChange(setSelectedGameboard, false)}
                 options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("question deck", "quiz")} (may belong to another user)`))}
             />
             {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
-                This {siteSpecific("question deck", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
+                {t('this', 'This')} {siteSpecific("question deck", "quiz")} {t('isAlreadyAssignedToGroup', 'is already assigned to group')}{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}{t('youMustDeleteThePreviousAssignment', '. You must delete the previous assignment')}{alreadyAssignedGroupNames.length > 1 ? "s" : ""} {t('toSetItAgain', 'to set it again.')}
             </Alert>}
             {gameboardToPreview && <GameboardPreviewCard showGameboardPreview={showGameboardPreview} toggleGameboardPreview={() => setShowGameboardPreview(p => !p)} gameboardToPreview={gameboardToPreview} />} 
         </Label>
-        <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
+        <Label className="w-100 pb-2"><Trans i18nKey="scheduleAnAssignmentStartDateSpanClassnametextmutedOptionalspan">Schedule an assignment start date <span className="text-muted"> (optional)</span></Trans><DateInput value={scheduledStartDate} placeholder={t('selectYourScheduledStartDate', 'Select your scheduled start date...')} yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)}
             />
         </Label>
-        <Label className="w-100 pb-2">Due date reminder
-            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
+        <Label className="w-100 pb-2">{t('dueDateReminder', 'Due date reminder')}
+            <DateInput value={dueDate} placeholder={t('selectYourDueDate', 'Select your due date...')} yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}
             />
-            {!dueDate && <small className={"pt-2 text-danger"}>Since January 2025, due dates are required for assignments.</small>}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
+            {!dueDate && <small className={"pt-2 text-danger"}>{t('sinceJanuary2025DueDatesAreRequiredForAssignments', 'Since January 2025, due dates are required for assignments.')}</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>{t('dueDateMustBeOnOrAfterStartDate', 'Due date must be on or after start date.')}</small>}
         </Label>
-        {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
+        {isStaff(user) && <Label className="w-100 pb-2">{t('notesOptional', 'Notes (optional):')}
             <Input type="textarea"
                 spellCheck={true}
                 rows={3}
                 value={assignmentNotes}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
             />
-            <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
+            <p className="mt-1 mb-0"><small>{t('length500Characters', '{{length}}/500 characters', { length: (assignmentNotes || '').length })}</small></p>
             {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
-                <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
+                <p className="mt-0 mb-0 text-danger"><small>{t('youHaveExceededTheMaximumLength', 'You have exceeded the maximum length.')}</small></p>
             }
         </Label>}
         <Row className={"mt-3"}>
             <Col xs={12} sm={6}>
-                <Button block color="keyline" className="w-100" onClick={toggleSetAssignmentUI}>Back to schedule</Button>
+                <Button block color="keyline" className="w-100" onClick={toggleSetAssignmentUI}>{t('backToSchedule', 'Back to schedule')}</Button>
             </Col>
             <Col xs={12} sm={6}>
                 <Button
@@ -545,7 +549,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                     onClick={assign}
                     disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length || !dueDate || dueDateInvalid}
                 >
-                    Assign to group{selectedGroups.length > 1 ? "s" : ""}
+                    {t('assignToGroup', 'Assign to group')}{selectedGroups.length > 1 ? "s" : ""}
                 </Button>
             </Col>
         </Row>
@@ -554,6 +558,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
 
 type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation()
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
     const { data: gameboards } = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: AssignmentBoardOrder.created});
@@ -674,7 +679,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     //     Students in the group will be emailed when you set a new assignment.
     // </span>;
     const pageHelp = <span>
-        Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.
+        {t('useThisPageToManageAssignmentsForYourGroupsAndViewThemAsATimelineYouCanUnassignWorkAndAssignExistingAssignmentsToOtherGroups', 'Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.')}
     </span>;
 
     return <Container>
@@ -699,19 +704,18 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                     <Card className="mt-2">
                         <CardBody hidden={showSetAssignmentUI}>
                             <p>
-                                Use the <Link to={PATHS.SET_ASSIGNMENTS}>set assignments</Link> page to schedule new assignments to your groups.
+                                {t('useThe', 'Use the')} <Link to={PATHS.SET_ASSIGNMENTS}>{t('setAssignments2', 'set assignments')}</Link> {t('pageToScheduleNewAssignmentsToYourGroups', 'page to schedule new assignments to your groups.')}
                             </p>
                             {/* Groups-related alerts */}
                             {groups && groups.length === 0 && <div className="mt-3">
-                                You have not created any groups to assign work to.
-                                Please <Link to="/groups">create a group here first.</Link>
+                                {t('youHaveNotCreatedAnyGroupsToAssignWorkToPlease2', 'You have not created any groups to assign work to.\n                                Please')} <Link to="/groups">{t('createAGroupHereFirst', 'create a group here first.')}</Link>
                             </div>}
                             {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <div className="mt-3">
-                                There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
+                                {t('thereAreNoAssignmentsSetToGroup', 'There are no assignments set to group')}{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
                             </div>}
                             {notAllPastAssignmentsAreListed && <div className="mt-3">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
-                                    Show assignments before {formatDate(earliestShowDate)}
+                                    {t('showAssignmentsBefore', 'Show assignments before')} {formatDate(earliestShowDate)}
                                 </Button>
                             </div>}
                             {assignmentsGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>

@@ -29,6 +29,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { useHistoryState } from "../../state/actions/history";
 import { MyGameboardsSidebar } from "../elements/sidebar/MyGameboardsSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 export interface GameboardsDisplaySettingsProps {
     boardView: BoardViews,
@@ -42,31 +43,32 @@ export interface GameboardsDisplaySettingsProps {
 }
 
 const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, boardLimit, setBoardLimit, boardOrder, setBoardOrder, showFilters, setShowFilters}: GameboardsDisplaySettingsProps) => {
+    const { t } = useTranslation()
     return <Row>
         <Col xs={6} md={3}>
             <Label className="w-100">
-                Display in <Input type="select" data-testid={"display-select"} value={boardView} onChange={switchViewAndClearSelected}>
+                {t('displayIn', 'Display in')} <Input type="select" data-testid={"display-select"} value={boardView} onChange={switchViewAndClearSelected}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
             </Label>
         </Col>
         <Col xs={6} md={2}>
             <Label className="w-100">
-                Show <Input type="select" data-testid={"limit-select"} value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                {t('show', 'Show')} <Input type="select" data-testid={"limit-select"} value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </Label>
         </Col>
         <Col xs={9} md={5} lg={{size: 4, offset: 2}}>
             <Label className="w-100">
-                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                {t('sortBy', 'Sort by')} <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
                     {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                 </Input>
             </Label>
         </Col>
         <Col xs={3} sm={{size: 2, offset: 1}} md={{size: 2, offset: 0}} lg={1}>
             <Label className="w-100 d-flex flex-column">
-                Filters
+                {t('filters', 'Filters')}
                 <Button color="secondary" className={classNames("gameboards-filter-dropdown d-flex justify-content-center align-items-center")}
                     onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"
                 >
@@ -87,17 +89,18 @@ interface GameboardsFiltersProps {
 }
 
 export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletion, setBoardCompletion, setBoardTitleFilter, showFilters}: GameboardsFiltersProps) => {
+    const { t } = useTranslation()
     return <div>
         <Row className={classNames("my-gameboards-filters", {"shown": showFilters})}>
             <Col xs={12} lg={7}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter boards by name</span>
+                    <span className={"text-nowrap"}>{t('filterBoardsByName', 'Filter boards by name')}</span>
                     <Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
             <Col xs={6} lg={2}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Creator</span>
+                    <span className={"text-nowrap"}>{t('filterByCreator', 'Filter by Creator')}</span>
                     <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                         {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                     </Input>
@@ -105,7 +108,7 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
             </Col>
             <Col xs={6} lg={3}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Status</span>
+                    <span className={"text-nowrap"}>{t('filterByStatus', 'Filter by Status')}</span>
                     <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
                         {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
                     </Input>
@@ -116,6 +119,7 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
 };
 
 export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation()
     //Redux state and dispatch
     const dispatch = useAppDispatch();
 
@@ -172,7 +176,7 @@ export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
     }, [boardLimit, forceAllBoards, setBoardLimit]);
 
     const pageHelp = <span>
-        A summary of your {siteSpecific("question decks", "quizzes")}
+        {t('aSummaryOfYour', 'A summary of your')} {siteSpecific("question decks", "quizzes")}
     </span>;
 
     const tableProps: GameboardsTableProps = {
@@ -189,7 +193,7 @@ export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
+            <TitleAndBreadcrumb currentPageTitle={siteSpecific(t('myQuestionDecks', 'My question decks'), "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         }
         sidebar={siteSpecific(
             <MyGameboardsSidebar
@@ -212,13 +216,13 @@ export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
         </PageMetadata>
         {boards && boards.totalResults == 0 ?
             <>
-                <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>
+                <h3 className="text-center mt-4">{t('youHaveNo', 'You have no')} {siteSpecific("question decks", "quizzes")} {t('toView', 'to view.')}</h3>
             </>
             :
             <>
                 <div className="mt-4 mb-2">
                     {boards 
-                        ? <span>Showing <strong>{inProgress + notStarted}</strong> {siteSpecific("question decks", "quizzes")}, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started.</span>
+                        ? <span>{t('showing', 'Showing')} <strong>{inProgress + notStarted}</strong> {siteSpecific("question decks", "quizzes")}{t('with', ', with')} <strong>{inProgress}</strong> {t('onTheGoAnd', 'on the go and')} <strong>{notStarted}</strong> {t('notStarted3', 'not started.')}</span>
                         : <IsaacSpinner size="sm" inline />
                     }
                 </div>

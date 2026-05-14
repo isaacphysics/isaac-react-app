@@ -12,6 +12,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
 import {confirmThen, siteSpecific} from "../../../services";
 import {QuizSidebarLayout} from "./QuizSidebarLayout";
+import { useTranslation, Trans } from 'react-i18next'
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -19,6 +20,7 @@ function extractSectionIdFromQuizQuestionId(questionId: string) {
 }
 
 export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: string}) {
+    const { t } = useTranslation()
     const {attempt, page, sections, questions, pageLink} = props;
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -55,13 +57,13 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
         const totalCompleted = Object.values(completedSections).reduce((sum, complete) => sum + (complete ? 1 : 0), 0);
         const firstIncomplete = Object.values(completedSections).indexOf(false);
         const allCompleted = totalCompleted === sectionCount;
-        const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : "Submit anyway";
+        const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : t('submitAnyway', 'Submit anyway');
 
         if (allCompleted) {
             controls = <>
-                <Button color="keyline" tag={Link} to={pageLink(1)}>Review answers</Button>
+                <Button color="keyline" tag={Link} to={pageLink(1)}>{t('reviewAnswers', 'Review answers')}</Button>
                 <Spacer/>
-                All sections complete
+                {t('allSectionsComplete', 'All sections complete')}
                 <Spacer/>
                 <Button color={siteSpecific("keyline", "solid")} onClick={submitQuiz}>{submitButton}</Button>
             </>;
@@ -71,15 +73,13 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                     <div className="text-center">
                         <Button onClick={() => confirmThen("Are you sure? You haven't answered all of the questions", submitQuiz)}>{submitButton}</Button>
                     </div>
-                    <Spacer/>
-                    {totalCompleted} / {sectionCount} sections complete<br/>
-                    <Spacer/>
-                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
+                    <Spacer/><Trans i18nKey="totalcompletedSectioncountSectionsCompletebr">{{ totalCompleted }} / {{ sectionCount }} sections complete<br/></Trans><Spacer/>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>{t('continue', 'Continue')}</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>{t('continue', 'Continue')}</Button>
                 </>;
             }
         }

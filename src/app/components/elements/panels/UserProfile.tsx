@@ -26,6 +26,7 @@ import { openActiveModal, store, useConfirmAccountDeletionRequestMutation } from
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next'
 
 interface UserProfileProps {
     userToUpdate: ValidationUser;
@@ -42,6 +43,7 @@ interface UserProfileProps {
 }
 
 export const UserProfile = (props: UserProfileProps) => {
+    const { t } = useTranslation()
     const {
         userToUpdate, setUserToUpdate, userContexts, setUserContexts,
         setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted
@@ -50,19 +52,19 @@ export const UserProfile = (props: UserProfileProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Account details</h3>
-            <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
+            <h3>{t('accountDetails', 'Account details')}</h3>
+            <p>{t('hereYouCanSeeAndManageYourAccountDetailsForSite_title', 'Here you can see and manage your account details for {{SITE_TITLE}}.', { SITE_TITLE })}</p>
             <p>
                 <AccountTypeMessage role={userToUpdate?.role} />
             </p>
             {!isTutorOrAbove(userToUpdate) ? <p>
-                If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
+                {t('ifYouWouldLikeToDeleteYourAccountPlease', 'If you would like to delete your account, please')} <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
                     store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
-                }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
+                }}>{siteSpecific(t('clickHere2', 'click here'), <strong>{t('clickHere2', 'click here')}</strong>)}</Button>.</span>
             </p> : <p>
-                Only student accounts can be deleted automatically. Please{" "}
-                <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
-                {" "}to request account deletion.
+                {t('onlyStudentAccountsCanBeDeletedAutomaticallyPlease', 'Only student accounts can be deleted automatically. Please')}{" "}
+                <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>{t('contactUs', 'contact us')}</strong>)}</Link>
+                {" "}{t('toRequestAccountDeletion', 'to request account deletion.')}
             </p>}
         </>}
         rightColumn={<>
@@ -116,7 +118,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                 submissionAttempted={submissionAttempted}
                 required={true}
-                textOverride={siteSpecific("This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
+                textOverride={siteSpecific(t('thisHelpsUsToMeasureOurReachAndImpactIfYouDidNotSelectACountryWhenYouRegisteredWeMayHaveSuggestedOneFromYourSchoolOrSchoolEmailAddress', 'This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.'), undefined)}
             />
             <SchoolInput
                 userToUpdate={userToUpdate}

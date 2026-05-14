@@ -9,9 +9,11 @@ import { AdaCard } from "../elements/cards/AdaCard";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import { isLoggedIn, SITE_TITLE } from "../../services";
 import { ExternalLink } from "../elements/ExternalLink";
+import { useTranslation } from 'react-i18next'
 
 export const StudentResources = () => {
-    useEffect( () => {document.title = "Students — " + SITE_TITLE;}, []);
+    const { t } = useTranslation()
+    useEffect( () => {document.title = t('students', 'Students — ') + SITE_TITLE;}, []);
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredStudentChallengePod = studentChallengesPods?.[0];
     
@@ -24,9 +26,9 @@ export const StudentResources = () => {
                     <TextBlock>
                         <h1 className="font-size-1-75 font-size-md-2-5">
                             <span className="text-yellow">/</span><br/>
-                            Ada CS for students
+                            {t('adaCsForStudents', 'Ada CS for students')}
                         </h1>
-                        <p>We&apos;ve got everything to help you study computer science – including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
+                        <p>{t('weaposveGotEverythingToHelpYouStudyComputerScienceIncludingClassworkHomeworkAndExamPrepAndItapossAllAvailableForFree', 'We&apos;ve got everything to help you study computer science – including classwork, homework, and exam prep. And it&apos;s all available for free.')}</p>
                     </TextBlock>
                     <ImageBlock>
                         <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/learner-1-wide.png" alt=""/>
@@ -41,10 +43,10 @@ export const StudentResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>A full curriculum of topics</h2>
-                        <p>We have over 65 learning topics that cover everything you need to learn in computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
-                        <p>They&apos;re created by expert educators and are regularly updated.</p>
-                        <Button className="mt-3" tag={Link} to="/topics">Explore all topics</Button>
+                        <h2>{t('aFullCurriculumOfTopics', 'A full curriculum of topics')}</h2>
+                        <p>{t('weHaveOver65LearningTopicsThatCoverEverythingYouNeedToLearnInComputerScienceFromComputingSystemsAndNetworksToAiMachineLearningAndMuchMore', 'We have over 65 learning topics that cover everything you need to learn in computer science. From computing systems and networks, to AI, machine learning, and much more.')}</p>
+                        <p>{t('theyaposreCreatedByExpertEducatorsAndAreRegularlyUpdated', 'They&apos;re created by expert educators and are regularly updated.')}</p>
+                        <Button className="mt-3" tag={Link} to="/topics">{t('exploreAllTopics', 'Explore all topics')}</Button>
                     </TextBlock>
                 </ColumnSlice>
             </Container>
@@ -53,9 +55,9 @@ export const StudentResources = () => {
             <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
-                        <h2>Over 1000 practice questions</h2>
-                        <p>Our self-marking questions give you hints and instant feedback as you go. You can filter by exam level, topic, or concept to find exactly what you need.</p>
-                        <Button className="mt-3" tag={Link} to="/questions">Try our practise questions</Button>
+                        <h2>{t('over1000PracticeQuestions', 'Over 1000 practice questions')}</h2>
+                        <p>{t('ourSelfmarkingQuestionsGiveYouHintsAndInstantFeedbackAsYouGoYouCanFilterByExamLevelTopicOrConceptToFindExactlyWhatYouNeed', 'Our self-marking questions give you hints and instant feedback as you go. You can filter by exam level, topic, or concept to find exactly what you need.')}</p>
+                        <Button className="mt-3" tag={Link} to="/questions">{t('tryOurPractiseQuestions', 'Try our practise questions')}</Button>
                     </TextBlock>
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/question-finder-clean.svg" alt=""/>
@@ -70,13 +72,13 @@ export const StudentResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/progress.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>Track your progress</h2>
-                        <p>With an Ada CS account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.</p>
+                        <h2>{t('trackYourProgress', 'Track your progress')}</h2>
+                        <p>{t('withAnAdaCsAccountAllYourAnswersGetSavedSoYouCanSeeWhatToWorkOnAndHowYoureProgressingAndYouCanTrackAnyAssignmentsSetByYourTeacher', 'With an Ada CS account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.')}</p>
                         {isLoggedIn(user) ? <>
-                            <Button className="mt-3" tag={Link} to="/progress">View my progress</Button>
+                            <Button className="mt-3" tag={Link} to="/progress">{t('viewMyProgress', 'View my progress')}</Button>
                         </> : <>
-                            <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                            <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
+                            <Button className="me-3" to={"/register"} tag={Link}>{t('createAnAccount', 'Create an account')}</Button>
+                            <Button color="keyline" to={"/login"} tag={Link}>{t('logIn2', 'Log in')}</Button>
                         </>}
                     </TextBlock>
                 </ColumnSlice>
@@ -87,9 +89,9 @@ export const StudentResources = () => {
                 <img className="full-background-img" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
-                        <h2>Win prizes with our student challenges</h2>
-                        <p>Join one of our termly challenges. Test your knowledge and skills, and be in with the chance to win some great prizes.</p>
-                        <Button className="mt-3" tag={Link} to="/pages/student_challenges">Find out more</Button>
+                        <h2>{t('winPrizesWithOurStudentChallenges', 'Win prizes with our student challenges')}</h2>
+                        <p>{t('joinOneOfOurTermlyChallengesTestYourKnowledgeAndSkillsAndBeInWithTheChanceToWinSomeGreatPrizes', 'Join one of our termly challenges. Test your knowledge and skills, and be in with the chance to win some great prizes.')}</p>
+                        <Button className="mt-3" tag={Link} to="/pages/student_challenges">{t('findOutMore', 'Find out more')}</Button>
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
                         title: featuredStudentChallengePod.title ?? "",
@@ -100,9 +102,9 @@ export const StudentResources = () => {
                         buttonText: "Read more",
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
-                        title: "There are no active challenges at the moment.",
+                        title: t('thereAreNoActiveChallengesAtTheMoment', 'There are no active challenges at the moment.'),
                         icon: {name: "icon-lightbulb-empty", color: "secondary"},
-                        bodyText: "Check back soon!",
+                        bodyText: t('checkBackSoon', 'Check back soon!'),
                     }}/>}
                 </ColumnSlice>
             </Container>
@@ -110,31 +112,31 @@ export const StudentResources = () => {
         <section id="further-learning" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock>
-                    <h2>Further learning</h2>
-                    <p>More projects, challenges, and tools from the Raspberry Pi Foundation’s world class range of computer science resources.</p> 
+                    <h2>{t('furtherLearning', 'Further learning')}</h2>
+                    <p>{t('moreProjectsChallengesAndToolsFromTheRaspberryPiFoundationsWorldClassRangeOfComputerScienceResources', 'More projects, challenges, and tools from the Raspberry Pi Foundation’s world class range of computer science resources.')}</p> 
                 </TextBlock>
                 <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
-                        title: "Online coding projects",
+                        title: t('onlineCodingProjects', 'Online coding projects'),
                         image: {src: "/assets/cs/decor/coding-projects.png"},
-                        bodyText: "There are hundreds of free coding and computing projects, all with step-by-step instructions.",
-                        buttonText: "Go to Projects",
+                        bodyText: t('thereAreHundredsOfFreeCodingAndComputingProjectsAllWithStepbystepInstructions', 'There are hundreds of free coding and computing projects, all with step-by-step instructions.'),
+                        buttonText: t('goToProjects', 'Go to Projects'),
                         clickUrl: "https://projects.raspberrypi.org/en",
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Your code in space",
+                        title: t('yourCodeInSpace', 'Your code in space'),
                         image: {src: "/assets/cs/decor/astro-pi.png"},
-                        bodyText: "The European Astro Pi Challenge gets learners writing code that runs on the International Space Station.",
-                        buttonText: "Go to Astro Pi",
+                        bodyText: t('theEuropeanAstroPiChallengeGetsLearnersWritingCodeThatRunsOnTheInternationalSpaceStation', 'The European Astro Pi Challenge gets learners writing code that runs on the International Space Station.'),
+                        buttonText: t('goToAstroPi', 'Go to Astro Pi'),
                         clickUrl: "https://astro-pi.org/",
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Free code editor",
+                        title: t('freeCodeEditor', 'Free code editor'),
                         image: {src: "/assets/cs/decor/code-editor.png"},
-                        bodyText: "Our online code editor lets you code whatever you like: a game, some art, or your very own website using Python or HTML and CSS.",
-                        buttonText: "Open the code editor",
+                        bodyText: t('ourOnlineCodeEditorLetsYouCodeWhateverYouLikeAGameSomeArtOrYourVeryOwnWebsiteUsingPythonOrHtmlAndCss', 'Our online code editor lets you code whatever you like: a game, some art, or your very own website using Python or HTML and CSS.'),
+                        buttonText: t('openTheCodeEditor', 'Open the code editor'),
                         clickUrl: "https://editor.raspberrypi.org/en/education",
                         className: "bg-cultured-grey",
                     }}/>
@@ -148,10 +150,10 @@ export const StudentResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>Studying science or maths?</h2>
-                        <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you learn physics, chemistry, biology and maths.</p>
+                        <h2>{t('studyingScienceOrMaths', 'Studying science or maths?')}</h2>
+                        <p>{t('checkOutIsaacScienceOurPartnerPlatformPackedWithFreeToolsAndResourcesToHelpYouLearnPhysicsChemistryBiologyAndMaths', 'Check out Isaac Science, our partner platform packed with free tools and resources to help you learn physics, chemistry, biology and maths.')}</p>
                         <ExternalLink asButton href='https://isaacscience.org'>
-                            Go to Isaac Science
+                            {t('goToIsaacScience', 'Go to Isaac Science')}
                         </ExternalLink>
                     </TextBlock>
                 </ColumnSlice>
@@ -161,46 +163,46 @@ export const StudentResources = () => {
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
-                        &ldquo;I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.&rdquo;
+                        {t('ldquoiLoveAdaTheContentFeaturedIsVeryComprehensiveAndDetailedAndTheVisualGuidesThroughTopicsLikeSortsAreParticularlyHelpfulToAidMyUnderstandingrdquo', '&ldquo;I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.&rdquo;')}
                     </h2>
-                    <p>– Computer science student</p>
+                    <p>{t('computerScienceStudent', '– Computer science student')}</p>
                 </TextBlock>
             </Container>
         </section>
         <section id="careers">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock>
-                    <h2>Explore a career in computer science</h2>
-                    <p>Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.</p> 
+                    <h2>{t('exploreACareerInComputerScience', 'Explore a career in computer science')}</h2>
+                    <p>{t('readStoriesFromGraduatesAtTheEarlyStagesOfTheirCareersInSoftwareDevelopmentGameDesignResearchAndMuchMore', 'Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.')}</p> 
                 </TextBlock>
                 <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
-                        title: "Max Fordham",
+                        title: t('maxFordham', 'Max Fordham'),
                         image: {src: "/assets/cs/decor/stories/max-fordham.png"},
-                        bodyText: "Explore how Max’s passion for computer science led him to become a software engineer through a digital technology solutions apprenticeship.",
+                        bodyText: t('exploreHowMaxsPassionForComputerScienceLedHimToBecomeASoftwareEngineerThroughADigitalTechnologySolutionsApprenticeship', 'Explore how Max’s passion for computer science led him to become a software engineer through a digital technology solutions apprenticeship.'),
                         buttonText: "Read more",
                         clickUrl: "/pages/20240730_max_fordham"
                     }}/>
                     <AdaCard card={{
-                        title: "Meghna Asthana",
+                        title: t('meghnaAsthana', 'Meghna Asthana'),
                         image: {src: "/assets/cs/decor/stories/meghna-asthana.png"},
-                        bodyText: "Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.",
+                        bodyText: t('discoverHowMeghnaTurnedHerPassionForCodingIntoACareerInComputerVisionWhereSheNowWorksOnInnovativeProjectsAddressingEnvironmentalChallenges', 'Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.'),
                         buttonText: "Read more",
                         clickUrl: "/pages/20240313_meghna_asthana"
                     }}/>
                     <AdaCard card={{
-                        title: "Lella Halloum",
+                        title: t('lellaHalloum', 'Lella Halloum'),
                         image: {src: "/assets/cs/decor/stories/lella-halloum.png"},
-                        bodyText: "Meet Lella, a young digital changemaker who uses technology to inspire, engage, and upskill the next generation of talent.",
+                        bodyText: t('meetLellaAYoungDigitalChangemakerWhoUsesTechnologyToInspireEngageAndUpskillTheNextGenerationOfTalent', 'Meet Lella, a young digital changemaker who uses technology to inspire, engage, and upskill the next generation of talent.'),
                         buttonText: "Read more",
                         clickUrl: "/pages/20240215_lella_halloum"
                     }}/>
                 </ColumnSlice>
                 <div className="d-flex justify-content-center mt-6">
                     <Link to="/pages/computer_science_stories" target="_blank">
-                        <strong className="link-dark-pink">View more stories</strong>
+                        <strong className="link-dark-pink">{t('viewMoreStories', 'View more stories')}</strong>
                     </Link>
-                    <strong className="link-dark-pink">&gt;</strong>
+                    <strong className="link-dark-pink">{t('gt', '&gt;')}</strong>
                 </div>
             </Container>
         </section>
@@ -209,9 +211,9 @@ export const StudentResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-cyan-200" src="/assets/cs/decor/help-slice-cyan.svg" alt=""/>
                     <TextBlock className="py-3 text-center">
-                        <h3>Need help?</h3>
-                        <p>Our student support page has lots of information for common questions and issues.</p>
-                        <Button to="/support/student/general" tag={Link}>Student support</Button>
+                        <h3>{t('needHelp', 'Need help?')}</h3>
+                        <p>{t('ourStudentSupportPageHasLotsOfInformationForCommonQuestionsAndIssues', 'Our student support page has lots of information for common questions and issues.')}</p>
+                        <Button to="/support/student/general" tag={Link}>{t('studentSupport', 'Student support')}</Button>
                     </TextBlock>
                 </div>
             </Container>

@@ -10,6 +10,7 @@ import {
 } from "../../../state";
 import QRCode from 'qrcode';
 import { MyAccountTab } from "./MyAccountTab";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface UserMFAProps {
     userToUpdate: RegisteredUserDTO;
@@ -18,6 +19,7 @@ interface UserMFAProps {
 }
 
 const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
+    const { t } = useTranslation()
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
@@ -72,31 +74,31 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <CardBody className="pt-0 px-0">
                 <Row>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
-                    <h4>Two-factor Authentication (2FA)</h4>
+                    <h4>{t('twofactorAuthentication2fa', 'Two-factor Authentication (2FA)')}</h4>
                 </Row>
                 {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
                     <Col>
                         <Row>
                             <Col>
-                                <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
+                                <p><strong>{t('2faStatus', '2FA Status:')} </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
                             </Col>
                         </Row>
                         {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
                             <Form onSubmit={setupMFA}>
                                 <Row>
                                     <Col>
-                                        <h5>Configure Two-factor Authentication (2FA)</h5>
-                                        <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
+                                        <h5>{t('configureTwofactorAuthentication2fa', 'Configure Two-factor Authentication (2FA)')}</h5>
+                                        <p><Trans i18nKey="strongstep1strongScanTheQrcodeBelowOnYourPhone"><strong>Step 1:</strong> Scan the QRcode below on your phone</Trans></p>
                                         <div className="qrcode-mfa vertical-center">
                                             {qrCodeStringBase64SVG && <img
                                                 src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
-                                                alt={"Follow this URL to setup 2FA: " + authenticatorURL}
+                                                alt={t('followThisUrlToSetup2fa', 'Follow this URL to setup 2FA: ') + authenticatorURL}
                                             />}
                                         </div>
 
                                         <FormGroup className="form-group">
-                                            <p><strong>Step 2:</strong> Enter the code provided by your app</p>
-                                            <Label htmlFor="setup-verification-code">Verification Code</Label>
+                                            <p><Trans i18nKey="strongstep2strongEnterTheCodeProvidedByYourApp"><strong>Step 2:</strong> Enter the code provided by your app</Trans></p>
+                                            <Label htmlFor="setup-verification-code">{t('verificationCode', 'Verification Code')}</Label>
                                             <Input
                                                 id="setup-verification-code" type="text" name="setup-verification-code"
                                                 value={mfaVerificationCode || ""}
@@ -109,7 +111,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                                 className="btn-keyline w-100"
                                                 disabled={!mfaVerificationCode}
                                             >
-                                                {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
+                                                {userAuthSettings.mfaStatus ? t('change2faDevice', 'Change 2FA Device') : t('enable2fa', 'Enable 2FA')}
                                             </Button>
                                         </FormGroup>
                                     </Col>
@@ -124,7 +126,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                             className="btn-keyline w-100"
                                             onClick={() => newMFASecret()}
                                         >
-                                            {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
+                                            {userAuthSettings.mfaStatus ? t('change2faDevice', 'Change 2FA Device') : t('enable2fa', 'Enable 2FA')}
                                         </Button>
                                     </FormGroup>
                                 </Col>
@@ -133,8 +135,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                     </Col>
                     : <Row className="pt-4">
                         {!editingOtherUser && userAuthSettings && userAuthSettings.linkedAccounts && <p>
-                            You do not currently have a password set for this account; you
-                            sign in using {" "}
+                            {t('youDoNotCurrentlyHaveAPasswordSetForThisAccountYouSignInUsing2', 'You do not currently have a password set for this account; you\n                            sign in using')} {" "}
                             {(userAuthSettings.linkedAccounts).map((linked, index) =>
                                 <span key={index}>
                                     {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
@@ -151,7 +152,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                     className="btn-keyline"
                                     onClick={() => userToUpdate.id && disableAccountMFA(userToUpdate.id)}
                                 >
-                                    Disable 2FA for user
+                                    {t('disable2faForUser', 'Disable 2FA for user')}
                                 </Button>
                             </FormGroup>
                         </p>}

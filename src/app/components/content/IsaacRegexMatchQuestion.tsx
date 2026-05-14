@@ -4,8 +4,10 @@ import {IsaacRegexMatchQuestionDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
 import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import { useTranslation } from 'react-i18next'
 
 const IsaacRegexMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacRegexMatchQuestionDTO>) => {
+    const { t } = useTranslation()
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
@@ -15,7 +17,7 @@ const IsaacRegexMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder="Type your answer here."
+        <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder={t('typeYourAnswerHere', 'Type your answer here.')}
             maxLength={doc.multiLineEntry ? 250 : 75}
             spellCheck={false} className="mb-4"
             rows={doc.multiLineEntry ? 3 : undefined}

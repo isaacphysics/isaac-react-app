@@ -3,26 +3,27 @@ import { Button } from "reactstrap";
 import { closeActiveModal, openActiveModal, store, useAppDispatch } from "../../../state";
 import { KEY, MODAL_TYPES, persistence } from "../../../services";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
+import i18next from 'i18next'
 
 const pages = [
     {
-        title: "Welcome to Ada CS",
-        message: "Ada CS supports your teaching to help your students succeed in computer science.",
+        title: i18next.t('welcomeToAdaCs', 'Welcome to Ada CS'),
+        message: i18next.t('adaCsSupportsYourTeachingToHelpYourStudentsSucceedInComputerScience', 'Ada CS supports your teaching to help your students succeed in computer science.'),
         image: "onboarding-welcome.svg"
     },
     {
-        title: "Only see relevant learning materials",
-        message: "Set your student learning stages and exam boards and we'll only show content relevant to you.",
+        title: i18next.t('onlySeeRelevantLearningMaterials', 'Only see relevant learning materials'),
+        message: i18next.t('setYourStudentLearningStagesAndExamBoardsAndWellOnlyShowContentRelevantToYou', 'Set your student learning stages and exam boards and we\'ll only show content relevant to you.'),
         image: "onboarding-relevant-materials.svg"
     },
     { 
-        title: "Assign auto-marking quizzes",
-        message: "Choose a pre-made quiz or create your own and assign it to a whole group of students at once",
+        title: i18next.t('assignAutomarkingQuizzes', 'Assign auto-marking quizzes'),
+        message: i18next.t('chooseAPremadeQuizOrCreateYourOwnAndAssignItToAWholeGroupOfStudentsAtOnce', 'Choose a pre-made quiz or create your own and assign it to a whole group of students at once'),
         image: "onboarding-auto-marking-quizzes.svg"
     },
     {
-        title: "See your students progress",
-        message: "See how students perform across quizzes and identify learning opportunities in your markbook.",
+        title: i18next.t('seeYourStudentsProgress', 'See your students progress'),
+        message: i18next.t('seeHowStudentsPerformAcrossQuizzesAndIdentifyLearningOpportunitiesInYourMarkbook', 'See how students perform across quizzes and identify learning opportunities in your markbook.'),
         image: "onboarding-students-progress.svg"
     }
 ] as const;
@@ -45,7 +46,7 @@ const closeAction = () => {
 
 export const adaTeacherOnboardingModal: ActiveModalProps = {
     body: pages.map((page, idx) => <Page key={idx} page={page}/>),
-    buttons: <Button color="solid" onClick={closeAction}>Go to My Ada</Button>,
+    buttons: <Button color="solid" onClick={closeAction}>{i18next.t('goToMyAda', 'Go to My Ada')}</Button>,
     closeAction 
 };
 

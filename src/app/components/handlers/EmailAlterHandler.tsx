@@ -12,8 +12,10 @@ import {
 import {Link} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useQueryParams} from "../../services";
+import { useTranslation } from 'react-i18next'
 
 export const EmailAlterHandler = () => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     const {userid, token} = useQueryParams(true);
@@ -25,8 +27,8 @@ export const EmailAlterHandler = () => {
     const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
 
     const successMessage = idsMatch
-        ? "Email address verified."
-        : "You are signed in as a different user to the user with the email you have just verified.";
+        ? t('emailAddressVerified', 'Email address verified.')
+        : t('youAreSignedInAsADifferentUserToTheUserWithTheEmailYouHaveJustVerified', 'You are signed in as a different user to the user with the email you have just verified.');
 
     useEffect(() => {
         if (userid && token) {
@@ -49,14 +51,14 @@ export const EmailAlterHandler = () => {
                             <>
                                 <h3 className="mb-4">{successMessage}</h3>
                                 <Button tag={Link} to="/" color="secondary" block>
-                                    Continue
+                                    {t('continue', 'Continue')}
                                 </Button>
                             </>}
                         {emailVerificationFailed &&
                             <>
-                                <h3 className="mb-4">Couldn&apos;t verify email address</h3>
+                                <h3 className="mb-4">{t('couldnapostVerifyEmailAddress', 'Couldn&apos;t verify email address')}</h3>
                                 <p className="m-0">
-                                    {(!userid || !token) && "This page received bad parameters."}
+                                    {(!userid || !token) && t('thisPageReceivedBadParameters', 'This page received bad parameters.')}
                                     {getRTKQueryErrorMessage(emailVerificationError).message}
                                 </p>
                                 {idsMatch
@@ -72,13 +74,13 @@ export const EmailAlterHandler = () => {
                                                     sendVerificationEmail({email: user.email});
                                                 }
                                             }}>
-                                                Resend verification email
+                                                {t('resendVerificationEmail', 'Resend verification email')}
                                             </Button>
                                             :
-                                            "Verification email sent to " + (user && user.loggedIn && user.email)
+                                            t('verificationEmailSentTo', 'Verification email sent to ') + (user && user.loggedIn && user.email)
                                         }
                                     </p>
-                                    : <p>Please login to your <Link to="/account">account</Link> to resend the verification email.</p>
+                                    : <p>{t('pleaseLoginToYour', 'Please login to your')} <Link to="/account">account</Link> {t('toResendTheVerificationEmail', 'to resend the verification email.')}</p>
                                 }
                             </>
                         }

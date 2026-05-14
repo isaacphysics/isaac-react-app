@@ -7,6 +7,7 @@ import { ExternalLink } from "../ExternalLink";
 import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
 import { QuestionLink, CompletionKey } from "./SidebarElements";
+import { useTranslation } from 'react-i18next'
 
 interface GameboardContentSidebarProps {
     id: string;
@@ -17,6 +18,7 @@ interface GameboardContentSidebarProps {
 }
 
 export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => {
+    const { t } = useTranslation()
     // For questions in the context of a gameboard
     const {id, title, questions, wildCard, currentContentId} = props;
 
@@ -32,7 +34,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
                 <span className="hover-underline link-title"><Markup encoding="latex">{wildCard?.title}</Markup></span>
                 <span className="text-muted small text-overflow-ellipsis">
                     {isExternal
-                        ? <>External link (<em>{externalUrl}</em>)</>
+                        ? <>{t('externalLink', 'External link (')}<em>{externalUrl}</em>)</>
                         : wildCard.description ?? wildCard.subtitle
                     }
                 </span>
@@ -43,7 +45,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
     return <NavigationSidebar>
         <div className="section-divider"/>
         <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
-            <h5 className="mb-3">Question deck: {title}</h5>
+            <h5 className="mb-3">{t('questionDeckTitle', 'Question deck: {{title}}', { title })}</h5>
         </Link>
         <ul>
             {wildCard && wildCard.url && <li className={classNames("board-sidebar-content", {"selected-content": wildCard.url === window.location.pathname})}>

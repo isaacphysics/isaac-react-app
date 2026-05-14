@@ -8,6 +8,7 @@ import { ContentSidebar } from "../layout/SidebarLayout";
 import { SectionProgress, QuizView, QuizRubricButton } from "../quiz/QuizContentsComponent";
 import { tags as tagsService } from "../../../services";
 import { Pill, KeyItem } from "./SidebarElements";
+import { useTranslation } from 'react-i18next'
 
 interface QuizSidebarProps {
     viewingAsSomeoneElse: boolean;
@@ -28,6 +29,7 @@ export interface QuizSidebarViewProps extends QuizSidebarProps {
 }
 
 export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
+    const { t } = useTranslation()
     const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
     const navigate = useNavigate();
@@ -44,9 +46,9 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A", alias: undefined}];
 
     const progressIcon = (section: number) => {
-        return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
-            : sectionStates[section] === SectionProgress.STARTED ? "icon icon-raw icon-in-progress"
-                : "icon icon-raw icon-not-started";
+        return sectionStates[section] === SectionProgress.COMPLETED ? t('iconIconrawIconcorrect', 'icon icon-raw icon-correct')
+            : sectionStates[section] === SectionProgress.STARTED ? t('iconIconrawIconinprogress', 'icon icon-raw icon-in-progress')
+                : t('iconIconrawIconnotstarted', 'icon icon-raw icon-not-started');
     };
 
     const switchToPage = (page: string) => {
@@ -61,19 +63,19 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const SidebarContents = () => {
         return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
-            <h5 className="mb-3">Test</h5>
+            <h5 className="mb-3">{t('test', 'Test')}</h5>
             <div className="mb-2">
-                Subject{subjects?.length > 1 && "s"}:
+                {t('subject2', 'Subject')}{subjects?.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
             </div>
             <div className="mb-2">
-                Topic{topicsAndFields?.length > 1 && "s"}:
+                {t('topic', 'Topic')}{topicsAndFields?.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.alias ?? e.title} theme="neutral"/></li>)}</ul>
             </div>
 
             {hasSections && <>
                 <div className="section-divider"/>
-                <h5 className="mb-3">Section(s)</h5>
+                <h5 className="mb-3">{t('sections', 'Section(s)')}</h5>
                 <ul>
                     <li>
                         <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => navigate(rubricPath)}/>
@@ -88,7 +90,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <div className="section-divider"/>
 
                 <div className="d-flex flex-column sidebar-key">
-                    Key
+                    {t('key5', 'Key')}
                     <ul>
                         <KeyItem icon="not-started" text="Section not started"/>
                         <KeyItem icon="in-progress" text="Section in progress"/>

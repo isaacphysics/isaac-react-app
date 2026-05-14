@@ -8,6 +8,7 @@ import classNames from "classnames";
 import { Spacer } from "../Spacer";
 import { ShareLink } from "../ShareLink";
 import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
+import { useTranslation } from 'react-i18next'
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -28,6 +29,7 @@ interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
+    const { t } = useTranslation()
     const {gameboard, linkLocation, onDelete, children, assignment, setAssignmentsDetails, ...rest} = props;
 
     const [showMore, setShowMore] = useState(false);
@@ -95,16 +97,16 @@ export const GameboardCard = (props: GameboardCardProps) => {
                         ? <>
                             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                                 {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
-                                Attempted
+                                {t('attempted', 'Attempted')}
                             </Label>
                             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                                 {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
-                                Correct
+                                {t('correct', 'Correct')}
                             </Label> 
                         </>
                         : <>
-                            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
-                                Assigned to
+                            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title={t('numberOfGroupsAssigned', 'Number of groups assigned')}>
+                                {t('assignedTo2', 'Assigned to')}
                                 <div className="board-bubble-info">{setAssignmentsDetails?.groupCount ?? 0}</div>
                                 group{setAssignmentsDetails?.groupCount !== 1 && "s"}
                             </Label>
@@ -117,7 +119,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
                         </div>}
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
-                            Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
+                            {t('assign', 'Assign')}{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && t('unassign2', ' / Unassign')}
                         </Button> 
                     </div>
                     : boardLink && <div className="d-flex justify-content-end card-share-link">
@@ -127,7 +129,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
                 {isSetAssignments && !above['md'](deviceSize) &&
                     <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
-                        Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
+                        {t('assign', 'Assign')}{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && t('unassign2', ' / Unassign')}
                     </Button> 
                 }
 
@@ -139,9 +141,9 @@ export const GameboardCard = (props: GameboardCardProps) => {
         <Collapse isOpen={showMore} className="w-100">
             <Row>
                 <Col xs={12} md={8} className="mt-sm-2">
-                    <p className="mb-0"><strong>Questions:</strong> {gameboard?.contents?.length || "0"}</p>
+                    <p className="mb-0"><strong>{t('questions2', 'Questions:')}</strong> {gameboard?.contents?.length || "0"}</p>
                     {isDefined(topics) && topics.length > 0 && <p className="mb-0">
-                        <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
+                        <strong>{t('topics2', { defaultValue_one: 'Topic:', defaultValue_other: 'Topics:', count: topics.length })}</strong>{" "}
                         {topics.join(", ")}
                     </p>}
                 </Col>
@@ -179,7 +181,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
         return <Link {...rest} className={classNames("w-100 d-flex assignments-card mb-3", rest.className)} to={boardLink}>
             {card}
             {onDelete && <Button className="delete-button" color="solid" onClick={(e) => {onDelete(); e.preventDefault();}}>
-                <i className="icon icon-bin icon-sm icon-color-white" aria-label="Delete board" />
+                <i className="icon icon-bin icon-sm icon-color-white" aria-label={t('deleteBoard', 'Delete board')} />
             </Button>}
         </Link>;
     } else {

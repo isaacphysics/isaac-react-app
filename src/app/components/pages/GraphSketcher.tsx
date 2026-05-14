@@ -11,8 +11,10 @@ import {
 } from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
 import {ifKeyIsEnter, isDefined, isStaff, useModalWithScroll} from "../../services";
+import { useTranslation } from 'react-i18next'
 
 const GraphSketcherPage = () => {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull);
     const [modalVisible, setModalVisible] = useState(false);
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
@@ -90,7 +92,7 @@ const GraphSketcherPage = () => {
             </div>
             {graphSpec && graphSpec.map((spec, i) => <pre key={i}>{spec}</pre>)}
             <div className="question-content d-flex justify-content-center d-print-none">
-                <div><i>{isDefined(currentAttempt?.value) ? "Click on the grid to edit your sketch." : "Click on the grid to start your sketch."}</i></div>
+                <div><i>{isDefined(currentAttempt?.value) ? t('clickOnTheGridToEditYourSketch', 'Click on the grid to edit your sketch.') : t('clickOnTheGridToStartYourSketch', 'Click on the grid to start your sketch.')}</i></div>
             </div>
         </Container>
     </div>;

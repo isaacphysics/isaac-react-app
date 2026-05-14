@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Col, Container, Row} from 'reactstrap';
 import Cookies from 'js-cookie';
+import { Trans } from 'react-i18next'
 
 const WARNING_COOKIE = "warningBannerDismissed";
 
@@ -22,11 +23,9 @@ export const WarningBanner = () => {
             <Container>
                 <Row style={{alignItems: "center", textAlign: "center"}}>
                     <Col xs={12} md={12}>
-                        <span>
-                            Isaac Computer Science will be temporarily unavailable as we make some exciting updates to the platform. <br />
+                        <span><Trans i18nKey="isaacComputerScienceWillBeTemporarilyUnavailableAsWeMakeSomeExcitingUpdatesToThePlatformBrTheSiteIsExpectedToBeDownFrom4pmOn27March2023FollowUsOnTwitterFacebookOrInstagramForUpdatesBrWeCantWaitForYouToSeeIt">Isaac Computer Science will be temporarily unavailable as we make some exciting updates to the platform. <br />
                             The site is expected to be down from 4pm on 27 March 2023. Follow us on Twitter, Facebook or Instagram for updates. <br />
-                            We can’t wait for you to see it!
-                        </span>
+                            We can’t wait for you to see it!</Trans></span>
                     </Col>
                 </Row>
             </Container>

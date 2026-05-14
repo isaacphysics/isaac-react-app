@@ -5,8 +5,10 @@ import classNames from "classnames";
 import { DropdownItem, Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import { useCurrentQuestionAttempt } from "../../../services";
 import { Markup } from "../markup";
+import { useTranslation } from 'react-i18next'
 
 export const InlineMultiChoiceEntryZone = ({questionDTO, focusRef, setModified, correctness, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacMultiChoiceQuestionDTO>) => {
+    const { t } = useTranslation()
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChoiceQuestionDTO>(questionDTO.id as string);
     const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +41,7 @@ export const InlineMultiChoiceEntryZone = ({questionDTO, focusRef, setModified, 
                     data-unit={'None'}
                     onClick={() => {updateCurrentAttempt({newValue: undefined});}}
                 >
-                    <span className="fst-italic text-muted">(clear)</span>
+                    <span className="fst-italic text-muted">{t('clear', '(clear)')}</span>
                 </DropdownItem>
                 {questionDTO.choices?.map((item, i) => {
                     return <DropdownItem key={i}

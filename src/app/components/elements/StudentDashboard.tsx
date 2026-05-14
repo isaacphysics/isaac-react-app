@@ -11,8 +11,10 @@ import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
 import { getFriendlyDaysUntil } from './DateString';
 import { FeatureFlag, useFeatureFlag } from '../../services/featureFlag';
+import { useTranslation, Trans } from 'react-i18next'
 
 const GroupJoinPanel = () => {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull);
     const dispatch = useAppDispatch();
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
@@ -25,24 +27,22 @@ const GroupJoinPanel = () => {
         }
     }
 
-    return <div className='w-100 dashboard-panel'>
-        <h4>Join a group</h4>
-        Enter the code given by your teacher to create a teacher connection and join a group.
-        <InputGroup className="my-4 separate-input-group">
+    return <div className='w-100 dashboard-panel'><Trans i18nKey="h4joinAGrouph4EnterTheCodeGivenByYourTeacherToCreateATeacherConnectionAndJoinAGroup"><h4>Join a group</h4>
+        Enter the code given by your teacher to create a teacher connection and join a group.</Trans><InputGroup className="my-4 separate-input-group">
             <Input
-                type="text" placeholder="Enter code"
+                type="text" placeholder={t('enterCode', 'Enter code')}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                 onKeyDown={(e) => {if (e.key === 'Enter') {
                     e.preventDefault();
                 }}}
             />
             <Button onClick={processToken} color="solid">
-                Connect
+                {t('connect', 'Connect')}
             </Button>
         </InputGroup>
         <Spacer/>
         <Link to="/account#teacherconnections" className="panel-link">
-            See my existing groups
+            {t('seeMyExistingGroups', 'See my existing groups')}
         </Link>
     </div>;
 };
@@ -52,35 +52,32 @@ interface DashboardStreakPanelProps {
 }
 
 const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
+    const { t } = useTranslation()
 
     const streaksTooltip = useRef(null);
-    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={streaksTooltip}>
-            The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/><br/>
-            Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!
-    </UncontrolledTooltip>;
+    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={streaksTooltip}><Trans i18nKey="theWeeklyStreakIndicatesTheNumberOfConsecutiveWeeksYouHaveBeenActiveOnIsaacbrbrAnswerAtLeastTenQuestionPartsCorrectlyPerWeekToFillUpYourWeeklyProgressBarAndIncreaseYourStreak">The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/><br/>
+            Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!</Trans></UncontrolledTooltip>;
 
     const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
     const streakLength = (streakRecord?.weeklyStreakRecord?.currentStreak || 0);
     const inStreakFreezeRange = new Date(1766361600000) <= new Date() && new Date() <= new Date(1767571200000);
 
     return <div className='w-100 dashboard-panel'>
-        <h4>Build your weekly streak</h4>
+        <h4>{t('buildYourWeeklyStreak', 'Build your weekly streak')}</h4>
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
         <div className="streak-text mb-2">
             {streakLength >= 1 && inStreakFreezeRange
-                ? "Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!"
+                ? t('enjoyYourFestiveTwoWeekStreakFreezeFrom22ndDecTo4thJan', 'Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!')
                 : remainingToAnswer <= 0
-                    ? `You've maintained your streak for this week!`
-                    : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+                    ? t('youveMaintainedYourStreakForThisWeek', 'You\'ve maintained your streak for this week!')
+                    : t('onlyRemainingtoanswerMoreQuestionPartsToAnswerCorrectlyThisWeek', 'Only {{remainingToAnswer}} more question parts to answer correctly this week!', { remainingToAnswer })
 
             }
         </div>
         <Spacer/>
-        <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
-            <i className="icon icon-info icon-color-grey"/> What is this?
-        </Button>
+        <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}><Trans i18nKey="iClassnameiconIconinfoIconcolorgreyWhatIsThis"><i className="icon icon-info icon-color-grey"/> What is this?</Trans></Button>
         {tooltip}
     </div>;
 };
@@ -92,6 +89,7 @@ interface AssignmentCardProps {
 }
 
 export const AssignmentCard = (props: AssignmentCardProps) => {
+    const { t } = useTranslation()
     const { assignment, isTeacherDashboard, groups } = props;
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
 
@@ -137,7 +135,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             </h5>
             <Spacer/>
             <div className="d-flex text-nowrap">
-                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due {getFriendlyDaysUntil(dueDate)}</span>)}
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">{t('overdue', 'Overdue')}</span> : <span className="me-3">{t('due', 'Due')} {getFriendlyDaysUntil(dueDate)}</span>)}
                 <span className="group-name">{groupName}</span>
             </div>
         </Card>
@@ -151,6 +149,7 @@ interface CurrentWorkPanelProps {
 }
 
 const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPanelProps) => {
+    const { t } = useTranslation()
     if (!isDefined(assignments) || !isDefined(quizAssignments)) {
         return <div className="dashboard-panel"/>;
     }
@@ -158,16 +157,16 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
     const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
-        <h4>Complete current work</h4>
+        <h4>{t('completeCurrentWork', 'Complete current work')}</h4>
         {toDo.length === 0 
             ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">
-                <span className="mb-2 row d-flex justify-content-center">You have no active assignments.</span>
+                <span className="mb-2 row d-flex justify-content-center">{t('youHaveNoActiveAssignments', 'You have no active assignments.')}</span>
                 <Link to="/assignments" className="d-inline panel-link">
-                    View older assignments.
+                    {t('viewOlderAssignments', 'View older assignments.')}
                 </Link>
             </div> 
             : <>
-                <span className="mb-2">You have assignments that are active or due soon:</span>
+                <span className="mb-2">{t('youHaveAssignmentsThatAreActiveOrDueSoon', 'You have assignments that are active or due soon:')}</span>
                 <div className="row overflow-y-auto pt-1 mt-n1">
                     {toDo.map((assignment: IAssignmentLike) => <div key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3">
                         <AssignmentCard assignment={assignment} groups={groups}/>
@@ -176,10 +175,10 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
                 <Spacer/>
                 <div className="d-flex align-items-center">
                     <Link to="/assignments" className="d-inline panel-link">
-                        See all assignments
+                        {t('seeAllAssignments', 'See all assignments')}
                     </Link>
                     <Link to="/tests" className="d-inline panel-link ms-auto ms-lg-7 ms-xl-auto">
-                        See all tests
+                        {t('seeAllTests', 'See all tests')}
                     </Link>
                 </div>
             </>}
@@ -192,26 +191,27 @@ interface MyIsaacPanelProps {
 };
 
 const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
+    const { t } = useTranslation()
     return <div className='w-100 dashboard-panel'>
-        <h4>More in My Isaac</h4>
+        <h4>{t('moreInMyIsaac', 'More in My Isaac')}</h4>
         <div className="d-flex flex-column">
             <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
-                My question decks
+                {t('myQuestionDecks', 'My question decks')}
             </Link>
             <Link to="/assignments" className="panel-my-isaac-link">
-                My assignments
+                {t('myAssignments', 'My assignments')}
                 {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
             </Link>
             <Link to="/progress" className="panel-my-isaac-link">
-                My progress
+                {t('myProgress', 'My progress')}
             </Link>
             <Link to="/tests" className="panel-my-isaac-link">
-                My tests
+                {t('myTests', 'My tests')}
                 {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
             </Link>
             <div className="section-divider"/>
             <Link to="/account" className="panel-my-isaac-link">
-                My account
+                {t('myAccount', 'My account')}
             </Link>
         </div>
     </div>; 
@@ -225,6 +225,7 @@ interface StudentDashboardProps {
 }
 
 export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
+    const { t } = useTranslation()
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
@@ -232,7 +233,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
+        {nameToDisplay && <h3>{t('welcomeBackNametodisplay', 'Welcome back, {{nameToDisplay}}!', { nameToDisplay })}</h3>}
         {deviceSize === "lg"
             ? <>
                 <Row>

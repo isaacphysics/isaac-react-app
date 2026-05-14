@@ -4,16 +4,18 @@ import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
 import {zeroOrLess} from "../../../services";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface SelectedEventDetailsProps {
     event: AugmentedEvent;
 }
 export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
+    const { t } = useTranslation()
     return <Card>
         <CardBody>
-            <h3 className="h-subtitle mb-1">Selected event details</h3>
+            <h3 className="h-subtitle mb-1">{t('selectedEventDetails', 'Selected event details')}</h3>
             <p className="m-0">
-                <strong>Event: </strong>
+                <strong>{t('event', 'Event:')} </strong>
                 <Link to={`/events/${event.id}`} target="_blank">
                     {event.title} {event.subtitle}
                 </Link>
@@ -21,7 +23,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
 
                 {event.location && event.location.address && event.location.address.addressLine1 &&
                     <>
-                        <strong>Location: </strong>
+                        <strong>{t('location', 'Location:')} </strong>
                         {event.location.address.addressLine1}{", "}
                         {event.location.address.town}{", "}
                         {event.location.address.postalCode}
@@ -29,19 +31,19 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                     </>
                 }
 
-                <strong>Event status: </strong>
+                <strong>{t('eventStatus', 'Event status:')} </strong>
                 <span className={event.isCancelled ? "text-danger fw-bold" : ""}>{event.eventStatus}</span>
                 <br />
 
-                <strong>Event start: </strong>
+                <strong>{t('eventStart', 'Event start:')} </strong>
                 <DateString>{event.date}</DateString> - <DateString>{event.endDate}</DateString>
                 <br />
 
-                <strong>Booking deadline: </strong>
+                <strong>{t('bookingDeadline', 'Booking deadline:')} </strong>
                 <DateString>{event.bookingDeadline}</DateString>
                 <br />
 
-                <strong>Prepwork deadline: </strong>
+                <strong>{t('prepworkDeadline', 'Prepwork deadline:')} </strong>
                 <DateString>{event.prepWorkDeadline}</DateString>
                 <br />
 
@@ -50,10 +52,8 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                 {/*{selectedEvent.isaacGroupToken}*/}
                 {/*<br />*/}
 
-                <span className={zeroOrLess(event.placesAvailable) ? "text-danger" : ""}>
-                    <strong>Number of places available: </strong>
-                    {event.placesAvailable} / {event.numberOfPlaces}
-                </span>
+                <span className={zeroOrLess(event.placesAvailable) ? "text-danger" : ""}><Trans i18nKey="strongnumberOfPlacesAvailableStrongPlacesavailableEventplacesavailableNumberofplacesEventnumberofplaces"><strong>Number of places available: </strong>
+                    {{ placesAvailable: event.placesAvailable }} / {{ numberOfPlaces: event.numberOfPlaces }}</Trans></span>
             </p>
         </CardBody>
     </Card>;

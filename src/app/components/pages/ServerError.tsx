@@ -3,8 +3,10 @@ import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE_TITLE_SHORT, trackEvent, WEBMASTER_EMAIL} from "../../services";
+import { useTranslation } from 'react-i18next'
 
 export const ServerError = () => {
+    const { t } = useTranslation()
     useEffect(() => {
         trackEvent("exception", { props: { description: `server_error`, fatal: true } });
     }, []);
@@ -13,10 +15,10 @@ export const ServerError = () => {
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "icon", icon: "icon-error"}} />
 
-            <h3 className="my-4">{`We're sorry, but an error has occurred on the ${SITE_TITLE_SHORT} server!`}</h3>
+            <h3 className="my-4">{t('wereSorryButAnErrorHasOccurredOnTheSite_title_shortServer', 'We\'re sorry, but an error has occurred on the {{SITE_TITLE_SHORT}} server!', { SITE_TITLE_SHORT })}</h3>
 
             <p>
-                {"You may want to "}
+                {t('youMayWantTo', 'You may want to ')}
                 <a
                     role="button"
                     tabIndex={0}
@@ -24,19 +26,19 @@ export const ServerError = () => {
                     onKeyPress={() => window.location.reload()}
                     onClick={() => window.location.reload()}
                 >
-                    refresh this page and try again
+                    {t('refreshThisPageAndTryAgain', 'refresh this page and try again')}
                 </a>
                 {", "}
                 <Link to="/">
-                    return to our homepage
+                    {t('returnToOurHomepage', 'return to our homepage')}
                 </Link>
-                {", or "}
+                {t('or2', ', or ')}
                 <Link to="/contact">
                     contact
                 </Link>
-                {" or "}
+                {t('or3', ' or ')}
                 <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
-                {" us if this keeps happening."}
+                {t('usIfThisKeepsHappening', ' us if this keeps happening.')}
             </p>
         </div>
     </Container>;

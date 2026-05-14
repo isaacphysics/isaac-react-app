@@ -5,8 +5,10 @@ import {selectors, useAppSelector} from "../../state";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Link } from "react-router-dom";
 import { Alert } from "reactstrap";
+import { useTranslation } from 'react-i18next'
 
 export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 
@@ -17,16 +19,16 @@ export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
 
     return <Alert color="warning" className={"no-print"}>
         {userContext.contexts.length === 1 && userContext.contexts[0].examBoard && userContext.contexts[0].stage ?
-            `There is no content on this page for ${examBoardLabelMap[userContext.contexts[0].examBoard]} ${stageLabelMap[userContext.contexts[0].stage]}. ` :
-            `There is no content on this page for your stage ${isAda && "and exam board"} preferences. `
+            t('thereIsNoContentOnThisPageForValVal2', 'There is no content on this page for {{val}} {{val2}}.', { val: examBoardLabelMap[userContext.contexts[0].examBoard], val2: stageLabelMap[userContext.contexts[0].stage] }) :
+            t('thereIsNoContentOnThisPageForYourStageValPreferences', 'There is no content on this page for your stage {{val}} preferences.', { val: isAda && "and exam board" })
         }
         { isLoggedIn(user) &&
             <>
-                You can change your preferences <strong>by updating your profile <Link to="/account">here</Link>.</strong>
+                {t('youCanChangeYourPreferences', 'You can change your preferences')} <strong>{t('byUpdatingYourProfile', 'by updating your profile')} <Link to="/account">here</Link>.</strong>
             </>
         }
         <br/><br/>
-        {"If you think that the page is incorrectly tagged, please "}
+        {t('ifYouThinkThatThePageIsIncorrectlyTaggedPlease', 'If you think that the page is incorrectly tagged, please ')}
         <strong><Link to={`/contact?preset=contentProblem&page=${doc.id}`}>contact us</Link></strong>.
     </Alert>;
 }

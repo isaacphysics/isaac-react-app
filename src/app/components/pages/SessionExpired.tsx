@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {trackEvent, WEBMASTER_EMAIL} from "../../services";
+import { useTranslation } from 'react-i18next'
 
 export const SessionExpired = () => {
+    const { t } = useTranslation()
     useEffect(() => {
         trackEvent("exception", { props: { description: `session_expired`, fatal: true } });
     }, []);
@@ -12,10 +14,10 @@ export const SessionExpired = () => {
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session expired" icon={{type: "icon", icon: "icon-error"}}/>
 
-            <h3 className="my-4">{"We're sorry, but your session has expired!"}</h3>
+            <h3 className="my-4">{t('wereSorryButYourSessionHasExpired', 'We\'re sorry, but your session has expired!')}</h3>
 
             <p>
-                {"You should "}
+                {t('youShould', 'You should ')}
                 <a
                     role="button"
                     tabIndex={0}
@@ -23,18 +25,18 @@ export const SessionExpired = () => {
                     onKeyPress={() => window.location.reload()}
                     onClick={() => window.location.reload()}
                 >
-                    refresh this page and try again
+                    {t('refreshThisPageAndTryAgain', 'refresh this page and try again')}
                 </a>
-                {", or try refreshing whilst "}
+                {t('orTryRefreshingWhilst', ', or try refreshing whilst ')}
                 <a href="https://en.wikipedia.org/wiki/Wikipedia:Bypass_your_cache#Bypassing_cache" target="_blank" rel="noopener noreferrer">
-                    {"bypassing your browser's cache"}
+                    {t('bypassingYourBrowsersCache', 'bypassing your browser\'s cache')}
                 </a>
-                {", which may have saved an outdated version of Isaac."}
+                {t('whichMayHaveSavedAnOutdatedVersionOfIsaac', ', which may have saved an outdated version of Isaac.')}
             </p>
             <p>
-                {"Please email "}
+                {t('pleaseEmail', 'Please email ')}
                 <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a>
-                {" if this keeps happening."}
+                {t('ifThisKeepsHappening', ' if this keeps happening.')}
             </p>
         </div>
     </Container>;

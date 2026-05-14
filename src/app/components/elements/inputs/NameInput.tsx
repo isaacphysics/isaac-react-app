@@ -3,6 +3,7 @@ import React, {ChangeEvent} from "react";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
 
 interface NameInputProps {
     className?: string;
@@ -14,8 +15,9 @@ interface NameInputProps {
 }
 
 export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
+    const { t } = useTranslation()
     return <FormGroup className={`form-group ${className}`}>
-        <Label htmlFor="family-name-input" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Last name</Label>
+        <Label htmlFor="family-name-input" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t('lastName', 'Last name')}</Label>
         <Input
             id="family-name-input"
             type="text"
@@ -28,15 +30,16 @@ export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameV
             aria-describedby="familyNameValidationMessage"
         />
         <FormFeedback id="familyNameValidationMessage">
-            Please enter a valid name.
+            {t('pleaseEnterAValidName', 'Please enter a valid name.')}
         </FormFeedback>
     </FormGroup>;
 };
 
 export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
+    const { t } = useTranslation()
     return <FormGroup className={`form-group ${className}`}>
         <Label className={classNames("fw-bold", (required ? "form-required" : "form-optional"))} htmlFor="given-name-input">
-            First name
+            {t('firstName', 'First name')}
         </Label>
         <Input
             id="given-name-input"
@@ -50,7 +53,7 @@ export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameVa
             aria-describedby="givenNameValidationMessage"
         />
         <FormFeedback id="givenNameValidationMessage">
-            Please enter a valid name.
+            {t('pleaseEnterAValidName', 'Please enter a valid name.')}
         </FormFeedback>
     </FormGroup>;
 };

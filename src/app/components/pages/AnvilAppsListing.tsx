@@ -6,8 +6,10 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { AnvilAppsListingSidebar } from "../elements/sidebar/AnvilAppsListingSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 export const AnvilAppsListing = () => {
+    const { t } = useTranslation()
     const pageContext = useUrlPageTheme();
     const crumb = isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
@@ -22,14 +24,14 @@ export const AnvilAppsListing = () => {
                 intermediateCrumbs={crumb ? [crumb] : []}
                 icon={{ icon: "icon-revision", type: "icon" }}
             />
-            <p className="mt-4">Tools are not available for {getHumanContext(pageContext)}.</p>
+            <p className="mt-4">{t('toolsAreNotAvailableFor', 'Tools are not available for')} {getHumanContext(pageContext)}.</p>
         </Container>;
     }
 
     return <PageContainer data-bs-theme={pageContext?.subject}
         pageTitle={
             <TitleAndBreadcrumb 
-                currentPageTitle={pageContext.stage[0] === "university" ? "Skills practice" : "Core skills practice"}
+                currentPageTitle={pageContext.stage[0] === "university" ? "Skills practice" : t('coreSkillsPractice', 'Core skills practice')}
                 intermediateCrumbs={crumb ? [crumb] : []}
                 icon={{icon: "icon-revision", type: "icon"}}
             />

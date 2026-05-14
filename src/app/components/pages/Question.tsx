@@ -43,6 +43,7 @@ import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSid
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../navigation/AssignedQuestionWarningBanner";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface QuestionPageProps{
     questionIdOverride?: string;
@@ -50,6 +51,7 @@ interface QuestionPageProps{
 }
 
 export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
+    const { t } = useTranslation()
     const location = useLocation();
     const params = useParams();
     const questionId = questionIdOverride || params.questionId || "";
@@ -137,12 +139,11 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                             </WithFigureNumbering>
 
                             {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
-                                This question {" "}
+                                {t('thisQuestion2', 'This question')} {" "}
                                 <Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                                    has been replaced
-                                </Button>.<br />
-                                However, if you were assigned this version, you should complete it.
-                            </div>}
+                                    {t('hasBeenReplaced', 'has been replaced')}
+                                </Button><Trans i18nKey="brHoweverIfYouWereAssignedThisVersionYouShouldCompleteIt">.<br />
+                                However, if you were assigned this version, you should complete it.</Trans></div>}
 
                             {doc.attribution && <p className="text-muted">
                                 <Markup trusted-markup-encoding={"markdown"}>

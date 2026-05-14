@@ -35,6 +35,7 @@ import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeed
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Alert, Button, Col, Form, Row } from "reactstrap";
 import { useLocation } from "react-router";
+import { useTranslation, Trans } from 'react-i18next'
 
 function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
     // We skip the check with the API if the question type is not a restricted question type
@@ -49,6 +50,7 @@ function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof use
 }
 
 export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const location = useLocation();
     const accordion = useContext(AccordionSectionContext);
@@ -88,19 +90,34 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     );
 
     const tooManySigFigsFeedback = <p>
-        Whether your answer is correct or not, it has the wrong number of&nbsp;
-        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+        <Trans i18nKey={"feedback.badSigFigs"}>
+            Whether your answer is correct or not, it has the wrong number of&nbsp;
+            <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> {t('significantFigures3', 'significant figures')}</a></strong>.
+        </Trans>
     </p>;
 
     const tooFewSigFigsFeedback = <p>
-        We can&apos;t mark this until you provide more&nbsp;
-        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+        <Trans i18nKey={"feedback.tooFewSigFigs"}>
+            We can&apos;t mark this until you provide more&nbsp;
+            <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> {t('significantFigures3', 'significant figures')}</a></strong>.
+        </Trans>
     </p>;
 
     const invalidFormatFeeback = <p>
-        Your answer is not in a format we recognise, please enter your answer as a decimal number.<br/>
-        {invalidFormatErrorStdForm && <>When writing standard form, you must include <code>^</code> or <code>**</code> between the 10 and the exponent.<br/></>}
-        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a>.</>}
+        <Trans i18nKey={"feedback.invalidFormat"}>
+            Your answer is not in a format we recognise, please enter your answer as a decimal number.
+        </Trans>
+        <br/>
+        {invalidFormatErrorStdForm && (
+            <Trans i18nKey={"feedback.invalidFormatStdForm"}>
+                When writing standard form, you must include <code>^</code> or <code>**</code> between the 10 and the exponent.
+            </Trans>
+        )}
+        {isPhy && (
+            <Trans i18nKey={"feedback.invalidFormatPhy"}>
+                For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a>.
+            </Trans>
+        )}
     </p>;
 
     // Register Question Part in Redux
@@ -156,7 +173,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
-    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? "Marking your answer…" : "Check my answer";
+    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? t('question.submission.markingYourAnswer', 'Marking your answer…') : t('question.submission.checkMyAnswer', 'Check my answer');
     const primaryAction = isFastTrack 
         ? determineFastTrackPrimaryAction(fastTrackInfo) 
         : isInlineQuestion 
@@ -205,7 +222,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 {isAda && (!validationResponse || !correct || canSubmit) && <Row>
                     <Col xl={{size: 10}} >
                         {doc.hints && !!doc.hints.length && <p className="no-print mb-0">
-                            <small>{"Don't forget to use the hints if you need help."}</small>
+                            <small>{t('hint.reminderAda', 'Don\'t forget to use the hints if you need help.')}</small>
                         </p>}
                     </Col>
                 </Row>}
@@ -221,16 +238,18 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         {
                             <h1 className="m-0">
                                 {correct ? "Correct!" : (
-                                    sigFigsError ? "Significant Figures" : (
-                                        almost ? "Partly correct..." : "Incorrect"
-                                    )
+                                    sigFigsError 
+                                        ? t('significantFigures', 'Significant Figures') 
+                                        : almost 
+                                            ? t('partlyCorrect', 'Partly correct...') 
+                                            : t('incorrect', 'Incorrect')
                                 )}
                             </h1>
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
-                            <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
+                            <span>{t('youCanViewFeedbackForASpecificBoxByEitherSelectingItAboveOrByUsingTheControlPanelBelow', 'You can view feedback for a specific box by either selecting it above, or by using the control panel below.')}</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <Button color="transparent" onClick={() => {
@@ -241,8 +260,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                                     <Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
                                         if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
                                     }}>
-                                        Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
-                                    </Button>
+                                        {t('box', 'Box')} {inlineContext.feedbackIndex as number + 1}{t('ofNuminlinequestions', 'of {{numInlineQuestions}}', { numInlineQuestions })}</Button>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
@@ -259,7 +277,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
                 {/* Lock */}
                 {locked && <Alert color="danger" className={"no-print"}>
-                    This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to prevent repeated guessing.
+                    {t('feedback.locked', 'This question is locked until at least {{val}} to prevent repeated guessing.', { val: <DateString formatter={TIME_ONLY}>{locked}</DateString> })}
                 </Alert>}
 
                 {/* Action Buttons */}

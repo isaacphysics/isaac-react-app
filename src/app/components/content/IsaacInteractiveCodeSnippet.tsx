@@ -6,15 +6,17 @@ import {logAction, selectors, useAppDispatch, useAppSelector, useGetSegueEnviron
 import {Alert, Button} from "reactstrap";
 import {Loading} from "../handlers/IsaacSpinner";
 import {Link} from "react-router-dom";
+import { useTranslation } from 'react-i18next'
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 const InteractiveCodeSnippetTimeoutError = ({doc}: {doc: InteractiveCodeSnippetDTO}) => {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull);
     const faqLink = doc.language === "sql" ? "/support/student/code#sql-editor" : "/support/student/code#code-editor";
 
     const usefulInformation = useMemo(() => ({
-        userId: user?.loggedIn && user.id || "Not currently logged in",
+        userId: user?.loggedIn && user.id || t('notCurrentlyLoggedIn', 'Not currently logged in'),
         location: window.location.href,
         userAgent: window.navigator.userAgent,
     }), [user]);
@@ -61,6 +63,7 @@ const InteractiveCodeSnippetTimeoutError = ({doc}: {doc: InteractiveCodeSnippetD
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
 export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const uid = useRef((doc?.id || "") + uuid_v4().slice(0, 8));
@@ -133,20 +136,20 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                         sendMessage({
                             type: "feedback",
                             succeeded: true,
-                            message: "Your code is correct!"
+                            message: t('yourCodeIsCorrect', 'Your code is correct!')
                         });
                     } else {
                         sendMessage({
                             type: "feedback",
                             succeeded: false,
-                            message: "Your code is incorrect!"
+                            message: t('yourCodeIsIncorrect', 'Your code is incorrect!')
                         });
                     }
                 } else {
                     sendMessage({
                         type: "feedback",
                         succeeded: true,
-                        message: "Your code ran correctly!"
+                        message: t('yourCodeRanCorrectly', 'Your code ran correctly!')
                     });
                 }
                 break;

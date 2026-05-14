@@ -3,9 +3,10 @@ import {AppState, hideToast, useAppDispatch, useAppSelector} from "../../state";
 import {Toast as ToastType} from "../../../IsaacAppTypes";
 import {siteSpecific} from "../../services";
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
+import i18next from 'i18next'
 
-export const FAILURE_TOAST: ToastType = {color: "danger", title: "Validation error", timeout: 5000, body: "Required information is not present."};
-export const SUCCESS_TOAST: ToastType = {color: "success", title: "Action completed", timeout: 5000, body: "Action completed successfully."};
+export const FAILURE_TOAST: ToastType = {color: "danger", title: i18next.t('validationError', 'Validation error'), timeout: 5000, body: i18next.t('requiredInformationIsNotPresent', 'Required information is not present.')};
+export const SUCCESS_TOAST: ToastType = {color: "success", title: i18next.t('actionCompleted', 'Action completed'), timeout: 5000, body: i18next.t('actionCompletedSuccessfully', 'Action completed successfully.')};
 
 export const Toasts = () => {
     const dispatch = useAppDispatch();

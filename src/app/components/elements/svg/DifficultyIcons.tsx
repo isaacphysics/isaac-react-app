@@ -6,6 +6,7 @@ import classnames from "classnames";
 import {Rectangle} from "./Rectangle";
 import {Circle} from "./Circle";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
 
 // Difficulty icon proportions
 const difficultyIconWidth = siteSpecific(15, 25);
@@ -28,9 +29,10 @@ interface DifficultyIconShapeProps {
 }
 
 function SingleDifficultyIconShape({difficultyCategory, difficultyCategoryLevel, active, blank, size}: DifficultyIconShapeProps) {
+    const { t } = useTranslation()
     const iconWidth = size === "lg" ? difficultyIconWidth * 2 : difficultyIconWidth;
     // FIXME the calculations here need refactoring, had to rush them to get it done
-    return <g transform={`translate(${(difficultyCategoryLevel - 1) * (iconWidth + 2 * difficultyIconXPadding) + siteSpecific(0, 1)}, ${isAda ? yPadding + 2 : difficultyCategory === "P" ? 0 : squareOffset})`}>
+    return <g transform={t('translatevalVal2', 'translate({{val}}, {{val2}})', { val: (difficultyCategoryLevel - 1) * (iconWidth + 2 * difficultyIconXPadding) + siteSpecific(0, 1), val2: isAda ? yPadding + 2 : difficultyCategory === "P" ? 0 : squareOffset })}>
         {difficultyCategory === "P" ?
             siteSpecific(
                 <Hexagon {...(size === "lg" ? largeHexagon : miniHexagon)} className={"hex difficulty practice " + classnames({active})} />,
@@ -47,6 +49,7 @@ function SingleDifficultyIconShape({difficultyCategory, difficultyCategoryLevel,
 }
 
 export function DifficultyIcons({difficulty, blank, className} : {difficulty: Difficulty, blank?: boolean, className?: string}) {
+    const { t } = useTranslation()
     const difficultyLabel = difficultyShortLabelMap[difficulty];
     const difficultyCategory = difficultyLabel[0];
     const difficultyLevel = parseInt(difficultyLabel[1]);
@@ -57,7 +60,7 @@ export function DifficultyIcons({difficulty, blank, className} : {difficulty: Di
             role={"img"}
             width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) + difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
-            {...(isPhy && {viewBox: `0 0 ${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding} ${miniHexagon.quarterHeight * 4}`})}
+            {...(isPhy && {viewBox: t('00ValVal2', '0 0 {{val}} {{val2}}', { val: difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding, val2: miniHexagon.quarterHeight * 4 })})}
         >
             <title>{difficultyLabelMap[difficulty]}</title>
             {difficultyCategoryLevels.map(difficultyCategoryLevel => {
@@ -72,13 +75,14 @@ export function DifficultyIcons({difficulty, blank, className} : {difficulty: Di
 }
 
 export function DifficultyIcon({difficultyCategory, className} : {difficultyCategory: string, className?: string}) {
+    const { t } = useTranslation()
     return <div className={classNames(className, "d-inline-flex ps-1 pe-1")}>
         <svg
             className="d-flex"
             role={"img"}
             width={`${difficultyIconWidth * 2}px`}
             height={`${largeHexagon.quarterHeight * 4 + 2 * yPadding}px`}
-            {...(isPhy && {viewBox: `0 0 ${difficultyIconWidth * 2} ${largeHexagon.quarterHeight * 4}`})}
+            {...(isPhy && {viewBox: t('00ValVal2', '0 0 {{val}} {{val2}}', { val: difficultyIconWidth * 2, val2: largeHexagon.quarterHeight * 4 })})}
             transform="translate(0,5)"
         >
             <SingleDifficultyIconShape

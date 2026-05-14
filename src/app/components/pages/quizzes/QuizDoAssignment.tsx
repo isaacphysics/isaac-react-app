@@ -9,12 +9,15 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
 import {Alert, Container} from "reactstrap";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const pageHelp = <span>
-    Answer the questions on each section of the test, then mark the test as complete when you are finished.
+    {i18next.t('answerTheQuestionsOnEachSectionOfTheTestThenMarkTheTestAsCompleteWhenYouAreFinished', 'Answer the questions on each section of the test, then mark the test as complete when you are finished.')}
 </span>;
 
 export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const {page, quizAssignmentId} = useParams();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
@@ -49,7 +52,7 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <h4 className="alert-heading">Error loading assignment!</h4>
+                    <h4 className="alert-heading">{t('errorLoadingAssignment', 'Error loading assignment!')}</h4>
                     <p>{error}</p>
                 </Alert>
             </>}

@@ -7,6 +7,7 @@ import { apiHelper } from "../../../services";
 import { IsaacPodDTO } from "../../../../IsaacApiTypes";
 import { Markup } from "../markup";
 import { IsaacContentValueOrChildren } from "../../content/IsaacContentValueOrChildren";
+import { useTranslation } from 'react-i18next'
 
 export interface IsaacProgrammeDTO extends IsaacPodDTO {
     date?: string;
@@ -19,13 +20,14 @@ interface ProgrammeCardProps extends CardProps {
 }
 
 export const ProgrammeCard = ({ programme, ...rest}: ProgrammeCardProps) => {
+    const { t } = useTranslation()
     const {title, value, children, image, url} = programme;
     return <Card data-testid={"programme-pod"} {...rest} className={classNames("pod", rest.className)}>
         {image && <a href={url} className="focus-target pod-img">
             <CardImg
                 top
                 src={image.src && apiHelper.determineImageUrl(image.src)}
-                alt={image.altText || `Illustration for ${title}`}
+                alt={image.altText || t('illustrationForTitle', 'Illustration for {{title}}', { title })}
                 className="programme-img"
             />
         </a>}
@@ -57,8 +59,8 @@ export const ProgrammeCard = ({ programme, ...rest}: ProgrammeCardProps) => {
             </div>
             <Spacer/>
             <CardText>
-                <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
-                    Read more
+                <Link aria-label={t('titleReadMore', '{{title}} read more', { title })} className="focus-target btn btn-keyline" to={`${url}`}>
+                    {t('readMore', 'Read more')}
                 </Link>
             </CardText>
         </CardBody>

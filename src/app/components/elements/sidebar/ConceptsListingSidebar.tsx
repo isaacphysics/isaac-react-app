@@ -8,6 +8,7 @@ import { Stage } from "../../../../IsaacApiTypes";
 import classNames from "classnames";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { AllFiltersCheckbox, FilterCheckbox } from "./SidebarElements";
+import { useTranslation } from 'react-i18next'
 
 interface SubjectSpecificConceptsListingSidebarProps extends ContentSidebarProps {
     searchText: string | null;
@@ -19,6 +20,7 @@ interface SubjectSpecificConceptsListingSidebarProps extends ContentSidebarProps
 }
 
 export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConceptsListingSidebarProps) => {
+    const { t } = useTranslation()
     const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, ...rest } = props;
 
     const pageContext = useAppSelector(selectors.pageContext.context);
@@ -37,18 +39,18 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search concepts</h5>
+            <h5>{t('searchConcepts', 'Search concepts')}</h5>
             <Input
                 className='search--filter-input my-4'
                 type="search" value={searchText || ""}
-                placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
+                placeholder={t('egVal', 'e.g. {{val}}', { val: getSearchPlaceholder(pageContext?.subject) })}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
             />
 
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <h5>Filter by topic</h5>
+                <h5>{t('filterByTopic', 'Filter by topic')}</h5>
                 <ul>
                     <li>
                         <AllFiltersCheckbox
@@ -83,6 +85,7 @@ interface GenericConceptsListingSidebarProps extends SubjectSpecificConceptsList
 }
 
 export const GenericConceptsListingSidebar = (props: GenericConceptsListingSidebarProps) => {
+    const { t } = useTranslation()
     const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, applicableTags: _applicableTags, ...rest } = props;
 
     const updateSearchStages = (stage: Stage) => {
@@ -103,18 +106,18 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search concepts</h5>
+            <h5>{t('searchConcepts', 'Search concepts')}</h5>
             <Input
                 className='search--filter-input my-4'
                 type="search" value={searchText || ""}
-                placeholder={`e.g. ${getSearchPlaceholder()}`}
+                placeholder={t('egVal', 'e.g. {{val}}', { val: getSearchPlaceholder() })}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
             />
 
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <h5>Filter by subject and topic</h5>
+                <h5>{t('filterBySubjectAndTopic', 'Filter by subject and topic')}</h5>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -142,7 +145,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
                     })}
                 </ul>
                 <div className="section-divider"/>
-                <h5>Filter by stage</h5>
+                <h5>{t('filterByStage', 'Filter by stage')}</h5>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.value] > 0 || searchStages.includes(s.value)).map((stage) =>
                         <li key={stage.value}>

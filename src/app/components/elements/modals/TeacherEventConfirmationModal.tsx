@@ -2,6 +2,8 @@ import React from "react";
 import {ActiveModalProps} from "../../../../IsaacAppTypes";
 import {closeActiveModal, store} from "../../../state";
 import {Button, Col, Row} from "reactstrap";
+import { Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 export const teacherEventConfirmationModal = (submitBooking: () => void, stopBooking: () => void): ActiveModalProps => ({
     closeAction: () => {store.dispatch(closeActiveModal());},
@@ -12,15 +14,15 @@ export const teacherEventConfirmationModal = (submitBooking: () => void, stopBoo
                 <Button onClick={() => {
                     submitBooking();
                     store.dispatch(closeActiveModal());
-                }}>I am a teacher</Button>
+                }}>{i18next.t('iAmATeacher', 'I am a teacher')}</Button>
             </Col>
             <Col className={"text-center"}>
                 <Button onClick={() => {
                     stopBooking();
                     store.dispatch(closeActiveModal());
-                }}>I am not a teacher</Button>
+                }}>{i18next.t('iAmNotATeacher', 'I am not a teacher')}</Button>
             </Col>
         </Row>
     </div>,
-    title: "Please confirm teacher status"
+    title: i18next.t('pleaseConfirmTeacherStatus', 'Please confirm teacher status')
 });

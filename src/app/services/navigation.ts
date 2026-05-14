@@ -28,6 +28,7 @@ import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSumm
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
+import i18next from 'i18next'
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
 export type CollectionType = "Question deck" | "Quiz" | "Topic" | "Master Mathematics";
@@ -83,12 +84,12 @@ export const determinePageNavigation = (
                 collectionType: "Master Mathematics",
                 breadcrumbHistory: gameboardHistory,
                 backToCollection: currentGameboard ? {
-                    title: "Return to Top 10 Questions",
+                    title: i18next.t('returnToTop10Questions', 'Return to Top 10 Questions'),
                     to: `${PATHS.GAMEBOARD}#${currentGameboard.id}`
                 } : undefined,
                 nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
                 previousItem: previousQuestion ? {
-                    title: "Return to Previous Question",
+                    title: i18next.t('returnToPreviousQuestion', 'Return to Previous Question'),
                     to: `/questions/${previousQuestion}`
                 } : undefined,
                 search: queryString.stringify(previousQuestion ? {board, modifiedQuestionHistory} : {board}),
@@ -102,7 +103,7 @@ export const determinePageNavigation = (
                 [];
 
             const breadcrumbHistory = isPhy && isDefined(assignments) && isFound(assignments) && (assignments.map(a => a.gameboardId).includes(gameboardId))
-                ? [{title: "Assignments", to: "/assignments"}, ...gameboardHistory]
+                ? [{title: i18next.t('assignments', 'Assignments'), to: "/assignments"}, ...gameboardHistory]
                 : gameboardHistory;
 
             return {
@@ -137,7 +138,7 @@ export const determinePageNavigation = (
                 return {
                     breadcrumbHistory: [
                         {
-                            title: `${HUMAN_STAGES[pageContext.stage[0]]} ${HUMAN_SUBJECTS[pageContext.subject]}`,
+                            title: i18next.t('valVal2', '{{val}} {{val2}}', { val: HUMAN_STAGES[pageContext.stage[0]], val2: HUMAN_SUBJECTS[pageContext.subject] }),
                             to: `/${pageContext.subject}/${pageContext.stage[0]}`,
                             replace: false
                         },

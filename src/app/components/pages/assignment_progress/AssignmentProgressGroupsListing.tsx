@@ -26,6 +26,7 @@ import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
+import { useTranslation, Trans } from 'react-i18next'
 
 const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -42,16 +43,12 @@ const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: Register
                 <b data-testid="group-name">{group.groupName}</b>
                 <Spacer/>
                 <strong>
-                    <a className={classNames("d-flex align-items-center pe-4", {"text-brand": isPhy})} href={getGroupAssignmentProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                        Download assignments CSV
-                        <i className="icon icon-download ms-2"/>
-                    </a>
+                    <a className={classNames("d-flex align-items-center pe-4", {"text-brand": isPhy})} href={getGroupAssignmentProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}><Trans i18nKey="downloadAssignmentsCsvIClassnameiconIcondownloadMs2">Download assignments CSV
+                        <i className="icon icon-download ms-2"/></Trans></a>
                 </strong>
                 {isTeacherOrAbove(user) && <strong>
-                    <a className={classNames("d-flex align-items-center", {"text-brand": isPhy})} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                        Download tests CSV
-                        <i className="icon icon-download ms-2"/>
-                    </a>
+                    <a className={classNames("d-flex align-items-center", {"text-brand": isPhy})} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}><Trans i18nKey="downloadTestsCsvIClassnameiconIcondownloadMs2">Download tests CSV
+                        <i className="icon icon-download ms-2"/></Trans></a>
                 </strong>}
             </div>
             <div className="flex-grow-1 flex-lg-grow-0"/>
@@ -62,6 +59,7 @@ const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: Register
 };
 
 export const AssignmentProgressGroupsListing = ({user, groups}: {user: RegisteredUserDTO, groups?: AppGroup[]}) => {
+    const { t } = useTranslation()
 
     const [groupSearch, setGroupSearch] = useState("");
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
@@ -71,7 +69,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
         <PageContainer
             pageTitle={
                 <TitleAndBreadcrumb
-                    currentPageTitle={siteSpecific("Assignment progress", "Markbook")}
+                    currentPageTitle={siteSpecific(t('assignmentProgress', 'Assignment progress'), "Markbook")}
                     icon={{type: "icon", icon: "icon-revision"}}
                 />
             }
@@ -88,12 +86,12 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                 <CardBody>
                     <Row className="row-gap-2">
                         <Col xs={12} md={7} lg={4} xl={3} className="d-flex flex-column">
-                            <Label className="m-0">Search for a group:</Label>
+                            <Label className="m-0">{t('searchForAGroup', 'Search for a group:')}</Label>
                             <SearchInputWithIcon onChange={(e) => setGroupSearch(e.target.value)}/>
                         </Col>
 
                         <Col xs={6} md={5} lg={{size: 3, offset: 5}} xl={{size: 2, offset: 7}} className="d-flex flex-column">
-                            <Label className="m-0">Sort by:</Label>
+                            <Label className="m-0">{t('sortBy2', 'Sort by:')}</Label>
                             <StyledDropdown
                                 value={groupSortOrder}
                                 onChange={(e) => setGroupSortOrder?.(e.target.value as GroupSortOrder)}
@@ -123,13 +121,13 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                     <div className={classNames("d-flex flex-column my-2 py-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                         <span>
                                             { isGroupsEmptyState ?
-                                                "You have no teaching groups yet." : "No groups match your criteria."
+                                                t('youHaveNoTeachingGroupsYet', 'You have no teaching groups yet.') : t('noGroupsMatchYourCriteria', 'No groups match your criteria.')
                                             }
                                         </span>
                                         { isGroupsEmptyState &&
                                             <strong>
                                                 <Link to={PATHS.MANAGE_GROUPS} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
-                                                    Create new group
+                                                    {t('createNewGroup', 'Create new group')}
                                                 </Link>
                                             </strong>
                                         }

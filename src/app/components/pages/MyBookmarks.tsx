@@ -8,8 +8,10 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { MyBookmarksSidebar } from "../elements/sidebar/MyBookmarksSidebar";
 import { BookmarksOrder } from "../../../IsaacAppTypes";
 import { PageFragment } from "../elements/PageFragment";
+import { useTranslation } from 'react-i18next'
 
 export const MyBookmarks = () => {
+    const { t } = useTranslation()
     const bookmarksQuery = useGetBookmarksQuery();
 
     const [searchText, setSearchText] = useState("");
@@ -41,7 +43,7 @@ export const MyBookmarks = () => {
             defaultErrorTitle="Could not load your bookmarks. Please try again later."
             thenRender={(bookmarks) => {
                 if (bookmarks.length === 0) {
-                    return <span>You have no bookmarks yet.</span>;
+                    return <span>{t('youHaveNoBookmarksYet', 'You have no bookmarks yet.')}</span>;
                 }
 
                 const filteredBookmarks = bookmarks.filter(bookmark => {

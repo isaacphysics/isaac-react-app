@@ -21,8 +21,10 @@ import classNames from "classnames";
 import {Markup} from "../markup";
 import { ListGroup, ListGroupItem, Button, UncontrolledTooltip } from "reactstrap";
 import { Spacer } from "../Spacer";
+import { useTranslation } from 'react-i18next'
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
+    const { t } = useTranslation()
     const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
@@ -70,7 +72,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                             {isPhy && item.deEmphasised && <div className="ms-auto me-3 d-flex align-items-center">
                                 <i id={`audience-help-${index}`} className="icon icon-info icon-color-grey" />
                                 <UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
-                                    {`This content has ${notRelevantMessage(userContext)}.`}
+                                    {t('thisContentHasVal', 'This content has {{val}}.', { val: notRelevantMessage(userContext) })}
                                 </UncontrolledTooltip>
                             </div>}
                         </div>

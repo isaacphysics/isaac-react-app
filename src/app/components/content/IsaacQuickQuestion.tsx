@@ -7,6 +7,7 @@ import {determineFastTrackSecondaryAction, FastTrackPageProperties, isAda, isPhy
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
+import { useTranslation } from 'react-i18next'
 
 const elemID = (doc: IsaacQuickQuestionDTO) => { return doc.id?.split("|")[doc.id?.split("|").length - 1]; };
 
@@ -49,6 +50,7 @@ function FastTrackOptions({isVisible, toggle, doc, fastTrackInfo}: OptionsProps)
 }
 
 function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsProps) {
+    const { t } = useTranslation()
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled} = useConfidenceQuestionsValues(
         doc.showConfidence,
         "quick_question",
@@ -70,7 +72,7 @@ function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsP
         {isVisible && <Row className="mt-3 no-print">
             <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
                 <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer} id={`toggle-${elemID(doc)}`}>
-                    Hide answer
+                    {t('hideAnswer', 'Hide answer')}
                 </Button>
             </Col>
         </Row>}
@@ -78,6 +80,7 @@ function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsP
 }
 
 export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const location = useLocation();
     const fastTrackInfo = useFastTrackInformation(doc, location);
@@ -111,7 +114,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
             <div className={classNames({"quick-question": !fastTrackInfo.isFastTrackPage})}>
                 {isAda &&
                     <div className="quick-question-title">
-                        <h3>Try it yourself!</h3>
+                        <h3>{t('tryItYourself', 'Try it yourself!')}</h3>
                     </div>
                 }
                 <div className="question-content clearfix">

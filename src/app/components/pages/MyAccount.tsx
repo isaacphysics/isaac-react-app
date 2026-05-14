@@ -64,6 +64,8 @@ import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { UserTheme } from '../elements/panels/UserTheme';
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -89,31 +91,40 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
         closeAction: () => {
             dispatch(closeActiveModal());
         },
-        title: "Changing schools?",
+        title: i18next.t('account.changeSchools.title', 'Changing schools?'),
         body: <>
             <p className="px-1">
-                If you are changing schools, we recommend you take the following steps:
+                {i18next.t('account.changeSchools.ifYouAreChangingSchoolsWeRecommendYouTakeTheFollowingSteps', 'If you are changing schools, we recommend you take the following steps:')}
             </p>
             <ol type='1'>
                 <li>
-                    Check your <strong><a target="_blank" href="/groups">groups</a>
-                    </strong>. Delete any groups that you will no longer teach.
+                    <Trans i18nkey="account.changeSchools.checkYourGroupsAndDeleteAnyThatYouWillNoLongerTeach">
+                        Check your <strong><a target="_blank" href="/groups">groups</a></strong>.
+                        Delete any groups that you will no longer teach.
+                    </Trans>
                 </li>
                 <li>
-                    Check your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Remove any connections with old colleagues and students.
+                    <Trans i18nKey="account.changeSchools.checkYourConnectionsAndRemoveAnyConnectionsWithOldColleaguesAndStudents">
+                        Check your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Remove any connections with old colleagues and students.
+                    </Trans>
                 </li>
             </ol>
-            <p><strong>This information can be found in the <a target="_blank" href="/support/teacher/general#moving_schools">Teacher FAQ</a> for future reference.</strong></p>
+            <p>
+                <Trans i18nKey="account.changeSchools.thisInformationCanBeFoundInTheTeacherFAQForFutureReference">
+                    <strong>This information can be found in the <a target="_blank" href="/support/teacher/general#moving_schools">Teacher FAQ</a> for future reference.</strong>
+                </Trans>
+            </p>
         </>,
         buttons: [
             <Button key={1} color="solid" onClick={() => dispatch(closeActiveModal())}>
-                Continue
+                {i18next.t('button.continue', 'Continue')}
             </Button>
         ]
     }));
 };
 
 export const MyAccount = ({user}: AccountPageProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const location = useLocation();
 
@@ -178,7 +189,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     }, [userToUpdate?.registeredContexts]);
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
-    const pageTitle = editingOtherUser ? "Edit user" : siteSpecific("My account", "Account");
+    const pageTitle = editingOtherUser ? t('editUser', 'Edit user') : siteSpecific("My account", "Account");
 
     const formSpecificTabs = [ACCOUNT_TAB.passwordreset, ACCOUNT_TAB.teacherconnections];
 
@@ -330,8 +341,8 @@ export const MyAccount = ({user}: AccountPageProps) => {
     >
         {isAda && <p className="d-md-none text-center m-3">
             <small>
-                <span className='text-muted'>Update your Ada Computer Science account, or </span>
-                <Link to="/logout" className="text-theme">Log out</Link>
+                <span className='text-muted'>{t('updateYourAdaComputerScienceAccountOr', 'Update your Ada Computer Science account, or')} </span>
+                <Link to="/logout" className="text-theme">{t('logOut2', 'Log out')}</Link>
             </small>
         </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
@@ -355,7 +366,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                     <Form id="my-account" name="my-account" onSubmit={updateAccount}>
                         {updateCurrentUserError &&
                                 <ExigentAlert color="warning">
-                                    <p className="alert-heading fw-bold">Unable to update your account</p>
+                                    <p className="alert-heading fw-bold">{t('unableToUpdateYourAccount', 'Unable to update your account')}</p>
                                     <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                                 </ExigentAlert>
                         }

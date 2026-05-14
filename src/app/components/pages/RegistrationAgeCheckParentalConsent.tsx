@@ -6,8 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 export const RegistrationAgeCheckParentalConsent = () => {
+    const { t } = useTranslation()
 
     const [parentalConsentCheckboxChecked, setParentalConsentCheckboxChecked] = React.useState<boolean>(false);
 
@@ -20,7 +22,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={"Additional information"} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t('additionalInformation', 'Additional information')} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -29,8 +31,8 @@ export const RegistrationAgeCheckParentalConsent = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <p>Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.</p>
-                <p>Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service <Link to={"/privacy"}>here</Link>.</p>
+                <p>{t('beforeSigningUpToAnyOnlineProgrammeOrWebsiteYouShouldAskForPermissionFromAParentOrCarerSoTheyMayCheckThatItIsAppropriateForYouToUse', 'Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.')}</p>
+                <p>{t('oftenWebsitesStoreSomeInformationAboutYouToGiveYouTheBestPossibleExperienceOnTheSiteButYouShouldAlwaysCheckWhatDataIsBeingKeptToDoThisYouCanReadHowWeUseYourDataToProvideOurService', 'Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service')} <Link to={"/privacy"}>here</Link>.</p>
                 <div className="d-flex align-items-center">
                     <Input
                         id="consent-checkbox" name="consent-checkbox" type="checkbox"
@@ -38,15 +40,15 @@ export const RegistrationAgeCheckParentalConsent = () => {
                         color="primary"
                         onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
                     />
-                    <Label for="consent-checkbox" className="ms-2 mb-0">Please check the box to confirm that you have read and understood this message.</Label>
+                    <Label for="consent-checkbox" className="ms-2 mb-0">{t('pleaseCheckTheBoxToConfirmThatYouHaveReadAndUnderstoodThisMessage', 'Please check the box to confirm that you have read and understood this message.')}</Label>
                 </div>
                 {siteSpecific(<br/>, <hr/>)}
                 <Row className="justify-content-end">
                     <Col sm={3} className="d-flex justify-content-end">
-                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>Back</Button>
+                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>{t('back', 'Back')}</Button>
                     </Col>
                     <Col sm={4} lg={3}>
-                        <Button className={classNames("mt-2 w-100")} color="solid" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>Continue</Button>
+                        <Button className={classNames("mt-2 w-100")} color="solid" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>{t('continue', 'Continue')}</Button>
                     </Col>
                 </Row>
             </CardBody>

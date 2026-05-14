@@ -48,6 +48,7 @@ import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
 import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -98,6 +99,7 @@ const _compareDates = (a: Date | number | undefined, b: Date | number | undefine
 };
 
 function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
+    const { t } = useTranslation()
 
     const compareGroupNames = (a: AssignedGroup, b: AssignedGroup) => _compareStrings(a?.group, b?.group);
     const compareCreationDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.creationDate, b?.assignment?.creationDate);
@@ -140,7 +142,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId);
 
     const cancel = () => confirmThen(
-        "Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.",
+        t('areYouSureYouWantToCancelStudentsWillNoLongerBeAbleToTakeTheTestOrSeeAnyFeedbackAndAllPreviousAttemptsWillBeLost', 'Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.'),
         () => markQuizAsCancelled(assignment.id as number)
     );
 
@@ -151,10 +153,10 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const subject = determineQuizSubject(assignment.quizSummary) || "physics";
 
     const innerTableHeaders : InnerTableHeader[] = [
-        {title: "Group name", sort: compareGroupNames},
-        above["md"](deviceSize) ? {title: "Creation date", sort: compareCreationDates} : undefined,
-        above["sm"](deviceSize) ? {title: "Start date", sort: compareStartDates} : undefined,
-        {title: "Due date", sort: compareDueDates}
+        {title: t('groupName', 'Group name'), sort: compareGroupNames},
+        above["md"](deviceSize) ? {title: t('creationDate', 'Creation date'), sort: compareCreationDates} : undefined,
+        above["sm"](deviceSize) ? {title: t('startDate', 'Start date'), sort: compareStartDates} : undefined,
+        {title: t('dueDate2', 'Due date'), sort: compareDueDates}
     ].filter(isDefined);
 
     return <>
@@ -181,10 +183,10 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                     assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
                                     e.stopPropagation();}}>
-                                Set test
+                                {t('setTest', 'Set test')}
                             </AffixButton>
                             <div className="d-none d-md-block w-max-content text-center text-nowrap me-3">
-                                Assigned to
+                                {t('assignedTo2', 'Assigned to')}
                                 <div className="board-bubble-info-sm">{assignedGroups.length}</div>
                                 group{assignedGroups.length !== 1 && "s"}
                             </div>
@@ -196,11 +198,11 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
 
                 <>
                     <td id={"group-td-" + index} className="group-counter align-middle">
-                        <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
+                        <span><strong>{assignedGroups.length}</strong>{t('nbsp', '&nbsp;')}</span><br/>
                         <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
                         <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
-                            "No groups have been assigned."
-                            : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
+                            t('noGroupsHaveBeenAssigned', 'No groups have been assigned.')
+                            : (t('testAssignedTo', 'Test assigned to:') + assignedGroups.map(g => g.group).join(", "))}
                         </UncontrolledTooltip>
                     </td>
                     <td className={classNames("set-quiz-table-title align-middle ps-4")}>{quizTitle}</td>
@@ -212,7 +214,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                 e.stopPropagation();
                             }}
                         >
-                            Set test
+                            {t('setTest', 'Set test')}
                         </Button>
                     </td>
                     <td className="text-center align-middle">
@@ -240,7 +242,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     <ReverseSortButtons active={(selectedCol ?? "Creation date") === header.title && currentSort.name === header.sort.name} />
                                 </div>
                             </th>)}
-                            <th className={`px-1 py-1 text-center ${below["md"](deviceSize) ? "actions-header-sm" : ""}`} colSpan={2}>Actions</th>
+                            <th className={`px-1 py-1 text-center ${below["md"](deviceSize) ? "actions-header-sm" : ""}`} colSpan={2}>{t('actions', 'Actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -260,24 +262,24 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                 }
                                 <td className={isPhy ? "text-end" : "text-center"}>
                                     <Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={classNames(`px-2 text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`, {"bg-transparent": isAda})}>
-                                        View {assignmentNotYetStarted ? "details" : "results"}
+                                        {t('view', 'View')} {assignmentNotYetStarted ? "details" : "results"}
                                     </Button>
                                 </td>
 
                                 <td className={isPhy ? "text-start" : "text-center"}>
                                     <UncontrolledButtonDropdown>
                                         <DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
-                                            More
+                                            {t('more', 'More')}
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             <DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} onClick={() => {
                                                 setSelectedQuiz(assignedGroup.assignment);
                                                 setIsModalOpen(true);
                                             }}>
-                                                Extend Due Date
+                                                {t('extendDueDate', 'Extend Due Date')}
                                             </DropdownItem>
                                             <DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
-                                                {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : "Cancel test"}
+                                                {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : t('cancelTest', 'Cancel test')}
                                             </DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledButtonDropdown>
@@ -292,6 +294,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
 }
 
 export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
@@ -322,18 +325,16 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
 
-    const pageTitle= siteSpecific("Set / manage tests", "Tests");
-    const pageHelp = <span>
-        Use this page to manage and set tests to your groups. You can assign any test the {SITE_TITLE_SHORT} team have built.
+    const pageTitle= siteSpecific(t('setManageTests', 'Set / manage tests'), "Tests");
+    const pageHelp = <span><Trans i18nKey="useThisPageToManageAndSetTestsToYourGroupsYouCanAssignAnyTestTheSite_title_shortTeamHaveBuiltBrStudentsInTheGroupWillBeEmailedWhenYouSetANewTest">Use this page to manage and set tests to your groups. You can assign any test the {{ SITE_TITLE_SHORT }} team have built.
         <br />
-        Students in the group will be emailed when you set a new test.
-    </span>;
+        Students in the group will be emailed when you set a new test.</Trans></span>;
 
     // If the user is event admin or above, and the quiz is hidden from teachers, then show that
     // Otherwise, show if the quiz is visible to students
     const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
-        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">{t('hiddenFromTeachers', 'hidden from teachers')}</div>}
+        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">{t('visibleToStudents', 'visible to students')}</div>}
     </>;
 
     const rowFiltersView = above["md"](deviceSize);
@@ -342,7 +343,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <Input
             id="manage-quizzes-title-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-            placeholder="Filter by title" aria-label="Filter by title"
+            placeholder={t('filterByTitle', 'Filter by title')} aria-label={t('filterByTitle', 'Filter by title')}
         />
     </Row>;
 
@@ -350,7 +351,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <Input
             id="manage-quizzes-group-name-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-            placeholder="Filter by group" aria-label="Filter by group"
+            placeholder={t('filterByGroup2', 'Filter by group')} aria-label={t('filterByGroup2', 'Filter by group')}
         />
     </Row>;
 
@@ -370,22 +371,22 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     </UncontrolledDropdown>;
 
     const setDateFilterInput = <div className="d-flex align-items-baseline">
-        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Starting</span>
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t('starting', 'Starting')}</span>
         {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
         <Input
             id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
-            placeholder="Filter by set date" aria-label="Filter by set date"
+            placeholder={t('filterBySetDate', 'Filter by set date')} aria-label={t('filterBySetDate', 'Filter by set date')}
         />
     </div>;
 
     const dueDateFilterInput = <div className="d-flex align-items-baseline">
-        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Due</span>
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t('due', 'Due')}</span>
         {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         <Input
             id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
-            placeholder="Filter by due date" aria-label="Filter by due date"
+            placeholder={t('filterByDueDate', 'Filter by due date')} aria-label={t('filterByDueDate', 'Filter by due date')}
         />
     </div>;
 
@@ -413,9 +414,9 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                 [siteSpecific("Set tests", "Available tests")]:
                 <ShowLoading until={undeprecatedQuizzes}>
                     {undeprecatedQuizzes && <>
-                        <p>The following tests are available to set to your groups.</p>
+                        <p>{t('theFollowingTestsAreAvailableToSetToYourGroups', 'The following tests are available to set to your groups.')}</p>
 
-                        {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
+                        {undeprecatedQuizzes.length === 0 && <p><em>{t('thereAreNoTestsYouCanSetWhichMatchYourSearchTerm', 'There are no tests you can set which match your search term.')}</em></p>}
 
                         {siteSpecific(
                             <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>,
@@ -430,27 +431,27 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                                         </Col>
                                         <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
                                             <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))}>
-                                                Set test
+                                                {t('setTest', 'Set test')}
                                             </Button>
                                         </Col>
                                         <Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
                                             <Link className={`my-3 d-flex justify-content-end me-1`} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                <span>Preview</span>
+                                                <span>{t('preview', 'Preview')}</span>
                                             </Link>
                                         </Col>
                                         <Col xs={3} className="d-flex align-items-center justify-content-end">
                                             <UncontrolledButtonDropdown className="d-flex d-md-none ">
                                                 <DropdownToggle caret className="text-nowrap" size="sm" color="link">
-                                                    Actions
+                                                    {t('actions', 'Actions')}
                                                 </DropdownToggle>
                                                 <DropdownMenu>
                                                     <DropdownItem onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))} style={{zIndex: '1'}}>
-                                                        Set test
+                                                        {t('setTest', 'Set test')}
                                                     </DropdownItem>
                                                     <DropdownItem divider />
                                                     <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
                                                         <DropdownItem>
-                                                            Preview
+                                                            {t('preview', 'Preview')}
                                                         </DropdownItem>
                                                     </Link>
                                                 </DropdownMenu>
@@ -492,11 +493,11 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
                     <ShowLoadingQuery
                         query={quizAssignmentsQuery}
-                        ifError={() => <Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</Alert>}
+                        ifError={() => <Alert color="warning">{t('testsYouHaveAssignedHaveFailedToLoadPleaseTryRefreshingThePage', 'Tests you have assigned have failed to load, please try refreshing the page.')}</Alert>}
                         thenRender={quizAssignments => {
                             let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
                                 const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
-                                    ? `Demo Group ${assignment.groupId}`
+                                    ? t('demoGroupGroupid', 'Demo Group {{groupId}}', { groupId: assignment.groupId })
                                     : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
                                 return {...assignment, groupName};
                             }).reverse();
@@ -537,7 +538,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                             quizAssignment.sort((a, b) => a.assignedGroups[0].assignment.quizSummary?.title?.localeCompare(b.assignedGroups[0].assignment.quizSummary?.title ?? "") ?? 0);
 
                             return <>
-                                {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
+                                {quizAssignments.length === 0 && <p>{t('youHaveNotSetAnyTestsToYourGroupsYet', 'You have not set any tests to your groups yet.')}</p>}
                                 {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
                                     {isAda && <colgroup>
                                         <col width={"120px"}/>

@@ -10,6 +10,7 @@ import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
 import { Spacer } from "../../elements/Spacer";
 import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
+import i18next from 'i18next'
 
 const pageHelp = <span>
     View information about a test without adding it to {'"My tests"'}. This page does not show any questions.
@@ -28,7 +29,7 @@ const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =
         <Spacer />
         <Row>
             {isTeacherOrAbove(user) && <FooterButton link={`/test/preview/${quizId}`} label="Preview" />}
-            <FooterButton link={`/test/attempt/${quizId}`} label="Take Test" />
+            <FooterButton link={`/test/attempt/${quizId}`} label={i18next.t('takeTest', 'Take Test')} />
         </Row>
     </QuizSidebarLayout>;
 

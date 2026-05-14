@@ -8,8 +8,10 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {NEWS_PODS_PER_PAGE} from "../../services";
 import {IsaacPodDTO} from "../../../IsaacApiTypes";
 import {PageFragment} from "../elements/PageFragment";
+import { useTranslation } from 'react-i18next'
 
 export const CSProjects = () => {
+    const { t } = useTranslation()
     const [page, setPage] = useState(0);
     const [allProjects, setAllProjects] = useState([] as IsaacPodDTO[]); // each query fetches a new page; this acts as a cache for all the news fetched so far
     const [disableLoadMore, setDisableLoadMore] = useState(false);
@@ -33,7 +35,7 @@ export const CSProjects = () => {
         };
     }, [page]);
 
-    const metaDescription = "Browse the list of projects available on Ada Computer Science.";
+    const metaDescription = t('browseTheListOfProjectsAvailableOnAdaComputerScience', 'Browse the list of projects available on Ada Computer Science.');
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Projects"} />
@@ -42,15 +44,15 @@ export const CSProjects = () => {
         {allProjects.length === 0 ?
             <ShowLoadingQuery
                 query={projectsQuery}
-                thenRender={() => <div className={"w-100 text-start"}><h4>No projects to display...</h4></div>}
-                defaultErrorTitle={"Error fetching projects"}
+                thenRender={() => <div className={"w-100 text-start"}><h4>{t('noProjectsToDisplay', 'No projects to display...')}</h4></div>}
+                defaultErrorTitle={t('errorFetchingProjects', 'Error fetching projects')}
             /> :
             <>
                 <Row className="d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-between my-3">
                     {allProjects.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-7">
-                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load more projects</Button>
+                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{t('loadMoreProjects', 'Load more projects')}</Button>
                 </div>
             </>
         }

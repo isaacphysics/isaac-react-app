@@ -9,9 +9,11 @@ import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useParams, useSearchParams} from "react-router-dom";
+import { useTranslation } from 'react-i18next'
 
 
 export const ResetPasswordHandler = () => {
+    const { t } = useTranslation()
 
     const {token: oldStyleToken} = useParams<{token: string}>();
     const [searchParams] = useSearchParams();
@@ -37,19 +39,19 @@ export const ResetPasswordHandler = () => {
 
     return <Container id="password-reset" className={"mb-7"}>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
-        {isLoading && <div>Verifying reset token...</div>}
+        {isLoading && <div>{t('verifyingResetToken', 'Verifying reset token...')}</div>}
         <div>
             {(!!tokenVerifyError || !!passwordResetError) &&
                 <ExigentAlert data-testid={"warning-invalid-token"} color={"warning"}>
-                    <p className="alert-heading fw-bold">Unable to reset your password</p>
+                    <p className="alert-heading fw-bold">{t('unableToResetYourPassword', 'Unable to reset your password')}</p>
                     {tokenVerifyError ?
                         getRTKQueryErrorMessage(tokenVerifyError).message : getRTKQueryErrorMessage(passwordResetError).message}
                 </ExigentAlert>
             }
             {!token && 
                 <ExigentAlert color={"warning"}>
-                    <p className="alert-heading fw-bold">No reset token provided</p>
-                    <p>Please ensure you have clicked the link provided in your password reset email.</p>
+                    <p className="alert-heading fw-bold">{t('noResetTokenProvided', 'No reset token provided')}</p>
+                    <p>{t('pleaseEnsureYouHaveClickedTheLinkProvidedInYourPasswordResetEmail', 'Please ensure you have clicked the link provided in your password reset email.')}</p>
                 </ExigentAlert>
             }
             <Form onSubmit={submit}>
@@ -67,7 +69,7 @@ export const ResetPasswordHandler = () => {
                     </CardBody>
                     <CardFooter>
                         <Button disabled={!urlTokenValid} type={"submit"} color="secondary" className="mb-2" block id="change-password">
-                            Change password
+                            {t('changePassword', 'Change password')}
                         </Button>
                     </CardFooter>
                 </Card>

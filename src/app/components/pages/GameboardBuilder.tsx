@@ -61,6 +61,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
 import {IconButton} from "../elements/AffixButton";
+import { useTranslation, Trans } from 'react-i18next'
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -112,6 +113,7 @@ class GameboardBuilderQuestionsStack {
 }
 
 const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation()
     const {search} = useLocation();
     const queryParams = search && queryString.parse(search);
     const baseGameboardId = queryParams && queryParams.base as string;
@@ -139,7 +141,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     const cloneGameboard = useCallback((gameboard: GameboardDTO) => {
-        setGameboardTitle(gameboard.title ? `${gameboard.title} (Copy)` : "");
+        setGameboardTitle(gameboard.title ? t('titleCopy', '{{title}} (Copy)', { title: gameboard.title }) : "");
         setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
         setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
         setWildcardId(isStaff(user) && gameboard.wildCard && gameboard.wildCard.id || undefined);
@@ -212,7 +214,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
             dispatch(openActiveModal({
                 closeAction: () => dispatch(closeActiveModal()),
-                title: `${siteSpecific("Question deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
+                title: t('valVal2', '{{val}} {{val2}}', { val: siteSpecific("Question deck", "Quiz"), val2: gameboardId ? "created" : "creation failed" }),
                 body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
             }));
             if (gameboardId) setSubmissionAttempted(false);
@@ -319,8 +321,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const undoButtonProps = {
         color: "keyline",
-        "aria-label": "Undo last action",
-        title: "Undo last action",
+        "aria-label": t('undoLastAction', 'Undo last action'),
+        title: t('undoLastAction', 'Undo last action'),
         onClick: () => {
             const newQuestion = undoStack.pop();
             redoStack.push(currentQuestions);
@@ -331,8 +333,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const redoButtonProps = {
         color: "keyline",
-        "aria-label": "Redo last action",
-        title: "Redo last action",
+        "aria-label": t('redoLastAction', 'Redo last action'),
+        title: t('redoLastAction', 'Redo last action'),
         onClick: () => {
             const newQuestion = redoStack.pop();
             undoStack.push(currentQuestions);
@@ -343,27 +345,27 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder">
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={t('valBuilder', '{{val}} builder', { val: siteSpecific("Question deck", "Quiz") })} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         <PageMetadata helpModalId="help_modal_gameboard_builder" />
         <Card className="p-3 mt-4 mb-7">
             <CardBody>
                 {submissionAttempted && !allInputIsValid  &&
                     <ExigentAlert color={"warning"}>
-                        <p className={"fw-bold alert-heading"}>Unable to create {siteSpecific("question deck", "quiz")}</p>
-                        <p>Please correct the problems below.</p>
+                        <p className={"fw-bold alert-heading"}>{t('unableToCreate', 'Unable to create')} {siteSpecific("question deck", "quiz")}</p>
+                        <p>{t('pleaseCorrectTheProblemsBelow', 'Please correct the problems below.')}</p>
                     </ExigentAlert>
                 }
                 <Form onSubmit={submit}>
                     <Row>
                         <Col>
-                            <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">Title</Label>
+                            <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">{t('title', 'Title')}</Label>
                             <p className="d-block input-description mb-2">
-                                This will be visible to your students.
+                                {t('thisWillBeVisibleToYourStudents', 'This will be visible to your students.')}
                             </p>
                             <FormGroup>
                                 <Input id="gameboard-builder-name"
                                     type="text"
-                                    placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
+                                    placeholder={siteSpecific(t('egYear12Dynamics', 'e.g. Year 12 Dynamics'), "e.g. Year 12 Network components")}
                                     value={gameboardTitle}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setGameboardTitle(e.target.value);
@@ -371,7 +373,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     invalid={submissionAttempted && !titleIsValid}
                                 />
                                 <FormFeedback>
-                                    Please provide a title.
+                                    {t('pleaseProvideATitle', 'Please provide a title.')}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
@@ -380,18 +382,18 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     {isStaff(user) && <Row className="mt-2 align-items-end">
                         <Col xs={6} sm={4}>
                             <FormGroup>
-                                <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>Tag as</Label>
+                                <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>{t('tagAs', 'Tag as')}</Label>
                                 <StyledSelect inputId="question-search-level"
                                     isMulti
                                     options={siteSpecific([
-                                        {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
+                                        {value: 'ISAAC_BOARD', label: t('createdByIsaac', 'Created by Isaac')},
                                     ], [
-                                        {value: 'ISAAC_BOARD', label: 'Created by Ada'},
-                                        {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
+                                        {value: 'ISAAC_BOARD', label: t('createdByAda', 'Created by Ada')},
+                                        {value: 'CONFIDENCE_RESEARCH_BOARD', label: t('confidenceResearchBoard', 'Confidence research board')}
                                     ])}
                                     name="colors"
                                     value={gameboardTags}
-                                    placeholder="None"
+                                    placeholder={t('none', 'None')}
                                     onChange={selectOnChange(setGameboardTags, false)}
                                 />
                             </FormGroup>
@@ -410,20 +412,20 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     invalid={!isValidGameboardId(gameboardURL)}
                                 />
                                 <FormFeedback>
-                                    The ID may only contain lowercase letters, numbers, dashes and underscores.
+                                    {t('theIdMayOnlyContainLowercaseLettersNumbersDashesAndUnderscores', 'The ID may only contain lowercase letters, numbers, dashes and underscores.')}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
                         <Col xs={12} sm={4}>
                             <FormGroup>
-                                <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>Wildcard</Label>
+                                <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>{t('wildcard', 'Wildcard')}</Label>
                                 <Input id="gameboard-builder-wildcard"
                                     type="select" value={wildcardId}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setWildcardId(e.target.value);
                                     }}
                                 >
-                                    <option value="">No wildcard</option>
+                                    <option value="">{t('noWildcard', 'No wildcard')}</option>
                                     {isDefined(wildcards) && wildcards.map((wildcard) => {
                                         return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
                                     })}
@@ -434,10 +436,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
                     <div className={"d-flex flex-row justify-content-between align-items-center"}>
                         <div>
-                            <span className={classNames("fw-bold form-required")}>Questions</span>
-                            <p className={classNames("d-none d-sm-block input-description mb-2")}>
-                                You can add up to {QUESTIONS_PER_GAMEBOARD} questions.
-                            </p>
+                            <span className={classNames("fw-bold form-required")}>{t('questions', 'Questions')}</span>
+                            <p className={classNames("d-none d-sm-block input-description mb-2")}>{t('youCanAddUpToQuestions_per_gameboardQuestions', 'You can add up to {{QUESTIONS_PER_GAMEBOARD}} questions.', { QUESTIONS_PER_GAMEBOARD })}</p>
                         </div>
                         <div className={"d-flex flex-row gap-2"}>
                             <IconButton icon="icon-undo" className="icon-button-sm action-button outline" {...undoButtonProps} disabled={!canUndo}/>
@@ -455,11 +455,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                             <thead>
                                                 <tr className="border-top-0">
                                                     <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
-                                                    <th className={siteSpecific("w-40", "w-30")}>Question title</th>
-                                                    <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                                    <th className="w-15">Stage</th>
-                                                    <th className="w-15">Difficulty</th>
-                                                    {isAda && <th className="w-15">Exam boards</th>}
+                                                    <th className={siteSpecific("w-40", "w-30")}>{t('questionTitle', 'Question title')}</th>
+                                                    <th className={siteSpecific("w-25", "w-20")}>{t('topic', 'Topic')}</th>
+                                                    <th className="w-15">{t('stage', 'Stage')}</th>
+                                                    <th className="w-15">{t('difficulty', 'Difficulty')}</th>
+                                                    {isAda && <th className="w-15">{t('examBoards', 'Exam boards')}</th>}
                                                 </tr>
                                             </thead>
                                             {questionOrder.map((questionId, index: number) => {
@@ -502,7 +502,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </DragDropContext>
                     </div>
                     <div className={"invalid-feedback"}>
-                        {`${tooManyQuestions ? `Only ${QUESTIONS_PER_GAMEBOARD} questions can be added, please remove some.` : "Please add some questions."}`}
+                        {`${tooManyQuestions ? t('onlyQuestions_per_gameboardQuestionsCanBeAddedPleaseRemoveSome', 'Only {{QUESTIONS_PER_GAMEBOARD}} questions can be added, please remove some.', { QUESTIONS_PER_GAMEBOARD }) : t('pleaseAddSomeQuestions', 'Please add some questions.')}`}
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-end gap-2 mt-3">
                         <ShowLoading
@@ -529,9 +529,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         />
                                     }));
                                 }}
-                            >
-                                Add questions <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-sm icon-add-circle"))}/>
-                            </Button>
+                            ><Trans i18nKey="addQuestionsIClassnameclassnamesiconMs2SitespecificiconplusIconcolorblackhoverableIconsmIconaddcircle">Add questions <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-sm icon-add-circle"))}/></Trans></Button>
                         </ShowLoading>
                         <Button
                             className={"w-100 w-md-auto"}
@@ -540,7 +538,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             type={"submit"}
                         >
                             {isWaitingForCreateGameboard ?
-                                <Spinner size={"md"}/> : siteSpecific("Save question deck", "Save quiz")}
+                                <Spinner size={"md"}/> : siteSpecific(t('saveQuestionDeck', 'Save question deck'), "Save quiz")}
                         </Button>
                     </div>
                 </Form>

@@ -22,6 +22,7 @@ import {Difficulty} from "../../../../IsaacApiTypes";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { Row, Col } from 'reactstrap';
 import { MyProgressState } from '../../../state';
+import { useTranslation } from 'react-i18next'
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -51,6 +52,7 @@ const colourPicker = (names: string[]): { [key: string]: string } => {
 };
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
+    const { t } = useTranslation()
     const {subId, flushRef, userProgress} = props;
     const questionsByTag = useMemo(() => (subId === "correct" ? userProgress?.correctByTag : userProgress?.attemptsByTag) || {}, 
         [subId, userProgress?.attemptsByTag, userProgress?.correctByTag]);
@@ -87,10 +89,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     type: donut(),
                 },
                 donut: {
-                    title: "By " + topTagLevel,
+                    title: t('by2', 'By ') + topTagLevel,
                     label: {format: (value) => `${value}`}
                 },
-                bindto: `#${subId}-categoryChart`,
+                bindto: t('subidcategorychart', '#{{subId}}-categoryChart', { subId }),
                 ...OPTIONS
             }));
         }
@@ -103,10 +105,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 type: donut()
             },
             donut: {
-                title: isAllZero(topicColumns) ? "No data" : "By topic",
+                title: isAllZero(topicColumns) ? t('noData', 'No data') : "By topic",
                 label: {format: (value) => `${value}`}
             },
-            bindto: `#${subId}-topicChart`,
+            bindto: t('subidtopicchart', '#{{subId}}-topicChart', { subId }),
             ...OPTIONS
         }));
 
@@ -119,10 +121,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     order: null
                 },
                 donut: {
-                    title: isAllZero(difficultyColumns) ? "No data" : "By difficulty",
+                    title: isAllZero(difficultyColumns) ? t('noData', 'No data') : "By difficulty",
                     label: {format: (value) => `${value}`}
                 },
-                bindto: `#${subId}-stageChart`,
+                bindto: t('subidstagechart', '#{{subId}}-stageChart', { subId }),
                 ...OPTIONS
             }));
         }
@@ -149,21 +151,19 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     return <Row>
         {isPhy && <Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
-            <div className="height-40px text-flex-align mb-2">
-                Questions by {topTagLevel}
-            </div>
+            <div className="height-40px text-flex-align mb-2">{t('questionsByToptaglevel', 'Questions by {{topTagLevel}}', { topTagLevel })}</div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-categoryChart`} className="text-center-width doughnut-binding align-self-center">
-                    <strong>{isAllZero(categoryColumns) ? "No data" : ""}</strong>
+                    <strong>{isAllZero(categoryColumns) ? t('noData', 'No data') : ""}</strong>
                 </div>
                 {isAllZero(categoryColumns) ?
                     <span className={"visually-hidden"}>
-                        No data
+                        {t('noData', 'No data')}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>Subject</th>
+                                <th>{t('subject2', 'Subject')}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>
@@ -185,7 +185,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             <div className="height-40px text-flex-align mb-2">
                 <div className="d-inline-block text-start pe-2 w-50">
                     <StyledSelect
-                        inputId={`${subId}-subcategory-select`}
+                        inputId={t('subidsubcategoryselect', '{{subId}}-subcategory-select', { subId })}
                         name="subcategory"
                         defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
                         options={labelledQuestionTags}
@@ -196,16 +196,16 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(topicColumns) ? "No data" : ""}</strong>
+                    <strong>{isAllZero(topicColumns) ? t('noData', 'No data') : ""}</strong>
                 </div>
                 {isAllZero(topicColumns) ?
                     <span className={"visually-hidden"}>
-                        No data
+                        {t('noData', 'No data')}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>Topic</th>
+                                <th>{t('topic', 'Topic')}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>
@@ -227,7 +227,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             <div className="height-40px text-flex-align mb-2">
                 <div className="d-inline-block text-start pe-2 w-50">
                     <StyledSelect
-                        inputId={`${subId}-stage-select`}
+                        inputId={t('subidstageselect', '{{subId}}-stage-select', { subId })}
                         name="stage"
                         defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
                         options={getFilteredStageOptions()}
@@ -238,16 +238,16 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(difficultyColumns) ? "No data" : ""}</strong>
+                    <strong>{isAllZero(difficultyColumns) ? t('noData', 'No data') : ""}</strong>
                 </div>
                 {isAllZero(difficultyColumns) ?
                     <span className={"visually-hidden"}>
-                        No data
+                        {t('noData', 'No data')}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>Stage</th>
+                                <th>{t('stage', 'Stage')}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>

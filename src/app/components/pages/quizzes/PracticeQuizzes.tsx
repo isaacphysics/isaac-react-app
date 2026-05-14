@@ -14,8 +14,10 @@ import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PracticeQuizzesSidebar } from "../../elements/sidebar/PracticeQuizzesSidebar";
 import { PageContainer } from "../../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 export const PracticeQuizzes = () => {
+    const { t } = useTranslation()
     const pageContext = useUrlPageTheme();
     const pageSubject = pageContext?.subject;
     const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
@@ -105,12 +107,12 @@ export const PracticeQuizzes = () => {
             <PageFragment fragmentId="help_toptext_practice_tests"/>
         </PageMetadata>
         {!user
-            ? <b>You must be logged in to view practice tests.</b>
+            ? <b>{t('youMustBeLoggedInToViewPracticeTests', 'You must be logged in to view practice tests.')}</b>
             : <ShowLoading until={quizzes}>
                 {quizzes && <>
-                    {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
+                    {quizzes.length === 0 && <p><em>{t('thereAreNoPracticeTestsCurrentlyAvailable', 'There are no practice tests currently available.')}</em></p>}
                     <Col xs={12} className="mb-4">
-                        {isAda && <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
+                        {isAda && <Input type="text" placeholder={t('filterTestsByName', 'Filter tests by name...')} value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
                         <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
                             if (filterText.trim()) {
                                 navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);

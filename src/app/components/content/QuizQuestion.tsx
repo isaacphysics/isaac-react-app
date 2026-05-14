@@ -8,8 +8,10 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {QuizAttemptContext} from "../../../IsaacAppTypes";
 import {Loading} from "../handlers/IsaacSpinner";
 import {ContentDTO} from "../../../IsaacApiTypes";
+import { useTranslation } from 'react-i18next'
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     const {quizAttempt, questionNumbers} = useContext(QuizAttemptContext);
@@ -37,7 +39,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
                 "question-component", siteSpecific("p-md-2", "p-md-4"),
                 {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
             )}>
-            {isAda && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+            {isAda && doc.id && <h3 className={"mb-3"}>{t('question', 'Question')} {questionNumbers[doc.id]}</h3>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             <Suspense fallback={<Loading/>}>
@@ -52,7 +54,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             {/* Validation Response */}
             {validated && <div className={`validation-response-panel p-2 mt-2 ${correct ? "correct" : ""}`}>
                 <div className="pb-1">
-                    <h1 className="m-0">{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                    <h1 className="m-0">{noAnswer ? t('notAnswered', 'Not answered') : sigFigsError ? t('significantFigures', 'Significant Figures') : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 {validationResponse && validationResponse.explanation && <div className="mb-1">
                     <IsaacContent doc={validationResponse.explanation as ContentDTO} />

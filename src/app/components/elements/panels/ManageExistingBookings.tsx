@@ -26,6 +26,7 @@ import {DateString} from "../DateString";
 import {produce} from "immer";
 import {RenderNothing} from "../RenderNothing";
 import { Table, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { useTranslation } from 'react-i18next'
 
 interface ManageExistingBookingsProps {
     user: PotentialUser;
@@ -34,6 +35,7 @@ interface ManageExistingBookingsProps {
     userIdToSchoolMapping: UserSchoolLookup;
 }
 export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSchoolMapping}: ManageExistingBookingsProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
 
     const [sortPredicate, setSortPredicate] = useState("date");
@@ -50,7 +52,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     const augmentedEventBookings = eventBookings?.map(produce((booking: EventBookingDTO & {schoolName?: string}) => {
         if (booking.userBooked && booking.userBooked.id) {
             const schoolDetails = userIdToSchoolMapping?.[booking.userBooked.id];
-            booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
+            booking.schoolName = schoolDetails ? schoolDetails.name : t('unknown', 'UNKNOWN');
         }
         return booking;
     }));
@@ -72,7 +74,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
 
     return <Accordion trustedTitle="Manage current bookings">
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
-            As an event leader, you are only able to see the bookings of users who have granted you access to their data.
+            {t('asAnEventLeaderYouAreOnlyAbleToSeeTheBookingsOfUsersWhoHaveGrantedYouAccessToTheirData', 'As an event leader, you are only able to see the bookings of users who have granted you access to their data.')}
         </div>}
 
         {eventBookings && atLeastOne(eventBookings.length) && <div>
@@ -81,7 +83,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                     <thead>
                         <tr>
                             <th className="align-middle text-center">
-                                Actions
+                                {t('actions', 'Actions')}
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('userBooked.familyName')}>
@@ -90,62 +92,62 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('userBooked.email')}>
-                                    Email
+                                    {t('email2', 'Email')}
                                 </Button>
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('userBooked.role')}>
-                                    Account type
+                                    {t('accountType', 'Account type')}
                                 </Button>
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('schoolName')}>
-                                    School
+                                    {t('school', 'School')}
                                 </Button>
                             </th>
                             <th className="align-middle">
-                                Job / year group
+                                {t('jobYearGroup', 'Job / year group')}
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('bookingStatus')}>
-                                    Booking status
+                                    {t('bookingStatus', 'Booking status')}
                                 </Button>
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('bookingDate')}>
-                                    Booking created
+                                    {t('bookingCreated', 'Booking created')}
                                 </Button>
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('updated')}>
-                                    Booking updated
+                                    {t('bookingUpdated', 'Booking updated')}
                                 </Button>
                             </th>
                             <th className="align-middle">
-                                Stage
+                                {t('stage', 'Stage')}
                             </th>
                             {isAda && <th className="align-middle">
-                                Exam board
+                                {t('examBoard', 'Exam board')}
                             </th>}
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
-                                    Reserved by ID
+                                    {t('reservedById', 'Reserved by ID')}
                                 </Button>
                             </th>
                             <th className="align-middle">
-                                Level of teaching experience
+                                {t('levelOfTeachingExperience', 'Level of teaching experience')}
                             </th>
                             <th className="align-middle">
-                                Accessibility requirements
+                                {t('accessibilityRequirements', 'Accessibility requirements')}
                             </th>
                             <th className="align-middle">
-                                Medical / dietary
+                                {t('medicalDietary', 'Medical / dietary')}
                             </th>
                             <th className="align-middle">
-                                Emergency name
+                                {t('emergencyName', 'Emergency name')}
                             </th>
                             <th className="align-middle">
-                                Emergency telephone
+                                {t('emergencyTelephone', 'Emergency telephone')}
                             </th>
                         </tr>
                     </thead>
@@ -162,7 +164,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                                     () => promoteUserBooking({eventId, userId})
                                                 )
                                             }>
-                                                Promote
+                                                {t('promote', 'Promote')}
                                             </Button>
                                         }
                                         {(['WAITING_LIST', 'CONFIRMED'].includes(booking.bookingStatus as string)) &&
@@ -172,7 +174,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                                     () => cancelUserBooking({eventId, userId})
                                                 )
                                             }>
-                                                Cancel
+                                                {t('cancel', 'Cancel')}
                                             </Button>
                                         }
                                         {isAdmin(user) &&
@@ -182,7 +184,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                                     () => deleteUserBooking({eventId, userId})
                                                 )
                                             }>
-                                                Delete
+                                                {t('delete', 'Delete')}
                                             </Button>
                                         }
                                         <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
@@ -191,11 +193,11 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                                 () => resendUserConfirmationEmail({eventId, userId})
                                             )
                                         }>
-                                            Resend email
+                                            {t('resendEmail', 'Resend email')}
                                         </Button>
                                     </td>
                                     <td className="align-middle text-center">
-                                        {booking.userBooked && <React.Fragment>{booking.userBooked.familyName}, {booking.userBooked.givenName}</React.Fragment>}
+                                        {booking.userBooked && <React.Fragment>{t('familynameGivenname', '{{familyName}}, {{givenName}}', { familyName: booking.userBooked.familyName, givenName: booking.userBooked.givenName })}</React.Fragment>}
                                     </td>
                                     <td className="align-middle">{booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}</td>
                                     <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
@@ -229,14 +231,14 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
             <div className="mt-3 text-end">
                 <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle caret color="primary" outline className="me-3 mt-1">
-                        Email Users
+                        {t('emailUsers2', 'Email Users')}
                     </DropdownToggle>
                     <DropdownMenu>
                         {Object.keys(bookingStatusMap).map((key, index)  => {
                             const usersWithStatus = relevantUsers(key);
                             if (atLeastOne(usersWithStatus.length)) {
                                 return <DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
-                                    Email {bookingStatusMap[key as BookingStatus]} users
+                                    {t('email2', 'Email')} {bookingStatusMap[key as BookingStatus]} users
                                 </DropdownItem>;
                             }
                         })}
@@ -246,13 +248,13 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                     color="keyline" className="btn-md mt-1"
                     href={`${API_PATH}/events/${eventId}/bookings/download`}
                 >
-                    Export as CSV
+                    {t('exportAsCsv', 'Export as CSV')}
                 </Button>
             </div>
         </div>}
 
         {(!eventBookings || zeroOrLess(eventBookings.length)) && <p className="text-center m-0">
-            <strong>There aren&apos;t currently any bookings for this event.</strong>
+            <strong>{t('thereArenapostCurrentlyAnyBookingsForThisEvent', 'There aren&apos;t currently any bookings for this event.')}</strong>
         </p>}
     </Accordion>;
 };

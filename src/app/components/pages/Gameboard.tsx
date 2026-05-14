@@ -35,8 +35,10 @@ import {ListView} from "../elements/list-groups/ListView";
 import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
 import { SupersededDeprecatedBoardContentWarning } from "../navigation/SupersededDeprecatedWarning";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 export const Gameboard = () => {
+    const { t } = useTranslation()
     const location = useLocation();
     const gameboardId = location.hash ? location.hash.slice(1) : null;
     const gameboardQuery = useGetGameboardByIdQuery(gameboardId || skipToken);
@@ -52,11 +54,11 @@ export const Gameboard = () => {
     const notFoundComponent = <>
         <TitleAndBreadcrumb
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
-            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
+            currentPageTitle={t('valNotFound', '{{val}} not found', { val: siteSpecific("Question deck", "Quiz") })}
             icon={{type: "icon", icon: "icon-error"}}
         />
         <h3 className="my-4">
-            {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
+            {t('wereSorryWeWereNotAbleToFindAValWithTheId', 'We\'re sorry, we were not able to find a {{val}} with the id', { val: siteSpecific("question deck", "quiz") })}<code>{gameboardId}</code>{"."}
         </h3>
     </>;
 
@@ -64,7 +66,7 @@ export const Gameboard = () => {
         ? <Navigate to={PATHS.QUESTION_FINDER} />
         : <ShowLoadingQuery
             query={gameboardQuery}
-            defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
+            defaultErrorTitle={t('errorFetchingValWithIdGameboardid', 'Error fetching {{val}} with id: {{gameboardId}}', { val: siteSpecific("question deck", "quiz"), gameboardId })}
             ifNotFound={notFoundComponent}
             placeholder={<Container><LoadingPlaceholder /></Container>}
             thenRender={(gameboard) => {
@@ -72,7 +74,7 @@ export const Gameboard = () => {
                     pageTitle={
                         <TitleAndBreadcrumb
                             currentPageTitle={gameboard && gameboard.title || siteSpecific("Question deck", "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
-                            intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
+                            intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: t('assignments', 'Assignments'), to: "/assignments"}] : []}
                         />
                     }
                     sidebar={siteSpecific(
@@ -94,6 +96,7 @@ interface GameboardContentsProps {
 }
 
 export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
@@ -113,12 +116,12 @@ export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
             ? <Row>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
                     <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`} color="keyline" block>
-                        {"Set as assignment"}
+                        {t('setAsAssignment', 'Set as assignment')}
                     </Button>
                 </Col>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
                     <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboard.id}`}} color="keyline" block>
-                        {"Duplicate and edit"}
+                        {t('duplicateAndEdit2', 'Duplicate and edit')}
                     </Button>
                 </Col>
             </Row>
@@ -128,7 +131,7 @@ export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
                         onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                         color="keyline" block
                     >
-                        {siteSpecific("Save to My question decks", "Save to My quizzes")}
+                        {siteSpecific(t('saveToMyQuestionDecks', 'Save to My question decks'), "Save to My quizzes")}
                     </Button>
                 </Col>
             </Row>

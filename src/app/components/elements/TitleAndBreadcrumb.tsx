@@ -6,6 +6,7 @@ import {CollectionType, HOME_CRUMB, HUMAN_STAGES, HUMAN_SUBJECTS, isAda, isDefin
 import {Markup} from "./markup";
 import classNames from "classnames";
 import { PageContextState } from "../../../IsaacAppTypes";
+import i18next from 'i18next'
 
 interface BreadcrumbTrailProps {
     currentPageTitle: string;

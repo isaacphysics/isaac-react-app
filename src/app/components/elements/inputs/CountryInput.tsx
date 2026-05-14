@@ -6,6 +6,7 @@ import React, {ChangeEvent} from "react";
 import {useGetCountriesQuery, useGetPriorityCountriesQuery,} from "../../../state";
 import {siteSpecific} from "../../../services";
 import {StyledDropdown} from "./DropdownInput";
+import { useTranslation } from 'react-i18next'
 
 interface CountryInputProps {
     className?: string;
@@ -19,13 +20,14 @@ interface CountryInputProps {
 }
 
 export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryCodeValid, submissionAttempted, idPrefix="account", required, textOverride}: CountryInputProps) => {
+    const { t } = useTranslation()
     const {data: allCountryOptions} = useGetCountriesQuery();
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
     return <FormGroup className={className}>
-        <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
+        <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t('country', 'Country')}</Label>
         <p className="d-block input-description mb-2">
-            {textOverride || siteSpecific("This helps us to measure our reach and impact.", "This helps us personalise the platform for you.")}
+            {textOverride || siteSpecific(t('thisHelpsUsToMeasureOurReachAndImpact', 'This helps us to measure our reach and impact.'), "This helps us personalise the platform for you.")}
         </p>
         <StyledDropdown
             id={`${idPrefix}-country-select`}

@@ -4,12 +4,14 @@ import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../..
 import classNames from "classnames";
 import {isAda, siteSpecific} from "../../../services";
 import {Modal, ModalHeader, ModalFooter, ModalBody, CloseButton, Button} from "reactstrap";
+import { useTranslation } from 'react-i18next'
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModalProps | null;
 }
 
 export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement<typeof Modal> => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const subject = useAppSelector(selectors.pageContext.subject);
     const [page, setPage] = useState(0);
@@ -52,10 +54,10 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
                         style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
                         close={
                             siteSpecific(
-                                <button aria-label="Close modal" data-testid={"active-modal-close"} className="text-nowrap close" onClick={activeModal.closeAction ?? toggle}>
+                                <button aria-label={t('closeModal', 'Close modal')} data-testid={"active-modal-close"} className="text-nowrap close" onClick={activeModal.closeAction ?? toggle}>
                                     {activeModal?.closeLabelOverride || "Close"}
                                 </button>,
-                                <CloseButton aria-label="Close modal" data-testid={"active-modal-close"} onClick={activeModal.closeAction ?? toggle}/>
+                                <CloseButton aria-label={t('closeModal', 'Close modal')} data-testid={"active-modal-close"} onClick={activeModal.closeAction ?? toggle}/>
                             )
                         }
                     >
@@ -85,9 +87,9 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
                                 setIsPageTransitioning(true);
                                 setTimeout(() => setIsPageTransitioning(false), 500); // slightly higher than CSS animation as React/CSS timers are not perfectly aligned; entirely safe to be too long here
                             }} 
-                            aria-label="Go to next page on modal"
+                            aria-label={t('goToNextPageOnModal', 'Go to next page on modal')}
                         >
-                            Next
+                            {t('next', 'Next')}
                         </Button>
                         : activeModal.buttons
                     }
@@ -97,7 +99,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
             {totalPages > 1 && <div 
                 role="progressbar" 
                 data-testid="modal-page-indicator"
-                aria-label="Modal page indicator"
+                aria-label={t('modalPageIndicator', 'Modal page indicator')}
                 aria-valuemin={1}
                 aria-valuemax={totalPages}
                 aria-valuenow={page + 1}

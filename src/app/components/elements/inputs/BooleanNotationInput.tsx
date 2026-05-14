@@ -4,6 +4,7 @@ import {BooleanNotation} from "../../../../IsaacAppTypes";
 import React from "react";
 import classNames from "classnames";
 import {StyledDropdown} from "./DropdownInput";
+import { useTranslation } from 'react-i18next'
 
 interface BooleanNotationInputProps {
     booleanNotation: Nullable<BooleanNotation>;
@@ -11,6 +12,7 @@ interface BooleanNotationInputProps {
     isRequired?: boolean;
 }
 export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isRequired = false} : BooleanNotationInputProps) => {
+    const { t } = useTranslation()
 
     const onChange = (event: any) => {
         // Makes a new object, with all the boolean notation flags being false apart
@@ -22,7 +24,7 @@ export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isReq
 
     return <FormGroup className="form-group me-lg-7">
         <Label className={classNames("fw-bold", (isRequired ? "form-required" : "form-optional"))} htmlFor="boolean-notation-preference">
-            Preferred logic notation
+            {t('preferredLogicNotation', 'Preferred logic notation')}
         </Label>
 
         <StyledDropdown

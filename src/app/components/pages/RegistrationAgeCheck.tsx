@@ -17,10 +17,12 @@ import classNames from "classnames";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 type AgePermission = "denied" | "additional_info" | "allowed";
 
 export const RegistrationAgeCheck = () => {
+    const { t } = useTranslation()
 
     const navigate = useNavigate();
 
@@ -46,13 +48,13 @@ export const RegistrationAgeCheck = () => {
 
     const goBack = () => {
         confirmThen(
-            "Are you sure you want go back? Any information you have entered will be lost.",
+            t('areYouSureYouWantGoBackAnyInformationYouHaveEnteredWillBeLost', 'Are you sure you want go back? Any information you have entered will be lost.'),
             () => navigate("/register"));
     };
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t('createAnSite_titleAccount', 'Create an {{SITE_TITLE}} account', { SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -61,10 +63,10 @@ export const RegistrationAgeCheck = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <div className={siteSpecific("h4", "h3")}>How old are you?</div>
+                <div className={siteSpecific("h4", "h3")}>{t('howOldAreYou', 'How old are you?')}</div>
                 <p>{siteSpecific(
-                    "We can only create accounts for users 10 years old or over.",
-                    "We can only create accounts for people over 13 years old."
+                    t('weCanOnlyCreateAccountsForUsers10YearsOldOrOver', 'We can only create accounts for users 10 years old or over.'),
+                    t('weCanOnlyCreateAccountsForPeopleOver13YearsOld', 'We can only create accounts for people over 13 years old.')
                 )}</p>
                 <Form onSubmit={submit}>
                     <FormGroup check className="d-flex align-items-center my-2">
@@ -77,7 +79,7 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-over" className="ms-2 mb-0">13 and over</Label>
+                        <Label for="registration-age-check-over" className="ms-2 mb-0">{t('13AndOver', '13 and over')}</Label>
                     </FormGroup>
                     {isPhy && <FormGroup check className="d-flex align-items-center my-2">
                         <Input
@@ -89,7 +91,7 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-additional-info" className="ms-2 mb-0">10 - 12 years old</Label>
+                        <Label for="registration-age-check-additional-info" className="ms-2 mb-0">{t('1012YearsOld', '10 - 12 years old')}</Label>
                     </FormGroup>}
                     <FormGroup check className="d-flex align-items-center my-2">
                         <Input
@@ -101,18 +103,18 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-under" className="ms-2 mb-0">Under {siteSpecific("10 years old", "13")}</Label>
+                        <Label for="registration-age-check-under" className="ms-2 mb-0">{t('under', 'Under')} {siteSpecific(t('10YearsOld', '10 years old'), "13")}</Label>
                         <FormFeedback>
-                            Please make a selection.
+                            {t('pleaseMakeASelection', 'Please make a selection.')}
                         </FormFeedback>
                     </FormGroup>
                     {isAda && <hr/>}
                     <Row className="justify-content-end">
                         <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
-                            <Button className="w-100 h-100" color="keyline" onClick={goBack}>Back</Button>
+                            <Button className="w-100 h-100" color="keyline" onClick={goBack}>{t('back', 'Back')}</Button>
                         </Col>
                         <Col sm={siteSpecific(4,5)} lg={3}>
-                            <Button type="submit" color="solid" className="w-100 h-100">Continue</Button>
+                            <Button type="submit" color="solid" className="w-100 h-100">{t('continue', 'Continue')}</Button>
                         </Col>
                     </Row>
                 </Form>

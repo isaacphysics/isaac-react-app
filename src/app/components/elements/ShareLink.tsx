@@ -3,6 +3,7 @@ import {isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback
 import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
 import { IconButton, IconButtonProps } from "./AffixButton";
+import { useTranslation } from 'react-i18next'
 
 interface ShareLinkProps {
     linkUrl: string;
@@ -17,6 +18,7 @@ interface ShareLinkProps {
 }
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, innerClassName, size, buttonProps}: ShareLinkProps) => {
+    const { t } = useTranslation()
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
@@ -51,7 +53,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const shareLinkDivRef = useRef(null);
     useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink]);
 
-    const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
+    const buttonAriaLabel = showShareLink ? t('hideShareLink', 'Hide share link') : t('getShareLink', 'Get share link');
     const linkWidth = isMobile() || reducedWidthLink ? siteSpecific(256, 192) : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
     return <div ref={shareLinkDivRef} className={classNames(className, "position-relative", {"w-max-content d-inline-flex": isPhy})}>
@@ -60,14 +62,14 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         </div>
         {showShareLink && showDuplicateAndEdit && <div className="duplicate-and-edit" style={{width: linkWidth}}>
             <a href={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
-                Duplicate and edit
+                {t('duplicateAndEdit2', 'Duplicate and edit')}
             </a>
         </div>}
         <IconButton
-            icon={{name: "icon-share icon-color-black-hoverable", color: outline ? "" : "white"}}
+            icon={{name: t('iconshareIconcolorblackhoverable', 'icon-share icon-color-black-hoverable'), color: outline ? "" : "white"}}
             className={classNames(innerClassName, "w-max-content h-max-content action-button", {"icon-button-sm": size == "sm"})}
             aria-label={buttonAriaLabel}
-            title="Share page"
+            title={t('sharePage', 'Share page')}
             color={siteSpecific("tint", "primary")}
             data-bs-theme="neutral"
             onClick={(e) => { e.preventDefault(); toggleShareLink(); }}

@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { useGetMyAssignmentsQuery } from "../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface AccessingAssignedQuestionOutsideAssignmentWarningProps {
     question?: QuestionDTO;
@@ -13,6 +14,7 @@ interface AccessingAssignedQuestionOutsideAssignmentWarningProps {
 }
 
 export const AccessingAssignedQuestionOutsideAssignmentWarning = ({question, assignment}: AccessingAssignedQuestionOutsideAssignmentWarningProps) => {
+    const { t } = useTranslation()
 
     const isAssignmentsV2 = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
 
@@ -29,12 +31,12 @@ export const AccessingAssignedQuestionOutsideAssignmentWarning = ({question, ass
         if (activeAssignmentsWithQuestion?.length) {
             // warn
             return <Alert color="warning" className="mb-4">
-                <span>This question has been set to you as part of an active assignment. Answering it here will <strong>not</strong> count towards the assignment.</span>
+                <span><Trans i18nKey="thisQuestionHasBeenSetToYouAsPartOfAnActiveAssignmentAnsweringItHereWillStrongnotstrongCountTowardsTheAssignment">This question has been set to you as part of an active assignment. Answering it here will <strong>not</strong> count towards the assignment.</Trans></span>
 
                 <ul className="mt-3">
                     {activeAssignmentsWithQuestion.map((a) => <li key={a.id}>
                         <Link to={`/assignment/${a.id}/view`}><b>{a.gameboard?.title}</b></Link>
-                        {" "}(set to <b>{a.groupName}</b> by {extractTeacherName(a.assignerSummary)})
+                        {" "}{t('setTo', '(set to')} <b>{a.groupName}</b> by {extractTeacherName(a.assignerSummary)})
                     </li>)}
                 </ul>
             </Alert>;

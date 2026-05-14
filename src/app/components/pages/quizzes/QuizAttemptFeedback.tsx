@@ -14,16 +14,19 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Col, Container} from "reactstrap";
 import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 function QuizAttemptFeedbackFooter(props: QuizAttemptProps) {
+    const { t } = useTranslation()
     const {page, pageLink, studentUser} = props;
     let controls;
     let prequel = null;
     if (page === null) {
-        prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
+        prequel = <p className="mt-3">{t('clickOnASectionTitleOrClickLsquonextrsquoToLookAt', 'Click on a section title or click &lsquo;Next&rsquo; to look at')} {isDefined(studentUser) ? "their" : "your"} {t('detailedFeedback', 'detailed feedback.')}</p>;
         controls = <>
             <Spacer/>
-            <Button tag={Link} to={pageLink(1)}>Next</Button>
+            <Button tag={Link} to={pageLink(1)}>{t('next', 'Next')}</Button>
         </>;
     } else {
         controls = <QuizPagination {...props} page={page} finalLabel="Back to Overview" />;
@@ -39,10 +42,11 @@ function QuizAttemptFeedbackFooter(props: QuizAttemptProps) {
 
 // TODO: Make this more specific to feedback mode.
 const pageHelp = <span>
-    See the feedback for this test attempt.
+    {i18next.t('seeTheFeedbackForThisTestAttempt', 'See the feedback for this test attempt.')}
 </span>;
 
 export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation()
     const {quizAttemptId, page, studentId, quizAssignmentId} = useParams<{quizAttemptId?: string; page?: string; studentId?: string; quizAssignmentId?: string;}>();
     const numericStudentId = studentId ? parseInt(studentId, 10) : undefined;
     const numericQuizAssignmentId = quizAssignmentId ? parseInt(quizAssignmentId, 10) : undefined;
@@ -77,7 +81,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
             {isDefined(error) && <>
                 <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <h4 className="alert-heading">Error loading your feedback!</h4>
+                    <h4 className="alert-heading">{t('errorLoadingYourFeedback', 'Error loading your feedback!')}</h4>
                     <p>{error}</p>
                 </Alert>
             </>}

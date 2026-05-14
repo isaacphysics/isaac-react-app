@@ -6,6 +6,7 @@ import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { CollapsibleList } from "../CollapsibleList";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
 import { BOOKMARKS_ORDER_NAMES, BookmarksOrder } from "../../../../IsaacAppTypes";
+import { useTranslation } from 'react-i18next'
 
 interface MyBookmarksSidebarProps extends ContentSidebarProps {
     bookmarks: ContentSummaryDTO[];
@@ -20,6 +21,7 @@ interface MyBookmarksSidebarProps extends ContentSidebarProps {
 }
 
 export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
+    const { t } = useTranslation()
     const { bookmarks, searchText, setSearchText, searchSubjects, setSearchSubjects, searchStages, setSearchStages, sortOrder, setSortOrder, ...rest } = props;
 
     const [subjectExpanded, toggleSubjectExpanded] = useState(true);
@@ -51,17 +53,17 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
     return <ContentSidebar {...rest}>
         <search>
             <div className="section-divider"/>
-            <h5>Search bookmarks</h5>
+            <h5>{t('searchBookmarks', 'Search bookmarks')}</h5>
             <Input
                 className='search--filter-input my-4'
                 type="search" value={searchText || ""}
-                placeholder={`e.g. ${getSearchPlaceholder()}`}
+                placeholder={t('egVal', 'e.g. {{val}}', { val: getSearchPlaceholder() })}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
             />
 
             <div className="section-divider"/>
 
-            <h5>Filter bookmarks by...</h5>
+            <h5>{t('filterBookmarksBy', 'Filter bookmarks by...')}</h5>
 
             <div className="d-flex flex-column my-4">
                 <CollapsibleList
@@ -110,7 +112,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
                 </CollapsibleList>
             </div>
 
-            <h5>Sort bookmarks by...</h5>
+            <h5>{t('sortBookmarksBy', 'Sort bookmarks by...')}</h5>
 
             <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as BookmarksOrder)}>
                 {Object.values(BookmarksOrder).map(order => <option key={order} value={order}>{BOOKMARKS_ORDER_NAMES[order]}</option>)}

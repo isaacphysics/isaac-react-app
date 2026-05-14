@@ -6,6 +6,7 @@ import {SITE_TITLE_SHORT, trackEvent, WEBMASTER_EMAIL} from "../../services";
 import {FallbackProps} from "react-error-boundary";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Loading} from "../handlers/IsaacSpinner";
+import { useTranslation } from 'react-i18next'
 
 export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     const isChunkError = error.name === "ChunkLoadError";
@@ -16,6 +17,7 @@ export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) =
 };
 
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
 
@@ -24,7 +26,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     }, [error]);
 
     const usefulInformation = {
-        userId: user?.loggedIn && user.id || "Not currently logged in",
+        userId: user?.loggedIn && user.id || t('notCurrentlyLoggedIn', 'Not currently logged in'),
         location: window.location.href,
         userAgent: window.navigator.userAgent,
         errorMessage: "\n" + (error?.message || ""),
@@ -41,15 +43,15 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
         dispatch(logAction({...informationNotIncludingUserId, type: "CLIENT_SIDE_ERROR"}));
     }, []);
 
-    const plainTextUsefulInformation = "\n\n---- Useful Error Information ----\n\n" + Object.entries(usefulInformation)
+    const plainTextUsefulInformation = t('usefulErrorInformation', '\n\n---- Useful Error Information ----\n\n') + Object.entries(usefulInformation)
         .map(([key, value]) => `${usefulInformationLabels[key as keyof typeof usefulInformation]}: ${value}`).join("\n\n");
 
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "icon", icon: "icon-error"}}/>
-            <h3 className="my-4">{`We're sorry, but an error has occurred in the ${SITE_TITLE_SHORT} app!`}</h3>
+            <h3 className="my-4">{t('wereSorryButAnErrorHasOccurredInTheSite_title_shortApp', 'We\'re sorry, but an error has occurred in the {{SITE_TITLE_SHORT}} app!', { SITE_TITLE_SHORT })}</h3>
             <p>
-                {"You may want to "}
+                {t('youMayWantTo', 'You may want to ')}
                 <a
                     role="button"
                     tabIndex={0}
@@ -57,28 +59,28 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
                     onKeyPress={() => window.location.reload()}
                     onClick={() => window.location.reload()}
                 >
-                    refresh this page and try again
+                    {t('refreshThisPageAndTryAgain', 'refresh this page and try again')}
                 </a>
                 {", "}
                 <Link to="/" onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()}>
-                    return to our homepage
+                    {t('returnToOurHomepage', 'return to our homepage')}
                 </Link>
-                {", or "}
+                {t('or2', ', or ')}
                 <Link
                     to={`/contact?subject=App Error&message=${encodeURIComponent(plainTextUsefulInformation)}`}
                     onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()}
                 >
                     contact
                 </Link>
-                {" or "}
+                {t('or3', ' or ')}
                 <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
-                {" us if this keeps happening."}
+                {t('usIfThisKeepsHappening', ' us if this keeps happening.')}
             </p>
 
             <Row className="mt-4 mb-7">
                 <Col>
                     <div className="alert alert-info small overflow-auto">
-                        <h4>Useful information to include in your email</h4>
+                        <h4>{t('usefulInformationToIncludeInYourEmail', 'Useful information to include in your email')}</h4>
                         <small>
                             {Object.entries(usefulInformation).map(([key, value]) => (
                                 <p key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>

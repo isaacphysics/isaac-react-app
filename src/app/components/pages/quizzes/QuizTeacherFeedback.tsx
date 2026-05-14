@@ -55,6 +55,7 @@ import {AssignmentSummaryCard} from "../assignment_progress/AssignmentProgressIn
 import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
 import { ResultsTableHeader } from "../../elements/ResultsTableHeader";
+import { useTranslation, Trans } from 'react-i18next'
 
 interface QuizQuestion extends ContentBaseDTO {
     questionPartsTotal?: number | undefined;
@@ -130,6 +131,7 @@ const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
 };
 
 export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation()
     const {quizAssignmentId} = useParams();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
@@ -147,22 +149,22 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const assignmentStartDate = quizAssignment?.scheduledStartDate ?? quizAssignment?.creationDate;
     const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test");
-    const pageTitle = `${quizTitle} ${(assignmentNotYetStarted ? `(starts ${formatDate(assignmentStartDate)})` : "results")}`;
+    const pageTitle = t('quiztitleVal', '{{quizTitle}} {{val}}', { quizTitle, val: (assignmentNotYetStarted ? `(starts ${formatDate(assignmentStartDate)})` : "results") });
 
     const pageHelp = <span>
-        See the feedback for your students for this test assignment.
+        {t('seeTheFeedbackForYourStudentsForThisTestAssignment', 'See the feedback for your students for this test assignment.')}
     </span>;
 
     const feedbackNames: Record<QuizFeedbackMode, string> = {
-        NONE: "No feedback for students",
-        OVERALL_MARK: "Overall mark only",
-        SECTION_MARKS: "Section-by-section mark breakdown",
-        DETAILED_FEEDBACK: "Detailed feedback on each question",
+        NONE: t('noFeedbackForStudents', 'No feedback for students'),
+        OVERALL_MARK: t('overallMarkOnly', 'Overall mark only'),
+        SECTION_MARKS: t('sectionbysectionMarkBreakdown', 'Section-by-section mark breakdown'),
+        DETAILED_FEEDBACK: t('detailedFeedbackOnEachQuestion', 'Detailed feedback on each question'),
     };
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
-            <h4 className="alert-heading">Error loading test feedback</h4>
+            <h4 className="alert-heading">{t('errorLoadingTestFeedback', 'Error loading test feedback')}</h4>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
         </Alert>
     </>;
@@ -179,19 +181,19 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
                 {assignmentNotYetStarted && <div className="mb-4 alert alert-info px-3 py-2 mt-4">
-                    <span className="alert-heading fw-bold">This test has not yet started. </span>
-                    <span>It will be released to your group on {formatDate(assignmentStartDate)}.</span>
+                    <span className="alert-heading fw-bold">{t('thisTestHasNotYetStarted', 'This test has not yet started.')} </span>
+                    <span>{t('itWillBeReleasedToYourGroupOnDate', 'It will be released to your group on {{date}}.', { date: formatDate(assignmentStartDate) })}</span>
                 </div>}
 
                 <div className={classNames("d-flex align-items-center flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
                     {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${quizAssignment.groupId}#tests`} className="d-flex align-items-center">
                         <i className="icon icon-arrow-left me-2"/>
-                        Back to group assignments and tests
+                        {t('markbook.backToGroupAssignmentsAndTests', 'Back to group assignments and tests')}
                     </Link>}
                     {isPhy && <Spacer/>}
                     <div className="d-flex flex-column px-3 py-3 py-md-0 text-md-center justify-content-center">
                         <Label for="feedbackMode" className="pe-1 mb-0 small">
-                            Student feedback mode:
+                            {t('markbook.studentFeedbackMode', 'Student feedback mode:')}
                         </Label>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={"sm"} disabled={isUpdatingQuiz}>
@@ -214,7 +216,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                         target="_blank"
                     >
-                        Download CSV
+                        {t('markbook.downloadCsv', 'Download CSV')}
                         <i className="icon icon-download ms-2" color={siteSpecific("white", "primary")}/>
                     </Button>
                 </div>
@@ -226,7 +228,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <Card className="p-4 my-3">
                             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} showLegend
-                                headerText={siteSpecific(<h4>Overview: {quizTitle}</h4>, <h3>Group results</h3>)} 
+                                headerText={siteSpecific(<h4>{t('overviewQuiztitle', 'Overview: {{quizTitle}}', { quizTitle })}</h4>, <h3>{t('groupResults', 'Group results')}</h3>)} 
                             />
                             <QuizProgressDetails assignment={quizAssignment} />
                         </Card>

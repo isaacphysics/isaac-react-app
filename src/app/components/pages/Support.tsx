@@ -13,6 +13,8 @@ import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
 import { FAQSidebar } from "../elements/sidebar/FAQSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 type SupportType = "student" | "teacher" | "tutor";
 
@@ -35,57 +37,57 @@ interface SupportCategories {
 const support: {student: SupportCategories; teacher: SupportCategories, tutor?: SupportCategories} = siteSpecific(
     {
         student: {
-            title: "Student FAQ",
+            title: i18next.t('studentFaq', 'Student FAQ'),
             categories:{
-                general: {category: "general", title: "Get started", icon: "faq"},
-                homework: {category: "homework", title: "Doing homework", icon: "faq"},
-                questions: {category: "questions", title: "Answering questions", icon: "faq"},
-                events: {category: "events", title: "Events and support", icon: "faq"},
-                troubleshooting: {category: "troubleshooting", title: "Troubleshooting & legal", icon: "faq"},
+                general: {category: "general", title: i18next.t('getStarted', 'Get started'), icon: "faq"},
+                homework: {category: "homework", title: i18next.t('doingHomework', 'Doing homework'), icon: "faq"},
+                questions: {category: "questions", title: i18next.t('answeringQuestions', 'Answering questions'), icon: "faq"},
+                events: {category: "events", title: i18next.t('eventsAndSupport', 'Events and support'), icon: "faq"},
+                troubleshooting: {category: "troubleshooting", title: i18next.t('troubleshootingLegal', 'Troubleshooting & legal'), icon: "faq"},
             }
         },
         teacher: {
-            title: "Teacher FAQ",
+            title: i18next.t('teacherFaq', 'Teacher FAQ'),
             categories: {
-                general: { category: "general", title: "Get started", icon: "faq" },
-                assignments: { category: "assignments", title: "Set work", icon: "faq" },
-                progress: { category: "progress", title: "View student progress", icon: "faq" },
-                suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
-                partner: { category: "partner", title: "Partner with us", icon: "teacher-hat" },
-                direct: { category: "direct", title: "Teacher support", icon: "teacher-hat"},
-                troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
-                legal: { category: "legal", title: "Legal", icon: "faq"}
+                general: { category: "general", title: i18next.t('getStarted', 'Get started'), icon: "faq" },
+                assignments: { category: "assignments", title: i18next.t('setWork', 'Set work'), icon: "faq" },
+                progress: { category: "progress", title: i18next.t('viewStudentProgress', 'View student progress'), icon: "faq" },
+                suggestions: { category: "suggestions", title: i18next.t('teachingSuggestions', 'Teaching suggestions'), icon: "teacher-hat" },
+                partner: { category: "partner", title: i18next.t('partnerWithUs', 'Partner with us'), icon: "teacher-hat" },
+                direct: { category: "direct", title: i18next.t('teacherSupport', 'Teacher support'), icon: "teacher-hat"},
+                troubleshooting: {category: "troubleshooting", title: i18next.t('troubleshooting', 'Troubleshooting'), icon: "faq"},
+                legal: { category: "legal", title: i18next.t('legal', 'Legal'), icon: "faq"}
             }
         },
         tutor: {
-            title: "Tutor FAQ",
+            title: i18next.t('tutorFaq', 'Tutor FAQ'),
             categories: {
-                general: { category: "general", title: "Get started", icon: "faq" },
-                assignments: { category: "assignments", title: "Set work", icon: "faq" },
-                progress: { category: "progress", title: "View student progress", icon: "faq" },
-                suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
-                troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
-                legal: { category: "legal", title: "Legal", icon: "faq"}
+                general: { category: "general", title: i18next.t('getStarted', 'Get started'), icon: "faq" },
+                assignments: { category: "assignments", title: i18next.t('setWork', 'Set work'), icon: "faq" },
+                progress: { category: "progress", title: i18next.t('viewStudentProgress', 'View student progress'), icon: "faq" },
+                suggestions: { category: "suggestions", title: i18next.t('teachingSuggestions', 'Teaching suggestions'), icon: "teacher-hat" },
+                troubleshooting: {category: "troubleshooting", title: i18next.t('troubleshooting', 'Troubleshooting'), icon: "faq"},
+                legal: { category: "legal", title: i18next.t('legal', 'Legal'), icon: "faq"}
             }
         }
     },
     {
         student: {
-            title: "Student support",
+            title: i18next.t('studentSupport', 'Student support'),
             categories:{
-                general: {category: "general", title: "General questions", icon: "faq"},
-                homework: {category: "homework", title: "Finding homework", icon: "faq"},
-                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
-                revision: {category: "revision", title: "Revision", icon: "faq"},
+                general: {category: "general", title: i18next.t('generalQuestions', 'General questions'), icon: "faq"},
+                homework: {category: "homework", title: i18next.t('findingHomework', 'Finding homework'), icon: "faq"},
+                code: {category: "code", title: i18next.t('codeAndPseudocode', 'Code and pseudocode'), icon: "faq"},
+                revision: {category: "revision", title: i18next.t('revision', 'Revision'), icon: "faq"},
             }
         },
         teacher: {
-            title: "Teacher support",
+            title: i18next.t('teacherSupport', 'Teacher support'),
             categories: {
-                general: { category: "general", title: "General questions", icon: "faq" },
-                assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
-                progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
-                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
+                general: { category: "general", title: i18next.t('generalQuestions', 'General questions'), icon: "faq" },
+                assignments: { category: "assignments", title: i18next.t('assigningWork', 'Assigning work'), icon: "faq" },
+                progress: { category: "progress", title: i18next.t('viewingStudentProgress', 'Viewing student progress'), icon: "faq" },
+                code: {category: "code", title: i18next.t('codeAndPseudocode', 'Code and pseudocode'), icon: "faq"},
             }
         }
     }
@@ -96,6 +98,7 @@ function supportPath(type?: string, category?: string) {
 }
 
 export const Support = () => {
+    const { t } = useTranslation()
 
     const { type, category } = useParams() as Params;
     const navigate = useNavigate();
@@ -127,12 +130,12 @@ export const Support = () => {
 
     const metaDescriptionMap = siteSpecific(
         {
-            "student": "Find answers to your questions about Isaac Science in our FAQ for students.",
-            "teacher": "Find answers to your questions about Isaac Science in our FAQ for teachers.",
+            "student": t('findAnswersToYourQuestionsAboutIsaacScienceInOurFaqForStudents', 'Find answers to your questions about Isaac Science in our FAQ for students.'),
+            "teacher": t('findAnswersToYourQuestionsAboutIsaacScienceInOurFaqForTeachers', 'Find answers to your questions about Isaac Science in our FAQ for teachers.'),
         },
         {
-            "student": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!",
-            "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!",
+            "student": t('gotAQuestionAboutAdaComputerScienceReadOurStudentFaqsGetGcseAndALevelSupportToday', 'Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!'),
+            "teacher": t('gotAQuestionAboutAdaComputerScienceReadOurTeacherFaqsGetGcseAndALevelSupportToday', 'Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!'),
         });
 
     return <PageContainer

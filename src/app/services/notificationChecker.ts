@@ -3,6 +3,7 @@ import {RegisteredUserDTO} from "../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery } from "../state";
 import {getAllSortedWorkToDo, isAssignment, isQuiz, isTeacherPending, KEY, PATHS, persistence} from "./";
 import {Immutable} from "immer";
+import i18next from 'i18next'
 
 export function canShowPopupNotification(user: Immutable<RegisteredUserDTO> | null): boolean {
     const dateNow = new Date();
@@ -51,20 +52,20 @@ export const useUserNotifications = () : UserNotificationsResult => {
     const workToDoNotifications = toDo.map((assignmentLike, i) => isAssignment(assignmentLike)
         ? {
             id: assignmentLike.id ?? `assignment-${i}`,
-            title: `Assignment to do: ${assignmentLike.gameboard?.title}`,
-            message: `Due on ${new Date(assignmentLike.dueDate ?? 0).toLocaleDateString()}`,
+            title: i18next.t('assignmentToDoVal', 'Assignment to do: {{val}}', { val: assignmentLike.gameboard?.title }),
+            message: i18next.t('dueOnVal', 'Due on {{val}}', { val: new Date(assignmentLike.dueDate ?? 0).toLocaleDateString() }),
             button: {
-                text: "Go to assignment",
+                text: i18next.t('goToAssignment', 'Go to assignment'),
                 link: `${PATHS.GAMEBOARD}#${assignmentLike.gameboardId}`
             }
         } 
         : isQuiz(assignmentLike)
             ? {
                 id: assignmentLike.id ?? `quiz-${i}`,
-                title: `Test to do: ${assignmentLike.quizSummary?.title}`,
-                message: `Due on ${new Date(assignmentLike.dueDate ?? 0).toLocaleDateString()}`,
+                title: i18next.t('testToDoVal', 'Test to do: {{val}}', { val: assignmentLike.quizSummary?.title }),
+                message: i18next.t('dueOnVal', 'Due on {{val}}', { val: new Date(assignmentLike.dueDate ?? 0).toLocaleDateString() }),
                 button: {
-                    text: "Go to test",
+                    text: i18next.t('goToTest', 'Go to test'),
                     link: `${PATHS.TEST}/${assignmentLike.id}`
                 }
             } 

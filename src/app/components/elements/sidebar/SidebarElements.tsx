@@ -9,6 +9,7 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { Tag } from "../../../../IsaacAppTypes";
+import { useTranslation } from 'react-i18next'
 
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
@@ -19,8 +20,9 @@ export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: st
 };
 
 export const CompletionKey = () => {
+    const { t } = useTranslation()
     return <div className="d-flex flex-column sidebar-key">
-        Question key
+        {t('questionKey', 'Question key')}
         <ul>
             <KeyItem icon="not-started" text="Not started"/>
             <KeyItem icon="in-progress" text="In progress"/>
@@ -121,17 +123,18 @@ interface QuestionLinkProps {
 }
 
 export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
+    const { t } = useTranslation()
     const { question, gameboardId, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
     const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
 
     const progressIcon = question.state && (question.state === CompletionState.ALL_CORRECT
-        ? "icon icon-raw icon-correct"
+        ? t('iconIconrawIconcorrect', 'icon icon-raw icon-correct')
         : [CompletionState.ALL_INCORRECT, CompletionState.ALL_ATTEMPTED].includes(question.state)
-            ? "icon icon-raw icon-attempted"
+            ? t('iconIconrawIconattempted', 'icon icon-raw icon-attempted')
             : question.state === CompletionState.IN_PROGRESS
-                ? "icon icon-raw icon-in-progress"
+                ? t('iconIconrawIconinprogress', 'icon icon-raw icon-in-progress')
                 : "icon icon-raw icon-not-started");
 
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>

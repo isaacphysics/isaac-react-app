@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import {Alert, Button, Col, Container, Row} from 'reactstrap';
 import Cookies from 'js-cookie';
 import {SITE_TITLE, siteSpecific} from "../../services";
+import { useTranslation, Trans } from 'react-i18next'
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
 export const DowntimeWarningBanner = () => {
+    const { t } = useTranslation()
     const [noCookie, setCookie] = useState(() => {
         const currentCookieValue = Cookies.get(DOWNTIME_COOKIE);
         return currentCookieValue != "1";
@@ -23,13 +25,9 @@ export const DowntimeWarningBanner = () => {
         <Alert color={colour} className="mb-0">
             <Container>
                 <Row style={{alignItems: "center"}}>
-                    <Col xs={12} md={9}>
-                        {SITE_TITLE} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance.
-                    </Col>
+                    <Col xs={12} md={9}>{t('site_titleMayBeUnavailableOnTuesday15JulyFrom7amBstUntil9amBstDueToEssentialNetworkMaintenance', '{{SITE_TITLE}} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance.', { SITE_TITLE })}</Col>
                     <Col xs={12} md={3} className="text-center">
-                        <Button color="keyline" className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
-                            Dismiss<span className="visually-hidden"> downtime notification</span>
-                        </Button>
+                        <Button color="keyline" className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}><Trans i18nKey="dismissspanClassnamevisuallyhiddenDowntimeNotificationspan">Dismiss<span className="visually-hidden"> downtime notification</span></Trans></Button>
                     </Col>
                 </Row>
             </Container>

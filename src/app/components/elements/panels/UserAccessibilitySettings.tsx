@@ -5,6 +5,7 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { isTeacherOrAbove, siteSpecific } from "../../../services";
 import { useAppSelector } from "../../../state";
 import { WithLinkableSetting } from "../WithLinkableSetting";
+import { useTranslation } from 'react-i18next'
 
 interface UserAccessibilitySettingsProps {
     accessibilitySettings: AccessibilitySettings;
@@ -12,12 +13,13 @@ interface UserAccessibilitySettingsProps {
 }
 
 export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibilitySettings }: UserAccessibilitySettingsProps) => {
+    const { t } = useTranslation()
     const user = useAppSelector(state => state?.user);
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Accessibility settings</h3>
-            <p>Here you can manage various accessibility features across the site.</p>
+            <h3>{t('accessibilitySettings', 'Accessibility settings')}</h3>
+            <p>{t('hereYouCanManageVariousAccessibilityFeaturesAcrossTheSite', 'Here you can manage various accessibility features across the site.')}</p>
         </>}
         rightColumn={<>
             <div className="pt-2"/>
@@ -27,12 +29,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, REDUCED_MOTION: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Prefer reduced motion</p>}
+                    label={<p>{t('preferReducedMotion', 'Prefer reduced motion')}</p>}
                     id={"reduced-motion"}
                     aria-describedby="reduced-motion-helptext"
                     removeVerticalOffset
                 /></b>
-                <p>{`Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.`}</p>
+                <p>{t('enablingThisWillReduceMotionEffectsOnThePlatformBrowserPreferenceWillTakePriorityOverThisSetting', 'Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.')}</p>
             </WithLinkableSetting>
             <div className="pt-2"/>
             <WithLinkableSetting id={"prefer-mathml-feature"}>
@@ -42,12 +44,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, SHOW_INACCESSIBLE_WARNING: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Warn about inaccessible content</p>}
+                    label={<p>{t('warnAboutInaccessibleContent', 'Warn about inaccessible content')}</p>}
                     id={"show-inaccessible-tag"}
                     aria-describedby="show-inaccessible-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="show-inaccessible-helptext">{`Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.`}</p>
+                <p id="show-inaccessible-helptext">{t('enablingThisWillDisplayWarningsOnCertainContentThatMayBeInaccessibleToAssistiveTechnologies', 'Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.')}</p>
             </WithLinkableSetting>
             <div className="section-divider" />
             <div className="pt-2"/>
@@ -57,12 +59,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, PREFER_MATHML: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Use MathML for accessible maths</p>}
+                    label={<p>{t('useMathmlForAccessibleMaths', 'Use MathML for accessible maths')}</p>}
                     id={"prefer-mathml"}
                     aria-describedby="mathml-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="mathml-helptext">{`With this setting you can toggle between using alternative text or MathML for mathematical equations.`}</p>
+                <p id="mathml-helptext">{t('withThisSettingYouCanToggleBetweenUsingAlternativeTextOrMathmlForMathematicalEquations', 'With this setting you can toggle between using alternative text or MathML for mathematical equations.')}</p>
             </WithLinkableSetting>
         </>}
     />;

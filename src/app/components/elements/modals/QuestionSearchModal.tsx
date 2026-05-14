@@ -49,6 +49,7 @@ import { updateTopicChoices, initialiseListState, listStateReducer } from "../..
 import { HorizontalScroller } from "../inputs/HorizontalScroller";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
+import { useTranslation } from 'react-i18next'
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -67,10 +68,11 @@ interface QuestionSearchModalProps {
 }
 export const QuestionSearchModal = (
     {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
     const deviceSize = useDeviceSize();
-    const sublistDelimiter = " >>> ";
+    const sublistDelimiter = t('key2', ' >>> ');
 
     const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
     const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
@@ -164,13 +166,13 @@ export const QuestionSearchModal = (
     const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center mt-2">
         <div className="flex-grow-1 mb-1">
             <strong className={classNames({"text-danger": selectedQuestions.size > QUESTIONS_PER_GAMEBOARD})}>
-                {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
+                {t('sizeQuestionvalSelected', '{{size}} question{{val}} selected', { size: selectedQuestions.size, val: selectedQuestions.size !== 1 ? "s" : "" })}
             </strong>
         </div>
         <div>
             <Input
                 type="button"
-                value={siteSpecific("Add selections to question deck", "Add selections to quiz")}
+                value={siteSpecific(t('addSelectionsToQuestionDeck', 'Add selections to question deck'), "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={classNames("btn w-100 h-100", siteSpecific("btn-keyline", "btn-solid border-0"))}
                 onClick={() => {
@@ -198,15 +200,15 @@ export const QuestionSearchModal = (
             <Row>
                 <Col className={classNames({"col-12 col-lg-6 col-xl-12": isPhy && !isBookSearch})}>
                     {isAda && <CollapsibleList 
-                        title={<span className="ms-n3">Topic</span>} 
+                        title={<span className="ms-n3">{t('topic', 'Topic')}</span>} 
                         expanded={listState.topics.state} 
                         className="mb-3"
                         toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
                     >
                         {groupBaseTagOptions.map((tag, index) => (
                             <CollapsibleList title={tag.label} asSubList
-                                expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
-                                toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
+                                expanded={listState[t('topicsSublistdelimiterLabel', 'topics {{sublistDelimiter}} {{label}}', { sublistDelimiter, label: tag.label })]?.state}
+                                toggle={() => listStateDispatch({type: "toggle", id: t('topicsSublistdelimiterLabel', 'topics {{sublistDelimiter}} {{label}}', { sublistDelimiter, label: tag.label }), focus: true})}
                                 key={index} tag={"li"}
                             >
                                 {tag.options.map((topic, index) => (
@@ -219,57 +221,57 @@ export const QuestionSearchModal = (
                         ))}
                     </CollapsibleList>}
                     {isPhy && <div className="mb-2">
-                        <Label htmlFor="question-search-book">Book</Label>
+                        <Label htmlFor="question-search-book">{t('book', 'Book')}</Label>
                         <StyledSelect
-                            inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
+                            inputId="question-search-book" isClearable placeholder={t('none', 'None')} {...selectStyle}
                             onChange={selectOnChange(setSearchBook, true)}
                             options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                         />
                     </div>}
                     <div className={classNames("mb-2", {"d-none": isBookSearch})}>
-                        <Label htmlFor="question-search-stage">Stage</Label>
+                        <Label htmlFor="question-search-stage">{t('stage', 'Stage')}</Label>
                         <StyledSelect
-                            inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
+                            inputId="question-search-stage" isClearable isMulti placeholder={t('any', 'Any')} {...selectStyle}
                             options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                         />
                     </div>
                     {isPhy && !isBookSearch && deviceSize !== "lg" && <div className="mb-2">
-                        <Label htmlFor="question-search-topic">Topic</Label>
+                        <Label htmlFor="question-search-topic">{t('topic', 'Topic')}</Label>
                         <HierarchyFilterTreeList root {...{
                             inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
                             choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
                     </div>}
                     <div className={classNames("mb-2", {"d-none": isBookSearch})}>
-                        <Label htmlFor="question-search-difficulty">Difficulty</Label>
+                        <Label htmlFor="question-search-difficulty">{t('difficulty', 'Difficulty')}</Label>
                         <StyledSelect
-                            inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
+                            inputId="question-search-difficulty" isClearable isMulti placeholder={t('any', 'Any')} {...selectStyle}
                             options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                         />
                         {isAda && <>
-                            <Label className="mt-2" htmlFor="question-search-exam-board">Exam Board</Label>
+                            <Label className="mt-2" htmlFor="question-search-exam-board">{t('examBoard2', 'Exam Board')}</Label>
                             <StyledSelect
-                                inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
+                                inputId="question-search-exam-board" isClearable isMulti placeholder={t('any', 'Any')} {...selectStyle}
                                 value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                                 options={getFilteredExamBoardOptions({byStages: searchStages})}
                                 onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
                             />
                         </>}
                     </div>
-                    <Label htmlFor="question-search-title">Search</Label>
+                    <Label htmlFor="question-search-title">{t('search', 'Search')}</Label>
                     <Input id="question-search-title" className="mb-3"
                         type="text"
-                        placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                        placeholder={siteSpecific(t('egManVsHorse', 'e.g. Man vs. Horse'), "e.g. Creating an AST")}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setSearchQuestionName(e.target.value);
                         }}
                     />
                     {isPhy && isStaff(user) &&
                         <Form className="mb-2">
-                            <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
+                            <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}{t('showFasttrackQuestions', 'Show FastTrack questions')}</Label>
                         </Form>}
                 </Col>
                 {isPhy && !isBookSearch && deviceSize === "lg" && <Col className="col-6">
-                    <Label htmlFor="question-search-topic">Topic</Label>
+                    <Label htmlFor="question-search-topic">{t('topic', 'Topic')}</Label>
                     <HierarchyFilterTreeList root {...{
                         inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
                         choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
@@ -290,11 +292,11 @@ export const QuestionSearchModal = (
                                 reverseOrder={SortOrder.DESC}
                                 currentOrder={questionsSort['title']}
                                 alignment="start"
-                            >Question title</SortItemHeader>
-                            <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                            <th className="w-15">Stage</th>
-                            <th className="w-15">Difficulty</th>
-                            {isAda && <th className="w-15">Exam boards</th>}
+                            >{t('questionTitle', 'Question title')}</SortItemHeader>
+                            <th className={siteSpecific("w-25", "w-20")}>{t('topic', 'Topic')}</th>
+                            <th className="w-15">{t('stage', 'Stage')}</th>
+                            <th className="w-15">{t('difficulty', 'Difficulty')}</th>
+                            {isAda && <th className="w-15">{t('examBoards', 'Exam boards')}</th>}
                         </tr>
                     </thead>
                     <tbody>

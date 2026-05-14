@@ -4,6 +4,7 @@ import { Tabs } from "../elements/Tabs";
 import { PageFragment } from "../elements/PageFragment";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { MetaDescription } from "../elements/MetaDescription";
+import { useTranslation } from 'react-i18next'
 
 enum TEACHING_ORDER_STAGE {
     CORE_Y1 = "Core Y1",
@@ -21,14 +22,15 @@ const getStageFromURL = () : TEACHING_ORDER_STAGE | undefined => {
 };
 
 export const TeachingOrders = () => {
+    const { t } = useTranslation()
     const TEACHING_ORDER_STAGES = Object.keys(TEACHING_ORDER_STAGE);
     const [stageTab, setStageTab] = useState<typeof TEACHING_ORDER_STAGES[number]>(getStageFromURL() || TEACHING_ORDER_STAGE.CORE_Y1);
     const [stageTabOverride, _setStageTabOverride] = useState<number | undefined>(Object.values(sanitisedStageTabsMap).indexOf(stageTab) + 1 || undefined);
     const [fragmentId, setFragmentId] = useState<string>("");
 
     const metaDescription = (stageTab === TEACHING_ORDER_STAGE.CORE_Y1 || stageTab === TEACHING_ORDER_STAGE.CORE_Y2)
-        ? "Discover our free Core computer science topics and questions. Learn or revise for your exams with us today."
-        : "Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.";
+        ? t('meta.description.core', 'Discover our free Core computer science topics and questions. Learn or revise for your exams with us today.')
+        : t('meta.description.advanced', 'Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.');
 
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
     for (const stageName of Object.values(TEACHING_ORDER_STAGE)) {
@@ -51,7 +53,7 @@ export const TeachingOrders = () => {
     }, [stageTab]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Suggested teaching order"} />
+        <TitleAndBreadcrumb currentPageTitle={t('suggestedTeachingOrder', 'Suggested teaching order')} />
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>

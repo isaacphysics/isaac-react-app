@@ -38,6 +38,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { GlossarySidebar } from "../elements/sidebar/GlossarySidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -121,6 +122,7 @@ interface GlossarySearchProps {
 }
 
 export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps) => {
+    const { t } = useTranslation()
     // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
     const [internalSearchText, setInternalSearchText] = useState(searchText);
 
@@ -129,7 +131,7 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
     return siteSpecific(<Input
         className='search--filter-input my-4'
         type="search" value={internalSearchText || ""}
-        placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
+        placeholder={t('egVal', 'e.g. {{val}}', { val: getSearchPlaceholder(pageContext?.subject) })}
         onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
             setSearchText(e.target.value);
             setInternalSearchText(e.target.value);
@@ -138,7 +140,7 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
     <Input
         id="terms-search" name="query"
         type="search" value={internalSearchText || ""}
-        placeholder="Search by term" aria-label="Search by term"
+        placeholder={t('searchByTerm', 'Search by term')} aria-label={t('searchByTerm', 'Search by term')}
         onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
             setSearchText(e.target.value);
             setInternalSearchText(e.target.value);
@@ -147,6 +149,7 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
 };
 
 export const Glossary = () => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -339,7 +342,7 @@ export const Glossary = () => {
     });
 
     const metaDescription = siteSpecific(
-        "A glossary of important words and phrases used in maths, physics, chemistry and biology.",
+        t('aGlossaryOfImportantWordsAndPhrasesUsedInMathsPhysicsChemistryAndBiology', 'A glossary of important words and phrases used in maths, physics, chemistry and biology.'),
         "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!");
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
@@ -375,15 +378,15 @@ export const Glossary = () => {
                     <Row className="no-print">
                         {isAda && <>
                             <Col md={{size: 4}}>
-                                <Label for='terms-search' className='visually-hidden'>Search by term</Label>
+                                <Label for='terms-search' className='visually-hidden'>{t('searchByTerm', 'Search by term')}</Label>
                                 <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
                             </Col>
                             <Col className="mt-3 mt-md-0">
-                                <Label for='topic-select' className='visually-hidden'>Topic</Label>
+                                <Label for='topic-select' className='visually-hidden'>{t('topic', 'Topic')}</Label>
                                 <StyledSelect inputId="topic-select"
                                     options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                     name="topic-select"
-                                    placeholder="All topics"
+                                    placeholder={t('allTopics', 'All topics')}
                                     onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                     isClearable
                                 />
@@ -392,8 +395,8 @@ export const Glossary = () => {
                     </Row>
                     <Row className="only-print">
                         <Col>
-                            {searchText !== "" && <span className="pe-4">Search: <strong>{searchText}</strong></span>}
-                            {isDefined(filterTopic) && <span className="pe-4">Topic: <strong>{filterTopic.title}</strong></span>}
+                            {searchText !== "" && <span className="pe-4">{t('search2', 'Search:')} <strong>{searchText}</strong></span>}
+                            {isDefined(filterTopic) && <span className="pe-4">{t('topic2', 'Topic:')} <strong>{filterTopic.title}</strong></span>}
                         </Col>
                     </Row>
                 </Col>
@@ -401,14 +404,14 @@ export const Glossary = () => {
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
                 <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
                     {/* Let users know that they need to select a subject */}
-                    {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
-                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
-                    {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>We could not find glossary terms to match your search criteria.</p>}
+                    {isPhy && !isDefined(filterSubject) && <p>{t('pleaseSelectASubject', 'Please select a subject.')}</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>{t('thereAreNoGlossaryTermsInTheGlossaryYetPleaseTryAgainLater', 'There are no glossary terms in the glossary yet! Please try again later.')}</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>{t('weCouldNotFindGlossaryTermsToMatchYourSearchCriteria', 'We could not find glossary terms to match your search criteria.')}</p>}
                 </div>
             </Row>}
             {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-4", {"pt-0": isAda, "pe-2 pt-md-2 mb-4 border-radius-2 list-results-container": isPhy})}>
                 <div className="no-print">
-                    <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
+                    <div id="sentinel" ref={alphabetScrollerSentinel}>{t('nbsp', '&nbsp;')}</div>
                     <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
                         {alphabetList}
                     </div>

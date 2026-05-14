@@ -16,6 +16,7 @@ import { ResultsListContainer, ResultsListHeader } from "../elements/ListResults
 import { FilterSummary } from "./QuestionFinder";
 import { GenericConceptsListingSidebar, SubjectSpecificConceptsListingSidebar } from "../elements/sidebar/ConceptsListingSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from 'react-i18next'
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -26,6 +27,7 @@ const subjectToTagMap = {
 
 // This component is Isaac Physics only (currently)
 export const Concepts = () => {
+    const { t } = useTranslation()
     const location = useLocation();
     const navigate = useNavigate();
     const user = useAppSelector(selectors.user.orNull);
@@ -159,11 +161,11 @@ export const Concepts = () => {
                 {pageContext?.subject 
                     ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
                         <p className="me-0 me-lg-3">
-                            The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                            {t('theConceptsShownOnThisPageHaveBeenFilteredToOnlyShowThoseThatAreRelevantTo', 'The concepts shown on this page have been filtered to only show those that are relevant to')} {getHumanContext(pageContext)}.
                             You can browse all concepts <Link to="/concepts">here</Link>.
                         </p>
                     </div> 
-                    : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
+                    : <p>{t('useOurConceptFinderToExploreAllConceptsOnTheIsaacPlatform', 'Use our concept finder to explore all concepts on the Isaac platform.')}</p>
                 }
             </PageMetadata>
             {isPhy && !pageContext?.subject && (!pageContext?.stage || pageContext.stage.length === 0) && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
@@ -177,12 +179,12 @@ export const Concepts = () => {
 
                         return <>
                             {!!shortcutAndFilteredSearchResults.length && <ResultsListHeader>
-                                Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
+                                {t('showing', 'Showing')} <b>{shortcutAndFilteredSearchResults.length}</b> results
                             </ResultsListHeader>}
 
                             {shortcutAndFilteredSearchResults.length
                                 ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
-                                : <em>No results found</em>
+                                : <em>{t('noResultsFound', 'No results found')}</em>
                             }
                         </>;
                     }}

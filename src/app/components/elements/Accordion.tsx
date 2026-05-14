@@ -31,6 +31,7 @@ import { CompletionState } from "../../../IsaacApiTypes";
 import { StatusDisplay } from "./list-groups/AbstractListViewItem";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 import { useHistoryState } from "../../state/actions/history";
+import { useTranslation } from 'react-i18next'
 
 interface AccordionsProps {
     id?: string;
@@ -46,6 +47,7 @@ interface AccordionsProps {
 let nextClientId = 0;
 
 export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString}: AccordionsProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const location = useLocation();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -148,11 +150,11 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
     
     const accordionState = calculateQuestionSetCompletionState(questionsInsideAccordionSection);
     const accordionAltText = {
-        [CompletionState.ALL_CORRECT]: "All questions in this part are answered correctly.",
-        [CompletionState.ALL_INCORRECT]: "All questions in this part are answered incorrectly.",
-        [CompletionState.ALL_ATTEMPTED]: "Some questions in this part are answered incorrectly.",
-        [CompletionState.IN_PROGRESS]: "Some questions in this part are answered incorrectly.",
-        [CompletionState.NOT_ATTEMPTED]: "No questions in this part have been answered."
+        [CompletionState.ALL_CORRECT]: t('allQuestionsInThisPartAreAnsweredCorrectly', 'All questions in this part are answered correctly.'),
+        [CompletionState.ALL_INCORRECT]: t('allQuestionsInThisPartAreAnsweredIncorrectly', 'All questions in this part are answered incorrectly.'),
+        [CompletionState.ALL_ATTEMPTED]: t('someQuestionsInThisPartAreAnsweredIncorrectly', 'Some questions in this part are answered incorrectly.'),
+        [CompletionState.IN_PROGRESS]: t('someQuestionsInThisPartAreAnsweredIncorrectly', 'Some questions in this part are answered incorrectly.'),
+        [CompletionState.NOT_ATTEMPTED]: t('noQuestionsInThisPartHaveBeenAnswered', 'No questions in this part have been answered.')
     };
 
     const accordionQuestionIncludeLLMMarked = questionsInsideAccordionSection?.some(q => q.type === "isaacLLMFreeTextQuestion");
@@ -205,7 +207,7 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
                 )}
             </span>}
             <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
-                {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
+                {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>{t('part', 'Part')} {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
                 <div className={classNames("accordion-title p-3 ps-1", {"pt-0": isPhy, "d-flex align-items-center": isPhy && includeLLMMarkedQuestionIndicator})}>
                     {isConceptPage && audienceString && isPhy && <span className="inline-stage-label">{audienceString}<br/></span>}
                     <Markup encoding={"latex"}>

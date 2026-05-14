@@ -30,6 +30,7 @@ import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../.
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
 import { initialiseListState, listStateReducer, sublistDelimiter, TopLevelListsState } from "../../../services";
+import { useTranslation, Trans } from 'react-i18next'
 
 const listTitles: { [field in keyof TopLevelListsState]: string } = {
     stage: siteSpecific("Learning Stage", "Stage"),
@@ -73,6 +74,7 @@ export interface QuestionFinderFilterPanelProps {
     setSearchDisabled: Dispatch<SetStateAction<boolean>>;
 }
 export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps) {
+    const { t } = useTranslation()
     const {
         searchDifficulties, setSearchDifficulties,
         searchTopics, setSearchTopics,
@@ -123,11 +125,11 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
         }}>
             {siteSpecific(
-                <h6 className="filter-question-text">Filter questions by</h6>,
+                <h6 className="filter-question-text">{t('filterQuestionsBy', 'Filter questions by')}</h6>,
                 <>
                     <div>
                         <img src="/assets/common/icons/filter-icon.svg" alt="Filter" style={{width: 18}} className="ms-1 me-2"/>
-                        <b>Filter by</b>
+                        <b>{t('filterBy', 'Filter by')}</b>
                     </div>
                     <Spacer/>
                     {validFiltersSelected && <div className="pe-1 pe-lg-0">
@@ -135,7 +137,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             className={classNames("text-black pe-lg-0 py-0 me-2 me-lg-0 bg-opacity-10 btn-link", {"bg-white": isAda})}
                             onClick={(e) => { e.stopPropagation(); clearFilters(); }}
                         >
-                            Clear all
+                            {t('clearAll', 'Clear all')}
                         </button>
                     </div>}
                 </>)}
@@ -212,8 +214,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         <>{groupBaseTagOptions.map((tag, index) => (
                             <CollapsibleList
                                 title={tag.label} asSubList
-                                expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
-                                toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
+                                expanded={listState[t('topicsSublistdelimiterLabel', 'topics {{sublistDelimiter}} {{label}}', { sublistDelimiter, label: tag.label })]?.state}
+                                toggle={() => listStateDispatch({type: "toggle", id: t('topicsSublistdelimiterLabel', 'topics {{sublistDelimiter}} {{label}}', { sublistDelimiter, label: tag.label }), focus: true})}
                                 tag={"li"} key={index}
                             >
                                 {tag.options.map((topic, index) => (
@@ -248,7 +250,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             e.preventDefault();
                             dispatch(openActiveModal(questionFinderDifficultyModal()));
                         }}>
-                        <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
+                        <b className="small text-start">{siteSpecific(t('learnMoreAboutDifficultyLevels', 'Learn more about difficulty levels'), "What do the difficulty levels mean?")}</b>
                     </button>
                     {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
                         <li key={index}>
@@ -284,7 +286,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     color="primary"
                                     checked={excludeBooks}
                                     onChange={() => setExcludeBooks(p => !p)}
-                                    label={<span className="me-2">Exclude skills book questions</span>}
+                                    label={<span className="me-2">{t('excludeSkillsBookQuestions', 'Exclude skills book questions')}</span>}
                                 />
                             </CheckboxWrapper>
                         </li>
@@ -328,14 +330,10 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 checked={searchStatuses.notAttempted}
                                 onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
                                 label={siteSpecific(
-                                    <div className="d-flex">
-                                        Not started
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/>
-                                    </div>,
-                                    <div>
-                                        Not attempted
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-not-started.svg" alt="Not attempted" />
-                                    </div>
+                                    <div className="d-flex"><Trans i18nKey="notStartedImgClassnameps2SrcassetsphyiconsredesignstatusnotstartedsvgAltnotStarted">Not started
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/></Trans></div>,
+                                    <div><Trans i18nKey="notAttemptedImgClassnameps2IconstatusSrcassetscsiconsstatusnotstartedsvgAltnotAttempted">Not attempted
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-not-started.svg" alt="Not attempted" /></Trans></div>
                                 )}
                             />
                         </CheckboxWrapper>
@@ -347,14 +345,10 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 checked={searchStatuses.complete}
                                 onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
                                 label={siteSpecific(
-                                    <div className="d-flex">
-                                        Fully correct
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/> 
-                                    </div>,
-                                    <div>
-                                        Completed
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-correct.svg" alt="Completed" />
-                                    </div>
+                                    <div className="d-flex"><Trans i18nKey="fullyCorrectImgClassnameps2SrcassetsphyiconsredesignstatuscorrectsvgAltfullyCorrect">Fully correct
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/></Trans></div>,
+                                    <div><Trans i18nKey="completedImgClassnameps2IconstatusSrcassetscsiconsstatuscorrectsvgAltcompleted">Completed
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-correct.svg" alt="Completed" /></Trans></div>
                                 )}
                             />
                         </CheckboxWrapper>
@@ -366,10 +360,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 checked={searchStatuses.allIncorrect}
                                 onChange={() => setSearchStatuses(s => {return {...s, allIncorrect: !s.allIncorrect};})}
                                 label={
-                                    <div className="d-flex">
-                                        All incorrect
-                                        <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
-                                    </div>
+                                    <div className="d-flex"><Trans i18nKey="allIncorrectImgClassnameps2IconstatusSrcassetsphyiconsredesignstatusincorrectsvgAltallIncorrect">All incorrect
+                                        <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/></Trans></div>
                                 }
                             />
                         </CheckboxWrapper>
@@ -381,10 +373,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 checked={searchStatuses.allAttempted}
                                 onChange={() => setSearchStatuses(s => {return {...s, allAttempted: !s.allAttempted};})}
                                 label={
-                                    <div className="d-flex">
-                                        All attempted
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt="All attempted"/> 
-                                    </div>
+                                    <div className="d-flex"><Trans i18nKey="allAttemptedImgClassnameps2SrcassetsphyiconsredesignstatusattemptedsvgAltallAttempted">All attempted
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt="All attempted"/></Trans></div>
                                 }
                             />
                         </CheckboxWrapper>
@@ -396,14 +386,10 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 checked={searchStatuses.tryAgain}
                                 onChange={() => setSearchStatuses(s => {return {...s, tryAgain: !s.tryAgain};})}
                                 label={siteSpecific(
-                                    <div className="d-flex">
-                                        In progress
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt="In Progress"/> 
-                                    </div>,
-                                    <div>
-                                        Try again
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-in-progress.svg" alt="Try again" />
-                                    </div>
+                                    <div className="d-flex"><Trans i18nKey="inProgressImgClassnameps2SrcassetsphyiconsredesignstatusinprogresssvgAltinProgress">In progress
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt="In Progress"/></Trans></div>,
+                                    <div><Trans i18nKey="tryAgainImgClassnameps2IconstatusSrcassetscsiconsstatusinprogresssvgAlttryAgain">Try again
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-in-progress.svg" alt="Try again" /></Trans></div>
                                 )}
                             />
                         </CheckboxWrapper>
@@ -439,7 +425,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     applyFilters();
                     setSearchDisabled(true);
                 }} disabled={searchDisabled}>
-                    Apply filters
+                    {t('applyFilters', 'Apply filters')}
                 </Button>
             </Col>}
         </div>

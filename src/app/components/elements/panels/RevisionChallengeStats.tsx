@@ -2,6 +2,8 @@ import React from "react";
 import { UserProgress } from "../../../../IsaacAppTypes";
 import { ProgressBar } from "../views/ProgressBar";
 import { isAda } from "../../../services";
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
 
 interface ProgressChallenge {
     name: string;
@@ -18,12 +20,10 @@ const isBetween = (start: Date, end: Date) => {
 
 const REVISION_CHALLENGES: { [key: string]: ProgressChallenge } = {
     "ada-revision-challenge-2026": {
-        name: "Ada Revision Challenge 2026",
-        text: <span>
-            Visit the <a href="/student_challenges" target="_blank" rel="noopener noreferrer">
+        name: i18next.t('adaRevisionChallenge2026', 'Ada Revision Challenge 2026'),
+        text: <span>Visit the <a href="/student_challenges" target="_blank" rel="noopener noreferrer">
                 revision challenge page
-            </a> for instructions on how to join.
-        </span>,
+            </a> for instructions on how to join.</span>,
         target: 50,
         active:    isAda && isBetween(new Date("2026-04-01"), new Date("2026-06-02")),
         displayed: isAda && isBetween(new Date("2026-04-01"), new Date("2026-06-02")),
@@ -31,6 +31,7 @@ const REVISION_CHALLENGES: { [key: string]: ProgressChallenge } = {
 };
 
 export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgress | null}) => {
+    const { t } = useTranslation()
     // assumes there is only one active challenge! (completedQuestionsInChallenge is not challenge-specific)
     const displayedChallenge = Object.values(REVISION_CHALLENGES).find((c) => c.displayed);
     const completedQuestionsInChallenge = userProgress?.totalQuestionsCorrectThisRevisionPeriod ?? 0;
@@ -41,12 +42,12 @@ export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgr
         {displayedChallenge?.text}
         {isComplete
             ? <ProgressBar percentage={100} className="mb-5 mt-2">
-                {"Challenge complete!"}
+                {t('challengeComplete', 'Challenge complete!')}
             </ProgressBar>
             : <ProgressBar percentage={100 * (completedQuestionsInChallenge / (displayedChallenge?.target ?? 1))} className="mb-5 mt-2">
                 {displayedChallenge.active 
-                    ? completedQuestionsInChallenge == null ? "No data" : `${completedQuestionsInChallenge} correct, ${displayedChallenge?.target - completedQuestionsInChallenge} to go!`
-                    : "Challenge over!"
+                    ? completedQuestionsInChallenge == null ? t('noData', 'No data') : t('completedquestionsinchallengeCorrectValToGo', '{{completedQuestionsInChallenge}} correct, {{val}} to go!', { completedQuestionsInChallenge, val: displayedChallenge?.target - completedQuestionsInChallenge })
+                    : t('challengeOver', 'Challenge over!')
                 }
             </ProgressBar>
         }

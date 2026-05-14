@@ -17,8 +17,10 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
+import { useTranslation } from 'react-i18next'
 
 export const Topic = () => {
+    const { t } = useTranslation()
     const user = useAppSelector(selectors.user.orNull);
     const {topicName=null} = useParams();
     
@@ -26,7 +28,7 @@ export const Topic = () => {
 
     const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage ?? null);
 
-    const searchQuery = `?topic=${topicName}`;
+    const searchQuery = t('topictopicname', '?topic={{topicName}}', { topicName });
     const linkedRelevantGameboards = topicPage && topicPage.linkedGameboards;
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
@@ -56,12 +58,12 @@ export const Topic = () => {
                 <Col className={"py-0 mw-760"}>
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
-                            <CardTitle>Gameboards</CardTitle>
-                            <p>You can work through individual questions or try a group of questions by clicking on the topic gameboards below.</p>
+                            <CardTitle>{t('gameboards', 'Gameboards')}</CardTitle>
+                            <p>{t('youCanWorkThroughIndividualQuestionsOrTryAGroupOfQuestionsByClickingOnTheTopicGameboardsBelow', 'You can work through individual questions or try a group of questions by clicking on the topic gameboards below.')}</p>
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
-                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>Preview</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>Assign</Link>
+                                        <strong>{gameboard.title || '-'}</strong> {t('mdash', '&mdash;')} <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>{t('preview', 'Preview')}</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>{t('assign', 'Assign')}</Link>
                                     </li>
                                 }
                                 {(!user?.loggedIn || user?.role === "STUDENT") &&
@@ -78,7 +80,7 @@ export const Topic = () => {
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="keyline" size="lg" block>
-                                <span className="d-none d-md-inline">Back to</span> {" "} All topics
+                                <span className="d-none d-md-inline">{t('backTo', 'Back to')}</span> {" "} {t('allTopics', 'All topics')}
                             </Button>
                         </Col>
                     </Row>

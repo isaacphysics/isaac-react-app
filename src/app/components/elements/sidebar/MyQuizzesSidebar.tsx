@@ -7,6 +7,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { useTranslation } from 'react-i18next'
 
 interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     status: QuizStatus;
@@ -54,6 +55,7 @@ interface MyQuizzesSidebarProps extends ContentSidebarProps {
 };
 
 export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
+    const { t } = useTranslation()
     const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode, ...rest } = props;
     const deviceSize = useDeviceSize();
     const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
@@ -66,11 +68,11 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
             return <>
                 {above["lg"](deviceSize) && <div className="section-divider"/>}
                 <search>
-                    <h5>Search tests</h5>
+                    <h5>{t('searchTests', 'Search tests')}</h5>
                     <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)}
-                        placeholder="e.g. Practice" aria-label="Search by title"/>
+                        placeholder={t('egPractice', 'e.g. Practice')} aria-label={t('searchByTitle', 'Search by title')}/>
                     <div className="section-divider"/>
-                    <h5 className="mb-3">Filter by status</h5>
+                    <h5 className="mb-3">{t('filterByStatus2', 'Filter by status')}</h5>
                     <ul>
                         <li><QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/></li>
                         <div className="section-divider-small"/>
@@ -79,16 +81,16 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         </li>)}
                     </ul>
                     {activeTab === 1 && <>
-                        <h5 className="my-3">Filter by assigner</h5>
+                        <h5 className="my-3">{t('filterByAssigner', 'Filter by assigner')}</h5>
                         <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
                             {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                         </Input>
                     </>}
                     <div className="section-divider mt-4"/>
-                    <h5 className="mb-3">Display</h5>
+                    <h5 className="mb-3">{t('display', 'Display')}</h5>
                     <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
-                        <option value="table">Table View</option>
-                        <option value="cards">Card View</option>
+                        <option value="table">{t('tableView', 'Table View')}</option>
+                        <option value="cards">{t('cardView', 'Card View')}</option>
                     </StyledDropdown>
                 </search>
             </>;

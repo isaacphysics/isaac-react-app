@@ -22,30 +22,32 @@ import {
 } from "../../../services";
 import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector,} from "../../../state";
 import classNames from "classnames";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const contextExplanationMap: {[key in CONTEXT_SOURCE]: string} = {
-    [CONTEXT_SOURCE.TRANSIENT]: "these context picker settings",
-    [CONTEXT_SOURCE.REGISTERED]: "your account settings",
-    [CONTEXT_SOURCE.GAMEBOARD]: `the ${siteSpecific("question deck", "quiz")} settings`,
-    [CONTEXT_SOURCE.DEFAULT]: `${SITE_TITLE_SHORT}'s default settings`,
-    [CONTEXT_SOURCE.PAGE_CONTEXT]: "the page context, which always takes precedence over the context picker settings. Try reloading to remove the page context to switch",
-    [CONTEXT_SOURCE.NOT_IMPLEMENTED]: "the site's settings"
+    [CONTEXT_SOURCE.TRANSIENT]: i18next.t('content.explanation.source.pickerSettings', 'these context picker settings'),
+    [CONTEXT_SOURCE.REGISTERED]: i18next.t('content.explanation.source.accountSettings', 'your account settings'),
+    [CONTEXT_SOURCE.GAMEBOARD]: i18next.t('content.explanation.source.gameboard', 'the {{val}} settings', { val: siteSpecific("question deck", "quiz") }),
+    [CONTEXT_SOURCE.DEFAULT]: i18next.t('content.explanation.source.default', '{{SITE_TITLE_SHORT}}\'s default settings', { SITE_TITLE_SHORT }),
+    [CONTEXT_SOURCE.PAGE_CONTEXT]: i18next.t('content.explanation.source.pageContext', 'the page context, which always takes precedence over the context picker settings. Try reloading to remove the page context to switch'),
+    [CONTEXT_SOURCE.NOT_IMPLEMENTED]: i18next.t('content.explanation.source.siteSettings', 'the site\'s settings')
 };
 
 const formatContextExplanation = (stageExplanation: CONTEXT_SOURCE, examBoardExplanation: CONTEXT_SOURCE, isMultiStage?: boolean) => {
     if (isAda) {
         if (stageExplanation == examBoardExplanation) {
-            return `The stage and exam board were specified by ${contextExplanationMap[stageExplanation]}.`;
+            return i18next.t('content.explanation.theStageAndExamBoardWereSpecifiedByVal', 'The stage and exam board were specified by {{val}}.', { val: contextExplanationMap[stageExplanation] });
         } else {
-            return `The stage was specified by ${contextExplanationMap[stageExplanation]} and the exam board by 
-            ${contextExplanationMap[examBoardExplanation]}.`;
+            return i18next.t('content.explanation.theStageWasSpecifiedByValAndTheExamBoardByVal2', 'The stage was specified by {{val}} and the exam board by {{val2}}.', { val: contextExplanationMap[stageExplanation], val2: contextExplanationMap[examBoardExplanation] });
         }
     } else {
-        return `${isMultiStage ? "These stages were" : "This stage was"} specified by ${contextExplanationMap[stageExplanation]}.`;
+        return i18next.t('content.explanation.valSpecifiedByVal2', '{{val}} specified by {{val2}}.', { val: isMultiStage ? "These stages were" : "This stage was", val2: contextExplanationMap[stageExplanation] });
     }
 };
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
@@ -82,9 +84,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
             <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-md-2": isAda})}>
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end align-items-center m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
-                    {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
+                    {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">{t('stage', 'Stage')}</Label>}
                     {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
-                        <button className="icon-reset mb-1" aria-label={"Reset viewing context"} onClick={() => {
+                        <button className="icon-reset mb-1" aria-label={t('resetViewingContext', 'Reset viewing context')} onClick={() => {
                             dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
                             dispatch(transientUserContextSlice.actions.setStage(undefined));
                         }}/>
@@ -126,7 +128,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     {isAda &&
                         <>
                             {/* Exam Board Selector */}
-                            {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
+                            {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">{t('examBoard2', 'Exam Board')}</Label>}
                             <Input
                                 className={`flex-grow-1 d-inline-block ps-2 pe-0 ms-2`}
                                 type="select" id="uc-exam-board-select"
@@ -147,11 +149,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
                     <i id={`viewing-context-explanation`} className={classNames("icon icon-info icon-sm ms-3 me-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                     <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
-                        You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
-                        &nbsp;content.&nbsp;
-                        {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard, currentStages.length > 1)}&nbsp;
+                        {t('youAreSeeing', 'You are seeing')} {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? t('val2', '- {{val}}', { val: examBoardLabelMap[userContext.contexts[0].examBoard] }) : ""}
+                        {t('nbspcontentnbsp', '&nbsp;content.&nbsp;')}
+                        {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard, currentStages.length > 1)}{t('nbsp', '&nbsp;')}
                         {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?
-                            "Log in or sign up to save your viewing preferences." : ""
+                            t('logInOrSignUpToSaveYourViewingPreferences', 'Log in or sign up to save your viewing preferences.') : ""
                         }
                     </UncontrolledTooltip>
                 </div>

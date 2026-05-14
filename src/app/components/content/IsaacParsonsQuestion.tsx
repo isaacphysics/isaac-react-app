@@ -20,12 +20,14 @@ import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
+import { useTranslation } from 'react-i18next'
 
 // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
 const PARSONS_MAX_INDENT = 3;
 const PARSONS_INDENT_STEP = 45;
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
+    const { t } = useTranslation()
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
 
@@ -258,7 +260,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
                 <Col md={{size: 6}} className="parsons-available-items">
-                    <h4>Available items</h4>
+                    <h4>{t('availableItems', 'Available items')}</h4>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={`parsons-items ${availableItems && availableItems.length > 0 ? "" : "empty"}`}>
@@ -283,14 +285,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         }}
                                     </Draggable>;
                                 })}
-                                {(!availableItems || availableItems.length === 0) && <div>&nbsp;</div>}
+                                {(!availableItems || availableItems.length === 0) && <div>{t('nbsp', '&nbsp;')}</div>}
                                 {provided.placeholder}
                             </div>;
                         }}
                     </Droppable>
                 </Col>
                 <Col md={{size: 6}} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
-                    <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
+                    <h4 className="mt-sm-4 mt-md-0">{t('yourAnswer', 'Your answer')}</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
                             return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", draggedElement ? "is-dragging" : "", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0)})}>
@@ -321,14 +323,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                         <button
                                                             className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1`}
                                                             onMouseUp={() => reduceIndentation(index)} type="button"
-                                                            aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
+                                                            aria-label={t('reduceIndentationVal', 'reduce indentation {{val}}', { val: !canDecreaseIndentation ? "(disabled)" : "" })}
                                                         >
                                                             <i className="icon icon-chevron-left icon-color-white d-block justify-self-center" />
                                                         </button>
                                                         <button
                                                             className={`increase ${canIncreaseIndentation ? 'show' : 'hide' }`}
                                                             onMouseUp={() => increaseIndentation(index)} type="button"
-                                                            aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
+                                                            aria-label={t('increaseIndentationVal', 'increase indentation {{val}}', { val: !canIncreaseIndentation ? "(disabled)" : "" })}
                                                         >
                                                             <i className="icon icon-chevron-right icon-color-white d-block justify-self-center" />
                                                         </button>
@@ -340,7 +342,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                 })}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
                                     <div className="text-muted text-center">
-                                        {readonly ? "No answer entered" : "Drag items across to build your answer"}
+                                        {readonly ? t('noAnswerEntered', 'No answer entered') : t('dragItemsAcrossToBuildYourAnswer', 'Drag items across to build your answer')}
                                     </div>
                                 }
                                 {provided.placeholder}

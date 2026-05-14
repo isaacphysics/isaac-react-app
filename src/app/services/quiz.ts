@@ -44,6 +44,7 @@ import {
 import partition from "lodash/partition";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {createAsyncThunk} from "@reduxjs/toolkit";
+import i18next from 'i18next'
 
 export interface QuizSpec {
     quizId: string;
@@ -105,10 +106,10 @@ export const assignMultipleQuiz = createAsyncThunk(
                     return rejectWithValue(null);
                 } else {
                     const partialSuccessMessage = `${successfulIds.length > 1
-                        ? "Some tests were saved successfully."
-                        : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`}`;
+                        ? i18next.t('someTestsWereSavedSuccessfully', 'Some tests were saved successfully.')
+                        : i18next.t('testAssignedToValWasSavedSuccessfully', 'Test assigned to {{val}} was saved successfully.', { val: groupLookUp.get(successfulIds[0] as number) })}`;
                     appDispatch(showSuccessToast(
-                        `Test${successfulIds.length > 1 ? "s" : ""} saved`,
+                        i18next.t('testvalSaved', 'Test{{val}} saved', { val: successfulIds.length > 1 ? "s" : "" }),
                         partialSuccessMessage
                     ));
                 }
@@ -130,7 +131,7 @@ export const assignMultipleQuiz = createAsyncThunk(
             return newQuizAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
-                `Test assignment${groups.length > 1 ? "(s)" : ""} failed`,
+                i18next.t('testAssignmentvalFailed', 'Test assignment{{val}} failed', { val: groups.length > 1 ? "(s)" : "" }),
                 response
             ));
             return rejectWithValue(null);

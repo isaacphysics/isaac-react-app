@@ -2,14 +2,16 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
+import { useTranslation } from 'react-i18next'
 
 export const PolicyPageSidebar = (props: ContentSidebarProps) => {
+    const { t } = useTranslation()
     const navigate = useNavigate();
     const path = useLocation().pathname;
 
     return <ContentSidebar buttonTitle="Select a page" optionBar={props.optionBar}>
         <div className="section-divider"/>
-        <h5>Select a page</h5>
+        <h5>{t('selectAPage', 'Select a page')}</h5>
         <ul>
             <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onClick={() => navigate("/accessibility")}/></li>
             <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"  || path === "/pages/privacy_policy"} onClick={() => navigate("/privacy")}/></li>

@@ -5,6 +5,7 @@ import { sidebarSlice, useAppDispatch } from '../../state';
 import classNames from 'classnames';
 import { siteSpecific } from '../../services';
 import { Spacer } from './Spacer';
+import { useTranslation } from 'react-i18next'
 
 interface SidebarButtonProps extends ButtonProps {
     buttonTitle?: string;
@@ -12,6 +13,7 @@ interface SidebarButtonProps extends ButtonProps {
 }
 
 export const SidebarButton = ({ buttonTitle, absolute, ...rest }: SidebarButtonProps) => {
+    const { t } = useTranslation()
     const dispatch = useAppDispatch();
     const [sticky, setSticky] = useState(false);
     const elementRef = useRef<HTMLElement>(null);
@@ -46,7 +48,7 @@ export const SidebarButton = ({ buttonTitle, absolute, ...rest }: SidebarButtonP
             }}
             style={{maxWidth: textRef?.current ? `${(!sticky ? textRef.current.clientWidth + 8 : 0) + 61}px` : "max-content"}}
         >
-            <span ref={textRef}>{buttonTitle ?? "Search and filter"}</span>
+            <span ref={textRef}>{buttonTitle ?? t('searchAndFilter', 'Search and filter')}</span>
         </AffixButton>,
         <button
             {...rest}
