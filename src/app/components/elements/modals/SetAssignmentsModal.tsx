@@ -29,7 +29,8 @@ import {
     UTC_MIDNIGHT_IN_SIX_DAYS,
     addDays,
     nthUtcHourOf,
-    isPhy
+    isPhy,
+    TODAY_LOCAL
 } from "../../../services";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {GameboardDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
@@ -104,7 +105,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
 
     const yearRange = range(currentYear, currentYear + 5);
     const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) : false) || TODAY().valueOf() > dueDate.valueOf());
-    const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
+    const startDateInvalid = scheduledStartDate ? TODAY_LOCAL().valueOf() > scheduledStartDate.valueOf() : false;
     const groupInvalid = selectedGroups.length === 0 || selectedGroups.some(g => currentAssignees.some(a => a.groupId === g.value));
     const notesInvalid = isDefined(assignmentNotes) && assignmentNotes.length > 500;
 

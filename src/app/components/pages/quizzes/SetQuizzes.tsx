@@ -26,7 +26,7 @@ import {
     siteSpecific,
     Subject,
     tags,
-    TODAY,
+    TODAY_LOCAL,
     useDeviceSize,
     useFilteredQuizzes
 } from "../../../services";
@@ -245,7 +245,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                     </thead>
                     <tbody>
                         {conditionalReverse(assignedGroups.sort(currentSort)).map(assignedGroup => {
-                            const assignmentNotYetStarted = assignedGroup.assignment?.scheduledStartDate && nthHourOf(0, assignedGroup.assignment?.scheduledStartDate) > TODAY();
+                            const assignmentNotYetStarted = assignedGroup.assignment?.scheduledStartDate && nthHourOf(0, assignedGroup.assignment?.scheduledStartDate) > TODAY_LOCAL();
                             return <tr key={assignedGroup.group}>
                                 <td className="text-center text-break">{assignedGroup.group}</td>
                                 {above["md"](deviceSize) && <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td>}

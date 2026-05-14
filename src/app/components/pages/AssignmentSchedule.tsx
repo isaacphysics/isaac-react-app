@@ -55,6 +55,7 @@ import {
     TAG_LEVEL,
     tags,
     TODAY,
+    TODAY_LOCAL,
     useDeviceSize,
     UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
@@ -239,7 +240,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         </CardHeader>
         <CardBody>
             <div>Assigned to: <strong>{assignment.groupName}</strong></div>
-            {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
+            {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY_LOCAL().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
             {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
             {showMore && <>
                 {assignment.notes && <div>

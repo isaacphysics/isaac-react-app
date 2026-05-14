@@ -8,6 +8,10 @@ export const TODAY = () => {
     return nthUtcHourOf(0, new Date(Date.now()));
 };
 
+export const TODAY_LOCAL = () => {
+    return nthHourOf(0, new Date(Date.now()));
+};
+
 export const UTC_MIDNIGHT_IN_SIX_DAYS = () => {
     return addDays(6, nthUtcHourOf(0, new Date(Date.now())));
 };

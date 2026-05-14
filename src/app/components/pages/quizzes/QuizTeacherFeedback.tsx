@@ -25,7 +25,7 @@ import {
     nthHourOf,
     PATHS,
     siteSpecific,
-    TODAY,
+    TODAY_LOCAL,
     useAssignmentProgressAccessibilitySettings
 } from "../../../services";
 import {
@@ -145,7 +145,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     const assignmentStartDate = quizAssignment?.scheduledStartDate ?? quizAssignment?.creationDate;
-    const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
+    const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY_LOCAL();
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test");
     const pageTitle = `${quizTitle} ${(assignmentNotYetStarted ? `(starts ${formatDate(assignmentStartDate)})` : "results")}`;
 

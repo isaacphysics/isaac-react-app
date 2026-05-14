@@ -11,7 +11,7 @@ import {
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
-import {addDays, assignMultipleQuiz, isDefined, Item, nthUtcHourOf, selectOnChange, siteSpecific, TODAY, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
+import {addDays, assignMultipleQuiz, isDefined, Item, nthUtcHourOf, selectOnChange, siteSpecific, TODAY, TODAY_LOCAL, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -117,7 +117,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
     const groupInvalid = selectedGroups.length === 0 || alreadyAssignedToAGroup;
     const feedbackModeInvalid = !isDefined(feedbackMode);
     const dueDateInvalid = !isDefined(dueDate) || (scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now();
-    const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf(); // optional, so undefined is valid
+    const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY_LOCAL().valueOf(); // optional, so undefined is valid
 
     const scheduledQuizHelpTooltipId = "scheduled-quiz-help-tooltip";
 
