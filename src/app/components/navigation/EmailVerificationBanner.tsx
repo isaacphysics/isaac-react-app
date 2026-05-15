@@ -10,9 +10,9 @@ import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from ".
 
 export const EmailVerificationBanner = () => {
     const [hidden, setHidden] = useState(false);
-    const {cookieConsent} = useUserConsent();
-    const isHiddenViaCookie = cookieConsent?.disableEmailVerificationWarningCookiesAccepted ?? false;
     const user = useAppSelector(selectors.user.orNull);
+    const {cookieConsent} = useUserConsent();
+    const isHiddenViaCookie = !!(user?.loggedIn && user?.emailVerificationStatus === "DELIVERY_FAILED" && cookieConsent?.disableEmailVerificationWarningCookiesAccepted);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
     const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
