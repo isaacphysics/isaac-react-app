@@ -9,13 +9,13 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, ACTION_TYPE, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
 import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
-import { selectors, useAppSelector } from '../../state';
+import { selectors, useAppDispatch, useAppSelector } from '../../state';
 import { BookmarkButton } from './BookmarkButton';
 import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
 import { DragAndDropInputModeToggle, useDefaultDragAndDropInputMode } from '../content/IsaacDragAndDropQuestion';
@@ -119,6 +119,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
 
+    const dispatch = useAppDispatch();
     const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
     const defaultDragAndDropInputMode = useDefaultDragAndDropInputMode();
     const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(true);
@@ -126,6 +127,12 @@ export const PageMetadata = (props: PageMetadataProps) => {
         // Portals need a drop zone to attach to on first render, so we start with drag and drop enabled to ensure these are created, then disable here if needed
         setDragAndDropEnabled(defaultDragAndDropInputMode);
     }, [defaultDragAndDropInputMode]);
+
+    const accessibilityType = useAppSelector(selectors.accessibility.type);
+    const dragAndDropEnabled2 = accessibilityType?.NON_DRAGGING_INPUTS === true;
+    const setDragAndDropEnabled2 = (enabled: boolean) => {
+        dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": enabled}});
+    };
     
 
     return <>
@@ -151,10 +158,10 @@ export const PageMetadata = (props: PageMetadataProps) => {
             <div className="d-flex align-items-end">
                 {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
-                {pageContainsClozeOrDragAndDropQuestion && (
+                {!pageContainsClozeOrDragAndDropQuestion && (
                     <>
                         <Spacer />
-                        <DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />
+                        <DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled2} setDragAndDropEnabled={setDragAndDropEnabled2} />
                     </>
                 )}
             </div>
@@ -164,3 +171,4 @@ export const PageMetadata = (props: PageMetadataProps) => {
         {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
     </>;
 };
+

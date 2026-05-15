@@ -61,7 +61,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET; accessibilityType: UserPreferencesDTO}
+    | {type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET; accessibilityType: AccessibilitySettings}
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; authResponse: ApiTypes.AuthenticationResponseDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}

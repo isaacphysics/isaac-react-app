@@ -1,4 +1,4 @@
-import {Action, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {AccessibilitySettings, Action, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {userApi} from "../index";
@@ -41,11 +41,11 @@ export const totpChallengePending = (totpChallengePending: TotpChallengePendingS
     }
 };
 
-type AccessibilityTypeState = UserPreferencesDTO | null;
+type AccessibilityTypeState = AccessibilitySettings | null;
 export const accessibilityType = (accessibilityType: AccessibilityTypeState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-            return action.userPreferences;
+            return action.userPreferences.ACCESSIBILITY;
         case ACTION_TYPE.ACCESSIBILITY_TYPE_SET:
             return action.accessibilityType;
         default:

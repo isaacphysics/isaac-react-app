@@ -46,6 +46,7 @@ import StyledToggle from "../elements/inputs/StyledToggle";
 import { useAccessibilitySettings } from "../../services/accessibility";
 import { Spacer } from "../elements/Spacer";
 import classNames from "classnames";
+import { selectors, useAppSelector } from "../../state";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -141,6 +142,9 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 export const useDefaultDragAndDropInputMode = () => {
     const accessibilitySettings = useAccessibilitySettings();
     const deviceSize = useDeviceSize();
+    const accessibilityType = useAppSelector(selectors.accessibility.type);
+    console.log("ac", accessibilityType);
+
 
     return !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_INPUTS || false);
 };
@@ -184,6 +188,9 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
         // Portals need a drop zone to attach to on first render, so we start with drag and drop enabled to ensure these are created, then disable here if needed
         setDragAndDropEnabled(defaultDragAndDropInputMode);
     }, [defaultDragAndDropInputMode]);
+
+    const accessibilityType = useAppSelector(selectors.accessibility.type);
+    const dragAndDropEnabled2 = accessibilityType?.NON_DRAGGING_INPUTS === false;
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -541,7 +548,7 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
             nonSelectedItems,
             allItems,
             zoneIds: new Set<string>(),
-            dragAndDropEnabled
+            dragAndDropEnabled: dragAndDropEnabled2
         }}>
             <DndContext
                 sensors={sensors}
@@ -558,7 +565,7 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {dragAndDropEnabled && <>
+                {dragAndDropEnabled2 && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
                         {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">
