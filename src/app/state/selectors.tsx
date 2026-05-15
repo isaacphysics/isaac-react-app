@@ -48,7 +48,7 @@ export const selectors = {
             return !!state?.questions?.questions.some(q => q.type === "isaacLLMFreeTextQuestion");
         },
         includesClozeOrDragAndDropQuestion: (state: AppState) => {
-            return !!state?.questions?.questions.some(q => q.type === "isaacClozeQuestion" || q.type === "isaacDragAndDropQuestion");
+            return !!state?.questions?.questions.some(q => q.type === "isaacClozeQuestion" || q.type === "isaacDndQuestion");
         }
     },
 

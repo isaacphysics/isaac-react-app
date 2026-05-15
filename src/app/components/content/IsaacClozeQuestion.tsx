@@ -39,7 +39,7 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { DragAndDropInputModeToggle, useDefaultDragAndDropInputMode } from "./IsaacDragAndDropQuestion";
+import { selectors, useAppSelector } from "../../state";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -135,12 +135,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
 
-    const defaultDragAndDropInputMode = useDefaultDragAndDropInputMode();
-    const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(true);
-    useEffect(() => {
-        // Portals need a drop zone to attach to on first render, so we start with drag and drop enabled to ensure these are created, then disable here if needed
-        setDragAndDropEnabled(defaultDragAndDropInputMode);
-    }, [defaultDragAndDropInputMode]);
+    const accessibilityType = useAppSelector(selectors.accessibility.type);
+    const dragAndDropEnabled = !accessibilityType?.NON_DRAGGING_INPUTS;
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -492,7 +488,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             nonSelectedItems,
             allItems,
             zoneIds: new Set<string>(),
-            dragAndDropEnabled,
+            dragAndDropEnabled
         }}>
             <DndContext
                 sensors={sensors}
@@ -503,8 +499,6 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 collisionDetection={customCollision}
                 accessibility={accessibility}
             >
-                {/*<DragAndDropInputModeToggle className="float-end" dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />*/}
-
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>

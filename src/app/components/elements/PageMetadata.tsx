@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { ShareLink } from './ShareLink';
 import { PrintButton } from './PrintButton';
 import { ReportButton } from './ReportButton';
@@ -18,8 +18,8 @@ import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { selectors, useAppDispatch, useAppSelector } from '../../state';
 import { BookmarkButton } from './BookmarkButton';
 import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
-import { DragAndDropInputModeToggle, useDefaultDragAndDropInputMode } from '../content/IsaacDragAndDropQuestion';
 import { Spacer } from './Spacer';
+import StyledToggle from "../elements/inputs/StyledToggle";
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -41,6 +41,19 @@ type PageMetadataProps = {
         sidebarInTitle?: never;
     }
 );
+
+export const DragAndDropInputModeToggle = ({dragAndDropEnabled, toggleDragAndDropEnabled}: {dragAndDropEnabled: boolean, toggleDragAndDropEnabled: () => void}) => {
+    return <div className="d-flex flex-column align-items-center w-min-content mb-1">
+        <span>Question input mode</span>
+        <Spacer />
+        <StyledToggle
+            checked={dragAndDropEnabled}
+            falseLabel="Dropdown"
+            trueLabel="Drag and drop"
+            onChange={toggleDragAndDropEnabled}
+        />
+    </div>;
+};
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
     location: Location;
@@ -121,19 +134,12 @@ export const PageMetadata = (props: PageMetadataProps) => {
 
     const dispatch = useAppDispatch();
     const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
-    const defaultDragAndDropInputMode = useDefaultDragAndDropInputMode();
-    const [dragAndDropEnabled, setDragAndDropEnabled] = useState<boolean>(true);
-    useEffect(() => {
-        // Portals need a drop zone to attach to on first render, so we start with drag and drop enabled to ensure these are created, then disable here if needed
-        setDragAndDropEnabled(defaultDragAndDropInputMode);
-    }, [defaultDragAndDropInputMode]);
 
     const accessibilityType = useAppSelector(selectors.accessibility.type);
-    const dragAndDropEnabled2 = accessibilityType?.NON_DRAGGING_INPUTS === true;
-    const setDragAndDropEnabled2 = (enabled: boolean) => {
-        dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": enabled}});
-    };
-    
+    const dragAndDropEnabled = !accessibilityType?.NON_DRAGGING_INPUTS;
+    const toggleDragAndDropEnabled = () => {
+        dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": dragAndDropEnabled}});
+    };    
 
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
@@ -158,12 +164,11 @@ export const PageMetadata = (props: PageMetadataProps) => {
             <div className="d-flex align-items-end">
                 {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
-                {!pageContainsClozeOrDragAndDropQuestion && (
-                    <>
-                        <Spacer />
-                        <DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled2} setDragAndDropEnabled={setDragAndDropEnabled2} />
-                    </>
-                )}
+                {pageContainsClozeOrDragAndDropQuestion && <>
+                    <Spacer />
+                    <DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled} toggleDragAndDropEnabled={toggleDragAndDropEnabled} />
+                </>
+                }
             </div>
 
             {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
