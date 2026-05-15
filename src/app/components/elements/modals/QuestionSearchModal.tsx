@@ -195,7 +195,7 @@ export const QuestionSearchModal = (
 
     return <>
         <Row>
-            <Col xs={9}>
+            <Col xs={siteSpecific(9, 12)}>
                 <Label htmlFor="question-search-title">Search</Label>
                 <Input id="question-search-title" className="mb-3"
                     type="text"
@@ -205,34 +205,34 @@ export const QuestionSearchModal = (
                     }}
                 />
             </Col>
-            <Col xs={3}>
-                {isPhy && <div className="mb-2">
+            {isPhy && <Col xs={3}>
+                <div className="mb-2">
                     <Label htmlFor="question-search-book">Book</Label>
                     <StyledSelect
                         inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
                         onChange={selectOnChange(setSearchBook, true)}
                         options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                     />
-                </div>}
-            </Col>
+                </div>
+            </Col>}
         </Row>
 
         <Row>
-            <Col className={classNames("mb-2", {"d-none": isBookSearch})}>
+            <Col xs={6} lg={4} className={classNames("mb-2", {"d-none": isBookSearch})}>
                 <Label htmlFor="question-search-stage">Stage</Label>
                 <StyledSelect
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </Col>
-            <Col className={classNames("mb-2", {"d-none": isBookSearch})}>
+            <Col xs={6} lg={4} className={classNames("mb-2", {"d-none": isBookSearch})}>
                 <Label htmlFor="question-search-difficulty">Difficulty</Label>
                 <StyledSelect
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </Col>
-            {isAda && <Col className={classNames("mb-2", {"d-none": isBookSearch})}>
+            {isAda && <Col xs={12} lg={4} className={classNames("mb-2", {"d-none": isBookSearch})}>
                 <Label htmlFor="question-search-exam-board">Exam Board</Label>
                 <StyledSelect
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -253,13 +253,14 @@ export const QuestionSearchModal = (
                     }} />
                 </FeatureFlagWrapper>
 
-                <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack questions</span>} onChange={e => {
-                    startTransition(() => {
-                        setSearchFastTrack(e.target.checked);
-                    });
-                }} />
-
-                <div className="section-divider" />
+                {isPhy && <>
+                    <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack questions</span>} onChange={e => {
+                        startTransition(() => {
+                            setSearchFastTrack(e.target.checked);
+                        });
+                    }} />
+                    <div className="section-divider" />
+                </>}
 
                 {isAda && <ul className="list-unstyled">
                     {groupBaseTagOptions.map((tag, index) => (
