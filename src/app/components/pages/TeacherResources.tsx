@@ -197,9 +197,9 @@ export const TeacherResources = () => {
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Code Editor for Education",
+                        title: "Code Classroom",
                         image: {src: "/assets/cs/decor/code-editor.png"},
-                        bodyText: "Our free code editor makes it easy for young people to learn text-based programming. It's safe, age-appropriate, and suitable for use in the classroom.",
+                        bodyText: "Code Classroom is a free, safe platform for teaching and learning computing in schools. It includes a simple-to-use code editor with different programming languages, and lots of other features to support your teaching.",
                         buttonText: "Learn more",
                         clickUrl: "https://editor.raspberrypi.org/en/education",
                         className: "bg-cultured-grey",
