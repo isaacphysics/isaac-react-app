@@ -358,11 +358,11 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
         {deviceSize !== "xs" && <div className="d-flex vertical-center rounded-2">
             <div className="d-flex flex-column align-items-center">
-                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
+                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
                     <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
                 <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
-                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
+                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
                     <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
             </div>

@@ -30,7 +30,12 @@ import {
     useUserViewingContext,
     ISAAC_BOOKS,
     TAG_LEVEL,
-    EXAM_BOARD, QUESTIONS_PER_GAMEBOARD
+    EXAM_BOARD, QUESTIONS_PER_GAMEBOARD,
+    simpleDifficultyLabelMap,
+    stageLabelMap,
+    TAG_ID,
+    itemise,
+    difficultyLabelMap
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
 import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -48,6 +53,8 @@ import { HorizontalScroller } from "../inputs/HorizontalScroller";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
+import { FilterSummary } from "../../pages/QuestionFinder";
+import { pruneTreeNode } from "../../../services/questionHierarchy";
 
 // Immediately load GameboardBuilderTableRow, but allow splitting
 const importGameboardBuilderTableRow = import("../GameboardBuilderTableRow");
@@ -111,18 +118,19 @@ export const QuestionSearchModal = (
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
             setQuestionsSort({});
 
-            const isBookSearch = book.length > 0; // Tasty.
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
                 return setSearchParams(skipToken);
             }
 
-            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(",");
+            const topicTags = [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "").join(",");
+            const bookTags = book.join(",");
 
             setSearchParams({
                 querySource: "gameboardBuilder",
                 searchString: searchString || undefined,
-                tags: tags || undefined,
+                tags: topicTags,
+                books: bookTags,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoards.join(",") || undefined,
@@ -193,6 +201,41 @@ export const QuestionSearchModal = (
         setSearchTopics(getChoiceTreeLeaves(topicSelections).map((s) => s.value));
     }, [topicSelections]);
 
+    const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(topicSelections);
+
+    const filterTags = useMemo(() => [
+        searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
+        searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
+        searchBook.map(b => {const book = ISAAC_BOOKS.find(book => book.tag === b); return {value: b, label: book ? book.shortTitle : b};}),
+        selectionList,
+    ].flat(), [searchBook, searchDifficulties, searchStages, selectionList]);
+
+    const removeFilterTag = (filter: string) => {
+        if (searchStages.includes(filter as STAGE)) {
+            setSearchStages(searchStages.filter(f => f !== filter));
+        } else if (getChoiceTreeLeaves(topicSelections).some(leaf => leaf.value === filter)) {
+            setTopicSelections(pruneTreeNode(topicSelections, filter, true));
+        } else if (searchDifficulties.includes(filter as Difficulty)) {
+            setSearchDifficulties(searchDifficulties.filter(f => f !== filter));
+        } else if (searchExamBoards.includes(filter as ExamBoard)) {
+            setSearchExamBoards(searchExamBoards.filter(f => f !== filter));
+        } else if (searchBook.includes(filter)) {
+            setSearchBook(sb => sb.filter(f => f !== filter));
+        }
+    };
+
+    const clearFilters = () => {
+        setSearchDifficulties([]);
+        setSearchTopics([]);
+        setSearchExamBoards([]);
+        setSearchStages([]);
+        setSearchBook([]);
+        setTopicSelections([{}, {}, {}]);
+    };
+
+    // only allowing search for a single book makes sense in this context, but we track it as an array to align with the other filters
+    const selectedBook = searchBook.length > 0 ? ISAAC_BOOKS.find(b => b.tag === searchBook[0]) : undefined;
+
     return <>
         <Row>
             <Col xs={siteSpecific(9, 12)}>
@@ -209,6 +252,7 @@ export const QuestionSearchModal = (
                 <div className="mb-2">
                     <Label htmlFor="question-search-book">Book</Label>
                     <StyledSelect
+                        value={selectedBook ? {value: selectedBook.tag, label: selectedBook.shortTitle} : null}
                         inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
                         onChange={selectOnChange(setSearchBook, true)}
                         options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
@@ -218,21 +262,23 @@ export const QuestionSearchModal = (
         </Row>
 
         <Row>
-            <Col xs={6} lg={4} className={classNames("mb-2", {"d-none": isBookSearch})}>
+            <Col xs={6} lg={4} className={classNames("mb-2")}>
                 <Label htmlFor="question-search-stage">Stage</Label>
                 <StyledSelect
+                    value={searchStages.map(s => itemise(s, stageLabelMap[s]))}
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </Col>
-            <Col xs={6} lg={4} className={classNames("mb-2", {"d-none": isBookSearch})}>
+            <Col xs={6} lg={4} className={classNames("mb-2")}>
                 <Label htmlFor="question-search-difficulty">Difficulty</Label>
                 <StyledSelect
+                    value={searchDifficulties.map(d => itemise(d, difficultyLabelMap[d]))}
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </Col>
-            {isAda && <Col xs={12} lg={4} className={classNames("mb-2", {"d-none": isBookSearch})}>
+            {isAda && <Col xs={12} lg={4} className={classNames("mb-2")}>
                 <Label htmlFor="question-search-exam-board">Exam Board</Label>
                 <StyledSelect
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -279,7 +325,7 @@ export const QuestionSearchModal = (
                         </CollapsibleList>
                     ))}
                 </ul>}
-                {isPhy && !isBookSearch && <div className="mb-2">
+                {isPhy && <div className="mb-2">
                     <Label htmlFor="question-search-topic">Topic</Label>
                     <HierarchyFilterTreeList root {...{
                         inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
@@ -294,6 +340,9 @@ export const QuestionSearchModal = (
 
 
             <Col className="col-12 col-xl-9">
+
+                <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters} />
+
                 <HorizontalScroller enabled className="my-4">
                     <Table bordered className="my-0">
                         <thead>
