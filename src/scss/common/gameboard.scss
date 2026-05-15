@@ -91,3 +91,8 @@
   min-width: unset;
   font-size: unset;
 }
+
+.gameboard-builder-container {
+  max-height: 60vh;
+  overflow-y: auto;
+}

@@ -10,11 +10,16 @@ interface DraggableListViewWrapperProps extends React.HTMLAttributes<HTMLLIEleme
 
 const DraggableListViewWrapper = ({ id, index, className, children, ...rest }: DraggableListViewWrapperProps) => {
     return <Draggable key={id} draggableId={id ?? ""} index={index ?? -1}>
-        {(providedDrag) => {
+        {(providedDrag, snapshot) => {
             return <li 
                 {...rest}
                 ref={providedDrag.innerRef}
-                className={classNames("d-flex draggable-list-view-accessible", className, {"list-group-item align-items-center": isAda})}
+                className={classNames(
+                    "d-flex draggable-list-view-accessible",
+                    className,
+                    {"list-group-item align-items-center": isAda},
+                    snapshot.isDragging ? "bg-white" : "bg-transparent"
+                )}
                 {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}
             >
                 {children}

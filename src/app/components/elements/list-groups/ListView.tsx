@@ -356,7 +356,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     const deviceSize = useDeviceSize();
 
     return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
-        {deviceSize !== "xs" && <div className="d-flex vertical-center bg-white rounded-2">
+        {deviceSize !== "xs" && <div className="d-flex vertical-center rounded-2">
             <div className="d-flex flex-column align-items-center">
                 <button type="button" title="Move question up" className="btn btn-blank p-0 m-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
                     <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
@@ -382,7 +382,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             // subtitle={item.subtitle}
             // breadcrumb={breadcrumb}
             audienceViews={audienceViews}
-            className="flex-grow-1 align-content-center"
+            className="flex-grow-1 align-content-center bg-transparent"
             disableRedirect
         />
         <Button className="delete-button" color={siteSpecific("solid", "keyline")} onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
