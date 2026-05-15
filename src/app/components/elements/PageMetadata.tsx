@@ -9,7 +9,7 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, ACTION_TYPE, below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, ACTION_TYPE, below, isAda, isPhy, siteSpecific, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
@@ -20,6 +20,7 @@ import { BookmarkButton } from './BookmarkButton';
 import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
 import { Spacer } from './Spacer';
 import StyledToggle from "../elements/inputs/StyledToggle";
+import { StyledCheckbox } from './inputs/StyledCheckbox';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -43,7 +44,7 @@ type PageMetadataProps = {
 );
 
 export const DragAndDropInputModeToggle = ({dragAndDropEnabled, toggleDragAndDropEnabled}: {dragAndDropEnabled: boolean, toggleDragAndDropEnabled: () => void}) => {
-    return <div className="d-flex flex-column align-items-center w-min-content mb-1">
+    return siteSpecific(<div className="d-flex flex-column align-items-center w-min-content mb-1">
         <span>Question input mode</span>
         <Spacer />
         <StyledToggle
@@ -52,7 +53,9 @@ export const DragAndDropInputModeToggle = ({dragAndDropEnabled, toggleDragAndDro
             trueLabel="Drag and drop"
             onChange={toggleDragAndDropEnabled}
         />
-    </div>;
+    </div>, 
+    <StyledCheckbox checked={!dragAndDropEnabled} onChange={toggleDragAndDropEnabled} label={<span className="text-muted">Use dropdowns for drag and drop questions</span>} /> 
+    );
 };
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
