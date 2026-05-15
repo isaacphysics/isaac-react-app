@@ -302,15 +302,18 @@ iframe.email-html {
 }
 
 .collapsible-list-container {
-  border-top: 2px solid $gray-107;
+  border-top: 2px solid var(--color-neutral-200, $gray-107);
   img {
     transition: transform 0.1s ease;
+  }
+  button {
+    color: inherit;
   }
 }
 
 :has(> .collapsible-list-container) {
   &:last-of-type {
-    border-bottom: 2px solid $gray-107;
+    border-bottom: 2px solid var(--color-neutral-200, $gray-107);
   }
 }
 
@@ -329,7 +332,7 @@ iframe.email-html {
   max-height: 0;
 }
 
-@mixin pill-tag($text-color: black, $bg-color: var(--subject-color-50, white), $border-color: null) {
+@mixin pill-tag($text-color: var(--color-neutral-900, black), $bg-color: var(--subject-color-50, white), $border-color: null) {
   width: max-content;
   padding: 0 0.4em;
   align-self: center;
@@ -349,8 +352,8 @@ iframe.email-html {
   }
 
   &:is(a):hover {
-    color: color-mix(in srgb, var(--pill-text-color, black), black 20%);
-    background-color: color-mix(in hsl, var(--pill-bg-color, $bg-color), black 5%);
+    color: color-mix(in srgb, var(--pill-text-color, var(--color-neutral-900, black)), var(--color-neutral-900, black) 20%);
+    background-color: color-mix(in hsl, var(--pill-bg-color, $bg-color), var(--color-neutral-900, black) 5%);
   }
 }
 
@@ -360,21 +363,29 @@ iframe.email-html {
   height: 0;
   margin: 0.5rem 0;
   overflow: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid color-mix(in srgb, var(--color-neutral-900, black), transparent 85%);
   opacity: 1;
+
+  &:is(hr) {
+    border-bottom: none;
+  }
 }
 
 .section-divider-y {
   width: 0;
   margin: 0 0.5rem;
   overflow: hidden;
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  border-left: 1px solid color-mix(in srgb, var(--color-neutral-900, black), transparent 85%);
   opacity: 1;
 }
 
 .section-divider-bold {
   @extend .section-divider;
-  border-top: 2px solid rgba(0, 0, 0, 0.20);
+  border-top: 2px solid color-mix(in srgb, var(--color-neutral-900, black), transparent 80%);
+  
+  &:is(hr) {
+    border-bottom: none;
+  }
 }
 
 .hoverable-tooltip {
@@ -387,35 +398,52 @@ iframe.email-html {
   }
 }
 
-.tab-picker {
+@mixin tab-picker($indicator-position: left, $indicator-thickness: 2px, $active-color: var(--subject-color-100)) {
   cursor: pointer;
-  border-left: solid 2px transparent;
+
+  @if $indicator-position == left {
+    border-left: solid $indicator-thickness transparent;
+  } @else if $indicator-position == right {
+    border-right: solid $indicator-thickness transparent;
+  }
 
   .badge.rounded-pill {
-    background-color: white;
-    color: var(--bs-body-color-rgb);
+    background-color: var(--color-neutral-white, white);
+    color: var(--color-neutral-900, var(--bs-body-color-rgb));
   }
 
   background-size: 205% 100%;
-  background-image: linear-gradient(90deg, var(--subject-color-100) 50%, transparent 50%);
+  background-image: linear-gradient(90deg, $active-color 50%, transparent 50%);
   background-position: 100% 0%;
+  background-origin: border-box;
   transition: background-position 0.3s ease-in-out;
   
-  &:has(> input:checked) {
-    border-left: solid 2px var(--tab-active);
+  &:has(> input:checked), // checkbox/radio inputs
+  &:is(a.checked) { // links
+    @if $indicator-position == left {
+      border-left: solid $indicator-thickness var(--tab-active);
+    } @else if $indicator-position == right {
+      border-right: solid $indicator-thickness var(--tab-active);
+    }
     background-position: 0% 0%;
     
     .badge.rounded-pill {
       background-color: var(--tab-active);
-      color: white;
+      color: var(--color-neutral-white, white);
     }
   }
 
-  &:hover:not(:has(> input:checked, > input:disabled)) {
-    border-left: solid 2px var(--tab-hover);
+  &:not(:is(a)):hover:not(:has(> input:checked, > input:disabled)), 
+  &:is(a):not(.checked):hover {
+    @if $indicator-position == left {
+      border-left: solid $indicator-thickness var(--tab-hover);
+    } @else if $indicator-position == right {
+      border-right: solid $indicator-thickness var(--tab-hover);
+    }
   }
 
-  &:has(> input:disabled) {
+  &:has(> input:disabled),
+  &:is(a.disabled) {
     color: var(--sidebar-tab-disabled);
     cursor: not-allowed;
   }
@@ -434,12 +462,16 @@ iframe.email-html {
 
   @supports not selector(:has(a, b)) {
     &.checked {
-      border-left: solid 2px var(--tab-active);
+      @if $indicator-position == left {
+        border-left: solid $indicator-thickness var(--tab-active);
+      } @else if $indicator-position == right {
+        border-right: solid $indicator-thickness var(--tab-active);
+      }
       background-position: 0% 0%;
       
       .badge.rounded-pill {
         background-color: var(--tab-active);
-        color: white;
+        color: var(--color-neutral-white, white);
       }
     }
   }
@@ -505,4 +537,12 @@ iframe.email-html {
     transform: translate(-50%, -50%);
     box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.4);
   }
+}
+
+.active-dot {
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  min-height: 8px;
 }

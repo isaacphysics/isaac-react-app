@@ -59,7 +59,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
 
         getQuestion: build.query<IsaacQuestionPageDTO, string>({
             query: (id) => ({
-                url: `/pages/questions/${id}`
+                url: `/pages/questions/${encodeURIComponent(id)}`
             }),
             transformResponse: (response: IsaacQuestionPageDTO) => {
                 return tags.augmentDocWithSubject(response);

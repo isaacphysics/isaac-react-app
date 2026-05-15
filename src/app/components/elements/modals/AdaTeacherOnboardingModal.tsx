@@ -37,13 +37,16 @@ const Page = ({ page }: { page: typeof pages[number]}) => {
     </div>;
 };
 
+
+const closeAction = () => {
+    unscheduleTeacherOnboardingModal();
+    store.dispatch(closeActiveModal());
+};
+
 export const adaTeacherOnboardingModal: ActiveModalProps = {
     body: pages.map((page, idx) => <Page key={idx} page={page}/>),
-    buttons: <Button color="solid" onClick={() => store.dispatch(closeActiveModal())}>Go to My Ada</Button>,
-    closeAction: () => {
-        unscheduleTeacherOnboardingModal();
-        store.dispatch(closeActiveModal());
-    }
+    buttons: <Button color="solid" onClick={closeAction}>Go to My Ada</Button>,
+    closeAction 
 };
 
 export const useTeacherOnboardingModal = () => {

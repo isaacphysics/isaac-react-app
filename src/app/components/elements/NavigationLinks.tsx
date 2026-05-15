@@ -2,6 +2,7 @@ import React from "react";
 import {PageNavigation} from "../../services";
 import {Link} from "react-router-dom";
 import {Markup} from "./markup";
+import classNames from "classnames";
 
 export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
     const backToCollectionLink = navigation.backToCollection && <div className="w-50 w-md-auto mb-4">
@@ -44,11 +45,14 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         <div className="section-divider my-4"/>
         <div className="d-flex justify-content-between align-items-stretch no-print">
             {previousItemLink}
-            <span className={threeLinks ? "d-none d-xl-block" : ""}>{backToCollectionLink}</span>
+            <span className={classNames({"d-none d-xl-block": threeLinks})}>{backToCollectionLink}</span>
             {nextItemLink}
         </div>
-        {threeLinks && <div className="d-xl-none">
+        <div className={classNames("no-print", {"d-block d-xl-none": threeLinks, "d-none": !threeLinks})}>
             {backToCollectionLink}
-        </div>}
+        </div>
+        <div className="only-print">
+            {backToCollectionLink}
+        </div>
     </>;
 };

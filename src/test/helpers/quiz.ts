@@ -40,7 +40,7 @@ export const editButton = () => screen.queryByRole('heading', {name: "Published 
 
 export const previewButton = () => screen.queryByRole('link', {name: "Preview"});
 
-export const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test sections"});
+export const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test section(s)"});
 
 export const expectPhyBreadCrumbs = ({href, text}: {href: string, text: string}) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');

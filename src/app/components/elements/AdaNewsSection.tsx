@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Button, Container } from "reactstrap";
+import { Row, Button } from "reactstrap";
 import { useDeviceSize } from "../../services";
 import { IconCard } from "./cards/IconCard";
 import { NewsCard } from "./cards/NewsCard";
@@ -14,7 +14,7 @@ export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
     const {setLinkedSetting} = useLinkableSetting();
 
-    return ((news && news.length > 0) || showNewsletterPrompts) && <Container className={isHomepage ? "homepage-padding mw-1600" : "overview-padding mw-1600"}>
+    return ((news && news.length > 0) || showNewsletterPrompts) && <>
         <h2 className={classNames({"font-size-1-75 mb-4": isHomepage})}>Tips, tools & support</h2>
         {news && news.length > 0 &&
             <>
@@ -40,6 +40,6 @@ export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
                 />
             </Row>
         }
-    </Container>;
+    </>;
 };
     

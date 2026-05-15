@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
     ItemValidationResponseDTO,
@@ -40,9 +40,10 @@ import {
 } from "@dnd-kit/core";
 import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Item} from "../elements/markup/portals/InlineDropZones";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
+
+const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
 const isDropZone = (item: {id: UniqueIdentifier} | null) => item?.id === CLOZE_ITEM_SECTION_ID || String(item?.id).slice(0, 10) === CLOZE_DROP_ZONE_ID_PREFIX;
 
@@ -70,7 +71,7 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
             <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
-                {items.map((item, i) => <Item key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
+                {items.map((item, i) => <DropZoneItem key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
     </div>;

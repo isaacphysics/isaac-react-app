@@ -17,7 +17,8 @@
   color: $gray-160 !important;
 }
 
-:focus-visible:not([tabindex="-1"]):not(.select__input) {
+// Doubled to raise specificity above certain elements such as Ada action buttons
+:focus-visible:focus-visible:not([tabindex="-1"]):not(.select__input) {
   @include focus-outline;
 }
 

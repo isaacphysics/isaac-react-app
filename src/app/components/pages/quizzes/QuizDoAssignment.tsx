@@ -16,11 +16,13 @@ const pageHelp = <span>
 
 export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
-    const {page, quizAssignmentId} = useParams<{quizAssignmentId: string; page?: string;}>();
+    const {page, quizAssignmentId} = useParams();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
     useEffect(() => {
-        dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId, 10)));
+        if (isDefined(quizAssignmentId)) {
+            void dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId, 10)));
+        }
         return () => {
             dispatch(clearQuizAttempt());
         };

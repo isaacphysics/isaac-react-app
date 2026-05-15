@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Input, Col, Container } from "reactstrap";
+import { Input, Col } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, LearningStage, sortByStringValue, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
+import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, LearningStage, siteSpecific, sortByStringValue, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
 import { PageFragment } from "../../elements/PageFragment";
-import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
 import { ListView } from "../../elements/list-groups/ListView";
 import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PracticeQuizzesSidebar } from "../../elements/sidebar/PracticeQuizzesSidebar";
+import { PageContainer } from "../../elements/layout/PageContainer";
 
 export const PracticeQuizzes = () => {
     const pageContext = useUrlPageTheme();
@@ -88,42 +88,44 @@ export const PracticeQuizzes = () => {
 
     const sidebarProps = {filterText, setFilterText, filterTags, setFilterTags, tagCounts: tagCounts(), filterStages, setFilterStages, stageCounts: stageCounts()};
 
-    return <Container { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
-        <TitleAndBreadcrumb
-            currentPageTitle={"Practice tests"}
-            icon={{"type": "icon", "icon": "icon-tests"}}
-            intermediateCrumbs={crumb ? [crumb] : []}
-        />
-        <SidebarLayout>
-            <PracticeQuizzesSidebar {...sidebarProps} hideButton />
-            <MainContent className="mb-4">
-                <PageMetadata noTitle showSidebarButton>
-                    <PageFragment fragmentId="help_toptext_practice_tests"/>
-                </PageMetadata>
-                {!user
-                    ? <b>You must be logged in to view practice tests.</b>
-                    : <ShowLoading until={quizzes}>
-                        {quizzes && <>
-                            {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
-                            <Col xs={12} className="mb-4">
-                                {isAda && <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
-                                <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
-                                    if (filterText.trim()) {
-                                        navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
-                                    }
-                                    setCopied(true);
-                                }} onMouseLeave={() => setCopied(false)} />
-                            </Col>
-                            <ListView
-                                type="quiz"
-                                items={quizzes.filter((quiz) => isRelevant(quiz)).sort(sortByStringValue("title"))}
-                                className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
-                                useViewQuizLink
-                            />
-                        </>}
-                    </ShowLoading>
-                }
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+    return <PageContainer { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
+        pageTitle={
+            <TitleAndBreadcrumb
+                currentPageTitle={"Practice tests"}
+                icon={{"type": "icon", "icon": "icon-tests"}}
+                intermediateCrumbs={crumb ? [crumb] : []}
+            />
+        }
+        sidebar={siteSpecific(
+            <PracticeQuizzesSidebar {...sidebarProps} hideButton />,
+            undefined
+        )}
+    >
+        <PageMetadata noTitle showSidebarButton>
+            <PageFragment fragmentId="help_toptext_practice_tests"/>
+        </PageMetadata>
+        {!user
+            ? <b>You must be logged in to view practice tests.</b>
+            : <ShowLoading until={quizzes}>
+                {quizzes && <>
+                    {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
+                    <Col xs={12} className="mb-4">
+                        {isAda && <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
+                        <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
+                            if (filterText.trim()) {
+                                navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                            }
+                            setCopied(true);
+                        }} onMouseLeave={() => setCopied(false)} />
+                    </Col>
+                    <ListView
+                        type="quiz"
+                        items={quizzes.filter((quiz) => isRelevant(quiz)).sort(sortByStringValue("title"))}
+                        className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
+                        useViewQuizLink
+                    />
+                </>}
+            </ShowLoading>
+        }
+    </PageContainer>;
 };

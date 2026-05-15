@@ -153,40 +153,34 @@ export class PhysicsTagService extends AbstractBaseTagService {
 
         // Cell biology
         {id: TAG_ID.cellStructure, title: `Cell Structure`, parent: TAG_ID.cellBiology},
-        {id: TAG_ID.mitosis, title: "Mitosis", parent: TAG_ID.cellBiology},
-        {id: TAG_ID.meiosis, title: "Meiosis", parent: TAG_ID.cellBiology},
-        {id: TAG_ID.viruses, title: "Viruses", parent: TAG_ID.cellBiology},
-        {id: TAG_ID.membraneTransport, title: "Membrane Transport", parent: TAG_ID.cellBiology},
-        {id: TAG_ID.tissues, title: "Tissues", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.cellDivision, title: `Cell Division`, parent: TAG_ID.cellBiology},
+        {id: TAG_ID.cellTransport, title: `Cell Transport`, parent: TAG_ID.cellBiology},
+        {id: TAG_ID.cellSpecialisation, title: `Cell Specialisation`, parent: TAG_ID.cellBiology},
         // Biochemistry
-        {id: TAG_ID.proteins, title: "Proteins", parent: TAG_ID.biochemistry},
-        {id: TAG_ID.carbohydrates, title: `Carbo${softHyphen}hydrates`, parent: TAG_ID.biochemistry},
-        {id: TAG_ID.lipids, title: "Lipids", parent: TAG_ID.biochemistry},
-        {id: TAG_ID.respiration, title: "Respiration", parent: TAG_ID.biochemistry},
-        {id: TAG_ID.photosynthesis, title: `Photo${softHyphen}synthesis`, parent: TAG_ID.biochemistry},
+        {id: TAG_ID.biomolecules, title: "Biomolecules", parent: TAG_ID.biochemistry},
+        {id: TAG_ID.enzymes, title: "Enzymes", parent: TAG_ID.biochemistry},
+        {id: TAG_ID.bioenergetics, title: "Bioenergetics", parent: TAG_ID.biochemistry},
         // Genetics
-        {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics},
-        {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},
-        {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics},
-        {id: TAG_ID.genesAndAlleles, title: `Genes & Alleles`, parent: TAG_ID.genetics},
+        {id: TAG_ID.nucleicAcids, title: "Nucleic Acids", parent: TAG_ID.genetics},
+        {id: TAG_ID.proteinSynthesis, title: "Protein Synthesis", parent: TAG_ID.genetics},
         {id: TAG_ID.inheritance, title: "Inheritance", parent: TAG_ID.genetics},
         {id: TAG_ID.biotechnology, title: `Bio${softHyphen}technology`, parent: TAG_ID.genetics},
         // Physiology
-        {id: TAG_ID.plants, title: "Plants", parent: TAG_ID.physiology, alias: "Plant Physiology"},
-        {id: TAG_ID.breathingAndCirculation, title: "Breathing & Circulation", parent: TAG_ID.physiology},
-        {id: TAG_ID.hormones, title: "Hormones", parent: TAG_ID.physiology},
-        {id: TAG_ID.digestionAndExcretion, title: "Digestion & Excretion", parent: TAG_ID.physiology},
+        {id: TAG_ID.nutritionAndDigestion, title: "Nutrition & Digestion", parent: TAG_ID.physiology},
+        {id: TAG_ID.exchangeAndTransport, title: "Exchange & Transport", parent: TAG_ID.physiology},
+        {id: TAG_ID.homeostasisAndResponse, title: "Homeostasis & Response", parent: TAG_ID.physiology},
         {id: TAG_ID.senseAndMovement, title: "Sense & Movement", parent: TAG_ID.physiology},
-        {id: TAG_ID.diseaseAndImmunity, title: "Disease & Immunity", parent: TAG_ID.physiology},
+        {id: TAG_ID.healthAndDisease, title: "Health & Disease", parent: TAG_ID.physiology},
+        {id: TAG_ID.reproductionAndDevelopment, title: "Reproduction & Development", parent: TAG_ID.physiology},
         // Ecology
         {id: TAG_ID.populations, title: "Populations", parent: TAG_ID.ecology},
         {id: TAG_ID.ecosystems, title: "Ecosystems", parent: TAG_ID.ecology},
-        {id: TAG_ID.nutrientCycles, title: `Nutrient Cycles`, parent: TAG_ID.ecology},
         {id: TAG_ID.biodiversity, title: "Biodiversity", parent: TAG_ID.ecology},
         // Evolution
         {id: TAG_ID.variation, title: "Variation", parent: TAG_ID.evolution},
-        {id: TAG_ID.theory, title: "Theory", parent: TAG_ID.evolution, alias: "Evolutionary Theory"},
-        {id: TAG_ID.phylogenetics, title: `Phylo${softHyphen}genetics`, parent: TAG_ID.evolution},
+        {id: TAG_ID.theory, title: "Theory & Evidence", parent: TAG_ID.evolution, alias: "Evolutionary Theory"},
+        {id: TAG_ID.speciation, title: "Speciation", parent: TAG_ID.evolution},
+        {id: TAG_ID.classification, title: "Classification", parent: TAG_ID.evolution, alias: "Biological Classification"},
         // Biology Maths Skills
         {id: TAG_ID.bioStatisticalTests, title: "Statistical Tests", parent: TAG_ID.bioMathsSkills}
     ];

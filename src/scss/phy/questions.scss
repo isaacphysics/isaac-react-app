@@ -11,19 +11,25 @@
   font-weight: 400;
 }
 
-:not(.generic-panel):not(.concept-panel):not(.question-panel) > .content-chunk > .figure-panel {
-  // if a figure is in the top level of a content block that is not the top level of a page (i.e. preamble), indent it. otherwise (i.e. when inside a layout component), leave it for that component to handle
-  // TODO: move the padding from this to the layout component (usually accordions!)
-  padding: 0 3rem;
+@include respond-above(xs) {
+  :not(.generic-panel):not(.concept-panel):not(.question-panel) > .content-chunk > .figure-panel {
+    // if a figure is in the top level of a content block that is not the top level of a page (i.e. preamble), indent it. otherwise (i.e. when inside a layout component), leave it for that component to handle
+    // TODO: move the padding from this to the layout component (usually accordions!)
+    padding: 0 3rem;
+
+    // Ensure that the top box shadow is not cut off for figures at the top of accordions
+    &:first-child {
+      padding-top: 1.5rem;
+    }
+  }
 }
 
 .question-panel .isaac-accordion {
-  @include no-print {
-    background: $gray-103;
-  }
   .card-body > .content-chunk > .content-value {
-    padding-left: 1.625rem;
-    padding-right: 1.625rem;
+    @include respond-above(xs) {
+      padding-left: 1.625rem;
+      padding-right: 1.625rem;
+    }
     font-size: $question-font-size;
     line-height: $question-line-height;
   }
@@ -37,7 +43,11 @@
     padding: 1rem 1.5rem;
     background-color: var(--subject-color-50);
     border: 1px solid var(--subject-color-100);
-    border-radius: 4px;
+    border-radius: 8px;
+
+    &:has(> .validation-response-panel.correct, > .validation-response-panel.almost) {
+      padding-bottom: 0;
+    }
   }
 
   .question-component:not(.expansion-layout) {
@@ -68,11 +78,11 @@
 
 .question-tag-indicator {
     background-color: $color-misc-llm;
-    color: $color-neutral-900;
-    border: 2px solid $color-neutral-900;
+    color: var(--color-neutral-900);
+    border: 2px solid var(--color-neutral-900);
 
     &.small {
-        border: 1px solid $color-neutral-900 !important;
+        border: 1px solid var(--color-neutral-900) !important;
         font-weight: 600 !important;
     }
 }
@@ -88,7 +98,7 @@
 .symbolic-question,
 .equality-page {
   .eqn-editor-preview {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     border: solid 1px $black;
   }
 }
@@ -107,19 +117,32 @@
   &.correct {
     background: var(--subject-color-500);
     color: white;
-    a {
+    .figure-reference, a {
       color: white !important;
+    }
+    .figure-caption {
+      .figure-reference, a {
+        color: inherit !important;
+      }
     }
   }
   &.almost {
     background: #ffb847;
     color: #3c0000;
+    .figure-reference {
+      color: #3c0000;
+    }
+  }
+  &.correct, &.almost {
+    code {
+      background-color: transparent;
+    }
   }
 }
 
 .numeric-question {
   .numeric-help.numeric-help {
-    color: $color-neutral-900;
+    color: var(--color-neutral-900);
     font-size: 0.875rem;
   }
 
@@ -141,7 +164,7 @@
 
 // styling for question components outside an accordion
 form:has(> .question-component), div.quiz-question-container:has(> .question-component) {
-  background-color: white;
+  background-color: var(--color-neutral-white);
   box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   padding: 0;
   border: 2px solid var(--nav-primary);
@@ -168,6 +191,17 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
 
   &:has(> .question-component .quick-question) {
     background-color: initial;
+  }
+
+  > .question-component:not(:has(> .validation-response-panel.correct, > .validation-response-panel.almost,
+    > .quick-question:is(.isaac-accordion *), + .tabbed-hints)) {
+    padding-bottom: 1rem;
+  }
+
+  &:not(:has(.tabbed-hints)) .validation-response-panel {
+    &.correct, &.almost {
+      border-radius: 0 0 4px 4px;
+    }
   }
 }
 

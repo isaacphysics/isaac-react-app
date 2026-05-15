@@ -2,7 +2,7 @@ import {RegisteredUserDTO, UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
-import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
+import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy, siteSpecific} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
 import {isaacApi, removeToast, requestCurrentUser, store} from "../app/state";
@@ -29,7 +29,7 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
 
 export interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
-    modifyUser?: <T extends typeof mockUser | RegisteredUserDTO>(u: T) => T;
+    modifyUser?: (u: RegisteredUserDTO) => RegisteredUserDTO;
     sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
@@ -64,10 +64,23 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
                     }
                     );
                 }
-                const userWithRole = produce(mockUser, user => {
-                    user.role = role ?? mockUser.role;
+
+                const userWithRole = produce(mockUser, u => {
+                    u.role = role ?? mockUser.role;
                 });
-                return HttpResponse.json(modifyUser ? modifyUser(userWithRole) : userWithRole, {
+
+                const user = modifyUser ? modifyUser(userWithRole) : userWithRole;
+
+                const userDateFix = produce(user, u => {
+                    // ensure dates are stored as numbers; this response otherwise converts Date()s to strings, which breaks comparison
+                    u.dateOfBirth = u.dateOfBirth?.valueOf();
+                    u.registrationDate = u.registrationDate?.valueOf();
+                    u.registeredContextsLastConfirmed = u.registeredContextsLastConfirmed?.valueOf();
+                    u.lastUpdated = u.lastUpdated?.valueOf();
+                    u.lastSeen = u.lastSeen?.valueOf();
+                });
+
+                return HttpResponse.json(userDateFix, {
                     status: 200,
                     headers: {
                         "x-session-expires": sessionExpires ?? SOME_FIXED_FUTURE_DATE_AS_STRING,
@@ -86,7 +99,7 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
         <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral">
             {PageComponent
-                ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
+                ? <MemoryRouter initialEntries={initalRouteEntries ?? ['/']}>
                     <PageComponent/>
                 </MemoryRouter>
                 : <IsaacApp/>
@@ -97,7 +110,7 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
 
 export const renderTestHook = <Result, Props>(
     render: (initialProps: Props) => Result,
-    { extraEndpoints }: { extraEndpoints?: HttpHandler[] } = {}
+    { Wrapper, extraEndpoints }: { Wrapper?: React.FC<{children: React.ReactNode}>, extraEndpoints?: HttpHandler[] } = {}
 ): RenderHookResult<Result, Props> => {
     resetStore();
     server.resetHandlers();
@@ -106,7 +119,9 @@ export const renderTestHook = <Result, Props>(
     }
     
     return renderHook(render, {
-        wrapper: ({children}) => <Provider store={store}>{children}</Provider>
+        wrapper: ({children}) => <Provider store={store}>
+            {Wrapper ? <Wrapper>{children}</Wrapper> : children}
+        </Provider>
     });
 };
 
@@ -134,39 +149,43 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
     await userEvent.click(link);
 };
 
+export const followMainMenuLink = async (linkName: string) => {
+    if (isPhy) {
+        return await followHeaderNavLink("My Isaac", linkName);
+    } else {
+        // My Ada nav occurs through sidebar after clicking header button
+        const header = await screen.findByTestId("header");
+        const navLink = await within(header).findByRole("link", {name: new RegExp("My Ada")});
+        await userEvent.click(navLink);
+
+        const sidebar = await screen.findByTestId("sidebar");
+        const link = await within(sidebar).findByRole("link", {name: linkName});
+        await userEvent.click(link);
+    }
+};
+
 export const navigateToGroups = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "Manage groups")
-        :
-        await followHeaderNavLink("My Ada", "Teaching groups");
+    await followMainMenuLink(siteSpecific("Manage groups", "Groups"));
 };
 
 export const navigateToMyAccount = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "My account")
-        :
-        await followHeaderNavLink("My Ada", "My account");
+    await followMainMenuLink(siteSpecific("My account", "Account"));
 };
 
 export const navigateToUserManager = async () => {
-    isPhy ?
-        await followHeaderNavLink("Admin", "User Manager")
-        :
+    if (isPhy) {
+        await followHeaderNavLink("Admin", "User Manager");
+    } else {
         await followHeaderNavLink("Admin", "User manager");
+    }
 };
 
 export const navigateToAssignmentProgress = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "Assignment progress")
-        :
-        await followHeaderNavLink("My Ada", "Markbook");
+    await followMainMenuLink(siteSpecific("Assignment progress", "Markbook"));
 };
 
 export const navigateToSetAssignments = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "Set assignments")
-        :
-        await followHeaderNavLink("My Ada", "Manage assignments");
+    await followMainMenuLink(siteSpecific("Set assignments", "Quizzes"));
 };
 
 // Open a given tab in the account page.
@@ -242,6 +261,8 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 export type PathString = `/${string}`;
 export type SearchString = `?${string}`;
 export const setUrl = async (location: Partial<URL>) => {
+    // this act seems to be generating a lot of warnings for both being there and for not being there if you remove it. 
+    // seems like an RTL issue: https://github.com/testing-library/react-testing-library/issues/1413
     await act(async () => {
         // push a new state, then go to it
         history.pushState({}, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);

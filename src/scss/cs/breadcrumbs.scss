@@ -5,6 +5,7 @@
 .bread {
   margin-left: -1 * math.div($grid-gutter-width, 2);
   margin-right: -1 * math.div($grid-gutter-width, 2);
+  position: relative;
   @include respond-above(sm) {
     margin: 0;
   }

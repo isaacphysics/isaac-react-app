@@ -29,14 +29,14 @@ const contentApi = isaacApi.injectEndpoints({
 
         getPageFragment: build.query<IsaacPageFragmentDTO, string>({
             query: (fragmentId) => ({
-                url: `/pages/fragments/${fragmentId}`
+                url: `/pages/fragments/${encodeURIComponent(fragmentId)}`
             }),
             keepUnusedDataFor: 60
         }),
 
         getFasttrackConceptQuestions: build.query<GameboardItem[], {gameboardId: string; concept: string; upperQuestionId: string}>({
             query: ({gameboardId, concept, upperQuestionId}) => ({
-                url: `/fasttrack/${gameboardId}/concepts`,
+                url: `/fasttrack/${encodeURIComponent(gameboardId)}/concepts`,
                 params: {concept, "upper_question_id": upperQuestionId}
             })
         }),

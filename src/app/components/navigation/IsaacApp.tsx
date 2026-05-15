@@ -36,7 +36,7 @@ import {
     OnPageLoad,
     PATHS,
     persistence,
-    showNotification,
+    canShowPopupNotification,
     trackEvent
 } from "../../services";
 import {Generic} from "../pages/Generic";
@@ -54,7 +54,6 @@ import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {SetAssignments} from "../pages/SetAssignments";
-import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
 import {AdminEmails} from "../pages/AdminEmails";
@@ -62,13 +61,13 @@ import {EventManager} from "../pages/EventManager";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
-import {notificationModal} from "../elements/modals/NotificationModal";
+import {surveyNotificationModal} from "../elements/modals/SurveyNotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
 import {TutorRequest} from "../pages/TutorRequest";
-import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
+import {AssignmentProgress} from "../pages/assignment_progress/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
@@ -79,6 +78,9 @@ import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
 import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
+import { NavigateWithSlug } from './NavigateWithSlug';
+import { FeatureFlag, FeatureFlagProvider, FeatureFlagWrapper } from '../../services/featureFlag';
+import { Assignment } from '../pages/Assignment';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -86,18 +88,18 @@ const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 
 const RootLayout = () => {
     const mainContentRef = useRef(null);
-    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
 
-    return <>
+    return <FeatureFlagProvider>
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
+        {/* TODO: turn notification banners into a useBanners hook or similar; c.f. REVISION_CHALLENGES – we could reuse the auto-expiry logic */}
         <IsaacScienceLaunchBanner />
         <ResearchNotificationBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
         <OnPageLoad />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={accessibilitySettings?.REDUCED_MOTION ? "true" : "false"}>
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <FigureNumberingProvider>
                     <Suspense fallback={<Loading/>}>
@@ -108,7 +110,7 @@ const RootLayout = () => {
         </main>
         <ScrollToTop mainContent={mainContentRef}/>
         <SiteSpecific.Footer />
-    </>;
+    </FeatureFlagProvider>;
 };
 
 // Render
@@ -144,7 +146,7 @@ const routes = createRoutesFromElements(
 
         <Route path={PATHS.GAMEBOARD} element={<Gameboard />} />
         <Route path={PATHS.GAMEBOARD_BUILDER} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <GameboardBuilder user={authUser} />} />} />
-        <Route path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<RedirectToGameboard />} />} />
+        <Route path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<NavigateWithSlug to={`${PATHS.GAMEBOARD}#:gameboardId`} />} />} />
         <Route path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <AddGameboard user={authUser} />} />} />
 
         {/* Student pages */}
@@ -153,6 +155,16 @@ const routes = createRoutesFromElements(
         <Route path="/progress/:userIdOfInterest" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
         <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
         <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
+
+        {/* Assignments V2 links */}
+        <Route path="/assignment/:assignmentId/view" element={<FeatureFlagWrapper flag={FeatureFlag.ASSIGNMENTS_V2}
+            onSet={<RequireAuth auth={isLoggedIn} element={<Assignment />} />}
+            onUnset={<NotFound />}
+        />} />
+        <Route path="/assignment/:assignmentId/question/:questionId" element={<FeatureFlagWrapper flag={FeatureFlag.ASSIGNMENTS_V2}
+            onSet={<RequireAuth auth={isLoggedIn} element={<Question />} />}
+            onUnset={<NotFound />}
+        />} />
 
         {/* Teacher pages */}
         {/* Tutors can set and manage assignments, but not tests/quizzes */}
@@ -167,14 +179,15 @@ const routes = createRoutesFromElements(
         <Route path="/admin/usermanager" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminUserManager />} />} />
         <Route path="/admin/events" element={<RequireAuth auth={user => isAdminOrEventManager(user) || isEventLeader(user)} element={(authUser) => <EventManager user={authUser} />} />} />
         <Route path="/admin/stats" element={<RequireAuth auth={isStaff} element={<AdminStats />} />} />
-        <Route path="/admin/content_errors" element={<RequireAuth auth={user => isStaff(user)} element={<AdminContentErrors />} />} />
+        <Route path="/admin/content_errors" element={<RequireAuth auth={(user, env) => isStaff(user) || env === "DEV"} element={<AdminContentErrors />} />} />
         <Route path="/admin/emails" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminEmails />} />} />
         <Route path="/admin/direct_emails" element={<RequireAuth auth={isAdminOrEventManager} element={<ContentEmails />} />} />
         {/* Authentication */}
         <Route path="/login" element={<LogIn />} />
         <Route path="/logout" element={<LogOutHandler />} />
         <Route path="/auth/:provider/callback" element={<ProviderCallbackHandler />} />
-        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword" element={<ResetPasswordHandler />} />
+        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} /> {/* historic route */}
         <Route path="/deleteaccount" element={<RequireAuth auth={isLoggedIn} element={<AccountDeletion />} />} />
         <Route path="/deleteaccount/success" element={<AccountDeletionSuccess />} />
 
@@ -239,14 +252,14 @@ export const IsaacApp = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, loggedInUserId]);
 
-    const showNotifications = isLoggedIn(user) && showNotification(user);
+    const canShowSurveyNotification = isLoggedIn(user) && canShowPopupNotification(user);
     useEffect(() => {
         const dateNow = new Date();
-        if (showNotifications && notifications && notifications.length > 0) {
-            dispatch(openActiveModal(notificationModal(notifications[0])));
+        if (canShowSurveyNotification && notifications && notifications.length > 0) {
+            dispatch(openActiveModal(surveyNotificationModal(notifications[0])));
             persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString());
         }
-    }, [dispatch, showNotifications, notifications]);
+    }, [dispatch, canShowSurveyNotification, notifications]);
 
 
     function onBeforePrint() {

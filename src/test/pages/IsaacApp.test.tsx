@@ -1,6 +1,6 @@
 import {screen, waitFor} from "@testing-library/react";
 import {renderTestEnvironment} from "../testUtils";
-import {isPhy} from "../../app/services";
+import { siteSpecific } from "../../app/services";
 
 describe("IsaacApp", () => {
 
@@ -11,11 +11,10 @@ describe("IsaacApp", () => {
         });
     });
 
-    // TODO implement test data and this test for CS
-    isPhy && it('should show the users number of current assignments in the navigation menu (Physics only)', async () => {
+    it('should show the users number of current assignments in the navigation menu', async () => {
         await renderTestEnvironment();
-        const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
-        expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
+        const myAssignmentsBadge = await screen.findByTestId(siteSpecific("my-assignments-badge", "my-notifications-badge"));
+        expect(myAssignmentsBadge.textContent).toContain("5");
     });
 
     // TODO broken since we only show 3-4 news pods on the homepage

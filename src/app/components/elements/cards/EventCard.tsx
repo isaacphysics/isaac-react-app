@@ -8,6 +8,7 @@ import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
+import { ContentPropertyTags } from "../ContentPropertyTags";
 
 const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
     return <div className="d-inline-flex">
@@ -46,21 +47,30 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
-
+    const bookingDeadlineSoon = event.bookingDeadline && event.isWithinBookingDeadline && (new Date(event.bookingDeadline).getTime() - Date.now()) < 604800000; // 1 week
     const subject = getThemeFromTags(event.tags) !== "neutral" ? getThemeFromTags(event.tags) : "physics";
 
     return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
         {eventThumbnail &&
             <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
-                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`} />
-                {hasExpired &&
-                    <div className="event-pod-badge">
-                        <Badge className="badge rounded-pill">EXPIRED</Badge>
-                    </div>}
-                {isVirtualEvent &&
-                    <div className="event-pod-badge align-self-end">
-                        <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
-                    </div>}
+                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`}/>
+                <span className="event-pod-badges align-self-end">
+                    {isVirtualEvent &&
+                        <span>
+                            <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
+                        </span>
+                    }
+                    {hasExpired &&
+                        <span className="expired-badge">
+                            <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
+                        </span>}
+                    {bookingDeadlineSoon &&
+                        <span>
+                            <span className="warning-tag px-2 fw-semibold">
+                                Booking deadline soon!
+                            </span>
+                        </span>}
+                </span>
                 {isTeacherEvent &&
                     <div className="event-pod-hex">
                         <b>TEACHER EVENT</b>
@@ -73,7 +83,10 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                     </div>}
             </Link>}
         <CardBody className="d-flex flex-column">
-            {title && <CardTitle className="mb-0 pod-title" id={`event-title-${id}`}><h5>{title}</h5></CardTitle>}
+            <CardTitle className="mb-0 pod-title d-flex align-items-baseline" id={`event-title-${id}`}>
+                {title && <h5 className="mb-0 me-2">{title}</h5>}
+                <ContentPropertyTags tags={event.tags} />
+            </CardTitle>
             {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
             </CardText>}

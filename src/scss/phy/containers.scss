@@ -63,8 +63,19 @@ div.dashboard.dashboard-outer {
   @include no-print {
     max-height: 462px;
     overflow-y: auto;
-    @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
-  }
-  border-radius: 4px;
-  flex: 1 0 content;
+}
+border-radius: 4px;
+flex: 1 0 content;
+}
+
+[data-ld-theme="light"] {
+    .item-list-container {
+        @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
+    }
+}
+
+[data-ld-theme="dark"] {
+    .item-list-container {
+        @include vertical-scroll-shadow($color-neutral-dark-50, rgba(0, 0, 0, 0.2));
+    }
 }

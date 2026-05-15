@@ -7,7 +7,7 @@ import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
 import { StudentDashboard } from "../../elements/StudentDashboard";
-import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
+import { CustomListViewItemProps, ListViewCards, transformItemsForCustomListView } from "../../elements/list-groups/ListView";
 import { Spacer } from "../../elements/Spacer";
 import { TeacherDashboard } from "../../elements/TeacherDashboard";
 
@@ -96,7 +96,7 @@ const subjectDescriptions: Record<Subject, string> = {
 
 const getListViewSubjectCard = (sc: subjectCategory) => {
 
-    const listViewSubjectCard: ListViewCardProps = {
+    const listViewSubjectCard: CustomListViewItemProps['item'] = {
         title: sc.humanSubject,
         subtitle: subjectDescriptions[sc.subject as Subject],
         icon: {
@@ -112,7 +112,7 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
     return listViewSubjectCard;
 };
 
-const AdaSubjectCard: ListViewCardProps = {
+const AdaSubjectCard: CustomListViewItemProps['item'] = {
     title: "Studying computer science?",
     subtitle: "Check out Ada CS, our partner platform. It’s free and packed with resources for computer science teachers and students.",
     icon: {
@@ -199,7 +199,7 @@ export const HomepagePhy = () => {
                             <h3>Explore and learn!</h3>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
-                        <ListViewCards cards={cards} />
+                        <ListViewCards type="item" items={cards.map(transformItemsForCustomListView)} />
                     </div>
                 </section>
                 <section id="events-news">
@@ -214,7 +214,7 @@ export const HomepagePhy = () => {
                                 query={eventsQuery}
                                 ifError={(() => <p>There was an error loading the events list. Please try again later!</p>)}
                                 thenRender={({events}) => {
-                                    return <Row className="h-100">
+                                    return <Row className="h-100 row-cols-1 row-cols-sm-2 gap-3 gap-sm-0">
                                         {events.length
                                             ? events.map(event => <Col key={event.id}>
                                                 <EventCard event={event} />
@@ -234,7 +234,7 @@ export const HomepagePhy = () => {
                                 query={newsQuery}
                                 ifError={(() => <p>There was an error loading the news list. Please try again later!</p>)}
                                 thenRender={(news) => {
-                                    return <Row className="h-100">
+                                    return <Row className="h-100 row-cols-1 row-cols-sm-2 gap-3 gap-sm-0">
                                         {news.length
                                             ? news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
                                                 <NewsCard newsItem={newsItem} />

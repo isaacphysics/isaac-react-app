@@ -1,5 +1,5 @@
 import { ActiveModals } from "../../app/components/elements/modals/ActiveModals";
-import { Overview } from "../../app/components/pages/Overview";
+import { TeacherOverview } from "../../app/components/pages/Overview";
 import { isAda, KEY, persistence } from "../../app/services";
 import React from "react";
 
@@ -12,7 +12,7 @@ describe('Overview Page Visual Regression Tests', () => {
             // Act
             cy.mountWithStoreAndRouter(<>
                 <ActiveModals/>
-                <Overview />
+                <TeacherOverview />
             </>, ["/dashboard"]);
             cy.get('[data-testid="active-modal"]').should('be.visible');
 

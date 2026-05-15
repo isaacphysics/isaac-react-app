@@ -1,7 +1,7 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
+import {DOCUMENT_TYPE, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -28,15 +28,15 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacReorderQuestion": "Reorder",
     "isaacParsonsQuestion": "Parsons",
     "isaacNumericQuestion": "Numeric",
-    "isaacSymbolicQuestion": "Symbolic",
+    "isaacSymbolicQuestion": "Algebraic",
     "isaacSymbolicChemistryQuestion": "Symbolic chemistry",
-    "isaacStringMatchQuestion": "String match",
+    "isaacStringMatchQuestion": "Text entry",
     "isaacRegexMatchQuestion": "Regex match",
     "isaacFreeTextQuestion": "Free text",
     "isaacLLMFreeTextQuestion": "LLM-marked free text",
     "isaacSymbolicLogicQuestion": "Boolean logic",
     "isaacGraphSketcherQuestion": "Graph sketcher",
-    "isaacClozeQuestion": "Cloze drag and drop",
+    "isaacClozeQuestion": "Drag and drop",
     "isaacCoordinateQuestion": "Coordinate",
     "default": "Multiple choice"
 };
@@ -64,6 +64,11 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
 
 export const RESTRICTED_QUESTION_TYPES = ["isaacLLMFreeTextQuestion"];
 
+export const PROGRESS_QUESTION_TYPE_MAP : {[key: string]: string[]} = {
+    "isaacStringMatchQuestion": ["isaacStringMatchQuestion", "isaacRegexMatchQuestion", "isaacFreeTextQuestion"],
+    "isaacMultiChoiceQuestion": ["isaacMultiChoiceQuestion", "isaacItemQuestion"],
+};
+
 export function isQuestion(doc: ContentDTO) {
     return doc.type ? doc.type in QUESTION_TYPES : false;
 }
@@ -88,75 +93,6 @@ export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
 
     return title;
 }
-
-// Inequality specific functions
-
-export function sanitiseInequalityState(state: any) {
-    const saneState = JSON.parse(JSON.stringify(state));
-    if (saneState.result?.tex) {
-        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_LATEX[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP_LATEX[l] : l).join('');
-    }
-    if (saneState.result?.python) {
-        saneState.result.python = saneState.result.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_PYTHON[l] || l).join('');
-    }
-    if (saneState.result?.uniqueSymbols) {
-        saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_PYTHON[l] || l).join('');
-    }
-    if (saneState.symbols) {
-        for (const symbol of saneState.symbols) {
-            if (symbol.expression.latex) {
-                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_LATEX[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP_LATEX[l] : l).join('');
-            }
-            if (symbol.expression.python) {
-                symbol.expression.python = symbol.expression.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_PYTHON[l] || l).join('');
-            }
-        }
-    }
-    return saneState;
-}
-
-const pseudoToSymbolDict: {[key: string]: string[]} = {
-    // Maths pseudosymbols
-    '_trigs': ['cos()', 'sin()', 'tan()'],
-    '_1/trigs': ['cosec()', 'sec()', 'cot()'],
-    '_inv_trigs': ['arccos()', 'arcsin()', 'arctan()'],
-    '_inv_1/trigs': ['arccosec()', 'arcsec()', 'arccot()'],
-    '_hyp_trigs': ['cosh()', 'sinh()', 'tanh()', 'cosech()', 'sech()', 'coth()'],
-    '_inv_hyp_trigs': ['arccosh()', 'arcsinh()', 'arctanh()', 'arccosech()', 'arcsech()', 'arccoth()'],
-    '_logs': ['log()', 'ln()'],
-    '_no_alphabet': [],
-    // Chemistry pseudosymbols
-    '_state_symbols': ['(s)', '(l)', '(g)', '(aq)'],
-    '_plus': ['+'],
-    '_minus': ['-'],
-    '_fraction': ['/'],
-    '_right_arrow': ['->'],
-    '_equilibrium_arrow': ['<=>'],
-    '_brackets_round': ['()'],
-    '_brackets_square': ['[]'],
-    '_dot': ['.'],
-    // Adding a pseudosymbol to an empty list in the content editor causes the list to start with a comma
-    // and so this empty string is used to avoid adding it to the list of available symbols
-    '': []
-};
-
-export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
-    if (!availableSymbols) return;
-
-    const theseSymbols = availableSymbols.slice(0).map(s => s.trim());
-    let i = 0;
-    while (i < theseSymbols.length) {
-        const currentSymbol = theseSymbols[i];
-        if (currentSymbol in pseudoToSymbolDict) {
-            const translatedSymbols = pseudoToSymbolDict[currentSymbol];
-            theseSymbols.splice(i, 1, ...translatedSymbols);
-            i += translatedSymbols.length;
-        } else {
-            i += 1;
-        }
-    }
-    return theseSymbols;
-};
 
 /**
  * Essentially a useState for the current question attempt - used in all question components.
@@ -223,6 +159,7 @@ const questionPlaceholdersByContext: {[subject in keyof typeof PHY_NAV_SUBJECTS]
     },
     "biology": {
         "a_level": "Adrenaline",
+        "gcse": "Mystery Cell"
     },
 };
 

@@ -67,7 +67,8 @@ div:has(> .pod) {
 }
 
 .pod {
-  background-color: white;
+  background-color: var(--color-neutral-white);
+  color: var(--color-neutral-800);
   box-shadow: 2px 4px 10px 0 $shadow-08;
   border-radius: 1rem;
   border: none;
@@ -83,7 +84,7 @@ div:has(> .pod) {
       object-fit: cover;
 
       &.programme-img {
-        aspect-ratio: 16/7;
+        aspect-ratio: 16/9;
       }
     }
   }
@@ -91,9 +92,15 @@ div:has(> .pod) {
   .event-pod-img {
     height: min-content;
 
-    .event-pod-badge {
+    .event-pod-badges {
       position: absolute;
       margin: 3%;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.2rem;
+      justify-content: space-between;
+      width: 94%;
     }
 
     .event-pod-hex {
@@ -114,7 +121,11 @@ div:has(> .pod) {
   }
 
   .expired {
-    filter: grayscale(1);
+    > * {
+      &:not(.expired-badge) {
+        filter: grayscale(1);
+      }
+    }
   }
 
   .fixed-height {

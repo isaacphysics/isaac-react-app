@@ -2,10 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { AppState, docSlice, mainContentIdSlice, registerPageChange, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../state";
 import { scrollTopOnPageLoad } from "./scrollManager";
 import { Location } from "history";
+import { isPhy } from "./";
 import { useReducedMotion } from "./accessibility";
 import { focusMainContent } from "./focus";
 import { useLocation } from "react-router";
 import { trackPageview } from "./constants";
+import { useLightnessTheme } from "./theme";
 
 export const OnPageLoad = () => {
     const dispatch = useAppDispatch();
@@ -13,6 +15,7 @@ export const OnPageLoad = () => {
     // the location correctly even if there is a react-router <Redirect ...> before the useEffect is called.
     const location = useLocation();
     const reducedMotion = useReducedMotion();
+    const lightnessTheme = useLightnessTheme();
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const scrollTop = scrollTopOnPageLoad(reducedMotion);
@@ -20,10 +23,10 @@ export const OnPageLoad = () => {
 
     const onPageLoad = useCallback((location: Location) => {
         if (loadedPathname !== location.pathname) {
-            // this should only run on initial page load or when the pathname changes, not query params or hash changes
+            // reset sidebar state for physics -- this should only run on initial page load or when the pathname changes, not query params or hash changes
             trackPageview({ url: window.location.origin + location.pathname + location.search + location.hash }); // record pageview on each page load
             dispatch(docSlice.actions.resetPage()); // reset redux's doc after any page change
-            dispatch(sidebarSlice.actions.setOpen(false));
+            if (isPhy) dispatch(sidebarSlice.actions.setOpen(false));
             scrollTop(loadedPathname, location.pathname);
             setLoadedPathname(location.pathname);
             dispatch(mainContentIdSlice.actions.clear()); // reset so that if the new page sets it to the same element id, it still triggers a focus
@@ -42,6 +45,11 @@ export const OnPageLoad = () => {
         registerPageChange(location.pathname);
         onPageLoad(location);
     }, [location, onPageLoad]);
+
+    useEffect(() => {
+        document.documentElement?.setAttribute("data-ld-theme", lightnessTheme.value);
+        document.documentElement?.setAttribute("data-reduced-motion", reducedMotion ? "true" : "false");
+    }, [lightnessTheme, reducedMotion]);
 
     return null;
 };

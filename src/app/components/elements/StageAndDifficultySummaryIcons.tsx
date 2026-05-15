@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import {simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
+import {isAda, simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import { Difficulty } from "../../../IsaacApiTypes";
@@ -17,9 +17,12 @@ interface StageAndDifficultySummaryIconsProps {
 export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryIconsProps) => {
     const {audienceViews, className, iconClassName, stack, spacerWidth} = props;
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
+    // Prefer Core over Advanced if both are present
+    const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
+        audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : undefined);
     return siteSpecific(
         <div className={classNames(className, "d-flex flex-column")}>
-            {audienceViews.map((view, i) =>
+            {audienceViews.map((view) =>
                 <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="d-flex w-100 hierarchy-tags text-center">
                     {view.stage && view.stage !== STAGE.ALL && stageLabelMap[view.stage] + " "}
                     {view.difficulty && <>
@@ -33,7 +36,8 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
         <div className={classNames(className, "d-sm-flex flex-wrap align-items-baseline", {"justify-content-end": !stack})}>
             <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
                 {difficulties.length > 0 && <>
-                    <div className="hierarchy-tags text-center me-2">
+                    <div className="hierarchy-tags text-center text-nowrap me-2">
+                        {!!adaStage && stageLabelMap[adaStage] + ": "}
                         {simpleDifficultyLabelMap[difficulties[0]]}
                     </div>
                     <div className="hierarchy-tags text-center">
@@ -43,4 +47,4 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
             </div>
         </div>,
     );
-}
+};

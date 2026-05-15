@@ -54,7 +54,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     removeVerticalOffset
                     aria-describedby="chem-text-entry-helptext"
                 />
-                <p id="chem-text-entry-helptext">{`This feature allows you to enter text-based answers (using mhchem chemical notation) for chemistry questions, as an alternative to the graphical equation editor.`}</p>
+                <p id="chem-text-entry-helptext">This feature allows you to enter text-based answers for chemistry questions, as an alternative to the graphical editor. See our <Link to="/pages/chemistry_text_entry" target="_blank">guidance on using this feature</Link>.</p>
             </WithLinkableSetting>}
 
             {/* Enabled for staff on Isaac so they can test questions, but not being pursued further for now (these questions should not be published) */}

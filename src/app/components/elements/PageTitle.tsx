@@ -6,6 +6,8 @@ import {
     simpleDifficultyLabelMap,
     SITE_TITLE,
     siteSpecific,
+    STAGE,
+    stageLabelMap,
 } from "../../services";
 import { mainContentIdSlice, useAppDispatch } from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
@@ -17,12 +19,16 @@ import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const difficulty = audienceViews.map(v => v.difficulty).filter(d => d !== undefined)[0];
+    // Prefer Core over Advanced if both are present
+    const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
+        audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : undefined);
 
-    return difficulty && <div className="h-subtitle pt-sm-0 mb-sm-0 d-flex d-sm-block align-content-center">
-        <div className="fw-regular align-self-center">
+    return difficulty && <div className="h-subtitle d-flex align-content-center">
+        <div className="fw-regular text-nowrap align-self-center">
+            {!!adaStage && stageLabelMap[adaStage] + ": "}
             {simpleDifficultyLabelMap[difficulty]}
         </div>
-        <div className="ms-2 ms-sm-0">
+        <div className="ms-2 d-flex align-items-center">
             <DifficultyIcons difficulty={difficulty}/>
         </div>
     </div>;

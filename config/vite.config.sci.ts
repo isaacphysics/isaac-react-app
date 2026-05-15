@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
-import { generateConfig } from "./vite.config.common";
+import { generateViteConfig } from "./vite.config.common";
 
 export default defineConfig(
-    generateConfig("sci")
+    generateViteConfig("sci")
 );

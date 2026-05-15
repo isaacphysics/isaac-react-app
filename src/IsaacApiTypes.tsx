@@ -231,6 +231,7 @@ export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
 
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
     isNuclear?: boolean;
+    showInequalitySeed?: boolean;
 }
 
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
@@ -365,6 +366,7 @@ export interface QuestionValidationResponseDTO {
     questionId?: string;
     answer?: ChoiceDTO;
     correct?: boolean;
+    marks?: number;
     explanation?: ContentDTO;
     dateAttempted?: Date;
 }
@@ -383,7 +385,6 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
 }
 
 export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
-    marksAwarded?: number;
     markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
 }
 
@@ -456,6 +457,7 @@ export interface ContentSummaryDTO {
     tags?: string[];
     url?: string;
     state?: CompletionState;
+    bookmarked?: Date;
     supersededBy?: string;
     deprecated?: boolean;
     difficulty?: string;
@@ -676,18 +678,18 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     givenName?: string;
     familyName?: string;
     email?: string;
-    dateOfBirth?: Date;
+    dateOfBirth?: Date | number;
     gender?: Gender;
-    registrationDate?: Date;
+    registrationDate?: Date | number;
     schoolId?: string;
     countryCode?: string;
     role?: UserRole;
     schoolOther?: string;
     registeredContexts?: UserContext[];
-    registeredContextsLastConfirmed?: Date;
+    registeredContextsLastConfirmed?: Date | number;
     firstLogin?: boolean;
-    lastUpdated?: Date;
-    lastSeen?: Date;
+    lastUpdated?: Date | number;
+    lastSeen?: Date | number;
     emailVerificationStatus?: EmailVerificationStatus;
     teacherAccountPending?: boolean;
     id?: number;
@@ -760,6 +762,7 @@ export interface GameboardItem {
     questionPartStates?: QuestionPartState[];
     boardId?: string;
     supersededBy?: string;
+    deprecated?: boolean;
 }
 
 export interface IsaacWildcard extends Content {
@@ -773,8 +776,6 @@ export interface AdminSearchEndpointParams {
     familyName?: string;
     role?: UserRole;
     schoolOther?: string;
-    postcode?: string;
-    postcodeRadius?: string;
     schoolURN?: string;
     emailVerificationStatus?: EmailVerificationStatus;
     subjectOfInterest?: string;

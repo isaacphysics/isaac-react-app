@@ -30,9 +30,10 @@ export const gameboardApi = isaacApi.injectEndpoints({
         //  function
         // TODO MT handle local storage load if gameboardId == null
         // TODO MT handle requesting new gameboard if local storage is also null
+        // FIXME: we don't want to deal with null here any more, only existing boards!
         getGameboardById: build.query<GameboardDTO, string | null>({
             query: (boardId) => ({
-                url: `/gameboards/${boardId}`
+                url: `/gameboards/${boardId ? encodeURIComponent(boardId) : null}`,
             }),
             providesTags: (result) => result && result.id ? [{type: "Gameboard", id: result.id}] : []
         }),
@@ -93,7 +94,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
 
         renameAndLinkUserToGameboard: build.mutation<void, {boardId: string, newTitle: string}>({
             query: ({boardId, newTitle}) => ({
-                url: `gameboards/${boardId}`,
+                url: `gameboards/${encodeURIComponent(boardId)}`,
                 method: "POST",
                 params: {title: newTitle},
             }),
@@ -105,7 +106,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
 
         linkUserToGameboard: build.mutation<void, string>({
             query: (boardId) => ({
-                url: `gameboards/user_gameboards/${boardId}`,
+                url: `gameboards/user_gameboards/${encodeURIComponent(boardId)}`,
                 method: "POST"
             }),
             invalidatesTags: ["AllGameboards"],
@@ -116,7 +117,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
 
         unlinkUserFromGameboard: build.mutation<void, string>({
             query: (boardId) => ({
-                url: `/gameboards/user_gameboards/${boardId}`,
+                url: `/gameboards/user_gameboards/${encodeURIComponent(boardId)}`,
                 method: "DELETE",
             }),
             invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],

@@ -4,6 +4,7 @@ import { CollapsibleContext } from "./CollapsibleList";
 
 export interface CollapsibleContainerProps extends React.HTMLAttributes<HTMLDivElement> {
     expanded: boolean;
+    additionalOffset?: string | number;
 }
 
 export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
@@ -52,8 +53,14 @@ export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
 
     return <div {...rest} 
         className={classNames("collapsible-body", rest.className)} 
-        style={{height: expanded ? expandedContainerHeight : 0, maxHeight: expanded ? expandedContainerHeight : 0, ...rest.style}}
+        style={{
+            height: expanded ? expandedContainerHeight : 0, 
+            maxHeight: expanded ? expandedContainerHeight : 0,
+            marginBottom: expanded ? rest.additionalOffset ?? 0 : 0,
+            ...rest.style
+        }}
         ref={divRef}
+        {...{ inert: !expanded ? '' : undefined }}
     >
         <CollapsibleContext.Provider value={{expanded, recalculateHeight}}>
             <div ref={contentRef}>

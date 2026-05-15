@@ -5,7 +5,6 @@ import {
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
     isAda,
-    isTeacherOrAbove,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
@@ -105,23 +104,14 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
 }
 
 // User authentication
-export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
+// only used internally for other action/reducer pairs here; prefer userApi slice's getUserAuthSettings for most cases
+const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const getChosenUserAuthSettings = (userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST});
-    try {
-        const authenticationSettings = await api.authentication.getSelectedUserAuthSettings(userId);
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS, selectedUserAuthSettings: authenticationSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -589,7 +579,7 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
     const pathOverride = persistence.pop(KEY.AFTER_AUTH_PATH);
     if (pathOverride) {
         target = pathOverride;
-    } else if (user && isTeacherOrAbove(user) && isAda) {
+    } else if (user && isAda) {
         target = "/dashboard";
     }
     void navigateComponentless(target);
@@ -597,7 +587,7 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
 
 // Hard redirect (refreshes page)
 export const redirectTo = (path: string) => {
-    window.location.href = window.location.origin + path;
+    window.location.href = path;
 };
 
 export const registerPageChange = (path: string) => {

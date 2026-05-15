@@ -15,13 +15,15 @@ const pageHelp = <span>
 </span>;
 
 export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
-    const {page, quizId} = useParams<{quizId: string; page?: string;}>();
+    const {page, quizId} = useParams();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(loadFreeQuizAttempt(quizId));
+        if (isDefined(quizId)) {
+            void dispatch(loadFreeQuizAttempt(quizId));
+        }
         return () => {
             dispatch(clearQuizAttempt());
         };

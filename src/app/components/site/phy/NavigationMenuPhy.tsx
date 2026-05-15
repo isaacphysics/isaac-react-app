@@ -3,13 +3,13 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, Dro
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, ifKeyIsEnter, isFullyDefinedContext, isSingleStageContext, isStudent, isTutor, isTutorOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, ifKeyIsEnter, isFullyDefinedContext, isSingleStageContext, isStudent, isTutor, isTutorOrAbove, isValidStageSubjectPair, useDeviceSize, useUserNotifications } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
-import { useAssignmentsCount } from "../../navigation/NavigationBar";
 import { Link, useNavigate } from "react-router-dom";
 import { HoverableNavigationContext, PageContextState } from "../../../../IsaacAppTypes";
 import max from "lodash/max";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
@@ -284,7 +284,8 @@ const ContentNavSection = (props: NavigationSectionProps) => {
 
 const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
     const user = useAppSelector(selectors.user.orNull);
-    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    const { notifications: _, workCounts } = useUserNotifications();
+
     const deviceSize = useDeviceSize();
 
     const NavigationItemClose = (props: NavigationItemProps) => {
@@ -312,13 +313,18 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
                                 My question decks
                             </NavigationItemClose>
+                            <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
+                                <NavigationItemClose href={PATHS.BOOKMARKS}>
+                                    My bookmarks
+                                </NavigationItemClose>
+                            </FeatureFlagWrapper>
                             <NavigationItemClose href="/assignments" className="d-flex align-items-center">
                                 My assignments
-                                {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
+                                {workCounts.assignments > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</span>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/tests" className="d-flex align-items-center">
                                 My tests
-                                {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
+                                {workCounts.tests > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.tests > 99 ? "99+" : workCounts.tests}</span>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/progress">
                                 My progress
@@ -386,7 +392,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
         }
     </>;
 
-    const taskCount = assignmentsCount + quizzesCount;
+    const taskCount = workCounts.total;
 
     // Get first char of first & last names. If either is not a letter, don't display it.
     const userInitials = user?.loggedIn && user?.givenName && user?.familyName ?

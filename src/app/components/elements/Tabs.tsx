@@ -24,6 +24,7 @@ interface TabsProps {
     expandable?: boolean;
     singleLine?: boolean;
     style?: TabStyle;
+    dataTestId?: string;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
@@ -33,8 +34,8 @@ function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabT
 }
 
 // e.g.:   Tab 1 | Tab 2 | Tab 3
-const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab, className}: TabsProps & {activeTab: number; changeTab: (i: number) => void;}) => {
-    return <Nav tabs className={classNames(className, "flex-wrap", {"guaranteed-single-line": singleLine})}>
+const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab, className, dataTestId}: TabsProps & {activeTab: number; changeTab: (i: number) => void;}) => {
+    return <Nav tabs className={classNames(className, "flex-wrap", {"guaranteed-single-line": singleLine})} data-testid={dataTestId}>
         {Object.keys(children).map((tabTitle, mapIndex) => {
             const tabIndex = mapIndex + 1;
             const linkClasses = callOrString(tabTitleClass, tabTitle, tabIndex);
@@ -53,7 +54,7 @@ const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab, c
 };
 
 // e.g.:   (Tab 1|Tab 2|Tab 3), i.e. as joined buttons
-const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass="", className}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass="", className, dataTestId}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
     const gliderRef = useRef<HTMLSpanElement>(null);
     const numberOfTabs = Object.keys(children).length;
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>(Array(numberOfTabs).fill(null));
@@ -68,7 +69,7 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass="", classNa
         gliderRef.current.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
     }
 
-    return <div className={"w-100 text-center"}>
+    return <div className={"w-100 text-center"} data-testid={dataTestId}>
         <ButtonGroup className={classNames(className, "selector-tabs")}>
             {Object.keys(children).map((tabTitle, i) =>
                 <Button key={i} innerRef={el => buttonRefs.current[i] = el}
@@ -84,8 +85,8 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass="", classNa
     </div>;
 };
 
-const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass, className}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <div className={classNames(className, "mt-3 mb-1")}>
+const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass, className, dataTestId}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className={classNames(className, "mt-3 mb-1")} data-testid={dataTestId}>
         {Object.keys(children).map((tabTitle, i) =>
             <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
                 affix: "icon-chevron-right",
@@ -99,8 +100,8 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass, classNam
     </div>;
 };
 
-const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <div className="d-flex card-tabs">
+const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass="", dataTestId}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className="d-flex card-tabs" data-testid={dataTestId}>
         {Object.keys(children).map((tabTitle, i) =>
             <button key={i} className={classNames(tabTitleClass, "flex-grow-1 py-3 card-tab", {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} type="button">
                 <Markup encoding={"latex"}>{tabTitle}</Markup>
@@ -143,12 +144,12 @@ export const Tabs = (props: TabsProps) => {
         {expandButton}
         <div className={classNames(className, innerClasses, `tab-style-${style}`, "position-relative")}>
             {style === "tabs"
-                ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab}>{children}</TabNavbar>
+                ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab} dataTestId="tab-navbar">{children}</TabNavbar>
                 : style === "buttons"
-                    ? <ButtonNavbar {...props} activeTab={activeTab} changeTab={changeTab}>{children}</ButtonNavbar>
+                    ? <ButtonNavbar {...props} activeTab={activeTab} changeTab={changeTab} dataTestId="tab-navbar">{children}</ButtonNavbar>
                     : style === "dropdowns" 
-                        ? <DropdownNavbar {...props} className={classNames({"no-print": isPhy}, tabNavbarClass)} activeTab={activeTab} changeTab={changeTab}>{children}</DropdownNavbar>
-                        : <CardsNavbar  {...props} activeTab={activeTab} changeTab={changeTab}>{children}</CardsNavbar>
+                        ? <DropdownNavbar {...props} className={classNames({"no-print": isPhy}, tabNavbarClass)} activeTab={activeTab} changeTab={changeTab} dataTestId="tab-navbar">{children}</DropdownNavbar>
+                        : <CardsNavbar  {...props} activeTab={activeTab} changeTab={changeTab} dataTestId="tab-navbar">{children}</CardsNavbar>
             }
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>
@@ -165,7 +166,7 @@ export const Tabs = (props: TabsProps) => {
                                     {children}
                                 </DropdownNavbar>
                             }
-                            <TabPane key={tabTitle} tabId={tabIndex}>
+                            <TabPane key={tabTitle} tabId={tabIndex} data-testid={tabIndex === activeTab ? "active-tab-pane" : undefined}>
                                 {tabBody as ReactNode}
                             </TabPane>
                         </React.Fragment>;

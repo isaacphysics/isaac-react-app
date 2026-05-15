@@ -43,41 +43,21 @@ describe("SetAssignments", () => {
         await navigateToSetAssignments();
     };
 
-    it('should show 6 gameboards in card view (and start in this view on Phy)', async () => {
+    it('should show 6 gameboards in card view (and start in this view)', async () => {
         await renderSetAssignments();
-        if (isPhy) {
-            await waitFor(() => {
-                expect(screen.queryAllByText("Loading...")).toHaveLength(0);
-            });
-            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Set display mode");
-            expect(viewDropdown.value).toEqual("Card View");
-        } else {
-            // Change view to "Card View"
-            const viewDropdown = await screen.findByLabelText("Display in");
-            await userEvent.selectOptions(viewDropdown, "Card View");
-
-            const limitDropdown = await screen.findByLabelText("Show");
-            await userEvent.selectOptions(limitDropdown, "6");
-            await waitFor(() => {
-                expect(screen.queryAllByText("Loading...")).toHaveLength(0);
-            });
-        }
+        await waitFor(() => {
+            expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+        });
+        const viewDropdown: HTMLInputElement = await screen.findByLabelText(siteSpecific("Set display mode", "Display in"));
+        expect(viewDropdown.value).toEqual("Card View");
         expect(await screen.findAllByTestId("gameboard-card")).toHaveLength(6);
     });
 
-    it('should show all gameboards in table view (and start in this view on CS)', async () => {
+    it('should show all gameboards in table view', async () => {
         await renderSetAssignments();
-        if (isAda) {
-            await waitFor(() => {
-                expect(screen.queryAllByText("Loading...")).toHaveLength(0);
-            });
-            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
-            expect(viewDropdown.value).toEqual("Table View");
-        } else {
-            // Change view to "Table View"
-            const viewDropdown = await screen.findByLabelText("Set display mode");
-            await userEvent.selectOptions(viewDropdown, "Table View");
-        }
+        // Change view to "Table View"
+        const viewDropdown = await screen.findByLabelText(siteSpecific("Set display mode", "Display in"));
+        await userEvent.selectOptions(viewDropdown, "Table View");
         // Make sure that all gameboards are listed
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
@@ -213,7 +193,7 @@ describe("SetAssignments", () => {
             expect(requestAssignment(observer.observedParams!).gameboardId).toEqual(mockGameboard.id);
             expect(requestAssignment(observer.observedParams!).notes).toEqual(testNotes);
             expect(requestAssignment(observer.observedParams!).dueDate).toBeDefined();
-            expect(requestAssignment(observer.observedParams!).scheduledStartDate).not.toBeDefined();
+            expect(requestAssignment(observer.observedParams!).scheduledStartDate).toBeDefined();
         });
 
         // Close modal
@@ -243,9 +223,11 @@ describe("SetAssignments", () => {
             expect(within(await modal()).getByTestId("modal-groups-selector")).toHaveTextContent('Groups:None');
         });
 
-        it('start date is empty by default', async () => {
-            await renderModal();
-            expect(await dateInput("modal-start-date-selector")).toHaveValue('');
+        it('start date is today by default', async () => {
+            await withMockedDate(Date.parse("2025-01-30"), async () => {
+                await renderModal();
+                expect(await dateInput("modal-start-date-selector")).toHaveValue("2025-01-30");
+            });
         });
 
         it('due date is a week from now by default', async() => {

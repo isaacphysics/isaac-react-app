@@ -35,7 +35,7 @@ export const emailApi = isaacApi.injectEndpoints({
 
         sendAdminEmail: build.mutation<void, {contentId: string; emailType: string; roles: EmailUserRoles}>({
             query: ({contentId, emailType, roles}) => ({
-                url: `/email/sendemail/${contentId}/${emailType}`,
+                url: `/email/sendemail/${encodeURIComponent(contentId)}/${emailType}`,
                 method: "POST",
                 body: roles,
             }),
@@ -48,7 +48,7 @@ export const emailApi = isaacApi.injectEndpoints({
 
         sendAdminEmailWithIds: build.mutation<void, {contentId: string; emailType: string; ids: number[]}>({
             query: ({contentId, emailType, ids}) => ({
-                url: `/email/sendemailwithuserids/${contentId}/${emailType}`,
+                url: `/email/sendemailwithuserids/${encodeURIComponent(contentId)}/${emailType}`,
                 method: "POST",
                 body: ids,
             }),
@@ -73,7 +73,7 @@ export const emailApi = isaacApi.injectEndpoints({
         }),
 
         getTemplateEmail: build.query<TemplateEmail, string>({
-            query: (contentId) => `/email/viewinbrowser/${contentId}`,
+            query: (contentId) => `/email/viewinbrowser/${encodeURIComponent(contentId)}`,
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to get email template",
             })

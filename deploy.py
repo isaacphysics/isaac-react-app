@@ -187,7 +187,7 @@ def bring_down_any_existing_containers(ctx):
     ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-", expected_nonzero_exit_codes=[1])
     # TODO: only prompt if containers found
     print(f"# Bring them down using:")
-    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -- bash -c './compose {ctx['site']} {ctx['env']} $0 down -v'", expected_nonzero_exit_codes=[1])
+    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -L1 -- bash -c './compose {ctx['site']} {ctx['env']} $0 down -v'", expected_nonzero_exit_codes=[1])
 
 
 def bring_up_the_new_containers(ctx):
@@ -278,7 +278,7 @@ def deploy_live(ctx):
             ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']}", expected_nonzero_exit_codes=[1])
             # TODO: only prompt if containers found
             print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
-            ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']} | xargs -- bash -c 'docker stop $0 && docker rm $0'", expected_nonzero_exit_codes=[1])
+            ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']} | xargs -L1 -- bash -c 'docker stop $0 && docker rm $0'", expected_nonzero_exit_codes=[1])
 
         update_config(ctx)
 

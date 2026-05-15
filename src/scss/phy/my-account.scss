@@ -24,7 +24,7 @@
   
   .connect-list-header {
     border-radius: 7px 7px 0 0; // avoids clashing with 8px on border
-    background-color: $color-brand-500;
+    background-color: var(--color-brand-500);
     height: 3rem;
 
     h4 {
@@ -54,7 +54,7 @@ p .btn-link {
 
 @keyframes highlight-pulse {
   20% {
-    outline-color: $color-brand-500;
+    outline-color: var(--color-brand-500);
   }
   100% {
     outline-color: rgba(0, 0, 0, 0.1);

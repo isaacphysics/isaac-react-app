@@ -48,9 +48,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST}
-    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS; selectedUserAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
-    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_LINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS; provider: AuthenticationProvider; redirectUrl: string}
     | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE; errorMessage: string}
@@ -228,6 +225,7 @@ export interface BooleanNotation {
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
     CHEM_TEXT_ENTRY?: boolean;
+    DARK_MODE?: boolean;
 }
 
 export interface AccessibilitySettings {
@@ -315,6 +313,20 @@ export interface ActiveModalProps {
     buttons?: ReactNode;
     bodyContainerClassName?: string;
 }
+
+export enum BookmarksOrder {
+    "date" = "date",
+    "-date" = "-date",
+    "title" = "title",
+    "-title" = "-title"
+}
+
+export const BOOKMARKS_ORDER_NAMES: Record<BookmarksOrder, string> = {
+    [BookmarksOrder.date]: "Date added (newest first)",
+    [BookmarksOrder["-date"]]: "Date added (oldest first)",
+    [BookmarksOrder.title]: "Title (A-Z)",
+    [BookmarksOrder["-title"]]: "Title (Z-A)"
+};
 
 export type ProgressSortOrder = number | "name" | "totalPartPercentage" | "totalAttemptedPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
@@ -486,6 +498,7 @@ export const AssignmentScheduleContext = React.createContext<{
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
 }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+export const SidebarContext = React.createContext<{sidebarPresent: boolean} | undefined>(undefined);
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
@@ -649,6 +662,7 @@ export interface UserProgress {
     totalQuestionsAttemptedThisAcademicYear?: number;
     totalQuestionPartsCorrectThisAcademicYear?: number;
     totalQuestionPartsAttemptedThisAcademicYear?: number;
+    totalQuestionsCorrectThisRevisionPeriod?: number;
     mostRecentQuestions?: ContentSummaryDTO[];
     oldestIncompleteQuestions?: ContentSummaryDTO[];
     attemptsByType?: { [type: string]: number };
@@ -765,7 +779,7 @@ export interface SearchShortcut {
     id: string;
     title: string;
     terms: string[];
-    summary: string;
+    summary?: string;
     url: string;
     type: SEARCH_RESULT_TYPE;
     hash?: string;

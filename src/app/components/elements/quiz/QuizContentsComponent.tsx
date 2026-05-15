@@ -105,7 +105,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
         return <div>
-            <h4>Test sections</h4>
+            <h4>Test section(s)</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
                     const section = sections[k];
@@ -233,8 +233,8 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
     ;
 }
 
-export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage tests", "Set tests"), to: `/set_tests`}];
+export const myQuizzesCrumbs = [{title: siteSpecific("My tests", "Tests"), to: `/tests`}];
+export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage tests", "Tests"), to: `/set_tests`}];
 export const rubricCrumbs = [{title: "Practice tests", to: "/practice_tests"}];
 const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user: RegisteredUserDTO) => {
     if (preview && isTeacherOrAbove(user)) {
@@ -346,7 +346,7 @@ export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
 
     return <>
         <QuizTitle {...props} />
-        <SidebarLayout>
+        <SidebarLayout show={isPhy}>
             <QuizSidebar {...sidebarProps} />
             <MainContent>
                 {props.page === null || props.page == undefined ? QuizOverview({...{viewingAsSomeoneElse, ...props}}): <QuizQuestions {...props} page={props.page} /> }

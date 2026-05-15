@@ -1,11 +1,11 @@
 import {isAda} from "../../app/services";
-import {Overview} from "../../app/components/pages/Overview";
+import {TeacherOverview} from "../../app/components/pages/Overview";
 import React from "react";
 
-it('Overview page should have no visual regressions', () => {
+it('Teacher overview page should have no visual regressions', () => {
     if (isAda) {
         // Arrange
-        cy.mountWithStoreAndRouter(<Overview />, ["/dashboard"]);
+        cy.mountWithStoreAndRouter(<TeacherOverview />, ["/dashboard"]);
 
         // Assert
         cy.matchImage();

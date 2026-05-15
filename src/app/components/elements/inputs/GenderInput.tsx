@@ -20,12 +20,11 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
             Gender
         </Label>
         <p className="d-block input-description mb-2">
-            We conduct academic research, including
+            We conduct academic research, including{" "}
             {siteSpecific(
-                <>{" "}research on gender balance in STEM</>,
+                <>research on gender balance in STEM</>,
                 <>
-                    &nbsp;
-                    <a href={"https://www.raspberrypi.org/blog/gender-balance-in-computing-big-picture/"} target={"_blank"}>research like this</a>&nbsp;
+                    <a href={"https://www.raspberrypi.org/blog/gender-balance-in-computing-big-picture/"} target={"_blank"}>research like this</a>{" "}
                     on gender balance in computing
                 </>
             )}

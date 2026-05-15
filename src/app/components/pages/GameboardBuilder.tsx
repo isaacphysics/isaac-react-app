@@ -70,10 +70,14 @@ class GameboardBuilderQuestionsStack {
     setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
     selectedQuestionsStack: Map<string, ContentSummary>[];
 
-    constructor(props: {questionOrderStack: string[][];
+    constructor(
+        props: {
+            questionOrderStack: string[][];
             setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
             selectedQuestionsStack: Map<string, ContentSummary>[];
-            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>}) {
+            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
+        })
+    {
         this.questionOrderStack = props.questionOrderStack;
         this.setQuestionOrderStack = props.setQuestionOrderStack;
         this.selectedQuestionsStack = props.selectedQuestionsStack;
@@ -156,7 +160,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setWildcardId(undefined);
     };
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setSubmissionAttempted(true);
@@ -215,13 +219,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         });
 
         logEvent(eventLog, "SAVE_GAMEBOARD", {});
-        dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
+        await dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
     };
 
     useEffect(() => {
         if (baseGameboard) {
             cloneGameboard(baseGameboard);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [baseGameboard]);
 
     const titleIsValid = gameboardTitle != "";
@@ -372,24 +377,26 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </Col>
                     </Row>
 
-                    {isStaff(user) && <Row className="mt-2">
-                        <Col>
-                            <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>Tag as</Label>
-                            <StyledSelect inputId="question-search-level"
-                                isMulti
-                                options={siteSpecific([
-                                    {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
-                                ], [
-                                    {value: 'ISAAC_BOARD', label: 'Created by Ada'},
-                                    {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
-                                ])}
-                                name="colors"
-                                value={gameboardTags}
-                                placeholder="None"
-                                onChange={selectOnChange(setGameboardTags, false)}
-                            />
+                    {isStaff(user) && <Row className="mt-2 align-items-end">
+                        <Col xs={6} sm={4}>
+                            <FormGroup>
+                                <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>Tag as</Label>
+                                <StyledSelect inputId="question-search-level"
+                                    isMulti
+                                    options={siteSpecific([
+                                        {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
+                                    ], [
+                                        {value: 'ISAAC_BOARD', label: 'Created by Ada'},
+                                        {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
+                                    ])}
+                                    name="colors"
+                                    value={gameboardTags}
+                                    placeholder="None"
+                                    onChange={selectOnChange(setGameboardTags, false)}
+                                />
+                            </FormGroup>
                         </Col>
-                        <Col>
+                        <Col xs={6} sm={4}>
                             <FormGroup>
                                 <Label htmlFor="gameboard-builder-url"
                                     className={"fw-bold form-optional"}>{siteSpecific("Question deck", "Quiz")} ID</Label>
@@ -407,19 +414,21 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
-                        <Col>
-                            <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>Wildcard</Label>
-                            <Input id="gameboard-builder-wildcard"
-                                type="select" value={wildcardId}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setWildcardId(e.target.value);
-                                }}
-                            >
-                                <option value="">No wildcard</option>
-                                {isDefined(wildcards) && wildcards.map((wildcard) => {
-                                    return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
-                                })}
-                            </Input>
+                        <Col xs={12} sm={4}>
+                            <FormGroup>
+                                <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>Wildcard</Label>
+                                <Input id="gameboard-builder-wildcard"
+                                    type="select" value={wildcardId}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        setWildcardId(e.target.value);
+                                    }}
+                                >
+                                    <option value="">No wildcard</option>
+                                    {isDefined(wildcards) && wildcards.map((wildcard) => {
+                                        return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
+                                    })}
+                                </Input>
+                            </FormGroup>
                         </Col>
                     </Row>}
 

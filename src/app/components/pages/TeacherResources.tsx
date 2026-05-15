@@ -31,11 +31,11 @@ export const TeacherResources = () => {
                             full of free tools and resources to support classwork, homework and exam prep.
                         </p>
                         {(!isLoggedIn(user) && <>
-                            <Button color="keyline" to="/register" tag={Link}>Sign up to Ada&nbsp;CS</Button>    
+                            <Button color="keyline" className="bg-white" to="/register" tag={Link}>Sign up to Ada&nbsp;CS</Button>    
                         </>) || isTeacherOrAbove(user) && <>
-                            <Button color="keyline" to="/dashboard" tag={Link}>Go to My&nbsp;Ada Overview</Button>
+                            <Button color="keyline" className="bg-white" to="/dashboard" tag={Link}>Go to My&nbsp;Ada Overview</Button>
                         </> || <>
-                            <Button color="keyline" to="/teacher_account_request" tag={Link}>Upgrade to a teacher account</Button>    
+                            <Button color="keyline" className="bg-white" to="/teacher_account_request" tag={Link}>Upgrade to a teacher account</Button>    
                         </>}
                     </TextBlock>
                     <ImageBlock>
@@ -197,9 +197,9 @@ export const TeacherResources = () => {
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Code Editor for Education",
+                        title: "Code Classroom",
                         image: {src: "/assets/cs/decor/code-editor.png"},
-                        bodyText: "Our free code editor makes it easy for young people to learn text-based programming. It's safe, age-appropriate, and suitable for use in the classroom.",
+                        bodyText: "Code Classroom is a free, safe platform for teaching and learning computing in schools. It includes a simple-to-use code editor with different programming languages, and lots of other features to support your teaching.",
                         buttonText: "Learn more",
                         clickUrl: "https://editor.raspberrypi.org/en/education",
                         className: "bg-cultured-grey",

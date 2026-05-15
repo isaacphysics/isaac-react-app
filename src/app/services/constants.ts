@@ -17,7 +17,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -112,10 +112,6 @@ export enum ACTION_TYPE {
     USER_AUTH_SETTINGS_REQUEST = "USER_AUTH_SETTINGS_REQUEST",
     USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "USER_AUTH_SETTINGS_RESPONSE_SUCCESS",
     USER_AUTH_SETTINGS_RESPONSE_FAILURE = "USER_AUTH_SETTINGS_RESPONSE_FAILURE",
-
-    SELECTED_USER_AUTH_SETTINGS_REQUEST = "SELECTED_USER_AUTH_SETTINGS_REQUEST",
-    SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "SELECTED_USER_AUTH_SETTINGS_REQUEST_SUCCESS",
-    SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE = "SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE",
 
     USER_AUTH_LINK_REQUEST = "USER_AUTH_LINK_REQUEST",
     USER_AUTH_LINK_RESPONSE_SUCCESS = "USER_AUTH_LINK_RESPONSE_SUCCESS",
@@ -314,7 +310,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
-    [EXAM_BOARD.SQA]: "SQA",
+    [EXAM_BOARD.SQA]: "Qualifications Scotland",
     [EXAM_BOARD.ADA]: "Ada CS",
     [EXAM_BOARD.ALL]: "All exam boards",
 };
@@ -489,7 +485,7 @@ export const PHY_NAV_SUBJECTS = {
     [SUBJECTS.PHYSICS]: [LEARNING_STAGE["11_TO_14"], LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
     [SUBJECTS.MATHS]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
     [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
-    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL],
+    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
 } as const;
 
 export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) => {
@@ -640,7 +636,18 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
         [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_chem_fragment",
         [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_chem_fragment",
     },
+    "biology": {
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_bio_fragment",
+    }
 };
+
+export const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
+    "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+    "chemistry": [LEARNING_STAGE.A_LEVEL],
+    "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+    "biology": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+};
+
 
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
@@ -917,40 +924,34 @@ export enum TAG_ID {
 
     // Cell biology
     cellStructure = "cell_structure",
-    mitosis = "mitosis",
-    meiosis = "meiosis",
-    viruses = "viruses",
-    membraneTransport = "membrane_transport",
-    tissues = "tissues",
+    cellDivision = "cell_division",
+    cellTransport = "cell_transport",
+    cellSpecialisation = "cell_specialisation",
     // Biochemistry
-    proteins = "proteins",
-    carbohydrates = "carbohydrates",
-    lipids = "lipids",
-    respiration = "respiration",
-    photosynthesis = "photosynthesis",
+    biomolecules = "biomolecules",
+    enzymes = "enzymes",
+    bioenergetics = "bioenergetics",
     // Genetics
-    dnaReplication = "dna_replication",
-    transcription = "transcription",
-    translation = "translation",
-    genesAndAlleles = "genes_alleles",
+    nucleicAcids = "nucleic_acids",
+    proteinSynthesis = "protein_synthesis",
     inheritance = "inheritance",
     biotechnology = "biotechnology",
     // Physiology
-    plants = "plants",
-    breathingAndCirculation = "breathing_circulation",
-    hormones = "hormones",
-    digestionAndExcretion = "digestion_excretion",
+    nutritionAndDigestion = "nutrition_digestion",
+    exchangeAndTransport = "exchange_transport",
+    homeostasisAndResponse = "homeostasis_response",
     senseAndMovement = "sense_movement",
-    diseaseAndImmunity = "disease_immunity",
+    healthAndDisease = "health_disease",
+    reproductionAndDevelopment = "reproduction_development",
     // Ecology
     populations = "populations",
     ecosystems = "ecosystems",
-    nutrientCycles = "nutrient_cycles",
     biodiversity = "biodiversity",
     // Evolution
     variation = "variation",
     theory = "theory",
-    phylogenetics = "phylogenetics",
+    speciation = "speciation",
+    classification = "classification",
     // Biology Maths Skills
     bioStatisticalTests = "bio_statistical_tests",
 }
@@ -1043,7 +1044,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
+export enum ACCOUNT_TAB {account, customise, theme, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
 
 export interface AccountTabs {
     tab: ACCOUNT_TAB,
@@ -1056,6 +1057,7 @@ export interface AccountTabs {
 export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.account, title: "Profile"},
     {tab: ACCOUNT_TAB.customise, title: "Customise", hidden: isPhy},
+    {tab: ACCOUNT_TAB.theme, title: "Theme", hidden: isAda},
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
     {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
@@ -1239,6 +1241,8 @@ export const GRAY_120 = '#c9cad1';
 
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 
+export const CONTACT_FORM_CHAR_LENGTH_LIMIT = 5000;
+
 export const SEARCH_RESULTS_PER_PAGE = 30;
 
 export const GAMEBOARD_UNDO_STACK_SIZE_LIMIT = 10;
@@ -1277,8 +1281,10 @@ export const PATHS = {
     }),
     // Common paths
     MANAGE_GROUPS: "/groups",
+    MY_TESTS: "/tests",
     TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
+    BOOKMARKS: "/bookmarks",
 };
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";

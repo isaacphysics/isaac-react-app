@@ -4,18 +4,18 @@
   background: $gray-110;
 
   .progress-bar-inner, .progress-bar-secondary {
-    background: $color-brand-500;
+    background: var(--color-brand-500);
   }
   .bar-physics {
-    background: $color-physics-500;
+    background: var(--color-physics-500);
   }
   .bar-maths {
-    background: $color-maths-500;
+    background: var(--color-maths-500);
   }
   .bar-chemistry {
-    background: $color-chemistry-500;
+    background: var(--color-chemistry-500);
   }
   .bar-biology {
-    background: $color-biology-500;
+    background: var(--color-biology-500);
   }
 }

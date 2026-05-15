@@ -9,14 +9,14 @@ import {
     useAppSelector
 } from "../../state";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Card, CardBody, Col, Row } from "reactstrap";
 import {
-    below,
     BookHiddenState,
     HUMAN_QUESTION_TYPES,
     ISAAC_BOOKS_BY_TAG,
     isPhy,
     isTeacherOrAbove,
+    PROGRESS_QUESTION_TYPE_MAP,
     safePercentage,
     siteSpecific,
     useDeviceSize
@@ -31,14 +31,16 @@ import { FlushableRef, QuestionProgressCharts } from "../elements/views/Question
 import { ActivityGraph } from "../elements/views/ActivityGraph";
 import { ProgressBar } from "../elements/views/ProgressBar";
 import { ListView } from '../elements/list-groups/ListView';
+import { PageContainer } from '../elements/layout/PageContainer';
+import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
+import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
-            "isaacClozeQuestion", "isaacReorderQuestion", "isaacItemQuestion", "isaacStringMatchQuestion",
-            "isaacRegexMatchQuestion", "isaacGraphSketcherQuestion", "isaacCoordinateQuestion"
+            "isaacClozeQuestion", "isaacReorderQuestion", "isaacStringMatchQuestion", "isaacGraphSketcherQuestion", "isaacCoordinateQuestion"
         ],
         questionCountByBookTag: {
             "phys_book_step_up": 432,
@@ -55,9 +57,8 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     // Computer science
     {
         questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion",
-            "isaacReorderQuestion", "isaacRegexMatchQuestion"
+            "isaacMultiChoiceQuestion", "isaacParsonsQuestion", "isaacNumericQuestion", "isaacStringMatchQuestion",
+            "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion", "isaacReorderQuestion"
         ],
         questionCountByBookTag: {},
     }
@@ -77,15 +78,15 @@ const MyProgress = ({user}: MyProgressProps) => {
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const [chartTab, setChartTab] = useState<"correct" | "attempted">("correct");
-    const screenSize = useDeviceSize();
+    const deviceSize = useDeviceSize();
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
-            dispatch(getMyProgress());
-            dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
+            void dispatch(getMyProgress());
+            void dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
         } else if (isTeacherOrAbove(user)) {
-            dispatch(getUserProgress(userIdOfInterest));
-            dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
+            void dispatch(getUserProgress(userIdOfInterest));
+            void dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
     }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
@@ -101,15 +102,23 @@ const MyProgress = ({user}: MyProgressProps) => {
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
-    const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
+    const pageTitle = viewingOwnData ? siteSpecific("My progress", "Progress") : `Progress for ${userName || "user"}`;
 
-    return <Container id="my-progress" className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-progress"}} disallowLaTeX />
+    return <PageContainer id="my-progress"
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-progress"}} disallowLaTeX />
+        }
+        sidebar={siteSpecific(
+            undefined, 
+            <MyAdaSidebar />
+        )}
+    >
         <Card className="mt-4">
             <CardBody>
                 <div>
                     <Row>
                         <Col>
+                            <RevisionChallengeStats userProgress={progress} />
                             <AggregateQuestionStats userProgress={progress} />
                         </Col>
                         {isPhy && <Col className="align-self-center" xs={12} md={3}>
@@ -137,8 +146,9 @@ const MyProgress = ({user}: MyProgressProps) => {
                         <h4>Question parts correct by type</h4>
                         <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
-                                const correct = progress?.correctByType?.[qType] || null;
-                                const attempts = progress?.attemptsByType?.[qType] || null;
+                                const groupedTypes = PROGRESS_QUESTION_TYPE_MAP[qType] || [qType];
+                                const correct = groupedTypes.reduce((sum, type) => sum + (progress?.correctByType?.[type] || 0), 0);
+                                const attempts = groupedTypes.reduce((sum, type) => sum + (progress?.attemptsByType?.[type] || 0), 0);
                                 const percentage = safePercentage(correct, attempts);
                                 return <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
@@ -146,7 +156,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                                     </div>
                                     <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
-                                            {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                            {percentage == null ? "None attempted" : `${correct} of ${attempts}`}
                                         </ProgressBar>
                                     </div>
                                 </Col>;
@@ -188,16 +198,26 @@ const MyProgress = ({user}: MyProgressProps) => {
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
-                            <ListView type="item" items={progress.mostRecentQuestions} fullWidth={below["lg"](screenSize)} className="bordered"/>
+                            <ListView 
+                                type="item" 
+                                items={progress.mostRecentQuestions} 
+                                style={deviceSize !== "md" ? "stacked" : undefined}
+                                className="bordered"
+                            />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Oldest unsolved questions</h4>
-                            <ListView type="item" items={progress.oldestIncompleteQuestions} fullWidth={below["lg"](screenSize)} className="bordered"/>
+                            <ListView 
+                                type="item" 
+                                items={progress.oldestIncompleteQuestions}
+                                style={deviceSize !== "md" ? "stacked" : undefined}
+                                className="bordered"
+                            />
                         </Col>}
                     </Row>
                 </div>
             </CardBody>
         </Card>
-    </Container>;
+    </PageContainer>;
 };
 export default MyProgress;

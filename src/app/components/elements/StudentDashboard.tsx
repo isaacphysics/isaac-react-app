@@ -3,14 +3,14 @@ import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } 
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
+import { getAllSortedWorkToDo, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, useDeviceSize } from '../../services';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
-import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
 import { getFriendlyDaysUntil } from './DateString';
+import { FeatureFlag, useFeatureFlag } from '../../services/featureFlag';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -95,23 +95,38 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
     const { assignment, isTeacherDashboard, groups } = props;
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
 
+    const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
+
     // QuizAssignmentDTOs don't have group names
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
 
-    const groupName = isQuiz(assignment) ? groupIdToName[assignment.groupId as number]
-        : isAssignment(assignment) ? assignment.groupName
+    const groupName = isQuiz(assignment) 
+        ? groupIdToName[assignment.groupId as number]
+        : isAssignment(assignment) 
+            ? assignment.groupName
             : "";
 
-    const link = isQuiz(assignment) ? (isTeacherDashboard ? `${PATHS.TEST}/${assignment.id}/feedback` : `${PATHS.TEST}/${assignment.id}`)
-        : isAssignment(assignment) ? (isTeacherDashboard ? `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`)
+    const link = isQuiz(assignment)
+        ? (isTeacherDashboard 
+            ? `${PATHS.TEST}/${assignment.id}/feedback` 
+            : `${PATHS.TEST}/${assignment.id}`
+        ) : isAssignment(assignment) 
+            ? (isTeacherDashboard
+                ? `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`
+                : (isAssignmentsV2Link ? `/assignment/${assignment.id}/view` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`)
+            )
             : "";
 
-    const title = isQuiz(assignment) ? assignment.quizSummary?.title
-        : isAssignment(assignment) ? assignment.gameboard?.title
+    const title = isQuiz(assignment)
+        ? assignment.quizSummary?.title
+        : isAssignment(assignment)
+            ? assignment.gameboard?.title
             : "";
 
-    const icon = isQuiz(assignment) ? "icon icon-tests"
-        : isAssignment(assignment) ? "icon icon-question-deck"
+    const icon = isQuiz(assignment)
+        ? "icon icon-tests"
+        : isAssignment(assignment)
+            ? "icon icon-question-deck"
             : "";
 
     return <Link to={link} className="w-100">
@@ -136,25 +151,11 @@ interface CurrentWorkPanelProps {
 }
 
 const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPanelProps) => {
-    const twoWeeksAgo = new Date(new Date().valueOf() - (2 * 7 * 24 * 60 * 60 * 1000));
-
     if (!isDefined(assignments) || !isDefined(quizAssignments)) {
         return <div className="dashboard-panel"/>;
     }
 
-    const isComplete = (quiz: IAssignmentLike) => convertAssignmentToQuiz(quiz)?.status === QuizStatus.Complete;
-
-    // We can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
-    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => quiz.dueDate && !isOverdue(quiz) && !isComplete(quiz)) : [];
-    
-    // Any assignments without a due date are old enough that they should never be displayed here
-    const myAssignments = filterAssignmentsByStatus(assignments.filter(a => a.dueDate && (a.dueDate > twoWeeksAgo)));
-
-    // Get the 2 most urgent due dates from assignments & quizzes combined
-    // To avoid merging & re-sorting entire lists, get the 2 most urgent from each list first
-    const assignmentsToDo = [...myAssignments.inProgress, ...myAssignments.overDue].slice(0, 2);
-    const quizzesToDo = sortedQuizAssignments.slice(0, 2);
-    const toDo = sortUpcomingAssignments([...assignmentsToDo, ...quizzesToDo]).slice(0, 2);
+    const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
@@ -168,7 +169,9 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
             : <>
                 <span className="mb-2">You have assignments that are active or due soon:</span>
                 <div className="row overflow-y-auto pt-1 mt-n1">
-                    {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard assignment={assignment} groups={groups}/></span>)}
+                    {toDo.map((assignment: IAssignmentLike) => <div key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3">
+                        <AssignmentCard assignment={assignment} groups={groups}/>
+                    </div>)}
                 </div>
                 <Spacer/>
                 <div className="d-flex align-items-center">
@@ -226,7 +229,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
 
-    const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
+    const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
         {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}

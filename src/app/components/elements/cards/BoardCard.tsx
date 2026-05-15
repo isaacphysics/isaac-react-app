@@ -38,6 +38,7 @@ import {BoardAssignee, Boards} from "../../../../IsaacAppTypes";
 import indexOf from "lodash/indexOf";
 import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
 import { IconButton } from "../AffixButton";
+import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 
 
 interface HexagonGroupsButtonProps {
@@ -100,7 +101,7 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
 const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal}: InfoShapeProps) => {
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
-    return <svg className={"board-circle"} id={hexagonId} width={48} height={48}>
+    return <svg className={"board-circle d-flex overflow-auto"} id={hexagonId} width={48} height={48}>
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
@@ -159,7 +160,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
             if (isAdminOrEventManager(user)) {
-                alert(`Warning: You currently have groups assigned to this ${siteSpecific("question deck", "quiz")}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Manage assignments")} page.`);
+                alert(`Warning: You currently have groups assigned to this ${siteSpecific("question deck", "quiz")}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Quizzes")} page.`);
             } else {
                 dispatch(showErrorToast(`${siteSpecific("Question Deck", "Quiz")} Deletion Not Allowed`, `You have groups assigned to this gameboard. To delete this ${siteSpecific("question deck", "quiz")}, you must unassign all groups.`));
                 return;
@@ -219,6 +220,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                     <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                     {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                    <br/>
+                    <SupersededDeprecatedBoardContentWarning gameboard={board} />
                 </td>
                 {stagesAndDifficultiesTD}
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
@@ -242,6 +245,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                         <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                         {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                        <br/>
+                        <SupersededDeprecatedBoardContentWarning gameboard={board} hideFullDetails />
                     </td>
                     {stagesAndDifficultiesTD}
                     {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
@@ -284,7 +289,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         siteSpecific(
             <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
                 {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
-                <Row className="w-100">
+                <Row>
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
                             Created <strong>{getFriendlyDaysUntil(board.creationDate)}</strong>

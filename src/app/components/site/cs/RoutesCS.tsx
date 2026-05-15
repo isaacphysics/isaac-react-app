@@ -24,7 +24,6 @@ import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {Events} from "../../pages/Events";
-import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import { OnlineCourses } from "../../pages/OnlineCourses";
 import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
 import { StudentResources } from "../../pages/StudentResources";
@@ -37,6 +36,7 @@ import {Overview} from "../../pages/Overview";
 import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
+import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -45,7 +45,7 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
-    <Route key={key++} path="/dashboard" element={<RequireAuth auth={isTeacherOrAbove} element={<Overview />} />} />,
+    <Route key={key++} path="/dashboard" element={<RequireAuth auth={isLoggedIn} element={<Overview />} />} />,
     <Route key={key++} path="/register" element={<RegistrationStart />} />,
     <Route key={key++} path="/register/role" element={<RegistrationRoleSelect />} />,
     <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
@@ -64,7 +64,7 @@ export const RoutesCS = [
 
     // Assignments
     <Route key={key++} path="/assignment_progress" element={<Navigate to="/my_markbook" replace />} />,
-    <Route key={key++} path="/assignment_progress/:assignmentId" element={<Navigate to="/my_markbook/:assignmentId" replace />} />,
+    <Route key={key++} path="/assignment_progress/:assignmentId" element={<NavigateWithSlug to="/my_markbook/:assignmentId" replace />} />,
 
     // Teacher test pages
     <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
@@ -104,24 +104,15 @@ export const RoutesCS = [
     <Route key={key++} path="/projects" element={<CSProjects />} />,
     <Route key={key++} path="/pages/online_courses" element={<OnlineCourses />} />,
 
-    // Books: FIXME ADA are we going to include these?
-    // <Route key={key++} path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
-    // <Route key={key++} path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
-
     // Events
     <Route key={key++} path='/events' element={<Events />}/>,
     <Route key={key++} path='/events/:eventId' element={<EventDetails />}/>,
-    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<RedirectToEvent />} />} />,
+    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<NavigateWithSlug to="/events/:eventId" replace />} />} />,
 
     // Static pages:
     <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us"} />} />,
     <Route key={key++} path="/safeguarding" element={<Generic pageIdOverride={"events_safeguarding"} />} />,
     <Route key={key++} path="/teacher_account_request" element={<RequireAuth auth={isLoggedIn} element={<TeacherAccountSelfUpgrade />} />} />,
-
-    // <Route key={key++} path="/student_rewards" element={<Generic pageIdOverride={"student_rewards_programme"} />} />,
-    // <Route key={key++} path="/teachcomputing" element={<Generic pageIdOverride={"teach_computing"} />} />,
-
-    // <Route key={key++} ifUser={isEventLeaderOrStaff} path="/events_toolkit" element={<Generic pageIdOverride={"fragments/event_leader_event_toolkit_fragment"} />} />,
 
     // <Route key={key++} path="/coming_soon" element={<ComingSoon />} />,
     <Route key={key++} path="/equality" element={<RequireAuth auth={isStaff} element={<Equality />} />} />,
