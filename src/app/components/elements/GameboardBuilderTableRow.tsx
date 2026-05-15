@@ -15,8 +15,6 @@ import {
     handleBuilderRowChange
 } from "../../services";
 import React from "react";
-import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
-import {Question} from "../pages/Question";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import { Spacer } from "./Spacer";
@@ -26,21 +24,13 @@ import { Markup } from "./markup";
 import { ContentPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
+import { PreviewQuestionButton } from "./PreviewButton";
 
 const GameboardBuilderTableRow = (
     {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
-    const dispatch = useAppDispatch();
-
     const tagIcon = (tag: string) => {
         return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>;
-    };
-
-    const openQuestionModal = (urlQuestionId: string) => {
-        dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal());}, size: "xl",
-            title: "Question preview", body: <Question questionIdOverride={urlQuestionId} preview />
-        }));
     };
 
     const audienceViews = determineAudienceViews(question.audience, creationContext);
@@ -70,15 +60,10 @@ const GameboardBuilderTableRow = (
                     {isDnd && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
                     <div>
                         <div className="d-flex">
-                            <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                                 <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
-                            <button
-                                type="button" title="Preview question in modal" className="pointer-cursor align-middle new-tab p-0" 
-                                onClick={() => question.id && openQuestionModal(question.id)}
-                            >
-                                <img src="/assets/common/icons/new-tab.svg" alt="Preview question" />
-                            </button>
+                            <PreviewQuestionButton id={question.id} />
                             <Spacer />
                         </div>
                         <ContentPropertyTags className="my-1" deprecated={question.deprecated} supersededByPath={question.supersededBy ? `/questions/${question.supersededBy}` : undefined} tags={question.tags} />

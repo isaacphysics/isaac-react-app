@@ -18,6 +18,7 @@ import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { useBookmarks } from "../../../services/bookmarks";
 import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
+import { PreviewQuestionButton } from "../PreviewButton";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -157,6 +158,7 @@ type ALVIType = {
     audienceViews?: ViewingContext[];
     allowBookmarking?: boolean; // as in item type
     disableRedirect?: boolean; // as in item type
+    questionPreviewId?: string; // shows a preview button next to the title; preview opens in modal
 };
 
 type ALVILayout = {
@@ -222,19 +224,22 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </div>
                 <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
-                        {url && !isDisabled && !("disableRedirect" in typedProps && typedProps.disableRedirect)
-                            ? (url.startsWith("http")
-                                ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
+                        <>
+                            {url && !isDisabled && !("disableRedirect" in typedProps && typedProps.disableRedirect)
+                                ? (url.startsWith("http")
+                                    ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
+                                        <Markup encoding="latex">{title}</Markup>
+                                    </ExternalLink>
+                                    : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
+                                        <Markup encoding="latex">{title}</Markup>
+                                    </Link>
+                                )
+                                : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
                                     <Markup encoding="latex">{title}</Markup>
-                                </ExternalLink>
-                                : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
-                                    <Markup encoding="latex">{title}</Markup>
-                                </Link>
-                            )
-                            : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
-                                <Markup encoding="latex">{title}</Markup>
-                            </span>
-                        }
+                                </span>
+                            }
+                            {isBuilder && typedProps.questionPreviewId && <PreviewQuestionButton id={typedProps.questionPreviewId} />}
+                        </>
                         {isItem && <>
                             {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
                             <ContentPropertyTags 

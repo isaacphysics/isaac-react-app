@@ -383,6 +383,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             // breadcrumb={breadcrumb}
             audienceViews={audienceViews}
             className="flex-grow-1 align-content-center bg-transparent"
+            questionPreviewId={item.id}
             disableRedirect
         />
         <Button className="delete-button" color={siteSpecific("solid", "keyline")} onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
