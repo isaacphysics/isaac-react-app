@@ -116,48 +116,50 @@ export const UserProfile = (props: UserProfileProps) => {
                 submissionAttempted={submissionAttempted}
                 required={true}
             />
-            {userToUpdate?.emailVerificationStatus !== "VERIFIED" && <Alert color="warning" className="d-flex mt-2">
+            {userToUpdate.emailVerificationStatus !== "VERIFIED" && <Alert color="warning" className="d-flex mt-2">
                 <i className="icon icon-warning icon-color-alert icon-sm me-3 mt-1" />
                 <div>
-                    Your email address is unverified. This may affect your ability to receive important notifications.
+                    Your email address is unverified. This may affect your ability to receive important notifications, and you will not be eligible to enter events and competitions.
                     <br/><br/>
                     <Button color="link primary-font-link" onClick={() => userToUpdate.email && sendVerificationEmail({email: userToUpdate.email})} disabled={isVerificationEmailSent}>
                         {isVerificationEmailSent ? "Verification email sent!" : "Click here to request a new verification email."}
                     </Button>
-                    <br/>
-                    <details>
-                        <summary>Other options</summary>
-                        <div className="ms-4 mt-3">
-                            <p>
-                                In some situations, schools or departments block email from external sites like ours, which may prevent you from receiving verification emails.
-                                If this is the case, please contact your IT department to see if they can allow emails from {SITE_TITLE}.
-                                We have a <Link to="/pages/emails">help page</Link> regarding our email setup that may be of use.
-                            </p>
-                            <p>
-                                If your IT department is unable to assist, you can disable banner warnings on the site for this browser. We strongly recommend against this. 
-                                Unverified email addresses may lead to issues with account recovery and you may miss important security notifications from {SITE_TITLE}.
-                            </p>
-                            <p>
-                                You can change this option at any time.
-                            </p>
-                            <Button disabled={hasModifiedEmailVerificationState} onClick={() => {
-                                if (emailVerificationWarningsDisabled) {
-                                    dispatch(cookieConsentSlice.actions.removeCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
-                                } else {
-                                    dispatch(cookieConsentSlice.actions.acceptCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
-                                }
-                                dispatch(emailVerificationWarningsDisabled 
-                                    ? showSuccessToast("Warnings restored", "Email verification warnings have been restored.")
-                                    : showSuccessToast("Warnings disabled", "Email verification warnings have been disabled for this browser."));
-                                setHasModifiedEmailVerificationState(true);
-                            }}>
-                                {hasModifiedEmailVerificationState
-                                    ? "Success!"
-                                    : emailVerificationWarningsDisabled ? "Restore warnings" : "Disable warnings"
-                                }
-                            </Button>
-                        </div>
-                    </details>
+                    {userToUpdate.emailVerificationStatus === "DELIVERY_FAILED" && <>
+                        <br/><br/>
+                        <details>
+                            <summary>Other options</summary>
+                            <div className="ms-4 mt-3">
+                                <p>
+                                    In some situations, schools or departments block email from external sites like ours, which may prevent you from receiving verification emails.
+                                    If this is the case, please contact your IT department to see if they can allow emails from {SITE_TITLE}.
+                                    We have a <Link to="/pages/emails">help page</Link> regarding our email setup that may be of use.
+                                </p>
+                                <p>
+                                    If your IT department is unable to assist, you can disable banner warnings on the site for this browser. We strongly recommend against this. 
+                                    Unverified email addresses may lead to issues with account recovery and you may miss important security notifications from {SITE_TITLE}.
+                                </p>
+                                <p>
+                                    You can change this option at any time.
+                                </p>
+                                <Button disabled={hasModifiedEmailVerificationState} onClick={() => {
+                                    if (emailVerificationWarningsDisabled) {
+                                        dispatch(cookieConsentSlice.actions.removeCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
+                                    } else {
+                                        dispatch(cookieConsentSlice.actions.acceptCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
+                                    }
+                                    dispatch(emailVerificationWarningsDisabled 
+                                        ? showSuccessToast("Warnings restored", "Email verification warnings have been restored.")
+                                        : showSuccessToast("Warnings disabled", "Email verification warnings have been disabled for this browser."));
+                                    setHasModifiedEmailVerificationState(true);
+                                }}>
+                                    {hasModifiedEmailVerificationState
+                                        ? "Success!"
+                                        : emailVerificationWarningsDisabled ? "Restore warnings" : "Disable warnings"
+                                    }
+                                </Button>
+                            </div>
+                        </details>
+                    </>}
                 </div>
             </Alert>}
             <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
