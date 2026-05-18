@@ -53,8 +53,10 @@ export const DragAndDropInputModeToggle = ({dragAndDropEnabled, toggleDragAndDro
             trueLabel="Drag and drop"
             onChange={toggleDragAndDropEnabled}
         />
-    </div>, 
-    <StyledCheckbox checked={!dragAndDropEnabled} onChange={toggleDragAndDropEnabled} label={<span className="text-muted">Use dropdowns for drag and drop questions</span>} /> 
+    </div>,
+    <div className="mt-1 ms-1">
+        <StyledCheckbox checked={!dragAndDropEnabled} onChange={toggleDragAndDropEnabled} label={<span className="text-muted">Use dropdowns for drag and drop questions</span>} /> 
+    </div>
     );
 };
 
@@ -91,13 +93,18 @@ interface TagStackProps extends React.HTMLAttributes<HTMLDivElement> {
 const TagStack = ({doc, className}: TagStackProps) => {
     const isCrossTopic = doc?.tags?.includes("cross_topic");
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
+    const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
 
     return <div className={className}>
         {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
             {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
             {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
+            {pageContainsClozeOrDragAndDropQuestion && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
         </div>}
-        <EditContentButton doc={doc}/>
+        <div>
+            <EditContentButton doc={doc}/>
+            {pageContainsClozeOrDragAndDropQuestion && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
+        </div>
     </div>;
 };
 
@@ -167,7 +174,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             <div className="d-flex align-items-end">
                 {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
-                {pageContainsClozeOrDragAndDropQuestion && <>
+                {isPhy && pageContainsClozeOrDragAndDropQuestion && <>
                     <Spacer />
                     <DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled} toggleDragAndDropEnabled={toggleDragAndDropEnabled} />
                 </>
