@@ -529,7 +529,7 @@ figure .inline-container {
 .cloze-dropdown > button {
   min-width: 40px !important; // Bootstrap thinks its important
 
-  &.btn-secondary {
+  &.btn-secondary, &.btn-outline-secondary {
     background-color: white;
   }
 
