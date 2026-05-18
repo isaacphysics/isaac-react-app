@@ -93,17 +93,17 @@ interface TagStackProps extends React.HTMLAttributes<HTMLDivElement> {
 const TagStack = ({doc, className}: TagStackProps) => {
     const isCrossTopic = doc?.tags?.includes("cross_topic");
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
-    const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
+    const displayDragAndDropToggle = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion) && isAda;
 
     return <div className={className}>
         {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
             {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
             {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
-            {pageContainsClozeOrDragAndDropQuestion && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
+            {displayDragAndDropToggle && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
         </div>}
         <div>
             <EditContentButton doc={doc}/>
-            {pageContainsClozeOrDragAndDropQuestion && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
+            {displayDragAndDropToggle && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
         </div>
     </div>;
 };
