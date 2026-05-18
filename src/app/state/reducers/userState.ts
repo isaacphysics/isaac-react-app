@@ -45,7 +45,7 @@ type AccessibilityTypeState = AccessibilitySettings | null;
 export const accessibilityType = (accessibilityType: AccessibilityTypeState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-            return action.userPreferences.ACCESSIBILITY;
+            return action.userPreferences.ACCESSIBILITY ?? accessibilityType;
         case ACTION_TYPE.ACCESSIBILITY_TYPE_SET:
             return action.accessibilityType;
         default:
