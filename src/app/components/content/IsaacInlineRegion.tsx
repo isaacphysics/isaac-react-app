@@ -30,7 +30,7 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const defaultFeedback = (correctness: QuestionCorrectness) : ContentDTO => {
         const feedbackMap : {[key in QuestionCorrectness]: string} = {
             "CORRECT" : "Correct!",
-            "INCORRECT" : "Check your working.",
+            "INCORRECT" : "Check your answer.",
             "NOT_ANSWERED" : "You did not provide an answer.",
             "NOT_SUBMITTED" : "This answer is missing a unit.", // this is a special case for numeric questions, may need to be updated if we add more inline q types
         };
