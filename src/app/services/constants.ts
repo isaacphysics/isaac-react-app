@@ -1342,3 +1342,27 @@ export const MODAL_TYPES = {
 export const CODE_EDITOR_IFRAME_HEIGHT_SMALL = 278;
 export const CODE_EDITOR_IFRAME_HEIGHT_LARGE = 354;
 export const CODE_EDITOR_RUN_BUTTON_SPACING = 96;
+
+export const reactSelectDarkModeStyles = {
+    control: (baseStyles: object) => ({
+        ...baseStyles,
+        backgroundColor: "unset",
+    }),
+    menu: (baseStyles: object) => ({
+        ...baseStyles,
+        backgroundColor: "var(--color-neutral-50)",
+    }),
+    multiValue: (base: object) => ({
+        ...base,
+        backgroundColor: "var(--subject-color-200)",
+        border: "1px solid var(--subject-color-400)",
+    }),
+    multiValueLabel: (base: object) => ({
+        ...base,
+        color: "var(--subject-color-900)",
+    }),
+    multiValueRemove: (base: object) => ({
+        ...base,
+        backgroundColor: "var(--subject-color-200)",
+    }), 
+};
