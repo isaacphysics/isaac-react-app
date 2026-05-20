@@ -165,8 +165,9 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
             .map(({replacementId: _, ...item}) => item);
     };
 
+    const deviceSize = useDeviceSize();
     const accessibilityType = useAppSelector(selectors.accessibility.type);
-    const dragAndDropEnabled = !accessibilityType?.NON_DRAGGING_INPUTS;
+    const dragAndDropEnabled = isDefined(accessibilityType) ? !accessibilityType?.NON_DRAGGING_INPUTS : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -535,8 +536,6 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
                 collisionDetection={customCollision}
                 accessibility={accessibility}
             >
-                {/*<DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled} setDragAndDropEnabled={setDragAndDropEnabled} />*/}
-
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>

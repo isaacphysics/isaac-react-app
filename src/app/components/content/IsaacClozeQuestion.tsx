@@ -12,8 +12,11 @@ import {
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM,
     NULL_CLOZE_ITEM_ID,
+    below,
     isDefined,
+    isTouchDevice,
     useCurrentQuestionAttempt,
+    useDeviceSize,
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -135,8 +138,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
 
+    const deviceSize = useDeviceSize(); 
     const accessibilityType = useAppSelector(selectors.accessibility.type);
-    const dragAndDropEnabled = !accessibilityType?.NON_DRAGGING_INPUTS;
+    const dragAndDropEnabled = isDefined(accessibilityType) ? !accessibilityType?.NON_DRAGGING_INPUTS : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
