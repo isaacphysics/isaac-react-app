@@ -96,6 +96,50 @@ $color-wildcard-orange: #ff7800;
 // however, the neutral palette changes from a yellow tint (at lightest) to a blue tint (at darkest), which when inverted looks pretty bad.
 // as such, the dark mode neutral palette is custom.
 
+$color-biology-dark-50: #f3f8f4;
+$color-biology-dark-100: #d7e7da;
+$color-biology-dark-200: #bbd6c0;
+$color-biology-dark-300: #83b48d;
+$color-biology-dark-400: #4a9259;
+$color-biology-dark-500: #127025;
+$color-biology-dark-600: #09691d;
+$color-biology-dark-700: #006214;
+$color-biology-dark-800: #005411;
+$color-biology-dark-900: #00450e;
+
+$color-chemistry-dark-50: #fbf4f7;
+$color-chemistry-dark-100: #f3dae6;
+$color-chemistry-dark-200: #eac0d5;
+$color-chemistry-dark-300: #d98cb2;
+$color-chemistry-dark-400: #c85790;
+$color-chemistry-dark-500: #b7236d;
+$color-chemistry-dark-600: #ae1260;
+$color-chemistry-dark-700: #a40153;
+$color-chemistry-dark-800: #880848;
+$color-chemistry-dark-900: #6b0f3d;
+
+$color-maths-dark-50:  hsl(194, 50%, 10%);
+$color-maths-dark-100: hsl(194, 58%, 14%);
+$color-maths-dark-200: hsl(196, 65%, 22%);
+$color-maths-dark-300: hsl(195, 69%, 35%);
+$color-maths-dark-400: hsl(195, 61%, 47%);
+$color-maths-dark-500: hsl(195, 66%, 54%);
+$color-maths-dark-600: hsl(195, 64%, 62%);
+$color-maths-dark-700: hsl(195, 58%, 71%);
+$color-maths-dark-800: hsl(195, 62%, 83%);
+$color-maths-dark-900: hsl(196, 100%, 95%);
+
+$color-physics-dark-50:  hsl(279, 21%, 13%);
+$color-physics-dark-100: hsl(280, 52%, 15%);
+$color-physics-dark-200: hsl(280, 52%, 24%);
+$color-physics-dark-300: hsl(278, 48%, 38%);
+$color-physics-dark-400: hsl(278, 50%, 54%);
+$color-physics-dark-500: hsl(278, 65%, 69%);
+$color-physics-dark-600: hsl(278, 67%, 74%);
+$color-physics-dark-700: hsl(279, 76%, 84%);
+$color-physics-dark-800: hsl(279, 75%, 89%);
+$color-physics-dark-900: hsl(279, 74%, 95%);
+
 $color-neutral-dark-white: #181a1b;
 $color-neutral-dark-50: #1f252a;
 $color-neutral-dark-100: #2d3135;
@@ -204,52 +248,52 @@ $dark-color-palettes: (
     900: $color-neutral-dark-900
   ),
   "biology": (
-    50: $color-biology-900,
-    100: $color-biology-800,
-    200: $color-biology-700,
-    300: $color-biology-600,
-    400: $color-biology-500,
-    500: $color-biology-400,
-    600: $color-biology-300,
-    700: $color-biology-200,
-    800: $color-biology-100,
-    900: $color-biology-50
+    50: $color-biology-dark-50,
+    100: $color-biology-dark-100,
+    200: $color-biology-dark-200,
+    300: $color-biology-dark-300,
+    400: $color-biology-dark-400,
+    500: $color-biology-dark-500,
+    600: $color-biology-dark-600,
+    700: $color-biology-dark-700,
+    800: $color-biology-dark-800,
+    900: $color-biology-dark-900
   ),
   "chemistry": (
-    50: $color-chemistry-900,
-    100: $color-chemistry-800,
-    200: $color-chemistry-700,
-    300: $color-chemistry-600,
-    400: $color-chemistry-500,
-    500: $color-chemistry-400,
-    600: $color-chemistry-300,
-    700: $color-chemistry-200,
-    800: $color-chemistry-100,
-    900: $color-chemistry-50
+    50: $color-chemistry-dark-50,
+    100: $color-chemistry-dark-100,
+    200: $color-chemistry-dark-200,
+    300: $color-chemistry-dark-300,
+    400: $color-chemistry-dark-400,
+    500: $color-chemistry-dark-500,
+    600: $color-chemistry-dark-600,
+    700: $color-chemistry-dark-700,
+    800: $color-chemistry-dark-800,
+    900: $color-chemistry-dark-900
   ),
   "maths": (
-    50: $color-maths-900,
-    100: $color-maths-800,
-    200: $color-maths-700,
-    300: $color-maths-600,
-    400: $color-maths-500,
-    500: $color-maths-400,
-    600: $color-maths-300,
-    700: $color-maths-200,
-    800: $color-maths-100,
-    900: $color-maths-50
+    50: $color-maths-dark-50,
+    100: $color-maths-dark-100,
+    200: $color-maths-dark-200,
+    300: $color-maths-dark-300,
+    400: $color-maths-dark-400,
+    500: $color-maths-dark-500,
+    600: $color-maths-dark-600,
+    700: $color-maths-dark-700,
+    800: $color-maths-dark-800,
+    900: $color-maths-dark-900
   ),
   "physics": (
-    50: $color-physics-900,
-    100: $color-physics-800,
-    200: $color-physics-700,
-    300: $color-physics-600,
-    400: $color-physics-500,
-    500: $color-physics-400,
-    600: $color-physics-300,
-    700: $color-physics-200,
-    800: $color-physics-100,
-    900: $color-physics-50
+    50: $color-physics-dark-50,
+    100: $color-physics-dark-100,
+    200: $color-physics-dark-200,
+    300: $color-physics-dark-300,
+    400: $color-physics-dark-400,
+    500: $color-physics-dark-500,
+    600: $color-physics-dark-600,
+    700: $color-physics-dark-700,
+    800: $color-physics-dark-800,
+    900: $color-physics-dark-900
   )
 );
 
