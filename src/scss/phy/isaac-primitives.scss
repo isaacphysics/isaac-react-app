@@ -117,18 +117,34 @@ $color-neutral-dark-900: #f2f1ed;
 // after some manual experimentation, we came up with custom dark themes for the maths and physics palette that were mostly quite close to the result of
 // simply inverting the *lightness* (in HSL) of the original colours.
 // this function exists to do precisely that formulaically, so as to generate the other themes consistently.
-@function dark-mode-color-invert($col) {
+@function dark-mode-color-invert-hsl($col) {
   // "white" is #fff, but "black" is not #000; the darkest we show is #181a1b. rather than 0-100, therefore, our scale is between lightness(darkest) and lightness(lightest) = lightness(#181a1b) to 100%.
   // we can invert a color in this scheme by first inverting its lightness as normal (i.e. 100% - lightness)...
-  $inv: color.change($col, $lightness: 100% - color.lightness($col), $space: oklch);
+  $inv: color.change($col, $lightness: 100% - color.lightness($col));
   // ...then mapping that inverted lightness from the [0, 100] range to the [lightness(darkest), 100] range using a linear transformation.
-  // ( lightness(col) / 100 * (100 - lightness(darkest)) + lightness(darkest) )
-  $lightness: calc((color.lightness($inv) / 100%) * (100% - color.lightness($color-neutral-dark-white)) + color.lightness($color-neutral-dark-white) / 1.2);
+  // said transformation is lightness(col) / 100 * (100 - lightness(darkest)) + lightness(darkest)
+  $darkest: color.lightness($color-neutral-dark-white);
+  $lightness: calc((color.lightness($inv) / 100%) * (100% - $darkest) + $darkest / 1.2);
 
   // this generates good lighter (-300+) colours, but the darker ones end up slightly too saturated
-  // $saturation: if(color.lightness($inv) < 20%, color.saturation($inv) * 0.5, color.saturation($inv));
-  @return color.change($inv, $lightness: $lightness, $space: oklch);
+  $saturation: if(color.lightness($inv) < 20%, color.saturation($inv) * 0.5, color.saturation($inv));
+  @return color.change($inv, $lightness: $lightness, $saturation: $saturation);
 }
+
+// as above, but adjusts lightness in oklch. this avoids needing to adjust saturation separately.
+// my main issue with this is not this function at all, but that the different subjects do not have equal lightnesses in the original palette (worst offenders are bio: 48%, phys: 56%);
+// this means that the adjustments we make here do affect different subject colours differently, something I would like to avoid, but not sure this is possible
+@function dark-mode-color-invert-oklch($col) {
+  $const-adjust: 0.5%;
+  $multiplicative-adjust: 1.4; // lowest value that lets physics-500 be AA against neutral-100
+  $darkest: 21.6%; // = color.lightness($color-neutral-dark-white, $space: oklch); –– this is not defined until sass 1.8+, which requires sorting out imports first
+  @return oklch(from $col calc((1 - l) * $multiplicative-adjust * (100% - $darkest) + $darkest + $const-adjust) c h);
+}
+
+// at some point, it would be nice to be able to define each $color-subject-dark-xxx as `dark-mode-color-invert($color-subject-xxx);)` or similar (as commented below).
+// however, the current preferred approach to calculate these (oklch) uses the CSS `oklch`, which while being a 2023 browser baseline, is not supported
+// by older browsers. since this is very core functionality, i am instead choosing to calculate these results manually and leave them as hex codes.
+// please do NOT remove the above functions nor the commented code below which makes use of them; they are used to calculate the hex codes below.
 
 $color-brand-300: #5ebc3f;
 $color-brand-400: #4e9934;
@@ -137,49 +153,93 @@ $color-brand-700: #1a6600;
 $color-brand-800: #143a04;
 $color-brand-900: #100c08;
 
-$color-biology-dark-50:  dark-mode-color-invert($color-biology-50);
-$color-biology-dark-100: dark-mode-color-invert($color-biology-100);
-$color-biology-dark-200: dark-mode-color-invert($color-biology-200);
-$color-biology-dark-300: dark-mode-color-invert($color-biology-300);
-$color-biology-dark-400: dark-mode-color-invert($color-biology-400);
-$color-biology-dark-500: dark-mode-color-invert($color-biology-500);
-$color-biology-dark-600: dark-mode-color-invert($color-biology-600);
-$color-biology-dark-700: dark-mode-color-invert($color-biology-700);
-$color-biology-dark-800: dark-mode-color-invert($color-biology-800);
-$color-biology-dark-900: dark-mode-color-invert($color-biology-900);
+$color-biology-dark-50: #252021;
+$color-biology-dark-100: #29362c;
+$color-biology-dark-200: #334a38;
+$color-biology-dark-300: #487752;
+$color-biology-dark-400: #5ea66c;
+$color-biology-dark-500: #7ed484;
+$color-biology-dark-600: #88dc8c;
+$color-biology-dark-700: #91e493;
+$color-biology-dark-800: #a8f2a9;
+$color-biology-dark-900: #c0ffc2;
 
-$color-chemistry-dark-50:  dark-mode-color-invert($color-chemistry-50);
-$color-chemistry-dark-100: dark-mode-color-invert($color-chemistry-100);
-$color-chemistry-dark-200: dark-mode-color-invert($color-chemistry-200);
-$color-chemistry-dark-300: dark-mode-color-invert($color-chemistry-300);
-$color-chemistry-dark-400: dark-mode-color-invert($color-chemistry-400);
-$color-chemistry-dark-500: dark-mode-color-invert($color-chemistry-500);
-$color-chemistry-dark-600: dark-mode-color-invert($color-chemistry-600);
-$color-chemistry-dark-700: dark-mode-color-invert($color-chemistry-700);
-$color-chemistry-dark-800: dark-mode-color-invert($color-chemistry-800);
-$color-chemistry-dark-900: dark-mode-color-invert($color-chemistry-900);
+$color-chemistry-dark-50: #252021;
+$color-chemistry-dark-100: #3e2c35;
+$color-chemistry-dark-200: #59374a;
+$color-chemistry-dark-300: #944d72;
+$color-chemistry-dark-400: #d15f98;
+$color-chemistry-dark-500: #ff70af;
+$color-chemistry-dark-600: #ff7ab5;
+$color-chemistry-dark-700: #ff86b9;
+$color-chemistry-dark-800: #ffa4d1;
+$color-chemistry-dark-900: #ffc3ea;
 
-$color-maths-dark-50:  hsl(194, 50%, 10%);
-$color-maths-dark-100: hsl(194, 58%, 14%);
-$color-maths-dark-200: hsl(196, 65%, 22%);
-$color-maths-dark-300: hsl(195, 69%, 35%);
-$color-maths-dark-400: hsl(195, 61%, 47%);
-$color-maths-dark-500: hsl(195, 66%, 54%);
-$color-maths-dark-600: hsl(195, 64%, 62%);
-$color-maths-dark-700: hsl(195, 58%, 71%);
-$color-maths-dark-800: hsl(195, 62%, 83%);
-$color-maths-dark-900: hsl(196, 100%, 95%);
+$color-maths-dark-50: #242021;
+$color-maths-dark-100: #233339;
+$color-maths-dark-200: #294650;
+$color-maths-dark-300: #2e6d7f;
+$color-maths-dark-400: #3a94b2;
+$color-maths-dark-500: #5cb7e1;
+$color-maths-dark-600: #74c6eb;
+$color-maths-dark-700: #8dd5f8;
+$color-maths-dark-800: #a2e3ff;
+$color-maths-dark-900: #b9f3ff;
 
-$color-physics-dark-50:  hsl(279, 21%, 13%);
-$color-physics-dark-100: hsl(280, 52%, 15%);
-$color-physics-dark-200: hsl(280, 52%, 24%);
-$color-physics-dark-300: hsl(278, 48%, 38%);
-$color-physics-dark-400: hsl(278, 50%, 54%);
-$color-physics-dark-500: hsl(278, 65%, 69%);
-$color-physics-dark-600: hsl(278, 67%, 74%);
-$color-physics-dark-700: hsl(279, 76%, 84%);
-$color-physics-dark-800: hsl(279, 75%, 89%);
-$color-physics-dark-900: hsl(279, 74%, 95%);
+$color-physics-dark-50: #241f20;
+$color-physics-dark-100: #342a39;
+$color-physics-dark-200: #473550;
+$color-physics-dark-300: #704d83;
+$color-physics-dark-400: #9a64b9;
+$color-physics-dark-500: #c57cf2;
+$color-physics-dark-600: #d38bff;
+$color-physics-dark-700: #e29bff;
+$color-physics-dark-800: #efafff;
+$color-physics-dark-900: #ffc5ff;
+
+// $color-biology-dark-50:  dark-mode-color-invert-oklch($color-biology-50);
+// $color-biology-dark-100: dark-mode-color-invert-oklch($color-biology-100);
+// $color-biology-dark-200: dark-mode-color-invert-oklch($color-biology-200);
+// $color-biology-dark-300: dark-mode-color-invert-oklch($color-biology-300);
+// $color-biology-dark-400: dark-mode-color-invert-oklch($color-biology-400);
+// $color-biology-dark-500: dark-mode-color-invert-oklch($color-biology-500);
+// $color-biology-dark-600: dark-mode-color-invert-oklch($color-biology-600);
+// $color-biology-dark-700: dark-mode-color-invert-oklch($color-biology-700);
+// $color-biology-dark-800: dark-mode-color-invert-oklch($color-biology-800);
+// $color-biology-dark-900: dark-mode-color-invert-oklch($color-biology-900);
+
+// $color-chemistry-dark-50:  dark-mode-color-invert-oklch($color-chemistry-50);
+// $color-chemistry-dark-100: dark-mode-color-invert-oklch($color-chemistry-100);
+// $color-chemistry-dark-200: dark-mode-color-invert-oklch($color-chemistry-200);
+// $color-chemistry-dark-300: dark-mode-color-invert-oklch($color-chemistry-300);
+// $color-chemistry-dark-400: dark-mode-color-invert-oklch($color-chemistry-400);
+// $color-chemistry-dark-500: dark-mode-color-invert-oklch($color-chemistry-500);
+// $color-chemistry-dark-600: dark-mode-color-invert-oklch($color-chemistry-600);
+// $color-chemistry-dark-700: dark-mode-color-invert-oklch($color-chemistry-700);
+// $color-chemistry-dark-800: dark-mode-color-invert-oklch($color-chemistry-800);
+// $color-chemistry-dark-900: dark-mode-color-invert-oklch($color-chemistry-900);
+
+// $color-maths-dark-50:  dark-mode-color-invert-oklch($color-maths-50);
+// $color-maths-dark-100: dark-mode-color-invert-oklch($color-maths-100);
+// $color-maths-dark-200: dark-mode-color-invert-oklch($color-maths-200);
+// $color-maths-dark-300: dark-mode-color-invert-oklch($color-maths-300);
+// $color-maths-dark-400: dark-mode-color-invert-oklch($color-maths-400);
+// $color-maths-dark-500: dark-mode-color-invert-oklch($color-maths-500);
+// $color-maths-dark-600: dark-mode-color-invert-oklch($color-maths-600);
+// $color-maths-dark-700: dark-mode-color-invert-oklch($color-maths-700);
+// $color-maths-dark-800: dark-mode-color-invert-oklch($color-maths-800);
+// $color-maths-dark-900: dark-mode-color-invert-oklch($color-maths-900);
+
+// $color-physics-dark-50:  dark-mode-color-invert-oklch($color-physics-50);
+// $color-physics-dark-100: dark-mode-color-invert-oklch($color-physics-100);
+// $color-physics-dark-200: dark-mode-color-invert-oklch($color-physics-200);
+// $color-physics-dark-300: dark-mode-color-invert-oklch($color-physics-300);
+// $color-physics-dark-400: dark-mode-color-invert-oklch($color-physics-400);
+// $color-physics-dark-500: dark-mode-color-invert-oklch($color-physics-500);
+// $color-physics-dark-600: dark-mode-color-invert-oklch($color-physics-600);
+// $color-physics-dark-700: dark-mode-color-invert-oklch($color-physics-700);
+// $color-physics-dark-800: dark-mode-color-invert-oklch($color-physics-800);
+// $color-physics-dark-900: dark-mode-color-invert-oklch($color-physics-900);
 
 $color-misc-dark-pale-yellow: #323524;
 $color-misc-dark-correct: #344d2d;
