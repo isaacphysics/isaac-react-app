@@ -5,7 +5,6 @@
 // $position: when playing with pseudo element, you mainly use `position: absolute` (default value).
 // $display: when playing with pseudo element, you mainly use `display: block` (default value).
 @use "sass:math";
-@use "sass:color";
 
 @mixin pseudo-element($content: '', $position: absolute, $display: block) {
   content: $content;

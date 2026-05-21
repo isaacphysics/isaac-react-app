@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $color-palettes: (
   "biology", "chemistry", "maths", "physics", "neutral"
 );
@@ -92,31 +94,70 @@ $light-misc-palette: (
 $color-wildcard-orange: #ff7800;
 
 // DARK MODE
-// the Fluent subject palettes can just be inverted since they all have the same hue.
-// however, the neutral palette changes from a yellow tint (at lightest) to a blue tint (at darkest), which when inverted looks pretty bad.
-// as such, the dark mode neutral palette is custom.
+// these are *not* simply inversions from the light mode colours (e.g. swap 50-900, 100-800, etc); in light mode, the lower values (subject-50, subject-100)
+// are usually very close to white but the higher ones (subject-800, subject-900) are surprisingly far from black. 
+// inverting, therefore, leaves us in a situation where many background colours (esp. xx-50) are far too saturated and deep for what they are used for.
 
-$color-biology-dark-50: #f3f8f4;
-$color-biology-dark-100: #d7e7da;
-$color-biology-dark-200: #bbd6c0;
-$color-biology-dark-300: #83b48d;
-$color-biology-dark-400: #4a9259;
-$color-biology-dark-500: #127025;
-$color-biology-dark-600: #09691d;
-$color-biology-dark-700: #006214;
-$color-biology-dark-800: #005411;
-$color-biology-dark-900: #00450e;
+// we start with neutral. neutral is unique in that the hue changes throughout the palette,from a yellow tint (at lightest) to a blue tint (at darkest).
+// all the other subject colours use the same (+-2) hue.
 
-$color-chemistry-dark-50: #fbf4f7;
-$color-chemistry-dark-100: #f3dae6;
-$color-chemistry-dark-200: #eac0d5;
-$color-chemistry-dark-300: #d98cb2;
-$color-chemistry-dark-400: #c85790;
-$color-chemistry-dark-500: #b7236d;
-$color-chemistry-dark-600: #ae1260;
-$color-chemistry-dark-700: #a40153;
-$color-chemistry-dark-800: #880848;
-$color-chemistry-dark-900: #6b0f3d;
+$color-neutral-dark-white: #181a1b;
+$color-neutral-dark-50: #1f252a;
+$color-neutral-dark-100: #2d3135;
+$color-neutral-dark-200: #3a3e42;
+$color-neutral-dark-300: #4a4e52;
+$color-neutral-dark-400: #62626d;
+$color-neutral-dark-500: #908f94;
+$color-neutral-dark-600: #bebebe;
+$color-neutral-dark-700: #e6e5e1;
+$color-neutral-dark-800: #ece9e5;
+$color-neutral-dark-900: #f2f1ed;
+
+// for the subject themes, we can take advantage of the fact that the hue is mostly consistent across the palette, and just play with the other values.
+// after some manual experimentation, we came up with custom dark themes for the maths and physics palette that were mostly quite close to the result of
+// simply inverting the *lightness* (in HSL) of the original colours.
+// this function exists to do precisely that formulaically, so as to generate the other themes consistently.
+@function dark-mode-color-invert($col) {
+  // "white" is #fff, but "black" is not #000; the darkest we show is #181a1b. rather than 0-100, therefore, our scale is between lightness(darkest) and lightness(lightest) = lightness(#181a1b) to 100%.
+  // we can invert a color in this scheme by first inverting its lightness as normal (i.e. 100% - lightness)...
+  $inv: color.change($col, $lightness: 100% - color.lightness($col), $space: oklch);
+  // ...then mapping that inverted lightness from the [0, 100] range to the [lightness(darkest), 100] range using a linear transformation.
+  // ( lightness(col) / 100 * (100 - lightness(darkest)) + lightness(darkest) )
+  $lightness: calc((color.lightness($inv) / 100%) * (100% - color.lightness($color-neutral-dark-white)) + color.lightness($color-neutral-dark-white) / 1.2);
+
+  // this generates good lighter (-300+) colours, but the darker ones end up slightly too saturated
+  // $saturation: if(color.lightness($inv) < 20%, color.saturation($inv) * 0.5, color.saturation($inv));
+  @return color.change($inv, $lightness: $lightness, $space: oklch);
+}
+
+$color-brand-300: #5ebc3f;
+$color-brand-400: #4e9934;
+$color-brand-500: #3a8621;
+$color-brand-700: #1a6600;
+$color-brand-800: #143a04;
+$color-brand-900: #100c08;
+
+$color-biology-dark-50:  dark-mode-color-invert($color-biology-50);
+$color-biology-dark-100: dark-mode-color-invert($color-biology-100);
+$color-biology-dark-200: dark-mode-color-invert($color-biology-200);
+$color-biology-dark-300: dark-mode-color-invert($color-biology-300);
+$color-biology-dark-400: dark-mode-color-invert($color-biology-400);
+$color-biology-dark-500: dark-mode-color-invert($color-biology-500);
+$color-biology-dark-600: dark-mode-color-invert($color-biology-600);
+$color-biology-dark-700: dark-mode-color-invert($color-biology-700);
+$color-biology-dark-800: dark-mode-color-invert($color-biology-800);
+$color-biology-dark-900: dark-mode-color-invert($color-biology-900);
+
+$color-chemistry-dark-50:  dark-mode-color-invert($color-chemistry-50);
+$color-chemistry-dark-100: dark-mode-color-invert($color-chemistry-100);
+$color-chemistry-dark-200: dark-mode-color-invert($color-chemistry-200);
+$color-chemistry-dark-300: dark-mode-color-invert($color-chemistry-300);
+$color-chemistry-dark-400: dark-mode-color-invert($color-chemistry-400);
+$color-chemistry-dark-500: dark-mode-color-invert($color-chemistry-500);
+$color-chemistry-dark-600: dark-mode-color-invert($color-chemistry-600);
+$color-chemistry-dark-700: dark-mode-color-invert($color-chemistry-700);
+$color-chemistry-dark-800: dark-mode-color-invert($color-chemistry-800);
+$color-chemistry-dark-900: dark-mode-color-invert($color-chemistry-900);
 
 $color-maths-dark-50:  hsl(194, 50%, 10%);
 $color-maths-dark-100: hsl(194, 58%, 14%);
@@ -139,18 +180,6 @@ $color-physics-dark-600: hsl(278, 67%, 74%);
 $color-physics-dark-700: hsl(279, 76%, 84%);
 $color-physics-dark-800: hsl(279, 75%, 89%);
 $color-physics-dark-900: hsl(279, 74%, 95%);
-
-$color-neutral-dark-white: #181a1b;
-$color-neutral-dark-50: #1f252a;
-$color-neutral-dark-100: #2d3135;
-$color-neutral-dark-200: #3a3e42;
-$color-neutral-dark-300: #4a4e52;
-$color-neutral-dark-400: #62626d;
-$color-neutral-dark-500: #908f94;
-$color-neutral-dark-600: #bebebe;
-$color-neutral-dark-700: #e6e5e1;
-$color-neutral-dark-800: #ece9e5;
-$color-neutral-dark-900: #f2f1ed;
 
 $color-misc-dark-pale-yellow: #323524;
 $color-misc-dark-correct: #344d2d;
