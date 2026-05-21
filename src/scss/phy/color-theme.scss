@@ -174,9 +174,9 @@
 
 
   --icon-secondary: #{$color-brand-500};
-  --icon-tertiary: #{$color-neutral-900};
+  --icon-tertiary: var(--color-neutral-900);
 
-  --sidebar-tab-disabled: #{$color-neutral-300};
+  --sidebar-tab-disabled: var(--color-neutral-300);
 
   /* number */
   --buttons-padding-v-sm: 0.6875rem;
