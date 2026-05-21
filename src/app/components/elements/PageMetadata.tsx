@@ -44,7 +44,9 @@ type PageMetadataProps = {
     }
 );
 
-export const DragAndDropInputModeToggle = ({dragAndDropEnabled, toggleDragAndDropEnabled}: {dragAndDropEnabled: boolean, toggleDragAndDropEnabled: () => void}) => {
+export const DragAndDropInputModeToggle = () => {
+    const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
+
     return siteSpecific(<div className="d-flex flex-column align-items-center w-min-content mb-1">
         <span>Question input mode</span>
         <Spacer />
@@ -100,11 +102,11 @@ const TagStack = ({doc, className}: TagStackProps) => {
         {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
             {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
             {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
-            {displayDragAndDropToggle && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
+            {displayDragAndDropToggle && <DragAndDropInputModeToggle/>}
         </div>}
         <div>
             <EditContentButton doc={doc}/>
-            {displayDragAndDropToggle && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle dragAndDropEnabled={true} toggleDragAndDropEnabled={() => {}} />}
+            {displayDragAndDropToggle && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle/>}
         </div>
     </div>;
 };
@@ -142,9 +144,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const location = useLocation();
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
-
     const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
-    const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
 
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
@@ -171,7 +171,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
                 {isPhy && pageContainsClozeOrDragAndDropQuestion && <>
                     <Spacer />
-                    <DragAndDropInputModeToggle dragAndDropEnabled={dragAndDropEnabled} toggleDragAndDropEnabled={toggleDragAndDropEnabled} />
+                    <DragAndDropInputModeToggle/>
                 </>
                 }
             </div>
