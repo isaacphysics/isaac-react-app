@@ -43,6 +43,7 @@ import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
 import { selectors, useAppSelector } from "../../state";
+import { useDragAndDropAccessibility } from "./IsaacDragAndDropQuestion";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -138,9 +139,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
 
-    const deviceSize = useDeviceSize(); 
-    const accessibilityType = useAppSelector(selectors.accessibility.type);
-    const dragAndDropEnabled = isDefined(accessibilityType) ? !accessibilityType?.NON_DRAGGING_INPUTS : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
+    const { dragAndDropEnabled } = useDragAndDropAccessibility();
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;

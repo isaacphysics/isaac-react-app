@@ -21,6 +21,7 @@ import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
 import { Spacer } from './Spacer';
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { StyledCheckbox } from './inputs/StyledCheckbox';
+import { useDragAndDropAccessibility } from '../content/IsaacDragAndDropQuestion';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -142,14 +143,8 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
 
-    const dispatch = useAppDispatch();
     const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
-
-    const accessibilityType = useAppSelector(selectors.accessibility.type);
-    const dragAndDropEnabled = !accessibilityType?.NON_DRAGGING_INPUTS;
-    const toggleDragAndDropEnabled = () => {
-        dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": dragAndDropEnabled}});
-    };    
+    const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
 
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}

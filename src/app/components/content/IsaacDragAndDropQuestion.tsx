@@ -9,6 +9,7 @@ import {
     DndItemDTO
 } from "../../../IsaacApiTypes";
 import {
+    ACTION_TYPE,
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM_ID,
@@ -43,7 +44,7 @@ import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
 import { useAccessibilitySettings } from "../../services/accessibility";
-import { selectors, useAppSelector } from "../../state";
+import { selectors, useAppDispatch, useAppSelector } from "../../state";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -136,14 +137,24 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
     }, [active]);
 };
 
-export const useDefaultDragAndDropInputMode = () => {
-    const accessibilitySettings = useAccessibilitySettings();
+export function useDragAndDropAccessibility() {
+    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const accessibilityType = useAppSelector(selectors.accessibility.type);
-    console.log("ac", accessibilityType);
+    const accessibilitySettings = useAccessibilitySettings();
 
-    return !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)) || accessibilitySettings.NON_DRAGGING_INPUTS || false);
-};
+    console.log(accessibilityType, accessibilitySettings);
+    
+    // If the user has set an accessibility type, use that type. If the user has set NON_DRAGGING_INPUTS to true in accessibility settings, use that type. Otherwise, use screen size.
+    const dragAndDropEnabled = (isDefined(accessibilityType) || accessibilitySettings?.NON_DRAGGING_INPUTS)
+        ? !accessibilityType?.NON_DRAGGING_INPUTS
+        : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
+    const toggleDragAndDropEnabled = () => {
+        dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": dragAndDropEnabled}});
+    };
+
+    return { dragAndDropEnabled, toggleDragAndDropEnabled };
+}
 
 const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacDragAndDropQuestionDTO, DndValidationResponseDTO>) => {
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<DndChoiceDTO>(questionId);
@@ -165,9 +176,7 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
             .map(({replacementId: _, ...item}) => item);
     };
 
-    const deviceSize = useDeviceSize();
-    const accessibilityType = useAppSelector(selectors.accessibility.type);
-    const dragAndDropEnabled = isDefined(accessibilityType) ? !accessibilityType?.NON_DRAGGING_INPUTS : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
+    const { dragAndDropEnabled } = useDragAndDropAccessibility();
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
