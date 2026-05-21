@@ -43,7 +43,6 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { useAccessibilitySettings } from "../../services/accessibility";
 import { selectors, useAppDispatch, useAppSelector } from "../../state";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
@@ -141,12 +140,10 @@ export function useDragAndDropAccessibility() {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const accessibilityType = useAppSelector(selectors.accessibility.type);
-    const accessibilitySettings = useAccessibilitySettings();
 
-    console.log(accessibilityType, accessibilitySettings);
-    
-    // If the user has set an accessibility type, use that type. If the user has set NON_DRAGGING_INPUTS to true in accessibility settings, use that type. Otherwise, use screen size.
-    const dragAndDropEnabled = (isDefined(accessibilityType) || accessibilitySettings?.NON_DRAGGING_INPUTS)
+    // Drag and drop is disabled if the user has selected a manual accessibility override, or if they have selected non-dragging inputs as an accessibility preference,
+    // or if they are on a touch device or very small screen and haven't explicitly enabled drag and drop.
+    const dragAndDropEnabled = (isDefined(accessibilityType) && (accessibilityType.MANUAL_OVERRIDE || accessibilityType?.NON_DRAGGING_INPUTS))
         ? !accessibilityType?.NON_DRAGGING_INPUTS
         : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
     const toggleDragAndDropEnabled = () => {

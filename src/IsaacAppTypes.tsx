@@ -235,6 +235,10 @@ export interface AccessibilitySettings {
     NON_DRAGGING_INPUTS?: boolean;
 }
 
+export interface AccessibilitySettingsWithOverride extends AccessibilitySettings {
+    MANUAL_OVERRIDE?: boolean;
+}
+
 export interface UserConsent {
     OPENAI?: boolean;
 }
