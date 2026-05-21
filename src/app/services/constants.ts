@@ -1364,5 +1364,5 @@ export const reactSelectDarkModeStyles = {
     multiValueRemove: (base: object) => ({
         ...base,
         backgroundColor: "var(--subject-color-200)",
-    }), 
+    }),
 };
