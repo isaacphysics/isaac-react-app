@@ -12,11 +12,8 @@ import {
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM,
     NULL_CLOZE_ITEM_ID,
-    below,
     isDefined,
-    isTouchDevice,
     useCurrentQuestionAttempt,
-    useDeviceSize,
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -42,7 +39,6 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { selectors, useAppSelector } from "../../state";
 import { useDragAndDropAccessibility } from "./IsaacDragAndDropQuestion";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
