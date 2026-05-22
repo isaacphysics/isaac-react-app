@@ -11,7 +11,6 @@ import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {
-    below,
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
@@ -236,7 +235,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
-                                        {below["xs"](deviceSize) ? "◀" : "Previous" }
+                                        ◀
                                     </Button>
                                     <div className="text-nowrap align-self-center">
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
@@ -244,7 +243,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
-                                        {below["xs"](deviceSize) ? "▶" : "Next"}
+                                        ▶
                                     </Button>
                                 </div>
                                 <div className="feedback-panel-content p-3">
