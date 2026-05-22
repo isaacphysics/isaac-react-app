@@ -5,10 +5,9 @@ import { QuestionDTO, QuizAttemptDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { SectionProgress, QuizView, QuizRubricButton, QuizSectionPreamble } from "../quiz/QuizContentsComponent";
+import { SectionProgress, QuizView, QuizSectionPreamble } from "../quiz/QuizContentsComponent";
 import { tags as tagsService } from "../../../services";
 import { Pill, KeyItem } from "./SidebarElements";
-import { DragAndDropInputModeToggle } from "../PageMetadata";
 
 interface QuizSidebarProps {
     viewingAsSomeoneElse: boolean;
