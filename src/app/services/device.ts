@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import { siteSpecific } from "./siteConstants";
 import { isAda } from "./siteConstants";
 
@@ -33,8 +33,8 @@ export enum DeviceOrientation {
 const descDeviceSizes = [DeviceSize.XXXL, DeviceSize.XXL, DeviceSize.XL, DeviceSize.LG, DeviceSize.MD, DeviceSize.SM, DeviceSize.XS];
 
 export const useDeviceSize = () => {
-    const myAdaTabUrls = ["/dashboard", "/groups", "/quizzes/set", "/set_tests", "/my_markbook", "/assignments", "/tests", "/progress", "/account"];
-    const getSize = (): DeviceSize => {
+    const getSize = useCallback((): DeviceSize => {
+        const myAdaTabUrls = ["/dashboard", "/groups", "/quizzes/set", "/set_tests", "/my_markbook", "/assignments", "/tests", "/progress", "/account"];
         const shouldIncludeSidebar = isAda && myAdaTabUrls.some(url => window.location.pathname.includes(url)) && window.innerWidth >= 768;
         const width = window.innerWidth - (shouldIncludeSidebar ? 220 : 0);
         if (width >= 1800) return DeviceSize.XXXL;
@@ -44,7 +44,7 @@ export const useDeviceSize = () => {
         else if (width >= 768) return DeviceSize.MD;
         else if (width >= 576) return DeviceSize.SM;
         else return DeviceSize.XS;
-    };
+    }, []);
 
     const [windowSize, setWindowSize] = useState(getSize);
 
@@ -52,7 +52,7 @@ export const useDeviceSize = () => {
         const handleResize = () => {setWindowSize(getSize());};
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [getSize]);
 
     return windowSize;
 };
