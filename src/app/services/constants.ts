@@ -1075,6 +1075,73 @@ export const ACCOUNT_TABS_ALIASES: {[alias: string]: ACCOUNT_TAB} = {
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
 
+interface MyAdaTab {
+    title: string;
+    url: string;
+    icon: string;
+    user: "STUDENT" | "TUTOR" | "TEACHER" | "ALL"; // Which user roles can see this tab – n.b. teacher means teacherOrAbove
+}
+
+export const MyAdaTabs: Record<string, MyAdaTab> = {
+    overview: {
+        title: "Overview",
+        url: "/dashboard",
+        icon: "icon-home",
+        user: "ALL"
+    },
+    groups: {
+        title: "Groups",
+        url: "/groups",
+        icon: "icon-group",
+        user: "TUTOR"
+    },
+    setQuizzes: {
+        title: "Quizzes",
+        url: "/quizzes/set",
+        icon: "icon-file",
+        user: "TUTOR"
+    },
+    setTests: {
+        title: "Tests",
+        url: "/set_tests",
+        icon: "icon-school",
+        user: "TEACHER"
+    },
+    markbook: {
+        title: "Markbook",
+        url: "/my_markbook",
+        icon: "icon-done-all",
+        user: "TUTOR"
+    },
+
+    assignedToMe: {
+        title: "Assigned to me",
+        url: "/assignments",
+        icon: "icon-person-check",
+        user: "ALL"
+    },
+
+    myTests: {
+        title: "Tests",
+        url: "/tests",
+        icon: "icon-school",
+        user: "STUDENT"
+    },
+    progress: {
+        title: "Progress",
+        url: "/progress",
+        icon: "icon-done-all",
+        user: "STUDENT"
+    },
+
+    account: {
+        title: "Account",
+        url: "/account",
+        icon: "icon-cog",
+        user: "ALL"
+    }
+};
+
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};

@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import { siteSpecific } from "./siteConstants";
 import { isAda } from "./siteConstants";
+import { MyAdaTabs } from "./constants";
 
 const MOBILE_WINDOW_WIDTH = 768;
 
@@ -34,8 +35,7 @@ const descDeviceSizes = [DeviceSize.XXXL, DeviceSize.XXL, DeviceSize.XL, DeviceS
 
 export const useDeviceSize = () => {
     const getSize = useCallback((): DeviceSize => {
-        const myAdaTabUrls = ["/dashboard", "/groups", "/quizzes/set", "/set_tests", "/my_markbook", "/assignments", "/tests", "/progress", "/account"];
-        const shouldIncludeSidebar = isAda && myAdaTabUrls.some(url => window.location.pathname.includes(url)) && window.innerWidth >= 768;
+        const shouldIncludeSidebar = isAda && Object.values(MyAdaTabs).some(tab => window.location.pathname.includes(tab.url)) && window.innerWidth >= 768;
         const width = window.innerWidth - (shouldIncludeSidebar ? 220 : 0);
         if (width >= 1800) return DeviceSize.XXXL;
         else if (width >= 1400) return DeviceSize.XXL;
