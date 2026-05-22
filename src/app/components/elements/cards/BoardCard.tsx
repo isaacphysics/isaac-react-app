@@ -350,7 +350,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             </p>
                         </Col>
                     </Row>
-                    {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board}/>}
+                    <SupersededDeprecatedBoardContentWarning gameboard={board}/>
                     <br/>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
