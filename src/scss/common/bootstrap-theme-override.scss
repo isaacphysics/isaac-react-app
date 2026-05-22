@@ -21,3 +21,28 @@
     }
   }
 }
+
+// generate bg-, text-, and border- color variables (with light/dark support) from CSS vars
+
+$css-var-compatible-themes: (
+  theme: var(--subject-color-500),
+  neutral-light: var(--color-neutral-100),
+);
+
+@each $theme, $color in $css-var-compatible-themes {
+  .bg-#{$theme} {
+    background-color: #{$color} !important;
+  }
+  .text-#{$theme} {
+    color: #{$color} !important;
+
+    &:is(a), a {
+      &:hover, &:focus {
+        color: var(--subject-color-600);
+      }
+    }
+  }
+  .border-#{$theme} {
+    border-color: #{$color} !important;
+  }
+}

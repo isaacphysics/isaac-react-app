@@ -141,8 +141,15 @@
 
         // COMPONENT STYLES
         .alert-secondary {
-          @extend .alert-#{$palette};
+          background-color: var(--subject-color-50);
+          border-color: var(--subject-color-200);
           color: var(--alert-text-color);
+          a {
+            color: var(--alert-text-color);
+            &:hover, &:focus {
+              color: var(--subject-color-900);
+            }
+          }
         }
       }
     }
@@ -200,16 +207,6 @@
   }
 }
 
-.text-theme {
-  color: var(--subject-color-500);
-
-  &:is(a) {
-    &:hover, &:focus {
-      color: var(--subject-color-600);
-    }
-  }
-}
-
 .text-theme-dark {
   color: var(--subject-color-800);
 
@@ -218,14 +215,6 @@
       color: var(--subject-color-900);
     }
   }
-}
-
-.bg-theme {
-  background-color: var(--subject-color-500);
-}
-
-.border-theme {
-  border-color: var(--subject-color-500);
 }
 
 .text-brand {
