@@ -348,9 +348,10 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                     `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                                 ).join(", ") || "-"}
                             </p>
-                            <br/>
                         </Col>
                     </Row>
+                    {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board}/>}
+                    <br/>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
