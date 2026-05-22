@@ -21,7 +21,6 @@ import {
     selectQuestionPart,
     siteSpecific,
     submitCurrentAttempt,
-    useDeviceSize,
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
@@ -71,7 +70,6 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
-    const deviceSize = useDeviceSize();
     const feedbackRef = useRef<HTMLDivElement>(null);
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const hidingAttempts = useAppSelector(selectors.user.preferences)?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false;
