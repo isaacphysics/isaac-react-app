@@ -14,7 +14,7 @@ interface MyAdaTab {
     user: "STUDENT" | "TUTOR" | "TEACHER" | "ALL"; // Which user roles can see this tab – n.b. teacher means teacherOrAbove
 }
 
-const MyAdaTabs: Record<string, MyAdaTab> = {
+export const MyAdaTabs: Record<string, MyAdaTab> = {
     overview: {
         title: "Overview",
         url: "/dashboard",
