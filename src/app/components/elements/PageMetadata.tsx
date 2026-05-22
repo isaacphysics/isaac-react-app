@@ -44,10 +44,10 @@ type PageMetadataProps = {
     }
 );
 
-export const DragAndDropInputModeToggle = () => {
+export const DragAndDropInputModeToggle = ({className}: {className?: string}) => {
     const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
 
-    return siteSpecific(<div className="d-flex flex-column align-items-center w-min-content mb-1">
+    return siteSpecific(<div className={classNames("d-flex flex-column align-items-center w-min-content", className)}>
         <span>Question input mode</span>
         <Spacer />
         <StyledToggle
@@ -57,7 +57,7 @@ export const DragAndDropInputModeToggle = () => {
             onChange={toggleDragAndDropEnabled}
         />
     </div>,
-    <div className="mt-1 ms-1">
+    <div className={className}>
         <StyledCheckbox checked={!dragAndDropEnabled} onChange={toggleDragAndDropEnabled} label={<span className="text-muted">Use dropdowns for drag and drop questions</span>} /> 
     </div>
     );
@@ -102,11 +102,11 @@ const TagStack = ({doc, className}: TagStackProps) => {
         {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
             {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
             {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
-            {displayDragAndDropToggle && <DragAndDropInputModeToggle/>}
+            {displayDragAndDropToggle && <DragAndDropInputModeToggle className="mt-1 ms-1"/>}
         </div>}
         <div>
             <EditContentButton doc={doc}/>
-            {displayDragAndDropToggle && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle/>}
+            {displayDragAndDropToggle && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle className="mt-1 ms-1"/>}
         </div>
     </div>;
 };
@@ -171,7 +171,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
                 {isPhy && pageContainsClozeOrDragAndDropQuestion && <>
                     <Spacer />
-                    <DragAndDropInputModeToggle/>
+                    <DragAndDropInputModeToggle className="mb-1"/>
                 </>
                 }
             </div>
