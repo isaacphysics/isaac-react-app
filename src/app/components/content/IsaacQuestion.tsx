@@ -238,11 +238,9 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                                     }}>
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </Button>
-                                    <Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
-                                    }}>
+                                    <div className="text-nowrap align-self-center">
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
-                                    </Button>
+                                    </div>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
