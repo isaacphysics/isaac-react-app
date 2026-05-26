@@ -7,6 +7,7 @@ import classNames from "classnames";
 import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
 import DropZoneItem from "../../DnDItem";
+import { Spacer } from "../../Spacer";
 
 interface InlineDropRegionProps {
     divId: string;
@@ -77,7 +78,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
         toggle={() => {setIsOpen(!isOpen);}}
         className="cloze-dropdown"
     >
-        <DropdownToggle className={classNames("py-1 px-3", {"empty": !item, "pe-2": isDefined(isCorrect)})} outline={isAda} style={{minHeight: height, width: width}} innerRef={zoneRef}>
+        <DropdownToggle className={classNames("py-1 px-3", {"empty": !item, "pe-2": isDefined(isCorrect) || !item})} outline={isAda} style={{minHeight: height, width: width}} innerRef={zoneRef}>
             <div className={classNames("d-flex cloze-item feedback-zone", {"cloze-bg": !!item && isPhy, "feedback-showing": isDefined(isCorrect)})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
@@ -85,10 +86,11 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
                         {item?.value ?? ""}
                     </Markup>
                 </span>
+                <Spacer />
                 {isDefined(isCorrect) && <div className={"feedback-box"}>
                     <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
                 </div>}
-                {!item && <i className={classNames("icon icon-chevron-down icon-dropdown-180 ms-auto me-n2", {"active": isOpen})} aria-hidden="true"/>}
+                {!item && <i className={classNames("icon icon-chevron-down icon-dropdown-180", {"active": isOpen})} aria-hidden="true"/>}
             </div>
         </DropdownToggle>
         <DropdownMenu container={zoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>
