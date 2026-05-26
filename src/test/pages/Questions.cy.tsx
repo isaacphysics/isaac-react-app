@@ -15,9 +15,11 @@ it('Question types\' regression test page should have no visual regressions', ()
         cy.wrap($el).click();
     });
 
-    cy.wait(1000);
+    cy.get('body').click(0, 0);
 
     cy.scrollTo('top');
+
+    cy.wait(1000);
 
     cy.matchImage();
 });
