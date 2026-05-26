@@ -29,8 +29,7 @@ const GraphSketcherPage = () => {
     const updatePreviewState = useCallback((attempt: GraphChoiceDTO | undefined) => {
         // Set the state of the preview box whenever currentAttempt changes
         if (previewSketch.current && attempt?.value) {
-            console.log(previewSketch.current);
-            const data: GraphSketcherState = JSON.parse(attempt.value);
+            const data: GraphSketcherState = GraphSketcher.toInternalState(JSON.parse(attempt.value));
             data.canvasWidth = 1000;
             data.canvasHeight = 600;
             data.curves = data.curves || [];
@@ -70,7 +69,7 @@ const GraphSketcherPage = () => {
     }, [handleKeyPress]);
 
     useEffect(() => {
-        const { sketch, p: p5 } = makeGraphSketcher(previewRef.current, 1000, 600, { previewMode: true, initialCurves: initialModalState?.curves });
+        const { sketch, p: p5 } = makeGraphSketcher(previewRef.current, 1000, 600, { previewMode: true });
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             previewSketch.current = sketch;
@@ -81,7 +80,7 @@ const GraphSketcherPage = () => {
             previewSketch.current?.teardown();
             p5?.remove();
         };
-    }, [initialModalState?.curves]);
+    }, []);
 
     return <div>
         <Container>
