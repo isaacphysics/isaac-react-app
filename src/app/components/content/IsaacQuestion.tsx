@@ -282,7 +282,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         <div className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-7 mb-n3": correct})}>
                             {isFastTrack 
                                 ? <FastTrackSubmissionButtons fastTrackPrimaryAction={fastTrackPrimaryAction} fastTrackSecondaryAction={fastTrackSecondaryAction} />
-                                : <Button {...checkAnswerButtonProps} type="submit">{submitButtonLabel}</Button>
+                                : <Button {...checkAnswerButtonProps} className="mt-3" type="submit">{submitButtonLabel}</Button>
                             }
                         </div>
                 }
