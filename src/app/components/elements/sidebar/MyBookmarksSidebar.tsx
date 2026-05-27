@@ -6,6 +6,7 @@ import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { CollapsibleList } from "../CollapsibleList";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
 import { BOOKMARKS_ORDER_NAMES, BookmarksOrder } from "../../../../IsaacAppTypes";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface MyBookmarksSidebarProps extends ContentSidebarProps {
     bookmarks: ContentSummaryDTO[];
@@ -52,8 +53,8 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
         <search>
             <div className="section-divider"/>
             <h5>Search bookmarks</h5>
-            <Input
-                className='search--filter-input my-4'
+            <SearchInputWithIcon
+                outerClassName='my-4'
                 type="search" value={searchText || ""}
                 placeholder={`e.g. ${getSearchPlaceholder()}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}

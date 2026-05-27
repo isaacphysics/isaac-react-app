@@ -10,6 +10,7 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Tag } from "../../../../IsaacAppTypes";
 import { FilterCheckbox, AllFiltersCheckbox } from "./SidebarElements";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
     filterText: string;
@@ -46,8 +47,12 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         <div className="section-divider"/>
         <search>
             <h5>Search practice tests</h5>
-            <Input type="search" placeholder="e.g. Practice" value={filterText} className="search--filter-input my-3"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
+            <SearchInputWithIcon
+                outerClassName="my-3"
+                type="search" placeholder="e.g. Practice" 
+                value={filterText} 
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
+            />
 
             {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
                 <div className="section-divider"/>
