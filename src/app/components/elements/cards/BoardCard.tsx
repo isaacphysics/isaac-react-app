@@ -101,7 +101,7 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
 const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal}: InfoShapeProps) => {
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
-    return <svg className={"board-circle d-flex overflow-auto"} id={hexagonId} width={48} height={48}>
+    return <svg className={"board-circle d-flex overflow-auto mx-auto"} id={hexagonId} width={48} height={48}>
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
