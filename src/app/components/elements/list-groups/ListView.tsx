@@ -339,7 +339,6 @@ type BuilderListViewItemProps = ListViewItemBaseProps<"builder", "list" | "card"
 
 export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     const { item, index, onDelete, onMove, totalItems, ...rest } = props;
-    // const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
@@ -379,8 +378,6 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
             style="flat"
             subtitle={topic}
-            // subtitle={item.subtitle}
-            // breadcrumb={breadcrumb}
             audienceViews={audienceViews}
             className="flex-grow-1 align-content-center bg-transparent"
             questionPreviewId={item.id}
