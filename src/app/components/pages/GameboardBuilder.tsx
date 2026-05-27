@@ -384,7 +384,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Col xs={6} sm={4}>
                             <FormGroup>
                                 <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>Tag as</Label>
-                                <StyledSelect inputId="question-search-level"
+                                <StyledSelect inputId="gameboard-builder-tag-as"
                                     isMulti
                                     options={siteSpecific([
                                         {value: 'ISAAC_BOARD', label: 'Created by Isaac'},

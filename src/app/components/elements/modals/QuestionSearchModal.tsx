@@ -210,7 +210,7 @@ export const QuestionSearchModal = (
         selectionList,
         searchFastTrack ? [{value: "fasttrack", label: "FastTrack"}] : [],
         searchBookmarks ? [{value: "bookmarked", label: "Bookmarked"}] : [],
-    ].flat(), [searchBook, searchDifficulties, searchStages, selectionList]);
+    ].flat(), [searchBook, searchBookmarks, searchDifficulties, searchFastTrack, searchStages, selectionList]);
 
     const removeFilterTag = (filter: string) => {
         if (searchStages.includes(filter as STAGE)) {
@@ -334,9 +334,9 @@ export const QuestionSearchModal = (
                     ))}
                 </ul>}
                 {isPhy && <div className="mb-2">
-                    <Label htmlFor="question-search-topic">Topic</Label>
+                    Topic
                     <HierarchyFilterTreeList root {...{
-                        inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
+                        tier: 0, index: TAG_LEVEL.subject,
                         choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
                 </div>}
 
