@@ -222,7 +222,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     </div>}
                     {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
                 </div>
-                <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
+                <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2 ps-1 ms-n1", "py-3"))}>
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
                         <>
                             {url && !isDisabled && !("disableRedirect" in typedProps && typedProps.disableRedirect)

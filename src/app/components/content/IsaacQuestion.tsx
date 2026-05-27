@@ -11,7 +11,6 @@ import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {
-    below,
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
@@ -22,7 +21,6 @@ import {
     selectQuestionPart,
     siteSpecific,
     submitCurrentAttempt,
-    useDeviceSize,
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
@@ -72,7 +70,6 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
-    const deviceSize = useDeviceSize();
     const feedbackRef = useRef<HTMLDivElement>(null);
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const hidingAttempts = useAppSelector(selectors.user.preferences)?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false;
@@ -230,23 +227,21 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
-                            <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
+                            <span>View feedback for a specific box by selecting it above or using the arrows below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
-                                        {below["xs"](deviceSize) ? "◀" : "Previous" }
+                                        ◀
                                     </Button>
-                                    <Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
-                                    }}>
+                                    <div className="text-nowrap align-self-center">
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
-                                    </Button>
+                                    </div>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
-                                        {below["xs"](deviceSize) ? "▶" : "Next"}
+                                        ▶
                                     </Button>
                                 </div>
                                 <div className="feedback-panel-content p-3">
