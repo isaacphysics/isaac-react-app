@@ -63,7 +63,7 @@ const GameboardBuilderTableRow = (
                             <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                                 <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
-                            <PreviewQuestionButton id={question.id} />
+                            <PreviewQuestionButton id={question.id} className="ms-2" />
                             <Spacer />
                         </div>
                         <ContentPropertyTags className="my-1" deprecated={question.deprecated} supersededByPath={question.supersededBy ? `/questions/${question.supersededBy}` : undefined} tags={question.tags} />

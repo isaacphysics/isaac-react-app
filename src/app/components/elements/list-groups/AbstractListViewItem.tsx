@@ -238,7 +238,6 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                                     <Markup encoding="latex">{title}</Markup>
                                 </span>
                             }
-                            {isBuilder && typedProps.questionPreviewId && <PreviewQuestionButton id={typedProps.questionPreviewId} />}
                         </>
                         {isItem && <>
                             {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
@@ -278,6 +277,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/>
                     </div>}
                 </div>
+                {isBuilder && typedProps.questionPreviewId && <PreviewQuestionButton id={typedProps.questionPreviewId} />}
             </Col>
             {!stackedLayout &&
                 <>
