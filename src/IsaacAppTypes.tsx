@@ -61,7 +61,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
-
+    | {type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET; accessibilityType: AccessibilitySettings}
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; authResponse: ApiTypes.AuthenticationResponseDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
@@ -232,6 +232,11 @@ export interface AccessibilitySettings {
     PREFER_MATHML?: boolean;
     REDUCED_MOTION?: boolean;
     SHOW_INACCESSIBLE_WARNING?: boolean;
+    NON_DRAGGING_INPUTS?: boolean;
+}
+
+export interface AccessibilitySettingsWithOverride extends AccessibilitySettings {
+    MANUAL_OVERRIDE?: boolean;
 }
 
 export interface UserConsent {
@@ -462,6 +467,7 @@ export const DragAndDropRegionContext = React.createContext<(
     nonSelectedItems: Immutable<ReplaceableItem>[],
     allItems: Immutable<ReplaceableItem>[],
     zoneIds: Set<string>,
+    dragAndDropEnabled: boolean;
 } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{

@@ -34,8 +34,7 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 /></b>
                 <p>{`Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.`}</p>
             </WithLinkableSetting>
-            <div className="pt-2"/>
-            <WithLinkableSetting id={"prefer-mathml-feature"}>
+            <WithLinkableSetting id={"show-inaccessible-warning-feature"}>
                 <b><StyledCheckbox 
                     checked={accessibilitySettings.SHOW_INACCESSIBLE_WARNING ?? isTeacherOrAbove(user)}
                     onChange={e => {
@@ -49,6 +48,20 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 /></b>
                 <p id="show-inaccessible-helptext">{`Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.`}</p>
             </WithLinkableSetting>
+            <WithLinkableSetting id={"non-dragging-movement-feature"}>
+                <b><StyledCheckbox checked={accessibilitySettings.NON_DRAGGING_INPUTS ?? false}
+                    onChange={e => {
+                        setAccessibilitySettings((oldDs) => ({...oldDs, NON_DRAGGING_INPUTS: e.target.checked}));
+                    }}
+                    color={siteSpecific("primary", "")}
+                    label={<p>Enable non-dragging alternative inputs</p>}
+                    id={"non-dragging-movement"}
+                    aria-describedby="non-dragging-movement-helptext"
+                    removeVerticalOffset
+                /></b>
+                <p id="non-dragging-helptext">{`Enabling this will allow you to use alternative input methods that don't require dragging for certain question types (e.g. drag-and-drop).`}</p>
+            </WithLinkableSetting>
+            {/* Seperate maths-specific setting from the general site-wide accessibility settings */}
             <div className="section-divider" />
             <div className="pt-2"/>
             <WithLinkableSetting id={"prefer-mathml-feature"}>

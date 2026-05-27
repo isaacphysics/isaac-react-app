@@ -37,6 +37,7 @@ import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 import { QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps } from "../sidebar/QuizSidebar";
+import { DragAndDropInputModeToggle } from "../PageMetadata";
 
 type PageLinkCreator = (page?: number) => string;
 export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId?: SUBJECTS | TAG_ID }, quizId: string | undefined };
@@ -189,14 +190,23 @@ export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
         }));
     };
 
-    if (rubric && renderRubric) {
-        return <Button color={siteSpecific("keyline", "tertiary")} outline={isAda} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
+    if (!(rubric && renderRubric)) {
+        return <Button color={siteSpecific("keyline", "tertiary")} outline={isAda} className={classNames("ms-3", siteSpecific("btn-lg text-nowrap", "mb-4 bg-light"))}
             alt="Show instructions" title="Show instructions in a modal" onClick={() => {openQuestionModal(attempt);}}> Show instructions
         </Button>;
     }
 }
 
-function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
+export function QuizSectionPreamble({attempt, questions}: {attempt: QuizAttemptDTO; questions: QuestionDTO[]}) {
+    const containsClozeOrDragAndDropQuestions = questions.some(q => ["isaacClozeQuestion", "isaacDragAndDropQuestion"].includes(q.type as string));
+
+    return <Col className="d-flex justify-content-end">
+        {containsClozeOrDragAndDropQuestions && <DragAndDropInputModeToggle/>}
+        <QuizRubricButton attempt={attempt}/>
+    </Col>;
+}
+
+function QuizSection({attempt, page, studentUser, user, quizAssignmentId, questions}: QuizAttemptProps & {page: number}) {
     const deviceSize = useDeviceSize();
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
@@ -209,13 +219,10 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
                 {viewingAsSomeoneElse && <div className="mb-2">
                     You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
                 </div>}
-                <Row>
-                    <Col className="d-flex flex-column align-items-end">
-                        {(isAda || above["lg"](deviceSize)) && <div className="mb-3">
-                            <QuizRubricButton attempt={attempt}/>
-                        </div>}
-                    </Col>
-                </Row>
+
+                {(isAda || above["lg"](deviceSize)) && <Row className={classNames({"mb-3": isPhy})}>
+                    <QuizSectionPreamble attempt={attempt} questions={questions}/>
+                </Row>}
 
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>
@@ -342,6 +349,7 @@ export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
         currentSection: props.page ? props.page : undefined,
         sectionStates: Object.values(sections).map(section => sectionState(section)),
         sectionTitles: Object.keys(sections).map(k => sections[k].title || "Section " + k),
+        questions
     }, attempt ? {attempt} : {view});
 
     return <>

@@ -46,6 +46,9 @@ export const selectors = {
         },
         includesLLMFreeTextQuestion: (state: AppState) => {
             return !!state?.questions?.questions.some(q => q.type === "isaacLLMFreeTextQuestion");
+        },
+        includesClozeOrDragAndDropQuestion: (state: AppState) => {
+            return !!state?.questions?.questions.some(q => q.type === "isaacClozeQuestion" || q.type === "isaacDndQuestion");
         }
     },
 
@@ -91,6 +94,10 @@ export const selectors = {
         previousContext: (state: AppState) => state?.pageContext?.previousContext ?? undefined,
         stage: (state: AppState) => state?.pageContext?.stage,
         subject: (state: AppState) => state?.pageContext?.subject,
+    },
+
+    accessibility: {
+        type: (state: AppState) => state?.accessibilityType
     }
 };
 

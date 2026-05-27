@@ -12,11 +12,8 @@ import {
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM,
     NULL_CLOZE_ITEM_ID,
-    below,
     isDefined,
-    isTouchDevice,
     useCurrentQuestionAttempt,
-    useDeviceSize
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -42,6 +39,7 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
+import { useDragAndDropAccessibility } from "./IsaacDragAndDropQuestion";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -134,9 +132,10 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 };
 
 const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ItemValidationResponseDTO>) => {
-    const deviceSize = useDeviceSize();
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
+
+    const { dragAndDropEnabled } = useDragAndDropAccessibility();
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -488,6 +487,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             nonSelectedItems,
             allItems,
             zoneIds: new Set<string>(),
+            dragAndDropEnabled
         }}>
             <DndContext
                 sensors={sensors}
@@ -502,7 +502,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {(!(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)))) && <>
+                {dragAndDropEnabled && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
                         {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">

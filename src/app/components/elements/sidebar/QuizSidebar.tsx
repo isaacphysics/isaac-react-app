@@ -1,11 +1,11 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Row, Col } from "reactstrap";
-import { QuizAttemptDTO } from "../../../../IsaacApiTypes";
+import { QuestionDTO, QuizAttemptDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { SectionProgress, QuizView, QuizRubricButton } from "../quiz/QuizContentsComponent";
+import { SectionProgress, QuizView, QuizSectionPreamble } from "../quiz/QuizContentsComponent";
 import { tags as tagsService } from "../../../services";
 import { Pill, KeyItem } from "./SidebarElements";
 
@@ -15,6 +15,7 @@ interface QuizSidebarProps {
     currentSection?: number;
     sectionStates: SectionProgress[];
     sectionTitles: string[];
+    questions: QuestionDTO[];
 }
 
 export interface QuizSidebarAttemptProps extends QuizSidebarProps {
@@ -28,7 +29,7 @@ export interface QuizSidebarViewProps extends QuizSidebarProps {
 }
 
 export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
-    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
+    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles, questions } = props;
     const deviceSize = useDeviceSize();
     const navigate = useNavigate();
     const location = useLocation();
@@ -106,9 +107,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <Col>
                     <SidebarContents/>
                 </Col>
-                <Col className="d-flex justify-content-end">
-                    <QuizRubricButton attempt={attempt}/>
-                </Col>
+                <QuizSectionPreamble attempt={attempt} questions={questions}/>
             </Row> :
             <SidebarContents/>
         }
