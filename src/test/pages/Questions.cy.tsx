@@ -12,14 +12,13 @@ it('Question types\' regression test page should have no visual regressions', ()
     // open all accordions (that weren't already open)
     cy.get('.isaac-accordion > button.accordion-header:not(.active)').each(($el) => {
         cy.wrap($el).scrollIntoView();
-        cy.wrap($el).click();
+        cy.wrap($el).click({scrollBehavior: false});
     });
 
-    cy.get('body').click(0, 0);
-
+    cy.wait(500);
+    cy.focused().blur();
     cy.scrollTo('top');
-
-    cy.wait(1000);
+    cy.wait(500);
 
     cy.matchImage();
 });
