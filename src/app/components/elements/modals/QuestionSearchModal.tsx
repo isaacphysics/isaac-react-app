@@ -262,7 +262,7 @@ export const QuestionSearchModal = (
         </Row>
 
         <Row>
-            <Col xs={6} lg={4} className={classNames("mb-2")}>
+            <Col xs={6} lg={siteSpecific(6, 4)} className={classNames("mb-2")}>
                 <Label htmlFor="question-search-stage">Stage</Label>
                 <StyledSelect
                     value={searchStages.map(s => itemise(s, stageLabelMap[s]))}
@@ -270,7 +270,7 @@ export const QuestionSearchModal = (
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </Col>
-            <Col xs={6} lg={4} className={classNames("mb-2")}>
+            <Col xs={6} lg={siteSpecific(6, 4)} className={classNames("mb-2")}>
                 <Label htmlFor="question-search-difficulty">Difficulty</Label>
                 <StyledSelect
                     value={searchDifficulties.map(d => itemise(d, difficultyLabelMap[d]))}
