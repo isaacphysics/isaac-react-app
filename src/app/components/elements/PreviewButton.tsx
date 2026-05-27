@@ -14,9 +14,10 @@ export const PreviewQuestionButton = ({id}: {id?: string}) => {
     if (!id) return null;
 
     return <button
-        type="button" title="Preview question in modal" className="pointer-cursor align-middle new-tab p-0 ms-2" 
+        type="button" title="Preview question in modal" className="pointer-cursor align-middle new-tab p-0 mt-1 ms-2 bg-transparent"
+        aria-label="Preview question"
         onClick={() => id && openQuestionModal(id)}
     >
-        <img src="/assets/common/icons/new-tab.svg" alt="Preview question" />
+        <i className="icon icon-md icon-raw icon-new-tab"/>
     </button>;
 };

@@ -57,6 +57,10 @@
   @include svg-icon-raw('/assets/phy/icons/redesign/status-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-new-tab {
+  @include svg-icon('/assets/common/icons/new-tab.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-bin {
   @include svg-icon('/assets/common/icons/bin.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
