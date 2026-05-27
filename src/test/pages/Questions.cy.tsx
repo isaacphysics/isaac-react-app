@@ -17,8 +17,8 @@ it('Question types\' regression test page should have no visual regressions', ()
 
     cy.wait(500);
     cy.focused().blur();
-    cy.scrollTo('top');
-    cy.wait(500);
+    cy.get('#page-title').scrollIntoView();
+    cy.wait(1000);
 
     cy.matchImage();
 });
