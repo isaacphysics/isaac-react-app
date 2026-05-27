@@ -29,7 +29,8 @@ import {
     UTC_MIDNIGHT_IN_SIX_DAYS,
     addDays,
     nthUtcHourOf,
-    isPhy
+    isPhy,
+    reactSelectDarkModeStyles
 } from "../../../services";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {GameboardDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
@@ -118,6 +119,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                         closeMenuOnSelect={false}
                         onChange={selectOnChange(setSelectedGroups, false)}
                         options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                        styles={reactSelectDarkModeStyles}
                     />
                 </div>
                 {(selectedGroups.length === 0 

@@ -59,10 +59,7 @@ const selectStyle = {
     className: "basic-multi-select", 
     classNamePrefix: "select",
     menuPortalTarget: document.body, 
-    styles: {
-        menuPortal: (base: object) => ({...base, zIndex: 1080}),
-        ...reactSelectDarkModeStyles
-    },
+    styles: reactSelectDarkModeStyles
 };
 
 interface QuestionSearchModalProps {

@@ -1352,6 +1352,10 @@ export const reactSelectDarkModeStyles = {
         ...baseStyles,
         backgroundColor: "var(--color-neutral-50)",
     }),
+    menuPortal: (baseStyles: object) => ({
+        ...baseStyles,
+        zIndex: 1080,
+    }),
     multiValue: (base: object) => ({
         ...base,
         backgroundColor: "var(--subject-color-200)",
@@ -1364,5 +1368,9 @@ export const reactSelectDarkModeStyles = {
     multiValueRemove: (base: object) => ({
         ...base,
         backgroundColor: "var(--subject-color-200)",
+    }),
+    singleValue: (base: object) => ({
+        ...base,
+        color: "var(--color-neutral-900)",
     }),
 };

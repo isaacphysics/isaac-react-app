@@ -39,7 +39,7 @@
 }
 
 .date-input .is-invalid, .date-input .is-valid {
-  background-color: white;
+  background-color: var(--color-neutral-white);
   --bs-form-select-bg-icon: none !important;
 }
 
