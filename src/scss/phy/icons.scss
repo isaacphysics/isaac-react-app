@@ -363,6 +363,10 @@ i.icon.icon-color-alert {
   @include icon-color-override(var(--bs-alert-color));
 }
 
+i.icon.icon-color-alert {
+  @include icon-color-override(var(--bs-alert-color));
+}
+
 i.icon.icon-color-black-hoverable {
   --buttons-light-icon: var(--color-neutral-900);
 }
