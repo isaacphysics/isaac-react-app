@@ -300,6 +300,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "quiz";
 @import "glossary";
 @import "stats";
+@import "../common/billboard";
 
 @import "expansion-layout";
 @import "../common/callout";
