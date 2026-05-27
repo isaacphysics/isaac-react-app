@@ -1,7 +1,14 @@
 @import "../common/assignment-progress";
 
-$table-selected-background: rgb(223, 237, 255);
-$table-selected-border: rgb(75, 157, 252);
+[data-ld-theme="light"] {
+  --table-selected-background: rgb(223, 237, 255);
+  --table-selected-border: rgb(75, 157, 252);
+}
+
+[data-ld-theme="dark"] {
+  --table-selected-background: rgb(75, 157, 252, 0.2);
+  --table-selected-border: rgb(75, 157, 252);
+}
 
 .assignment-progress-gameboard .gameboard-header > *:first-child:before {
   background: $secondary;
@@ -20,9 +27,9 @@ $table-selected-border: rgb(75, 157, 252);
 
 .progress-table {
   .selected {
-    background: $table-selected-background;
+    background: var(--table-selected-background);
     background-clip: padding-box;
-    box-shadow: inset 1px 0 $table-selected-border, inset -1px 0 $table-selected-border;
+    box-shadow: inset 1px 0 var(--table-selected-border), inset -1px 0 var(--table-selected-border);
   }
 
   .progress-table-question-link {
@@ -37,45 +44,45 @@ $table-selected-border: rgb(75, 157, 252);
     font-weight: bold;
   }
 
-  background-color: $gray-103;
+  background-color: var(--color-neutral-50);
 
   tbody tr:nth-of-type(even) {
-    background: $gray-103;
+    background: var(--color-neutral-50);
     th {
-      background: $gray-103;
+      background: var(--color-neutral-50);
     }
   }
 
   tbody tr:nth-of-type(odd) {
-    background: white;
+    background: var(--color-neutral-white);
     th {
-      background: white;
+      background: var(--color-neutral-white);
     }
   }
 
   thead th, tfoot th, tfoot td {
     // this be enabled for all sticky elements.
-    background: $gray-103;
+    background: var(--color-neutral-50);
   }
 
   &.has-selected {
     thead tr:nth-of-type(2) th {
-      background: $table-selected-background;
+      background: var(--table-selected-background);
       background-clip: padding-box;
     }
 
     // This must be a box-shadow rather than a border so that it scrolls with the sticky table content
     .progress-table-question-header {
-      box-shadow: 0 1px $table-selected-border, 0 -1px $table-selected-border;
+      box-shadow: 0 1px var(--table-selected-border), 0 -1px var(--table-selected-border);
     }
 
     // Horizontally sticky headers appear above the question-header's box-shadow so we need dedicated inset shadows for these headers
     thead th.student-name {
-      box-shadow: inset 0 -1px $table-selected-border;
+      box-shadow: inset 0 -1px var(--table-selected-border);
     }
     thead th.correct-attempted-header {
       @include respond-above(lg) {
-        box-shadow: inset 0 -1px $table-selected-border;
+        box-shadow: inset 0 -1px var(--table-selected-border);
       }
     }
   }
