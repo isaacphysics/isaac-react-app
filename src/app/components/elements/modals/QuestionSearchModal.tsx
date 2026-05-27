@@ -208,6 +208,8 @@ export const QuestionSearchModal = (
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
         searchBook.map(b => {const book = ISAAC_BOOKS.find(book => book.tag === b); return {value: b, label: book ? book.shortTitle : b};}),
         selectionList,
+        searchFastTrack ? [{value: "fasttrack", label: "FastTrack"}] : [],
+        searchBookmarks ? [{value: "bookmarked", label: "Bookmarked"}] : [],
     ].flat(), [searchBook, searchDifficulties, searchStages, selectionList]);
 
     const removeFilterTag = (filter: string) => {
@@ -221,6 +223,10 @@ export const QuestionSearchModal = (
             setSearchExamBoards(searchExamBoards.filter(f => f !== filter));
         } else if (searchBook.includes(filter)) {
             setSearchBook(sb => sb.filter(f => f !== filter));
+        } else if (filter === "fasttrack") {
+            setSearchFastTrack(false);
+        } else if (filter === "bookmarked") {
+            setSearchBookmarks(false);
         }
     };
 
@@ -231,6 +237,8 @@ export const QuestionSearchModal = (
         setSearchStages([]);
         setSearchBook([]);
         setTopicSelections([{}, {}, {}]);
+        setSearchFastTrack(false);
+        setSearchBookmarks(false);
     };
 
     // only allowing search for a single book makes sense in this context, but we track it as an array to align with the other filters
