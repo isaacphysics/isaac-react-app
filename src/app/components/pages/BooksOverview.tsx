@@ -8,18 +8,20 @@ import { BooksOverviewSidebar } from "../elements/sidebar/BooksOverviewSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 
 export const BookCard = (book: BookInfo) => {
-    return <Link to={book.path} className="book-container d-flex p-2 gap-3">
-        <div className="book-image-container">
-            <img src={book.image} alt={book.title} className="h-100"/>
-        </div>
-        <div className="d-flex flex-column">
-            <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
-            <div className="section-divider"/>
-            <span className="text-decoration-none">
-                {book.description}
-            </span>
-        </div>
-    </Link>;
+    return <div className="book-card">
+        <Link to={book.path} className="book-container d-flex gap-3">
+            <div className="book-image-container">
+                <img src={book.image} alt={book.title} className="h-100"/>
+            </div>
+            <div className="d-flex flex-column">
+                <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
+                <div className="section-divider"/>
+                <span className="text-decoration-none">
+                    {book.description}
+                </span>
+            </div>
+        </Link>
+    </div>;
 };
 
 export const BooksOverview = () => {

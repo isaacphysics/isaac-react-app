@@ -101,7 +101,7 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
 const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal}: InfoShapeProps) => {
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
-    return <svg className={"board-circle d-flex overflow-auto"} id={hexagonId} width={48} height={48}>
+    return <svg className={"board-circle d-flex overflow-auto mx-auto"} id={hexagonId} width={48} height={48}>
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
@@ -348,9 +348,10 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                     `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                                 ).join(", ") || "-"}
                             </p>
-                            <br/>
                         </Col>
                     </Row>
+                    <SupersededDeprecatedBoardContentWarning gameboard={board}/>
+                    <br/>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
