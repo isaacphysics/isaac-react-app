@@ -74,14 +74,14 @@
 input {
   &.form-control {
     @include placeholder($gray-500);
-    border: solid 1px $black;
+    border: solid 1px var(--color-neutral-900, black);
     padding: 0 1.2em;
   }
 }
 
 textarea {
   &.form-control {
-    border: solid 1px $black;
+    border: solid 1px var(--color-neutral-900, black);
     padding: 0.7rem 1.2rem;// 0;  // TextAreas look wrong with this 0 for bottom padding. Remove it.
 
     &.answer {

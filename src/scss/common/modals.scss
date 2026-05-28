@@ -16,7 +16,7 @@
 
     button {
       &.close {
-        color: $black;
+        color: var(--color-neutral-900, black);
         font-family: $secondary-font;
         font-size: 1rem;
         font-weight: 400;

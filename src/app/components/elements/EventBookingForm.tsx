@@ -28,7 +28,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
     return <>
         {/* Account Information */}
-        <Card className="mb-3 bg-light">
+        <Card className="mb-3 bg-neutral-light">
             <CardBody>
                 <legend>Your account information (<a href="/account" target="_blank" className="text-theme">update</a>)</legend>
                 <Row>

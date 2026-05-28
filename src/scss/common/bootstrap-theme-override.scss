@@ -27,6 +27,7 @@
 $css-var-compatible-themes: (
   theme: var(--subject-color-500),
   neutral-light: var(--color-neutral-100),
+  neutral: var(--color-neutral-200),
 );
 
 @each $theme, $color in $css-var-compatible-themes {
