@@ -1,11 +1,11 @@
 @import "../common/assignment-progress";
 
-[data-ld-theme="light"] {
+@include color-mode(light, $root: true) {
   --table-selected-background: rgb(223, 237, 255);
   --table-selected-border: rgb(75, 157, 252);
 }
 
-[data-ld-theme="dark"] {
+@include color-mode(dark, $root: true) {
   --table-selected-background: rgb(75, 157, 252, 0.2);
   --table-selected-border: rgb(75, 157, 252);
 }
