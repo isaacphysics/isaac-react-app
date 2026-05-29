@@ -7,3 +7,11 @@
         fill: var(--color-neutral-600, $gray-120) !important;
     }
 }
+
+.bb-tooltip {
+    background-color: var(--color-neutral-white) !important;
+
+    td {
+        background-color: var(--color-neutral-white) !important;
+    }
+}
