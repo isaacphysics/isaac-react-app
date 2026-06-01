@@ -15,8 +15,11 @@ it('Question types\' regression test page (part 1) should have no visual regress
         cy.wrap($el).click({scrollBehavior: false});
     });
 
+    cy.wait(300);
     cy.focused().blur();
+    cy.wait(300);
     cy.get('#page-title').scrollIntoView();
+    cy.wait(300);
 
     cy.matchImage();
 });
@@ -33,8 +36,11 @@ it('Question types\' regression test page (part 2) should have no visual regress
         cy.wrap($el).click({scrollBehavior: false});
     });
 
+    cy.wait(300);
     cy.focused().blur();
+    cy.wait(300);
     cy.get('#page-title').scrollIntoView();
+    cy.wait(300);
 
     cy.matchImage();
 });
