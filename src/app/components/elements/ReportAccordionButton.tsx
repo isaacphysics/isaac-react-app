@@ -1,5 +1,7 @@
 import React from "react";
 import {logAction, useAppDispatch} from "../../state";
+import { isAda, siteSpecific } from "../../services";
+import classNames from "classnames";
 
 interface ReportAccordionButtonProps {
     pageId?: string,
@@ -47,6 +49,6 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
             window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
         }}
     >
-        <i className="icon icon-sm icon-flag icon-color-black" />
+        <i className={classNames("icon icon-flag", siteSpecific("icon-color-grey", "icon-color-muted icon-sm"))} />
     </button>;
 };
