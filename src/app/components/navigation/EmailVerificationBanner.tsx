@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
     selectors,
     useAppSelector,
@@ -6,13 +6,15 @@ import {
 } from "../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from 'reactstrap';
-import {SITE_TITLE_SHORT, siteSpecific, WEBMASTER_EMAIL} from "../../services";
+import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../services";
 
 export const EmailVerificationBanner = () => {
     const [hidden, setHidden] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
+    const {cookieConsent} = useUserConsent();
+    const isHiddenViaCookie = !!(user?.loggedIn && user?.emailVerificationStatus === "DELIVERY_FAILED" && cookieConsent?.disableEmailVerificationWarningCookiesAccepted);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
-    const show = user?.loggedIn && status != "VERIFIED" && !hidden;
+    const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     function clickVerify() {
@@ -22,10 +24,9 @@ export const EmailVerificationBanner = () => {
         setHidden(true);
     }
 
-    return show ? <div className="banner d-print-none" id="email-status-banner">
+    return show && <div className="banner d-print-none" id="email-status-banner">
         <Container className="py-3">
-
-            <Row style={{alignItems: "center"}}>
+            <Row className="align-items-center">
                 <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
                     <h3 className="text-center">
                         <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/icons/info.svg" style={{height: "1.5rem"}}
@@ -63,5 +64,5 @@ export const EmailVerificationBanner = () => {
                 }
             </Row>
         </Container>
-    </div> : null;
+    </div>;
 };

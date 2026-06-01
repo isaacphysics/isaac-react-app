@@ -54,9 +54,9 @@ interface DashboardStreakPanelProps {
 const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
 
     const streaksTooltip = useRef(null);
-    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={streaksTooltip}>
-            The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/><br/>
-            Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!
+    const tooltip = <UncontrolledTooltip placement="bottom" autohide={false} target={streaksTooltip}>
+        The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/><br/>
+        Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!
     </UncontrolledTooltip>;
 
     const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
@@ -78,7 +78,7 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
             }
         </div>
         <Spacer/>
-        <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
+        <Button className="d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
             <i className="icon icon-info icon-color-grey"/> What is this?
         </Button>
         {tooltip}
