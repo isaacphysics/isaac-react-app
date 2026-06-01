@@ -39,12 +39,14 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
     }
 
     return <button
-        className="accordion-icon accordion-icon-report btn-action"
+        className="accordion-icon btn-action align-self-end mt-2 me-2 mb-4 bg-transparent btn-blank"
         aria-label="Report a problem (opens in new tab)"
         title="Report a problem (opens in new tab)"
         onClick={() => {
             logAccordionReport();
             window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
         }}
-    />;
+    >
+        <i className="icon icon-sm icon-flag icon-color-black" />
+    </button>;
 };
