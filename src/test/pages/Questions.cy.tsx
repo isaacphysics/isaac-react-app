@@ -1,7 +1,8 @@
 import React from "react";
 import { Question } from "../../app/components/pages/Question";
+import { mockRegressionTestQuestionParts } from "../../mocks/data";
 
-it('Question types\' regression test page (part 1) should have no visual regressions', () => {
+it.skip('Question types\' regression test page (part 1) should have no visual regressions', () => {
 
     // the API request for the question is mocked in src/mocks/handlers.ts
 
@@ -18,17 +19,15 @@ it('Question types\' regression test page (part 1) should have no visual regress
     cy.matchImage();
 });
 
-it('Question types\' regression test page (part 2) should have no visual regressions', () => {
+for (const part of mockRegressionTestQuestionParts) {
 
-    cy.mountWithStoreAndRouter(<Question questionIdOverride="_regression_test_2_"/>, ["/questions/_regression_test_2_"]);
+    it(`Question type ${part.type} should have no visual regression`, () => {
+        cy.mountWithStoreAndRouter(<Question questionIdOverride={part.id}/>, [`/questions/${part.id}`]);
 
-    cy.get('[data-testid="loading"]').should('not.exist');
+        cy.get('[data-testid="loading"]').should('not.exist');
 
-    // open all accordions (that weren't already open)
-    cy.get('.isaac-accordion > button.accordion-header:not(.active)').each(($el) => {
-        cy.wrap($el).scrollIntoView();
-        cy.wrap($el).click({scrollBehavior: false});
+        cy.wait(500);
+
+        cy.matchImage();
     });
-
-    cy.matchImage();
-});
+}
