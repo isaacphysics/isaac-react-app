@@ -40,15 +40,17 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
         dispatch(logAction(eventDetails));
     }
 
-    return <button
-        className="accordion-icon btn-action align-self-end mt-2 me-2 mb-4 bg-transparent btn-blank"
-        aria-label="Report a problem (opens in new tab)"
-        title="Report a problem (opens in new tab)"
-        onClick={() => {
-            logAccordionReport();
-            window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
-        }}
-    >
-        <i className={classNames("icon icon-flag", siteSpecific("icon-color-grey", "icon-color-muted icon-sm"))} />
-    </button>;
+    return <div className="d-flex w-100 justify-content-end mb-4 px-4">
+        <button
+            className="accordion-icon btn-action bg-transparent btn-blank p-0 wf-2 hf-2 vertical-center"
+            aria-label="Report a problem (opens in new tab)"
+            title="Report a problem (opens in new tab)"
+            onClick={() => {
+                logAccordionReport();
+                window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
+            }}
+        >
+            <i className={classNames("icon icon-flag", siteSpecific("icon-color-grey", "icon-color-muted icon-sm"))} />
+        </button>
+    </div>;
 };
