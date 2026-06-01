@@ -1,6 +1,6 @@
 import React from "react";
 import {logAction, useAppDispatch} from "../../state";
-import { isAda, siteSpecific } from "../../services";
+import { siteSpecific } from "../../services";
 import classNames from "classnames";
 
 interface ReportAccordionButtonProps {
