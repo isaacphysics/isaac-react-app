@@ -21,7 +21,9 @@ it.skip('Question types\' regression test page (part 1) should have no visual re
 
 for (const part of mockRegressionTestQuestionParts) {
 
-    it(`Question type ${part.type} should have no visual regression`, () => {
+    const type = part.children?.[0]?.type ?? "unknown";
+
+    it(`Question type ${type} should have no visual regression`, () => {
         cy.mountWithStoreAndRouter(<Question questionIdOverride={part.id}/>, [`/questions/${part.id}`]);
 
         cy.get('[data-testid="loading"]').should('not.exist');
