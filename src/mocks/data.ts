@@ -3541,13 +3541,13 @@ export const mockMyAssignments = [
     }
 ];
 
-export const mockRegressionTestQuestions = {
-    "id": "_regression_test_",
-    "title": "Regression Test Page",
+export const mockRegressionTestQuestionsPart1 = {
+    "id": "_regression_test_1_",
+    "title": "Regression Test Page (1)",
     "subtitle": "Testing123",
     "type": "isaacQuestionPage",
     "encoding": "markdown",
-    "canonicalSourceFile": "content/_regression_test/_regression_test_.json",
+    "canonicalSourceFile": "content/_regression_test/_regression_test_1_.json",
     "children": [
         {
             "type": "content",
@@ -4340,6 +4340,254 @@ export const mockRegressionTestQuestions = {
                     "published": true,
                     "tags": []
                 },
+                {
+                    "id": "_regression_test_|acc_drag_and_drop",
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "isaacDndQuestion",
+                            "encoding": "markdown",
+                            "id": "3d927959-a943-4c09-a39a-5fc406b14da1",
+                            "choices": [
+                                {
+                                    "encoding": "markdown",
+                                    "value": "",
+                                    "explanation": {
+                                        "type": "content",
+                                        "children": []
+                                    },
+                                    "type": "dndChoice",
+                                    "children": [],
+                                    "correct": true,
+                                    "items": [
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "A1",
+                                            "id": "eb00"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-0",
+                                            "id": "d39b"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F1",
+                                            "id": "afab"
+                                        },
+                                        {
+                                            "type": "dndItem",
+                                            "dropZoneId": "F-2",
+                                            "id": "9d81"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "answer": {
+                                "type": "content",
+                                "encoding": "markdown",
+                                "value": ""
+                            },
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "value": "This is a drag and drop question. This is a [drop-zone:A1|w-100h-27]."
+                                },
+                                {
+                                    "type": "figure",
+                                    "encoding": "markdown",
+                                    "src": "figures/sketch_beta_quad_sketch.svg",
+                                    "value": "test figure",
+                                    "figureRegions": [
+                                        {
+                                            "id": "F-0",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 50,
+                                            "top": 50
+                                        },
+                                        {
+                                            "id": "F1",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 18.8,
+                                            "top": 35.8
+                                        },
+                                        {
+                                            "id": "F-2",
+                                            "minWidth": "100px",
+                                            "width": 15,
+                                            "left": 75.2,
+                                            "top": 35.5
+                                        }
+                                    ],
+                                    "condensedMaxWidth": "500px"
+                                }
+                            ],
+                            "items": [
+                                {
+                                    "type": "item",
+                                    "id": "eb00",
+                                    "value": "graph"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "d39b",
+                                    "value": "origin"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "9d81",
+                                    "value": "$x > 0$"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "afab",
+                                    "value": "$x < 0$"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "_regression_test_|acc_coordinates",
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "isaacCoordinateQuestion",
+                            "encoding": "markdown",
+                            "id": "a4335dfc-c908-4bda-a1f6-78367ee5d8a9",
+                            "choices": [
+                                {
+                                    "encoding": "markdown",
+                                    "value": "",
+                                    "explanation": {
+                                        "type": "content",
+                                        "children": []
+                                    },
+                                    "type": "coordinateChoice",
+                                    "items": [
+                                        {
+                                            "type": "coordinateItem",
+                                            "coordinates": [
+                                                "2",
+                                                "1"
+                                            ]
+                                        },
+                                        {
+                                            "type": "coordinateItem",
+                                            "coordinates": [
+                                                "4",
+                                                "2"
+                                            ]
+                                        }
+                                    ],
+                                    "correct": true
+                                }
+                            ],
+                            "answer": {
+                                "type": "content",
+                                "encoding": "markdown",
+                                "value": ""
+                            },
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "value": "This is a coordinate question. The correct answer is (2, 1) and (4, 2)."
+                                }
+                            ],
+                            "disregardSignificantFigures": true,
+                            "numberOfDimensions": 2,
+                            "placeholderValues": [
+                                "placeholder",
+                                "placeholder"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "tags": []
+        }
+    ],
+    "relatedContent": [
+        {
+            "id": "_regression_test_",
+            "title": "Regression Test Page",
+            "subtitle": "Testing123",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "regression_test"
+            ],
+            "state": "NOT_ATTEMPTED" ,
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ],
+                    "examBoard": [
+                        "aqa",
+                        "ocr"
+                    ]
+                },
+                {
+                    "stage": [
+                        "advanced"
+                    ],
+                    "examBoard": [
+                        "ada"
+                    ]
+                }
+            ]
+        }
+    ],
+    "published": true,
+    "tags": [
+        "regression_test"
+    ],
+    "level": 0,
+    "audience": [
+        {
+            "stage": [
+                "a_level"
+            ],
+            "examBoard": [
+                "aqa",
+                "ocr"
+            ]
+        },
+        {
+            "stage": [
+                "advanced"
+            ],
+            "examBoard": [
+                "ada"
+            ]
+        }
+    ]
+};
+
+export const mockRegressionTestQuestionsPart2 = {
+    "id": "_regression_test_2_",
+    "title": "Regression Test Page (2)",
+    "subtitle": "Testing123",
+    "type": "isaacQuestionPage",
+    "encoding": "markdown",
+    "canonicalSourceFile": "content/_regression_test/_regression_test_2_.json",
+    "children": [
+        {
+            "type": "content",
+            "encoding": "markdown",
+            "children": [],
+            "value": "This page is to speed up testing of question behaviors. **Changing anything on this page is liable to break the automated testing**.\n\nYou may find this page useful to see what content looks like in the editor, then you can click the blue \"Preview on Staging\" button to see what it would look like on the Isaac site.",
+            "tags": []
+        },
+        {
+            "type": "content",
+            "layout": "accordion",
+            "children": [
                 {
                     "id": "_regression_test_|acc_drag_and_drop",
                     "type": "content",
