@@ -12,11 +12,8 @@ import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
 import {
     ifKeyIsEnter,
-    initialiseInequality,
     isDefined,
     jsonHelper,
-    parsePseudoSymbolicAvailableSymbols,
-    sanitiseInequalityState,
     useCurrentQuestionAttempt,
     useModalWithScroll
 } from "../../services";
@@ -27,6 +24,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 import { InequalityState, SeedExpressions, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
+import { initialiseInequality, parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState } from "../../services/inequalityUtils";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -42,7 +40,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const [hasStartedEditing, setHasStartedEditing] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const emptySubmission = !hasStartedEditing && !currentAttemptValue;
-    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible, readonly});
 
     const editorSeed: WidgetSpec[] = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)).current;
     const initialEditorSymbols = useRef(editorSeed ?? []);
@@ -82,12 +80,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const openInequality = () => {
-        if (!readonly) {
-            openModal();
-        }
-    };
-
     return <div className="symbolic-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
@@ -102,7 +94,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
             role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})}
-            onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
+            onClick={openModal} onKeyDown={ifKeyIsEnter(openModal)}
             dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<span>or click here to drag and drop your answer</span>' }}
         />
         {/* TODO Accessibility */}

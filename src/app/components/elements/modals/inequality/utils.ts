@@ -13,12 +13,11 @@ import {
     EditorMode,
     CHEMICAL_STATES
 } from "./constants";
-import {GREEK_LETTERS_MAP, isDefined, sanitiseInequalityState} from "../../../../services";
+import {GREEK_LETTERS_MAP, isDefined} from "../../../../services";
 import React from "react";
 import isEqual from "lodash/isEqual";
 import uniqWith from "lodash/uniqWith";
-import {Inequality, makeInequality, WidgetSpec} from "inequality";
-import { InequalityState } from "../../inputs/SymbolicTextInput";
+import {Inequality, WidgetSpec} from "inequality";
 
 // This file contains helper functions used specifically in the Inequality modal
 
@@ -327,7 +326,7 @@ export function generateChemicalOperationsMenuItems() {
     ];
 }
 
-export function generateChemicalElementMenuItem(symbol: string): MenuItemProps | undefined {
+export function generateChemicalElementMenuItem(symbol: string, editorMode?: EditorMode): MenuItemProps | undefined {
     if (CHEMICAL_ELEMENTS.includes(symbol)) {
         return {
             type: "ChemicalElement",
@@ -337,10 +336,12 @@ export function generateChemicalElementMenuItem(symbol: string): MenuItemProps |
             menu: {label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}`}
         };
     } else if (CHEMICAL_PARTICLES.hasOwnProperty(symbol)) {
+        if (editorMode === "nuclear" && symbol === "electron") symbol = "electron_nuclear";
         return {
             type: "Particle",
             properties: CHEMICAL_PARTICLES[symbol].properties,
-            menu: {...CHEMICAL_PARTICLES[symbol].menu, className: `chemical-particle ${symbol}`}
+            menu: {...CHEMICAL_PARTICLES[symbol].menu, className: `chemical-particle ${symbol}`},
+            children: CHEMICAL_PARTICLES[symbol].children
         };
     }
     return undefined;
@@ -510,7 +511,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 if (["chemistry", "nuclear"].includes(editorMode)) {
                     // Available chemical elements
                     if (CHEMICAL_ELEMENTS.includes(availableSymbol) || CHEMICAL_PARTICLES.hasOwnProperty(availableSymbol)) {
-                        const item = generateChemicalElementMenuItem(availableSymbol);
+                        const item = generateChemicalElementMenuItem(availableSymbol, editorMode);
                         if (item) {
                             customMenuItems.chemicalElements.push(item);
                         }
@@ -568,8 +569,8 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
         } else if (["chemistry", "nuclear"].includes(editorMode)) {
             return [{
                 ...baseItems,
-                chemicalElements: CHEMICAL_ELEMENTS.map(generateChemicalElementMenuItem),
-                chemicalParticles: Object.keys(CHEMICAL_PARTICLES).map(generateChemicalElementMenuItem),
+                chemicalElements: CHEMICAL_ELEMENTS.map(symbol => generateChemicalElementMenuItem(symbol, editorMode)),
+                chemicalParticles: Object.keys(CHEMICAL_PARTICLES).filter(symbol => symbol !== "electron_nuclear").map(symbol => generateChemicalElementMenuItem(symbol, editorMode)),
             }, true] as [MenuItems, boolean];
         } else {
             // Assuming editorMode === 'maths'
@@ -678,64 +679,4 @@ export function onCursorMoveEndCallback({movingMenuItem, previousCursor, sketch,
     movingMenuItem.current = null;
     movingMenuBar.current = null;
     potentialSymbolSpec.current = null;
-}
-
-interface PrepareInequalityArgs {
-    editorMode?: EditorMode;
-    logicSyntax?: LogicSyntax;
-    inequalityModalRef: React.RefObject<HTMLDivElement>;
-    isTrashActive: React.MutableRefObject<boolean>;
-    sketch: React.MutableRefObject<Nullable<Inequality>>;
-    initialEditorSymbols: WidgetSpec[];
-    onEditorStateChange?: (state: InequalityState) => void;
-    setEditorState: React.Dispatch<React.SetStateAction<InequalityState>>;
-}
-export function prepareInequality({editorMode, inequalityModalRef, initialEditorSymbols, isTrashActive, sketch, logicSyntax, setEditorState, onEditorStateChange}: PrepareInequalityArgs) {
-    if (!isDefined(inequalityModalRef.current)) {
-        throw new Error("Unable to initialise inequality; target element not found.");
-    }
-    
-    const { sketch: newSketch, p } = makeInequality(
-        inequalityModalRef.current,
-        window.innerWidth,
-        window.innerHeight,
-        initialEditorSymbols,
-        {
-            editorMode: editorMode ?? "logic",
-            logicSyntax: logicSyntax ?? "logic",
-            textEntry: false,
-            fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
-            fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf'
-        }
-    );
-    if (!isDefined(newSketch)) {
-        throw new Error("Unable to initialize inequality.");
-    }
-    newSketch.log = {
-        initialState: [],
-        actions: [{
-            event: "OPEN",
-            timestamp: Date.now()
-        }]
-    };
-    newSketch.onCloseMenus = () => undefined;
-    newSketch.isTrashActive = () => isTrashActive.current;
-    newSketch.onNewEditorState = (state: InequalityState) => {
-        const modal = inequalityModalRef.current;
-        if (modal) {
-            const newState = sanitiseInequalityState(state);
-            setEditorState((prev: InequalityState) => ({...prev, ...newState}));
-            onEditorStateChange?.(newState);
-        }
-    };
-    sketch.current = newSketch;
-    return () => {
-        if (sketch.current) {
-            sketch.current.onNewEditorState = () => null;
-            sketch.current.onCloseMenus = () => null;
-            sketch.current.isTrashActive = () => false;
-            sketch.current = null;
-        }
-        p.remove();
-    };
 }

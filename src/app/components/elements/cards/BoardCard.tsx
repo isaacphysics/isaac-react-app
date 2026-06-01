@@ -100,7 +100,7 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
 const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal}: InfoShapeProps) => {
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
-    return <svg className={"board-circle"} id={hexagonId} width={48} height={48}>
+    return <svg className={"board-circle d-flex overflow-auto mx-auto"} id={hexagonId} width={48} height={48}>
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
@@ -202,7 +202,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                     {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
                     <br/>
-                    {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board} />}
+                    <SupersededDeprecatedBoardContentWarning gameboard={board} />
                 </td>
                 {stagesAndDifficultiesTD}
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
@@ -229,6 +229,8 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                         <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                         {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                        <br/>
+                        <SupersededDeprecatedBoardContentWarning gameboard={board} hideFullDetails />
                     </td>
                     {stagesAndDifficultiesTD}
                     {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
@@ -289,7 +291,6 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
                             Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
                         </p>}
-                        {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board} />}
                     </Col>
                 </Row>
             </GameboardCard>,
@@ -343,9 +344,10 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                                     `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                                 ).join(", ") || "-"}
                             </p>
-                            <br/>
                         </Col>
                     </Row>
+                    <SupersededDeprecatedBoardContentWarning gameboard={board}/>
+                    <br/>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <SaveBoardButton board={board} color="keyline" size="sm" />

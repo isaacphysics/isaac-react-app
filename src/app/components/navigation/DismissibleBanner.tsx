@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import Cookies from "js-cookie";
 import React, { ReactNode, useState } from "react";
-import { Alert, Col, Row } from "reactstrap";
+import { Alert, AlertProps, Col, Row } from "reactstrap";
 
-interface DismissibleBannerProps {
+interface DismissibleBannerProps extends AlertProps {
     cookieName: string;
     dismissText?: string; // undefined generates a close button
     children: ReactNode;
@@ -11,7 +11,7 @@ interface DismissibleBannerProps {
 }
 
 export const DismissibleBanner = (props: DismissibleBannerProps) => {
-    const { cookieName, children, dismissText, theme } = props;
+    const { cookieName, children, dismissText, theme, ...rest } = props;
 
     const [show, setShown] = useState(() => {
         const currentCookieValue = Cookies.get(cookieName);
@@ -28,6 +28,7 @@ export const DismissibleBanner = (props: DismissibleBannerProps) => {
     }
 
     return <Alert 
+        {...rest}
         color={theme} 
         className={classNames("mb-0 border-radius-0 mx-0 px-5 no-print", {"d-flex align-items-center": !dismissText})} 
         fade={false} 

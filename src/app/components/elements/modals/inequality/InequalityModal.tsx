@@ -3,8 +3,7 @@ import {Inequality, WidgetSpec} from "inequality";
 import {
     isDefined,
     isStaff,
-    parsePseudoSymbolicAvailableSymbols,
-    sanitiseInequalityState, siteSpecific
+    siteSpecific
 } from "../../../../services";
 import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
 import {ContentDTO} from "../../../../../IsaacApiTypes";
@@ -27,10 +26,10 @@ import {
     generateMenuItems,
     handleMoveCallback,
     onCursorMoveEndCallback,
-    prepareInequality,
     setupAndTeardownDocStyleAndListeners
 } from "./utils";
 import { InequalityState } from "../../inputs/SymbolicTextInput";
+import { parsePseudoSymbolicAvailableSymbols, prepareInequality, sanitiseInequalityState } from "../../../../services/inequalityUtils";
 
 // This file contains the React components associated with the Inequality modal
 
@@ -204,7 +203,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
             const splitUnparsed = unparsedChemicalElements.replace(/[^a-z]+/img, ",").split(",").filter(s => s !== "");
             const splitChemicalElements = splitUnparsed.filter(s => CHEMICAL_ELEMENTS.includes(s));
             const upperCaseWarning = splitUnparsed.some(e => e[0] !== e[0].toUpperCase());
-            return [uniq(splitChemicalElements).map(generateChemicalElementMenuItem).filter(isDefined), upperCaseWarning];
+            return [uniq(splitChemicalElements).map((symbol) => generateChemicalElementMenuItem(symbol, editorMode)).filter(isDefined), upperCaseWarning];
         }
         return [undefined, false];
     }, [unparsedChemicalElements]);

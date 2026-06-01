@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { GameboardDTO } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse, Badge } from "reactstrap";
 import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
@@ -9,6 +9,8 @@ import { Spacer } from "../Spacer";
 import { ShareLink } from "../ShareLink";
 import { SaveBoardButton } from "../SaveBoardButton";
 import { selectors, useAppSelector } from "../../../state";
+import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
+import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -63,13 +65,14 @@ const CardUsageInfo = ({ gameboard, groupCount, isSetAssignments, className, ...
 interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
     gameboard?: GameboardDTO;
     linkLocation?: GameboardLinkLocation;
+    assignment?: AssignmentDTO;
     openAssignModal?: () => void;
     groupCount?: number;
 }
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, children, openAssignModal, groupCount, ...rest} = props;
+    const {gameboard, linkLocation, children, assignment, openAssignModal, groupCount, ...rest} = props;
 
     const isSetAssignments = isDefined(groupCount);
     const user = useAppSelector(selectors.user.orNull);
@@ -78,6 +81,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(gameboard), [gameboard]);
 
     const deviceSize = useDeviceSize();
+    const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
 
     const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
         if (isDefined(c.tags) && c.tags.length > 0) {
@@ -88,10 +92,12 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const boardSubjects = determineGameboardSubjects(gameboard);
 
-    const boardLink = gameboard && (isSetAssignments 
-        ? `/assignment/${gameboard.id}`
-        : `${PATHS.GAMEBOARD}#${gameboard.id}`
-    );
+    const boardLink = assignment && isAssignmentsV2Link
+        ? `/assignment/${assignment.id}/view`
+        : gameboard && (isSetAssignments 
+            ? `/assignment/${gameboard.id}`
+            : `${PATHS.GAMEBOARD}#${gameboard.id}`
+        );
 
     const card = <div className="px-3 py-2 flex-grow-1">
         <Row data-testid="my-assignment">
@@ -120,6 +126,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 </div>
 
                 {children}
+
+                <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
 
                 <Spacer/>
             </Col>

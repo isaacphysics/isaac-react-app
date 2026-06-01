@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../../state';
+import {openActiveModal, useAppDispatch, useGetGroupMembersQuery} from '../../../state';
 import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../../IsaacAppTypes';
 import {
     above,
@@ -15,7 +15,8 @@ import {
     PATHS,
     siteSpecific,
     SortOrder,
-    useDeviceSize
+    useDeviceSize,
+    useGroupAssignments
 } from '../../../services';
 import {RegisteredUserDTO} from '../../../../IsaacApiTypes';
 import {Link, useLocation} from 'react-router-dom';
@@ -32,10 +33,12 @@ import classNames from 'classnames';
 import { useHistoryState } from '../../../state/actions/history';
 import { PageContainer } from '../../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
+import { FeatureFlag, useFeatureFlag } from '../../../services/featureFlag';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
     const quiz = isQuiz(assignment);
+    const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement> | React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
@@ -55,7 +58,10 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 <span className="d-inline-flex flex-wrap">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
                     {isScheduled && <em className="mx-1">(scheduled)</em>}
-                    <a className="new-tab-link" href={quiz ? `${PATHS.PREVIEW_TEST}/${assignment.quizSummary?.id}` : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+                    <a className="new-tab-link" href={quiz 
+                        ? `${PATHS.PREVIEW_TEST}/${assignment.quizSummary?.id}` 
+                        : isAssignmentsV2Link ? `/assignment/${assignment.id}/view` : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`
+                    } target="_blank" onClick={(e) => e.stopPropagation()}>
                         <i className="icon icon-new-tab" />
                     </a>
                 </span>

@@ -11,7 +11,6 @@ import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {
-    below,
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
@@ -22,7 +21,6 @@ import {
     selectQuestionPart,
     siteSpecific,
     submitCurrentAttempt,
-    useDeviceSize,
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
@@ -48,6 +46,24 @@ function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof use
     }
 }
 
+interface FastTrackSubmissionButtonsProps {
+    fastTrackPrimaryAction?: React.InputHTMLAttributes<HTMLInputElement> | null;
+    fastTrackSecondaryAction?: React.InputHTMLAttributes<HTMLInputElement> | null;
+}
+
+const FastTrackSubmissionButtons = ({fastTrackPrimaryAction, fastTrackSecondaryAction}: FastTrackSubmissionButtonsProps) => {
+    return <>
+        {fastTrackSecondaryAction && <div
+            className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3 pb-3": fastTrackPrimaryAction})}>
+            <input {...fastTrackSecondaryAction} className="h-100 btn btn-outline-primary w-100"/>
+        </div>}
+        {fastTrackPrimaryAction && <div
+            className={classNames("m-auto pt-3 w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("px-4 px-md-0 pb-3", "pb-1"), {"ps-sm-2 ps-md-0 ps-lg-3": fastTrackSecondaryAction})}>
+            <input {...fastTrackPrimaryAction} className="h-100 btn btn-secondary w-100"/>
+        </div>}
+    </>;
+};
+
 export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const dispatch = useAppDispatch();
     const location = useLocation();
@@ -72,7 +88,6 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
-    const deviceSize = useDeviceSize();
     const feedbackRef = useRef<HTMLDivElement>(null);
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const hidingAttempts = useAppSelector(selectors.user.preferences)?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false;
@@ -157,17 +172,12 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
     const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? "Marking your answer…" : "Check my answer";
-    const primaryAction = isFastTrack 
-        ? determineFastTrackPrimaryAction(fastTrackInfo) 
-        : isInlineQuestion 
-            ? {disabled: !canSubmit, value: submitButtonLabel, type: "submit", onClick: () => { 
-                submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
-            }} 
-            : {disabled: !canSubmit || awaitingFeedback, value: submitButtonLabel, type: "submit"};
+    const fastTrackPrimaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) : null;
+    const fastTrackSecondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
 
-    const secondaryAction = isFastTrack ?
-        determineFastTrackSecondaryAction(fastTrackInfo) :
-        null;
+    const checkAnswerButtonProps = isInlineQuestion 
+        ? {disabled: !canSubmit, onClick: () => submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts)} 
+        : {disabled: !canSubmit || awaitingFeedback};
 
     const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
@@ -179,7 +189,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
+            void submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
             setHasSubmitted(true);
             setSentFeedback(false);
         }}>
@@ -230,23 +240,21 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
-                            <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
+                            <span>View feedback for a specific box by selecting it above or using the arrows below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
-                                        {below["xs"](deviceSize) ? "◀" : "Previous" }
+                                        ◀
                                     </Button>
-                                    <Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
-                                    }}>
+                                    <div className="text-nowrap align-self-center">
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
-                                    </Button>
+                                    </div>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
-                                        {below["xs"](deviceSize) ? "▶" : "Next"}
+                                        ▶
                                     </Button>
                                 </div>
                                 <div className="feedback-panel-content p-3">
@@ -270,20 +278,11 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         identifier={doc.id} type={"question"}
                         validationResponse={validationResponse}
                     />
-                    : (!correct || canSubmit || (isFastTrack && (primaryAction || secondaryAction))) && !locked &&
-                        <div
-                            className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-7 mb-n3": correct})}>
-                            {secondaryAction &&
-                            <div
-                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3 pb-3": primaryAction})}>
-                                <input {...secondaryAction} className="h-100 btn btn-outline-primary w-100"/>
-                            </div>
-                            }
-                            {primaryAction &&
-                            <div
-                                className={classNames("m-auto pt-3 w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("px-4 px-md-0 pb-3", "pb-1"), {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
-                                <input {...primaryAction} className="h-100 btn btn-secondary w-100"/>
-                            </div>
+                    : (!correct || canSubmit || (isFastTrack && (fastTrackPrimaryAction || fastTrackSecondaryAction))) && !locked &&
+                        <div className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-7 mb-n3": correct})}>
+                            {isFastTrack 
+                                ? <FastTrackSubmissionButtons fastTrackPrimaryAction={fastTrackPrimaryAction} fastTrackSecondaryAction={fastTrackSecondaryAction} />
+                                : <Button {...checkAnswerButtonProps} className="mx-auto mt-3 w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
                             }
                         </div>
                 }
