@@ -2,11 +2,13 @@ import React from "react";
 import { Question } from "../../app/components/pages/Question";
 import { mockRegressionTestQuestionParts } from "../../mocks/data";
 
-it.skip('Question types\' regression test page (part 1) should have no visual regressions', () => {
+// Using the whole page has proven repeatedly flaky. It would be much quicker to test with this approach rather than the latter,
+// but the current inconsistency is simply causing too many problems.
+it.skip('Question types\' regression test page should have no visual regressions', () => {
 
     // the API request for the question is mocked in src/mocks/handlers.ts
 
-    cy.mountWithStoreAndRouter(<Question questionIdOverride="_regression_test_1_"/>, ["/questions/_regression_test_1_"]);
+    cy.mountWithStoreAndRouter(<Question questionIdOverride="_regression_test_"/>, ["/questions/_regression_test_"]);
 
     cy.get('[data-testid="loading"]').should('not.exist');
 
