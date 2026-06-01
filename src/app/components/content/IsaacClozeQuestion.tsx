@@ -39,7 +39,7 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { useDragAndDropAccessibility } from "./IsaacDragAndDropQuestion";
+import { useDragAndDropAccessibility } from "../../services/accessibility";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 

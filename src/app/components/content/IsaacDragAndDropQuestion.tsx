@@ -9,15 +9,11 @@ import {
     DndItemDTO
 } from "../../../IsaacApiTypes";
 import {
-    ACTION_TYPE,
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM_ID,
-    below,
     isDefined,
-    isTouchDevice,
     useCurrentQuestionAttempt,
-    useDeviceSize
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -43,7 +39,7 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
-import { selectors, useAppDispatch, useAppSelector } from "../../state";
+import { useDragAndDropAccessibility } from "../../services/accessibility";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -135,23 +131,6 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [active]);
 };
-
-export function useDragAndDropAccessibility() {
-    const dispatch = useAppDispatch();
-    const deviceSize = useDeviceSize();
-    const accessibilityType = useAppSelector(selectors.accessibility.type);
-
-    // Drag and drop is disabled if the user has selected a manual accessibility override, or if they have selected non-dragging inputs as an accessibility preference,
-    // or if they are on a touch device or very small screen and haven't explicitly enabled drag and drop.
-    const dragAndDropEnabled = (isDefined(accessibilityType) && (accessibilityType.MANUAL_OVERRIDE || accessibilityType?.NON_DRAGGING_INPUTS))
-        ? !accessibilityType?.NON_DRAGGING_INPUTS
-        : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
-    const toggleDragAndDropEnabled = () => {
-        dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": dragAndDropEnabled}});
-    };
-
-    return { dragAndDropEnabled, toggleDragAndDropEnabled };
-}
 
 const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacDragAndDropQuestionDTO, DndValidationResponseDTO>) => {
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<DndChoiceDTO>(questionId);

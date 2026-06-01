@@ -21,7 +21,7 @@ import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
 import { Spacer } from './Spacer';
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { StyledCheckbox } from './inputs/StyledCheckbox';
-import { useDragAndDropAccessibility } from '../content/IsaacDragAndDropQuestion';
+import { useDragAndDropAccessibility } from '../../services/accessibility';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;

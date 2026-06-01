@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { AppState, useAppSelector } from "../state";
+import { AppState, selectors, useAppDispatch, useAppSelector } from "../state";
 import { isTeacherOrAbove } from "./user";
+import { below, isTouchDevice, useDeviceSize } from "./device";
+import { isDefined } from "./miscUtils";
+import { ACTION_TYPE } from "./constants";
 
 export const useReducedMotion = () => {
     const { ACCESSIBILITY: accessibilitySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
@@ -27,6 +30,24 @@ export const useReducedMotion = () => {
 
     return reducedMotion;
 };
+
+export function useDragAndDropAccessibility() {
+    const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
+    const accessibilityType = useAppSelector(selectors.accessibility.type);
+
+    // Drag and drop is disabled if the user has selected a manual accessibility override, or if they have selected non-dragging inputs as an accessibility preference,
+    // or if they are on a touch device or very small screen and haven't explicitly enabled drag and drop.
+    const dragAndDropEnabled = (isDefined(accessibilityType) && (accessibilityType.MANUAL_OVERRIDE || accessibilityType?.NON_DRAGGING_INPUTS))
+        ? !accessibilityType?.NON_DRAGGING_INPUTS
+        : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
+
+    const toggleDragAndDropEnabled = () => {
+        dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": dragAndDropEnabled}});
+    };
+
+    return { dragAndDropEnabled, toggleDragAndDropEnabled };
+}
 
 export const ACCESSIBILITY_TAGS = ["access:visual", "access:motor"] as const;
 
