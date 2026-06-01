@@ -3541,13 +3541,13 @@ export const mockMyAssignments = [
     }
 ];
 
-export const mockRegressionTestQuestionsPart1 = {
-    "id": "_regression_test_1_",
-    "title": "Regression Test Page (1)",
+export const mockRegressionTestQuestions = {
+    "id": "_regression_test_",
+    "title": "Regression Test Page",
     "subtitle": "Testing123",
     "type": "isaacQuestionPage",
     "encoding": "markdown",
-    "canonicalSourceFile": "content/_regression_test/_regression_test_1_.json",
+    "canonicalSourceFile": "content/_regression_test/_regression_test_.json",
     "children": [
         {
             "type": "content",
@@ -4069,139 +4069,138 @@ export const mockRegressionTestQuestionsPart1 = {
                     "published": true,
                     "tags": []
                 },
-                // TODO: these are consistently flaky. why?????
-                // {
-                //     "id": "_regression_test_|acc_cloze_q",
-                //     "type": "content",
-                //     "children": [
-                //         {
-                //             "id": "_regression_test_|acc_cloze_q|3562dfe3-fb1d-42ef-941d-41bd672aa57b",
-                //             "type": "isaacClozeQuestion",
-                //             "title": "Cloze Question",
-                //             "encoding": "markdown",
-                //             "children": [],
-                //             "value": "Drag \"a\" here: [drop-zone], \"b\" here: [drop-zone], and \"d\" and \"c\" should be dropped in alphabetical order below:\n<table class=\"expandable\">\n\t<tbody>\n\t\t<tr>\n    \t\t<td>[drop-zone]</td>\n            <td>[drop-zone]</td>\n        </tr>\n   \t</tbody>\n</table>\nAlso put \\(1\\) in this integral limit for fun:\n\\[ \\int^{\\text{[drop-zone|w-30]}}_0 \\sin x \\]",
-                //             "published": true,
-                //             "items": [
-                //                 {
-                //                     "id": "eaf1",
-                //                     "type": "item",
-                //                     "children": [],
-                //                     "value": "a"
-                //                 },
-                //                 {
-                //                     "id": "f534",
-                //                     "type": "item",
-                //                     "children": [],
-                //                     "value": "b"
-                //                 },
-                //                 {
-                //                     "id": "1ea9",
-                //                     "type": "item",
-                //                     "children": [],
-                //                     "value": "c"
-                //                 },
-                //                 {
-                //                     "id": "a2d2",
-                //                     "type": "item",
-                //                     "children": [],
-                //                     "value": "d"
-                //                 },
-                //                 {
-                //                     "id": "6a27",
-                //                     "type": "item",
-                //                     "children": [],
-                //                     "value": "\\(1\\)"
-                //                 }
-                //             ]
-                //         }
-                //     ],
-                //     "published": true,
-                //     "tags": []
-                // },
-                // {
-                //     "id": "_regression_test_|acc_inline_q",
-                //     "type": "content",
-                //     "children": [
-                //         {
-                //             "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287",
-                //             "type": "isaacInlineRegion",
-                //             "encoding": "markdown",
-                //             "children": [
-                //                 {
-                //                     "type": "content",
-                //                     "encoding": "markdown",
-                //                     "children": [],
-                //                     "value": "<table>\n  <thead style=\"background-color: #ddd\">\n    <td>x</td>\n    <td>2x</td>\n    <td>1/x</td>\n  </thead>\n  <tbody>\n    <tr>\n      <td>5</td>\n      <td>[inline-question:maths1]</td>\n      <td>0.2</td>\n    </tr>\n    <tr>\n      <td>[inline-question:maths2]</td>\n      <td>20</td>\n      <td>[inline-question:maths3]</td>\n    </tr>\n  </tbody>\n</table>",
-                //                     "tags": []
-                //                 },
-                //                 {
-                //                     "type": "content",
-                //                     "encoding": "markdown",
-                //                     "layout": "accordion",
-                //                     "children": [
-                //                         {
-                //                             "title": "Accordion Test",
-                //                             "type": "content",
-                //                             "children": [
-                //                                 {
-                //                                     "type": "content",
-                //                                     "encoding": "markdown",
-                //                                     "children": [],
-                //                                     "value": "The answer to this question is 'accordion': [inline-question:accordion]",
-                //                                     "tags": []
-                //                                 }
-                //                             ],
-                //                             "tags": []
-                //                         }
-                //                     ],
-                //                     "tags": []
-                //                 }
-                //             ],
-                //             "published": true,
-                //             "inlineQuestions": [
-                //                 {
-                //                     "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths1",
-                //                     "type": "isaacNumericQuestion",
-                //                     "children": [],
-                //                     "published": true,
-                //                     "requireUnits": false,
-                //                     "disregardSignificantFigures": false,
-                //                     "availableUnits": [],
-                //                     "displayUnit": "\\text{Display Unit}"
-                //                 },
-                //                 {
-                //                     "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths2",
-                //                     "type": "isaacNumericQuestion",
-                //                     "children": [],
-                //                     "published": true,
-                //                     "requireUnits": false,
-                //                     "disregardSignificantFigures": false,
-                //                     "availableUnits": []
-                //                 },
-                //                 {
-                //                     "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths3",
-                //                     "type": "isaacNumericQuestion",
-                //                     "children": [],
-                //                     "published": true,
-                //                     "requireUnits": true,
-                //                     "disregardSignificantFigures": false,
-                //                     "availableUnits": [
-                //                         "ms^-1"
-                //                     ]
-                //                 },
-                //                 {
-                //                     "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:accordion",
-                //                     "type": "isaacStringMatchQuestion",
-                //                     "children": [],
-                //                     "published": true
-                //                 }
-                //             ]
-                //         }
-                //     ],
-                //     "published": true,
-                //     "tags": []
-                // },
+                {
+                    "id": "_regression_test_|acc_cloze_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_cloze_q|3562dfe3-fb1d-42ef-941d-41bd672aa57b",
+                            "type": "isaacClozeQuestion",
+                            "title": "Cloze Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "Drag \"a\" here: [drop-zone], \"b\" here: [drop-zone], and \"d\" and \"c\" should be dropped in alphabetical order below:\n<table class=\"expandable\">\n\t<tbody>\n\t\t<tr>\n    \t\t<td>[drop-zone]</td>\n            <td>[drop-zone]</td>\n        </tr>\n   \t</tbody>\n</table>\nAlso put \\(1\\) in this integral limit for fun:\n\\[ \\int^{\\text{[drop-zone|w-30]}}_0 \\sin x \\]",
+                            "published": true,
+                            "items": [
+                                {
+                                    "id": "eaf1",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "a"
+                                },
+                                {
+                                    "id": "f534",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "b"
+                                },
+                                {
+                                    "id": "1ea9",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "c"
+                                },
+                                {
+                                    "id": "a2d2",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "d"
+                                },
+                                {
+                                    "id": "6a27",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "\\(1\\)"
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_inline_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287",
+                            "type": "isaacInlineRegion",
+                            "encoding": "markdown",
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "children": [],
+                                    "value": "<table>\n  <thead style=\"background-color: #ddd\">\n    <td>x</td>\n    <td>2x</td>\n    <td>1/x</td>\n  </thead>\n  <tbody>\n    <tr>\n      <td>5</td>\n      <td>[inline-question:maths1]</td>\n      <td>0.2</td>\n    </tr>\n    <tr>\n      <td>[inline-question:maths2]</td>\n      <td>20</td>\n      <td>[inline-question:maths3]</td>\n    </tr>\n  </tbody>\n</table>",
+                                    "tags": []
+                                },
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "layout": "accordion",
+                                    "children": [
+                                        {
+                                            "title": "Accordion Test",
+                                            "type": "content",
+                                            "children": [
+                                                {
+                                                    "type": "content",
+                                                    "encoding": "markdown",
+                                                    "children": [],
+                                                    "value": "The answer to this question is 'accordion': [inline-question:accordion]",
+                                                    "tags": []
+                                                }
+                                            ],
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "published": true,
+                            "inlineQuestions": [
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths1",
+                                    "type": "isaacNumericQuestion",
+                                    "children": [],
+                                    "published": true,
+                                    "requireUnits": false,
+                                    "disregardSignificantFigures": false,
+                                    "availableUnits": [],
+                                    "displayUnit": "\\text{Display Unit}"
+                                },
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths2",
+                                    "type": "isaacNumericQuestion",
+                                    "children": [],
+                                    "published": true,
+                                    "requireUnits": false,
+                                    "disregardSignificantFigures": false,
+                                    "availableUnits": []
+                                },
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths3",
+                                    "type": "isaacNumericQuestion",
+                                    "children": [],
+                                    "published": true,
+                                    "requireUnits": true,
+                                    "disregardSignificantFigures": false,
+                                    "availableUnits": [
+                                        "ms^-1"
+                                    ]
+                                },
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:accordion",
+                                    "type": "isaacStringMatchQuestion",
+                                    "children": [],
+                                    "published": true
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
                 {
                     "id": "_regression_test_|acc_figure_numbering",
                     "type": "content",
@@ -4340,88 +4339,7 @@ export const mockRegressionTestQuestionsPart1 = {
                     ],
                     "published": true,
                     "tags": []
-                }
-            ],
-            "tags": []
-        }
-    ],
-    "relatedContent": [
-        {
-            "id": "_regression_test_",
-            "title": "Regression Test Page",
-            "subtitle": "Testing123",
-            "type": "isaacQuestionPage",
-            "level": "0",
-            "tags": [
-                "regression_test"
-            ],
-            "state": "NOT_ATTEMPTED" ,
-            "audience": [
-                {
-                    "stage": [
-                        "a_level"
-                    ],
-                    "examBoard": [
-                        "aqa",
-                        "ocr"
-                    ]
                 },
-                {
-                    "stage": [
-                        "advanced"
-                    ],
-                    "examBoard": [
-                        "ada"
-                    ]
-                }
-            ]
-        }
-    ],
-    "published": true,
-    "tags": [
-        "regression_test"
-    ],
-    "level": 0,
-    "audience": [
-        {
-            "stage": [
-                "a_level"
-            ],
-            "examBoard": [
-                "aqa",
-                "ocr"
-            ]
-        },
-        {
-            "stage": [
-                "advanced"
-            ],
-            "examBoard": [
-                "ada"
-            ]
-        }
-    ]
-};
-
-export const mockRegressionTestQuestionsPart2 = {
-    "id": "_regression_test_2_",
-    "title": "Regression Test Page (2)",
-    "subtitle": "Testing123",
-    "type": "isaacQuestionPage",
-    "encoding": "markdown",
-    "canonicalSourceFile": "content/_regression_test/_regression_test_2_.json",
-    "children": [
-        {
-            "type": "content",
-            "encoding": "markdown",
-            "children": [],
-            "value": "This page is to speed up testing of question behaviors. **Changing anything on this page is liable to break the automated testing**.\n\nYou may find this page useful to see what content looks like in the editor, then you can click the blue \"Preview on Staging\" button to see what it would look like on the Isaac site.",
-            "tags": []
-        },
-        {
-            "type": "content",
-            "layout": "accordion",
-            "children": [
                 {
                     "id": "_regression_test_|acc_drag_and_drop",
                     "type": "content",

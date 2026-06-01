@@ -11,8 +11,7 @@ import {
     mockUser,
     mockUserAuthSettings,
     mockUserPreferences,
-    mockRegressionTestQuestionsPart1,
-    mockRegressionTestQuestionsPart2,
+    mockRegressionTestQuestions,
     mockQuestionFinderResults,
     mockConceptPage,
     mockRubrics,
@@ -211,13 +210,8 @@ export const handlers = [
             status: 200,
         });
     }),
-    http.get(API_PATH + "/pages/questions/_regression_test_1_", () => {
-        return HttpResponse.json(mockRegressionTestQuestionsPart1, {
-            status: 200,
-        });
-    }),
-    http.get(API_PATH + "/pages/questions/_regression_test_2_", () => {
-        return HttpResponse.json(mockRegressionTestQuestionsPart2, {
+    http.get(API_PATH + "/pages/questions/_regression_test_", () => {
+        return HttpResponse.json(mockRegressionTestQuestions, {
             status: 200,
         });
     }),
