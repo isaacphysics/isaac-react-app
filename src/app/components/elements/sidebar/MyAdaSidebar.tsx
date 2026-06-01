@@ -3,7 +3,7 @@ import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { above, below, isStudent, isTeacherOrAbove, isTutorOrAbove, MyAdaTabs, useDeviceSize, useUserNotifications } from "../../../services";
+import { above, below, isStudent, isTeacherOrAbove, isTutorOrAbove, MyAdaTabs, useAbsoluteDeviceSize, useUserNotifications } from "../../../services";
 import { Spacer } from "../Spacer";
 import { useLocation } from "react-router";
 
@@ -30,8 +30,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const location = useLocation();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
-    const deviceSize = useDeviceSize();
-
+    const deviceSize = useAbsoluteDeviceSize();
     const { notifications: _, workCounts } = useUserNotifications();
 
     const isOpen = useAppSelector(selectors.sidebar.open);
@@ -39,7 +38,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle="My Ada">
         <div className="sticky-top overflow-x-hidden">
-            {above['md'](deviceSize) && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
+            {above['lg'](deviceSize) && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
 
             {Object.entries(MyAdaTabs)
                 .filter(([_, tab]) => {
@@ -64,7 +63,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         </div>}
                         checked={isActive}
                         className={classNames("nav-link my-ada-tab ps-1")}
-                        onClick={() => below['sm'](deviceSize) && isOpen && toggleSidebar()}
+                        onClick={() => below['lg'](deviceSize) && isOpen && toggleSidebar()}
                         type="link"
                         to={tab.url}
                     />;
