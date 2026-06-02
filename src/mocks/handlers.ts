@@ -23,7 +23,8 @@ import {
     mockLLMMarkedValidationResponse,
     mockSearchResults,
     mockFreeAttempts,
-    mockGameboards
+    mockGameboards,
+    mockRegressionTestQuestionParts
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -215,6 +216,13 @@ export const handlers = [
             status: 200,
         });
     }),
+
+    ...mockRegressionTestQuestionParts.map(part =>
+        http.get(API_PATH + `/pages/questions/${part.id}`, () => {
+            return HttpResponse.json(part);
+        })
+    ),
+    
     http.get(API_PATH + "/images/figures/sketch_beta_quad_sketch.svg", () => {
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="223px" height="144px" viewBox="-111.5 -72 223 144">
             <path d="M-105,0H105M0,66V-66" fill="none" stroke="#000" stroke-width="1.5"/>
