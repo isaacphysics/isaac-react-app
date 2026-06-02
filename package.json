@@ -57,7 +57,7 @@
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
     "remarkable": "^2.0.1",
-    "uuid": "^14.0.0"
+    "uuid": "^11.1.1"
   },
   "scripts": {
     "build-phy": "vite build --config config/vite.config.sci.ts",
@@ -125,7 +125,7 @@
     "@types/redux-logger": "^3.0.13",
     "@types/redux-mock-store": "^1.0.6",
     "@types/remarkable": "^2.0.8",
-    "@types/uuid": "^10.0.0",
+    "@types/uuid": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.57.1",
     "axios-mock-adapter": "^2.1.0",
