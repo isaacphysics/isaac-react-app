@@ -37,12 +37,12 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
             accordionTitle: sectionTitle,
             accordionIndex: sectionIndex
         };
-        dispatch(logAction(eventDetails));
+        void dispatch(logAction(eventDetails));
     }
 
     return <div className="d-flex w-100 justify-content-end mb-4 px-4">
         <button
-            className="accordion-icon btn-action bg-transparent btn-blank p-0 wf-2 hf-2 vertical-center"
+            className="btn-action bg-transparent btn-blank p-0 wf-2 hf-2 vertical-center"
             aria-label="Report a problem (opens in new tab)"
             title="Report a problem (opens in new tab)"
             onClick={() => {
