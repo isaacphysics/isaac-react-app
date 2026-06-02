@@ -57,7 +57,7 @@
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
     "remarkable": "^2.0.1",
-    "uuid": "^10.0.0"
+    "uuid": "^14.0.0"
   },
   "scripts": {
     "build-phy": "vite build --config config/vite.config.sci.ts",
