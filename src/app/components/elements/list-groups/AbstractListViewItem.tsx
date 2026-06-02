@@ -291,7 +291,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             <Breadcrumb breadcrumb={breadcrumb}/>
                         </span>}
                     </div>}
-                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": typedProps.audienceViews.length > 0})}>
+                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
                     {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
