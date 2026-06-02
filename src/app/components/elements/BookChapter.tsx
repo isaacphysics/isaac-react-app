@@ -2,7 +2,6 @@ import React from "react";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
 import {PageFragment} from "./PageFragment";
 import {SUBJECTS} from "../../services";
-import { Container } from "reactstrap";
 
 interface ChapterProps {
     chapterId: string;

@@ -13,7 +13,7 @@ import { Tag } from "../../../../IsaacAppTypes";
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
     return <li {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}>
-        <i className={`icon icon-raw icon-${icon} me-2`} />
+        <i className={`icon icon-raw icon-${icon} icon-inline me-2`} />
         {text}
     </li>;
 };

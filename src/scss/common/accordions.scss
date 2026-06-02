@@ -42,33 +42,11 @@
   }
 }
 
-.accordion-icon {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: right;
-  width: 25px;
-  height: 20px;
-  margin-right: 0.25rem;
-  > span {
-    font-family: $primary-font;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 700;
-  }
-  &-report {
-    background-image: url(/assets/common/icons/flag-accordion.svg);
-    background-color: transparent;
-    opacity: 0.4;
-    align-self: flex-end;
-    margin-bottom: 1.5rem;
-    margin-right: 1rem;
-    &:hover {
-      opacity: 1;
-    }
-    &:focus-visible {
-      opacity: 1;
-    }
-  }
+.accordion-status > span {
+  font-family: $primary-font;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
 }
 
 // Nomensa accordions.scss
