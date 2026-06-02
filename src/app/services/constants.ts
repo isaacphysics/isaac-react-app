@@ -19,6 +19,7 @@ import {
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
+import { CSSObjectWithLabel } from "react-select";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -1343,34 +1344,51 @@ export const CODE_EDITOR_IFRAME_HEIGHT_SMALL = 278;
 export const CODE_EDITOR_IFRAME_HEIGHT_LARGE = 354;
 export const CODE_EDITOR_RUN_BUTTON_SPACING = 96;
 
-export const reactSelectDarkModeStyles = {
-    control: (baseStyles: object) => ({
-        ...baseStyles,
+export const reactSelectDarkModeStyles = siteSpecific({
+    // sci
+    control: (base: CSSObjectWithLabel) => ({
+        ...base,
         backgroundColor: "unset",
     }),
-    menu: (baseStyles: object) => ({
-        ...baseStyles,
+    menu: (base: CSSObjectWithLabel) => ({
+        ...base,
         backgroundColor: "var(--color-neutral-50)",
     }),
-    menuPortal: (baseStyles: object) => ({
-        ...baseStyles,
+    menuPortal: (base: CSSObjectWithLabel) => ({
+        ...base,
         zIndex: 1080,
     }),
-    multiValue: (base: object) => ({
+    multiValue: (base: CSSObjectWithLabel) => ({
         ...base,
         backgroundColor: "var(--subject-color-200)",
         border: "1px solid var(--subject-color-400)",
     }),
-    multiValueLabel: (base: object) => ({
+    multiValueLabel: (base: CSSObjectWithLabel) => ({
         ...base,
         color: "var(--subject-color-900)",
     }),
-    multiValueRemove: (base: object) => ({
+    multiValueRemove: (base: CSSObjectWithLabel) => ({
         ...base,
         backgroundColor: "var(--subject-color-200)",
     }),
-    singleValue: (base: object) => ({
+    singleValue: (base: CSSObjectWithLabel) => ({
         ...base,
         color: "var(--color-neutral-900)",
     }),
-};
+}, 
+{
+    // ada
+    menuPortal: (base: CSSObjectWithLabel) => ({
+        ...base,
+        zIndex: 1080,
+    }),
+    multiValue: (styles: CSSObjectWithLabel) => ({
+        ...styles,
+        backgroundColor: "rgb(135, 13, 90)",
+        color: "white",
+    }),
+    multiValueLabel: (styles: CSSObjectWithLabel) => ({
+        ...styles,
+        color: "white",
+    }),
+});
