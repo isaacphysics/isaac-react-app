@@ -15,24 +15,21 @@ import mapValues from "lodash/mapValues";
 import range from "lodash/range";
 import sortBy from "lodash/sortBy";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import React, {ChangeEvent, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, Fragment, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {
     Alert,
     Button,
-    ButtonGroup,
     Card,
     CardBody,
     CardFooter,
     CardHeader,
     Col,
-    Container,
     Input,
     Label,
     Row,
     Table
 } from "reactstrap";
 import {
-    above,
     BoardLimit,
     convertGameboardItemToContentSummary,
     determineGameboardStagesAndDifficulties,
@@ -55,11 +52,9 @@ import {
     TAG_LEVEL,
     tags,
     TODAY,
-    useDeviceSize,
     UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
 import {
-    AppGroup,
     AssignmentBoardOrder,
     AssignmentScheduleContext,
     ValidAssignmentWithListingDate
@@ -73,119 +68,9 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {formatDate} from "../elements/DateString";
 import { ListView } from "../elements/list-groups/ListView";
 import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
+import { PageContainer } from "../elements/layout/PageContainer";
+import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
 
-interface HeaderProps {
-    assignmentsSetByMe?: AssignmentDTO[];
-    viewBy: "startDate" | "dueDate";
-    setViewBy: (vb: "startDate" | "dueDate") => void;
-    groupsToInclude: Item<number>[];
-    setGroupsToInclude: (groups: Item<number>[]) => void;
-    groups?: AppGroup[];
-    user: RegisteredUserDTO;
-    openAssignmentModal: (assignment?: ValidAssignmentWithListingDate) => void;
-    collapse: () => void;
-}
-const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, openAssignmentModal, collapse}: HeaderProps) => {
-
-    const headerScrollerSentinel = useRef<HTMLDivElement>(null);
-    const headerScrollerFlag = useRef(false);
-    const headerScrollerObserver = useRef<IntersectionObserver>();
-    const stickyHeaderListContainer = useRef<HTMLDivElement>(null);
-    const deviceSize = useDeviceSize();
-
-    const headerScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-        for (const entry of entries) {
-            if (entry.target.id === 'header-sentinel') {
-                if (entry.isIntersecting) {
-                    stickyHeaderListContainer.current?.classList.remove('active');
-                } else {
-                    if (entry.boundingClientRect.top <= 0) {
-                        // Gone up
-                        stickyHeaderListContainer.current?.classList.add('active');
-                    } else if (entry.boundingClientRect.top > 0) {
-                        // Gone down
-                        stickyHeaderListContainer.current?.classList.remove('active');
-                    }
-                }
-            }
-        }
-    };
-    useEffect(() => {
-        if (headerScrollerSentinel.current && !headerScrollerObserver.current && !headerScrollerFlag.current) {
-            const options = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 1.0,
-            };
-            headerScrollerObserver.current = new IntersectionObserver(headerScrollerCallback, options);
-            headerScrollerObserver.current.observe(headerScrollerSentinel.current);
-            headerScrollerFlag.current = true;
-            return () => {
-                headerScrollerObserver?.current?.disconnect();
-                headerScrollerObserver.current = undefined;
-                headerScrollerFlag.current = false;
-            };
-        }
-    }, [assignmentsSetByMe]);
-
-    const header = <Card className={"container py-2 px-3 w-100"}>
-        <Row>
-            <Col xs={6}>
-                {assignmentsSetByMe && assignmentsSetByMe.length > 0
-                    ? <>
-                        <Label className={"w-100"}>Filter by group:
-                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
-                                value={groupsToInclude}
-                                closeMenuOnSelect={!isStaff(user)}
-                                onChange={selectOnChange(setGroupsToInclude, false)}
-                                options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                            />
-                        </Label>
-                        <Button className={"mt-2 mt-sm-0"} size={"xs"} color={"link"} block onClick={() => {
-                            collapse();
-                            if (headerScrollerSentinel.current && headerScrollerSentinel.current.getBoundingClientRect().top < 0) {
-                                headerScrollerSentinel.current?.scrollIntoView();
-                            }
-                        }}>
-                            Collapse schedule
-                        </Button>
-                    </>
-                    : <div className={"mt-2"}>You have no assignments</div>
-                }
-            </Col>
-            <Col xs={6} className={"py-2"}>
-                {/*<Button size={"sm"} block onClick={() => openAssignmentModal()}>*/}
-                {/*    <span className={"d-block d-md-none"}>Set assignment</span>*/}
-                {/*    <span className={"d-none d-md-block"}>Set new assignment</span>*/}
-                {/*</Button>*/}
-                {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
-                    <ButtonGroup className={"w-100 pt-3"}>
-                        <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
-                            color={viewBy === "startDate" ? "solid" : "keyline"}
-                            onClick={() => setViewBy("startDate")}
-                        >
-                            By start date
-                        </Button>
-                        <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
-                            color={viewBy === "dueDate" ? "solid" : "keyline"}
-                            onClick={() => setViewBy("dueDate")}
-                        >
-                            By due date
-                        </Button>
-                    </ButtonGroup>
-                </>}
-            </Col>
-        </Row>
-    </Card>;
-
-    return <div className="no-print">
-        <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
-        <div ref={stickyHeaderListContainer} id="stickyheader">
-            {header}
-        </div>
-        {header}
-    </div>;
-};
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -677,8 +562,23 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
         Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.
     </span>;
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Assignment schedule" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
+    return <PageContainer className="mb-7"
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle="Assignment schedule" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
+        }
+        sidebar={
+            <ManageAssignmentsSidebar 
+                assignmentsSetByMe={assignmentsSetByMe}
+                groupsToInclude={groupsToInclude} 
+                setGroupsToInclude={setGroupsToInclude}
+                viewBy={viewBy} 
+                setViewBy={setViewBy}
+                collapse={() => setCollapsed(true)}
+                groups={groups} 
+                user={user}
+            />
+        }
+    >
         {/*<h4 className="mt-4 mb-3">*/}
         {/*    Assign a {siteSpecific("question deck", "quiz")} from...*/}
         {/*</h4>*/}
@@ -689,13 +589,6 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
-                    {!showSetAssignmentUI && <AssignmentScheduleStickyHeader
-                        assignmentsSetByMe={assignmentsSetByMe}
-                        groupsToInclude={groupsToInclude} setGroupsToInclude={setGroupsToInclude}
-                        viewBy={viewBy} setViewBy={setViewBy}
-                        openAssignmentModal={openAssignmentModal} collapse={() => setCollapsed(true)}
-                        groups={groups} user={user}
-                    />}
                     <Card className="mt-2">
                         <CardBody hidden={showSetAssignmentUI}>
                             <p>
@@ -739,5 +632,5 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 </div>
             </AssignmentScheduleContext.Provider>
         </ShowLoadingQuery>
-    </Container>;
+    </PageContainer>;
 };
