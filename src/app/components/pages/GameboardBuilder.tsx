@@ -435,10 +435,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </Col>
                     </Row>}
 
-                    <div className={"d-flex flex-row justify-content-between align-items-center"}>
+                    <div className={"d-flex flex-row justify-content-between align-items-center mb-2"}>
                         <div>
-                            <span className={classNames("fw-bold form-required")}>Questions</span>
-                            <p className={classNames("d-none d-sm-block input-description mb-2")}>
+                            <span className="fw-bold form-required">Questions</span>
+                            <p className="d-none d-sm-block input-description mb-0">
                                 You can add up to {QUESTIONS_PER_GAMEBOARD} questions.
                             </p>
                         </div>
@@ -453,6 +453,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             {/* dragging here can be a little choppy on local development if browser cache is disabled! */}
                             <ListView 
                                 id="gameboard-builder-questions"
+                                className="mw-max-content"
                                 type="builder"
                                 style="flat"
                                 items={questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
