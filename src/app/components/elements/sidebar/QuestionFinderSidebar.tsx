@@ -1,5 +1,4 @@
 import React, { useState, ChangeEvent } from "react";
-import { Input } from "reactstrap";
 import { getQuestionPlaceholder } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";

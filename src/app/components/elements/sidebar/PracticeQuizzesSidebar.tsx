@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import React, { Dispatch, SetStateAction, useEffect, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
-import { Input } from "reactstrap";
 import { Stage } from "../../../../IsaacApiTypes";
 import { tags, TAG_ID, PHY_NAV_SUBJECTS, isSingleStageContext, getFilteredStageOptions } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";

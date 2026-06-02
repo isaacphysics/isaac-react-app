@@ -1,5 +1,4 @@
 import React from "react";
-import { Input } from "reactstrap";
 import { useDeviceSize, above } from "../../../services";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { SearchInputWithIcon } from "../SearchInputs";

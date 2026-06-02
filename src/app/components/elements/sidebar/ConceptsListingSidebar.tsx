@@ -1,5 +1,4 @@
 import React, { useEffect, ChangeEvent, useMemo } from "react";
-import { Input } from "reactstrap";
 import { tags, TAG_ID, getSearchPlaceholder, isDefined, PHY_NAV_SUBJECTS, getFilteredStageOptions, TAG_LEVEL } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
