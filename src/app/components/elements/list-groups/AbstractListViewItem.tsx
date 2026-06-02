@@ -300,7 +300,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
-                    {(isItem || isBuilder) && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <div
+                    {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <div
                         className="alvi-bookmark-container"
                     >
                         <button 

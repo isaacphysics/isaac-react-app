@@ -299,13 +299,13 @@ export const QuestionSearchModal = (
         <Row>
             <Col className="d-flex flex-column col-12 col-xl-3 mt-2">
 
-                <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
+                {isPhy && <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
                     <StyledCheckbox color="primary" checked={searchBookmarks} label={<span>Show bookmarked only</span>} onChange={e => {
                         startTransition(() => {
                             setSearchBookmarks(e.target.checked);
                         });
                     }} />
-                </FeatureFlagWrapper>
+                </FeatureFlagWrapper>}
 
                 {isPhy && <>
                     <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack questions</span>} onChange={e => {
