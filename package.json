@@ -87,7 +87,7 @@
     "build-phy-renderer": "vite build --config config/vite.config.sci.renderer.ts",
     "start-phy-renderer": "vite --port 3002 --config config/vite.config.sci.renderer.ts",
     "build-renderer": "yarn run build-ada-renderer && yarn run build-phy-renderer",
-    "deps:package-json-updates": "./package-updates.sh"
+    "deps:package-json-updates": "./scripts/package-updates.sh"
   },
   "browserslist": [
     ">0.2%",
