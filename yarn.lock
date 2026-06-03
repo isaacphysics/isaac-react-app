@@ -4809,10 +4809,10 @@ is-weakset@^2.0.3:
     call-bound "^1.0.3"
     get-intrinsic "^1.2.6"
 
-isaac-graph-sketcher@0.13.7:
-  version "0.13.7"
-  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.13.7.tgz#be59b7fdaa3321c0880985e693fdda8294b5a334"
-  integrity sha512-Ex2BvWm8wATmnKGVx9kpBsewmIDS6XfeQlafSoGi7CU5MZa9QoUaaT6fL2Ld589TqAQTGO49hYyEJG5Hmh/CuA==
+isaac-graph-sketcher@0.13.8:
+  version "0.13.8"
+  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.13.8.tgz#62b1a189102f4b65a5888e01eb65f82b90291850"
+  integrity sha512-peDLygS/ressAr7BQRxP1yBExws1lRxZQDP4RUSxRy7kqVYbHoqtnwCyFmwT26NfHlijSqcmk5ibQxCiyHFd/A==
   dependencies:
     eslint "^8.0.1"
 
