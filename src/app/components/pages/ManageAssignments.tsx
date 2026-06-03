@@ -39,6 +39,7 @@ import {
     getAssignmentStartDate,
     isAda,
     isDefined,
+    isOverdue,
     isStaff,
     Item,
     itemise,
@@ -65,11 +66,13 @@ import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {Link, useLocation} from "react-router-dom";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import {formatDate} from "../elements/DateString";
+import {formatDate, getFriendlyDaysUntil} from "../elements/DateString";
 import { ListView } from "../elements/list-groups/ListView";
 import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
+import { GameboardCard, GameboardLinkLocation } from "../elements/cards/GameboardCard";
+import { useManageAssignment } from "../../services/setAssignment";
 
 
 interface AssignmentListEntryProps {
@@ -183,6 +186,36 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     </Card>;
 };
 
+// this is similar to MyAssignmentsContents/AssignmentCard, but:
+// - inside the card's children, does not highlight past deadlines.
+// - GameboardCard.usageDisplay is undefined, so no completion / group statistics are shown in the top right.
+// - GameboardCard.allowManaging is set
+const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
+    const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
+
+    const { openAssignModal, unassign } = useManageAssignment(assignment);
+
+    return <GameboardCard className="mt-2" gameboard={assignment.gameboard} linkLocation={GameboardLinkLocation.Title} assignment={assignment} openAssignModal={openAssignModal} unassign={unassign} allowManaging>
+        <Row className="w-100">
+            <Col>
+                {isDefined(assignmentStartDate) && 
+                    <p className="mb-0" data-testid={"gameboard-assigned"}>
+                        Assigned <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
+                    </p>
+                }
+                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && <p className="mb-0">
+                    Due <strong>{getFriendlyDaysUntil(assignment.dueDate)}</strong>
+                </p>}
+                {isDefined(assignment.groupName) &&
+                    <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
+                }
+            </Col>
+        </Row>
+        
+        {assignment.notes && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
+    </GameboardCard>;
+};
+
 // If the hexagon proportions change, the CSS class bg-timeline needs revisiting
 const dateHexagon = calculateHexagonProportions(20, 1);
 const DateAssignmentList = ({date, assignments}: {date: number; assignments: ValidAssignmentWithListingDate[]}) => {
@@ -221,7 +254,10 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
             </svg>
         </div>
         {open && <div className={"date-assignment-list"}>
-            {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboard ?? (a.gameboardId ? boardsById[a.gameboardId] : undefined)}}/> )}
+            {assignments.map(a => <AssignmentCard
+                key={a.id}
+                assignment={{...a, gameboard: a.gameboard ?? (a.gameboardId ? boardsById[a.gameboardId] : undefined)}}
+            />)}
         </div>}
     </>;
 };

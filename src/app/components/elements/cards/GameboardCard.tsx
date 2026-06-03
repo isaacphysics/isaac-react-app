@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { AssignmentDTO, GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse, Badge } from "reactstrap";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove, siteSpecific } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -31,50 +31,58 @@ export const BoardItemIndicator = ({count, type, ...rest}: BoardItemIndicatorPro
     </Badge>;
 };
 
+type GameboardCardUsageDisplay = {
+    type: "correctness";
+} | {
+    type: "group";
+    groupCount: number;
+} | {
+    type: undefined;
+}
 interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
     gameboard?: GameboardDTO;
-    groupCount?: number;
-    isSetAssignments?: boolean;
+    usageDisplay?: GameboardCardUsageDisplay;
 }
 
 // "Attempted/Correct" percentages or "Assigned to X groups"
-const CardUsageInfo = ({ gameboard, groupCount, isSetAssignments, className, ...rest }: CardUsageInfoProps) => {
+const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
     return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end column-gap-7 column-gap-md-4")}>
-        {!isSetAssignments 
-            ? <>
-                <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                    {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
-                    Attempted
-                </Label>
-                <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                    {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
-                    Correct
-                </Label> 
-            </>
-            : <>
-                <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
-                    Assigned to
-                    <div className="board-bubble-info">{groupCount ?? 0}</div>
-                    group{groupCount !== 1 && "s"}
-                </Label>
-            </>
-        }
+        {usageDisplay?.type === "correctness" && <>
+            <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
+                Attempted
+            </Label>
+            <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
+                Correct
+            </Label> 
+        </>}
+        {usageDisplay?.type === "group" && <>
+            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
+                Assigned to
+                <div className="board-bubble-info">{usageDisplay.groupCount ?? 0}</div>
+                group{usageDisplay.groupCount !== 1 && "s"}
+            </Label>
+        </>}
     </div>;
 };
 
-interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
+type GameboardCardProps = React.HTMLAttributes<HTMLElement> & {
     gameboard?: GameboardDTO;
     linkLocation?: GameboardLinkLocation;
     assignment?: AssignmentDTO;
     openAssignModal?: () => void;
-    groupCount?: number;
-}
+    unassign?: () => void;
+    useAssignmentLink?: boolean; // whether to use /assignment/:id over /gameboards#:id
+    allowManaging?: boolean; // replaces "assign" with both "unset" and "set again" buttons for more precise assignment management
+    usageDisplay?: GameboardCardUsageDisplay;
+};
+
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, children, assignment, openAssignModal, groupCount, ...rest} = props;
+    const {gameboard, linkLocation, children, assignment, openAssignModal, unassign, useAssignmentLink, allowManaging, usageDisplay, ...rest} = props;
 
-    const isSetAssignments = isDefined(groupCount);
     const user = useAppSelector(selectors.user.orNull);
 
     const [showMore, setShowMore] = useState(false);
@@ -94,7 +102,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const boardLink = assignment && isAssignmentsV2Link
         ? `/assignment/${assignment.id}/view`
-        : gameboard && (isSetAssignments 
+        : gameboard && (useAssignmentLink
             ? `/assignment/${gameboard.id}`
             : `${PATHS.GAMEBOARD}#${gameboard.id}`
         );
@@ -122,7 +130,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             {boardSubjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}
                         </div>}
                     </div>
-                    {!below['xs'](deviceSize) && <CardUsageInfo className="float-end" gameboard={gameboard} groupCount={groupCount} isSetAssignments={isSetAssignments} />}
+                    {!below['xs'](deviceSize) && <CardUsageInfo className="float-end" gameboard={gameboard} usageDisplay={usageDisplay} />}
                 </div>
 
                 {children}
@@ -133,7 +141,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
             </Col>
         </Row>
 
-        {below['xs'](deviceSize) && <CardUsageInfo className="d-flex w-100 justify-content-around" gameboard={gameboard} groupCount={groupCount} isSetAssignments={isSetAssignments} />}
+        {below['xs'](deviceSize) && <CardUsageInfo className="d-flex w-100 justify-content-around" gameboard={gameboard} usageDisplay={usageDisplay} />}
 
         <div className="d-flex flex-column flex-sm-row align-items-start mt-2">
             <Button className="my-2 btn-underline order-1 order-sm-0" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
@@ -145,9 +153,21 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 {isPhy && boardLink && <div className="card-share-link">
                     <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
                 </div>}
-                {isTutorOrAbove(user) && <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                    {isSetAssignments ? "Assign / Unassign" : "Assign"}
-                </Button>}
+                {allowManaging
+                    ? isTutorOrAbove(user) && <>
+                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); unassign?.();}}>
+                            Unassign
+                        </Button>
+                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
+                            Set again
+                        </Button>
+                    </>
+                    : isTutorOrAbove(user) && <>
+                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
+                            Assign
+                        </Button>
+                    </>
+                }
             </div>
         </div>
 
