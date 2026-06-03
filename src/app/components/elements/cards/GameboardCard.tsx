@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { AssignmentDTO, GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse, Badge } from "reactstrap";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove, siteSpecific } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove, siteSpecific, TODAY } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -11,6 +11,7 @@ import { SaveBoardButton } from "../SaveBoardButton";
 import { selectors, useAppSelector } from "../../../state";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
+import { getFriendlyDaysUntil } from "../DateString";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -37,7 +38,8 @@ type GameboardCardUsageDisplay = {
     type: "group";
     groupCount: number;
 } | {
-    type: undefined;
+    type: "progressLink";
+    assignment: AssignmentDTO;
 }
 interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
     gameboard?: GameboardDTO;
@@ -46,7 +48,7 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
-    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end column-gap-7 column-gap-md-4")}>
+    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})}>
         {usageDisplay?.type === "correctness" && <>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
@@ -63,6 +65,19 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
                 <div className="board-bubble-info">{usageDisplay.groupCount ?? 0}</div>
                 group{usageDisplay.groupCount !== 1 && "s"}
             </Label>
+        </>}
+        {usageDisplay?.type === "progressLink" && <>
+            {isDefined(usageDisplay.assignment.scheduledStartDate) && usageDisplay.assignment.scheduledStartDate >= TODAY()
+                ? <div className="d-flex align-items-center">
+                    Begins&nbsp;
+                    <b>{getFriendlyDaysUntil(usageDisplay.assignment.scheduledStartDate)}</b>
+                </div>
+                : <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/${usageDisplay.assignment.id}`} target="_blank" className="d-flex align-items-center gap-2">
+                    <b>View group progress</b>
+                    <span className={"visually-hidden"}>(opens in new tab)</span>
+                    <i className="icon icon-arrow-right icon-color-white" aria-hidden="true" />
+                </Link>
+            }
         </>}
     </div>;
 };

@@ -195,7 +195,16 @@ const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
 
     const { openAssignModal, unassign } = useManageAssignment(assignment);
 
-    return <GameboardCard className="mt-2" gameboard={assignment.gameboard} linkLocation={GameboardLinkLocation.Title} assignment={assignment} openAssignModal={openAssignModal} unassign={unassign} allowManaging>
+    return <GameboardCard 
+        className="mt-2"
+        gameboard={assignment.gameboard}
+        linkLocation={GameboardLinkLocation.Title}
+        assignment={assignment}
+        openAssignModal={openAssignModal}
+        usageDisplay={{type: "progressLink", assignment}}
+        unassign={unassign}
+        allowManaging
+    >
         <Row className="w-100">
             <Col>
                 {isDefined(assignmentStartDate) && 

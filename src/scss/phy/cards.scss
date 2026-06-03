@@ -132,3 +132,19 @@ div:has(> .pod) {
     @include fixed-text-height(1.5rem, 2);
   }
 }
+
+.card-usage-branded-corner {
+  $height: 50px;
+  $edge-width: calc($height * tan(30deg));
+  height: $height;
+  margin: -0.5rem -1rem 0 0;
+  padding: 0.5rem 1rem 0.8rem calc(0.5rem + $edge-width);
+  background-color: var(--color-brand-400);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, $edge-width 100%);
+  border-top-right-radius: 7px;
+
+  > *, > a:hover {
+    color: var(--color-neutral-white);
+    text-underline-position: from-font; // perhaps we should add this more widely? it looks better here owing to the bold font, but looks fine in general on all link types
+  }
+}
