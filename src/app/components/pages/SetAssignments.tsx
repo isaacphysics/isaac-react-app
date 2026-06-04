@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import {Link, useLocation} from "react-router-dom";
 import {
+    closeActiveModal,
     openIsaacBooksModal,
     selectors,
     setAssignBoardPath,
@@ -56,6 +57,7 @@ import { useHistoryState } from "../../state/actions/history";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
+import { FeatureFlag, FeatureFlagWrapper } from "../../services/featureFlag";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -220,9 +222,9 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 };
 const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 
-export const PhyAddGameboardButtons = ({className, redirectBackTo}: { className: string, redirectBackTo: string }) => {
+export const PhyAddGameboardButtons = ({className, redirectBackTo}: { className?: string, redirectBackTo?: string }) => {
     const dispatch = useAppDispatch();
-    return <>
+    return <FeatureFlagWrapper flag={FeatureFlag.MANAGE_ASSIGNMENTS} onUnset={<>
         <h4 className="mt-4 mb-3">
             Add a {siteSpecific("question deck", "quiz")} from ...
         </h4>
@@ -230,7 +232,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: { className:
             <Col md={6} lg={4} className="pt-1">
                 <Button role={"link"} onClick={() => {
                     setAssignBoardPath(redirectBackTo);
-                    dispatch(openIsaacBooksModal());
+                    void dispatch(openIsaacBooksModal());
                 }} color="secondary" block className="px-3">
                     our books
                 </Button>
@@ -248,7 +250,39 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: { className:
                 </Button>
             </Col>
         </Row>
-    </>;
+    </>}
+    onSet={<>
+        <p>Assignments can be created from any question deck on the platform. To set an assignment, find the question deck you would like to use and click &quot;Assign&quot;.</p>
+        <p>You can find pre-made question decks from our books or from our per-topic question decks page. You can also use decks you have saved or created yourself.</p>
+        <h4 className="mb-3">
+            Find a deck from...
+        </h4>
+        <Row className="d-flex row-cols-1 row-cols-md-2 row-gap-3 mb-5">
+            <Col>
+                <Button onClick={() => {
+                    void dispatch(closeActiveModal());
+                    void dispatch(openIsaacBooksModal());
+                }} block color="keyline" className="px-3">
+                    our books
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/physics/a_level/question_decks"} block color="keyline" className="px-3">
+                    our topic questions decks
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/my_question_decks"} block color="keyline" className="px-3">
+                    your saved decks
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={PATHS.GAMEBOARD_BUILDER} block color="keyline" className="px-3">
+                    a new question deck
+                </Button>
+            </Col>
+        </Row>
+    </>}/>;
 };
 
 export const getAssigneesByBoard = (assignmentsSetByMe: AssignmentDTO[] | undefined): Record<string, BoardAssignee[]> => {

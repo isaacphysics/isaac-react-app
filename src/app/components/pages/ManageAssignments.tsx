@@ -1,4 +1,6 @@
 import {
+    openActiveModal,
+    useAppDispatch,
     useGetGroupsQuery,
     useGetMySetAssignmentsQuery} from "../../state";
 import {AssignmentDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
@@ -19,8 +21,9 @@ import {
     isOverdue,
     Item,
     MONTH_NAMES,
-    PATHS} from "../../services";
+} from "../../services";
 import {
+    ActiveModalProps,
     ManageAssignmentsContext,
     ValidAssignmentWithListingDate
 } from "../../../IsaacAppTypes";
@@ -33,6 +36,10 @@ import { PageContainer } from "../elements/layout/PageContainer";
 import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
 import { GameboardCard, GameboardLinkLocation } from "../elements/cards/GameboardCard";
 import { useManageAssignment } from "../../services/setAssignment";
+import { PhyAddGameboardButtons } from "./SetAssignments";
+import { PageMetadata } from "../elements/PageMetadata";
+import { PageFragment } from "../elements/PageFragment";
+import { RenderNothing } from "../elements/RenderNothing";
 
 // this is similar to MyAssignmentsContents/AssignmentCard, but:
 // - inside the card's children, does not highlight past deadlines.
@@ -261,9 +268,16 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
         Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.
     </span>;
 
+    const dispatch = useAppDispatch();
+
+    const setNewAssignmentModal = () : ActiveModalProps => ({
+        title: "Set a new assignment",
+        body: <PhyAddGameboardButtons />
+    });
+
     return <PageContainer className="mb-7"
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle="Assignment schedule" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
+            <TitleAndBreadcrumb currentPageTitle="Manage assignments" icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}/>
         }
         sidebar={
             <ManageAssignmentsSidebar 
@@ -278,30 +292,29 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
             />
         }
     >
-        {/*<h4 className="mt-4 mb-3">*/}
-        {/*    Assign a {siteSpecific("question deck", "quiz")} from...*/}
-        {/*</h4>*/}
-        {/*<PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>*/}
+        <PageMetadata noTitle>
+            <PageFragment fragmentId={"help_toptext_manage_assignments"} ifNotFound={RenderNothing} />
+        </PageMetadata>
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or question decks"
             query={assignmentsSetByMeQuery}
         >
             <ManageAssignmentsContext.Provider value={{groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
-                    <Card className="mt-2">
+                    <Card>
                         <CardBody>
-                            <p>
-                                Use the <Link to={PATHS.SET_ASSIGNMENTS}>set assignments</Link> page to schedule new assignments to your groups.
-                            </p>
+                            <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><h5 className="mb-0">Set a new assignment</h5></Button>
+                            <div className="section-divider-bold" />
+
                             {/* Groups-related alerts */}
-                            {groups && groups.length === 0 && <div className="mt-3">
+                            {groups && groups.length === 0 && <div className="mt-1">
                                 You have not created any groups to assign work to.
                                 Please <Link to="/groups">create a group here first.</Link>
                             </div>}
-                            {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <div className="mt-3">
+                            {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <div className="mt-1">
                                 There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
                             </div>}
-                            {notAllPastAssignmentsAreListed && <div className="mt-3">
+                            {notAllPastAssignmentsAreListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
                                     Show assignments before {formatDate(earliestShowDate)}
                                 </Button>

@@ -11,6 +11,7 @@ export enum FeatureFlag {
     SCI_DARK_MODE = "SCI_DARK_MODE",
     ENABLE_SCI_BOOKMARKS = "ENABLE_SCI_BOOKMARKS",
     ASSIGNMENTS_V2 = "ASSIGNMENTS_V2",
+    MANAGE_ASSIGNMENTS = "MANAGE_ASSIGNMENTS",
 }
 
 const loadOverridesFromStorage = (): Partial<Record<FeatureFlag, boolean>> => {
@@ -41,6 +42,7 @@ const useFlags = () : Record<FeatureFlag, boolean> => {
         [FeatureFlag.SCI_DARK_MODE]: false,
         [FeatureFlag.ENABLE_SCI_BOOKMARKS]: false,
         [FeatureFlag.ASSIGNMENTS_V2]: false,
+        [FeatureFlag.MANAGE_ASSIGNMENTS]: isNonProd,
 
         // overrides
         ...overrides

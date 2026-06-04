@@ -602,6 +602,10 @@ export const handleApiGoneAway = () => {
     store.dispatch(errorSlice.actions.apiGoneAway());
 };
 
-export const setAssignBoardPath = (path: string) => {
-    persistence.save(KEY.ASSIGN_BOARD_PATH, path);
+export const setAssignBoardPath = (path?: string) => {
+    if (path) {
+        persistence.save(KEY.ASSIGN_BOARD_PATH, path);
+    } else {
+        persistence.remove(KEY.ASSIGN_BOARD_PATH);
+    }
 };
