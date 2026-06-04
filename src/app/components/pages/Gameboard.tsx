@@ -45,6 +45,7 @@ export const Gameboard = () => {
     const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId))) || undefined;
+    const bookId = new URLSearchParams(location.search).get("book") ?? undefined;
 
     const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
     const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;
@@ -76,7 +77,7 @@ export const Gameboard = () => {
                         />
                     }
                     sidebar={siteSpecific(
-                        <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />,
+                        <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} bookId={bookId} hideButton />,
                         undefined
                     )}
                 >

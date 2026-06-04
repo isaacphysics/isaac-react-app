@@ -4,10 +4,14 @@ import { determineGameboardSubjects, isDefined, TAG_ID, tags, HUMAN_SUBJECTS, ex
 import { getFriendlyDaysUntil } from "../DateString";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Pill, CompletionKey } from "./SidebarElements";
+import { Link } from "react-router";
+import { AffixButton } from "../AffixButton";
+import { Spacer } from "../Spacer";
 
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments?: AssignmentDTO[];
+    bookId?: string;
 };
 
 const GameboardDetails = ({ gameboard }: { gameboard: GameboardDTO }) => {
@@ -60,10 +64,26 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
     </>;
 };
 
+const BackToBookButton = ({ bookId }: { bookId: string }) => {
+    return <AffixButton
+        tag={Link}
+        to={"/books/" + bookId}
+        affix={{
+            affix: "icon-chevron-left",
+            position: "prefix",
+            type: "icon",
+            affixClassName: "icon-inline me-2"
+        }}>
+        Back to book
+        <Spacer />
+    </AffixButton>;
+};
+
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
-    const {gameboard, assignments, ...rest} = props;
+    const {gameboard, assignments, bookId, ...rest} = props;
 
     return <ContentSidebar buttonTitle="Details" {...rest}>
+        {bookId && <BackToBookButton bookId={bookId} />}
         <GameboardDetails gameboard={gameboard} />
         <AllAssignmentDetails assignments={assignments} />
         <div className="section-divider"/>
