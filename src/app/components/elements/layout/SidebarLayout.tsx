@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Container, Accordion, AccordionItem, AccordionHeader, AccordionBody } from "reactstrap";
 import classNames from "classnames";
-import { above, isPhy, siteSpecific, useAbsoluteDeviceSize } from "../../../services";
+import { above, isPhy, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
 import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -13,11 +13,9 @@ interface SidebarLayoutProps extends RowProps {
 
 export const SidebarLayout = (props: SidebarLayoutProps) => {
     const { className, show=true, ...rest } = props;
-    const deviceSize = useAbsoluteDeviceSize();
-
     return show
         ? <SidebarContext.Provider value={{sidebarPresent: true}}>
-            <div {...rest} className={classNames("d-flex sidebar-layout", {"flex-column": !above['lg'](deviceSize), "flex-row": above['lg'](deviceSize)}, className)}/>
+            <div {...rest} className={classNames("d-flex flex-column sidebar-layout", siteSpecific("flex-lg-row", "flex-md-row"), className)}/>
         </SidebarContext.Provider>
         : props.children;
 };
@@ -55,7 +53,7 @@ export interface ContentSidebarProps extends SidebarProps {
 export const ContentSidebar = (props: ContentSidebarProps) => {
     // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
     // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
-    const deviceSize = useAbsoluteDeviceSize();
+    const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
     const sidebarOpen = useAppSelector(selectors.sidebar.open);
     const toggleMenu = () => dispatch(sidebarSlice.actions.toggle());
@@ -66,8 +64,10 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>;
 
+    const breakpoint = siteSpecific("lg", "md");
+
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
-    return above["lg"](deviceSize)
+    return above[breakpoint](deviceSize)
         ? siteSpecific(
             <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print ps-lg-3 py-lg-4 pe-lg-5 order-0", className)} />,
             <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />

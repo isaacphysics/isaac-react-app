@@ -1,7 +1,6 @@
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import { siteSpecific } from "./siteConstants";
 import { isAda } from "./siteConstants";
-import { MyAdaTabs } from "./constants";
 
 const MOBILE_WINDOW_WIDTH = 768;
 
@@ -33,24 +32,18 @@ export enum DeviceOrientation {
 
 const descDeviceSizes = [DeviceSize.XXXL, DeviceSize.XXL, DeviceSize.XL, DeviceSize.LG, DeviceSize.MD, DeviceSize.SM, DeviceSize.XS];
 
-const pixelsToDeviceSize = (pixels: number): DeviceSize => {
-    if (pixels >= 1800) return DeviceSize.XXXL;
-    else if (pixels >= 1400) return DeviceSize.XXL;
-    else if (pixels >= 1200) return DeviceSize.XL;
-    else if (pixels >= 992) return DeviceSize.LG;
-    else if (pixels >= 768) return DeviceSize.MD;
-    else if (pixels >= 576) return DeviceSize.SM;
-    else return DeviceSize.XS;
-};
-
-// Standard device size based on bootstrap breakpoints, with the addition of XXXL for very large screens, 
-// and taking into account the presence of the My Ada sidebar which changes the effective screen width for pages where it is present
 export const useDeviceSize = () => {
-    const getSize = useCallback((): DeviceSize => {
-        const shouldIncludeSidebar = isAda && Object.values(MyAdaTabs).some(tab => window.location.pathname.includes(tab.url)) && window.innerWidth >= 992;
+    const getSize = (): DeviceSize => {
+        const shouldIncludeSidebar = isAda && window.innerWidth >= 768;
         const width = window.innerWidth - (shouldIncludeSidebar ? 220 : 0);
-        return pixelsToDeviceSize(width);
-    }, []);
+        if (width >= 1800) return DeviceSize.XXXL;
+        else if (width >= 1400) return DeviceSize.XXL;
+        else if (width >= 1200) return DeviceSize.XL;
+        else if (width >= 992) return DeviceSize.LG;
+        else if (width >= 768) return DeviceSize.MD;
+        else if (width >= 576) return DeviceSize.SM;
+        else return DeviceSize.XS;
+    };
 
     const [windowSize, setWindowSize] = useState(getSize);
 
@@ -58,26 +51,7 @@ export const useDeviceSize = () => {
         const handleResize = () => {setWindowSize(getSize());};
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [getSize]);
-
-    return windowSize;
-};
-
-// Returns the absolute device size based on the actual window width, without considering the My Ada sidebar,
-// useful for components like the sidebar itself which need to know the actual window size rather than the effective size
-export const useAbsoluteDeviceSize = () => {
-    const getSize = useCallback((): DeviceSize => {
-        const width = window.innerWidth;
-        return pixelsToDeviceSize(width);
     }, []);
-
-    const [windowSize, setWindowSize] = useState(getSize);
-
-    useEffect(() => {
-        const handleResize = () => {setWindowSize(getSize());};
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [getSize]);
 
     return windowSize;
 };
@@ -85,7 +59,13 @@ export const useAbsoluteDeviceSize = () => {
 export const useDeviceHeight = () => {
     const getHeight = (): DeviceSize => {
         const height = window.innerHeight;
-        return pixelsToDeviceSize(height);
+        if (height >= 1800) return DeviceSize.XXXL;
+        else if (height >= 1400) return DeviceSize.XXL;
+        else if (height >= 1200) return DeviceSize.XL;
+        else if (height >= 992) return DeviceSize.LG;
+        else if (height >= 768) return DeviceSize.MD;
+        else if (height >= 576) return DeviceSize.SM;
+        else return DeviceSize.XS;
     };
 
     const [windowHeight, setWindowHeight] = useState(getHeight);

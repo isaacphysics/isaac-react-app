@@ -3,9 +3,76 @@ import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { above, below, isStudent, isTeacherOrAbove, isTutorOrAbove, MyAdaTabs, useAbsoluteDeviceSize, useUserNotifications } from "../../../services";
+import { above, below, isStudent, isTeacherOrAbove, isTutorOrAbove, useDeviceSize, useUserNotifications } from "../../../services";
 import { Spacer } from "../Spacer";
 import { useLocation } from "react-router";
+
+interface MyAdaTab {
+    title: string;
+    url: string;
+    icon: string;
+    user: "STUDENT" | "TUTOR" | "TEACHER" | "ALL"; // Which user roles can see this tab – n.b. teacher means teacherOrAbove
+}
+
+const MyAdaTabs: Record<string, MyAdaTab> = {
+    overview: {
+        title: "Overview",
+        url: "/dashboard",
+        icon: "icon-home",
+        user: "ALL"
+    },
+    groups: {
+        title: "Groups",
+        url: "/groups",
+        icon: "icon-group",
+        user: "TUTOR"
+    },
+    setQuizzes: {
+        title: "Quizzes",
+        url: "/quizzes/set",
+        icon: "icon-file",
+        user: "TUTOR"
+    },
+    setTests: {
+        title: "Tests",
+        url: "/set_tests",
+        icon: "icon-school",
+        user: "TEACHER"
+    },
+    markbook: {
+        title: "Markbook",
+        url: "/my_markbook",
+        icon: "icon-done-all",
+        user: "TUTOR"
+    },
+
+    assignedToMe: {
+        title: "Assigned to me",
+        url: "/assignments",
+        icon: "icon-person-check",
+        user: "ALL"
+    },
+
+    myTests: {
+        title: "Tests",
+        url: "/tests",
+        icon: "icon-school",
+        user: "STUDENT"
+    },
+    progress: {
+        title: "Progress",
+        url: "/progress",
+        icon: "icon-done-all",
+        user: "STUDENT"
+    },
+
+    account: {
+        title: "Account",
+        url: "/account",
+        icon: "icon-cog",
+        user: "ALL"
+    }
+};
 
 interface AdaSidebarCollapserProps extends React.HTMLAttributes<HTMLButtonElement> {
     collapsed: boolean;
@@ -30,7 +97,8 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const location = useLocation();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
-    const deviceSize = useAbsoluteDeviceSize();
+    const deviceSize = useDeviceSize();
+
     const { notifications: _, workCounts } = useUserNotifications();
 
     const isOpen = useAppSelector(selectors.sidebar.open);
@@ -38,7 +106,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle="My Ada">
         <div className="sticky-top overflow-x-hidden">
-            {above['lg'](deviceSize) && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
+            {above['md'](deviceSize) && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
 
             {Object.entries(MyAdaTabs)
                 .filter(([_, tab]) => {
@@ -63,7 +131,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         </div>}
                         checked={isActive}
                         className={classNames("nav-link my-ada-tab ps-1")}
-                        onClick={() => below['md'](deviceSize) && isOpen && toggleSidebar()}
+                        onClick={() => below['sm'](deviceSize) && isOpen && toggleSidebar()}
                         type="link"
                         to={tab.url}
                     />;
