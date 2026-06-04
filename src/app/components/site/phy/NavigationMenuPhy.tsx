@@ -366,12 +366,21 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                 <NavigationItemClose href="/question_deck_builder">
                                     Create a question deck
                                 </NavigationItemClose>
-                                <NavigationItemClose href="/set_assignments">
-                                    Set assignments
-                                </NavigationItemClose>
-                                <NavigationItemClose href="/assignment_schedule">
-                                    Assignment schedule
-                                </NavigationItemClose>
+                                <FeatureFlagWrapper flag={FeatureFlag.MANAGE_ASSIGNMENTS} 
+                                    onUnset={<>
+                                        <NavigationItemClose href="/set_assignments">
+                                            Set assignments
+                                        </NavigationItemClose>
+                                        <NavigationItemClose href="/assignment_schedule">
+                                            Assignment schedule
+                                        </NavigationItemClose>
+                                    </>} 
+                                    onSet={<>
+                                        <NavigationItemClose href="/manage_assignments">
+                                            Manage assignments
+                                        </NavigationItemClose>
+                                    </>}
+                                />
                                 <NavigationItemClose href="/assignment_progress">
                                     Assignment progress
                                 </NavigationItemClose>
