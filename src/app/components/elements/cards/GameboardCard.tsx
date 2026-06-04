@@ -89,7 +89,6 @@ type GameboardCardProps = React.HTMLAttributes<HTMLElement> & {
     linkLocation?: GameboardLinkLocation;
     assignment?: AssignmentDTO;
     openAssignModal?: () => void;
-    preview?: () => void;
     unassign?: () => void;
     useAssignmentLink?: boolean; // whether to use /assignment/:id over /gameboards#:id
     allowManaging?: boolean; // replaces "assign" with both "unset" and "set again" buttons for more precise assignment management
@@ -99,7 +98,7 @@ type GameboardCardProps = React.HTMLAttributes<HTMLElement> & {
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, children, assignment, openAssignModal, preview, unassign, useAssignmentLink, allowManaging, usageDisplay, ...rest} = props;
+    const {gameboard, linkLocation, children, assignment, openAssignModal, unassign, useAssignmentLink, allowManaging, usageDisplay, ...rest} = props;
 
     const user = useAppSelector(selectors.user.orNull);
 
@@ -162,9 +161,9 @@ export const GameboardCard = (props: GameboardCardProps) => {
         {below['xs'](deviceSize) && <CardUsageInfo className="d-flex w-100 justify-content-around" gameboard={gameboard} usageDisplay={usageDisplay} />}
 
         <div className="d-flex flex-column flex-sm-row align-items-start mt-2">
-            <Button className="my-2 btn-underline order-1 order-sm-0" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
+            {gameboard?.contents?.length && <Button className="my-2 btn-underline order-1 order-sm-0" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
                 {showMore ? "Hide details" : "Show details"}
-            </Button>
+            </Button>}
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
                 {isPhy && gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
@@ -189,8 +188,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
             </div>
         </div>
 
-        {/* collapsed info */}
-        <Collapse isOpen={showMore} className="w-100">
+        {/* collapsed info -- hidden if no contents */}
+        {gameboard?.contents?.length && <Collapse isOpen={showMore} className="w-100">
             <Row>
                 <Col xs={12} md={8} className="mt-sm-2">
                     <p className="mb-0 d-flex align-items-center gap-2">
@@ -198,7 +197,6 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             <strong>Questions:</strong>{" "}
                             {gameboard?.contents?.length || "0"}
                         </span>
-                        {preview && <Button color="link" className="p-0 m-0 text-muted" aria-label="Preview questions" onClick={preview}>(preview)</Button>}
                     </p>
                     {isDefined(topics) && topics.length > 0 && <p className="mb-0">
                         <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
@@ -232,7 +230,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     }
                 </Col>
             </Row>
-        </Collapse>
+        </Collapse>}
     </div>;
 
     if (gameboard && linkLocation === GameboardLinkLocation.Card && boardLink) {
