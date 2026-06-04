@@ -409,7 +409,7 @@ a.btn {
   border-right: none;
   padding: 0 1.5rem 0 1rem;
   z-index: 15;
-  background: white;
+  background: var(--color-neutral-white);
 
   & ~ button {
     position: relative;

@@ -35,7 +35,8 @@ import {
     stageLabelMap,
     TAG_ID,
     itemise,
-    difficultyLabelMap
+    difficultyLabelMap,
+    reactSelectDarkModeStyles
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
 import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -61,8 +62,10 @@ const importGameboardBuilderTableRow = import("../GameboardBuilderTableRow");
 const GameboardBuilderTableRow = lazy(() => importGameboardBuilderTableRow);
 
 const selectStyle = {
-    className: "basic-multi-select", classNamePrefix: "select",
-    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 1080})}
+    className: "basic-multi-select", 
+    classNamePrefix: "select",
+    menuPortalTarget: document.body, 
+    styles: reactSelectDarkModeStyles
 };
 
 interface QuestionSearchModalProps {

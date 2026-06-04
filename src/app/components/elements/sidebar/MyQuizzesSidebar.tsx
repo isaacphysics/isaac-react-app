@@ -7,6 +7,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     status: QuizStatus;
@@ -67,8 +68,12 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 {above["lg"](deviceSize) && <div className="section-divider"/>}
                 <search>
                     <h5>Search tests</h5>
-                    <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)}
-                        placeholder="e.g. Practice" aria-label="Search by title"/>
+                    <SearchInputWithIcon 
+                        outerClassName="my-3" 
+                        type="search" 
+                        onChange={(e) => setQuizTitleFilter(e.target.value)}
+                        placeholder="e.g. Practice" aria-label="Search by title"
+                    />
                     <div className="section-divider"/>
                     <h5 className="mb-3">Filter by status</h5>
                     <ul>

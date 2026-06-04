@@ -43,6 +43,7 @@ import {
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
     logEvent, QUESTIONS_PER_GAMEBOARD,
+    reactSelectDarkModeStyles,
     selectOnChange,
     siteSpecific,
     STAGE,
@@ -396,6 +397,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     value={gameboardTags}
                                     placeholder="None"
                                     onChange={selectOnChange(setGameboardTags, false)}
+                                    styles={reactSelectDarkModeStyles}
                                 />
                             </FormGroup>
                         </Col>
