@@ -8,8 +8,13 @@ import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
 import { scrollVerticallyIntoView } from "../../services";
 
-export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
+export interface BookPageProps {
+    page: IsaacBookDetailPageDTO,
+    bookId?: string,
+}
 
+export const BookPage = (props: BookPageProps) => {
+    const { page, bookId } = props;
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
     const hasExtension = page.extensionGameboards && page.extensionGameboards.length > 0;
@@ -49,7 +54,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
-                    items={convertToALVIGameboards(page.gameboards as GameboardDTO[], page.id)}
+                    items={convertToALVIGameboards(page.gameboards as GameboardDTO[], bookId)}
                 />
             </div>
         </>}

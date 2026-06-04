@@ -63,7 +63,7 @@ export const Book = () => {
                         defaultErrorTitle="Unable to load book page"
                         thenRender={(bookDetailPage) => {
                             return <WithFigureNumbering doc={bookDetailPage}>
-                                <BookPage page={bookDetailPage} />
+                                <BookPage page={bookDetailPage} bookId={bookId} />
                             </WithFigureNumbering>;
                         }}
                     />
