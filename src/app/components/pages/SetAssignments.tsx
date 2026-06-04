@@ -252,8 +252,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: { className?
         </Row>
     </>}
     onSet={<>
-        <p>Assignments can be created from any question deck on the platform. To set an assignment, find the question deck you would like to use and click &quot;Assign&quot;.</p>
-        <p>You can find pre-made question decks from our books or from our per-topic question decks page. You can also use decks you have saved or created yourself.</p>
+        <PageFragment fragmentId={"manage_assignments_set_new_modal_text"} ifNotFound={RenderNothing} />
         <h4 className="mb-3">
             Find a deck from...
         </h4>
