@@ -11,7 +11,7 @@ import { Spacer } from "../Spacer";
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments?: AssignmentDTO[];
-    bookId?: string;
+    bookPagePath?: string;
 };
 
 const GameboardDetails = ({ gameboard }: { gameboard: GameboardDTO }) => {
@@ -64,26 +64,26 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
     </>;
 };
 
-const BackToBookButton = ({ bookId }: { bookId: string }) => {
+const BackToBookButton = ({ bookPagePath }: { bookPagePath: string }) => {
     return <AffixButton
         tag={Link}
-        to={"/books/" + bookId}
+        to={bookPagePath}
         affix={{
             affix: "icon-arrow-left",
             position: "prefix",
             type: "icon",
             affixClassName: "icon-inline me-2"
         }}>
-        Back to book
+        Back to book section
         <Spacer />
     </AffixButton>;
 };
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
-    const {gameboard, assignments, bookId, ...rest} = props;
+    const {gameboard, assignments, bookPagePath, ...rest} = props;
 
     return <ContentSidebar buttonTitle="Details" {...rest}>
-        {bookId && <BackToBookButton bookId={bookId} />}
+        {bookPagePath && <BackToBookButton bookPagePath={bookPagePath} />}
         <GameboardDetails gameboard={gameboard} />
         <AllAssignmentDetails assignments={assignments} />
         <div className="section-divider"/>
