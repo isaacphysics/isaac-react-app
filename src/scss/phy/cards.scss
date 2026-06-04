@@ -141,6 +141,7 @@ div:has(> .pod) {
   $arc-x: calc($circle-radius * cos(30deg) * -1);
   $arc-y: calc($circle-radius * sin(30deg) * -1);
   height: $height;
+  min-width: max-content;
   margin: -0.5rem -1rem 0 0;
   padding: 0.5rem 1rem 0.8rem calc(0.5rem + $edge-width);
   background-color: var(--color-brand-400);

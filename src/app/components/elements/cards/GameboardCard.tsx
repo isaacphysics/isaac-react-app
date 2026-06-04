@@ -69,8 +69,10 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
         {usageDisplay?.type === "progressLink" && <>
             {isDefined(usageDisplay.assignment.scheduledStartDate) && usageDisplay.assignment.scheduledStartDate >= TODAY()
                 ? <div className="d-flex align-items-center">
-                    Begins&nbsp;
-                    <b>{getFriendlyDaysUntil(usageDisplay.assignment.scheduledStartDate)}</b>
+                    <span>
+                        Begins&nbsp;
+                        <b>{getFriendlyDaysUntil(usageDisplay.assignment.scheduledStartDate)}</b>
+                    </span>
                 </div>
                 : <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/${usageDisplay.assignment.id}`} target="_blank" className="d-flex align-items-center gap-2">
                     <b>View group progress</b>
@@ -87,6 +89,7 @@ type GameboardCardProps = React.HTMLAttributes<HTMLElement> & {
     linkLocation?: GameboardLinkLocation;
     assignment?: AssignmentDTO;
     openAssignModal?: () => void;
+    preview?: () => void;
     unassign?: () => void;
     useAssignmentLink?: boolean; // whether to use /assignment/:id over /gameboards#:id
     allowManaging?: boolean; // replaces "assign" with both "unset" and "set again" buttons for more precise assignment management
@@ -96,7 +99,7 @@ type GameboardCardProps = React.HTMLAttributes<HTMLElement> & {
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, children, assignment, openAssignModal, unassign, useAssignmentLink, allowManaging, usageDisplay, ...rest} = props;
+    const {gameboard, linkLocation, children, assignment, openAssignModal, preview, unassign, useAssignmentLink, allowManaging, usageDisplay, ...rest} = props;
 
     const user = useAppSelector(selectors.user.orNull);
 
@@ -190,7 +193,13 @@ export const GameboardCard = (props: GameboardCardProps) => {
         <Collapse isOpen={showMore} className="w-100">
             <Row>
                 <Col xs={12} md={8} className="mt-sm-2">
-                    <p className="mb-0"><strong>Questions:</strong> {gameboard?.contents?.length || "0"}</p>
+                    <p className="mb-0 d-flex align-items-center gap-2">
+                        <span>
+                            <strong>Questions:</strong>{" "}
+                            {gameboard?.contents?.length || "0"}
+                        </span>
+                        {preview && <Button color="link" className="p-0 m-0 text-muted" aria-label="Preview questions" onClick={preview}>(preview)</Button>}
+                    </p>
                     {isDefined(topics) && topics.length > 0 && <p className="mb-0">
                         <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
                         {topics.join(", ")}

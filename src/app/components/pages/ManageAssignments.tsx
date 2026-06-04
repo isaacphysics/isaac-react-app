@@ -1,9 +1,10 @@
 import {
     assignGameboard,
+    closeActiveModal,
+    openActiveModal,
     selectors,
     useAppDispatch,
     useAppSelector,
-    useGetGameboardsQuery,
     useGetGroupsQuery,
     useGetMySetAssignmentsQuery,
     useLazyGetGameboardByIdQuery,
@@ -30,7 +31,6 @@ import {
     Table
 } from "reactstrap";
 import {
-    BoardLimit,
     convertGameboardItemToContentSummary,
     determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
@@ -56,7 +56,7 @@ import {
     UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
 import {
-    AssignmentBoardOrder,
+    ActiveModalProps,
     AssignmentScheduleContext,
     ValidAssignmentWithListingDate
 } from "../../../IsaacAppTypes";
@@ -73,6 +73,7 @@ import { PageContainer } from "../elements/layout/PageContainer";
 import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
 import { GameboardCard, GameboardLinkLocation } from "../elements/cards/GameboardCard";
 import { useManageAssignment } from "../../services/setAssignment";
+import { GameboardContents } from "./Gameboard";
 
 
 interface AssignmentListEntryProps {
@@ -194,6 +195,15 @@ const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
 
     const { openAssignModal, unassign } = useManageAssignment(assignment);
+    const dispatch = useAppDispatch();
+
+    const previewGameboardModal = (gameboard: GameboardDTO): ActiveModalProps => {
+        return {
+            closeAction: () => dispatch(closeActiveModal()),
+            title: "Question deck preview",
+            body: <GameboardContents gameboard={gameboard} />,
+        };
+    };
 
     return <GameboardCard 
         className="mt-2"
@@ -201,6 +211,7 @@ const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
         linkLocation={GameboardLinkLocation.Title}
         assignment={assignment}
         openAssignModal={openAssignModal}
+        preview={assignment.gameboard ? () => dispatch(openActiveModal(previewGameboardModal(assignment.gameboard as GameboardDTO))) : undefined}
         usageDisplay={{type: "progressLink", assignment}}
         unassign={unassign}
         allowManaging
