@@ -4,6 +4,7 @@ import { Input } from "reactstrap";
 import { BoardViews, BoardLimit, BoardCreators, BoardCompletions, useDeviceSize, above, getSearchPlaceholder } from "../../../services";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Spacer } from "../Spacer";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface MyGameboardsSidebarProps extends ContentSidebarProps {
     displayMode: BoardViews;
@@ -28,9 +29,9 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
             <h5>Search question decks</h5>
-            <Input
+            <SearchInputWithIcon 
                 data-testid="title-filter"
-                className='search--filter-input my-3'
+                outerClassName="my-3"
                 type="search" value={boardTitleFilter || ""}
                 placeholder={`e.g. ${getSearchPlaceholder()}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}

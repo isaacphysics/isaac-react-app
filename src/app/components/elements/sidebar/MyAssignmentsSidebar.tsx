@@ -8,6 +8,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     status: AssignmentState;
@@ -88,8 +89,8 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                 <div className="section-divider"/>
                 <search data-testid="my-assignments-sidebar">
                     <h5>Search assignments</h5>
-                    <Input
-                        className='search--filter-input my-3'
+                    <SearchInputWithIcon
+                        outerClassName='my-3'
                         type="search" value={titleFilter || ""}
                         placeholder={`e.g. ${getSearchPlaceholder()}`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}

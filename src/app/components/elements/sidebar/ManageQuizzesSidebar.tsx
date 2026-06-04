@@ -3,6 +3,7 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Input
 import { useDeviceSize, above } from "../../../services";
 import { formatISODateOnly } from "../DateString";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface ManageQuizzesSidebarProps extends ContentSidebarProps {
     manageQuizzesTitleFilter: string;
@@ -45,17 +46,17 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
             <h5>Search tests</h5>
-            <Input
+            <SearchInputWithIcon
+                outerClassName="mt-3 mb-4"
                 id="manage-quizzes-title-filter" type="search"
                 value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-                className="search--filter-input mt-3 mb-4"
                 placeholder="e.g. Practice" aria-label="Search by title"
             />
             <h5>Search by group</h5>
-            <Input
+            <SearchInputWithIcon
+                outerClassName="my-3"
                 id="manage-quizzes-group-name-filter" type="search"
                 value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-                className="search--filter-input my-3"
                 placeholder="Group name"  aria-label="Search by group"
             />
             <div className="section-divider"/>

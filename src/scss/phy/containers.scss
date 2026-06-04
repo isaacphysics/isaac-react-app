@@ -68,13 +68,13 @@ border-radius: 4px;
 flex: 1 0 content;
 }
 
-[data-ld-theme="light"] {
+@include color-mode(light) {
     .item-list-container {
         @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
     }
 }
 
-[data-ld-theme="dark"] {
+@include color-mode(dark) {
     .item-list-container {
         @include vertical-scroll-shadow($color-neutral-dark-50, rgba(0, 0, 0, 0.2));
     }
