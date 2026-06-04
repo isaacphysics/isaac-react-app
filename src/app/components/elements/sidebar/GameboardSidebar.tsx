@@ -69,7 +69,7 @@ const BackToBookButton = ({ bookId }: { bookId: string }) => {
         tag={Link}
         to={"/books/" + bookId}
         affix={{
-            affix: "icon-chevron-left",
+            affix: "icon-arrow-left",
             position: "prefix",
             type: "icon",
             affixClassName: "icon-inline me-2"
