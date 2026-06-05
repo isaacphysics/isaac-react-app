@@ -13,12 +13,14 @@ interface HeaderProps {
     setViewBy: (vb: "startDate" | "dueDate") => void;
     groupsToInclude: Item<number>[];
     setGroupsToInclude: (groups: Item<number>[]) => void;
+    workTypesToInclude: Item<string>[];
+    setWorkTypesToInclude: (types: Item<string>[]) => void;
     groups?: AppGroup[];
     user: RegisteredUserDTO;
     collapse: () => void;
 }
 
-export const ManageAssignmentsSidebar = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, collapse}: HeaderProps) => {
+export const ManageAssignmentsSidebar = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, collapse}: HeaderProps) => {
 
     const deviceSize = useDeviceSize();
 
@@ -30,6 +32,14 @@ export const ManageAssignmentsSidebar = ({user, groups, assignmentsSetByMe, view
             closeMenuOnSelect={!isStaff(user)}
             onChange={selectOnChange(setGroupsToInclude, false)}
             options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+        />
+
+        <h5 className="mt-3">Filter by type</h5>
+        <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
+            value={workTypesToInclude}
+            closeMenuOnSelect={!isStaff(user)}
+            onChange={selectOnChange(setWorkTypesToInclude, false)}
+            options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
         />
 
         <div className="section-divider" />

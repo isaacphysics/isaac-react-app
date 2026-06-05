@@ -497,13 +497,12 @@ export const GameboardContext = React.createContext<GameboardDTO | undefined>(un
 
 export const ManageAssignmentsContext = React.createContext<{
     groupsById: {[id: number]: AppGroup | undefined};
-    groupFilter: {[id: number]: boolean};
     workByGroup: {[id: number]: {boards?: IAssignmentLike[], tests?: IAssignmentLike[]} | undefined};
     groups: AppGroup[];
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-}>({groupsById: {}, groupFilter: {}, workByGroup: {}, groups: [], collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+}>({groupsById: {}, workByGroup: {}, groups: [], collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};

@@ -9,7 +9,7 @@ import groupBy from "lodash/groupBy";
 import mapValues from "lodash/mapValues";
 import sortBy from "lodash/sortBy";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import React, {Fragment, useContext, useEffect, useMemo, useState} from "react";
+import React, {Fragment, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {
     Button,
     Card,
@@ -173,6 +173,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     // Empty list means all groups are included, non-empty means only those in the list are included
     const [groupsToInclude, setGroupsToInclude] = useState<Item<number>[]>([]);
+    const [workTypesToInclude, setWorkTypesToInclude] = useState<Item<string>[]>([]);
 
     // --- Slow-to-calculate constant lookup maps for ease of locating gameboards, groups, etc. ---
 
@@ -181,12 +182,21 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
     }, [groups]);
 
     // Map from group id -> whether group should be included or not
-    const groupFilter = useMemo<{[id: number]: boolean}>(() => {
-        if (groupsToInclude.length === 0) {
-            return mapValues(groupsById, () => true);
+    const groupFilter = useCallback((work: IAssignmentLike) => {
+        if (groupsToInclude.length === 0) return true;
+        if (!work.groupId) return false;
+        return groupsToInclude.map(item => item.value).includes(work.groupId);
+    }, [groupsToInclude]);
+
+    const workTypeFilter = useCallback((work: IAssignmentLike) => {
+        if (workTypesToInclude.length === 0) return true;
+        if (isAssignment(work)) {
+            return workTypesToInclude.map(item => item.value).includes("assignment");
+        } else if (isQuiz(work)) {
+            return workTypesToInclude.map(item => item.value).includes("test");
         }
-        return groupsToInclude.reduce((acc, n) => ({...acc, [n.value]: true}), {});
-    }, [groupsToInclude, groupsById]);
+        return false;
+    }, [workTypesToInclude]);
 
     // Map from group id -> ids of boards / tests they are assigned to
     const workByGroup = useMemo(() => {
@@ -215,13 +225,16 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
         return d;
     });
     const oldestWorkDate = useMemo<Date>(() => new Date(
-        workSetByMe?.filter(a => a.id && isValidWork(a) && a.groupId && groupFilter[a.groupId] && (viewBy === "startDate" || isDefined(a.dueDate)))
+        workSetByMe
+            ?.filter(a => a.id && isValidWork(a) && (viewBy === "startDate" || isDefined(a.dueDate)))
+            .filter(groupFilter)
+            .filter(workTypeFilter)
             .reduce((oldest, a) => {
                 const assignmentTimestamp = a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? Date.now();
                 return assignmentTimestamp < oldest
                     ? assignmentTimestamp : oldest;
             }, Date.now()) ?? Date.now()
-    ), [workSetByMe, groupFilter, viewBy]);
+    ), [workSetByMe, groupFilter, workTypeFilter, viewBy]);
 
     const extendBackSixMonths = (until?: Date) => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
@@ -245,7 +258,9 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                     additionalManagerPrivileges: (a?.groupId && groupsById[a.groupId]?.additionalManagerPrivileges) ?? false
                 } as ValidWorkWithListingDate))
                 // IMPORTANT - filter ensures that id, gameboard/quiz id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
-                .filter(a => a.id && isValidWork(a) && a.groupId && groupFilter[a.groupId] && (viewBy === "startDate" || isDefined(a.dueDate)))
+                .filter(a => a.id && isValidWork(a) && (viewBy === "startDate" || isDefined(a.dueDate)))
+                .filter(groupFilter)
+                .filter(workTypeFilter)
             , a => a.listingDate.valueOf()
         );
         if (sortedWork.length === 0) return [];
@@ -263,7 +278,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 _as => Object.entries(groupBy(_as, a => a.listingDate.getDate())).map(parseNumericKey)
             )).map(parseNumericKey)
         )).map(parseNumericKey);
-    }, [workSetByMe, viewBy, groupsById, groupFilter, earliestShowDate]);
+    }, [workSetByMe, groupFilter, workTypeFilter, viewBy, groupsById, earliestShowDate]);
 
     const notAllPastWorkIsListed = earliestShowDate.valueOf() >= oldestWorkDate.valueOf();
 
@@ -290,6 +305,8 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 assignmentsSetByMe={assignmentsSetByMe}
                 groupsToInclude={groupsToInclude} 
                 setGroupsToInclude={setGroupsToInclude}
+                workTypesToInclude={workTypesToInclude}
+                setWorkTypesToInclude={setWorkTypesToInclude}
                 viewBy={viewBy} 
                 setViewBy={setViewBy}
                 collapse={() => setCollapsed(true)}
@@ -305,7 +322,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
             defaultErrorTitle="Error loading assignments and/or question decks"
             query={combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, discardResults)}
         >
-            <ManageAssignmentsContext.Provider value={{groupsById, groupFilter, workByGroup, groups: groups ?? [], collapsed, setCollapsed, viewBy}}>
+            <ManageAssignmentsContext.Provider value={{groupsById, workByGroup, groups: groups ?? [], collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
                     <Card>
                         <CardBody>
