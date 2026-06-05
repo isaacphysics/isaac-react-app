@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
 import { AssignmentDTO, QuizAssignmentDTO } from "../../../IsaacApiTypes";
-import { isDefined, isOverdue } from "../../services";
+import { isDefined, isOverdue, useManageQuizAssignments } from "../../services";
 import { useManageAssignment } from "../../services/setAssignment";
 import { GameboardCard, GameboardLinkLocation } from "./cards/GameboardCard";
 import { getFriendlyDaysUntil } from "./DateString";
@@ -47,14 +47,17 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
 };
 
 export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignmentDTO}) => {
+
+    const { cancel, openExtendDueDateModal, openAssignModal } = useManageQuizAssignments();
+
     return <TestCard
         className="mt-2"
         quizAssignment={quizAssignment}
         linkLocation={!isOverdue(quizAssignment) ? GameboardLinkLocation.Title : undefined}
         usageDisplay={{type: "progressLink"}}
-        // TODO: implement below by extracting functionality from SetQuizzes via hook
-        unassign={() => {}} 
-        extendDueDate={() => {}}
+        openAssignModal={() => openAssignModal(quizAssignment)}
+        cancel={() => cancel(quizAssignment)} 
+        extendDueDate={() => openExtendDueDateModal(quizAssignment)}
         allowManaging
     >
         <Row className="w-100">

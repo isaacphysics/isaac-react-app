@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Link } from "react-router";
 import { Row, Col, Button } from "reactstrap";
 import { QuizAssignmentDTO } from "../../../../IsaacApiTypes";
-import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY } from "../../../services";
+import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY, isOverdue } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { ShareLink } from "../ShareLink";
 import { Spacer } from "../Spacer";
@@ -46,7 +46,7 @@ type TestCardProps = React.HTMLAttributes<HTMLElement> & {
     quizAssignment?: QuizAssignmentDTO;
     linkLocation?: GameboardLinkLocation;
     openAssignModal?: () => void;
-    unassign?: () => void;
+    cancel?: () => void;
     extendDueDate?: () => void;
     // useAssignmentLink?: boolean; // whether to use /assignment/:id over /gameboards#:i
     allowManaging?: boolean; // replaces "assign" with both "unset" and "set again" buttons for more precise assignment management
@@ -56,7 +56,7 @@ type TestCardProps = React.HTMLAttributes<HTMLElement> & {
 
 // any children passed into this component will be rendered in the card body
 export const TestCard = (props: TestCardProps) => {
-    const {quizAssignment, linkLocation, children, openAssignModal, unassign, extendDueDate, allowManaging, usageDisplay, ...rest} = props;
+    const {quizAssignment, linkLocation, children, openAssignModal, cancel, extendDueDate, allowManaging, usageDisplay, ...rest} = props;
 
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
@@ -101,11 +101,11 @@ export const TestCard = (props: TestCardProps) => {
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
                 {isPhy && testUrl && <div className="card-share-link">
-                    <ShareLink linkUrl={testUrl} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
+                    <ShareLink linkUrl={testUrl} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline", disabled: !!(quizAssignment && isOverdue(quizAssignment))}} />
                 </div>}
                 {allowManaging
                     ? isTutorOrAbove(user) && <>
-                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); unassign?.();}}>
+                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); cancel?.();}}>
                             Unassign
                         </Button>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); extendDueDate?.();}}>
