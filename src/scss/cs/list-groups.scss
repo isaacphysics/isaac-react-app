@@ -45,13 +45,11 @@
     > div {
       font-size: 1.25rem;
 
-      .question-progress-icon {
+      .question-progress-icon:has(> .inner-progress-icon) {
         display: inline-block;
         border-right: 1px solid $gray-107;
         margin-right: 1rem;
-        padding-right: 1rem;
         text-align: center;
-        min-width: 3.4rem;
       }
     }
   }

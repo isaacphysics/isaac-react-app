@@ -38,26 +38,12 @@
   right: 0;
 }
 
-.responsive {
-  max-height: 60vh;
-  .table.table-bordered {
-    thead {
-      @include table-sticky();
-      background: var(--color-neutral-50);
-    }
-    tr {
-      &.disabled {
-        background-color: lightgrey;
-      }
-    }
-  }
-}
-
 button.btn.delete-button {
   border-radius: inherit;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 0.625rem;
+  min-width: 36px;
   > img {
     filter: invert(1);
   }

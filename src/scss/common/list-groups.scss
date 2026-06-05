@@ -1,7 +1,12 @@
 .list-group-links {
   border: 1px solid var(--color-neutral-200, $gray-107);
   .question-link-title {
-    font-size: 1.25rem;
+    &.title-small {
+      font-size: 1.1rem;
+    }
+    &:not(.title-small) {
+      font-size: 1.25rem;
+    }
   }
 
   li {
@@ -18,12 +23,19 @@
   }
 }
 
+.alvi-bookmark-container {
+  width: 16px;
+  height: 16px;
+  margin-left: 1rem;
+}
+
 .alvi-bookmark {
   display: flex;
+  position: absolute;
+  top: 0;
+  right: 1rem;
   padding: 0;
   background: none;
-  margin-left: 1rem;
-  margin-top: -1rem;
   overflow: hidden;
 
   &::after {
@@ -44,5 +56,21 @@
       margin-top: -1rem;
       @include svg-color(url("/assets/common/bookmark.svg"), $gray-110, 16px, 48px, 16px);
     }
+  }
+}
+
+.list-view-border {
+  border-left: 1px solid var(--color-neutral-200, $gray-107);
+  padding-left: 1rem;
+  &.flex-column {
+    min-width: 220px;
+  }
+}
+
+.draggable-list-view-accessible {
+  @extend .focus-visible-z-index;
+
+  button {
+    @extend .focus-visible-z-index;
   }
 }

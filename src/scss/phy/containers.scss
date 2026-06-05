@@ -50,10 +50,15 @@ div.dashboard.dashboard-outer {
 }
 
 .modal .container {
-    // modals have their own padding, and containers ought to be full width inside these.
+    // modals have their own padding (mx-4 + --bs-modal-padding, 2.5rem total), and containers ought to be full width inside these.
     // most modals should not have containers in the first place, but some (like question previews) work by
-    // reusing the question page container. in these cases, ignore the above padding.
+    // reusing the question page container. in such cases, ignore the container's normal padding, and make overrides cover the *modal* padding.
     padding: 0;
+
+    .container-override {
+        padding: 0 2.5rem;
+        margin: 0 -2.5rem;
+    }
 }
 
 
