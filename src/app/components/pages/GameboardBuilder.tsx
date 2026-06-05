@@ -48,6 +48,7 @@ import {
     siteSpecific,
     STAGE,
     TAG_ID,
+    useDeviceSize,
     useUserViewingContext
 } from "../../services";
 import {useBlocker, useLocation} from "react-router-dom";
@@ -120,6 +121,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const concepts = queryParams && queryParams.concepts as string;
 
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
     const userContext = useUserViewingContext();
     const {data: wildcards} = useGetWildcardsQuery();
     const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
@@ -455,7 +457,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             {/* dragging here can be a little choppy on local development if browser cache is disabled! */}
                             <ListView 
                                 id="gameboard-builder-questions"
-                                className="mw-max-content"
+                                className={classNames({"mw-max-content": deviceSize === "xs"})}
                                 type="builder"
                                 style="flat"
                                 items={questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
