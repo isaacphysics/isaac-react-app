@@ -4,7 +4,7 @@ import {
     useGetGroupsQuery,
     useGetMySetAssignmentsQuery,
     useGetQuizAssignmentsSetByMeQuery} from "../../state";
-import {AssignmentDTO, IAssignmentLike, QuizAssignmentDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {IAssignmentLike, QuizAssignmentDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import groupBy from "lodash/groupBy";
 import mapValues from "lodash/mapValues";
 import sortBy from "lodash/sortBy";
@@ -20,7 +20,6 @@ import {
     getAssignmentStartDate,
     isAssignment,
     isDefined,
-    isOverdue,
     isQuiz,
     Item,
     MONTH_NAMES,
@@ -34,57 +33,17 @@ import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
 import {combineQueries, discardResults, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {formatDate, getFriendlyDaysUntil} from "../elements/DateString";
+import {formatDate} from "../elements/DateString";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
-import { GameboardCard, GameboardLinkLocation } from "../elements/cards/GameboardCard";
-import { useManageAssignment } from "../../services/setAssignment";
 import { PhyAddGameboardButtons } from "./SetAssignments";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
+import { ManageAssignmentCard, ManageTestCard } from "../elements/ManageAssignedCards";
 
 const isValidWork = (a: IAssignmentLike) => {
     return (isAssignment(a) && a.gameboardId) || (isQuiz(a) && a.quizId && a.quizSummary);
-};
-
-// this is similar to MyAssignmentsContents/AssignmentCard, but:
-// - inside the card's children, does not highlight past deadlines.
-// - GameboardCard.usageDisplay is undefined, so no completion / group statistics are shown in the top right.
-// - GameboardCard.allowManaging is set
-const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
-    const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
-
-    const { openAssignModal, unassign } = useManageAssignment(assignment);
-
-    return <GameboardCard 
-        className="mt-2"
-        gameboard={assignment.gameboard}
-        linkLocation={GameboardLinkLocation.Title}
-        assignment={assignment}
-        openAssignModal={openAssignModal}
-        usageDisplay={{type: "progressLink", assignment}}
-        unassign={unassign}
-        allowManaging
-    >
-        <Row className="w-100">
-            <Col>
-                {isDefined(assignment.groupName) &&
-                    <p className="mb-0">Set to <strong>{assignment.groupName}</strong></p>
-                }
-                {isDefined(assignmentStartDate) && 
-                    <p className="mb-0" data-testid={"gameboard-assigned"}>
-                        Assigned <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
-                    </p>
-                }
-                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && <p className="mb-0">
-                    Due <strong>{getFriendlyDaysUntil(assignment.dueDate)}</strong>
-                </p>}
-            </Col>
-        </Row>
-        
-        {assignment.notes && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
-    </GameboardCard>;
 };
 
 // If the hexagon proportions change, the CSS class bg-timeline needs revisiting
@@ -136,12 +95,15 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
         </div>
         {open && <div className={"date-assignment-list"}>
             {work.map(a => isAssignment(a as IAssignmentLike)
-                ? <AssignmentCard
+                ? <ManageAssignmentCard
                     key={a.id}
                     assignment={a}
                 />
                 : isQuiz(a as IAssignmentLike)
-                    ? <div>Test: {(a as QuizAssignmentDTO).quizSummary?.title}</div>
+                    ? <ManageTestCard
+                        key={a.id}
+                        quizAssignment={a as QuizAssignmentDTO}
+                    />
                     : null
             )}
         </div>}
