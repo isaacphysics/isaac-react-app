@@ -10,6 +10,7 @@ import {
     Difficulty,
     GameboardDTO,
     GameboardItem,
+    IAssignmentLike,
     ItemDTO,
     QuestionDTO,
     QuestionValidationResponseDTO,
@@ -421,6 +422,13 @@ export interface ValidAssignmentWithListingDate extends AssignmentDTO {
     listingDate: Date;
 }
 
+export interface ValidWorkWithListingDate extends IAssignmentLike {
+    groupId: number;
+    additionalManagerPrivileges: boolean;
+    id: number;
+    listingDate: Date;
+}
+
 export interface AssignmentProgressPageSettings {
     colourBlind: boolean;
     setColourBlind: (colourBlind: boolean) => void;
@@ -490,12 +498,12 @@ export const GameboardContext = React.createContext<GameboardDTO | undefined>(un
 export const ManageAssignmentsContext = React.createContext<{
     groupsById: {[id: number]: AppGroup | undefined};
     groupFilter: {[id: number]: boolean};
-    boardIdsByGroupId: {[id: number]: string[] | undefined};
+    workByGroup: {[id: number]: {boards?: IAssignmentLike[], tests?: IAssignmentLike[]} | undefined};
     groups: AppGroup[];
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-}>({groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+}>({groupsById: {}, groupFilter: {}, workByGroup: {}, groups: [], collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
