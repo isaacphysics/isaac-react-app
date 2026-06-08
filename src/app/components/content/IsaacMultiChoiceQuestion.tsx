@@ -2,9 +2,8 @@ import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {Input, Label} from "reactstrap";
-import {isAda, useCurrentQuestionAttempt} from "../../services";
+import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import classNames from "classnames";
 
 const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacMultiChoiceQuestionDTO>) => {
 

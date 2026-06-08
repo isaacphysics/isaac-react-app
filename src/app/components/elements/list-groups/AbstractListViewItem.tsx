@@ -20,6 +20,7 @@ import { SaveBoardButton } from "../SaveBoardButton";
 import { BoardItemIndicator } from "../cards/GameboardCard";
 import { useBookmarks } from "../../../services/bookmarks";
 import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
+import { PreviewQuestionButton } from "../PreviewButton";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -130,6 +131,7 @@ type ALVIType = {
     hasCaret?: boolean;
     linkTags?: ListViewTagProps[];
     allowBookmarking?: boolean; // if set, displays a bookmark for logged-in users that will save the alvi to the user's bookmarks on click
+    disableRedirect?: boolean; // the URL is required for bookmarks to show; if we do not want the item to redirect on click, enable
 } | {
     // quizzes – have exclusive "preview" and "view test" buttons
     alviType: "quiz";
@@ -147,6 +149,9 @@ type ALVIType = {
     deprecated?: boolean;
     supersededByPath?: string;
     audienceViews?: ViewingContext[];
+    allowBookmarking?: boolean; // as in item type
+    disableRedirect?: boolean; // as in item type
+    questionPreviewId?: string; // shows a preview button next to the title; preview opens in modal
 };
 
 type ALVILayout = {
@@ -193,14 +198,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isCrossTopic = isAda && tags?.includes("cross_topic");
     const isLLM = tags?.includes("llm_question_page");
 
-    const flatLayout = style === "flat" && above['md'](deviceSize);
+    const flatLayout = style === "flat" && above['lg'](deviceSize);
     const stackedLayout = style === "stacked" || below["sm"](deviceSize);
     const wrapTitleTags = below["xs"](deviceSize);
 
     const cardBody = <>
         <div className="w-100 d-flex flex-row">
             <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard})}>
-                <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
+                <div className={classNames("position-relative", {"question-progress-icon": isAda, "d-flex vertical-center": flatLayout})}>
                     {icon && <div className="inner-progress-icon">
                         <TitleIcon icon={icon} />
                         {icon.label && isAda && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
@@ -212,19 +217,21 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </div>
                 <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2 ps-1 ms-n1", "py-3"))}>
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
-                        {url && !isDisabled
-                            ? (url.startsWith("http")
-                                ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                        <>
+                            {url && !isDisabled && !("disableRedirect" in typedProps && typedProps.disableRedirect)
+                                ? (url.startsWith("http")
+                                    ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
+                                        <Markup encoding="latex">{title}</Markup>
+                                    </ExternalLink>
+                                    : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
+                                        <Markup encoding="latex">{title}</Markup>
+                                    </Link>
+                                )
+                                : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
                                     <Markup encoding="latex">{title}</Markup>
-                                </ExternalLink>
-                                : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
-                                    <Markup encoding="latex">{title}</Markup>
-                                </Link>
-                            )
-                            : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
-                                <Markup encoding="latex">{title}</Markup>
-                            </span>
-                        }
+                                </span>
+                            }
+                        </>
                         {isItem && <>
                             {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
                             <ContentPropertyTags 
@@ -235,12 +242,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             />
                         </>}
                     </div>
-                    {subtitle && <div className="small text-muted text-wrap">
-                        <Markup encoding="latex">{subtitle}</Markup>
-                    </div>}
-                    {breadcrumb && !(flatLayout && subtitle) && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
-                        <Breadcrumb breadcrumb={breadcrumb}/>
-                    </span>}
+                    {!flatLayout && <>
+                        {subtitle && <div className="small text-muted text-wrap">
+                            <Markup encoding="latex">{subtitle}</Markup>
+                        </div>}
+                        {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                            <Breadcrumb breadcrumb={breadcrumb}/>
+                        </span>}
+                    </>}
                     {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                     </div>}
@@ -263,11 +272,21 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/>
                     </div>}
                 </div>
+                {isBuilder && typedProps.questionPreviewId && <PreviewQuestionButton id={typedProps.questionPreviewId} />}
             </Col>
             {!stackedLayout &&
                 <>
                     {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
-                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
+                    {flatLayout && (subtitle || breadcrumb) && <div className="list-view-border wf-10 pe-3 d-flex align-items-center">
+                        {subtitle && <div className="small text-muted text-wrap">
+                            <Markup encoding="latex">{subtitle}</Markup>
+                        </div>}
+                        {/* additional `&& !subtitle` as compared to stacked, as flat layout only has room for one */}
+                        {breadcrumb && !subtitle && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                            <Breadcrumb breadcrumb={breadcrumb}/>
+                        </span>}
+                    </div>}
+                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
                     {isGameboard && typedProps.board && <div className="d-flex align-items-center justify-content-end gap-3 ms-3">
@@ -277,10 +296,16 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
-                    {isItem && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <button 
-                        className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
-                        onClick={() => bookmarkItem(contentId)}
-                    /> }
+                    {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <div
+                        className="alvi-bookmark-container"
+                    >
+                        <button 
+                            className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
+                            onClick={() => bookmarkItem(contentId)}
+                            type="button"
+                        /> 
+                    </div>
+                    }
                 </>
             }
             {isItem && typedProps.hasCaret && <div className="list-caret align-content-center" aria-hidden="true">
@@ -291,7 +316,13 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     </>;
 
     return <ListGroupItem
-        className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
+        className={classNames(
+            "content-summary-item", 
+            {"thin": flatLayout},
+            {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT},
+            className, 
+            state
+        )} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
         data-testid={"list-view-item"}
         tag={componentTag}

@@ -2,7 +2,7 @@
 @use "sass:color";
 
 // since the brand colours are not used as themes, we need to make them available (dark mode-inclusively) globally
-[data-ld-theme="light"] {
+@include color-mode(light, $root: true) {
   --color-brand-400: #{$color-brand-400};
   --color-brand-500: #{$color-brand-500};
   --color-brand-700: #{$color-brand-700};
@@ -11,7 +11,7 @@
   --breadcrumb-alt: var(--color-neutral-900);
 }
 
-[data-ld-theme="dark"] {
+@include color-mode(dark, $root: true) {
   --color-brand-400: #{$color-brand-700};
   --color-brand-500: #{$color-brand-500};
   --color-brand-700: #{$color-brand-300};
@@ -21,7 +21,7 @@
 }
 
 @each $ld-palette, $subject-palettes-map in $isaac-light-dark-palettes {
-  [data-ld-theme="#{$ld-palette}"] {
+  @include color-mode($ld-palette, $root: true) {
 
     @each $palette, $subject-colors in $subject-palettes-map {
 
@@ -70,7 +70,7 @@
         --buttons-keyline-disabled-border: var(--subject-color-300);
         --buttons-keyline-white-border: var(--subject-color-400);
         --buttons-keyline-white-hover: var(--subject-color-900);
-        --buttons-light-disabled-text: var(--subject-color-300);
+        --buttons-light-disabled-text: var(--subject-color-400);
         --buttons-light-hover: var(--subject-color-700);
         --buttons-light-hover-icon: var(--subject-color-200);
         --buttons-light-hover-prefix: var(--subject-color-100);
@@ -141,8 +141,15 @@
 
         // COMPONENT STYLES
         .alert-secondary {
-          @extend .alert-#{$palette};
+          background-color: var(--subject-color-50);
+          border-color: var(--subject-color-200);
           color: var(--alert-text-color);
+          a {
+            color: var(--alert-text-color);
+            &:hover, &:focus {
+              color: var(--subject-color-900);
+            }
+          }
         }
       }
     }
@@ -156,7 +163,7 @@
 
 // misc colours – uses a slightly different palette structure as most colours don't have scales
 @each $ld-palette, $subject-palette-map in $isaac-light-dark-misc {
-  [data-ld-theme="#{$ld-palette}"] {
+  @include color-mode($ld-palette, $root: true) {
     @each $misc, $color in $subject-palette-map {
       --color-misc-#{$misc}: #{$color};
     }
@@ -174,9 +181,9 @@
 
 
   --icon-secondary: #{$color-brand-500};
-  --icon-tertiary: #{$color-neutral-900};
+  --icon-tertiary: var(--color-neutral-900);
 
-  --sidebar-tab-disabled: #{$color-neutral-300};
+  --sidebar-tab-disabled: var(--color-neutral-300);
 
   /* number */
   --buttons-padding-v-sm: 0.6875rem;
@@ -189,25 +196,15 @@
   --forms-input-border-radius: 8rem;
 
   --buttons-font-size-btn-lg: 0.875rem;
-  
-  &[data-ld-theme="dark"] {
-    background-color: #181a1b;
-    color-scheme: dark;
-  }
-
-  &[data-ld-theme="light"] {
-    color-scheme: light;
-  }
 }
 
-.text-theme {
-  color: var(--subject-color-500);
+@include color-mode(dark, $root: true) {
+  background-color: #181a1b;
+  color-scheme: dark;
+}
 
-  &:is(a) {
-    &:hover, &:focus {
-      color: var(--subject-color-600);
-    }
-  }
+@include color-mode(light, $root: true) {
+  color-scheme: light;
 }
 
 .text-theme-dark {
@@ -218,14 +215,6 @@
       color: var(--subject-color-900);
     }
   }
-}
-
-.bg-theme {
-  background-color: var(--subject-color-500);
-}
-
-.border-theme {
-  border-color: var(--subject-color-500);
 }
 
 .text-brand {
