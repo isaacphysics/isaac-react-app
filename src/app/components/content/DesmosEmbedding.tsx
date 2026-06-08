@@ -1,6 +1,7 @@
 import React from "react";
 import { DesmosEmbeddingDTO } from "../../../IsaacApiTypes";
 import { DesmosCookieHandler } from "../handlers/InterstitialCookieHandler";
+import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
 
 interface DesmosEmbeddingProps {
     doc: DesmosEmbeddingDTO;
@@ -21,8 +22,10 @@ export const DesmosEmbedding = ({doc}: DesmosEmbeddingProps) => {
                     height="500px"
                     allowFullScreen
                 />
-                {altText && <figcaption className="text-center figure-caption">
-                    {altText}
+                {(!!doc.value || !!doc.children?.length) && <figcaption className="text-center figure-caption">
+                    <IsaacContentValueOrChildren value={doc.value}>
+                        {doc.children}
+                    </IsaacContentValueOrChildren>
                 </figcaption>}
             </figure>
         } />
