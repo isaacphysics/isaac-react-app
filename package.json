@@ -33,7 +33,7 @@
     "immer": "^9.0.21",
     "inequality": "1.2.7",
     "inequality-grammar": "1.3.9",
-    "isaac-graph-sketcher": "0.13.8",
+    "isaac-graph-sketcher": "0.13.9",
     "js-cookie": "^3.0.8",
     "katex": "^0.16.47",
     "leaflet": "^1.9.4",
