@@ -1,4 +1,4 @@
-[data-ld-theme="dark"] {
+@include color-mode(dark, $root: true) {
   --bs-white-rgb: 24, 26, 27;
   --bs-black-rgb: 242, 241, 237;
   --bs-body-bg: var(--color-neutral-white);

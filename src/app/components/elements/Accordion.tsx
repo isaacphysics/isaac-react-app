@@ -223,7 +223,7 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
                 </div>}
             </div>
 
-            {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content pe-3 align-self-center"}>
+            {accordionState && isPhy && <span className={"accordion-status d-flex align-items-center gap-2 w-max-content pe-3 align-self-center"}>
                 <StatusDisplay status={accordionState} showText className="flex-row-reverse" aria-label={accordionAltText[accordionState]} />
             </span>}
             {isAda && <>

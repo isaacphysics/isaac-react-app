@@ -1,5 +1,4 @@
 import React, { useEffect, ChangeEvent, useMemo } from "react";
-import { Input } from "reactstrap";
 import { tags, TAG_ID, getSearchPlaceholder, isDefined, PHY_NAV_SUBJECTS, getFilteredStageOptions, TAG_LEVEL } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
@@ -8,6 +7,7 @@ import { Stage } from "../../../../IsaacApiTypes";
 import classNames from "classnames";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { AllFiltersCheckbox, FilterCheckbox } from "./SidebarElements";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface SubjectSpecificConceptsListingSidebarProps extends ContentSidebarProps {
     searchText: string | null;
@@ -38,8 +38,8 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
         <div className="section-divider"/>
         <search>
             <h5>Search concepts</h5>
-            <Input
-                className='search--filter-input my-4'
+            <SearchInputWithIcon
+                outerClassName='my-4'
                 type="search" value={searchText || ""}
                 placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
@@ -104,8 +104,8 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
         <div className="section-divider"/>
         <search>
             <h5>Search concepts</h5>
-            <Input
-                className='search--filter-input my-4'
+            <SearchInputWithIcon
+                outerClassName='my-4'
                 type="search" value={searchText || ""}
                 placeholder={`e.g. ${getSearchPlaceholder()}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}

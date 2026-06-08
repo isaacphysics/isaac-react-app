@@ -17,27 +17,43 @@ const GraphSketcherPage = () => {
     const user = useAppSelector(selectors.user.orNull);
     const [modalVisible, setModalVisible] = useState(false);
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
-    const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
-    const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
-    const [initialState, setInitialState] = useState<GraphSketcherState>();
+    const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>(undefined);
+    const previewSketch = useRef<GraphSketcher | undefined>(undefined);
     const previewRef = useRef(null);
     const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
 
-    const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
-        setInitialState(newState);
-        setCurrentAttempt({type: 'graphChoice', value: JSON.stringify(GraphSketcher.toExternalState(newState))});
-        if (previewSketch) {
-            previewSketch.state = newState;
-            previewSketch.state.curves = previewSketch.state.curves || [];
+    const initialModalState: GraphSketcherState | undefined = currentAttempt?.value ? GraphSketcher.toInternalState(JSON.parse(currentAttempt.value)) : undefined;
+    
+    // loads with previous attempt data in real use
+    const [pendingAttemptState, setPendingAttemptState] = useState<GraphSketcherState | undefined>(undefined);
+
+    const updatePreviewState = useCallback((attempt: GraphChoiceDTO | undefined) => {
+        // Set the state of the preview box whenever currentAttempt changes
+        if (previewSketch.current && attempt?.value) {
+            const data: GraphSketcherState = GraphSketcher.toInternalState(JSON.parse(attempt.value));
+            data.canvasWidth = 1000;
+            data.canvasHeight = 600;
+            data.curves = data.curves || [];
+            previewSketch.current.state = data;
         }
-    };
+    }, []);
 
     const closeModal = useCallback(async () => {
-        if (currentAttempt?.value && isStaff(user)) {
-            await generateGraphSpec({ type: 'graphChoice', value: currentAttempt.value});
+        if (pendingAttemptState) {
+            const newAttempt = {type: 'graphChoice', value: JSON.stringify(GraphSketcher.toExternalState(pendingAttemptState))};
+            
+            setCurrentAttempt(newAttempt);
+            updatePreviewState(newAttempt);
+            setPendingAttemptState(undefined);
+
+            if (isStaff(user)) {
+                await generateGraphSpec({ type: 'graphChoice', value: newAttempt.value});
+            }
         }
+
         closeModalAndReturnToScrollPosition();
-    }, [currentAttempt?.value, user, generateGraphSpec, closeModalAndReturnToScrollPosition]);
+        
+    }, [pendingAttemptState, closeModalAndReturnToScrollPosition, updatePreviewState, user, generateGraphSpec]);
 
     const handleKeyPress = useCallback(async (ev: KeyboardEvent) => {
         if (ev.code === 'Escape') {
@@ -51,29 +67,21 @@ const GraphSketcherPage = () => {
         return () => {
             window.removeEventListener('keyup', handleKeyPress);
         };
-    }, [closeModal, handleKeyPress]);
+    }, [handleKeyPress]);
 
     useEffect(() => {
-        if (previewSketch) return;
-        if (makeGraphSketcher && previewRef.current) {
-            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 1000, 600, { previewMode: true, initialCurves: initialState?.curves });
-            if (sketch) {
-                sketch.selectedLineType = LineType.BEZIER;
-                setPreviewSketch(sketch);
-            }
+        const { sketch, p: p5 } = makeGraphSketcher(previewRef.current, 1000, 600, { previewMode: true });
+        if (sketch) {
+            sketch.selectedLineType = LineType.BEZIER;
+            previewSketch.current = sketch;
         }
-    }, [previewRef, previewSketch]);
 
-    useEffect(() => {
-        // Set the state of the preview box whenever currentAttempt changes
-        if (previewSketch && currentAttempt?.value) {
-            const data: GraphSketcherState = JSON.parse(currentAttempt.value);
-            data.canvasWidth = 1000;
-            data.canvasHeight = 600;
-            data.curves = data.curves || [];
-            previewSketch.state = data;
-        }
-    }, [currentAttempt]);
+        return () => {
+            // teardown sketcher instance on unmount
+            previewSketch.current?.teardown();
+            p5?.remove();
+        };
+    }, []);
 
     return <div>
         <Container>
@@ -85,8 +93,8 @@ const GraphSketcherPage = () => {
                 {modalVisible && <GraphSketcherModal
                     user={user}
                     close={closeModal}
-                    onGraphSketcherStateChange={onGraphSketcherStateChange}
-                    initialState={initialState}
+                    onGraphSketcherStateChange={setPendingAttemptState}
+                    initialState={initialModalState}
                 />}
             </div>
             {graphSpec && graphSpec.map((spec, i) => <pre key={i}>{spec}</pre>)}
