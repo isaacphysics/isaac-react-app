@@ -36,8 +36,9 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
                         Assigned <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
                     </p>
                 }
-                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && <p className="mb-0">
+                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && <p className="mb-0">
                     Due <strong>{getFriendlyDaysUntil(assignment.dueDate)}</strong>
+                    {isOverdue(assignment) && <span className="overdue ms-1">(passed)</span>}
                 </p>}
             </Col>
         </Row>
@@ -66,13 +67,14 @@ export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignment
                 {/* {isDefined(quizAssignment.quizSummary?.groupName) &&
                     <p className="mb-0">Set to <strong>{quizAssignment.quizSummary?.groupName}</strong></p>
                 } */}
-                {isDefined(quizAssignment.scheduledStartDate) || isDefined(quizAssignment.creationDate) &&
+                {isDefined(quizAssignment?.scheduledStartDate) || isDefined(quizAssignment?.creationDate) &&
                     <p className="mb-0" data-testid={"gameboard-assigned"}>
                         Assigned <strong>{getFriendlyDaysUntil(quizAssignment.scheduledStartDate || quizAssignment.creationDate)}</strong>
                     </p>
                 }
-                {isDefined(quizAssignment.dueDate) && isDefined(quizAssignment) && isOverdue(quizAssignment) && <p className="mb-0">
+                {isDefined(quizAssignment?.dueDate) && <p className="mb-0">
                     Due <strong>{getFriendlyDaysUntil(quizAssignment.dueDate)}</strong>
+                    {isOverdue(quizAssignment) && <span className="overdue ms-1">(passed)</span>}
                 </p>}
             </Col>
         </Row>
