@@ -39,7 +39,8 @@ const classBasedLayouts = {
 
 export interface IsaacContentProps {
     doc: ContentDTO,
-    contentIndex?: number
+    contentIndex?: number,
+    preview?: boolean;
 }
 
 export const IsaacContent = (props: IsaacContentProps) => {
@@ -97,7 +98,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
                     case "horizontal": selectedComponent = <IsaacHorizontal {...props} key={props.doc.id} />; break;
                     case "clearfix": selectedComponent = <>&nbsp;</>; break;
                     default: selectedComponent =
-                        <IsaacContentValueOrChildren encoding={encoding} value={value} key={props.doc.id} >
+                        <IsaacContentValueOrChildren encoding={encoding} value={value} key={props.doc.id} preview={props.preview}>
                             {children}
                         </IsaacContentValueOrChildren>;
                 }
