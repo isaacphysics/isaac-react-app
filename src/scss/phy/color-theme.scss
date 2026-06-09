@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "sass:color";
+@use "sass:string";
 
 // since the brand colours are not used as themes, we need to make them available (dark mode-inclusively) globally
 @include color-mode(light, $root: true) {
@@ -150,6 +151,14 @@
               color: var(--subject-color-900);
             }
           }
+        }
+
+        // create a subject-color-coded bullet for content lists
+        .content-value ul:not(.list-unstyled) {
+          $col: if($palette == "neutral", "#{$color-brand-500}", "#{map.get($subject-colors, 500)}");
+          $col-plain: string.slice($col, 2);
+          // this svg is made to be 8px x 8px – but using a larger width gives more space between the bullet and the text, and a slightly larger height centres it better with the text
+          list-style-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='9' viewBox='0 0 16 18'><polygon points='11.7,10.1 5.8,13.5 0,10.1 0,3.4 5.8,0 11.7,3.4' fill='%23#{$col-plain}'/></svg>");
         }
       }
     }
