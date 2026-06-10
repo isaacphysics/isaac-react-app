@@ -166,17 +166,17 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     />;
 };
 
-type ALVIGameboard = GameboardDTO & {type?: string} & {linkedBookPath?: string};
+type ALVIGameboard = GameboardDTO & {type?: string} & {bookPagePath?: string};
 
-export const convertToALVIGameboard = (gameboard: GameboardDTO, linkedBookPath?: string): ALVIGameboard => {
-    return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD, linkedBookPath};
+export const convertToALVIGameboard = (gameboard: GameboardDTO, bookPagePath?: string): ALVIGameboard => {
+    return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD, bookPagePath};
 };
-export const convertToALVIGameboards = (gameboards: GameboardDTO[], linkedBookPath?: string): ALVIGameboard[] => {
-    return gameboards.map(gb => convertToALVIGameboard(gb, linkedBookPath));
+export const convertToALVIGameboards = (gameboards: GameboardDTO[], bookPagePath?: string): ALVIGameboard[] => {
+    return gameboards.map(gb => convertToALVIGameboard(gb, bookPagePath));
 };
 type QuestionDeckListViewItemProps = ListViewItemBaseProps<"gameboard", "list" | "card"> & {
     item: ALVIGameboard;
-    linkedBookPath?: string;
+    bookPagePath?: string;
 }
 
 export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
@@ -191,7 +191,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
 
-    const url = `${PATHS.GAMEBOARD}${item.linkedBookPath ? `?book=${item.linkedBookPath}` : ""}#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}${item.bookPagePath ? `?book=${item.bookPagePath}` : ""}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
