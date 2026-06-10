@@ -15,6 +15,7 @@ import {
     Card,
     CardBody,
     Col,
+    Collapse,
     Row} from "reactstrap";
 import {
     getAssignmentStartDate,
@@ -46,54 +47,42 @@ const isValidWork = (a: IAssignmentLike) => {
     return (isAssignment(a) && a.gameboardId) || (isQuiz(a) && a.quizId && a.quizSummary);
 };
 
-// If the hexagon proportions change, the CSS class bg-timeline needs revisiting
-const dateHexagon = calculateHexagonProportions(20, 1);
-
-const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDate[]}) => {
-    const [open, setOpen] = useState<boolean>(false);
-    const {collapsed, setCollapsed, viewBy} = useContext(ManageAssignmentsContext);
-    const assignmentCount = useMemo(() => work.filter(isAssignment).length, [work]);
-    const testCount = useMemo(() => work.filter(isQuiz).length, [work]);
+const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: number; work: ValidWorkWithListingDate[]; initialOpen?: boolean; parentOpen?: boolean}) => {
+    const [open, setOpen] = useState<boolean>(!!initialOpen);
+    const {collapsed, setCollapsed, groupsById} = useContext(ManageAssignmentsContext);
+    const groupName = groupsById[groupId]?.groupName ?? "Unknown group";
 
     useEffect(() => {
-        if (collapsed) setOpen(false);
-    }, [collapsed]);
+        if (collapsed) setOpen(!!initialOpen);
+    }, [collapsed, initialOpen]);
 
-    return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyPress={(e) => {
-            if (e.key === "Enter") {
+    useEffect(() => {
+        if (!parentOpen) setOpen(!!initialOpen);
+    }, [parentOpen, initialOpen]);
+
+    return <div className={"group-assignment-list"}>
+        <div 
+            tabIndex={0} 
+            role={"button"} 
+            aria-label={(open ? "Collapse" : "Expand") + ` list for group ${groupName}`} 
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    setOpen(o => !o);
+                    setCollapsed(false);
+                }
+            }} 
+            onClick={() => {
                 setOpen(o => !o);
                 setCollapsed(false);
-            }
-        }} onClick={() => {
-            setOpen(o => !o);
-            setCollapsed(false);
-        }} className={"hexagon-date"}>
-            <svg height={dateHexagon.quarterHeight * 4} width={"100%"}>
-                <Hexagon className={"fill-secondary"} {...dateHexagon}/>
-                {<foreignObject height={dateHexagon.quarterHeight * 4} width={"100%"} y={11} x={dateHexagon.halfWidth * 2.5 + 12}>
-                    <p className={classNames("date-assignment-count", {"text-muted": !open})}>
-                        {work[0].listingDate.toDateString().split(" ")[0]} - <>
-                            {assignmentCount > 0 && <>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}</>}
-                            {assignmentCount > 0 && testCount > 0 && " and "}
-                            {testCount > 0 && <>{testCount} test{testCount > 1 ? "s" : ""}</>}
-                            {viewBy === "startDate" ? " set" : " due"}
-                        </>
-                    </p>
-                </foreignObject>}
-                <svg x={2.5 * dateHexagon.halfWidth - (open ? 7 : 3)} y={dateHexagon.quarterHeight * 2 - (open ? 3 : 6.5)}>
-                    <polygon className={classNames("date-toggle-arrow fill-secondary", {"open": open})} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
-                        transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}
-                    />
-                </svg>
-                {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
-                    <div className={"position-relative w-100"}>
-                        <h4 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h4>
-                    </div>
-                </foreignObject>}
-            </svg>
+            }} 
+            className={"hexagon-date"}
+        >
+            <div className="d-flex align-items-center gap-2 ms-5">
+                <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": open})} />
+                {groupName}
+            </div>
         </div>
-        {open && <div className={"date-assignment-list"}>
+        <Collapse isOpen={open}>
             {work.map(a => isAssignment(a as IAssignmentLike)
                 ? <ManageAssignmentCard
                     key={a.id}
@@ -106,7 +95,78 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
                     />
                     : null
             )}
-        </div>}
+        </Collapse>
+    </div>;
+};
+
+// If the hexagon proportions change, the CSS class bg-timeline needs revisiting
+const dateHexagon = calculateHexagonProportions(20, 1);
+
+const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDate[]}) => {
+    const [open, setOpen] = useState<boolean>(false);
+    const {collapsed, setCollapsed, viewBy} = useContext(ManageAssignmentsContext);
+    const assignmentCount = useMemo(() => work.filter(isAssignment).length, [work]);
+    const testCount = useMemo(() => work.filter(isQuiz).length, [work]);
+
+    const groupsAndWork = useMemo(() => {        
+        return work.reduce((acc, a) => {
+            const groupId = a.groupId;
+            if (!groupId) return acc;
+            if (!(groupId in acc)) {
+                acc[groupId] = [];
+            }
+            acc[groupId].push(a);
+            return acc;
+        }, {} as {[id: number]: ValidWorkWithListingDate[]});
+    }, [work]);
+
+    const numGroups = Object.keys(groupsAndWork).length;
+
+    useEffect(() => {
+        if (collapsed) setOpen(false);
+    }, [collapsed]);
+
+    return <>
+        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyDown={(e) => {
+            if (e.key === "Enter") {
+                setOpen(o => !o);
+                setCollapsed(false);
+            }
+        }} onClick={() => {
+            setOpen(o => !o);
+            setCollapsed(false);
+        }} className={"hexagon-date"}>
+            <div className={classNames("d-flex align-items-center gap-2", {"text-muted": !open, "fw-bold": open})}>
+                <svg height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2}>
+                    <Hexagon className={"fill-secondary"} {...dateHexagon}/>
+                    <foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
+                        <div className={"position-relative w-100"}>
+                            <h4 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h4>
+                        </div>
+                    </foreignObject>
+                </svg>
+                <span>
+                    {work[0].listingDate.toDateString().split(" ")[0]}
+                    {" "}⋅{" "}
+                    {numGroups} group{numGroups > 1 ? "s" : ""}
+                    {" "}⋅{" "}
+                    {assignmentCount > 0 && <>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}</>}
+                    {assignmentCount > 0 && testCount > 0 && " and "}
+                    {testCount > 0 && <>{testCount} test{testCount > 1 ? "s" : ""}</>}
+                    {viewBy === "startDate" ? " set" : " due"}
+                </span>
+                <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": open})} />
+            </div>
+        </div>
+        <Collapse isOpen={open} className={"date-assignment-list"}>
+            {Object.entries(groupsAndWork).map(([groupId, work]) => <GroupWorkList 
+                key={groupId}
+                groupId={parseInt(groupId)}
+                work={work}
+                initialOpen={numGroups === 1}
+                parentOpen={open}
+            />)}
+        </Collapse>
     </>;
 };
 
@@ -153,6 +213,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
                 {viewBy === "startDate" ? " set" : " due"}
             </span>
         </div>
+        {/* not a <Collapse/> so as to avoid DOM bloat – maybe reconsider? */}
         {open && datesAndWork.map(([d, as]) => <DateWorkList key={d} date={d} work={as}/>)}
     </>;
 };
@@ -286,7 +347,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
     const pageHelp = <span>
-        Use this page to manage assigned work for your groups, and view them as a timeline. You can unassign work, and assign existing work to other groups.
+        Use this page to set and manage assigned work for your groups, and view set work as a timeline. You can unassign work, and assign existing work to other groups.
     </span>;
 
     const dispatch = useAppDispatch();
@@ -298,7 +359,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     return <PageContainer className="mb-7"
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle="Manage assigned work" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
+            <TitleAndBreadcrumb currentPageTitle="Set / manage work" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
         }
         sidebar={
             <ManageAssignmentsSidebar 

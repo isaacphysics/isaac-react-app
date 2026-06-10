@@ -377,7 +377,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                     </>} 
                                     onSet={<>
                                         <NavigationItemClose href="/assigned">
-                                            Manage assigned work
+                                            Set / manage work
                                         </NavigationItemClose>
                                     </>}
                                 />
