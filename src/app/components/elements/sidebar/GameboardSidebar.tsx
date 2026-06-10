@@ -7,7 +7,7 @@ import { Pill, CompletionKey, BackToBookButton } from "./SidebarElements";
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments?: AssignmentDTO[];
-    linkedBookSection?: string;
+    linkedBookSection?: string[];
 };
 
 const GameboardDetails = ({ gameboard }: { gameboard: GameboardDTO }) => {

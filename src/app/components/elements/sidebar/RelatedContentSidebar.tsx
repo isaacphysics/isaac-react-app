@@ -12,7 +12,7 @@ import { QuestionLink, CompletionKey, BackToBookButton } from "./SidebarElements
 
 interface RelatedContentSidebarProps {
     relatedContent: ContentSummaryDTO[] | undefined;
-    linkedBookSection?: string;
+    linkedBookSection?: string[];
 }
 
 const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: ContentSummaryDTO}) => {

@@ -45,7 +45,9 @@ export const Gameboard = () => {
     const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId))) || undefined;
-    const linkedBookSection = new URLSearchParams(location.search).toString();
+
+    const urlParams = new URLSearchParams(location.search);
+    const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
 
     const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
     const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;

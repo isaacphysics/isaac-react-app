@@ -51,6 +51,9 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
     const wildcard = (gameboard && showWildcard(gameboard)) ? gameboard.wildCard : undefined;
 
+    const urlParams = new URLSearchParams(location.search);
+    const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+
     useEffect(() => {
         if (pageContext) {
             // the page context, if single stage, overrides the user context
@@ -91,7 +94,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={doc.id}/>
-                            : <ConceptSidebar relatedContent={doc.relatedContent} linkedBookSection={new URLSearchParams(location.search).toString()} />,
+                            : <ConceptSidebar relatedContent={doc.relatedContent} linkedBookSection={linkedBookSection} />,
                         undefined
                     )}
                 >
