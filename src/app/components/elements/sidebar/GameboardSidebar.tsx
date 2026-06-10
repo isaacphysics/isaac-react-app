@@ -65,9 +65,12 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
 };
 
 const BackToBookButton = ({ bookPagePath }: { bookPagePath: string }) => {
+    const bookId = new URLSearchParams(bookPagePath).get("book");
+    const sectionId = new URLSearchParams(bookPagePath).get("section");
+    const path = `/books/${bookId}/${sectionId}`;
     return <AffixButton
         tag={Link}
-        to={bookPagePath}
+        to={path}
         affix={{
             affix: "icon-arrow-left",
             position: "prefix",

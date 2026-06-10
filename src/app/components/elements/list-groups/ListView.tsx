@@ -191,7 +191,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
 
-    const url = `${PATHS.GAMEBOARD}${item.bookPagePath ? `?book=${item.bookPagePath}` : ""}#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}${item.bookPagePath ?? ""}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
