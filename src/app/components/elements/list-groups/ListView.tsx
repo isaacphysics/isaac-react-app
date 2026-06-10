@@ -166,17 +166,17 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     />;
 };
 
-type ALVIGameboard = GameboardDTO & {type?: string} & {bookPagePath?: string};
+type ALVIGameboard = GameboardDTO & {type?: string} & {linkedBookSection?: string};
 
-export const convertToALVIGameboard = (gameboard: GameboardDTO, bookPagePath?: string): ALVIGameboard => {
-    return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD, bookPagePath};
+export const convertToALVIGameboard = (gameboard: GameboardDTO, linkedBookSection?: string): ALVIGameboard => {
+    return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD, linkedBookSection};
 };
-export const convertToALVIGameboards = (gameboards: GameboardDTO[], bookPagePath?: string): ALVIGameboard[] => {
-    return gameboards.map(gb => convertToALVIGameboard(gb, bookPagePath));
+export const convertToALVIGameboards = (gameboards: GameboardDTO[], linkedBookSection?: string): ALVIGameboard[] => {
+    return gameboards.map(gb => convertToALVIGameboard(gb, linkedBookSection));
 };
 type QuestionDeckListViewItemProps = ListViewItemBaseProps<"gameboard", "list" | "card"> & {
     item: ALVIGameboard;
-    bookPagePath?: string;
+    linkedBookSection?: string;
 }
 
 export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
@@ -191,7 +191,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
 
-    const url = `${PATHS.GAMEBOARD}${item.bookPagePath ?? ""}#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}${item.linkedBookSection ?? ""}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}

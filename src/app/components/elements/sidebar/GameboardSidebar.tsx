@@ -11,7 +11,7 @@ import { Spacer } from "../Spacer";
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments?: AssignmentDTO[];
-    bookPagePath?: string;
+    linkedBookSection?: string;
 };
 
 const GameboardDetails = ({ gameboard }: { gameboard: GameboardDTO }) => {
@@ -64,9 +64,9 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
     </>;
 };
 
-const BackToBookButton = ({ bookPagePath }: { bookPagePath: string }) => {
-    const bookId = new URLSearchParams(bookPagePath).get("book");
-    const sectionId = new URLSearchParams(bookPagePath).get("section");
+const BackToBookButton = ({ linkedBookSection }: { linkedBookSection: string }) => {
+    const bookId = new URLSearchParams(linkedBookSection).get("book");
+    const sectionId = new URLSearchParams(linkedBookSection).get("section");
     const path = `/books/${bookId}/${sectionId}`;
     return <AffixButton
         tag={Link}
@@ -83,10 +83,10 @@ const BackToBookButton = ({ bookPagePath }: { bookPagePath: string }) => {
 };
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
-    const {gameboard, assignments, bookPagePath, ...rest} = props;
+    const {gameboard, assignments, linkedBookSection, ...rest} = props;
 
     return <ContentSidebar buttonTitle="Details" {...rest}>
-        {bookPagePath && <BackToBookButton bookPagePath={bookPagePath} />}
+        {linkedBookSection && <BackToBookButton linkedBookSection={linkedBookSection} />}
         <GameboardDetails gameboard={gameboard} />
         <AllAssignmentDetails assignments={assignments} />
         <div className="section-divider"/>
