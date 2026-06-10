@@ -64,7 +64,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
     const {gameboard, assignments, linkedBookSection, ...rest} = props;
 
     return <ContentSidebar buttonTitle="Details" {...rest}>
-        {linkedBookSection && <BackToBookButton linkedBookSection={linkedBookSection} />}
+        {linkedBookSection && linkedBookSection[0] && linkedBookSection[1] && <BackToBookButton linkedBookSection={linkedBookSection} />}
         <GameboardDetails gameboard={gameboard} />
         <AllAssignmentDetails assignments={assignments} />
         <div className="section-divider"/>

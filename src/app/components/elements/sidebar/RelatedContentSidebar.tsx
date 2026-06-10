@@ -37,7 +37,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
 
     return <NavigationSidebar>
-        {props.linkedBookSection && <BackToBookButton linkedBookSection={props.linkedBookSection} className="w-100"/>}
+        {props.linkedBookSection && props.linkedBookSection[0] && props.linkedBookSection[1] && <BackToBookButton linkedBookSection={props.linkedBookSection} className="w-100"/>}
 
         <div className="section-divider"/>
         <h5>Related concepts</h5>
