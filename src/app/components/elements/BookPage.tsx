@@ -53,7 +53,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
-                    items={convertToALVIGameboards(page.gameboards as GameboardDTO[], bookPageUrlParam)}
+                    items={convertToALVIGameboards(page.gameboards as GameboardDTO[])}
+                    linkedBookSection={bookPageUrlParam}
                 />
             </div>
         </>}

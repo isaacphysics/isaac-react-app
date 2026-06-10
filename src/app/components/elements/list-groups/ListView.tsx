@@ -167,20 +167,20 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     />;
 };
 
-type ALVIGameboard = GameboardDTO & {type?: string} & {linkedBookSection?: string};
+type ALVIGameboard = GameboardDTO & {type?: string};
 
-export const convertToALVIGameboard = (gameboard: GameboardDTO, linkedBookSection?: string): ALVIGameboard => {
-    return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD, linkedBookSection};
+export const convertToALVIGameboard = (gameboard: GameboardDTO): ALVIGameboard => {
+    return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD};
 };
-export const convertToALVIGameboards = (gameboards: GameboardDTO[], linkedBookSection?: string): ALVIGameboard[] => {
-    return gameboards.map(gb => convertToALVIGameboard(gb, linkedBookSection));
+export const convertToALVIGameboards = (gameboards: GameboardDTO[]): ALVIGameboard[] => {
+    return gameboards.map(gb => convertToALVIGameboard(gb));
 };
 type QuestionDeckListViewItemProps = ListViewItemBaseProps<"gameboard", "list" | "card"> & {
     item: ALVIGameboard;
     linkedBookSection?: string;
 }
 
-export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
+export const QuestionDeckListViewItem = ({item, linkedBookSection, ...rest}: QuestionDeckListViewItemProps) => {
     const questionTagsCountMap = item.contents?.filter(c => c.contentType === "isaacQuestionPage").map(q => q.tags as TAG_ID[]).reduce((acc, tags) => {
         tags?.forEach(tag => {
             acc[tag] = (acc[tag] || 0) + 1;
@@ -192,7 +192,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
 
-    const url = `${PATHS.GAMEBOARD}${item.linkedBookSection ?? ""}#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}${linkedBookSection ?? ""}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
