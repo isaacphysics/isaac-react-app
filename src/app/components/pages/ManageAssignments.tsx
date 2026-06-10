@@ -24,6 +24,8 @@ import {
     isQuiz,
     Item,
     MONTH_NAMES,
+    TAG_ID,
+    tags,
 } from "../../services";
 import {
     ActiveModalProps,
@@ -235,6 +237,8 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
     // Empty list means all groups are included, non-empty means only those in the list are included
     const [groupsToInclude, setGroupsToInclude] = useState<Item<number>[]>([]);
     const [workTypesToInclude, setWorkTypesToInclude] = useState<Item<string>[]>([]);
+    const [subjectsToInclude, setSubjectsToInclude] = useState<Item<string>[]>([]);
+    const [workTitleToInclude, setWorkTitleToInclude] = useState<string>("");
 
     // --- Slow-to-calculate constant lookup maps for ease of locating gameboards, groups, etc. ---
 
@@ -258,6 +262,34 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
         }
         return false;
     }, [workTypesToInclude]);
+
+    const subjectsFilter = useCallback((work: IAssignmentLike) => {
+        if (subjectsToInclude.length === 0) return true;
+        const workTags = isAssignment(work)
+            ? work.gameboard?.tags
+            : isQuiz(work) 
+                ? work.quizSummary?.tags
+                : undefined;
+        const subjects = tags.getSubjectTags((workTags ?? []) as TAG_ID[]).map(t => t.id);
+        if (!subjects || subjects.length === 0) return false;
+        return subjectsToInclude.map(item => item.value).some(subject => subjects.includes(subject as TAG_ID));
+    }, [subjectsToInclude]);
+
+    const workTitleFilter = useCallback((work: IAssignmentLike) => {
+        const workTitle = isAssignment(work)
+            ? work.gameboard?.title
+            : isQuiz(work) 
+                ? work.quizSummary?.title
+                : undefined;
+        if (!workTitle) return false;
+        return workTitle.toLowerCase().includes(workTitleToInclude.toLowerCase());
+    }, [workTitleToInclude]);
+
+    const workFilter = useCallback((work: IAssignmentLike) => {
+        return groupFilter(work) && workTypeFilter(work) && subjectsFilter(work) && workTitleFilter(work);
+    }, [groupFilter, workTypeFilter, subjectsFilter, workTitleFilter]);
+
+    const someActiveFilter = groupsToInclude.length > 0 || workTypesToInclude.length > 0 || workTitleToInclude.length > 0 || subjectsToInclude.length > 0;
 
     // Map from group id -> ids of boards / tests they are assigned to
     const workByGroup = useMemo(() => {
@@ -288,14 +320,13 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const oldestWorkDate = useMemo<Date>(() => new Date(
         workSetByMe
             ?.filter(a => a.id && isValidWork(a) && (viewBy === "startDate" || isDefined(a.dueDate)))
-            .filter(groupFilter)
-            .filter(workTypeFilter)
+            .filter(workFilter)
             .reduce((oldest, a) => {
                 const assignmentTimestamp = a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? Date.now();
                 return assignmentTimestamp < oldest
                     ? assignmentTimestamp : oldest;
             }, Date.now()) ?? Date.now()
-    ), [workSetByMe, groupFilter, workTypeFilter, viewBy]);
+    ), [workSetByMe, workFilter, viewBy]);
 
     const extendBackSixMonths = (until?: Date) => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
@@ -320,8 +351,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 } as ValidWorkWithListingDate))
                 // IMPORTANT - filter ensures that id, gameboard/quiz id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
                 .filter(a => a.id && isValidWork(a) && (viewBy === "startDate" || isDefined(a.dueDate)))
-                .filter(groupFilter)
-                .filter(workTypeFilter)
+                .filter(workFilter)
             , a => a.listingDate.valueOf()
         );
         if (sortedWork.length === 0) return [];
@@ -339,7 +369,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 _as => Object.entries(groupBy(_as, a => a.listingDate.getDate())).map(parseNumericKey)
             )).map(parseNumericKey)
         )).map(parseNumericKey);
-    }, [workSetByMe, groupFilter, workTypeFilter, viewBy, groupsById, earliestShowDate]);
+    }, [workSetByMe, workFilter, viewBy, groupsById, earliestShowDate]);
 
     const notAllPastWorkIsListed = earliestShowDate.valueOf() >= oldestWorkDate.valueOf();
 
@@ -368,6 +398,10 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 setGroupsToInclude={setGroupsToInclude}
                 workTypesToInclude={workTypesToInclude}
                 setWorkTypesToInclude={setWorkTypesToInclude}
+                subjectsToInclude={subjectsToInclude}
+                setSubjectsToInclude={setSubjectsToInclude}
+                workTitleToInclude={workTitleToInclude}
+                setWorkTitleToInclude={setWorkTitleToInclude}
                 viewBy={viewBy} 
                 setViewBy={setViewBy}
                 collapse={() => setCollapsed(true)}
@@ -402,8 +436,8 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 You have not created any groups to assign work to.
                                 Please <Link to="/groups">create a group here first.</Link>
                             </div>}
-                            {groupsToInclude.length > 0 && workGroupedByDate.length === 0 && <div className="mt-1">
-                                There is no work set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
+                            {someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
+                                There is no work matching your filters.
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
