@@ -6,7 +6,7 @@ import { isAppLink, PATHS } from "../../../services";
 import { ExternalLink } from "../ExternalLink";
 import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
-import { QuestionLink, CompletionKey } from "./SidebarElements";
+import { QuestionLink, CompletionKey, BackToBookButton } from "./SidebarElements";
 
 interface GameboardContentSidebarProps {
     id: string;
@@ -14,11 +14,12 @@ interface GameboardContentSidebarProps {
     questions: GameboardItem[];
     wildCard?: IsaacWildcard;
     currentContentId?: string;
+    linkedBookSection?: string[];
 }
 
 export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => {
     // For questions in the context of a gameboard
-    const {id, title, questions, wildCard, currentContentId} = props;
+    const {id, title, questions, wildCard, currentContentId, linkedBookSection} = props;
 
     const wildCardContents = useMemo(() => {
         if (!wildCard?.url) return null;
@@ -41,6 +42,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
     }, [wildCard]);
 
     return <NavigationSidebar>
+        <BackToBookButton linkedBookSection={linkedBookSection ?? []} className="w-100"/>
         <div className="section-divider"/>
         <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
             <h5 className="mb-3">Question deck: {title}</h5>

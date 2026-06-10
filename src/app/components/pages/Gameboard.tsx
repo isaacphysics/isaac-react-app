@@ -48,6 +48,7 @@ export const Gameboard = () => {
 
     const urlParams = new URLSearchParams(location.search);
     const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+    const linkedBookSectionUrlParams = `?book=${linkedBookSection[0]}&section=${linkedBookSection[1]}`;
 
     const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
     const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;
@@ -86,7 +87,7 @@ export const Gameboard = () => {
                     <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                             
-                    <GameboardContents gameboard={gameboard} />
+                    <GameboardContents gameboard={gameboard} linkedBookSectionUrlParams={linkedBookSectionUrlParams}/>
                 </PageContainer>;
             }}
         />;
@@ -94,9 +95,10 @@ export const Gameboard = () => {
 
 interface GameboardContentsProps {
     gameboard: GameboardDTO;
+    linkedBookSectionUrlParams?: string;
 }
 
-export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
+export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: GameboardContentsProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
@@ -111,7 +113,7 @@ export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
     }, [dispatch, gameboard]);
 
     return <>
-        <ListView type="item" items={displayQuestions} linkedBoardId={gameboard.id} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
+        <ListView type="item" items={displayQuestions} linkedBoardId={gameboard.id} linkedBookSection={linkedBookSectionUrlParams} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
         {user && isTutorOrAbove(user)
             ? <Row>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">

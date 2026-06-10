@@ -28,15 +28,17 @@ type QuestionListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> 
     item: ContentSummaryDTO;
     hideIconLabel?: boolean;
     linkedBoardId?: string;
+    linkedBookSection?: string;
 }
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
-    const { item, hideIconLabel, linkedBoardId, ...rest } = props;
+    const { item, hideIconLabel, linkedBoardId, linkedBookSection, ...rest } = props;
     const breadcrumb = (isPhy || rest.hasCaret) ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
+    const bookSectionUrlParam = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "") + bookSectionUrlParam;
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
     const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
