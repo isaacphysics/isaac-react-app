@@ -65,6 +65,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                     <ListView
                         type="item"
                         items={page.relatedContent}
+                        linkedBookSection={bookPageUrlParam}
                     />
                 </div>
             </>}

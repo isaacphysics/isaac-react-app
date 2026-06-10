@@ -8,10 +8,11 @@ import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { AffixButton } from "../AffixButton";
 import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
-import { QuestionLink, CompletionKey } from "./SidebarElements";
+import { QuestionLink, CompletionKey, BackToBookButton } from "./SidebarElements";
 
 interface RelatedContentSidebarProps {
     relatedContent: ContentSummaryDTO[] | undefined;
+    linkedBookSection?: string;
 }
 
 const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: ContentSummaryDTO}) => {
@@ -36,6 +37,8 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
 
     return <NavigationSidebar>
+        {props.linkedBookSection && <BackToBookButton linkedBookSection={props.linkedBookSection} className="w-100"/>}
+
         <div className="section-divider"/>
         <h5>Related concepts</h5>
         {relatedConcepts && relatedConcepts.length > 0

@@ -91,7 +91,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={doc.id}/>
-                            : <ConceptSidebar relatedContent={doc.relatedContent}/>,
+                            : <ConceptSidebar relatedContent={doc.relatedContent} linkedBookSection={new URLSearchParams(location.search).toString()} />,
                         undefined
                     )}
                 >

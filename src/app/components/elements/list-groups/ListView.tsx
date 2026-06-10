@@ -63,13 +63,14 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
 type ConceptListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
     item: ContentSummaryDTO;
+    linkedBookSection?: string;
 }
 
-export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
+export const ConceptListViewItem = ({item, linkedBookSection, ...rest}: ConceptListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}${linkedBookSection ?? ""}`;
     const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-concept", size: "lg"}};
     
     if (isAda) {

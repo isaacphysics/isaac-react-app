@@ -155,11 +155,17 @@ export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
         {title}
     </span>;
 
-export const BackToBookButton = ({ linkedBookSection }: { linkedBookSection: string }) => {
+interface BackToBookButtonProps extends React.HTMLAttributes<HTMLElement> {
+    linkedBookSection: string;
+}
+
+export const BackToBookButton = (props: BackToBookButtonProps) => {
+    const { linkedBookSection, ...rest } = props;
     const bookId = new URLSearchParams(linkedBookSection).get("book");
     const sectionId = new URLSearchParams(linkedBookSection).get("section");
     const path = `/books/${bookId}/${sectionId}`;
     return <AffixButton
+        {...rest}
         tag={Link}
         to={path}
         affix={{
