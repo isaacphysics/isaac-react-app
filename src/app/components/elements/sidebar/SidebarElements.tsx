@@ -9,6 +9,8 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { Tag } from "../../../../IsaacAppTypes";
+import { AffixButton } from "../AffixButton";
+import { Spacer } from "../Spacer";
 
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
@@ -152,3 +154,21 @@ export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}>
         {title}
     </span>;
+
+export const BackToBookButton = ({ linkedBookSection }: { linkedBookSection: string }) => {
+    const bookId = new URLSearchParams(linkedBookSection).get("book");
+    const sectionId = new URLSearchParams(linkedBookSection).get("section");
+    const path = `/books/${bookId}/${sectionId}`;
+    return <AffixButton
+        tag={Link}
+        to={path}
+        affix={{
+            affix: "icon-arrow-left",
+            position: "prefix",
+            type: "icon",
+            affixClassName: "icon-inline me-2"
+        }}>
+        Back to book section
+        <Spacer />
+    </AffixButton>;
+};

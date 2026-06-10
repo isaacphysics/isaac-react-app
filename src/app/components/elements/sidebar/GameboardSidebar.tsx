@@ -3,11 +3,7 @@ import { GameboardDTO, AssignmentDTO } from "../../../../IsaacApiTypes";
 import { determineGameboardSubjects, isDefined, TAG_ID, tags, HUMAN_SUBJECTS, extractTeacherName } from "../../../services";
 import { getFriendlyDaysUntil } from "../DateString";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
-import { Pill, CompletionKey } from "./SidebarElements";
-import { Link } from "react-router";
-import { AffixButton } from "../AffixButton";
-import { Spacer } from "../Spacer";
-
+import { Pill, CompletionKey, BackToBookButton } from "./SidebarElements";
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments?: AssignmentDTO[];
@@ -62,24 +58,6 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
         {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
         <ul>{assignments.map(a => <li key={a.id}><AssignmentDetails assignment={a} multipleAssignments={multipleAssignments} /></li>)}</ul>
     </>;
-};
-
-const BackToBookButton = ({ linkedBookSection }: { linkedBookSection: string }) => {
-    const bookId = new URLSearchParams(linkedBookSection).get("book");
-    const sectionId = new URLSearchParams(linkedBookSection).get("section");
-    const path = `/books/${bookId}/${sectionId}`;
-    return <AffixButton
-        tag={Link}
-        to={path}
-        affix={{
-            affix: "icon-arrow-left",
-            position: "prefix",
-            type: "icon",
-            affixClassName: "icon-inline me-2"
-        }}>
-        Back to book section
-        <Spacer />
-    </AffixButton>;
 };
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
