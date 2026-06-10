@@ -153,7 +153,8 @@
     "typescript-eslint": "^8.60.1",
     "vite": "^7.3.5",
     "vite-bundle-analyzer": "^1.3.8",
-    "vite-plugin-checker": "^0.12.0"
+    "vite-plugin-checker": "^0.12.0",
+    "vite-plugin-static-copy": "^4.1.1"
   },
   "msw": {
     "workerDirectory": "public"
