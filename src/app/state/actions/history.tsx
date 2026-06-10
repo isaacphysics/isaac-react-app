@@ -15,8 +15,8 @@ export function useHistoryState<T>(key: string, initialValue: T, withoutLocation
     }, [location]);
 
     const setStateAndLocation = useCallback((value: React.SetStateAction<T>) => {
-        // don't do anything if the value is already set (would create a new state object and not be reference-equal inside useEffect deps)
         if (!withoutLocationUpdate) {
+            // don't do anything if the value is already set (would create a new state object and not be reference-equal inside useEffect deps)
             if (value === locationRef.current.state?.[key as keyof typeof locationRef.current.state]) return; 
 
             void navigate({
