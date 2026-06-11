@@ -20,6 +20,7 @@ interface GameboardContentSidebarProps {
 export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => {
     // For questions in the context of a gameboard
     const {id, title, questions, wildCard, currentContentId, linkedBookSection} = props;
+    const linkedBookUrlParams = linkedBookSection && linkedBookSection[0] && linkedBookSection[1] ? `?book=${linkedBookSection[0]}&section=${linkedBookSection[1]}` : "";
 
     const wildCardContents = useMemo(() => {
         if (!wildCard?.url) return null;
@@ -44,7 +45,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
     return <NavigationSidebar>
         <BackToBookButton linkedBookSection={linkedBookSection ?? []} className="w-100"/>
         <div className="section-divider"/>
-        <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
+        <Link to={`${PATHS.GAMEBOARD}${linkedBookUrlParams}#${id}`} style={{textDecoration: "none"}}>
             <h5 className="mb-3">Question deck: {title}</h5>
         </Link>
         <ul>
