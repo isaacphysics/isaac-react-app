@@ -133,7 +133,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                             <RevisionWarningBanner />
 
                             <WithFigureNumbering doc={doc}>
-                                <IsaacContent doc={doc}/>
+                                <IsaacContent doc={doc} preview={preview}/>
                             </WithFigureNumbering>
 
                             {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">

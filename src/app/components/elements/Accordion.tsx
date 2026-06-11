@@ -41,11 +41,12 @@ interface AccordionsProps {
     deEmphasised?: boolean;
     disabled?: string | boolean;
     audienceString?: string;
+    preview?: boolean;
 }
 
 let nextClientId = 0;
 
-export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString}: AccordionsProps) => {
+export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, preview}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const location = useLocation();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -61,7 +62,8 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
         `accordion-${id ?? "unknown"}-${index ?? "unknown"}`,
         disabled 
             ? false 
-            : startOpen ?? (openFirst && isFirst)
+            : startOpen ?? (openFirst && isFirst),
+        preview, // do not update location when previewing; avoids firing useBlockers on relevant pages
     );
     
     // If start open changes we need to update whether or not the accordion section should be open

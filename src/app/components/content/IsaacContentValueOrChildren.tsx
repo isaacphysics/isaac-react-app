@@ -9,8 +9,9 @@ interface ContentValueOrChildrenProps {
     value?: string;
     encoding?: string;
     children?: ContentDTO[];
+    preview?: boolean;
 }
-export const IsaacContentValueOrChildren = ({value, encoding, children}: ContentValueOrChildrenProps) => {
+export const IsaacContentValueOrChildren = ({value, encoding, children, preview}: ContentValueOrChildrenProps) => {
     // Content chunking inherited from Isaac Physics
     const contentChunks: ContentOrAccordionChunk[] = []; // One of these for each chunk of content, where accordions may only appear on their own in a chunk.
     let breakOnTypeChange = false;
@@ -60,13 +61,13 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
             if (contentChunk.isAccordion) {
                 return <React.Fragment key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
-                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex}/>)
+                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} preview={preview}/>)
                     }
                 </React.Fragment>;
             } else {
                 return <div className="clearfix content-chunk" key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
-                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex}/>)}
+                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} preview={preview}/>)}
                 </div>;
             }
         })}
