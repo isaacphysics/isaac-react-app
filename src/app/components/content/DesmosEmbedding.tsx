@@ -23,7 +23,7 @@ export const DesmosEmbedding = ({doc}: DesmosEmbeddingProps) => {
                     allowFullScreen
                 />
                 {(!!doc.value || !!doc.children?.length) && <figcaption className="text-center figure-caption">
-                    <IsaacContentValueOrChildren value={doc.value}>
+                    <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                         {doc.children}
                     </IsaacContentValueOrChildren>
                 </figcaption>}
