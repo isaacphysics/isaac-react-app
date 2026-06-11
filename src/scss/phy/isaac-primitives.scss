@@ -101,13 +101,15 @@ $color-wildcard-orange: #ff7800;
 // we start with neutral. neutral is unique in that the hue changes throughout the palette,from a yellow tint (at lightest) to a blue tint (at darkest).
 // all the other subject colours use the same (+-2) hue.
 
+// these are approximated and can be changed if needed. a baseline check is that -500 (text-muted) should be at least AA accessible on -100 (neutral-light).
+
 $color-neutral-dark-white: #181a1b;
 $color-neutral-dark-50: #1f252a;
 $color-neutral-dark-100: #2d3135;
 $color-neutral-dark-200: #3a3e42;
 $color-neutral-dark-300: #4a4e52;
 $color-neutral-dark-400: #62626d;
-$color-neutral-dark-500: #908f94;
+$color-neutral-dark-500: #99989e;
 $color-neutral-dark-600: #bebebe;
 $color-neutral-dark-700: #e6e5e1;
 $color-neutral-dark-800: #ece9e5;
