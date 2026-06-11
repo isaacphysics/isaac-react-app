@@ -543,6 +543,7 @@ export interface MediaDTO extends ContentDTO {
 
 export interface DesmosEmbeddingDTO extends MediaDTO {
     calculatorId?: string;
+    calculatorType?: string;
 }
 
 export interface GeogebraEmbeddingDTO extends MediaDTO {
