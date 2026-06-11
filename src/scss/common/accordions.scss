@@ -69,8 +69,8 @@
     }
 
     &.de-emphasised {
-      background: darken(#fff, 9%);
-      color: lighten(black, 10%);
+      background: var(--color-neutral-200, #e8e8e8);
+      color: var(--color-neutral-900, #1a1a1a);
       .stage-label {
         background: lighten($dark, 10%);
       }

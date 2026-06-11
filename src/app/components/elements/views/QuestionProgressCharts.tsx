@@ -9,6 +9,7 @@ import {
     isAda,
     isPhy,
     Item,
+    reactSelectDarkModeStyles,
     selectOnChange,
     siteSpecific,
     specificDoughnutColours,
@@ -32,7 +33,7 @@ interface QuestionProgressChartsProps {
 export type FlushableRef = MutableRefObject<(() => void) | undefined>;
 
 const OPTIONS = {
-    size: { width: 240, height: 330 }
+    size: { width: 240, height: 330 },
 };
 
 const colourPicker = (names: string[]): { [key: string]: string } => {
@@ -190,6 +191,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
                         options={labelledQuestionTags}
                         onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
+                        styles={reactSelectDarkModeStyles}
                     />
                 </div>
                 <span className={siteSpecific("ms-2", "d-inline-block ms-2")}>questions</span>
@@ -232,6 +234,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
                         options={getFilteredStageOptions()}
                         onChange={selectOnChange(setStageChoices, false)}
+                        styles={reactSelectDarkModeStyles}
                     />  
                 </div>
                 <span className="ms-2">questions</span>

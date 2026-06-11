@@ -1,9 +1,9 @@
-import React from "react";
+import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { ListGroup } from "reactstrap";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
+import { Button, ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
@@ -13,6 +13,8 @@ import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 import { IconProps } from "../svg/HexIcon";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
+
+const DraggableListViewWrapper = lazy(() => import("../DraggableListViewItemWrapper"));
 
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
@@ -331,7 +333,67 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
     />;
 };
 
-export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
+type BuilderListViewItemProps = ListViewItemBaseProps<"builder", "list" | "card"> & {
+    item: ContentSummaryDTO;
+    index?: number;
+    totalItems?: number;
+    onMove?: (id: string, adjustment: number) => void;
+    onDelete?: (id: string) => void;
+}
+
+export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
+    const { item, index, onDelete, onMove, totalItems, ...rest } = props;
+    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const pageSubject = useAppSelector(selectors.pageContext.subject);
+    const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
+    const state = item.state ?? CompletionState.NOT_ATTEMPTED;
+
+    const topic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[])?.title;
+
+    const icon: TitleIconProps = { type: "icon", label: "Question",
+        icon: isPhy
+            ? {name: "icon-question", size: "md"}
+            : {name: QUESTION_STATUS_TO_ICON[CompletionState.NOT_ATTEMPTED], size: "md", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
+    };
+
+    const deviceSize = useDeviceSize();
+
+    return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
+        {deviceSize !== "xs" && <div className="d-flex vertical-center rounded-2">
+            <div className="d-flex flex-column align-items-center">
+                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
+                    <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                </button>
+                <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
+                    <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                </button>
+            </div>
+        </div>}
+        <AbstractListViewItem
+            {...rest}
+            componentTag={"div"}
+            icon={deviceSize !== "xs" ? icon : undefined}
+            title={item.title ?? ""}
+            subject={itemSubject !== "neutral" ? itemSubject : undefined}
+            url={item.url}
+            tags={item.tags}
+            deprecated={item.deprecated}
+            supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
+            style="flat"
+            subtitle={topic}
+            audienceViews={audienceViews}
+            className="flex-grow-1 align-content-center bg-transparent"
+            questionPreviewId={item.id}
+            disableRedirect
+        />
+        <Button className="delete-button" color={siteSpecific("solid", "keyline")} onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
+            <img src="/assets/common/icons/bin.svg" alt="Delete board"/>
+        </Button>
+    </DraggableListViewWrapper>;
+};
+
+export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "list" | "card"> & {
     item: Omit<Extract<AbstractListViewItemProps, {alviType: "item"}>, "alviType"> & {
         type?: string;
     }
@@ -360,6 +422,7 @@ type ListViewItemProps =
     | ShortcutListViewItemProps
     | BookIndexListViewItemProps
     | BookDetailListViewItemProps
+    | BuilderListViewItemProps
     | CustomListViewItemProps
 ;
 
@@ -463,6 +526,17 @@ export const ListView = <T extends {type?: string}, G extends alviTypes>(props: 
                         }
                     });
                 }
+                case "builder": {
+                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "list" as const};
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.QUESTION):
+                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                }
                 default:
                     return null;
             }
@@ -523,6 +597,17 @@ export const ListViewCards = <T extends {type?: string}, G extends alviTypes>(pr
                         switch (item.type) {
                             case (DOCUMENT_TYPE.QUIZ):
                                 return <QuizListViewItem key={index} item={item} {...lviProps} />;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                }
+                case "builder": {
+                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "card" as const};
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.QUESTION):
+                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
                             default:
                                 return failedToRender(item);
                         }

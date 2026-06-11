@@ -44,3 +44,10 @@
   --focus-outline-color: #000;
   --focus-outline-width: 0.2rem;
 }
+
+.focus-visible-z-index {
+  // focus outlines on position-relative, adjacent elements with backgrounds can be obscured by said background; this lifts the focused element above siblings to ensure visibility 
+  &:focus-visible {
+    z-index: 2010;
+  }
+}

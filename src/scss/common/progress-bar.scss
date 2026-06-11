@@ -12,7 +12,7 @@
 
   div {
     vertical-align: middle;
-    color: $gray-194;
+    color: var(--color-neutral-900, $gray-194);
     font-weight: bold;
     overflow: visible;
     white-space: nowrap;

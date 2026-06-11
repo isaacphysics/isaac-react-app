@@ -1,0 +1,5 @@
+@import '../common/gameboard';
+
+.delete-button {
+    min-width: calc(2* 3px + 2 * 2.1rem + 16px); // 2*border + 2*padding + icon width
+}

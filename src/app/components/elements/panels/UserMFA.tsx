@@ -137,6 +137,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                             sign in using {" "}
                             {(userAuthSettings.linkedAccounts).map((linked, index) =>
                                 <span key={index}>
+                                    {index > 0 && " or "}
                                     {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
                                 </span>
                             )}.

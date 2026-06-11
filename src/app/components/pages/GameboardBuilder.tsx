@@ -23,18 +23,18 @@ import {
     Label,
     Row,
     Spinner,
-    Table
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
-import {DragDropContext, Draggable, Droppable, DropResult} from "@hello-pangea/dnd";
+import {DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
     EXAM_BOARD,
     GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
+    handleBuilderRowChange,
     isAda,
     isDefined,
     isStaff,
@@ -43,10 +43,12 @@ import {
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
     logEvent, QUESTIONS_PER_GAMEBOARD,
+    reactSelectDarkModeStyles,
     selectOnChange,
     siteSpecific,
     STAGE,
     TAG_ID,
+    useDeviceSize,
     useUserViewingContext
 } from "../../services";
 import {useBlocker, useLocation} from "react-router-dom";
@@ -61,8 +63,9 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
 import {IconButton} from "../elements/AffixButton";
+import { ListView } from '../elements/list-groups/ListView';
 
-const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
+const DraggableListViewContainer = lazy(() => import('../elements/DraggableListViewContainer'));
 
 class GameboardBuilderQuestionsStack {
     questionOrderStack: string[][];
@@ -118,6 +121,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const concepts = queryParams && queryParams.concepts as string;
 
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
     const userContext = useUserViewingContext();
     const {data: wildcards} = useGetWildcardsQuery();
     const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
@@ -237,8 +241,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const reorder = (result: DropResult) => {
         if (result.destination) {
-            const [removed] = questionOrder.splice(result.source.index, 1);
-            questionOrder.splice(result.destination.index, 0, removed);
+            const newQuestionOrder = [...questionOrder];
+            const [removed] = newQuestionOrder.splice(result.source.index, 1);
+            newQuestionOrder.splice(result.destination.index, 0, removed);
+            setQuestionOrder(newQuestionOrder);
         }
     };
 
@@ -381,7 +387,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Col xs={6} sm={4}>
                             <FormGroup>
                                 <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>Tag as</Label>
-                                <StyledSelect inputId="question-search-level"
+                                <StyledSelect inputId="gameboard-builder-tag-as"
                                     isMulti
                                     options={siteSpecific([
                                         {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
@@ -393,6 +399,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     value={gameboardTags}
                                     placeholder="None"
                                     onChange={selectOnChange(setGameboardTags, false)}
+                                    styles={reactSelectDarkModeStyles}
                                 />
                             </FormGroup>
                         </Col>
@@ -432,10 +439,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </Col>
                     </Row>}
 
-                    <div className={"d-flex flex-row justify-content-between align-items-center"}>
+                    <div className={"d-flex flex-row justify-content-between align-items-center mb-2"}>
                         <div>
-                            <span className={classNames("fw-bold form-required")}>Questions</span>
-                            <p className={classNames("d-none d-sm-block input-description mb-2")}>
+                            <span className="fw-bold form-required">Questions</span>
+                            <p className="d-none d-sm-block input-description mb-0">
                                 You can add up to {QUESTIONS_PER_GAMEBOARD} questions.
                             </p>
                         </div>
@@ -445,61 +452,34 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </div>
                     </div>
 
-                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-2 responsive vertical-scroll-shadow")}>
-                        <DragDropContext onDragEnd={reorder}>
-                            <Droppable droppableId="droppable">
-                                {(providedDrop) => {
-                                    return (
-                                        <Table className={"mb-0"} id={"gameboard-builder-questions"} bordered
-                                            innerRef={providedDrop.innerRef}>
-                                            <thead>
-                                                <tr className="border-top-0">
-                                                    <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
-                                                    <th className={siteSpecific("w-40", "w-30")}>Question title</th>
-                                                    <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                                    <th className="w-15">Stage</th>
-                                                    <th className="w-15">Difficulty</th>
-                                                    {isAda && <th className="w-15">Exam boards</th>}
-                                                </tr>
-                                            </thead>
-                                            {questionOrder.map((questionId, index: number) => {
-                                                const question = selectedQuestions.get(questionId);
-                                                return question && question.id &&
-                                                        <Draggable key={question.id} draggableId={question.id}
-                                                            index={index}>
-                                                            {(providedDrag, snapshot) => {
-                                                                return <tbody
-                                                                    ref={providedDrag && providedDrag.innerRef}
-                                                                    className={classNames({"table-row-dragging": snapshot.isDragging})}
-                                                                    {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
-                                                                >
-                                                                    <GameboardBuilderRow
-                                                                        provided={providedDrag}
-                                                                        snapshot={snapshot}
-                                                                        key={`gameboard-builder-row-${question.id}`}
-                                                                        question={question}
-                                                                        currentQuestions={currentQuestions}
-                                                                        undoStack={undoStack}
-                                                                        redoStack={redoStack}
-                                                                        creationContext={question.creationContext}
-                                                                    />
-                                                                </tbody>;
-                                                            }}
-                                                        </Draggable>;
-                                            })}
-                                            <tbody>
-                                                {providedDrop.placeholder}
-                                                {selectedQuestions?.size === 0 && <tr>
-                                                    <td colSpan={20}>
-                                                    </td>
-                                                </tr>}
-                                            </tbody>
-                                        </Table>
-
-                                    );
+                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "p-1 m-n1 mt-2 gameboard-builder-container vertical-scroll-shadow-subtle")}>
+                        <DraggableListViewContainer reorder={reorder}>
+                            {/* dragging here can be a little choppy on local development if browser cache is disabled! */}
+                            <ListView 
+                                id="gameboard-builder-questions"
+                                className={classNames({"mw-max-content": deviceSize === "xs"})}
+                                type="builder"
+                                style="flat"
+                                items={questionOrder.map((questionId) => selectedQuestions.get(questionId)).filter(isDefined)}
+                                totalItems={questionOrder.length}
+                                onMove={(id, adjustment) => {
+                                    const index = currentQuestions.questionOrder.findIndex(qId => qId === id);
+                                    if (index === -1) return;
+                                    if (index + adjustment < 0 || index + adjustment >= currentQuestions.questionOrder.length) return;
+                                    const newQuestionOrder = [...currentQuestions.questionOrder];
+                                    const [removed] = newQuestionOrder.splice(index, 1);
+                                    newQuestionOrder.splice(index + adjustment, 0, removed);
+                                    currentQuestions.setQuestionOrder(newQuestionOrder);
                                 }}
-                            </Droppable>
-                        </DragDropContext>
+                                onDelete={(id) => {
+                                    const question= selectedQuestions.get(id);
+                                    if (question) {
+                                        handleBuilderRowChange({ isDnd: true, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
+                                    }
+                                }}
+                                allowBookmarking
+                            />
+                        </DraggableListViewContainer>
                     </div>
                     <div className={"invalid-feedback"}>
                         {`${tooManyQuestions ? `Only ${QUESTIONS_PER_GAMEBOARD} questions can be added, please remove some.` : "Please add some questions."}`}

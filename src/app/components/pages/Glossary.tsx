@@ -38,6 +38,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { GlossarySidebar } from "../elements/sidebar/GlossarySidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { SearchInputWithIcon } from "../elements/SearchInputs";
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -126,8 +127,8 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
 
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return siteSpecific(<Input
-        className='search--filter-input my-4'
+    return siteSpecific(<SearchInputWithIcon
+        outerClassName='my-4'
         type="search" value={internalSearchText || ""}
         placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
         onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
