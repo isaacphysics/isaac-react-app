@@ -9,6 +9,7 @@ import { useLocation } from "react-router";
 import { scrollVerticallyIntoView } from "../../services";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
+    
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
     const hasExtension = page.extensionGameboards && page.extensionGameboards.length > 0;
