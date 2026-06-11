@@ -116,13 +116,6 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
 
 // Theme colours
 $theme-colour-overrides: (
-    physics: $color-physics-500,
-    maths: $color-maths-500,
-    chemistry: $color-chemistry-500,
-    biology: $color-biology-500,
-    neutral: $color-neutral-500,
-    
-    neutral-light: $color-neutral-100,
     correct: $color-misc-correct,
 
     // these are intended for "action states", e.g. event status, not question feedback
@@ -215,6 +208,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 // all Bootstrap overrides must appear before this
 @import "bootstrap/scss/mixins";
 @import "../common/bootstrap-theme-override";
+@import "../common/bootstrap-additions";
 @import "bootstrap/scss/utilities";
 @import "../common/bootstrap-contents";
 @import "dark-mode-overrides";
@@ -307,6 +301,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "quiz";
 @import "glossary";
 @import "stats";
+@import "../common/billboard";
 
 @import "expansion-layout";
 @import "../common/callout";

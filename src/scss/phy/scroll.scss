@@ -1,9 +1,17 @@
 @import "../common/scroll";
 
 .vertical-scroll-shadow {
-  @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
+  @include vertical-scroll-shadow(var(--color-neutral-white), rgba(0, 0, 0, 0.2));
 }
 
 .horizontal-scroll-shadow {
-  @include horizontal-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
+  @include horizontal-scroll-shadow(var(--color-neutral-white), rgba(0, 0, 0, 0.2));
+}
+
+.vertical-scroll-shadow-subtle {
+  @include vertical-scroll-shadow(white, rgba(0, 0, 0, 0.2));
+}
+
+.horizontal-scroll-shadow-subtle {
+  @include horizontal-scroll-shadow(white, rgba(0, 0, 0, 0.2));
 }

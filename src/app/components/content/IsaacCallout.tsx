@@ -15,7 +15,7 @@ const calloutStyle = siteSpecific({
         marginLeft: -2,
         marginRight: 18
     },
-    colour: "t-grey"
+    colour: "bg-neutral"
 },{
     width: "50",
     height: "50",

@@ -281,7 +281,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                     <tbody>
                                         {eventBookingsForGroup?.map(booking => {
                                             const bookingCancelled = booking.bookingStatus === "CANCELLED";
-                                            return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id} className={classNames({"bg-light text-muted": bookingCancelled})}>
+                                            return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id} className={classNames({"bg-neutral-light text-muted": bookingCancelled})}>
                                                 <td className="align-middle">
                                                     <Input key={booking.userBooked.id}
                                                         id={`${booking.userBooked.id}`}

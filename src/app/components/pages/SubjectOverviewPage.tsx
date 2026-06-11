@@ -7,7 +7,6 @@ import { PageContextState } from "../../../IsaacAppTypes";
 import { convertToALVIGameboard, CustomListViewItemProps, ListView, ListViewCards, transformItemsForCustomListView } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
-import { AbstractListViewItemState } from "../elements/list-groups/AbstractListViewItem";
 import { GameboardDTO } from "../../../IsaacApiTypes";
 import { PageMetadata } from "../elements/PageMetadata";
 

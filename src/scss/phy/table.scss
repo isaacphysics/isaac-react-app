@@ -11,3 +11,7 @@
     border-bottom-style: none;
   }
 }
+
+.table {
+  --bs-table-border-color: var(--color-neutral-300);
+}

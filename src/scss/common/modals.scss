@@ -16,7 +16,7 @@
 
     button {
       &.close {
-        color: $black;
+        color: var(--color-neutral-900, black);
         font-family: $secondary-font;
         font-size: 1rem;
         font-weight: 400;
@@ -31,10 +31,6 @@
       font-weight: 600;
       font-size: 2.125rem;
     }
-  }
-
-  .modal-body {
-    overflow: auto;
   }
 
   .modal-footer {

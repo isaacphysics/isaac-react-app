@@ -365,6 +365,7 @@ $theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-su
 $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
 
 @import "bootstrap/scss/mixins";
+@import "../common/bootstrap-additions";
 @import "bootstrap/scss/utilities";
 @import "../common/bootstrap-contents";
 // See https://getbootstrap.com/docs/5.3/customize/sass/#importing; using Option A ("@import "bootstrap/scss/bootstrap";") is not feasible as we need the default overrides above.
@@ -438,11 +439,12 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "homepage";
 @import "../common/login";
 @import "../common/registration";
+@import "scroll";
 @import "../common/assignments";
 @import "my-account";
 @import "../common/topic";
 @import "../common/my-progress";
-@import "../common/gameboard";
+@import "gameboard";
 @import "assignment-progress";
 @import "../common/books";
 @import "groups";

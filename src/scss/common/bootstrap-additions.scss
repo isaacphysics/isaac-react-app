@@ -1,0 +1,10 @@
+// This file contains additions to Bootstrap that would undesirably override certain BS styles if they were placed after the main BS import.
+
+// this isn't in bootstrap for some reason. sm and lg+ are?
+@include media-breakpoint-up(md) {
+  .modal-md,
+  .modal-lg,
+  .modal-xl {
+    --bs-modal-width: 680px;
+  }
+}

@@ -57,6 +57,10 @@
   @include svg-icon-raw('/assets/phy/icons/redesign/status-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-preview {
+  @include svg-icon('/assets/common/icons/preview.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-bin {
   @include svg-icon('/assets/common/icons/bin.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
@@ -324,12 +328,6 @@ svg {
   }
 }
 
-.btn.btn-keyline:hover > i.icon:not(.icon-raw), .btn.btn-secondary:hover > i.icon:not(.icon-raw),
-.btn.btn-tint:hover > i.icon:not(.icon-raw), .btn.btn-tertiary:hover > i.icon:not(.icon-raw) {
-  --icon-foreground: var(--icon-hover);
-  --icon-background: var(--icon-hover);
-}
-
 .phy-hex-icon {
   // this is essentially an .icon, but needs different colouring; override size as needed with icon-lg, icon-xl, etc.
   @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), var(--icon-size, 75px), var(--icon-size, 75px), 100%);
@@ -343,34 +341,28 @@ svg {
 
 // the default icon colour for `neutral` is var(--color-theme-500) (green), but we use black icons in a few places across e.g. navigation
 
-i.icon.icon-color-black {
-  @include icon-color-override(var(--color-neutral-900));
-}
+$icon-color-themes: (
+  "black": var(--color-neutral-900),
+  "grey": var(--color-neutral-500),
+  "muted": var(--color-neutral-300),
+  "disabled": var(--color-neutral-200),
+  "white": var(--color-neutral-white),
+  "theme": var(--subject-color-500),
+  "alert": var(--bs-alert-color),
+);
 
-i.icon.icon-color-grey {
-  @include icon-color-override(var(--color-neutral-500));
-}
+@each $name, $color in $icon-color-themes {
+  .icon-color-#{$name} {
+    @include icon-color-override($color);
+  }
 
-i.icon.icon-color-muted {
-  @include icon-color-override(var(--color-neutral-300));
-}
+  .icon-color-#{$name}-hoverable {
+    // replaces the color when *not* hovering; resets to white (or any -on-hover override) when hovering
+    --buttons-light-icon: #{$color};
+  }
 
-i.icon.icon-color-white {
-  @include icon-color-override(var(--color-neutral-white));
-}
-
-i.icon.icon-color-alert {
-  @include icon-color-override(var(--bs-alert-color));
-}
-
-i.icon.icon-color-alert {
-  @include icon-color-override(var(--bs-alert-color));
-}
-
-i.icon.icon-color-black-hoverable {
-  --buttons-light-icon: var(--color-neutral-900);
-}
-
-i.icon.icon-color-theme-hoverable {
-  --buttons-light-icon: var(--subject-color-500);
+  .icon-color-#{$name}-on-hover {
+    // replaces the color when hovering
+    --icon-hover: #{$color};
+  }
 }

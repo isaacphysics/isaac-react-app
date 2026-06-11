@@ -131,18 +131,21 @@ export const SearchPageSearch = siteSpecific(PhySimpleSearch, AdaHeaderSearch);
 
 interface SearchButtonWithIconProps extends InputProps {
     onSearch?: () => void;
+    outerClassName?: string;
 }
 
 export const SearchInputWithIcon = (props: SearchButtonWithIconProps) => {
-    const {onSearch, ...rest} = props;
-    return <InputGroup className="search-input-icon">
+    // pass onSearch to have only enter / button trigger search;
+    // pass onChange for instant search results
+    const {onSearch, outerClassName, ...rest} = props;
+    return <InputGroup className={classNames("search-input-icon", outerClassName)}>
         <Input {...rest}
             id="question-search-title"
             type="text"
             maxLength={SEARCH_CHAR_LENGTH_LIMIT}
             {...(onSearch ? {"onKeyDown": ifKeyIsEnter(onSearch)} : {})}
         />
-        <button className="d-flex align-items-center justify-content-center" onClick={onSearch} aria-label="Search">
+        <button disabled={!onSearch} className="d-flex align-items-center justify-content-center" onClick={onSearch} aria-label="Search">
             <i className="icon icon-search" color="tertiary"/>
         </button>
     </InputGroup>;
