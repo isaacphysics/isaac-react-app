@@ -243,7 +243,7 @@ $color-physics-dark-900: #ffc5ff;
 
 $color-misc-dark-pale-yellow: #534123;
 $color-misc-dark-correct: #344d2d;
-
+$color-misc-dark-llm: #134040;
 $dark-misc-palette: (
   "orange-50": $color-misc-orange-50,
   "orange-300": $color-misc-orange-300,
@@ -253,7 +253,7 @@ $dark-misc-palette: (
   "red": $color-misc-red,
   "pale-yellow": $color-misc-dark-pale-yellow,
   "correct": $color-misc-dark-correct,
-  "llm": $color-misc-llm
+  "llm": $color-misc-dark-llm
 );
 
 $light-color-palettes: (
