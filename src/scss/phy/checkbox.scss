@@ -2,7 +2,7 @@
 
 .label-radio:hover {
     input:not(:checked) {
-      background: $gray-103;
+      background: var(--color-neutral-100);
       cursor: pointer;
     }
   }
