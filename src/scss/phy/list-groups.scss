@@ -126,7 +126,7 @@
 }
 
 .filter-tag {
-  @include pill-tag($color-neutral-900, $color-neutral-100, $color-neutral-200);
+  @include pill-tag(var(--color-neutral-900), var(--color-neutral-100), var(--color-neutral-200));
   border-width: 2px;
 
   &:focus-within {
