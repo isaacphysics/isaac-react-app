@@ -52,9 +52,14 @@
   @include svg-icon-raw('/assets/phy/icons/redesign/status-not-started.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-not-attempted {
+.icon-attempted-markbook {
+  // only for assignment progress – prefer icon-attempted for questions
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-markbook-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-not-attempted-markbook {
   // only for assignment progress – prefer icon-not-started for questions
-  @include svg-icon-raw('/assets/phy/icons/redesign/status-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-markbook-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-preview {
