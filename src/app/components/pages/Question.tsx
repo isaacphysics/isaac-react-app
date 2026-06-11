@@ -64,6 +64,11 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
     const query = queryString.parse(location.search);
     const urlParams = new URLSearchParams(location.search);
     const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+    const linkedBookSectionUrlParams = linkedBookSection[0] && linkedBookSection[1] ? `?book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
+    if (navigation.backToCollection?.to) {
+        const [preHash, hash] = (navigation.backToCollection.to ?? "").split("#");
+        navigation.backToCollection.to = preHash + linkedBookSectionUrlParams + (hash ? `#${hash}` : "");
+    }
 
     const {data: assignments} = useGetMyAssignmentsQuery(params.assignmentId ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const assignment = assignments?.find(a => a.id?.toString() === params.assignmentId);
