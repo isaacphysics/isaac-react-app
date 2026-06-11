@@ -175,7 +175,7 @@ export const convertToALVIGameboard = (gameboard: GameboardDTO): ALVIGameboard =
     return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD};
 };
 export const convertToALVIGameboards = (gameboards: GameboardDTO[]): ALVIGameboard[] => {
-    return gameboards.map(gb => convertToALVIGameboard(gb));
+    return gameboards.map(convertToALVIGameboard);
 };
 type QuestionDeckListViewItemProps = ListViewItemBaseProps<"gameboard", "list" | "card"> & {
     item: ALVIGameboard;

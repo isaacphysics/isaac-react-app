@@ -95,7 +95,7 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
         }],
     };
 
-    return items[subject].length > 0 ? <ListView className={className} type="gameboard" items={items[subject].map(gb => convertToALVIGameboard(gb))} /> : null;
+    return items[subject].length > 0 ? <ListView className={className} type="gameboard" items={items[subject].map(convertToALVIGameboard)} /> : null;
 };
 
 export const SubjectOverviewPage = () => {
