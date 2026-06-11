@@ -44,9 +44,10 @@ button.btn.delete-button {
   border-bottom-left-radius: 0;
   padding: 0.625rem;
   min-width: 36px;
-  > img {
-    filter: invert(1);
-  }
+}
+
+[data-ld-theme="light"] button.btn.delete-button > img {
+  filter: invert(1);
 }
 
 .board-sidebar-content {
