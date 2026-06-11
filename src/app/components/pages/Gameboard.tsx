@@ -48,7 +48,7 @@ export const Gameboard = () => {
 
     const urlParams = new URLSearchParams(location.search);
     const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
-    const linkedBookSectionUrlParams = `?book=${linkedBookSection[0]}&section=${linkedBookSection[1]}`;
+    const linkedBookSectionUrlParams = `?book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}`;
 
     const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
     const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;

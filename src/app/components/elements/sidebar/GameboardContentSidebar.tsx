@@ -21,7 +21,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
     // For questions in the context of a gameboard
     const {id, title, questions, wildCard, currentContentId, linkedBookSection} = props;
     const hasLinkedBookSection = linkedBookSection && linkedBookSection[0] && linkedBookSection[1];
-    const linkedBookUrlParams = hasLinkedBookSection ? `?book=${linkedBookSection[0]}&section=${linkedBookSection[1]}` : "";
+    const linkedBookUrlParams = hasLinkedBookSection ? `?book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
 
     const wildCardContents = useMemo(() => {
         if (!wildCard?.url) return null;
