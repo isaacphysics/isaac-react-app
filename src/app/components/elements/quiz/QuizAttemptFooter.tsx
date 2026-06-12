@@ -1,4 +1,4 @@
-import {QuizAttemptProps, QuizPagination} from "./QuizContentsComponent";
+import {FullQuizInfo, QuizPagination, QuizProps} from "./QuizContentsComponent";
 import {
     mutationSucceeded,
     showSuccessToast,
@@ -18,8 +18,8 @@ function extractSectionIdFromQuizQuestionId(questionId: string) {
     return ids[0] + "|" + ids[1];
 }
 
-export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: string}) {
-    const {attempt, page, sections, questions, pageLink} = props;
+export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLink: string}) {
+    const {attempt, page, quizContents: {sections, questions, pageLink}} = props;
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 

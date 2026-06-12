@@ -1,5 +1,5 @@
 import React from "react";
-import {useGetQuizRubricQuery} from "../../../state";
+import {openActiveModal, useAppDispatch, useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {getThemeFromTags, isDefined, isTeacherOrAbove, tags} from "../../../services";
 import {QuizContentsComponent, rubricCrumbs} from "../../elements/quiz/QuizContentsComponent";
@@ -17,20 +17,17 @@ const pageHelp = <span>
 
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", rubricCrumbs);
 
-const FooterButton = ({link, label}: {link: string, label: string}) => <Col className="d-flex">
-    <Button className="flex-fill d-flex text-nowrap align-items-center justify-content-center mb-3" color="secondary" tag={Link} to={link}>
-        {label}
-    </Button>
-</Col>;
-
-const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =>
-    <QuizSidebarLayout>
+const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) => {
+    // this is intended to be a student-only page, so no options to set are considered (preview is, temporarily, while teachers can still access this page)
+    return <QuizSidebarLayout>
         <Spacer />
-        <Row>
-            {isTeacherOrAbove(user) && <FooterButton link={`/test/preview/${quizId}`} label="Preview" />}
-            <FooterButton link={`/test/attempt/${quizId}`} label="Take Test" />
-        </Row>
+        <div className="d-flex w-100 align-items-center mt-2 gap-2">
+            <Spacer />
+            {isTeacherOrAbove(user) && <Button to={`/test/preview/${quizId}`}>Preview</Button>}
+            <Button to={`/test/attempt/${quizId}`}>Take Test</Button>
+        </div>
     </QuizSidebarLayout>;
+};
 
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     const {quizId} = useParams();
@@ -41,9 +38,9 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     return <Container data-testid="quiz-view" className="mb-7" data-bs-theme={getThemeFromTags(view.quiz?.tags)}>
-        <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
-            <QuizContentsComponent view={view} pageHelp={pageHelp} user={user} />
+        <ShowLoadingQuery query={quizRubricQuery} ifError={Error} thenRender={(quizSummary => <>
+            <QuizContentsComponent user={user} pageHelp={pageHelp} quiz={quizSummary} />
             <QuizFooter quizId={quizId as string} user={user} />
-        </ShowLoadingQuery>
+        </>)} />
     </Container>;
 };

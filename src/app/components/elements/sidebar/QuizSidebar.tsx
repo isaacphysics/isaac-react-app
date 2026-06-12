@@ -1,15 +1,16 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Row, Col } from "reactstrap";
-import { QuizAttemptDTO } from "../../../../IsaacApiTypes";
+import { DetailedQuizSummaryDTO, IsaacQuizDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { SectionProgress, QuizView, QuizRubricButton } from "../quiz/QuizContentsComponent";
+import { SectionProgress, QuizRubricButton } from "../quiz/QuizContentsComponent";
 import { tags as tagsService } from "../../../services";
 import { Pill, KeyItem } from "./SidebarElements";
 
-interface QuizSidebarProps {
+export interface QuizSidebarProps {
+    quiz: IsaacQuizDTO | DetailedQuizSummaryDTO;
     viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
@@ -17,30 +18,22 @@ interface QuizSidebarProps {
     sectionTitles: string[];
 }
 
-export interface QuizSidebarAttemptProps extends QuizSidebarProps {
-    attempt: QuizAttemptDTO;
-    view?: undefined;
-}
-
-export interface QuizSidebarViewProps extends QuizSidebarProps {
-    attempt?: undefined;
-    view: QuizView;
-}
-
-export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
-    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
+export const QuizSidebar = (props: QuizSidebarProps) => {
+    const { quiz, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const isFullQuiz = (quiz: QuizSidebarProps['quiz']): quiz is IsaacQuizDTO => isDefined((quiz as IsaacQuizDTO).defaultFeedbackMode);
+
     const rubricPath =
         viewingAsSomeoneElse ? location.pathname.split("/").slice(0, 6).join("/") :
-            attempt && attempt.feedbackMode ? location.pathname.split("/").slice(0, 5).join("/") :
+            isFullQuiz(quiz) ? location.pathname.split("/").slice(0, 5).join("/") :
                 location.pathname.split("/page")[0];
     const hasSections = totalSections > 0;
-    const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
-    const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
-    const topics = tagsService.getTopicTags(tags as TAG_ID[]);
-    const fields = tagsService.getFieldTags(tags as TAG_ID[]);
+    const subjects = tagsService.getSubjectTags(quiz.tags as TAG_ID[]);
+    const topics = tagsService.getTopicTags(quiz.tags as TAG_ID[]);
+    const fields = tagsService.getFieldTags(quiz.tags as TAG_ID[]);
     const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A", alias: undefined}];
 
     const progressIcon = (section: number) => {
@@ -50,7 +43,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     };
 
     const switchToPage = (page: string) => {
-        if (viewingAsSomeoneElse || attempt && attempt.feedbackMode) {
+        if (viewingAsSomeoneElse || isFullQuiz(quiz)) {
             void navigate(rubricPath.concat("/", page));
         }
         else {
@@ -101,13 +94,13 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     };
 
     return <>
-        {below["md"](deviceSize) && attempt && isPhy && currentSection ?
+        {below["md"](deviceSize) && isPhy && currentSection ?
             <Row className="d-flex align-items-center">
                 <Col>
                     <SidebarContents/>
                 </Col>
                 <Col className="d-flex justify-content-end">
-                    <QuizRubricButton attempt={attempt}/>
+                    <QuizRubricButton rubric={quiz.rubric}/>
                 </Col>
             </Row> :
             <SidebarContents/>
