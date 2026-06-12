@@ -78,7 +78,10 @@ export const TestCard = (props: TestCardProps) => {
                         <h4 className="text-break m-0">
                             {isDefined(quizAssignment) && (
                                 linkLocation === GameboardLinkLocation.Title
-                                    ? <Link to={`${PATHS.TEST}/${quizAssignment.id}`}>{quizAssignment.quizSummary?.title}</Link>
+                                    ? <Link to={`${PATHS.TEST}/${quizAssignment.id}`} target="_blank">
+                                        {quizAssignment.quizSummary?.title}
+                                        <i className="icon icon-new-tab ms-2 icon-color-black" />
+                                    </Link>
                                     : quizAssignment.quizSummary?.title || "Untitled Test"
                             )}
                         </h4>

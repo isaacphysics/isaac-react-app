@@ -139,7 +139,10 @@ export const GameboardCard = (props: GameboardCardProps) => {
                         <h4 className="text-break m-0">
                             {isDefined(gameboard) && (
                                 linkLocation === GameboardLinkLocation.Title
-                                    ? <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>{gameboard.title}</Link>
+                                    ? <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`} target="_blank">
+                                        {gameboard.title}
+                                        <i className="icon icon-new-tab ms-2 icon-color-black" />
+                                    </Link>
                                     : gameboard.title
                             )}
                         </h4>
