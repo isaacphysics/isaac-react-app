@@ -1,9 +1,9 @@
 import React from "react";
-import {openActiveModal, useAppDispatch, useGetQuizRubricQuery} from "../../../state";
-import {Link, useParams} from "react-router-dom";
+import {useGetQuizRubricQuery} from "../../../state";
+import {useParams} from "react-router-dom";
 import {getThemeFromTags, isDefined, isTeacherOrAbove, tags} from "../../../services";
 import {QuizContentsComponent, rubricCrumbs} from "../../elements/quiz/QuizContentsComponent";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
