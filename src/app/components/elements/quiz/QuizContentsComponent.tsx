@@ -19,8 +19,6 @@ import {
     isTeacherOrAbove,
     QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP,
     siteSpecific,
-    SUBJECTS,
-    TAG_ID,
     useDeviceSize
 } from "../../../services";
 import {Spacer} from "../Spacer";
@@ -39,8 +37,6 @@ import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 import { QuizSidebar, QuizSidebarProps } from "../sidebar/QuizSidebar";
-
-export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId?: SUBJECTS | TAG_ID }, quizId: string | undefined };
 
 type QuizContents = {
     questions: QuestionDTO[];
