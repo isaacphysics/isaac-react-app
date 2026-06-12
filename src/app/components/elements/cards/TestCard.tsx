@@ -35,7 +35,7 @@ const CardUsageInfo = ({ quizAssignment, usageDisplay, className, ...rest }: Car
                 : <Link to={`${PATHS.TEST}/${quizAssignment.id}/feedback`} target="_blank" className="d-flex align-items-center gap-2">
                     <b>View group results</b>
                     <span className={"visually-hidden"}>(opens in new tab)</span>
-                    <i className="icon icon-arrow-right icon-color-white" aria-hidden="true" />
+                    <i className="icon icon-arrow-right" aria-hidden="true" />
                 </Link>
             }
         </>}

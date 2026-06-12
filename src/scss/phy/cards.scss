@@ -151,8 +151,10 @@ div:has(> .pod) {
   clip-path: shape(from 0 0, hline to 100%, vline to 100%, hline to $edge-width + $circle-origin-offset, arc by $arc-x $arc-y of $circle-radius $circle-radius cw small);
   border-top-right-radius: 7px;
 
+  --icon-primary: white; // independent of lightness theme
+
   > *, > a:hover {
-    color: var(--color-neutral-white);
+    color: white;
     text-underline-position: from-font; // perhaps we should add this more widely? it looks better here owing to the bold font, but looks fine in general on all link types
   }
 }
