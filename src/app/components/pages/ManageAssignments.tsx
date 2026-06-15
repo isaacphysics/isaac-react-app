@@ -22,6 +22,7 @@ import {
     isAssignment,
     isDefined,
     isQuiz,
+    isTeacherOrAbove,
     Item,
     MONTH_NAMES,
     TAG_ID,
@@ -421,13 +422,13 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
                     <Card>
                         <CardBody>
-                            <Row className="row-cols-1 row-cols-md-2">
+                            <Row className={classNames("row-cols-1", { "row-cols-md-2": isTeacherOrAbove(user) })}>
                                 <Col>
                                     <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><h5 className="mb-0">Set a new assignment</h5></Button>
                                 </Col>
-                                <Col>
+                                {isTeacherOrAbove(user) && <Col>
                                     <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><h5 className="mb-0">Set a new test</h5></Button>
-                                </Col>
+                                </Col>}
                             </Row>
                             <div className="section-divider-bold" />
 

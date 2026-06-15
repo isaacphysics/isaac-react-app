@@ -1,5 +1,5 @@
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { above, Item, itemise, reactSelectDarkModeStyles, selectOnChange, Subjects, useDeviceSize } from "../../../services";
+import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, selectOnChange, Subjects, useDeviceSize } from "../../../services";
 import { sortBy } from "lodash";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
@@ -59,13 +59,15 @@ export const ManageAssignmentsSidebar = ({user, groups, assignmentsSetByMe, view
             styles={reactSelectDarkModeStyles}
         />
 
-        <h5 className="mt-3">Filter by work type</h5>
-        <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
-            value={workTypesToInclude}
-            onChange={selectOnChange(setWorkTypesToInclude, false)}
-            options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
-            styles={reactSelectDarkModeStyles}
-        />
+        {isTeacherOrAbove(user) && <>
+            <h5 className="mt-3">Filter by work type</h5>
+            <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
+                value={workTypesToInclude}
+                onChange={selectOnChange(setWorkTypesToInclude, false)}
+                options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
+                styles={reactSelectDarkModeStyles}
+            />
+        </>}
 
         <details>
             <summary className="mt-3">More filters</summary>
