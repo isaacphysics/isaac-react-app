@@ -26,7 +26,7 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
             <div className="my-3"/>
         </>}
         {isOffcanvas && <NavigationSection topLevelLink to="/" title={"Home"}/>}
-        <NavigationSection topLevelLink to="/about" title={deviceSize === "lg" ? "About" : "About Isaac"}/>
+        {(isOffcanvas || above["xl"](deviceSize)) && <NavigationSection topLevelLink to="/about" title={"About Isaac"}/>}
         <NavigationSection topLevelLink to="/questions" title={"Question finder"}/>
         <NavigationSection topLevelLink to="/concepts" title={"Concepts"}/>
         <NavigationSection topLevelLink to="/view_tests" title={"Tests"}/>
