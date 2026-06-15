@@ -257,7 +257,7 @@ const generateQuizTitle = (quiz: IsaacQuizDTO | DetailedQuizSummaryDTO | undefin
     }
 
     return quizTitle;
-}
+};
 
 const QuizTitle = (quizProps: QuizProps) => {
     const {page, pageHelp, preview, studentUser, user, quiz} = quizProps;
