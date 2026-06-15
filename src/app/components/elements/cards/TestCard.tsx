@@ -1,9 +1,9 @@
 import React from "react";
 import classNames from "classnames";
 import { Link } from "react-router";
-import { Row, Col, Button } from "reactstrap";
+import { Row, Col, Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from "reactstrap";
 import { QuizAssignmentDTO } from "../../../../IsaacApiTypes";
-import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY, isOverdue } from "../../../services";
+import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY, isOverdue, isTeacherOrAbove } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { ShareLink } from "../ShareLink";
 import { Spacer } from "../Spacer";
@@ -48,6 +48,7 @@ type TestCardProps = React.HTMLAttributes<HTMLElement> & {
     openAssignModal?: () => void;
     cancel?: () => void;
     extendDueDate?: () => void;
+    openSetFeedbackModeModal?: () => void;
     // useAssignmentLink?: boolean; // whether to use /assignment/:id over /gameboards#:i
     allowManaging?: boolean; // replaces "assign" with both "unset" and "set again" buttons for more precise assignment management
     usageDisplay?: TestCardUsageDisplay;
@@ -56,7 +57,7 @@ type TestCardProps = React.HTMLAttributes<HTMLElement> & {
 
 // any children passed into this component will be rendered in the card body
 export const TestCard = (props: TestCardProps) => {
-    const {quizAssignment, linkLocation, children, openAssignModal, cancel, extendDueDate, allowManaging, usageDisplay, ...rest} = props;
+    const {quizAssignment, linkLocation, children, openAssignModal, cancel, extendDueDate, allowManaging, usageDisplay, openSetFeedbackModeModal, ...rest} = props;
 
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
@@ -108,12 +109,16 @@ export const TestCard = (props: TestCardProps) => {
                 </div>}
                 {allowManaging
                     ? isTutorOrAbove(user) && <>
-                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); cancel?.();}}>
-                            Unassign
-                        </Button>
-                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); extendDueDate?.();}}>
-                            Extend due date
-                        </Button>
+                        <UncontrolledButtonDropdown size="sm">
+                            <DropdownToggle caret className="text-nowrap" color="keyline" size="md">
+                                Manage
+                            </DropdownToggle>
+                            <DropdownMenu container={"root"}>
+                                <DropdownItem onClick={cancel}>Unassign</DropdownItem>
+                                <DropdownItem onClick={openSetFeedbackModeModal}>Change feedback type</DropdownItem>
+                                <DropdownItem onClick={extendDueDate}>Extend due date</DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
                             Set again
                         </Button>

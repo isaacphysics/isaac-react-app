@@ -49,7 +49,7 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
 
 export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignmentDTO}) => {
 
-    const { cancel, openExtendDueDateModal, openAssignModal } = useManageQuizAssignments();
+    const { cancel, openExtendDueDateModal, openAssignModal, openSetFeedbackModeModal } = useManageQuizAssignments();
 
     return <TestCard
         className="mt-2"
@@ -58,6 +58,7 @@ export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignment
         usageDisplay={{type: "progressLink"}}
         openAssignModal={() => openAssignModal(quizAssignment)}
         cancel={() => cancel(quizAssignment)} 
+        openSetFeedbackModeModal={() => openSetFeedbackModeModal(quizAssignment)}
         extendDueDate={() => openExtendDueDateModal(quizAssignment)}
         allowManaging
     >

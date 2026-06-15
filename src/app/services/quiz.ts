@@ -49,6 +49,7 @@ import {skipToken} from "@reduxjs/toolkit/query";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import { extendDueDateModal } from "../components/elements/modals/ExtendDueDateModal";
 import { SetQuizzesModal } from "../components/elements/modals/SetQuizzesModal";
+import { setFeedbackModeModal } from "../components/elements/modals/SetFeedbackModeModal";
 
 export interface QuizSpec {
     quizId: string;
@@ -400,5 +401,7 @@ export const useManageQuizAssignments = () => {
         }
     };
 
-    return {cancel, isCancelling, openExtendDueDateModal, openAssignModal};
+    const openSetFeedbackModeModal = async (quiz: QuizAssignmentDTO) => dispatch(openActiveModal(setFeedbackModeModal({quiz})));
+
+    return {cancel, isCancelling, openExtendDueDateModal, openSetFeedbackModeModal, openAssignModal};
 };
