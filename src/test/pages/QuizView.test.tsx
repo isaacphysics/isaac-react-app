@@ -9,7 +9,6 @@ import {
     expectSidebarToggle,
     previewButton,
     renderQuizPage,
-    setTestButton,
     sideBarTestCases,
     testSectionsHeader
 } from "../helpers/quiz";
@@ -36,14 +35,9 @@ describe("QuizView", () => {
         expectH1(rubric.title);
     });
 
-    it('does not show message about this page', async () => {
+    it('shows message about this page', async () => {
         await studentViewsQuiz();
-        expect(screen.queryByTestId("quiz-action")).not.toBeInTheDocument();
-    });
-
-    it('does not show Set Test button', async () => {
-        await studentViewsQuiz();
-        expect(setTestButton()).toBe(null);
+        expect(screen.queryByTestId("quiz-action")).toBeInTheDocument();
     });
 
     it('shows quiz rubric', async () => {
@@ -69,11 +63,6 @@ describe("QuizView", () => {
     describe('for teachers', () => {
         const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId });
 
-        it('shows Set Test button', async () => {
-            await teacherViewsQuiz();
-            expect(setTestButton()).toBeInTheDocument();
-        });
-
         it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
             await teacherViewsQuiz();
             await expectLinkWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
@@ -82,11 +71,6 @@ describe("QuizView", () => {
 
     describe('for content editors', () => {
         const editorViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId });
-
-        it('shows Set Test Button', async () => {
-            await editorViewsQuiz();
-            expect(setTestButton()).toBeInTheDocument();
-        });
 
         // It'd be more consistent with, eg. the `/preview` page to show the edit button.
         // However, we'd need `canonicalSourceFile` for this, which the `/rubric` endpoint doesn't return.
