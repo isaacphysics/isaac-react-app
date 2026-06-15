@@ -35,7 +35,6 @@ import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
 import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
-import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 import { QuizSidebar, QuizSidebarProps } from "../sidebar/QuizSidebar";
 
 type QuizContents = {
