@@ -151,6 +151,7 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_CLEAR}
     ;
 
 export type NOT_FOUND_TYPE = 404;
