@@ -74,7 +74,7 @@ $color-misc-orange-500: #bd5a00;
 $color-misc-orange-600: #aa5100;
 
 $color-misc-navy: #001f47;
-$color-misc-red: #b40c0c;
+$color-misc-red: #bb2828;
 $color-misc-pale-yellow: #f9fdd5;
 $color-misc-correct: #ecf7e9;
 $color-misc-llm: #eeffff;
@@ -92,6 +92,8 @@ $light-misc-palette: (
 );
 
 $color-wildcard-orange: #ff7800;
+$color-bookmark-saved: $color-misc-red;
+$color-bookmark-unsaved: var(--color-neutral-200);
 
 // DARK MODE
 // these are *not* simply inversions from the light mode colours (e.g. swap 50-900, 100-800, etc); in light mode, the lower values (subject-50, subject-100)
