@@ -4,7 +4,6 @@ import {
     closeActiveModal,
     useAppDispatch,
     useAppSelector,
-    useGetBookmarksQuery,
     useSearchQuestionsQuery
 } from "../../../state";
 import debounce from "lodash/debounce";
@@ -82,7 +81,6 @@ export const QuestionSearchModal = (
 
     const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
     const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
-    const searchBookmarksQuery = useGetBookmarksQuery();
 
     const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
