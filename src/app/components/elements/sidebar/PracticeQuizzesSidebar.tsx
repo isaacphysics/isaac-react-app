@@ -11,7 +11,7 @@ import { Tag } from "../../../../IsaacAppTypes";
 import { FilterCheckbox, AllFiltersCheckbox } from "./SidebarElements";
 import { SearchInputWithIcon } from "../SearchInputs";
 
-interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
+interface ViewQuizzesSidebarProps extends ContentSidebarProps {
     filterText: string;
     setFilterText: Dispatch<SetStateAction<string>>;
     filterTags?: Tag[];
@@ -22,7 +22,7 @@ interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
     stageCounts: Record<string, number>;
 }
 
-export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
+export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
     const { filterText, setFilterText, filterTags, setFilterTags, tagCounts, filterStages, setFilterStages, stageCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
     const subjectTag = tags.getById(pageContext?.subject as TAG_ID);
@@ -48,7 +48,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <h5>Search practice tests</h5>
             <SearchInputWithIcon
                 outerClassName="my-3"
-                type="search" placeholder="e.g. Practice" 
+                type="search" placeholder="e.g. Admissions" 
                 value={filterText} 
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
             />

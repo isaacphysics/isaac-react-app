@@ -23,7 +23,7 @@ import {RegistrationSetDetails} from "../../pages/RegistrationSetDetails";
 import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
-import {PracticeQuizzes} from "../../pages/quizzes/PracticeQuizzes";
+import {ViewQuizzes} from "../../pages/quizzes/ViewQuizzes";
 import {SubjectLandingPage} from "../../pages/SubjectLandingPage";
 import {QuestionFinder} from "../../pages/QuestionFinder";
 import {QuestionDecks} from "../../pages/QuestionDecks";
@@ -59,7 +59,7 @@ const subjectStagePairPages : Record<string, React.ComponentType<any>> = {
     "": SubjectLandingPage,
     "/questions": QuestionFinder,
     "/concepts": Concepts,
-    "/practice_tests": PracticeQuizzes,
+    "/view_tests": ViewQuizzes,
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
@@ -93,12 +93,12 @@ export const RoutesPhy = [
     } />,
 
     // Teacher test pages
-    <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
-    <Route key={key++} path="/set_quizzes" element={<Navigate to="/set_tests" replace />} />,
+    <Route key={key++} path="/set_tests" element={<Navigate to="/view_tests" replace />} />,
+    <Route key={key++} path="/set_quizzes" element={<Navigate to="/view_tests" replace />} />,
     // Student test pages
     <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,
     <Route key={key++} path="/quizzes" element={<Navigate to="/tests" replace />} />,
-    <Route key={key++} path="/practice_tests" element={<PracticeQuizzes />} />,
+    <Route key={key++} path="/view_tests" element={<ViewQuizzes />} />,
 
     // Quiz (test) pages
     <Route key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,

@@ -29,6 +29,7 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
         <NavigationSection topLevelLink to="/about" title={deviceSize === "lg" ? "About" : "About Isaac"}/>
         <NavigationSection topLevelLink to="/questions" title={"Question finder"}/>
         <NavigationSection topLevelLink to="/concepts" title={"Concepts"}/>
+        <NavigationSection topLevelLink to="/view_tests" title={"Tests"}/>
         <NavigationSection topLevelLink to="/news" title={"News"}/>
         <NavigationSection to="/events" title={"Events"}>
             <LinkItem to="/events">Events</LinkItem>

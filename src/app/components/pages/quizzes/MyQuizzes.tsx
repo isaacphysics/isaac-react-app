@@ -454,7 +454,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
     }</span>;
 
     const emptyPracticeMessage = <span className="text-muted">{!freeAttempts || freeAttempts.length === 0
-        ? <>You have no practice tests. Take some new tests <Link to="/practice_tests">here</Link>!</>
+        ? <>You have no practice tests. Take some new tests <Link to="/view_tests">here</Link>!</>
         : "No practice tests match your filters."
     }</span>;
 

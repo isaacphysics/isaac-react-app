@@ -89,7 +89,6 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 setScheduledStartDate(undefined);
                 setFeedbackMode(undefined);
                 dispatch(closeActiveModal());
-                changePage("/set_tests#manage");
             }
         });
     }

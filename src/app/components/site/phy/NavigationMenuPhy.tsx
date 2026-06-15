@@ -384,10 +384,6 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                 <NavigationItemClose href="/assignment_progress">
                                     Assignment progress
                                 </NavigationItemClose>
-                                {!isTutor(user) &&
-                                    <NavigationItemClose href="/set_tests">
-                                        Set / manage tests
-                                    </NavigationItemClose>}
                             </ul>
                         </div>
                     </>}

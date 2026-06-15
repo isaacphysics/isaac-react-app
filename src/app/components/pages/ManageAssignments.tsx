@@ -426,7 +426,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                     <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><h5 className="mb-0">Set a new assignment</h5></Button>
                                 </Col>
                                 <Col>
-                                    <Button block tag={Link} to="/set_tests" color="keyline" className="mt-2"><h5 className="mb-0">Set a new test</h5></Button>
+                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><h5 className="mb-0">Set a new test</h5></Button>
                                 </Col>
                             </Row>
                             <div className="section-divider-bold" />

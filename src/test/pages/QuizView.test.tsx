@@ -25,8 +25,8 @@ describe("QuizView", () => {
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
         siteSpecific(
-            () => expectPhyBreadCrumbs({href: "/practice_tests", text: "Practice tests"}),
-            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice tests"}, rubric.title])
+            () => expectPhyBreadCrumbs({href: "/view_tests", text: "Practice tests"}),
+            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "Practice tests"}, rubric.title])
         )();
     });
 
@@ -101,8 +101,8 @@ describe("QuizView", () => {
         it ('shows Unknown Test on breadcrumbs', async () => {
             await studentViewsMissingQuiz();
             siteSpecific(
-                () => expectPhyBreadCrumbs({href: '/practice_tests', text: "Practice tests"}),
-                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice tests"}, "Unknown Test"])
+                () => expectPhyBreadCrumbs({href: '/view_tests', text: "Practice tests"}),
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "Practice tests"}, "Unknown Test"])
             )();
         });
 

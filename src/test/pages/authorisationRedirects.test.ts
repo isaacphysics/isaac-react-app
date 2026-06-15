@@ -63,7 +63,7 @@ describe("Visiting a tutor-only page", () => {
     });
 });
 
-const teacherOnlyRoutes = [siteSpecific("/set_tests", PATHS.SET_ASSIGNMENTS)];
+const teacherOnlyRoutes = [PATHS.SET_ASSIGNMENTS];
 describe("Visiting a teacher-only page", () => {
 
     if (isAda) {
