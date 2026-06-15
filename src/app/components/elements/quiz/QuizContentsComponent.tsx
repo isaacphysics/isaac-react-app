@@ -126,21 +126,18 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
 }
 
 function QuizHeader(quizProps: QuizProps) {
-    const dispatch = useAppDispatch();
 
     if (!isFullQuizProps(quizProps) && !quizProps.preview) {
         return <p data-testid="quiz-action">You are freely attempting this test.</p>;
     }
 
-    const {quiz, preview, user, attempt} = quizProps as QuizProps & FullQuizInfo;
+    const {quiz, preview, attempt} = quizProps as QuizProps & FullQuizInfo;
 
     if (preview) {
         return <>
             <EditContentButton doc={quiz} />
-            <div data-testid="quiz-action" className="d-flex">
+            <div data-testid="quiz-action">
                 <p>You are previewing this test.</p>
-                <Spacer />
-                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
