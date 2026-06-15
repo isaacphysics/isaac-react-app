@@ -1,6 +1,6 @@
 import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {getThemeFromTags, isDefined, isTeacherOrAbove, tags} from "../../../services";
 import {QuizContentsComponent, rubricCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {Button, Container} from "reactstrap";
@@ -23,8 +23,8 @@ const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =
         <Spacer />
         <div className="d-flex w-100 align-items-center mt-2 gap-2">
             <Spacer />
-            {isTeacherOrAbove(user) && <Button to={`/test/preview/${quizId}`}>Preview</Button>}
-            <Button to={`/test/attempt/${quizId}`}>Take Test</Button>
+            {isTeacherOrAbove(user) && <Button tag={Link} to={`/test/preview/${quizId}`}>Preview</Button>}
+            <Button tag={Link} to={`/test/attempt/${quizId}`}>Take Test</Button>
         </div>
     </QuizSidebarLayout>;
 };

@@ -24,7 +24,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const isFullQuiz = (quiz: QuizSidebarProps['quiz']): quiz is IsaacQuizDTO => isDefined((quiz as IsaacQuizDTO).defaultFeedbackMode);
+    const isFullQuiz = (quiz: QuizSidebarProps['quiz']): quiz is IsaacQuizDTO => isDefined((quiz as IsaacQuizDTO).canonicalSourceFile);
 
     const rubricPath =
         viewingAsSomeoneElse ? location.pathname.split("/").slice(0, 6).join("/") :

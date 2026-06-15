@@ -20,7 +20,7 @@ function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
     const {page, studentUser, quizContents: {pageLink}} = props;
     let controls;
     let prequel = null;
-    if (page === null) {
+    if (!isDefined(page)) {
         prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>

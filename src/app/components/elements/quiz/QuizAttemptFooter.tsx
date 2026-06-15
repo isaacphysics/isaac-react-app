@@ -10,7 +10,7 @@ import React from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {confirmThen, siteSpecific} from "../../../services";
+import {confirmThen, isDefined, siteSpecific} from "../../../services";
 import {QuizSidebarLayout} from "./QuizSidebarLayout";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
@@ -38,7 +38,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
     const sectionCount = Object.keys(sections).length;
 
     let controls;
-    if (page === null) {
+    if (!isDefined(page)) {
         let anyAnswered = false;
         const completedSections = Object.keys(sections).reduce((map, sectionId) => {
             map[sectionId] = true;

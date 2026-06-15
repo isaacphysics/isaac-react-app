@@ -63,7 +63,9 @@ export type QuizProps = {
     page?: number;
 } & (FullQuizInfo | QuizSummaryInfo);
 
-const isFullQuiz = (quiz: IsaacQuizDTO | DetailedQuizSummaryDTO): quiz is IsaacQuizDTO => isDefined((quiz as IsaacQuizDTO).defaultFeedbackMode);
+const isFullQuizProps = (props: QuizProps): props is QuizProps & FullQuizInfo => {
+    return isDefined((props as QuizProps & FullQuizInfo).attempt);
+};
 
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
@@ -123,9 +125,14 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
     }
 }
 
-function QuizHeader(quizProps: QuizProps & FullQuizInfo) {
-    const {quiz, attempt, preview, user} = quizProps;
+function QuizHeader(quizProps: QuizProps) {
     const dispatch = useAppDispatch();
+
+    if (!isFullQuizProps(quizProps) && !quizProps.preview) {
+        return <p data-testid="quiz-action">You are freely attempting this test.</p>;
+    }
+
+    const {quiz, preview, user, attempt} = quizProps as QuizProps & FullQuizInfo;
 
     if (preview) {
         return <>
@@ -234,12 +241,15 @@ export const myQuizzesCrumbs = [{title: siteSpecific("My tests", "Tests"), to: `
 export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage tests", "Tests"), to: `/set_tests`}];
 export const rubricCrumbs = [{title: "Practice tests", to: "/practice_tests"}];
 export const viewQuizzesCrumbs = [{title: "View tests", to: "/view_tests"}];
-const getCrumbs = (preview: boolean | undefined, user: RegisteredUserDTO) => {
+const getCrumbs = (preview: boolean | undefined, isFreeAttempt: boolean, user: RegisteredUserDTO) => {
     if (preview && isTeacherOrAbove(user)) {
         return teacherQuizzesCrumbs;
     }
-    return viewQuizzesCrumbs;
-    // TODO
+    // TODO adjust with changes to test pages – remove isFreeAttempt entirely, just use viewQuizzesCrumbs from here down
+    // return viewQuizzesCrumbs;
+    if (isFreeAttempt) {
+        return rubricCrumbs;
+    }
     return myQuizzesCrumbs;
 };
 
@@ -260,10 +270,10 @@ const generateQuizTitle = (quiz: IsaacQuizDTO | DetailedQuizSummaryDTO | undefin
 };
 
 const QuizTitle = (quizProps: QuizProps) => {
-    const {page, pageHelp, preview, studentUser, user, quiz} = quizProps;
+    const {page, pageHelp, preview, studentUser, user, quiz} = quizProps as QuizProps;
 
-    const crumbs = getCrumbs(preview, user);
-    if (page === null || page === undefined || !isFullQuiz(quiz)) {
+    const crumbs = getCrumbs(preview, window.location.pathname.includes('/view/'), user);
+    if (!isDefined(page) || !isFullQuizProps(quizProps)) {
         const quizTitle = generateQuizTitle(quiz, preview, undefined, studentUser);
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
             intermediateCrumbs={crumbs} icon={{"type": "icon", "icon": "icon-tests"}}
@@ -311,12 +321,12 @@ export enum SectionProgress {
 function QuizOverview(props: QuizProps & { viewingAsSomeoneElse: boolean }) {
     const {studentUser, quizAssignmentId, viewingAsSomeoneElse, quiz} = props;
     return <div className="mt-4">
-        {isFullQuiz(quiz) && !isDefined(studentUser?.id) && <QuizHeader {...props as QuizProps & FullQuizInfo} />}
+        {!isDefined(studentUser?.id) && <QuizHeader {...props as QuizProps & FullQuizInfo} />}
         {viewingAsSomeoneElse && <div className="mb-2">
             You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
         </div>}
         <QuizRubric rubric={quiz.rubric}/>
-        {isFullQuiz(quiz) && <QuizDetails {...props as QuizProps & FullQuizInfo} />}
+        {isFullQuizProps(props) && <QuizDetails {...props} />}
     </div>;
 }
 
@@ -333,8 +343,8 @@ function QuizQuestions(props: QuizProps & FullQuizInfo) {
 export function QuizContentsComponent(props: QuizProps) {
     const {quiz, studentUser, user} = props;
 
-    const questions = isFullQuiz(quiz) ? (props as QuizProps & FullQuizInfo).quizContents.questions : [];
-    const sections = isFullQuiz(quiz) ? (props as QuizProps & FullQuizInfo).quizContents.sections : {};
+    const questions = isFullQuizProps(props) ? (props as QuizProps & FullQuizInfo).quizContents.questions : [];
+    const sections = isFullQuizProps(props) ? (props as QuizProps & FullQuizInfo).quizContents.sections : {};
 
     const sectionState = (section: IsaacQuizSectionDTO) => {
         const sectionQs = section ? inSection(section, questions) : undefined;
@@ -359,7 +369,7 @@ export function QuizContentsComponent(props: QuizProps) {
         <SidebarLayout show={isPhy}>
             <QuizSidebar {...sidebarProps} />
             <MainContent>
-                {props.page === null || props.page == undefined 
+                {!isDefined(props.page)
                     ? <QuizOverview {...props} viewingAsSomeoneElse={viewingAsSomeoneElse} />
                     : <QuizQuestions {...props as QuizProps & FullQuizInfo} page={props.page} /> }
             </MainContent>
