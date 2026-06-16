@@ -277,8 +277,8 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     </>;
 }
 
+// 06/26 now deprecated for Isaac, still used on Ada for now
 export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
-    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useHistoryState("currentTab", MANAGE_QUIZ_TAB.set);
@@ -314,13 +314,6 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <br />
         Students in the group will be emailed when you set a new test.
     </span>;
-
-    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
-    // Otherwise, show if the quiz is visible to students
-    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
-        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
-    </>;
 
     const rowFiltersView = above["md"](deviceSize);
 
@@ -403,48 +396,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
                         {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
 
-                        {siteSpecific(
-                            <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>,
-                            <ListGroup className="mb-2 quiz-list">
-                                {undeprecatedQuizzes.map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                    <Row className="w-100">
-                                        <Col xs={9} md={8} lg={9} className="d-flex align-items-center">
-                                            <div className="p-3">
-                                                <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
-                                                {roleVisibilitySummary(quiz)}
-                                            </div>
-                                        </Col>
-                                        <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
-                                            <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))}>
-                                                Set test
-                                            </Button>
-                                        </Col>
-                                        <Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
-                                            <Link className={`my-3 d-flex justify-content-end me-1`} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                <span>Preview</span>
-                                            </Link>
-                                        </Col>
-                                        <Col xs={3} className="d-flex align-items-center justify-content-end">
-                                            <UncontrolledButtonDropdown className="d-flex d-md-none ">
-                                                <DropdownToggle caret className="text-nowrap" size="sm" color="link">
-                                                    Actions
-                                                </DropdownToggle>
-                                                <DropdownMenu>
-                                                    <DropdownItem onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))} style={{zIndex: '1'}}>
-                                                        Set test
-                                                    </DropdownItem>
-                                                    <DropdownItem divider />
-                                                    <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                        <DropdownItem>
-                                                            Preview
-                                                        </DropdownItem>
-                                                    </Link>
-                                                </DropdownMenu>
-                                            </UncontrolledButtonDropdown>
-                                        </Col>
-                                    </Row>
-                                </ListGroupItem>)}
-                            </ListGroup>)}
+                        <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>
                     </>}
                 </ShowLoading>,
 

@@ -67,7 +67,8 @@ export const RoutesCS = [
     <Route key={key++} path="/assignment_progress/:assignmentId" element={<NavigateWithSlug to="/my_markbook/:assignmentId" replace />} />,
 
     // Teacher test pages
-    <Route key={key++} path="/set_tests" element={<Navigate to="/view_tests" replace />} />,
+    <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
+    <Route key={key++} path="/practice_tests" element={<Navigate to="/view_tests" replace />} />,
 
     // Student test pages
     <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,

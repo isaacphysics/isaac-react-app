@@ -234,7 +234,7 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
 }
 
 export const myQuizzesCrumbs = [{title: siteSpecific("My tests", "Tests"), to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage work", "Tests"), to: siteSpecific("/assigned", "/view_tests")}];
+export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage work", "Tests"), to: siteSpecific("/assigned", "/set_tests")}];
 export const viewQuizzesCrumbs = [{title: "View tests", to: "/view_tests"}];
 const getCrumbs = (preview: boolean | undefined, user: RegisteredUserDTO) => {
     if (preview && isTeacherOrAbove(user)) {
