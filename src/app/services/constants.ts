@@ -1373,8 +1373,8 @@ export const reactSelectDarkModeStyles = siteSpecific({
     }),
     multiValue: (base: CSSObjectWithLabel) => ({
         ...base,
-        backgroundColor: "var(--subject-color-200)",
-        border: "1px solid var(--subject-color-400)",
+        backgroundColor: "var(--subject-color-100)",
+        border: "1px solid var(--subject-color-300)",
     }),
     multiValueLabel: (base: CSSObjectWithLabel) => ({
         ...base,
@@ -1382,11 +1382,20 @@ export const reactSelectDarkModeStyles = siteSpecific({
     }),
     multiValueRemove: (base: CSSObjectWithLabel) => ({
         ...base,
-        backgroundColor: "var(--subject-color-200)",
+        backgroundColor: "var(--subject-color-100)",
     }),
     singleValue: (base: CSSObjectWithLabel) => ({
         ...base,
         color: "var(--color-neutral-900)",
+    }),
+    option: (base: CSSObjectWithLabel, state: {isDisabled: boolean, isFocused: boolean, isSelected: boolean}) => ({
+        ...base,
+        color: state.isDisabled ? "var(--color-neutral-500)" : "var(--color-neutral-900)",
+        backgroundColor: state.isFocused ? "var(--color-neutral-200)" : "unset",
+        ":active": {
+            // isSelected doesn't seem to work? using :active instead
+            backgroundColor: "var(--subject-color-300)",
+        }
     }),
 }, 
 {

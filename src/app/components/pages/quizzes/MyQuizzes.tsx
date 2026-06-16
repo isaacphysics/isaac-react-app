@@ -310,7 +310,6 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
                             setShowCompleted(newValues.map(v => v.value).includes(QuizStatus.Complete) || newValues.map(v => v.value).includes(QuizStatus.Overdue));
                         }}
                         menuPortalTarget={document.body}
-                        styles={{ menuPortal: base => ({ ...base, zIndex: 1000 }) }}
                     />
                 </Label>
             </Col>
