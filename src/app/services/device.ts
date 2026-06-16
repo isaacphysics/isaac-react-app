@@ -34,7 +34,7 @@ const descDeviceSizes = [DeviceSize.XXXL, DeviceSize.XXL, DeviceSize.XL, DeviceS
 
 export const useDeviceSize = () => {
     const getSize = (): DeviceSize => {
-        const shouldIncludeSidebar = isAda && window.innerWidth >= 768;
+        const shouldIncludeSidebar = isAda && window.innerWidth >= 988;
         const width = window.innerWidth - (shouldIncludeSidebar ? 220 : 0);
         if (width >= 1800) return DeviceSize.XXXL;
         else if (width >= 1400) return DeviceSize.XXL;
@@ -77,6 +77,20 @@ export const useDeviceHeight = () => {
     }, []);
 
     return windowHeight;
+};
+
+export const useFullSidebarLayout = () => {
+    const shouldUseFullLayout = (): boolean => window.innerWidth >= siteSpecific(768, 988);
+
+    const [fullSidebarLayout, setFullSidebarLayout] = useState(shouldUseFullLayout);
+
+    useEffect(() => {
+        const handleResize = () => {setFullSidebarLayout(shouldUseFullLayout());};
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return fullSidebarLayout;
 };
 
 export const useNavbarExpanded = () => {
