@@ -243,6 +243,7 @@ $color-physics-dark-900: #ffc5ff;
 // $color-physics-dark-800: dark-mode-color-invert-oklch($color-physics-800);
 // $color-physics-dark-900: dark-mode-color-invert-oklch($color-physics-900);
 
+$color-misc-dark-red: #ff8080;
 $color-misc-dark-pale-yellow: #534123;
 $color-misc-dark-correct: #344d2d;
 $color-misc-dark-llm: #134040;
@@ -252,7 +253,7 @@ $dark-misc-palette: (
   "orange-500": $color-misc-orange-500,
   "orange-600": $color-misc-orange-600,
   "navy": $color-misc-navy,
-  "red": $color-misc-red,
+  "red": $color-misc-dark-red,
   "pale-yellow": $color-misc-dark-pale-yellow,
   "correct": $color-misc-dark-correct,
   "llm": $color-misc-dark-llm
