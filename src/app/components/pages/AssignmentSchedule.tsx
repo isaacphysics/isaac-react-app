@@ -140,7 +140,6 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                                 closeMenuOnSelect={!isStaff(user)}
                                 onChange={selectOnChange(setGroupsToInclude, false)}
                                 options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                                styles={reactSelectDarkModeStyles}
                             />
                         </Label>
                         <Button className={"mt-2 mt-sm-0"} size={"xs"} color={"link"} block onClick={() => {
@@ -499,7 +498,6 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                 closeMenuOnSelect={false}
                 onChange={selectOnChange(setSelectedGroups, false)}
                 options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                styles={reactSelectDarkModeStyles}
             />
         </Label>
         <Label className="w-100 pb-2">Gameboard:
@@ -507,7 +505,6 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                 value={selectedGameboard}
                 onChange={selectOnChange(setSelectedGameboard, false)}
                 options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("question deck", "quiz")} (may belong to another user)`))}
-                styles={reactSelectDarkModeStyles}
             />
             {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
                 This {siteSpecific("question deck", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.

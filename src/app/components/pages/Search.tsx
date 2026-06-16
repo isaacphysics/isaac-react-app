@@ -117,7 +117,6 @@ export const Search = () => {
                                                 .map(itemise)
                                         }
                                         onChange={selectOnChange(setFiltersState, false)}
-                                        styles={reactSelectDarkModeStyles}
                                         menuPortalTarget={document.body}
                                     />
                                 </div>
