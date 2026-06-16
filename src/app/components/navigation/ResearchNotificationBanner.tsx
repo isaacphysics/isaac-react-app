@@ -18,16 +18,15 @@ export const ResearchNotificationBanner = () => {
         setShown(false);
         Cookies.set(RESEARCH_NOTIFICATION_COOKIE, "1", {expires: 720 /* days*/});
         const eventDetails = {type: "RESEARCH_NOTIFICATION_DISMISSED"};
-        dispatch(logAction(eventDetails));
+        void dispatch(logAction(eventDetails));
     }
 
     return show ? <div className="banner d-print-none" id="research-banner">
         <Container className="py-3">
             <Row style={{alignItems: "center"}}>
                 <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
-                    <h3 className="text-center">
-                        <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/icons/info.svg" style={{height: "1.5rem"}}
-                            alt="" aria-labelledby="research-heading" />
+                    <h3 className="d-flex align-items-center justify-content-center gap-2">
+                        <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
                         <span id="research-heading" className="d-inline-block d-sm-none">&nbsp;Research</span>
                     </h3>
                 </Col>
