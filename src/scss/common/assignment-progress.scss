@@ -131,6 +131,16 @@ $failed-cb-bg-img:
         linear-gradient( 45deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%);
 $failed-bg-size: 25%;
 
+@include color-mode(dark) {
+  // owing to all the above using scss variables, it doesn't easily integrate with dark mode.
+  // instead, apply a filter over the top to brighten them up a little.
+  td.passed, td.in-progress, .key-cell > .passed, .key-cell > .in-progress {
+    filter: brightness(5) sepia(1);
+  }
+  td.fully-attempted, td.completed, td.failed, .key-cell > .fully-attempted, .key-cell > .completed, .key-cell > .failed {
+    filter: brightness(1.2);
+  }
+}
 
 .assignment-progress-details, .group-progress-summary {
   td, .key-cell, tr {
@@ -210,7 +220,7 @@ $failed-bg-size: 25%;
   }
 
   .key-cell span {
-    border: 1px solid black;
+    border: 1px solid var(--color-neutral-900);
     display: inline-block;
     width: 22px;
     height: 22px;

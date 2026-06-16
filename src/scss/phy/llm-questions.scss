@@ -1,7 +1,7 @@
 @import '../common/llm-questions.scss';
 
 .llm-info-banner {
-    background-color: $color-misc-llm;
+    background-color: var(--color-misc-llm);
     border: 2px solid var(--color-neutral-900);
 }
 
@@ -12,7 +12,7 @@
     border-bottom-right-radius: inherit;
 
     .prediction {
-        background-color: $color-misc-llm;
+        background-color: var(--color-misc-llm);
     }
     
     .llm-mark-table-wrapper {
@@ -25,7 +25,7 @@
                 background-color: var(--color-neutral-100);
             }
             td {
-                background-color: $color-neutral-white;
+                background-color: var(--color-neutral-white);
             }
         }
     }

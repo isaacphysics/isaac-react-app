@@ -7,11 +7,3 @@
 .horizontal-scroll-shadow {
   @include horizontal-scroll-shadow($gray-107, rgba(0, 0, 0, 0.2));
 }
-
-.vertical-scroll-shadow-subtle {
-  @include vertical-scroll-shadow(white, rgba(0, 0, 0, 0.2));
-}
-
-.horizontal-scroll-shadow-subtle {
-  @include horizontal-scroll-shadow(white, rgba(0, 0, 0, 0.2));
-}

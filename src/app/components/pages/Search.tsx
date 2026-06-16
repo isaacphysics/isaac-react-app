@@ -16,7 +16,6 @@ import {
     isDefined,
     parseLocationSearch,
     pushSearchToHistory,
-    reactSelectDarkModeStyles,
     SEARCH_RESULT_TYPE,
     SearchableDocumentType,
     searchResultIsPublic,
@@ -117,7 +116,6 @@ export const Search = () => {
                                                 .map(itemise)
                                         }
                                         onChange={selectOnChange(setFiltersState, false)}
-                                        styles={reactSelectDarkModeStyles}
                                         menuPortalTarget={document.body}
                                     />
                                 </div>

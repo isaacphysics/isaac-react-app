@@ -246,7 +246,7 @@ a:has(.assignment-card) {
   }
 
   .overdue {
-    color: $color-misc-red;
+    color: var(--color-misc-red);
     font-weight: 600;
   }
 
