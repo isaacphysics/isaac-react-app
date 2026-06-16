@@ -30,7 +30,6 @@ import {
     addDays,
     nthUtcHourOf,
     isPhy,
-    reactSelectDarkModeStyles
 } from "../../../services";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {GameboardDTO, UserGroupDTO} from "../../../../IsaacApiTypes";

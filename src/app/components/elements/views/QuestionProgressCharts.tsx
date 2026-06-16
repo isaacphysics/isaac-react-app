@@ -9,7 +9,6 @@ import {
     isAda,
     isPhy,
     Item,
-    reactSelectDarkModeStyles,
     selectOnChange,
     siteSpecific,
     specificDoughnutColours,

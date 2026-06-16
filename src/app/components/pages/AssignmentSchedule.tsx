@@ -48,7 +48,6 @@ import {
     MONTH_NAMES,
     nthHourOf,
     PATHS,
-    reactSelectDarkModeStyles,
     selectOnChange,
     siteSpecific,
     stageLabelMap,

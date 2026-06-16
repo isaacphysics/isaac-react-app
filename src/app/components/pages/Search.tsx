@@ -16,7 +16,6 @@ import {
     isDefined,
     parseLocationSearch,
     pushSearchToHistory,
-    reactSelectDarkModeStyles,
     SEARCH_RESULT_TYPE,
     SearchableDocumentType,
     searchResultIsPublic,

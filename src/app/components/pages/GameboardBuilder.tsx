@@ -43,7 +43,6 @@ import {
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
     logEvent, QUESTIONS_PER_GAMEBOARD,
-    reactSelectDarkModeStyles,
     selectOnChange,
     siteSpecific,
     STAGE,
