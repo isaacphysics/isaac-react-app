@@ -527,6 +527,7 @@ export const ListView = <T extends {type?: string}, G extends alviTypes>(props: 
                     return items.map((item, index) => {
                         switch (item.type) {
                             case (DOCUMENT_TYPE.QUESTION):
+                            case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
                                 return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
                             default:
                                 return failedToRender(item);
