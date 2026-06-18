@@ -25,7 +25,6 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
         setJustLinked(true);
         void dispatch(saveGameboard({
             boardId: board.id ?? "",
-            boardTitle: board.title,
             user,
         }));
     }, [user, board, dispatch]);

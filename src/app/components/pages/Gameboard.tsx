@@ -68,6 +68,7 @@ export const Gameboard = () => {
             query={gameboardQuery}
             defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
             ifNotFound={notFoundComponent}
+            maintainOnRefetch
             placeholder={<Container><LoadingPlaceholder /></Container>}
             thenRender={(gameboard) => {
                 return <PageContainer className="mb-7" data-bs-theme={singleSubject}
