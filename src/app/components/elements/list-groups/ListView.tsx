@@ -344,6 +344,8 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
+    const url = `/${documentTypePathPrefix[item.type as keyof typeof documentTypePathPrefix]}/${item.id}`;
+
     const topic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[])?.title;
 
     const icon: TitleIconProps = { type: "icon", label: "Question",
@@ -372,7 +374,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             icon={deviceSize !== "xs" ? icon : undefined}
             title={item.title ?? ""}
             subject={itemSubject !== "neutral" ? itemSubject : undefined}
-            url={item.url}
+            url={url}
             tags={item.tags}
             deprecated={item.deprecated}
             supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
