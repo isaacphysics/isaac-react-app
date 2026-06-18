@@ -17,8 +17,8 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
 
+    const isLinked = useMemo(() => board.savedToCurrentUser, [board]);
     const [justLinked, setJustLinked] = useState(false);
-    const isLinked = useMemo(() => board.savedToCurrentUser || justLinked, [board, justLinked]);
 
     const linkBoard = useCallback(() => {
         if (!user || !board) return;
