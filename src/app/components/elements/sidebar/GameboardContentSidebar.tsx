@@ -52,7 +52,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
         <ul>
             {wildCard && wildCard.url && <li className={classNames("board-sidebar-content", {"selected-content": wildCard.url === window.location.pathname})}>
                 {isAppLink(wildCard.url)
-                    ? <Link className="py-2" to={`${wildCard.url}?board=${id}`}>{wildCardContents}</Link>
+                    ? <Link className="py-2" to={`${wildCard.url}?board=${id}${linkedBookUrlParams.replace("?", "&")}`}>{wildCardContents}</Link>
                     : <ExternalLink className="py-2" href={wildCard.url}>{wildCardContents}</ExternalLink>
                 }
             </li>}

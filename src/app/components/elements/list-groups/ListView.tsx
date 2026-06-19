@@ -39,8 +39,8 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const bookSectionUrlParam = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "") + bookSectionUrlParam;
+    const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "") + bookSectionUrlParams;
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
     const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
@@ -269,13 +269,16 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
 type ShortcutListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
     item: ShortcutResponse;
     linkedBoardId?: string;
+    linkedBookSection?: string;
 }
 
-export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
+export const ShortcutListViewItem = ({item, linkedBoardId, linkedBookSection, ...rest}: ShortcutListViewItemProps) => {
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
+    const boardUrlParams = linkedBoardId ? `?board=${linkedBoardId}` : "";
+    const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
+    const url = `${item.url}${boardUrlParams}${bookSectionUrlParams}${item.hash ? `#${item.hash}` : ""}`;
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
     const icon: TitleIconProps = isPhy ?
         {type: "icon", icon: {name: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}} :
