@@ -30,15 +30,17 @@ type QuestionListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> 
     item: ContentSummaryDTO;
     hideIconLabel?: boolean;
     linkedBoardId?: string;
+    linkedBookSection?: string;
 }
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
-    const { item, hideIconLabel, linkedBoardId, ...rest } = props;
+    const { item, hideIconLabel, linkedBoardId, linkedBookSection, ...rest } = props;
     const breadcrumb = (isPhy || rest.hasCaret) ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
+    const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "") + bookSectionUrlParams;
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
     const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
@@ -65,13 +67,14 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
 type ConceptListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
     item: ContentSummaryDTO;
+    linkedBookSection?: string;
 }
 
-export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
+export const ConceptListViewItem = ({item, linkedBookSection, ...rest}: ConceptListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}${linkedBookSection ?? ""}`;
     const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-concept", size: "lg"}};
     
     if (isAda) {
@@ -178,9 +181,10 @@ export const convertToALVIGameboards = (gameboards: GameboardDTO[]): ALVIGameboa
 };
 type QuestionDeckListViewItemProps = ListViewItemBaseProps<"gameboard", "list" | "card"> & {
     item: ALVIGameboard;
+    linkedBookSection?: string;
 }
 
-export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
+export const QuestionDeckListViewItem = ({item, linkedBookSection, ...rest}: QuestionDeckListViewItemProps) => {
     const questionTagsCountMap = item.contents?.filter(c => c.contentType === "isaacQuestionPage").map(q => q.tags as TAG_ID[]).reduce((acc, tags) => {
         tags?.forEach(tag => {
             acc[tag] = (acc[tag] || 0) + 1;
@@ -192,7 +196,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
 
-    const url = `${PATHS.GAMEBOARD}#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}${linkedBookSection ?? ""}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
@@ -265,13 +269,16 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
 type ShortcutListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
     item: ShortcutResponse;
     linkedBoardId?: string;
+    linkedBookSection?: string;
 }
 
-export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
+export const ShortcutListViewItem = ({item, linkedBoardId, linkedBookSection, ...rest}: ShortcutListViewItemProps) => {
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
+    const boardUrlParams = linkedBoardId ? `?board=${linkedBoardId}` : "";
+    const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
+    const url = `${item.url}${boardUrlParams}${bookSectionUrlParams}${item.hash ? `#${item.hash}` : ""}`;
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
     const icon: TitleIconProps = isPhy ?
         {type: "icon", icon: {name: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}} :
