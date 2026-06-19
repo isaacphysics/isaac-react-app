@@ -270,15 +270,36 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                                            return <div
-                                                id={`${item.id || index}|parsons-item-available`}
-                                                className={`parsons-item indent-${item.indentation}`}
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getStyle(provided.draggableProps.style, snapshot)}
-                                            >
-                                                <pre>{item.value}</pre>
+                                            return <div className="d-flex">
+                                                <div className="d-flex vertical-center rounded-2">
+                                                    <div className="d-flex flex-column align-items-center">
+                                                        <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
+                                                            const items = [...availableItems];
+                                                            moveItem(items, index, items, index-1, 0);
+                                                            setAvailableItems(items);
+                                                        }}>
+                                                            <i className={classNames("icon icon-chevron-up", "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                                                        </button>
+                                                        <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                                                        <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
+                                                            const items = [...availableItems];
+                                                            moveItem(items, index, items, index+1, 0);
+                                                            setAvailableItems(items);
+                                                        }}>
+                                                            <i className={classNames("icon icon-chevron-down", "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    id={`${item.id || index}|parsons-item-available`}
+                                                    className={`parsons-item indent-${item.indentation}`}
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    style={getStyle(provided.draggableProps.style, snapshot)}
+                                                >
+                                                    <pre>{item.value}</pre>
+                                                </div>
                                             </div>;
                                         }}
                                     </Draggable>;
@@ -304,36 +325,58 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                                            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-                                            return <div
-                                                onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
-                                                onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
-                                                id={`${item.id || index}|parsons-item-choice`}
-                                                className={`parsons-item indent-${item.indentation}`}
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getStyle(provided.draggableProps.style, snapshot)}
-                                            >
-                                                <pre>
-                                                    {item.value}
-                                                    {canIndent && <div className="controls">
-                                                        <button
-                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1`}
-                                                            onMouseUp={() => reduceIndentation(index)} type="button"
-                                                            aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
-                                                        >
-                                                            <i className="icon icon-chevron-left icon-color-white d-block justify-self-center" />
+                                            
+                                            return <div className="d-flex">
+                                                <div className="d-flex vertical-center rounded-2">
+                                                    <div className="d-flex flex-column align-items-center">
+                                                        <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
+                                                            const items = [...(currentAttempt?.items || [])];
+                                                            moveItem(items, index, items, index-1, currentIndent || 0);
+                                                            dispatchSetCurrentAttempt({...currentAttempt, items});
+                                                        }}>
+                                                            <i className={classNames("icon icon-chevron-up", "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                                                         </button>
-                                                        <button
-                                                            className={`increase ${canIncreaseIndentation ? 'show' : 'hide' }`}
-                                                            onMouseUp={() => increaseIndentation(index)} type="button"
-                                                            aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
-                                                        >
-                                                            <i className="icon icon-chevron-right icon-color-white d-block justify-self-center" />
+                                                        <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                                                        <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
+                                                            const items = [...(currentAttempt?.items || [])];
+                                                            moveItem(items, index, items, index+1, currentIndent || 0);
+                                                            dispatchSetCurrentAttempt({...currentAttempt, items});
+                                                        }}>
+                                                            <i className={classNames("icon icon-chevron-down", "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                                                         </button>
-                                                    </div>}
-                                                </pre>
+                                                    </div>
+                                                </div>
+                                                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                                                <div
+                                                    onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
+                                                    onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
+                                                    id={`${item.id || index}|parsons-item-choice`}
+                                                    className={`parsons-item indent-${item.indentation}`}
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    style={getStyle(provided.draggableProps.style, snapshot)}
+                                                >
+                                                    <pre>
+                                                        {item.value}
+                                                        {canIndent && <div className="controls">
+                                                            <button
+                                                                className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1`}
+                                                                onMouseUp={() => reduceIndentation(index)} type="button"
+                                                                aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
+                                                            >
+                                                                <i className="icon icon-chevron-left icon-color-white d-block justify-self-center" />
+                                                            </button>
+                                                            <button
+                                                                className={`increase ${canIncreaseIndentation ? 'show' : 'hide' }`}
+                                                                onMouseUp={() => increaseIndentation(index)} type="button"
+                                                                aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
+                                                            >
+                                                                <i className="icon icon-chevron-right icon-color-white d-block justify-self-center" />
+                                                            </button>
+                                                        </div>}
+                                                    </pre>
+                                                </div>
                                             </div>;
                                         }}
                                     </Draggable>;
