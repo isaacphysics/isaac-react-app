@@ -1,17 +1,19 @@
-import { closeActiveModal, openActiveModal, useAppDispatch, useGetGroupsQuery, useGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../state";
+import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../state";
 import { useCallback, useMemo } from "react";
 import { SetAssignmentsModal } from "../components/elements/modals/SetAssignmentsModal";
 import { getAssigneesByBoard } from "../components/pages/SetAssignments";
 import { isDefined } from "./miscUtils";
 import { AssignmentDTO, GameboardDTO } from "../../IsaacApiTypes";
 import { siteSpecific } from "./siteConstants";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 // used to set a new assignment from a given board
 export const useSetAssignment = (board?: GameboardDTO) => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
 
-    const {data: groups} = useGetGroupsQuery(false);
-    const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(undefined);
+    const {data: groups} = useGetGroupsQuery(user?.loggedIn ? false : skipToken);
+    const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(user?.loggedIn ? undefined : skipToken);
     const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
     // TODO: at some stage, this modal ought not to allow un-assigning
     const [unassignBoard] = useUnassignGameboardMutation();
@@ -36,9 +38,10 @@ export const useSetAssignment = (board?: GameboardDTO) => {
 // used to manage an existing assignment, including un- and re-assigning
 export const useManageAssignment = (assignment?: AssignmentDTO) => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
 
-    const {data: groups} = useGetGroupsQuery(false);
-    const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(undefined);
+    const {data: groups} = useGetGroupsQuery(user?.loggedIn ? false : skipToken);
+    const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(user?.loggedIn ? undefined : skipToken);
     const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
     const [unassignBoard] = useUnassignGameboardMutation();
     const unassign = () => {
