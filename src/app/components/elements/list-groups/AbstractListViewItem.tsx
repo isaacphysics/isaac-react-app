@@ -17,7 +17,6 @@ import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { useBookmarks } from "../../../services/bookmarks";
-import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 import { PreviewQuestionButton } from "../PreviewButton";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
@@ -191,8 +190,6 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const user = useAppSelector(selectors.user.orNull);
 
-    const bookmarksFeatureFlag = useFeatureFlag(FeatureFlag.ENABLE_SCI_BOOKMARKS);
-
     const contentId = (url?.includes("/questions/") || url?.includes("/concepts/")) && url.split("/").slice(-1)[0];
 
     const isItem = typedProps.alviType === "item";
@@ -300,7 +297,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
-                    {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <div
+                    {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && <div
                         className="alvi-bookmark-container"
                     >
                         <button 
