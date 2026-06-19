@@ -270,7 +270,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                                            return <div className="d-flex">
+                                            return <div className="d-flex" style={{border: "solid 1px #00000021"}}>
                                                 <div className="d-flex vertical-center rounded-2">
                                                     <div className="d-flex flex-column align-items-center">
                                                         <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
@@ -280,7 +280,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                         }}>
                                                             <i className={classNames("icon icon-chevron-up", "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                                                         </button>
-                                                        <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                                                        {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
                                                         <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
                                                             const items = [...availableItems];
                                                             moveItem(items, index, items, index+1, 0);
@@ -292,7 +292,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 </div>
                                                 <div
                                                     id={`${item.id || index}|parsons-item-available`}
-                                                    className={`parsons-item indent-${item.indentation}`}
+                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
@@ -324,9 +324,8 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         index={index}
                                         isDragDisabled={readonly}
                                     >
-                                        {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                                            
-                                            return <div className="d-flex">
+                                        {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => { 
+                                            return <div className="d-flex" style={{border: "solid 1px #00000021"}}>
                                                 <div className="d-flex vertical-center rounded-2">
                                                     <div className="d-flex flex-column align-items-center">
                                                         <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
@@ -336,7 +335,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                         }}>
                                                             <i className={classNames("icon icon-chevron-up", "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                                                         </button>
-                                                        <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                                                        {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
                                                         <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => {
                                                             const items = [...(currentAttempt?.items || [])];
                                                             moveItem(items, index, items, index+1, currentIndent || 0);
@@ -351,7 +350,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
                                                     onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
                                                     id={`${item.id || index}|parsons-item-choice`}
-                                                    className={`parsons-item indent-${item.indentation}`}
+                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
