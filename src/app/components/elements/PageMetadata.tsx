@@ -17,7 +17,6 @@ import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { selectors, useAppSelector } from '../../state';
 import { BookmarkButton } from './BookmarkButton';
-import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;

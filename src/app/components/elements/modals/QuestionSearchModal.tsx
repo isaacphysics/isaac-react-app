@@ -52,7 +52,6 @@ import { updateTopicChoices, initialiseListState, listStateReducer } from "../..
 import { HorizontalScroller } from "../inputs/HorizontalScroller";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
-import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
 import { FilterSummary } from "../../pages/QuestionFinder";
 import { pruneTreeNode } from "../../../services/questionHierarchy";
 

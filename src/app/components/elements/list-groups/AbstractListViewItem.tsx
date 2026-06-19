@@ -17,7 +17,6 @@ import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { useBookmarks } from "../../../services/bookmarks";
-import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 import { PreviewQuestionButton } from "../PreviewButton";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
