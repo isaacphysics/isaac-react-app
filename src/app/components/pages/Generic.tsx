@@ -47,7 +47,9 @@ const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: 
         return <NewsSidebar {...sidebarProps} />;
     }
     if (gameboard?.id && showWildcard(gameboard) && gameboard.wildCard?.url === window.location.pathname) {
-        return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} {...sidebarProps} />;
+        const urlParams = new URLSearchParams(location.search);
+        const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+        return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} linkedBookSection={linkedBookSection} {...sidebarProps} />;
     }
     if (relatedContent) {
         return <GenericSidebarWithRelatedContent relatedContent={relatedContent} {...sidebarProps} />;
