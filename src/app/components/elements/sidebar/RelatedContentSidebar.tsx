@@ -59,19 +59,19 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
                 {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
                     ? <>
                         <ul className="link-list">
-                            {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
+                            {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
                         </ul>
                     </>
                     : <>
                         <div className="section-divider"/>
                         <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
                         <ul className="link-list">
-                            {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
+                            {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
                         </ul>
                         <div className="section-divider"/>
                         <h5>Related questions for other learning stages</h5>
                         <ul className="link-list">
-                            {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
+                            {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
                         </ul>
                     </>
                 }

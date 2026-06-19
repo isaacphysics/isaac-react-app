@@ -56,7 +56,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
                     : <ExternalLink className="py-2" href={wildCard.url}>{wildCardContents}</ExternalLink>
                 }
             </li>}
-            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={classNames("board-sidebar-content", {"selected-content": q.id === currentContentId})}/></li>)}
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} linkedBookSection={linkedBookSection} className={classNames("board-sidebar-content", {"selected-content": q.id === currentContentId})}/></li>)}
         </ul>
         <div className="section-divider"/>
         <CompletionKey/>

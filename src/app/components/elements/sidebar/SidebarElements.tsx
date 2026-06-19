@@ -120,13 +120,17 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
 interface QuestionLinkProps {
     question: ContentSummaryDTO | GameboardItem;
     gameboardId?: string;
+    linkedBookSection?: string[];
 }
 
 export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
-    const { question, gameboardId, ...rest } = props;
+    const { question, gameboardId, linkedBookSection, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
-    const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
+    const boardUrlParams = isDefined(gameboardId) ? `?board=${gameboardId}` : "";
+    const hasLinkedBookSection = linkedBookSection && linkedBookSection[0] && linkedBookSection[1];
+    const linkedBookUrlParams = hasLinkedBookSection ? `${isDefined(gameboardId) ? "&" : "?"}book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
+    const link = `/questions/${question.id}${boardUrlParams}${linkedBookUrlParams}`;
 
     const progressIcon = question.state && (question.state === CompletionState.ALL_CORRECT
         ? "icon icon-raw icon-correct"
