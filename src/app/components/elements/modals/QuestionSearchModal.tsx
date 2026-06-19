@@ -4,7 +4,6 @@ import {
     closeActiveModal,
     useAppDispatch,
     useAppSelector,
-    useGetBookmarksQuery,
     useSearchQuestionsQuery
 } from "../../../state";
 import debounce from "lodash/debounce";
@@ -82,7 +81,6 @@ export const QuestionSearchModal = (
 
     const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
     const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
-    const searchBookmarksQuery = useGetBookmarksQuery();
 
     const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
@@ -117,11 +115,11 @@ export const QuestionSearchModal = (
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useMemo(() => 
-        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
+        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number, bookmarks: boolean) => {
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
             setQuestionsSort({});
 
-            if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
+            if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack && !bookmarks) {
                 // Nothing to search for
                 return setSearchParams(skipToken);
             }
@@ -139,7 +137,8 @@ export const QuestionSearchModal = (
                 examBoards: examBoards.join(",") || undefined,
                 fasttrack,
                 startIndex,
-                limit: 300
+                bookmarks,
+                limit: 300,
             });
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
@@ -157,8 +156,8 @@ export const QuestionSearchModal = (
     const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
 
     useEffect(() => {
-        searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
-    },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
+        searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0, searchBookmarks);
+    },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, searchBookmarks]);
 
     const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions({...questionsSort, ...(isBookSearch ? {book: SortOrder.ASC} : {})}, creationContext)(
         questions.filter(question => {
@@ -169,7 +168,11 @@ export const QuestionSearchModal = (
                 (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
 
             return qIsPublic && qTopicsMatch;
-        })
+        }).sort(
+            searchBookmarks
+                ? (a, b) => new Date(b?.bookmarked ?? 0).getTime() - new Date(a?.bookmarked ?? 0).getTime()
+                : () => 0
+        )
     );
 
     const addSelectionsRow = <div className="d-flex flex-column sticky-bottom align-items-center pt-3 pb-5 bg-white">
@@ -374,47 +377,25 @@ export const QuestionSearchModal = (
                             </tr>
                         </thead>
                         <tbody>
-                            {searchBookmarks
-                                ? <ShowLoadingQuery
-                                    query={searchBookmarksQuery}
-                                    placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
-                                    defaultErrorTitle="Failed to load bookmarks."
-                                    thenRender={(bookmarks) => {
-                                        const questions = bookmarks.filter(b => b.type === "isaacQuestionPage");
-                                        questions.sort((a, b) => new Date(b?.bookmarked ?? 0).getTime() - new Date(a?.bookmarked ?? 0).getTime());
-                                        const sortedQuestions = sortAndFilterBySearch(questions);
-                                        return sortedQuestions?.map(question =>
-                                            <GameboardBuilderTableRow
-                                                key={`question-search-modal-row-${question.id}`}
-                                                question={question}
-                                                currentQuestions={modalQuestions}
-                                                undoStack={undoStack}
-                                                redoStack={redoStack}
-                                                creationContext={creationContext}
-                                            />
-                                        );
-                                    }}
-                                />
-                                : <ShowLoadingQuery
-                                    query={searchQuestionsQuery}
-                                    placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
-                                    defaultErrorTitle="Failed to load questions."
-                                    thenRender={({results: questions}) => {
-                                        if (!questions) return <></>;
-                                        const sortedQuestions = sortAndFilterBySearch(questions);
-                                        return sortedQuestions?.map(question =>
-                                            <GameboardBuilderTableRow
-                                                key={`question-search-modal-row-${question.id}`}
-                                                question={question}
-                                                currentQuestions={modalQuestions}
-                                                undoStack={undoStack}
-                                                redoStack={redoStack}
-                                                creationContext={creationContext}
-                                            />
-                                        );
-                                    }}
-                                />
-                            }
+                            <ShowLoadingQuery
+                                query={searchQuestionsQuery}
+                                placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
+                                defaultErrorTitle="Failed to load questions."
+                                thenRender={({results: questions}) => {
+                                    if (!questions) return <></>;
+                                    const sortedQuestions = sortAndFilterBySearch(questions);
+                                    return sortedQuestions?.map(question =>
+                                        <GameboardBuilderTableRow
+                                            key={`question-search-modal-row-${question.id}`}
+                                            question={question}
+                                            currentQuestions={modalQuestions}
+                                            undoStack={undoStack}
+                                            redoStack={redoStack}
+                                            creationContext={creationContext}
+                                        />
+                                    );
+                                }}
+                            />
                         </tbody>
                     </Table>
                 </HorizontalScroller>
