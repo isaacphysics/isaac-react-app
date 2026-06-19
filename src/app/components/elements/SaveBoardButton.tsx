@@ -47,7 +47,7 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
 
     return <IconButton
         icon={{
-            name: classNames("icon-star", siteSpecific("icon-color-black-hoverable", undefined), { "fill": isLinked, "anim-star-select": justLinked }),
+            name: classNames("icon-star-sparkle", siteSpecific("icon-color-black-hoverable", undefined), { "fill": isLinked, "anim-star-select": justLinked }),
             color: siteSpecific(undefined, props.color === "solid" ? "white" : "primary")
         }}
         className={classNames(className, "w-max-content h-max-content action-button", {"icon-button-sm": size === "sm"})}
