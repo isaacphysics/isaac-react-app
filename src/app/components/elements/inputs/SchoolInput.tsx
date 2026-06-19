@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
+import {reactSelectDarkModeStyles, schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -128,6 +128,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 loadOptions={searchSchoolsFn}
                 filterOption={() => true}
                 formatCreateLabel={(input) => `Use "${input}" as your school name`}
+                styles={reactSelectDarkModeStyles}
             />
         </React.Fragment>}
 

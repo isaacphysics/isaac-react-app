@@ -1350,6 +1350,10 @@ export const reactSelectDarkModeStyles = siteSpecific({
         ...base,
         backgroundColor: "unset",
     }),
+    input: (base: CSSObjectWithLabel) => ({
+        ...base,
+        color: "var(--color-neutral-900)",
+    }),
     menu: (base: CSSObjectWithLabel) => ({
         ...base,
         backgroundColor: "var(--color-neutral-50)",
