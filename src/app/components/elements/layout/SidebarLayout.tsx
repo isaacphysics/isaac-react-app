@@ -13,9 +13,10 @@ interface SidebarLayoutProps extends RowProps {
 
 export const SidebarLayout = (props: SidebarLayoutProps) => {
     const { className, show=true, ...rest } = props;
+    const fullSidebarLayout = useFullSidebarLayout();
     return show
         ? <SidebarContext.Provider value={{sidebarPresent: true}}>
-            <div {...rest} className={classNames("d-flex flex-column sidebar-layout", siteSpecific("flex-lg-row", "flex-md-row"), className)}/>
+            <div {...rest} className={classNames("d-flex sidebar-layout", fullSidebarLayout ? "flex-row" : "flex-column", className)}/>
         </SidebarContext.Provider>
         : props.children;
 };

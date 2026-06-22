@@ -80,7 +80,7 @@ export const useDeviceHeight = () => {
 };
 
 export const useFullSidebarLayout = () => {
-    const shouldUseFullLayout = (): boolean => window.innerWidth >= siteSpecific(768, 988);
+    const shouldUseFullLayout = (): boolean => window.innerWidth >= siteSpecific(992, 988);
 
     const [fullSidebarLayout, setFullSidebarLayout] = useState(shouldUseFullLayout);
 
