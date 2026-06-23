@@ -43,7 +43,6 @@ import {
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
     logEvent, QUESTIONS_PER_GAMEBOARD,
-    reactSelectDarkModeStyles,
     selectOnChange,
     siteSpecific,
     STAGE,
@@ -399,7 +398,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     value={gameboardTags}
                                     placeholder="None"
                                     onChange={selectOnChange(setGameboardTags, false)}
-                                    styles={reactSelectDarkModeStyles}
                                 />
                             </FormGroup>
                         </Col>
@@ -452,7 +450,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </div>
                     </div>
 
-                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "p-1 m-n1 mt-2 gameboard-builder-container vertical-scroll-shadow-subtle")}>
+                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "p-1 m-n1 mt-2 gameboard-builder-container vertical-scroll-shadow")}>
                         <DraggableListViewContainer reorder={reorder}>
                             {/* dragging here can be a little choppy on local development if browser cache is disabled! */}
                             <ListView 

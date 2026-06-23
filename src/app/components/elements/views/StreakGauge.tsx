@@ -16,7 +16,7 @@ export const StreakGauge = (props: StreakGaugeProps) => {
         maxValue={maxParts}
         strokeWidth={12}
         styles={buildStyles({
-            pathColor: "#3A8621", // color-brand-500
+            pathColor: "var(--color-brand-500)",
             trailColor: GRAY_120
 
         })}>
@@ -54,9 +54,9 @@ export const DashboardStreakGauge = (props: StreakGaugeProps) => {
         strokeWidth={6}
         background={true}
         styles={buildStyles({
-            pathColor: "#3A8621", // color-brand-500
-            trailColor: GRAY_120,
-            backgroundColor: "#FFFFFF"
+            pathColor: "var(--color-brand-500)",
+            trailColor: "var(--color-neutral-300)",
+            backgroundColor: "var(--color-neutral-white)"
         })}>
         <div className="streak-panel-gauge m-0 align-content-center">
             <b>{currentStreak}</b><br/>WEEK{currentStreak !== 1 && "S"}

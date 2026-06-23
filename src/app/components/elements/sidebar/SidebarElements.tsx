@@ -9,6 +9,8 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { Tag } from "../../../../IsaacAppTypes";
+import { AffixButton } from "../AffixButton";
+import { Spacer } from "../Spacer";
 
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
@@ -118,13 +120,17 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
 interface QuestionLinkProps {
     question: ContentSummaryDTO | GameboardItem;
     gameboardId?: string;
+    linkedBookSection?: string[];
 }
 
 export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
-    const { question, gameboardId, ...rest } = props;
+    const { question, gameboardId, linkedBookSection, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
-    const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
+    const boardUrlParams = isDefined(gameboardId) ? `?board=${gameboardId}` : "";
+    const hasLinkedBookSection = linkedBookSection && linkedBookSection[0] && linkedBookSection[1];
+    const linkedBookUrlParams = hasLinkedBookSection ? `${isDefined(gameboardId) ? "&" : "?"}book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
+    const link = `/questions/${question.id}${boardUrlParams}${linkedBookUrlParams}`;
 
     const progressIcon = question.state && (question.state === CompletionState.ALL_CORRECT
         ? "icon icon-raw icon-correct"
@@ -152,3 +158,27 @@ export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}>
         {title}
     </span>;
+
+interface BackToBookButtonProps extends React.HTMLAttributes<HTMLElement> {
+    linkedBookSection: string[];
+}
+
+export const BackToBookButton = (props: BackToBookButtonProps) => {
+    const { linkedBookSection, ...rest } = props;
+    const bookId = linkedBookSection[0];
+    const sectionId = linkedBookSection[1];
+    const path = `/books/${bookId}/${sectionId}`;
+    return <AffixButton
+        {...rest}
+        tag={Link}
+        to={path}
+        affix={{
+            affix: "icon-arrow-left",
+            position: "prefix",
+            type: "icon",
+            affixClassName: "icon-inline me-2"
+        }}>
+        Back to book section
+        <Spacer />
+    </AffixButton>;
+};

@@ -77,7 +77,7 @@
 }
 
 .question-tag-indicator {
-    background-color: $color-misc-llm;
+    background-color: var(--color-misc-llm);
     color: var(--color-neutral-900);
     border: 2px solid var(--color-neutral-900);
 

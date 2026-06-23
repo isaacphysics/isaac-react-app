@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import classNames from "classnames";
-import { siteSpecific } from "../../services";
+import { isAda, siteSpecific } from "../../services";
 import { IconButton } from "../elements/AffixButton";
 
 export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<HTMLElement | null>}) => {
@@ -20,7 +20,7 @@ export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<
     return <IconButton
         color={siteSpecific("keyline", "white")}
         icon="icon-chevron-up"
-        className={classNames("scroll-btn d-print-none", {"is-sticky": sticky})}
+        className={classNames("scroll-btn d-print-none", {"is-sticky": sticky, "bg-white": isAda})}
         onClick={() => mainContent.current?.scrollIntoView({behavior: 'smooth'})}
         tabIndex={sticky ? 0 : -1}
         aria-label="Scroll to top of page"

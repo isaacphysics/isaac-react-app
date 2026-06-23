@@ -37,14 +37,14 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                 ],
                 types: {activity: areaSpline()},
                 colors: {activity: siteSpecific("#FEA102", "#FF4DC9")},
-                xFormat: "%Y-%m-%d"
+                xFormat: "%Y-%m-%d",
             },
             axis: {
                 x: {
                     type: "timeseries",
                     tick: {fit: false, format: '%b %Y', count: Math.min(8, nTicks)},
                     min: minDate,  // If these are undefined, then the values from the data will be used.
-                    max: maxDate
+                    max: maxDate,
                 }
             },
             zoom: {enabled: zoom()},

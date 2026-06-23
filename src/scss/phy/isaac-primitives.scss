@@ -74,7 +74,7 @@ $color-misc-orange-500: #bd5a00;
 $color-misc-orange-600: #aa5100;
 
 $color-misc-navy: #001f47;
-$color-misc-red: #b40c0c;
+$color-misc-red: #bb2828;
 $color-misc-pale-yellow: #f9fdd5;
 $color-misc-correct: #ecf7e9;
 $color-misc-llm: #eeffff;
@@ -92,6 +92,8 @@ $light-misc-palette: (
 );
 
 $color-wildcard-orange: #ff7800;
+$color-bookmark-saved: $color-misc-red;
+$color-bookmark-unsaved: var(--color-neutral-200);
 
 // DARK MODE
 // these are *not* simply inversions from the light mode colours (e.g. swap 50-900, 100-800, etc); in light mode, the lower values (subject-50, subject-100)
@@ -101,13 +103,15 @@ $color-wildcard-orange: #ff7800;
 // we start with neutral. neutral is unique in that the hue changes throughout the palette,from a yellow tint (at lightest) to a blue tint (at darkest).
 // all the other subject colours use the same (+-2) hue.
 
+// these are approximated and can be changed if needed. a baseline check is that -500 (text-muted) should be at least AA accessible on -100 (neutral-light).
+
 $color-neutral-dark-white: #181a1b;
 $color-neutral-dark-50: #1f252a;
 $color-neutral-dark-100: #2d3135;
 $color-neutral-dark-200: #3a3e42;
 $color-neutral-dark-300: #4a4e52;
 $color-neutral-dark-400: #62626d;
-$color-neutral-dark-500: #908f94;
+$color-neutral-dark-500: #99989e;
 $color-neutral-dark-600: #bebebe;
 $color-neutral-dark-700: #e6e5e1;
 $color-neutral-dark-800: #ece9e5;
@@ -241,19 +245,20 @@ $color-physics-dark-900: #ffc5ff;
 // $color-physics-dark-800: dark-mode-color-invert-oklch($color-physics-800);
 // $color-physics-dark-900: dark-mode-color-invert-oklch($color-physics-900);
 
+$color-misc-dark-red: #ff8080;
 $color-misc-dark-pale-yellow: #534123;
 $color-misc-dark-correct: #344d2d;
-
+$color-misc-dark-llm: #134040;
 $dark-misc-palette: (
   "orange-50": $color-misc-orange-50,
   "orange-300": $color-misc-orange-300,
   "orange-500": $color-misc-orange-500,
   "orange-600": $color-misc-orange-600,
   "navy": $color-misc-navy,
-  "red": $color-misc-red,
+  "red": $color-misc-dark-red,
   "pale-yellow": $color-misc-dark-pale-yellow,
   "correct": $color-misc-dark-correct,
-  "llm": $color-misc-llm
+  "llm": $color-misc-dark-llm
 );
 
 $light-color-palettes: (
