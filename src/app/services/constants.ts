@@ -15,7 +15,6 @@ import {
     ItemDTO,
     QuestionPartState,
     Stage,
-    UserRole
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
