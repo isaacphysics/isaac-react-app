@@ -20,6 +20,8 @@ import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
+import { Markup } from "../elements/markup";
+import { Spacer } from "../elements/Spacer";
 
 // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
 const PARSONS_MAX_INDENT = 3;
@@ -292,13 +294,15 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 </div>
                                                 <div
                                                     id={`${item.id || index}|parsons-item-available`}
-                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
+                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center w-100`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                     style={getStyle(provided.draggableProps.style, snapshot)}
                                                 >
-                                                    <pre>{item.value}</pre>
+                                                    <Markup trusted-markup-encoding={"html"}>
+                                                        {item.value ?? ""}
+                                                    </Markup>
                                                 </div>
                                             </div>;
                                         }}
@@ -347,18 +351,21 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 </div>
                                                 {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                                                 <div
-                                                    onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
-                                                    onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
+                                                    // onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
+                                                    // onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
                                                     id={`${item.id || index}|parsons-item-choice`}
-                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
+                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center w-100 show-controls`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                     style={getStyle(provided.draggableProps.style, snapshot)}
                                                 >
-                                                    <pre>
-                                                        {item.value}
-                                                        {canIndent && <div className="controls">
+                                                    <div className="d-flex w-100 me-3">
+                                                        <Markup trusted-markup-encoding={"html"}>
+                                                            {item.value}
+                                                        </Markup>
+                                                        <Spacer/>
+                                                        {canIndent && <div className="controls align-items-center">
                                                             <button
                                                                 className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1`}
                                                                 onMouseUp={() => reduceIndentation(index)} type="button"
@@ -374,7 +381,8 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                                 <i className="icon icon-chevron-right icon-color-white d-block justify-self-center" />
                                                             </button>
                                                         </div>}
-                                                    </pre>
+                                                    
+                                                    </div>
                                                 </div>
                                             </div>;
                                         }}
