@@ -1090,16 +1090,6 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
 );
 export const BOOKS_CRUMB = {title: "Books", to: "/books"};
 
-export const UserFacingRole: {[role in UserRole]: string} = {
-    ADMIN: "admin",
-    EVENT_MANAGER: "event manager",
-    CONTENT_EDITOR: "content editor",
-    EVENT_LEADER: "event leader",
-    TEACHER: "teacher",
-    TUTOR: "tutor",
-    STUDENT: "student"
-};
-
 export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
