@@ -4,6 +4,9 @@
 // - copy any required theming from phy/isaac.scss
 // - ensure all variables are named equivalently across the two files
 
+$color-bookmark-saved: #4487fa;
+$color-bookmark-unsaved: $gray-110;
+
 :root {
     --tab-active: #{$dark-pink-300};
     --tab-hover: #{$cs-light-gray};

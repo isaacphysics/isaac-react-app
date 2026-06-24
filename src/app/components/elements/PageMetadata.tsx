@@ -17,7 +17,6 @@ import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { selectors, useAppSelector } from '../../state';
 import { BookmarkButton } from './BookmarkButton';
-import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -56,10 +55,7 @@ export const ActionButtons = ({location, isQuestion, helpModalId, doc, additiona
 
     return anyActionButtonShown && <div {...rest} className={classNames("d-flex no-print gap-2", rest.className)}>
         {additionalActionButtons}
-        {isPhy && isQuestion && <FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}>
-            <BookmarkButton doc={doc} />
-        </FeatureFlagWrapper>
-        }
+        {isPhy && isQuestion && <BookmarkButton doc={doc} />}
         {isPhy && helpModalId && <HelpButton modalId={helpModalId} />}
         {above['sm'](deviceSize) && <>
             <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />

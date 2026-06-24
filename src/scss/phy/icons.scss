@@ -52,13 +52,18 @@
   @include svg-icon-raw('/assets/phy/icons/redesign/status-not-started.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-not-attempted {
-  // only for assignment progress – prefer icon-not-started for questions
-  @include svg-icon-raw('/assets/phy/icons/redesign/status-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-attempted-markbook {
+  // only for assignment progress – prefer icon-attempted for questions
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-markbook-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-new-tab {
-  @include svg-icon('/assets/common/icons/new-tab.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-not-attempted-markbook {
+  // only for assignment progress – prefer icon-not-started for questions
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-markbook-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-preview {
+  @include svg-icon('/assets/common/icons/preview.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-bin {
@@ -67,8 +72,8 @@
 
 .icon-initials {
   // background hex
-  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--color-brand-400), 28px, 28px, 100%);
-  opacity: 0.2;
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-300, 28px, 28px, 100%);
+  opacity: 0.3;
   // initials text
   + * {
     position: absolute;

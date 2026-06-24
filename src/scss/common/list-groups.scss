@@ -47,14 +47,14 @@
   &.saved {
     &::after {
       margin-top: -0.4rem;
-      @include svg-color(url("/assets/common/bookmark.svg"), #4487FA, 16px, 48px, 16px);
+      @include svg-color(url("/assets/common/bookmark.svg"), $color-bookmark-saved, 16px, 48px, 16px);
     }
   }
 
   &:not(.saved) {
     &::after {
       margin-top: -1rem;
-      @include svg-color(url("/assets/common/bookmark.svg"), $gray-110, 16px, 48px, 16px);
+      @include svg-color(url("/assets/common/bookmark.svg"), $color-bookmark-unsaved, 16px, 48px, 16px);
     }
   }
 }

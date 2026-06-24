@@ -143,7 +143,7 @@ figure .inline-container {
   display: inline-flex;
   border-radius: $border-radius-lg;
   width: 100%;
-  background-color: white;
+  background-color: var(--color-neutral-white, white);
 
   .feedback-wrapper {
     // wraps around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states
@@ -168,7 +168,7 @@ figure .inline-container {
       text-align: center;
       align-content: center;
       line-height: 100%;
-      background-color: white;
+      background-color: var(--color-neutral-white, white);
       border-radius: 5px;
       pointer-events: none;
     }
@@ -301,7 +301,7 @@ figure .inline-container {
   }
 
   .eqn-editor-preview {
-    background: $white;
+    background: var(--color-neutral-white, white);
   }
 
   .eqn-editor-input input {
@@ -375,7 +375,7 @@ figure .inline-container {
         margin: 0.5rem 0;
         padding: 0.5em 1em;
         cursor: grab;
-        background: white;
+        background: var(--color-neutral-white, white);
         border: solid 1px #00000021;
       }
     }
@@ -425,6 +425,17 @@ figure .inline-container {
               opacity: 1.0;
             }
           }
+        }
+      }
+    }
+    
+    // The fixed position of a selected parsons-item causes the box-shadow to be drawn in the wrong place,
+    // so we need to apply it to the correctly positioned child instead
+    .parsons-item, .reorder-item {
+      &:focus-visible:focus-visible {
+        box-shadow: none;
+        > * {
+          @include focus-outline;
         }
       }
     }

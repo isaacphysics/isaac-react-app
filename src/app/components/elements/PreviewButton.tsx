@@ -19,6 +19,6 @@ export const PreviewQuestionButton = ({id, className}: {id?: string, className?:
         aria-label="Preview question"
         onClick={() => id && openQuestionModal(id)}
     >
-        <i className="icon icon-inline-sm icon-raw icon-new-tab"/>
+        <i className="icon icon-inline-sm icon-raw icon-preview"/>
     </button>;
 };
