@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { AssignmentDTO, GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse, Badge } from "reactstrap";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove, siteSpecific, TODAY } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove, TODAY } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -169,8 +169,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
             </Button>}
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
-                {isPhy && gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
-                {isPhy && boardLink && <div className="card-share-link">
+                {gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
+                {boardLink && <div className="card-share-link">
                     <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
                 </div>}
                 {allowManaging
