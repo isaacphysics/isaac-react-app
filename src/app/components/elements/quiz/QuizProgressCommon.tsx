@@ -553,7 +553,9 @@ export function ResultsTablePartBreakdown({
             case "name":
                 return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
             case "totalPartPercentage":
+                return -item.correctQuestionPartsCount; 
             case "totalAttemptedPartPercentage":
+                return -(item.correctQuestionPartsCount + item.incorrectQuestionPartsCount);
             case "totalQuestionPercentage":
             case "totalAttemptedQuestionPercentage":
                 return 0; // These sorts are not applicable for part breakdown
@@ -594,8 +596,8 @@ export function ResultsTablePartBreakdown({
                         {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                             ? <SortItemHeader<ProgressSortOrder>
                                 className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
-                                defaultOrder={"totalQuestionPercentage"}
-                                reverseOrder={"totalQuestionPercentage"}
+                                defaultOrder={"totalPartPercentage"}
+                                reverseOrder={"totalPartPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                                 label={"Total correct"}
                             >
@@ -609,8 +611,8 @@ export function ResultsTablePartBreakdown({
                             </SortItemHeader>
                             : <SortItemHeader<ProgressSortOrder>
                                 className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
-                                defaultOrder={"totalAttemptedQuestionPercentage"}
-                                reverseOrder={"totalAttemptedQuestionPercentage"}
+                                defaultOrder={"totalAttemptedPartPercentage"}
+                                reverseOrder={"totalAttemptedPartPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                                 label={"Total attempted"}
                             >
