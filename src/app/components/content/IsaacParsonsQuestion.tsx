@@ -16,7 +16,7 @@ import {
     NotDraggingStyle,
 } from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
-import {ifKeyIsEnter, isDefined, useCurrentQuestionAttempt} from "../../services";
+import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -34,9 +34,8 @@ const moveItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: numbe
 };
 
 const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
-    if (!snapshot.isDropAnimating) {
-        return style;
-    }
+    if (!snapshot.isDropAnimating) return style;
+    
     return {
         ...style,
         // cannot be 0, but make it super tiny
@@ -44,12 +43,12 @@ const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot:
     };
 };
 
-const ReorderButtons = ({setItems, items, index}: { setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void), items: Immutable<ParsonsItemDTO>[], index: number}) => {
+const ReorderButtons = ({setItems, items, index, currentIndent}: { setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void), items: Immutable<ParsonsItemDTO>[], index: number, currentIndent?: number | null}) => {
     return <div className="d-flex vertical-center rounded-2">
         <div className="d-flex flex-column align-items-center">
             <button type="button" title="Move item up" className="btn btn-blank p-0 m-0 border-0" disabled={index === 0} onClick={() => {
                 const newItems = [...items];
-                moveItem(newItems, index, newItems, index-1, 0);
+                moveItem(newItems, index, newItems, index-1, currentIndent || 0);
                 setItems(newItems);
             }}>
                 <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled"  :"icon-color-muted-hoverable icon-color-theme-on-hover" )} />
@@ -57,7 +56,7 @@ const ReorderButtons = ({setItems, items, index}: { setItems: Dispatch<SetStateA
             {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
             <button type="button" title="Move item down" className="btn btn-blank p-0 m-0 border-0" disabled={index === items.length - 1} onClick={() => {
                 const newItems = [...items];
-                moveItem(newItems, index, newItems, index+1, 0);
+                moveItem(newItems, index, newItems, index+1, currentIndent || 0);
                 setItems(newItems);
             }}>
                 <i className={classNames("icon icon-chevron-down", index === items.length - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
@@ -112,6 +111,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             const matches = className.match(/indent-([0-3])/);
             const localCurrentIndent: number = currentIndent || (matches && parseInt(matches[1])) || 0;
             let newIndent = currentIndent;
+            console.log("currentIndent", currentIndent, "localCurrentIndent", localCurrentIndent, "currentMaxIndent", currentMaxIndent, "canIndent", canIndent);
             if (canIndent) {
                 if (e.key === '[' || e.code === 'BracketLeft') {
                     newIndent = Math.max(localCurrentIndent - 1, 0);
@@ -140,6 +140,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
         setDraggedElement(draggedElement);
         setInitialX(choiceElement && choiceElement.getBoundingClientRect().left);
+        setCurrentIndent(draggedElement?.className.match(/indent-([0-3])/g)?.map((match) => parseInt(match.split('-')[1]))?.[0] || 0);
     };
 
     const onDragEnd = (result: DropResult) => {
@@ -276,7 +277,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
-                <Col md={{size: 6}} className="parsons-available-items">
+                <Col md={6} className="parsons-available-items">
                     <h4>Available items</h4>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
@@ -313,7 +314,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         }}
                     </Droppable>
                 </Col>
-                <Col md={{size: 6}} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
+                <Col md={6} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
                     <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
@@ -339,7 +340,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 {...provided.dragHandleProps}
                                                 style={getStyle(provided.draggableProps.style, snapshot)}
                                             >
-                                                <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index}/>
+                                                <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index} currentIndent={item.indentation} />
                                                 <div className="d-flex w-100 me-3">
                                                     <pre>
                                                         <Markup trusted-markup-encoding={"html"}>
@@ -349,24 +350,20 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     <Spacer/>
                                                     {canIndent && <div className="controls align-items-center">
                                                         <button
-                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid`}
-                                                            onMouseUp={() => reduceIndentation(index)} onKeyDown={ifKeyIsEnter(() => reduceIndentation(index))} type="button"
-                                                            aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
+                                                            type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid`}
+                                                            onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
                                                         >
                                                             <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
                                                         </button>
                                                         <button
-                                                            className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid`}
-                                                            onMouseUp={() => increaseIndentation(index)} onKeyDown={ifKeyIsEnter(() => increaseIndentation(index))} type="button"
-                                                            aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
+                                                            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid`}
+                                                            onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
                                                         >
                                                             <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
                                                         </button>
                                                     </div>}
-                                                
                                                 </div>
                                             </div>;
-                                            
                                         }}
                                     </Draggable>;
                                 })}
