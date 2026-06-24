@@ -1,4 +1,16 @@
+.sidebar-layout {
+  align-items: flex-start;
+}
+
+.sidebar-inner {
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
 .sidebar {
+  position: sticky;
+  top: -50px;
+
   ul {
     list-style: none;
     list-style-image: none;
