@@ -32,7 +32,7 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
     const unlinkBoard = useCallback(() => {
         if (!user || !board) return;
         const confirmMessage = board.ownerUserId === user.id && !board.tags?.includes("ISAAC_BOARD")
-            ? `Are you sure you want to unsave your deck '${board.title}' from your account? You'll only be able to find it again if you've set it as an assignment.`
+            ? `Are you sure you want to unsave your ${siteSpecific("deck", "quiz")} '${board.title}' from your account? You'll only be able to find it again if you've set it as an assignment.`
             : `Are you sure you want to unsave '${board.title}' from your account?`;
         if (confirm(confirmMessage)) {
             setJustLinked(false);
