@@ -296,20 +296,20 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                                            return <div className="d-flex">
-                                                <div
-                                                    id={`${item.id || index}|parsons-item-available`}
-                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center w-100`}
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    style={{...getStyle(provided.draggableProps.style, snapshot), border: "solid 1px #00000021"}}
-                                                >
-                                                    <ReorderButtons setItems={setAvailableItems} items={availableItems} index={index}/>
+                                            return <div
+                                                id={`${item.id || index}|parsons-item-available`}
+                                                className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                style={getStyle(provided.draggableProps.style, snapshot)}
+                                            >
+                                                <ReorderButtons setItems={setAvailableItems} items={availableItems} index={index}/>
+                                                <pre>
                                                     <Markup trusted-markup-encoding={"html"}>
                                                         {item.value}
                                                     </Markup>
-                                                </div>
+                                                </pre>
                                             </div>;
                                         }}
                                     </Draggable>;
@@ -335,44 +335,45 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => { 
-                                            return <div className="d-flex">
-                                                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                                                <div
-                                                    // onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
-                                                    // onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
-                                                    id={`${item.id || index}|parsons-item-choice`}
-                                                    className={`parsons-item indent-${item.indentation} d-flex align-items-center w-100 show-controls`}
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    style={{...getStyle(provided.draggableProps.style, snapshot), border: "solid 1px #00000021"}}
-                                                >
-                                                    <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index}/>
-                                                    <div className="d-flex w-100 me-3">
+                                            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                                            return <div
+                                                // onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
+                                                // onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
+                                                id={`${item.id || index}|parsons-item-choice`}
+                                                className={`parsons-item indent-${item.indentation} d-flex align-items-center show-controls`}
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                style={getStyle(provided.draggableProps.style, snapshot)}
+                                            >
+                                                <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index}/>
+                                                <div className="d-flex w-100 me-3">
+                                                    <pre>
                                                         <Markup trusted-markup-encoding={"html"}>
                                                             {item.value}
                                                         </Markup>
-                                                        <Spacer/>
-                                                        {canIndent && <div className="controls align-items-center">
-                                                            <button
-                                                                className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1 d-grid`}
-                                                                onMouseUp={() => reduceIndentation(index)} type="button"
-                                                                aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
-                                                            >
-                                                                <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
-                                                            </button>
-                                                            <button
-                                                                className={`increase ${canIncreaseIndentation ? 'show' : 'hide' } d-grid`}
-                                                                onMouseUp={() => increaseIndentation(index)} type="button"
-                                                                aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
-                                                            >
-                                                                <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
-                                                            </button>
-                                                        </div>}
-                                                    
-                                                    </div>
+                                                    </pre>
+                                                    <Spacer/>
+                                                    {canIndent && <div className="controls align-items-center">
+                                                        <button
+                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1 d-grid`}
+                                                            onMouseUp={() => reduceIndentation(index)} type="button"
+                                                            aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
+                                                        >
+                                                            <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
+                                                        </button>
+                                                        <button
+                                                            className={`increase ${canIncreaseIndentation ? 'show' : 'hide' } d-grid`}
+                                                            onMouseUp={() => increaseIndentation(index)} type="button"
+                                                            aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
+                                                        >
+                                                            <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
+                                                        </button>
+                                                    </div>}
+                                                
                                                 </div>
                                             </div>;
+                                            
                                         }}
                                     </Draggable>;
                                 })}

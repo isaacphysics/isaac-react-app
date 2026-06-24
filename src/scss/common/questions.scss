@@ -363,10 +363,11 @@ figure .inline-container {
       }
     }
 
-    .parsons-item > pre {
-      margin: 0.5rem 0;
+    .parsons-item pre {
+      margin: 0;
       padding: 0.5em 1em;
       cursor: grab; // Doesn't work?
+      border: none;
     }
 
     .reorder-item {
@@ -393,6 +394,8 @@ figure .inline-container {
       }
 
       position: relative;
+      border: solid 1px #00000021;
+      margin: 0.5rem 0;
 
       .controls {
         display: none;
