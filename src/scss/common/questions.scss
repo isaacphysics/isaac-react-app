@@ -352,7 +352,7 @@ figure .inline-container {
 
 .parsons-question {
   .parsons-items {
-    border: solid 1px #00000021;
+    border: solid 1px $cs-light-gray;
     padding: 0 0.5em;
 
     &.empty {
@@ -377,7 +377,7 @@ figure .inline-container {
         padding: 0.5em 1em;
         cursor: grab;
         background: var(--color-neutral-white, white);
-        border: solid 1px #00000021;
+        border: solid 1px $cs-light-gray;
       }
     }
 
@@ -394,8 +394,9 @@ figure .inline-container {
       }
 
       position: relative;
-      border: solid 1px #00000021;
+      border: solid 1px $cs-light-gray;
       margin: 0.5rem 0;
+      background: var(--color-neutral-white, white);
 
       .controls {
         display: none;

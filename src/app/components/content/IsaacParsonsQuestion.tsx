@@ -33,6 +33,17 @@ const moveItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: numbe
     dst.splice(toIndex, 0, {...srcItem, indentation: indent});
 };
 
+const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
+    if (!snapshot.isDropAnimating) {
+        return style;
+    }
+    return {
+        ...style,
+        // cannot be 0, but make it super tiny
+        transitionDuration: `0.001s`,
+    };
+};
+
 const ReorderButtons = ({setItems, items, index}: { setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void), items: Immutable<ParsonsItemDTO>[], index: number}) => {
     return <div className="d-flex vertical-center rounded-2">
         <div className="d-flex flex-column align-items-center">
@@ -124,8 +135,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [draggedElement, currentIndent, currentMaxIndent, canIndent, currentDestinationIndex]);
 
-
-
     const onDragStart = (initial: DragStart) => {
         const draggedElement: HTMLElement | null = document.getElementById(initial.draggableId);
         const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
@@ -180,17 +189,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         }
     };
 
-    const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
-        if (!snapshot.isDropAnimating) {
-            return style;
-        }
-        return {
-            ...style,
-            // cannot be 0, but make it super tiny
-            transitionDuration: `0.001s`,
-        };
-    };
-
     const getPreviousItemIndentation = (index: number) => {
         if (!currentAttempt?.items) return -1;
         const items = [...(currentAttempt.items || [])];
@@ -220,21 +218,33 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         dispatchSetCurrentAttempt({...currentAttempt, items});
     };
 
-    const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ParsonsChoiceDTO>, newAvailableItems?: Immutable<ParsonsItemDTO>[]) => {
-        if (!newCurrentAttempt) {
+    useEffect(() => {
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('touchmove', onMouseMove);
+        window.addEventListener('keyup', onKeyUp);
+        return () => {
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('touchmove', onMouseMove);
+            window.removeEventListener('keyup', onKeyUp);
+        };
+    }, [onMouseMove, onKeyUp]);
+
+    useEffect(() => {
+        if (!currentAttempt) {
             const defaultAttempt: ParsonsChoiceDTO = {
                 type: "parsonsChoice",
                 items: [],
             };
             dispatchSetCurrentAttempt(defaultAttempt);
         }
-        if (newCurrentAttempt) {
+
+        if (currentAttempt) {
             // This makes sure that available items and current attempt items contain different items.
             // This is because available items always start from the document's available items (see constructor)
             // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
             // This also takes care of updating the two lists when a user moves items from one to the other.
             let fixedAvailableItems: ParsonsItemDTO[] = [];
-            const currentAttemptItems = newCurrentAttempt.items || [];
+            const currentAttemptItems = currentAttempt.items || [];
             if (doc.items) {
                 fixedAvailableItems = doc.items.filter(item => {
                     let found = false;
@@ -249,30 +259,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             }
             // WARNING: Inverting the order of the arrays breaks this.
             // TODO: Investigate if there is a method that gives more formal guarantees.
-            const diff = _differenceBy(newAvailableItems, fixedAvailableItems, 'id');
+            const diff = _differenceBy(availableItems, fixedAvailableItems, 'id');
             // This stops re-rendering when availableItems have not changed from one state update to the next.
             // The set difference is empty if the two sets contain the same elements (by 'id', see above).
             if (diff.length > 0) {
                 setAvailableItems(fixedAvailableItems);
             }
         }
-    };
-
-    useEffect(() => {
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('touchmove', onMouseMove);
-        window.addEventListener('keyup', onKeyUp);
-        return () => {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('touchmove', onMouseMove);
-            window.removeEventListener('keyup', onKeyUp);
-        };
-    }, [onMouseMove, onKeyUp]);
-
-    useEffect(() => {
-        onCurrentAttemptUpdate(currentAttempt, availableItems);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentAttempt, availableItems]);
+    }, [currentAttempt, availableItems, dispatchSetCurrentAttempt, doc.items]);
 
     return <div className="parsons-question">
         <div className="question-content">
@@ -280,14 +274,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        {/* TODO Accessibility */}
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
                 <Col md={{size: 6}} className="parsons-available-items">
                     <h4>Available items</h4>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
-                            return <div ref={provided.innerRef} className={`parsons-items ${availableItems && availableItems.length > 0 ? "" : "empty"}`}>
+                            return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
                                 {availableItems && availableItems.map((item, index) => {
                                     return <Draggable
                                         key={item.id}
@@ -324,7 +317,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                     <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
-                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", draggedElement ? "is-dragging" : "", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0)})}>
+                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => {
                                     const canDecreaseIndentation = canIndent && isDefined(item?.indentation) && item.indentation > 0;
                                     const canIncreaseIndentation = canIndent && isDefined(item?.indentation) && index !== 0 && item.indentation <= getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
@@ -337,8 +330,8 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => { 
                                             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                                             return <div
-                                                // onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
-                                                // onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
+                                                onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
+                                                onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
                                                 id={`${item.id || index}|parsons-item-choice`}
                                                 className={`parsons-item indent-${item.indentation} d-flex align-items-center show-controls`}
                                                 ref={provided.innerRef}
@@ -356,16 +349,16 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     <Spacer/>
                                                     {canIndent && <div className="controls align-items-center">
                                                         <button
-                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1 d-grid`}
+                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid`}
                                                             onMouseUp={() => reduceIndentation(index)} type="button"
-                                                            aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
+                                                            aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
                                                         >
                                                             <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
                                                         </button>
                                                         <button
-                                                            className={`increase ${canIncreaseIndentation ? 'show' : 'hide' } d-grid`}
+                                                            className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid`}
                                                             onMouseUp={() => increaseIndentation(index)} type="button"
-                                                            aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
+                                                            aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
                                                         >
                                                             <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
                                                         </button>
