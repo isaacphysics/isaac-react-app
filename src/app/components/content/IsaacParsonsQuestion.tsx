@@ -273,25 +273,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                             return <div className="d-flex" style={{border: "solid 1px #00000021"}}>
-                                                <div className="d-flex vertical-center rounded-2">
-                                                    <div className="d-flex flex-column align-items-center">
-                                                        <button type="button" title="Move item up" className="btn btn-blank p-0 m-0 border-0" disabled={index === 0} onClick={() => {
-                                                            const items = [...availableItems];
-                                                            moveItem(items, index, items, index-1, 0);
-                                                            setAvailableItems(items);
-                                                        }}>
-                                                            <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled"  :"icon-color-muted-hoverable icon-color-theme-on-hover" )} />
-                                                        </button>
-                                                        {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
-                                                        <button type="button" title="Move item down" className="btn btn-blank p-0 m-0 border-0" disabled={index === availableItems.length - 1} onClick={() => {
-                                                            const items = [...availableItems];
-                                                            moveItem(items, index, items, index+1, 0);
-                                                            setAvailableItems(items);
-                                                        }}>
-                                                            <i className={classNames("icon icon-chevron-down", index === availableItems.length - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <div
                                                     id={`${item.id || index}|parsons-item-available`}
                                                     className={`parsons-item indent-${item.indentation} d-flex align-items-center w-100`}
@@ -300,6 +281,25 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     {...provided.dragHandleProps}
                                                     style={getStyle(provided.draggableProps.style, snapshot)}
                                                 >
+                                                    <div className="d-flex vertical-center rounded-2">
+                                                        <div className="d-flex flex-column align-items-center">
+                                                            <button type="button" title="Move item up" className="btn btn-blank p-0 m-0 border-0" disabled={index === 0} onClick={() => {
+                                                                const items = [...availableItems];
+                                                                moveItem(items, index, items, index-1, 0);
+                                                                setAvailableItems(items);
+                                                            }}>
+                                                                <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled"  :"icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                                                            </button>
+                                                            {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
+                                                            <button type="button" title="Move item down" className="btn btn-blank p-0 m-0 border-0" disabled={index === availableItems.length - 1} onClick={() => {
+                                                                const items = [...availableItems];
+                                                                moveItem(items, index, items, index+1, 0);
+                                                                setAvailableItems(items);
+                                                            }}>
+                                                                <i className={classNames("icon icon-chevron-down", index === availableItems.length - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                     <Markup trusted-markup-encoding={"html"}>
                                                         {item.value ?? ""}
                                                     </Markup>
@@ -330,25 +330,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => { 
                                             return <div className="d-flex" style={{border: "solid 1px #00000021"}}>
-                                                <div className="d-flex vertical-center rounded-2">
-                                                    <div className="d-flex flex-column align-items-center">
-                                                        <button type="button" title="Move item up" className="btn btn-blank p-0 m-0 border-0" disabled={index === 0} onClick={() => {
-                                                            const items = [...(currentAttempt?.items || [])];
-                                                            moveItem(items, index, items, index-1, currentIndent || 0);
-                                                            dispatchSetCurrentAttempt({...currentAttempt, items});
-                                                        }}>
-                                                            <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
-                                                        </button>
-                                                        {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
-                                                        <button type="button" title="Move item down" className="btn btn-blank p-0 m-0 border-0" disabled={index === (currentAttempt?.items?.length ?? 0) - 1} onClick={() => {
-                                                            const items = [...(currentAttempt?.items || [])];
-                                                            moveItem(items, index, items, index+1, currentIndent || 0);
-                                                            dispatchSetCurrentAttempt({...currentAttempt, items});
-                                                        }}>
-                                                            <i className={classNames("icon icon-chevron-down", index === (currentAttempt?.items?.length ?? 0) - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                                                 <div
                                                     // onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
@@ -360,6 +341,25 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     {...provided.dragHandleProps}
                                                     style={getStyle(provided.draggableProps.style, snapshot)}
                                                 >
+                                                    <div className="d-flex vertical-center rounded-2">
+                                                        <div className="d-flex flex-column align-items-center">
+                                                            <button type="button" title="Move item up" className="btn btn-blank p-0 m-0 border-0" disabled={index === 0} onClick={() => {
+                                                                const items = [...(currentAttempt?.items || [])];
+                                                                moveItem(items, index, items, index-1, currentIndent || 0);
+                                                                dispatchSetCurrentAttempt({...currentAttempt, items});
+                                                            }}>
+                                                                <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                                                            </button>
+                                                            {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
+                                                            <button type="button" title="Move item down" className="btn btn-blank p-0 m-0 border-0" disabled={index === (currentAttempt?.items?.length ?? 0) - 1} onClick={() => {
+                                                                const items = [...(currentAttempt?.items || [])];
+                                                                moveItem(items, index, items, index+1, currentIndent || 0);
+                                                                dispatchSetCurrentAttempt({...currentAttempt, items});
+                                                            }}>
+                                                                <i className={classNames("icon icon-chevron-down", index === (currentAttempt?.items?.length ?? 0) - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                     <div className="d-flex w-100 me-3">
                                                         <Markup trusted-markup-encoding={"html"}>
                                                             {item.value}
