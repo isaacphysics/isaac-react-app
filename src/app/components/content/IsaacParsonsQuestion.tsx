@@ -296,14 +296,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                                            return <div className="d-flex" style={{border: "solid 1px #00000021"}}>
+                                            return <div className="d-flex">
                                                 <div
                                                     id={`${item.id || index}|parsons-item-available`}
                                                     className={`parsons-item indent-${item.indentation} d-flex align-items-center w-100`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    style={getStyle(provided.draggableProps.style, snapshot)}
+                                                    style={{...getStyle(provided.draggableProps.style, snapshot), border: "solid 1px #00000021"}}
                                                 >
                                                     <ReorderButtons setItems={setAvailableItems} items={availableItems} index={index}/>
                                                     <Markup trusted-markup-encoding={"html"}>
@@ -335,7 +335,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => { 
-                                            return <div className="d-flex" style={{border: "solid 1px #00000021"}}>
+                                            return <div className="d-flex">
                                                 {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                                                 <div
                                                     // onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
@@ -345,7 +345,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    style={getStyle(provided.draggableProps.style, snapshot)}
+                                                    style={{...getStyle(provided.draggableProps.style, snapshot), border: "solid 1px #00000021"}}
                                                 >
                                                     <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index}/>
                                                     <div className="d-flex w-100 me-3">
@@ -359,14 +359,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                                 onMouseUp={() => reduceIndentation(index)} type="button"
                                                                 aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
                                                             >
-                                                                <i className="icon icon-chevron-left icon-color-white d-block justify-self-center align-self-center" />
+                                                                <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
                                                             </button>
                                                             <button
                                                                 className={`increase ${canIncreaseIndentation ? 'show' : 'hide' } d-grid`}
                                                                 onMouseUp={() => increaseIndentation(index)} type="button"
                                                                 aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
                                                             >
-                                                                <i className="icon icon-chevron-right icon-color-white d-block justify-self-center align-self-center" />
+                                                                <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
                                                             </button>
                                                         </div>}
                                                     
