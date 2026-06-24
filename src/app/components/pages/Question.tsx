@@ -62,6 +62,13 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
     const navigation = useNavigation(doc ?? null);
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
     const query = queryString.parse(location.search);
+    const urlParams = new URLSearchParams(location.search);
+    const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+    const linkedBookSectionUrlParams = linkedBookSection[0] && linkedBookSection[1] ? `?book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
+    if (navigation.backToCollection?.to) {
+        const [preHash, hash] = (navigation.backToCollection.to ?? "").split("#");
+        navigation.backToCollection.to = preHash + linkedBookSectionUrlParams + (hash ? `#${hash}` : "");
+    }
 
     const {data: assignments} = useGetMyAssignmentsQuery(params.assignmentId ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const assignment = assignments?.find(a => a.id?.toString() === params.assignmentId);
@@ -101,8 +108,8 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                     }
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
-                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={questionId}/>
-                            : <QuestionSidebar relatedContent={doc.relatedContent} />,
+                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={questionId} linkedBookSection={linkedBookSection}/>
+                            : <QuestionSidebar relatedContent={doc.relatedContent} linkedBookSection={linkedBookSection}/>,
                         undefined
                     )}
                 >

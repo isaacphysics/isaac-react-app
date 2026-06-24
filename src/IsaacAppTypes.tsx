@@ -641,6 +641,7 @@ export interface QuestionSearchQuery {
     limit?: number;
     randomSeed?: number;
     querySource: string;
+    bookmarks?: boolean;
 }
 
 export interface ContentSummary extends ContentSummaryDTO {

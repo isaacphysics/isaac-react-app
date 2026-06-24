@@ -52,6 +52,11 @@ export const Gameboard = () => {
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId))) || undefined;
 
+    const urlParams = new URLSearchParams(location.search);
+    const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+    const hasLinkedBookSection = linkedBookSection[0] && linkedBookSection[1];
+    const linkedBookSectionUrlParams = hasLinkedBookSection ? `?book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
+
     const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
     const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;
 
@@ -83,7 +88,7 @@ export const Gameboard = () => {
                         />
                     }
                     sidebar={siteSpecific(
-                        <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />,
+                        <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} linkedBookSection={linkedBookSection} hideButton />,
                         undefined
                     )}
                 >
@@ -99,7 +104,7 @@ export const Gameboard = () => {
                     />
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                             
-                    <GameboardContents gameboard={gameboard} />
+                    <GameboardContents gameboard={gameboard} linkedBookSectionUrlParams={linkedBookSectionUrlParams}/>
                 </PageContainer>;
             }}
         />;
@@ -107,9 +112,10 @@ export const Gameboard = () => {
 
 interface GameboardContentsProps {
     gameboard: GameboardDTO;
+    linkedBookSectionUrlParams?: string;
 }
 
-export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
+export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: GameboardContentsProps) => {
     const dispatch = useAppDispatch();
     const {openAssignModal} = useSetAssignment(gameboard);
     const user = useAppSelector(selectors.user.orNull);
@@ -134,7 +140,7 @@ export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
     }, [dispatch, gameboard]);
 
     return <>
-        <ListView type="item" items={displayQuestions} linkedBoardId={gameboard.id} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
+        <ListView type="item" items={displayQuestions} linkedBoardId={gameboard.id} linkedBookSection={linkedBookSectionUrlParams} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
         {user && (isTutorOrAbove(user)
             ? <Row>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
