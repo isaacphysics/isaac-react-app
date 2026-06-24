@@ -16,7 +16,7 @@ import {
     NotDraggingStyle,
 } from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
-import {isDefined, useCurrentQuestionAttempt} from "../../services";
+import {ifKeyIsEnter, isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -350,14 +350,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     {canIndent && <div className="controls align-items-center">
                                                         <button
                                                             className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid`}
-                                                            onMouseUp={() => reduceIndentation(index)} type="button"
+                                                            onMouseUp={() => reduceIndentation(index)} onKeyDown={ifKeyIsEnter(() => reduceIndentation(index))} type="button"
                                                             aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
                                                         >
                                                             <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
                                                         </button>
                                                         <button
                                                             className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid`}
-                                                            onMouseUp={() => increaseIndentation(index)} type="button"
+                                                            onMouseUp={() => increaseIndentation(index)} onKeyDown={ifKeyIsEnter(() => increaseIndentation(index))} type="button"
                                                             aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
                                                         >
                                                             <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />

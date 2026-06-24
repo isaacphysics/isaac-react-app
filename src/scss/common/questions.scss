@@ -352,7 +352,7 @@ figure .inline-container {
 
 .parsons-question {
   .parsons-items {
-    border: solid 1px $cs-light-gray;
+    border: solid 1px $gray-136;
     padding: 0 0.5em;
 
     &.empty {
@@ -366,8 +366,8 @@ figure .inline-container {
     .parsons-item pre {
       margin: 0;
       padding: 0.5em 1em;
-      cursor: grab; // Doesn't work?
       border: none;
+      background: none;
     }
 
     .reorder-item {
@@ -377,7 +377,7 @@ figure .inline-container {
         padding: 0.5em 1em;
         cursor: grab;
         background: var(--color-neutral-white, white);
-        border: solid 1px $cs-light-gray;
+        border: solid 1px $gray-136;
       }
     }
 
@@ -394,7 +394,7 @@ figure .inline-container {
       }
 
       position: relative;
-      border: solid 1px $cs-light-gray;
+      border: solid 1px $gray-136;
       margin: 0.5rem 0;
       background: var(--color-neutral-white, white);
 
@@ -430,17 +430,6 @@ figure .inline-container {
               opacity: 1.0;
             }
           }
-        }
-      }
-    }
-    
-    // The fixed position of a selected parsons-item causes the box-shadow to be drawn in the wrong place,
-    // so we need to apply it to the correctly positioned child instead
-    .parsons-item, .reorder-item {
-      &:focus-visible:focus-visible {
-        box-shadow: none;
-        > * {
-          @include focus-outline;
         }
       }
     }
