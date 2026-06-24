@@ -399,37 +399,48 @@ figure .inline-container {
       background: var(--color-neutral-white, white);
 
       .controls {
-        display: none;
+        &:has(:focus) {
+          button {
+            z-index: 2;
+          }
+        }
+
+        &:not(:has(:focus)) {
+          button {
+            z-index: -999;
+          }
+        }
+
+        display: flex;
+        button {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          padding: 0;
+          background: $gray-120;
+
+          &.show:hover {
+            background-color: $primary !important;
+          }
+
+          &.hide {
+            opacity: 0.2;
+            cursor: default;
+          }
+
+          &.show {
+            opacity: 1.0;
+          }
+        }
       }
 
-      &.show-controls {
+      &:hover {
         .controls {
           /*position: absolute;
           right: 0.5rem;
           top: 0.5rem;
           display: block;*/
-          display: flex;
-
-          button {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            padding: 0;
-            background: $gray-120;
-
-            &.show:hover {
-              background-color: $primary !important;
-            }
-
-            &.hide {
-              opacity: 0.2;
-              cursor: default;
-            }
-
-            &.show {
-              opacity: 1.0;
-            }
-          }
+          z-index: 2;
         }
       }
     }

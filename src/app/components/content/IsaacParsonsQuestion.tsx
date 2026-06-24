@@ -329,12 +329,9 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         isDragDisabled={readonly}
                                     >
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => { 
-                                            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                                             return <div
-                                                onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
-                                                onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
                                                 id={`${item.id || index}|parsons-item-choice`}
-                                                className={`parsons-item indent-${item.indentation} d-flex align-items-center show-controls`}
+                                                className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
@@ -350,14 +347,16 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     <Spacer/>
                                                     {canIndent && <div className="controls align-items-center">
                                                         <button
-                                                            type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid`}
+                                                            type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid position-relative`}
                                                             onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
+                                                            disabled={!canDecreaseIndentation}
                                                         >
                                                             <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
                                                         </button>
                                                         <button
-                                                            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid`}
+                                                            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid position-relative`}
                                                             onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
+                                                            disabled={!canIncreaseIndentation}
                                                         >
                                                             <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
                                                         </button>
