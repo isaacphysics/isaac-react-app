@@ -18,13 +18,13 @@ export interface QuizSidebarProps {
     sectionTitles: string[];
 }
 
+const isFullQuiz = (quiz: QuizSidebarProps['quiz']): quiz is IsaacQuizDTO => isDefined((quiz as IsaacQuizDTO).canonicalSourceFile);
+
 export const QuizSidebar = (props: QuizSidebarProps) => {
     const { quiz, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
     const navigate = useNavigate();
     const location = useLocation();
-
-    const isFullQuiz = (quiz: QuizSidebarProps['quiz']): quiz is IsaacQuizDTO => isDefined((quiz as IsaacQuizDTO).canonicalSourceFile);
 
     const rubricPath =
         viewingAsSomeoneElse ? location.pathname.split("/").slice(0, 6).join("/") :
