@@ -45,16 +45,16 @@ const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot:
 
 const ReorderButtons = ({setItems, items, index, currentIndent}: { setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void), items: Immutable<ParsonsItemDTO>[], index: number, currentIndent?: number | null}) => {
     return <div className="d-flex vertical-center rounded-2">
-        <div className="d-flex flex-column align-items-center">
-            <button type="button" title="Move item up" className="btn btn-blank p-0 m-0 border-0" disabled={index === 0} onClick={() => {
+        <div className="d-flex flex-column align-items-center reorder-buttons">
+            <button type="button" title="Move item up" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === 0} onClick={() => {
                 const newItems = [...items];
                 moveItem(newItems, index, newItems, index-1, currentIndent || 0);
                 setItems(newItems);
             }}>
-                <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled"  :"icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
             </button>
             {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
-            <button type="button" title="Move item down" className="btn btn-blank p-0 m-0 border-0" disabled={index === items.length - 1} onClick={() => {
+            <button type="button" title="Move item down" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === items.length - 1} onClick={() => {
                 const newItems = [...items];
                 moveItem(newItems, index, newItems, index+1, currentIndent || 0);
                 setItems(newItems);
@@ -63,7 +63,7 @@ const ReorderButtons = ({setItems, items, index, currentIndent}: { setItems: Dis
             </button>
         </div>
     </div>;
-}
+};
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
 
@@ -315,7 +315,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                     </Droppable>
                 </Col>
                 <Col md={6} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
-                    <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
+                    <h4 className="mt-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
                             return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
@@ -338,7 +338,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 style={getStyle(provided.draggableProps.style, snapshot)}
                                             >
                                                 <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index} currentIndent={item.indentation} />
-                                                <div className="d-flex w-100 me-3">
+                                                <div className="d-flex w-100 pe-1 me-2 overflow-auto"> {/* FINISH FIXING ME */}
                                                     <pre>
                                                         <Markup trusted-markup-encoding={"html"}>
                                                             {item.value}
