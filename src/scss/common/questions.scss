@@ -404,20 +404,10 @@ figure .inline-container {
       margin: 0.5rem 0;
       background: var(--color-neutral-white, white);
 
-      .controls {
-        &:has(:focus) {
-          button {
-            z-index: 2;
-          }
-        }
-
-        &:not(:has(:focus)) {
-          button {
-            z-index: -999;
-          }
-        }
-
+      .indent-buttons {
         display: flex;
+        align-items: center;
+
         button {
           display: inline-block;
           width: 20px;
@@ -438,14 +428,24 @@ figure .inline-container {
             opacity: 1.0;
           }
         }
+
+        // Use negative z-index rather than `display: none` to hide buttons so they can still be selected using keyboard controls
+        &:not(:has(:focus)) button {
+          z-index: -999;
+        }
+        &:has(:focus) button {
+          z-index: 2;
+        }
       }
 
-      &:hover {
-        .controls {
-          /*position: absolute;
-          right: 0.5rem;
-          top: 0.5rem;
-          display: block;*/
+      &:has(*:focus), &:has(* *:focus) {
+        .indent-buttons button {
+          z-index: 2;
+        }
+      }
+
+      &:hover, &:focus {
+        .indent-buttons button {
           z-index: 2;
         }
       }

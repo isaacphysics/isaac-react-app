@@ -44,24 +44,21 @@ const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot:
 };
 
 const ReorderButtons = ({setItems, items, index, currentIndent}: { setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void), items: Immutable<ParsonsItemDTO>[], index: number, currentIndent?: number | null}) => {
-    return <div className="d-flex vertical-center rounded-2">
-        <div className="d-flex flex-column align-items-center reorder-buttons">
-            <button type="button" title="Move item up" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === 0} onClick={() => {
-                const newItems = [...items];
-                moveItem(newItems, index, newItems, index-1, currentIndent || 0);
-                setItems(newItems);
-            }}>
-                <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
-            </button>
-            {/*<img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />*/}
-            <button type="button" title="Move item down" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === items.length - 1} onClick={() => {
-                const newItems = [...items];
-                moveItem(newItems, index, newItems, index+1, currentIndent || 0);
-                setItems(newItems);
-            }}>
-                <i className={classNames("icon icon-chevron-down", index === items.length - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
-            </button>
-        </div>
+    return <div className="d-flex flex-column align-items-center reorder-buttons">
+        <button type="button" title="Move item up" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === 0} onClick={() => {
+            const newItems = [...items];
+            moveItem(newItems, index, newItems, index-1, currentIndent || 0);
+            setItems(newItems);
+        }}>
+            <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+        </button>
+        <button type="button" title="Move item down" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === items.length - 1} onClick={() => {
+            const newItems = [...items];
+            moveItem(newItems, index, newItems, index+1, currentIndent || 0);
+            setItems(newItems);
+        }}>
+            <i className={classNames("icon icon-chevron-down", index === items.length - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
+        </button>
     </div>;
 };
 
@@ -338,29 +335,31 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 style={getStyle(provided.draggableProps.style, snapshot)}
                                             >
                                                 <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index} currentIndent={item.indentation} />
-                                                <div className="d-flex w-100 pe-1 me-2 overflow-auto"> {/* FINISH FIXING ME */}
+                                                <div className="d-flex w-100 pe-1 me-2 overflow-auto">
                                                     <pre>
                                                         <Markup trusted-markup-encoding={"html"}>
                                                             {item.value}
                                                         </Markup>
                                                     </pre>
-                                                    <Spacer/>
-                                                    {canIndent && <div className="controls align-items-center">
-                                                        <button
-                                                            type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid position-relative`}
-                                                            onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
-                                                            disabled={!canDecreaseIndentation}
-                                                        >
-                                                            <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
-                                                        </button>
-                                                        <button
-                                                            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid position-relative`}
-                                                            onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
-                                                            disabled={!canIncreaseIndentation}
-                                                        >
-                                                            <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
-                                                        </button>
-                                                    </div>}
+                                                    {canIndent && <>
+                                                        <Spacer/>
+                                                        <div className="indent-buttons align-items-center">
+                                                            <button
+                                                                type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid position-relative`}
+                                                                onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
+                                                                disabled={!canDecreaseIndentation}
+                                                            >
+                                                                <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
+                                                            </button>
+                                                            <button
+                                                                type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid position-relative`}
+                                                                onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
+                                                                disabled={!canIncreaseIndentation}
+                                                            >
+                                                                <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
+                                                            </button>
+                                                        </div>
+                                                    </>}
                                                 </div>
                                             </div>;
                                         }}
