@@ -353,7 +353,6 @@ export function QuizContentsComponent(props: QuizProps) {
 
     const sidebarProps: QuizSidebarProps = {
         quiz,
-        viewingAsSomeoneElse,
         totalSections: Object.keys(sections).length,
         currentSection: props.page ? props.page : undefined,
         sectionStates: Object.values(sections).map(section => sectionState(section)),
