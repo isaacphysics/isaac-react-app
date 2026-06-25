@@ -1,6 +1,6 @@
 import React, {RefObject, useContext, useEffect} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
-import {selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector, usePostAnswerMutation} from "../../state";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
 import {selectQuestionPart} from "../../services";
 import { AnvilCookieHandler } from '../handlers/InterstitialCookieHandler';
@@ -67,26 +67,29 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     }).join('&');
 
     const iframeSrc = `${baseURL}#?${queryParams}`;
-
-    const onMessage = function(e: any) {
-        if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) {
-            return;
-        }
-
-        const data = e.data;
-
-        if (iframeRef.current && (data.fn == "newAppHeight")) {
-            (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
-        }
-    };
+    const [postAnswer] = usePostAnswerMutation();
 
     useEffect(() => {
+        const onMessage = function(e: any) {
+            if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) {
+                return;
+            }
+
+            const data = e.data;
+
+            if (iframeRef.current && (data.fn == "newAppHeight")) {
+                (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
+            } else if (doc.appId && e.origin === `https://${doc.appId.toLocaleLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED') {
+                void postAnswer({ hmac: e.data.hmac, payload: e.data.payload });
+            }
+        };
+
         window.addEventListener("message", onMessage);
 
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [onMessage]);
+    }, [postAnswer, doc.appId]);
 
     return <AnvilCookieHandler afterAcceptedElement={
         <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>

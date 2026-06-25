@@ -880,6 +880,11 @@ export interface MisuseStatisticDTO {
     currentCounter: number;
 }
 
+export interface AnvilMarkingRequestDTO {
+    payload: string;
+    hmac: string;
+}
+
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY" | "RESERVATION_ONLY";
