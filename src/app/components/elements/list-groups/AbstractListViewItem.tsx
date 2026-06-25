@@ -89,7 +89,7 @@ const LinkTags = ({linkTags, disabled}: LinkTagProps) => {
 const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl?: string, quizButton?: ReactNode}) => {
     const { previewQuizUrl, quizButton, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
-        {previewQuizUrl && <Button to={previewQuizUrl} color={siteSpecific("keyline", "solid")} tag={Link} className="set-quiz-button-md">
+        {previewQuizUrl && <Button to={previewQuizUrl} color={"keyline"} tag={Link} className="set-quiz-button-md">
             {previewQuizUrl.includes("/preview/") ? "Preview" : "View test"}
         </Button>}
         {quizButton}
@@ -206,7 +206,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isLLM = tags?.includes("llm_question_page");
 
     const flatLayout = style === "flat" && above['lg'](deviceSize);
-    const stackedLayout = style === "stacked" || below["sm"](deviceSize);
+    const stackedLayout = style === "stacked" || (isPhy && below["sm"](deviceSize)) || (isAda && below["xs"](deviceSize));
     const wrapTitleTags = below["xs"](deviceSize);
 
     const cardBody = <>
@@ -273,7 +273,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isItem && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
                         <LinkTags linkTags={typedProps.linkTags}/>
                     </div>}
-                    {isQuiz && stackedLayout && <div className="d-flex d-md-none align-items-center">
+                    {isQuiz && stackedLayout && <div className={classNames("d-flex align-items-center mt-2")}>
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/>
                     </div>}
                 </div>
@@ -297,7 +297,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                         <GameboardAssign board={typedProps.board} />
                     </Col>}
-                    {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                    {isQuiz && <Col md={6} className="d-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
                     {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <div
