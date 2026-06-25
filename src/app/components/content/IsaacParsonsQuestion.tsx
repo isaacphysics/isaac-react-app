@@ -17,7 +17,7 @@ import {
 } from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
-import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import { Markup } from "../elements/markup";
@@ -63,6 +63,105 @@ const ReorderButtons = ({setItems, items, index, currentIndent}: ReorderButtonsP
             <i className={classNames("icon icon-chevron-down", canReorderDown ? "icon-color-muted-hoverable icon-color-theme-on-hover" : "icon-color-disabled")} />
         </button>
     </div>;
+};
+
+interface ParsonsDraggableItemProps {
+    item: Immutable<ParsonsItemDTO>;
+    index: number;
+    inAvailableItems?: boolean;
+    readonly?: boolean;
+    currentAttempt?: any;
+    dispatchSetCurrentAttempt: (attempt: Immutable<ParsonsChoiceDTO | ValidatedChoice<ParsonsChoiceDTO>>) => void
+    setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
+    items: Immutable<ParsonsItemDTO>[];
+    canIndent?: boolean;
+}
+
+const ParsonsDraggableItem = ({item, index, inAvailableItems, readonly, currentAttempt, dispatchSetCurrentAttempt, setItems, items, canIndent}: ParsonsDraggableItemProps) => {
+    const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
+        if (!snapshot.isDropAnimating) return style;
+        
+        return {
+            ...style,
+            // cannot be 0, but make it super tiny
+            transitionDuration: `0.001s`,
+        };
+    };
+    
+    const getPreviousItemIndentation = (index: number) => {
+        if (!currentAttempt?.items) return -1;
+        const items = [...(currentAttempt.items || [])];
+        return items[Math.max(0, index-1)].indentation || 0;
+    };
+
+    const reduceIndentation = (index: number) => {
+        if (!currentAttempt?.items) return;
+
+        const items = [...(currentAttempt.items || [])];
+        if (isDefined(items[index].indentation)) {
+            const indentedItem = {...items[index], indentation: Math.max((items[index].indentation || 0) - 1, 0)};
+            items.splice(index, 1, indentedItem);
+        }
+        dispatchSetCurrentAttempt({...currentAttempt, items});
+    };
+
+    const increaseIndentation = (index: number) => {
+        if (index === 0 || !currentAttempt?.items) return;
+
+        const items = [...(currentAttempt.items || [])];
+        // This condition is insane but of course 0, undefined, and null are all false-y.
+        if (isDefined(items[index].indentation)) {
+            const indentedItem = {...items[index], indentation: Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT))};
+            items.splice(index, 1, indentedItem);
+        }
+        dispatchSetCurrentAttempt({...currentAttempt, items});
+    };
+    
+    const canDecreaseIndentation = canIndent && isDefined(item?.indentation) && item.indentation > 0;
+    const canIncreaseIndentation = canIndent && isDefined(item?.indentation) && index !== 0 && item.indentation <= getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
+    return <Draggable
+        key={item.id}
+        draggableId={`${item.id || index}|parsons-item-${inAvailableItems ? "available" : "choice"}`}
+        index={index}
+        isDragDisabled={readonly}
+    >
+        {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
+            return <div
+                id={`${item.id || index}|parsons-item-${inAvailableItems ? "available" : "choice"}`}
+                className={`parsons-item indent-${item.indentation}`}
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                style={getStyle(provided.draggableProps.style, snapshot)}
+            >
+                <ReorderButtons setItems={setItems} items={items} index={index}/>
+                <pre>
+                    <Markup trusted-markup-encoding={"html"}>
+                        {item.value}
+                    </Markup>
+                </pre>
+                {canIndent && <>
+                    <Spacer/>
+                    <div className="indent-buttons">
+                        <button
+                            type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1`}
+                            onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
+                            disabled={!canDecreaseIndentation}
+                        >
+                            <i className="icon icon-chevron-left icon-color-white" />
+                        </button>
+                        <button
+                            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} me-2`}
+                            onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
+                            disabled={!canIncreaseIndentation}
+                        >
+                            <i className="icon icon-chevron-right icon-color-white" />
+                        </button>
+                    </div>
+                </>}
+            </div>;
+        }}
+    </Draggable>;
 };
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
@@ -189,45 +288,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         }
     };
 
-    const getPreviousItemIndentation = (index: number) => {
-        if (!currentAttempt?.items) return -1;
-        const items = [...(currentAttempt.items || [])];
-        return items[Math.max(0, index-1)].indentation || 0;
-    };
-
-    const reduceIndentation = (index: number) => {
-        if (!currentAttempt?.items || doc.disableIndentation) return;
-
-        const items = [...(currentAttempt.items || [])];
-        if (isDefined(items[index].indentation)) {
-            const indentedItem = {...items[index], indentation: Math.max((items[index].indentation || 0) - 1, 0)};
-            items.splice(index, 1, indentedItem);
-        }
-        dispatchSetCurrentAttempt({...currentAttempt, items});
-    };
-
-    const increaseIndentation = (index: number) => {
-        if (index === 0 || !currentAttempt?.items || doc.disableIndentation) return;
-
-        const items = [...(currentAttempt.items || [])];
-        // This condition is insane but of course 0, undefined, and null are all false-y.
-        if (isDefined(items[index].indentation)) {
-            const indentedItem = {...items[index], indentation: Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT))};
-            items.splice(index, 1, indentedItem);
-        }
-        dispatchSetCurrentAttempt({...currentAttempt, items});
-    };
-    
-    const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
-        if (!snapshot.isDropAnimating) return style;
-        
-        return {
-            ...style,
-            // cannot be 0, but make it super tiny
-            transitionDuration: `0.001s`,
-        };
-    };
-
     useEffect(() => {
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('touchmove', onMouseMove);
@@ -291,32 +351,12 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
-                                {availableItems && availableItems.map((item, index) => {
-                                    return <Draggable
-                                        key={item.id}
-                                        draggableId={`${item.id || index}|parsons-item-available`}
-                                        index={index}
-                                        isDragDisabled={readonly}
-                                    >
-                                        {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                                            return <div
-                                                id={`${item.id || index}|parsons-item-available`}
-                                                className={`parsons-item indent-${item.indentation}`}
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getStyle(provided.draggableProps.style, snapshot)}
-                                            >
-                                                <ReorderButtons setItems={setAvailableItems} items={availableItems} index={index}/>
-                                                <pre>
-                                                    <Markup trusted-markup-encoding={"html"}>
-                                                        {item.value}
-                                                    </Markup>
-                                                </pre>
-                                            </div>;
-                                        }}
-                                    </Draggable>;
-                                })}
+                                {availableItems && availableItems.map((item, index) => 
+                                    <ParsonsDraggableItem key={item.id} item={item} index={index} inAvailableItems readonly={readonly}
+                                        setItems={setAvailableItems} items={availableItems} 
+                                        currentAttempt={currentAttempt} dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
+                                    />
+                                )}
                                 {(!availableItems || availableItems.length === 0) && <div>&nbsp;</div>}
                                 {provided.placeholder}
                             </div>;
@@ -328,55 +368,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
                             return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
-                                {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => {
-                                    const canDecreaseIndentation = canIndent && isDefined(item?.indentation) && item.indentation > 0;
-                                    const canIncreaseIndentation = canIndent && isDefined(item?.indentation) && index !== 0 && item.indentation <= getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
-                                    return <Draggable
-                                        key={item.id}
-                                        draggableId={`${item.id || index}|parsons-item-choice`}
-                                        index={index}
-                                        isDragDisabled={readonly}
-                                    >
-                                        {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => { 
-                                            return <div
-                                                id={`${item.id || index}|parsons-item-choice`}
-                                                className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getStyle(provided.draggableProps.style, snapshot)}
-                                            >
-                                                <ReorderButtons setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} index={index} currentIndent={item.indentation} />
-                                                <div className="d-flex w-100 pe-1 me-2 overflow-auto">
-                                                    <pre>
-                                                        <Markup trusted-markup-encoding={"html"}>
-                                                            {item.value}
-                                                        </Markup>
-                                                    </pre>
-                                                    {canIndent && <>
-                                                        <Spacer/>
-                                                        <div className="indent-buttons">
-                                                            <button
-                                                                type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1`}
-                                                                onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
-                                                                disabled={!canDecreaseIndentation}
-                                                            >
-                                                                <i className="icon icon-chevron-left icon-color-white" />
-                                                            </button>
-                                                            <button
-                                                                type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'}`}
-                                                                onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
-                                                                disabled={!canIncreaseIndentation}
-                                                            >
-                                                                <i className="icon icon-chevron-right icon-color-white" />
-                                                            </button>
-                                                        </div>
-                                                    </>}
-                                                </div>
-                                            </div>;
-                                        }}
-                                    </Draggable>;
-                                })}
+                                {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => 
+                                    <ParsonsDraggableItem key={item.id} item={item} index={index} inAvailableItems readonly={readonly}
+                                        setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
+                                        items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} canIndent={canIndent}
+                                        currentAttempt={currentAttempt} dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
+                                    />
+                                )}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
                                     <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
