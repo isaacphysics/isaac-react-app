@@ -64,7 +64,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                         }));
                     }
                 },
-                errorTitle: `Error creating ${siteSpecific("question deck", "quiz")}`
+                errorTitle: `Error creating ${siteSpecific("deck", "quiz")}`
             }),
             invalidatesTags: ["AllGameboards"],
         }),
@@ -88,7 +88,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 };
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Error creating temporary ${siteSpecific("question deck", "quiz")}`
+                errorTitle: `Error creating temporary ${siteSpecific("deck", "quiz")}`
             })
         }),
 
@@ -109,7 +109,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 url: `gameboards/user_gameboards/${encodeURIComponent(boardId)}`,
                 method: "POST"
             }),
-            invalidatesTags: ["AllGameboards"],
+            invalidatesTags: (_, error, boardId) => !error ? ["AllGameboards", {type: "Gameboard", id: boardId} as const] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: `Linking the ${siteSpecific("question deck", "quiz")} to your account failed`
             })
@@ -122,9 +122,9 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: `${siteSpecific("Question deck", "Quiz")} deleted`,
-                successMessage: `You have successfully unlinked your account from this ${siteSpecific("question deck", "quiz")}.`,
-                errorTitle: `${siteSpecific("Question deck", "Quiz")} deletion failed`
+                successTitle: `${siteSpecific("Deck", "Quiz")} removed`,
+                successMessage: siteSpecific("The deck has been removed from your saved decks.", "You have successfully unlinked your account from this quiz."),
+                errorTitle: `${siteSpecific("Deck", "Quiz")} removal failed`
             })
         }),
     })

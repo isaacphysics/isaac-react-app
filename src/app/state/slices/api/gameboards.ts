@@ -1,7 +1,7 @@
 import {
     getValue,
-    isAdminOrEventManager,
     isDefined,
+    isStudent,
     isTutorOrAbove,
     Item,
     KEY,
@@ -139,7 +139,7 @@ export const assignGameboard = createAsyncThunk(
 
 export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: string, boardTitle?: string}>(
     "gameboards/deleteBoard",
-    async ({boardId, boardTitle}: {boardId?: string, boardTitle?: string}, {getState, dispatch, rejectWithValue}) => {
+    async ({boardId, boardTitle: _}: {boardId?: string, boardTitle?: string}, {getState, dispatch, rejectWithValue}) => {
         if (!isDefined(boardId)) {
             // This really shouldn't happen!
             dispatch(showErrorToast(
@@ -149,27 +149,18 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
             return rejectWithValue(null);
         }
         try {
+            const reduxState = getState() as AppState;
+
+            // no need to check for assignments for students; just unlink immediately
+            if (reduxState && reduxState.user && isStudent(reduxState.user)) {
+                const deleteResponse = await dispatch(gameboardApi.endpoints.unlinkUserFromGameboard.initiate(boardId));
+                return mutationSucceeded(deleteResponse) ? boardId : rejectWithValue(null);
+            }
+
             const getAssignments = dispatch(assignmentsApi.endpoints.getMySetAssignments.initiate(undefined));
             const response = await getAssignments;
             getAssignments.unsubscribe();
             if (response.isSuccess) {
-                const assignmentsByMe = response.data;
-                const reduxState = getState() as AppState;
-                // Check if there are any assignments that use this gameboard...
-                const hasAssignedGroups = (assignmentsByMe?.filter(a => a.gameboardId === boardId) ?? []).length > 0;
-                if (hasAssignedGroups) {
-                    if (reduxState && reduxState.user && reduxState.user.loggedIn && isAdminOrEventManager(reduxState.user)) {
-                        if (!confirm(`Warning: You currently have groups assigned to ${boardTitle}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Quizzes")} page.`)) {
-                            return rejectWithValue(null);
-                        }
-                    } else {
-                        dispatch(showErrorToast(
-                            `${siteSpecific("Question deck", "Quiz")} deletion not allowed`,
-                            `You have groups assigned to ${boardTitle}. To delete this ${siteSpecific("question deck", "quiz")}, you must unassign all groups.`
-                        ) as any);
-                        return rejectWithValue(null);
-                    }
-                }
                 const deleteResponse = await dispatch(gameboardApi.endpoints.unlinkUserFromGameboard.initiate(boardId));
                 return mutationSucceeded(deleteResponse) ? boardId : rejectWithValue(null);
             } else {
@@ -223,9 +214,10 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                     void navigateComponentless(`${PATHS.MY_GAMEBOARDS}#${boardId}`);
                 }
             }
+            dispatch(showSuccessToast("Deck saved", `The deck '${boardTitle}' has successfully been saved to your account.`) as any);
             return {boardId, boardTitle};
         } catch (e) {
-            dispatch(showRTKQueryErrorToastIfNeeded("Error saving gameboard", e) as any);
+            dispatch(showRTKQueryErrorToastIfNeeded("Error saving question deck", e) as any);
             return rejectWithValue(null);
         }
     }

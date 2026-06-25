@@ -78,16 +78,18 @@ const CSTable = (props: GameboardsTableProps) => {
         </SortItemHeader>
         {siteSpecific(
             <>
-                <th className="text-center align-middle">Delete</th>
+                <th className="text-center align-middle">
+                    {boardView === BoardViews.card ? "Unsave" : "Manage"}
+                </th>
             </>,
             <>
                 <th>Share</th>
                 <th>
                     {selectedBoards.length
                         ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                            Delete ({selectedBoards.length})
+                            Unsave ({selectedBoards.length})
                         </Button>
-                        : "Delete"
+                        : "Unsave"
                     }
                 </th>
             </>
@@ -115,6 +117,7 @@ const CSTable = (props: GameboardsTableProps) => {
                             boardView={boardView}
                             user={user}
                             boards={boards}
+                            displayAssignmentInfo={false}
                         />)
                     }
                 </tbody>
@@ -144,6 +147,7 @@ const Cards = (props: GameboardsCardsProps) => {
                     boardView={boardView}
                     user={user}
                     boards={boards}
+                    displayAssignmentInfo={false}
                 />
             </Col>)}
         </Row>}
