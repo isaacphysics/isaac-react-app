@@ -33,31 +33,34 @@ const moveItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: numbe
     dst.splice(toIndex, 0, {...srcItem, indentation: indent});
 };
 
-const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
-    if (!snapshot.isDropAnimating) return style;
-    
-    return {
-        ...style,
-        // cannot be 0, but make it super tiny
-        transitionDuration: `0.001s`,
-    };
-};
+interface ReorderButtonsProps {
+    setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
+    items: Immutable<ParsonsItemDTO>[];
+    index: number;
+    currentIndent?: number | null;
+}
 
-const ReorderButtons = ({setItems, items, index, currentIndent}: { setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void), items: Immutable<ParsonsItemDTO>[], index: number, currentIndent?: number | null}) => {
-    return <div className="d-flex flex-column align-items-center reorder-buttons">
-        <button type="button" title="Move item up" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === 0} onClick={() => {
-            const newItems = [...items];
-            moveItem(newItems, index, newItems, index-1, currentIndent || 0);
-            setItems(newItems);
-        }}>
-            <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+const ReorderButtons = ({setItems, items, index, currentIndent}: ReorderButtonsProps) => {
+    const canReorderUp = index !== 0;
+    const canReorderDown = index !== items.length - 1;
+    return <div className="reorder-buttons">
+        <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderUp})}
+            disabled={!canReorderUp} title="Move item up" onClick={() => {
+                const newItems = [...items];
+                moveItem(newItems, index, newItems, index-1, currentIndent || 0);
+                setItems(newItems);
+            }}
+        >
+            <i className={classNames("icon icon-chevron-up", canReorderUp ? "icon-color-muted-hoverable icon-color-theme-on-hover" : "icon-color-disabled")} />
         </button>
-        <button type="button" title="Move item down" className="d-grid justify-content-center btn btn-blank py-1 px-0 m-0 border-0" disabled={index === items.length - 1} onClick={() => {
-            const newItems = [...items];
-            moveItem(newItems, index, newItems, index+1, currentIndent || 0);
-            setItems(newItems);
-        }}>
-            <i className={classNames("icon icon-chevron-down", index === items.length - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover")} />
+        <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderDown})}
+            disabled={!canReorderDown} title="Move item down" onClick={() => {
+                const newItems = [...items];
+                moveItem(newItems, index, newItems, index+1, currentIndent || 0);
+                setItems(newItems);
+            }}
+        >
+            <i className={classNames("icon icon-chevron-down", canReorderDown ? "icon-color-muted-hoverable icon-color-theme-on-hover" : "icon-color-disabled")} />
         </button>
     </div>;
 };
@@ -108,7 +111,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             const matches = className.match(/indent-([0-3])/);
             const localCurrentIndent: number = currentIndent || (matches && parseInt(matches[1])) || 0;
             let newIndent = currentIndent;
-            console.log("currentIndent", currentIndent, "localCurrentIndent", localCurrentIndent, "currentMaxIndent", currentMaxIndent, "canIndent", canIndent);
             if (canIndent) {
                 if (e.key === '[' || e.code === 'BracketLeft') {
                     newIndent = Math.max(localCurrentIndent - 1, 0);
@@ -215,6 +217,16 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         }
         dispatchSetCurrentAttempt({...currentAttempt, items});
     };
+    
+    const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
+        if (!snapshot.isDropAnimating) return style;
+        
+        return {
+            ...style,
+            // cannot be 0, but make it super tiny
+            transitionDuration: `0.001s`,
+        };
+    };
 
     useEffect(() => {
         window.addEventListener('mousemove', onMouseMove);
@@ -289,7 +301,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                             return <div
                                                 id={`${item.id || index}|parsons-item-available`}
-                                                className={`parsons-item indent-${item.indentation} d-flex align-items-center`}
+                                                className={`parsons-item indent-${item.indentation}`}
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
@@ -343,20 +355,20 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                     </pre>
                                                     {canIndent && <>
                                                         <Spacer/>
-                                                        <div className="indent-buttons align-items-center">
+                                                        <div className="indent-buttons">
                                                             <button
-                                                                type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1 d-grid position-relative`}
+                                                                type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1`}
                                                                 onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
                                                                 disabled={!canDecreaseIndentation}
                                                             >
-                                                                <i className="icon icon-chevron-left icon-color-white justify-self-center align-self-center" />
+                                                                <i className="icon icon-chevron-left icon-color-white" />
                                                             </button>
                                                             <button
-                                                                type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} d-grid position-relative`}
+                                                                type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'}`}
                                                                 onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
                                                                 disabled={!canIncreaseIndentation}
                                                             >
-                                                                <i className="icon icon-chevron-right icon-color-white justify-self-center align-self-center" />
+                                                                <i className="icon icon-chevron-right icon-color-white" />
                                                             </button>
                                                         </div>
                                                     </>}
