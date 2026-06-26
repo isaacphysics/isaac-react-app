@@ -2,42 +2,17 @@ import React, {useEffect, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacReorderQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {Col, Row} from "reactstrap";
-import {DragDropContext, Draggable, Droppable, DropResult} from "@hello-pangea/dnd";
+import {DragDropContext, Droppable, DropResult} from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
 import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
-import {Markup} from "../elements/markup";
 import {Immutable} from "immer";
-
-const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: Immutable<ItemDTO>; index: number; inAvailableItems?: boolean; readonly?: boolean}) => {
-    return <Draggable
-        key={item.id}
-        draggableId={`${item.id || index}|reorder-item-choice`}
-        index={index}
-        isDragDisabled={readonly}
-    >
-        {(provided) => {
-            return <div
-                id={`${item.id || index}|reorder-item-${inAvailableItems ? "available" : "choice"}`}
-                className={`reorder-item`}
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                style={provided.draggableProps.style}
-            >
-                <Markup trusted-markup-encoding={"html"}>
-                    {item?.value ?? ""}
-                </Markup>
-            </div>;
-        }}
-    </Draggable>;
-};
+import { ParsonsDraggableItem } from "./IsaacParsonsQuestion";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
 
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
-
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
 
     const moveItem = (src: Immutable<ItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ItemDTO>[] | undefined, toIndex: number) => {
@@ -139,7 +114,8 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                 className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {availableItems && availableItems.map((item, index) =>
-                                    <ReorderDraggableItem key={item.id} item={item} index={index} inAvailableItems readonly={readonly}/>)}
+                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
+                                        setItems={setAvailableItems} items={availableItems}/>)}
                                 {(!availableItems || availableItems.length === 0)
                                     ? <div>&nbsp;</div>
                                     : provided.placeholder}
@@ -155,7 +131,9 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                 className={classNames("parsons-items", {"empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) =>
-                                    <ReorderDraggableItem key={item.id} item={item} index={index} readonly={readonly}/>)}
+                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
+                                        setItems={(items: Immutable<ItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
+                                        items={(currentAttempt?.items || []) as Immutable<ItemDTO>[]}/>)}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0)
                                     ? <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}

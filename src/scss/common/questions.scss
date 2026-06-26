@@ -363,17 +363,6 @@ figure .inline-container {
       }
     }
 
-    .reorder-item {
-      > * {
-        overflow-x: auto;
-        margin: 0.5rem 0;
-        padding: 0.5em 1em;
-        cursor: grab;
-        background: var(--color-neutral-white, white);
-        border: solid 1px $gray-136;
-      }
-    }
-
     // REMINDER: If you change the PARSONS_MAX_INDENT and PARSONS_INDENT_STEP
     // constants, you also have to change these two in here.
     $parsons-max-indent: 3;
@@ -383,35 +372,6 @@ figure .inline-container {
       @for $i from 0 through $parsons-max-indent {
         &.indent-#{$i} {
           margin-left: #{$i * $parsons-step}px;
-        }
-      }
-
-      display: flex;
-      align-items: center;
-      position: relative;
-      border: solid 1px $gray-136;
-      margin: 0.5rem 0;
-      background: var(--color-neutral-white, white);
-
-      pre {
-        margin: 0.25em 0.5em;
-        padding: 0.25em 0;
-        border: none;
-        background: none;
-      }
-
-      .reorder-buttons {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        button {
-          display: grid;
-          justify-content: center;
-
-          &.disabled {
-            opacity: 0.5;
-          }
         }
       }
 
@@ -450,6 +410,33 @@ figure .inline-container {
         }
         &:has(:focus) button {
           z-index: 2;
+        }
+      }
+    }
+    
+    .parsons-item, .reorder-item {
+      display: flex;
+      align-items: center;
+      position: relative;
+      border: solid 1px $gray-136;
+      margin: 0.5rem 0;
+      background: var(--color-neutral-white, white);
+
+      pre {
+        margin: 0.25em 0.5em;
+        padding: 0.25em 0;
+        border: none;
+        background: none;
+      }
+
+      .reorder-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        button {
+          display: grid;
+          justify-content: center;
         }
       }
 

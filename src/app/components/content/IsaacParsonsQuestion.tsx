@@ -130,10 +130,11 @@ interface ParsonsDraggableItemProps {
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
     canIndent?: boolean;
     inAvailableItems?: boolean;
+    isParsons?: boolean;
     readonly?: boolean;
 }
 
-const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIndent, inAvailableItems, readonly}: ParsonsDraggableItemProps) => {
+export const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIndent, inAvailableItems, isParsons, readonly}: ParsonsDraggableItemProps) => {
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
         if (!snapshot.isDropAnimating) return style;
         
@@ -143,21 +144,22 @@ const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIndent, i
             transitionDuration: `0.001s`,
         };
     };
-    
+
+    const itemType = `${isParsons ? "parsons" : "reorder"}-item`;
     return <Draggable
         key={currentItem.id}
-        draggableId={`${currentItem.id || index}|parsons-item-${inAvailableItems ? "available" : "choice"}`}
+        draggableId={`${currentItem.id || index}|${itemType}-${inAvailableItems ? "available" : "choice"}`}
         index={index}
         isDragDisabled={readonly}
     >
         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
             return <div
-                id={`${currentItem.id || index}|parsons-item-${inAvailableItems ? "available" : "choice"}`}
-                className={`parsons-item indent-${currentItem.indentation}`}
+                id={`${currentItem.id || index}|${itemType}-${inAvailableItems ? "available" : "choice"}`}
+                className={`${itemType} indent-${currentItem.indentation}`}
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-                style={getStyle(provided.draggableProps.style, snapshot)}
+                style={isParsons ? getStyle(provided.draggableProps.style, snapshot) : provided.draggableProps.style}
             >
                 <ReorderButtons index={index} items={items} setItems={setItems} currentIndent={currentItem.indentation}/>
                 <pre>
@@ -363,7 +365,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
                                 {availableItems && availableItems.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
-                                        setItems={setAvailableItems} items={availableItems}/>
+                                        setItems={setAvailableItems} items={availableItems} isParsons/>
                                 )}
                                 {(!availableItems || availableItems.length === 0) && <div>&nbsp;</div>}
                                 {provided.placeholder}
@@ -379,7 +381,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
                                         setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
-                                        items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} canIndent={canIndent}/>
+                                        items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} canIndent={canIndent} isParsons/>
                                 )}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
                                     <div className="text-muted text-center">
