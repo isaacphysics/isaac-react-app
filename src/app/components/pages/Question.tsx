@@ -26,23 +26,23 @@ import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
-import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
+import {IntendedAudienceWarningBanner} from "../elements/banners/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
-import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
-import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
+import { RevisionWarningBanner } from "../elements/banners/RevisionWarningBanner";
+import { LLMFreeTextQuestionInfoBanner } from "../elements/banners/LLMFreeTextQuestionInfoBanner";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
-import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
+import { InaccessibleContentWarningBanner } from "../elements/banners/InaccessibleContentWarningBanner";
 import { QuestionMetaData } from "../elements/QuestionMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
-import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../navigation/AssignedQuestionWarningBanner";
+import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../elements/banners/AssignedQuestionWarningBanner";
 
 interface QuestionPageProps{
     questionIdOverride?: string;

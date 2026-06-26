@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, Container} from 'reactstrap';
 import {Link} from "react-router-dom";
-import {isPhy} from "../../services";
+import {isPhy} from "../../../services";
 
 export const BetaSiteBanner = () => {
 

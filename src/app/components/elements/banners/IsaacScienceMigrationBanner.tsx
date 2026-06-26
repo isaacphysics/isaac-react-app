@@ -1,6 +1,6 @@
 import React from "react";
 import {Alert, Container} from "reactstrap";
-import {isPhy} from "../../services";
+import {isPhy} from "../../../services";
 
 export const IsaacScienceMigrationBanner = () => {
     return isPhy ? <Alert color="danger" className="mb-0 border-radius-0 mx-0 no-print" fade={false}>

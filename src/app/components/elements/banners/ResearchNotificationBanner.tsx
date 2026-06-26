@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import Cookies from 'js-cookie';
-import {logAction, useAppDispatch} from "../../state";
-import {isAda, siteSpecific} from "../../services";
+import {logAction, useAppDispatch} from "../../../state";
+import {isAda, siteSpecific} from "../../../services";
 import { Container, Row, Col, Button } from 'reactstrap';
 
 const RESEARCH_NOTIFICATION_COOKIE = "researchNotificationDismissed";

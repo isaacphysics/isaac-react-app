@@ -1,7 +1,7 @@
 import React from "react";
 import { DismissibleBanner } from "./DismissibleBanner";
-import { isAda, isLoggedIn, isTeacherOrAbove } from "../../services";
-import { selectors, useAppSelector } from "../../state";
+import { isAda, isLoggedIn, isTeacherOrAbove } from "../../../services";
+import { selectors, useAppSelector } from "../../../state";
 
 export const NewAdaNavigationBanner = () => {
     const user = useAppSelector(selectors.user.orNull);

@@ -16,7 +16,7 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
-import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
+import { IntendedAudienceWarningBanner } from "../elements/banners/IntendedAudienceWarningBanner";
 
 export const Topic = () => {
     const user = useAppSelector(selectors.user.orNull);

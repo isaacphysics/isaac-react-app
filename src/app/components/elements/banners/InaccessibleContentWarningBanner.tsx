@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert } from 'reactstrap';
-import { ACCESSIBILITY_WARNINGS } from '../../services/accessibility';
-import { isAda } from '../../services';
+import { ACCESSIBILITY_WARNINGS } from '../../../services/accessibility';
+import { isAda } from '../../../services';
 
 export const InaccessibleContentWarningBanner = ({type}: {type: keyof typeof ACCESSIBILITY_WARNINGS}) => {
     return <Alert color="warning" className="d-flex no-print my-2 align-items-center">

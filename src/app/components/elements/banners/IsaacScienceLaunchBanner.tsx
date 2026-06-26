@@ -1,7 +1,7 @@
 import React from "react";
 import { DismissibleBanner } from "./DismissibleBanner";
 import { Link } from "react-router-dom";
-import { isPhy } from "../../services";
+import { isPhy } from "../../../services";
 
 export const IsaacScienceLaunchBanner = () => {
     return isPhy && <DismissibleBanner cookieName="isaacScienceLaunchBannerDismissed" theme="info">

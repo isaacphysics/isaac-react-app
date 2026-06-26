@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {siteSpecific} from "../../services";
+import {siteSpecific} from "../../../services";
 import { Alert } from 'reactstrap';
 
 export const QuestionFinderBanner = () => {

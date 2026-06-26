@@ -3,10 +3,10 @@ import {
     selectors,
     useAppSelector,
     useRequestEmailVerificationMutation
-} from "../../state";
+} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from 'reactstrap';
-import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../services";
+import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../../services";
 
 export const EmailVerificationBanner = () => {
     const [hidden, setHidden] = useState(false);

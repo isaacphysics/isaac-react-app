@@ -1,11 +1,11 @@
 import React from "react";
-import { AssignmentDTO, QuestionDTO } from "../../../IsaacApiTypes";
-import { extractTeacherName, getAssignmentsToDo, isDefined } from "../../services";
+import { AssignmentDTO, QuestionDTO } from "../../../../IsaacApiTypes";
+import { extractTeacherName, getAssignmentsToDo, isDefined } from "../../../services";
 import { Alert } from "reactstrap";
 import { Link } from "react-router";
-import { useGetMyAssignmentsQuery } from "../../state";
+import { useGetMyAssignmentsQuery } from "../../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { FeatureFlag, useFeatureFlag } from "../../services/featureFlag";
+import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 
 interface AccessingAssignedQuestionOutsideAssignmentWarningProps {
     question?: QuestionDTO;
