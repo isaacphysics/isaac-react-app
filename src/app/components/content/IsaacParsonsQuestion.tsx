@@ -17,7 +17,7 @@ import {
 } from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
-import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import { Markup } from "../elements/markup";
@@ -27,7 +27,7 @@ import { Spacer } from "../elements/Spacer";
 const PARSONS_MAX_INDENT = 3;
 const PARSONS_INDENT_STEP = 45;
 
-const moveItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ParsonsItemDTO>[] | undefined, toIndex: number, indent: number) => {
+export const moveParsonsItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ParsonsItemDTO>[] | undefined, toIndex: number, indent?: number) => {
     if (!src || !dst) return;
     const srcItem = src.splice(fromIndex, 1)[0];
     dst.splice(toIndex, 0, {...srcItem, indentation: indent});
@@ -37,17 +37,18 @@ interface ReorderButtonsProps {
     index: number;
     items: Immutable<ParsonsItemDTO>[];
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
+    canIndent?: boolean;
     currentIndent?: number | null;
 }
 
-const ReorderButtons = ({index, items, setItems, currentIndent}: ReorderButtonsProps) => {
+const ReorderButtons = ({index, items, setItems, canIndent, currentIndent}: ReorderButtonsProps) => {
     const canReorderUp = index !== 0;
     const canReorderDown = index !== items.length - 1;
     return <div className="reorder-buttons">
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderUp})}
             disabled={!canReorderUp} title="Move item up" onClick={() => {
                 const newItems = [...items];
-                moveItem(newItems, index, newItems, index-1, currentIndent || 0);
+                moveParsonsItem(newItems, index, newItems, index-1, canIndent ? currentIndent || 0 : undefined);
                 setItems(newItems);
             }}
         >
@@ -56,7 +57,7 @@ const ReorderButtons = ({index, items, setItems, currentIndent}: ReorderButtonsP
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderDown})}
             disabled={!canReorderDown} title="Move item down" onClick={() => {
                 const newItems = [...items];
-                moveItem(newItems, index, newItems, index+1, currentIndent || 0);
+                moveParsonsItem(newItems, index, newItems, index+1, canIndent ? currentIndent || 0 : undefined);
                 setItems(newItems);
             }}
         >
@@ -160,7 +161,7 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIn
                 {...provided.dragHandleProps}
                 style={isParsons ? getStyle(provided.draggableProps.style, snapshot) : provided.draggableProps.style}
             >
-                <ReorderButtons index={index} items={items} setItems={setItems} currentIndent={currentItem.indentation}/>
+                <ReorderButtons index={index} items={items} setItems={setItems} canIndent={canIndent} currentIndent={currentItem.indentation}/>
                 <pre>
                     <Markup trusted-markup-encoding={"html"}>
                         {currentItem.value}
@@ -175,13 +176,14 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIn
     </Draggable>;
 };
 
-const handleParsonsItemMove = (
+export const handleParsonsItemMove = (
     result: DropResult,
-    currentIndent: number | null,
     availableItems: Immutable<ParsonsItemDTO>[],
     setAvailableItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>>,
     attemptItems: Immutable<ParsonsItemDTO>[],
-    setAttemptItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void)
+    setAttemptItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void),
+    canIndent?: boolean,
+    currentIndent?: number | null
 ) => {
     if (!result.source || !result.destination) {
         return;
@@ -189,25 +191,25 @@ const handleParsonsItemMove = (
     if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'answerItems' && attemptItems) {
         // Reorder currentAttempt
         const items = [...attemptItems];
-        moveItem(items, result.source.index, items, result.destination.index, currentIndent || 0);
+        moveParsonsItem(items, result.source.index, items, result.destination.index, canIndent ? (currentIndent || 0) : undefined);
         setAttemptItems(items);
     } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
         // Reorder availableItems
         const items = [...availableItems];
-        moveItem(items, result.source.index, items, result.destination.index, 0);
+        moveParsonsItem(items, result.source.index, items, result.destination.index, canIndent ? 0 : undefined);
         setAvailableItems(items);
     } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems') {
         // Move from availableItems to currentAttempt
         const srcItems = [...availableItems];
         const dstItems = [...attemptItems];
-        moveItem(srcItems, result.source.index, dstItems, result.destination.index, currentIndent || 0);
+        moveParsonsItem(srcItems, result.source.index, dstItems, result.destination.index, canIndent ? (currentIndent || 0) : undefined);
         setAttemptItems(dstItems);
         setAvailableItems(srcItems);
     } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && attemptItems) {
         // Move from currentAttempt to availableItems
         const srcItems = [...attemptItems];
         const dstItems = [...availableItems];
-        moveItem(srcItems, result.source.index, dstItems, result.destination.index, 0);
+        moveParsonsItem(srcItems, result.source.index, dstItems, result.destination.index, canIndent ? 0 : undefined);
         setAttemptItems(srcItems);
         setAvailableItems(dstItems);
     } else {
@@ -216,17 +218,8 @@ const handleParsonsItemMove = (
 };
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
-
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
-
-    const [ availableItems, setAvailableItems ] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
-    const [ draggedElement, setDraggedElement ] = useState<HTMLElement | null>(null);
-    const [ initialX, setInitialX ] = useState<number | null>(null);
-    const [ currentIndent, setCurrentIndent ] = useState<number | null>(null);
-    const [ currentMaxIndent, setCurrentMaxIndent ] = useState<number>(0);
-    const [ currentDestinationIndex, setCurrentDestinationIndex ] = useState<number | null>(null);
-
-    const canIndent = (!isDefined(doc.disableIndentation) || !doc.disableIndentation) && !readonly;
+    const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
+    const [availableItems, setAvailableItems] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
     const attemptItems = (currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[];
     const setAttemptItems = (items: Immutable<ParsonsItemDTO>[]) => {
         if (currentAttempt) {
@@ -235,6 +228,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             dispatchSetCurrentAttempt({type: "parsonsChoice", items});
         }
     };
+
+    const [draggedElement, setDraggedElement] = useState<HTMLElement | null>(null);
+    const [initialX, setInitialX] = useState<number | null>(null);
+    const [currentIndent, setCurrentIndent] = useState<number | null>(null);
+    const [currentMaxIndent, setCurrentMaxIndent] = useState<number>(0);
+    const [currentDestinationIndex, setCurrentDestinationIndex] = useState<number | null>(null);
+    const canIndent = (!isDefined(doc.disableIndentation) || !doc.disableIndentation) && !readonly;
 
     // WARNING: There's a limit to how far to the right we can drag an element, presumably due to @hello-pangea/dnd
     const onMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
@@ -301,7 +301,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     };
 
     const onDragEnd = (result: DropResult) => {
-        handleParsonsItemMove(result, currentIndent, availableItems, setAvailableItems, attemptItems, setAttemptItems);
+        handleParsonsItemMove(result, availableItems, setAvailableItems, attemptItems, setAttemptItems, canIndent, currentIndent);
         setDraggedElement(null);
         setInitialX(null);
         setCurrentIndent(null);

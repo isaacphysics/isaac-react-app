@@ -8,50 +8,22 @@ import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import { ParsonsDraggableItem } from "./IsaacParsonsQuestion";
+import { handleParsonsItemMove, ParsonsDraggableItem } from "./IsaacParsonsQuestion";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
-
-    const moveItem = (src: Immutable<ItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ItemDTO>[] | undefined, toIndex: number) => {
-        if (!src || !dst) return;
-        const srcItem = src.splice(fromIndex, 1)[0];
-        dst.splice(toIndex, 0, srcItem);
+    const attemptItems = (currentAttempt?.items || []) as Immutable<ItemChoiceDTO>[];
+    const setAttemptItems = (items: Immutable<ItemChoiceDTO>[]) => {
+        if (currentAttempt) {
+            dispatchSetCurrentAttempt({...currentAttempt, items});
+        } else {
+            dispatchSetCurrentAttempt({type: "itemChoice", items});
+        }
     };
 
     const onDragEnd = (result: DropResult) => {
-        if (!result.source || !result.destination) {
-            return;
-        }
-        if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'answerItems' && currentAttempt) {
-            // Reorder currentAttempt
-            const items = [...(currentAttempt?.items || [])];
-            moveItem(items, result.source.index, items, result.destination.index);
-            dispatchSetCurrentAttempt({...currentAttempt, items});
-        } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
-            // Reorder availableItems
-            const items = [...availableItems];
-            moveItem(items, result.source.index, items, result.destination.index);
-            setAvailableItems(items);
-        } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems') {
-            // Move from availableItems to currentAttempt
-            const srcItems = [...availableItems];
-            const dstItems = [...(currentAttempt?.items || [])];
-            moveItem(srcItems, result.source.index, dstItems, result.destination.index);
-            // We can't guarantee that `currentAttempt` is defined, so we have to explicitly state `type: "itemChoice"` here.
-            dispatchSetCurrentAttempt({type: "itemChoice", items: dstItems});
-            setAvailableItems(srcItems);
-        } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && currentAttempt) {
-            // Move from currentAttempt to availableItems
-            const srcItems = [...(currentAttempt?.items || [])];
-            const dstItems = [...availableItems];
-            moveItem(srcItems, result.source.index, dstItems, result.destination.index);
-            dispatchSetCurrentAttempt({...currentAttempt, items: srcItems});
-            setAvailableItems(dstItems);
-        } else {
-            console.error("Not sure how we got here...");
-        }
+        handleParsonsItemMove(result, availableItems, setAvailableItems, attemptItems, setAttemptItems);
     };
 
     const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ItemChoiceDTO>, newAvailableItems?: Immutable<ItemDTO>[]) => {
