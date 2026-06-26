@@ -6,7 +6,7 @@ import {RenderNothing} from "../RenderNothing";
 import { Link } from "react-router-dom";
 import { Alert } from "reactstrap";
 
-export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
+export function IntendedAudienceWarningAlert({doc}: {doc: ContentBaseDTO}) {
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 

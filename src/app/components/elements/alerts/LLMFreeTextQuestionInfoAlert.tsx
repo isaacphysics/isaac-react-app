@@ -112,7 +112,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
     </>;
 }
 
-export function LLMFreeTextQuestionInfoBanner({doc}: InfoBannerProps) {
+export function LLMFreeTextQuestionInfoAlert({doc}: InfoBannerProps) {
     const user = useAppSelector(selectors.user.orNull);
     const userConsent = useUserConsent();
 
