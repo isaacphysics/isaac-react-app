@@ -89,7 +89,7 @@ export const RoutesPhy = [
     // Assignments
     <Route key={key++} path="/assignment_schedule" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentSchedule user={authUser} />} />} />,
     <Route key={key++} path="/assigned" element={<FeatureFlagWrapper flag={FeatureFlag.MANAGE_ASSIGNMENTS} onUnset={<NotFound />} onSet={
-        <RequireAuth auth={isTutorOrAbove} element={(authUser) => <ManageAssignments user={authUser} />} />} />
+        <RequireAuth auth={isTutorOrAbove} element={<ManageAssignments />} />} />
     } />,
 
     // Teacher test pages
