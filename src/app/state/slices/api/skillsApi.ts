@@ -4,17 +4,17 @@ import { onQueryLifecycleEvents } from "./utils";
 
 export const skillsApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
-        postAnswer: build.mutation<void, AnvilMarkingRequestDTO>({
-            query: (body: AnvilMarkingRequestDTO) => ({
-                url: "skills/app_page_mental_maths_overall/answer",
+        postSkillsAnswer: build.mutation<void, { appId: string, body: AnvilMarkingRequestDTO}>({
+            query: ({ appId, body }) => ({
+                url: `skills/${appId}/answer`,
                 method: "POST",
-                body
+                body,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Couldn't save answer."
+                errorTitle: "Couldn't save answer.",
             }),
         }),
     })
 });
 
-export const { usePostAnswerMutation } = skillsApi;
+export const { usePostSkillsAnswerMutation } = skillsApi;

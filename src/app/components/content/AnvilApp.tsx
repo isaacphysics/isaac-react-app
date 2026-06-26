@@ -1,6 +1,6 @@
 import React, {RefObject, useContext, useEffect} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
-import {selectors, useAppSelector, usePostAnswerMutation} from "../../state";
+import {selectors, useAppSelector, usePostSkillsAnswerMutation} from "../../state";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
 import {selectQuestionPart} from "../../services";
 import { AnvilCookieHandler } from '../handlers/InterstitialCookieHandler';
@@ -67,7 +67,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     }).join('&');
 
     const iframeSrc = `${baseURL}#?${queryParams}`;
-    const [postAnswer] = usePostAnswerMutation();
+    const [postSkillsAnswer] = usePostSkillsAnswerMutation();
 
     useEffect(() => {
         const onMessage = function(e: any) {
@@ -79,8 +79,8 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
 
             if (iframeRef.current && (data.fn == "newAppHeight")) {
                 (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
-            } else if (doc.appId && e.origin === `https://${doc.appId.toLocaleLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED') {
-                void postAnswer({ hmac: e.data.hmac, payload: e.data.payload });
+            } else if (e.origin === `https://${doc.appId?.toLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED') {
+                void postSkillsAnswer({ appId: `${typeof page === 'object' && page?.id}`, body: { hmac: e.data.hmac, payload: e.data.payload } });
             }
         };
 
@@ -89,7 +89,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [postAnswer, doc.appId]);
+    }, [postSkillsAnswer, doc.appId, page]);
 
     return <AnvilCookieHandler afterAcceptedElement={
         <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>
