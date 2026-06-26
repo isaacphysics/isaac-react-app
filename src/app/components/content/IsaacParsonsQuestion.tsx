@@ -75,15 +75,14 @@ interface IndentButtonsProps {
 
 const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentButtonsProps) => {
     const getPreviousItemIndentation = (index: number) => {
-        if (!items) return -1;
         const newItems = [...(items || [])];
+    
         return newItems[Math.max(0, index-1)].indentation || 0;
     };
 
     const reduceIndentation = (index: number) => {
-        if (!items) return;
-
         const newItems = [...(items || [])];
+    
         if (isDefined(newItems[index].indentation)) {
             const indentedItem = {...newItems[index], indentation: Math.max((newItems[index].indentation || 0) - 1, 0)};
             newItems.splice(index, 1, indentedItem);
@@ -92,7 +91,7 @@ const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentB
     };
 
     const increaseIndentation = (index: number) => {
-        if (index === 0 || !items) return;
+        if (index === 0) return;
 
         const newItems = [...(items || [])];
         // This condition is insane but of course 0, undefined, and null are all false-y.
