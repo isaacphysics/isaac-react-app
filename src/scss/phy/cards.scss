@@ -16,6 +16,10 @@
   }
 }
 
+.pod-img > img {
+  background-color: $color-neutral-white; // enforce that pod images use a white background, independent of dark mode styling
+}
+
 div:has(> .pod) {
   container: pod-parent / inline-size;
 
