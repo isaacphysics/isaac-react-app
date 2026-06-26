@@ -79,7 +79,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
 
             if (iframeRef.current && (data.fn == "newAppHeight")) {
                 (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
-            } else if (e.origin === `https://${doc.appId?.toLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED') {
+            } else if (user?.loggedIn && e.origin === `https://${doc.appId?.toLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED') {
                 void postSkillsAnswer({ appId: `${typeof page === 'object' && page?.id}`, body: { hmac: e.data.hmac, payload: e.data.payload } });
             }
         };
@@ -89,7 +89,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [postSkillsAnswer, doc.appId, page]);
+    }, [postSkillsAnswer, doc.appId, page, user]);
 
     return <AnvilCookieHandler afterAcceptedElement={
         <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>
