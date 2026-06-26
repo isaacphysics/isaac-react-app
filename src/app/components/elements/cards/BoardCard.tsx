@@ -209,7 +209,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
                 <td className={"align-middle text-center"}>
                     <div className="d-flex gap-2 align-items-center">
-                        <SaveBoardButton board={board} color="keyline" size="sm" />
+                        {isPhy && <SaveBoardButton board={board} color="keyline" size="sm" />}
                         <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
                             {isSetAssignments ? "Assign / Unassign" : "Assign"}
                         </Button>

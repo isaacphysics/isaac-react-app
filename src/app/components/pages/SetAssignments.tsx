@@ -326,8 +326,10 @@ export const SetAssignments = () => {
     // Logic for set assignments modal.
     // hashAnchor acts as a buffer for a modal that needs to be opened. If it is set, the next time we get boards from
     // the API, a modal will be open with the gameboard specified by hashAnchor, **and then hashAnchor will be cleared**.
+
+    // TODO this is made functional in a future commit! editing to appease ESLint for now
     const {hash} = useLocation();
-    const [hashAnchor, setHashAnchor] = useState<string | undefined>();
+    const [_hashAnchor, setHashAnchor] = useState<string | undefined>();
     useEffect(() => {
         setHashAnchor(hash.includes("#") ? hash.slice(1) : undefined);
     }, [hash]);

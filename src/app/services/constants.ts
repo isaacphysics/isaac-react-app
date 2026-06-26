@@ -15,7 +15,6 @@ import {
     ItemDTO,
     QuestionPartState,
     Stage,
-    UserRole
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
@@ -1089,16 +1088,6 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Markbook", to: "/my_markbook"}
 );
 export const BOOKS_CRUMB = {title: "Books", to: "/books"};
-
-export const UserFacingRole: {[role in UserRole]: string} = {
-    ADMIN: "admin",
-    EVENT_MANAGER: "event manager",
-    CONTENT_EDITOR: "content editor",
-    EVENT_LEADER: "event leader",
-    TEACHER: "teacher",
-    TUTOR: "tutor",
-    STUDENT: "student"
-};
 
 export enum SortOrder {
     ASC = "ASC",
