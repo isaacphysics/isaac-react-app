@@ -7,7 +7,7 @@ import { useAppDispatch } from "../../../state";
 
 // a banner type that tracks a cookie to determine whether it should be shown or not (so as to persist across page reloads and sessions)
 export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => {
-    const { cookieName, children, dismissText, theme, onDismiss, ...rest } = props;
+    const { cookieName, cookieExpiry=720, children, dismissText, theme, onDismiss, ...rest } = props;
     const dispatch = useAppDispatch();
 
     const [show, setShown] = useState(() => {
@@ -17,7 +17,7 @@ export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => 
 
     function clickDismiss() {
         setShown(false);
-        Cookies.set(cookieName, "1", {expires: 720 /* days*/});
+        Cookies.set(cookieName, "1", {expires: cookieExpiry /* days*/});
         onDismiss?.(dispatch);
     }
 

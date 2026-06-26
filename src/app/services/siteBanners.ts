@@ -23,6 +23,7 @@ export interface DismissibleCookieBannerProps extends BannerProps {
     dismissText?: ReactNode; // undefined generates a close button
     onDismiss?: (dispatch: AppDispatch) => void;
     cookieName: string;
+    cookieExpiry?: number; // in days, default 720 (2 years)
 }
 
 export interface SiteBanner {
