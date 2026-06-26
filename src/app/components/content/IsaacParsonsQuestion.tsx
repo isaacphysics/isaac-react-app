@@ -17,7 +17,7 @@ import {
 } from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
-import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import { Markup } from "../elements/markup";
@@ -175,6 +175,46 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIn
     </Draggable>;
 };
 
+const handleParsonsItemMove = (
+    result: DropResult,
+    currentIndent: number | null,
+    availableItems: Immutable<ParsonsItemDTO>[],
+    setAvailableItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>>,
+    attemptItems: Immutable<ParsonsItemDTO>[],
+    setAttemptItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void)
+) => {
+    if (!result.source || !result.destination) {
+        return;
+    }
+    if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'answerItems' && attemptItems) {
+        // Reorder currentAttempt
+        const items = [...attemptItems];
+        moveItem(items, result.source.index, items, result.destination.index, currentIndent || 0);
+        setAttemptItems(items);
+    } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
+        // Reorder availableItems
+        const items = [...availableItems];
+        moveItem(items, result.source.index, items, result.destination.index, 0);
+        setAvailableItems(items);
+    } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems') {
+        // Move from availableItems to currentAttempt
+        const srcItems = [...availableItems];
+        const dstItems = [...attemptItems];
+        moveItem(srcItems, result.source.index, dstItems, result.destination.index, currentIndent || 0);
+        setAttemptItems(dstItems);
+        setAvailableItems(srcItems);
+    } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && attemptItems) {
+        // Move from currentAttempt to availableItems
+        const srcItems = [...attemptItems];
+        const dstItems = [...availableItems];
+        moveItem(srcItems, result.source.index, dstItems, result.destination.index, 0);
+        setAttemptItems(srcItems);
+        setAvailableItems(dstItems);
+    } else {
+        console.error("Not sure how we got here...");
+    }
+};
+
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
@@ -187,6 +227,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     const [ currentDestinationIndex, setCurrentDestinationIndex ] = useState<number | null>(null);
 
     const canIndent = (!isDefined(doc.disableIndentation) || !doc.disableIndentation) && !readonly;
+    const attemptItems = (currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[];
+    const setAttemptItems = (items: Immutable<ParsonsItemDTO>[]) => {
+        if (currentAttempt) {
+            dispatchSetCurrentAttempt({...currentAttempt, items});
+        } else {
+            dispatchSetCurrentAttempt({type: "parsonsChoice", items});
+        }
+    };
 
     // WARNING: There's a limit to how far to the right we can drag an element, presumably due to @hello-pangea/dnd
     const onMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
@@ -253,37 +301,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     };
 
     const onDragEnd = (result: DropResult) => {
-        if (!result.source || !result.destination) {
-            return;
-        }
-        if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'answerItems' && currentAttempt) {
-            // Reorder currentAttempt
-            const items = [...(currentAttempt?.items || [])];
-            moveItem(items, result.source.index, items, result.destination.index, currentIndent || 0);
-            dispatchSetCurrentAttempt({...currentAttempt, items});
-        } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
-            // Reorder availableItems
-            const items = [...availableItems];
-            moveItem(items, result.source.index, items, result.destination.index, 0);
-            setAvailableItems(items);
-        } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems') {
-            // Move from availableItems to currentAttempt
-            const srcItems = [...availableItems];
-            const dstItems = [...(currentAttempt?.items || [])];
-            moveItem(srcItems, result.source.index, dstItems, result.destination.index, currentIndent || 0);
-            // We can't guarantee that `currentAttempt` is defined, so we have to explicitly state `type: "parsonsChoice"` here.
-            dispatchSetCurrentAttempt({type: "parsonsChoice", items: dstItems});
-            setAvailableItems(srcItems);
-        } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && currentAttempt) {
-            // Move from currentAttempt to availableItems
-            const srcItems = [...(currentAttempt?.items || [])];
-            const dstItems = [...availableItems];
-            moveItem(srcItems, result.source.index, dstItems, result.destination.index, 0);
-            dispatchSetCurrentAttempt({...currentAttempt, items: srcItems });
-            setAvailableItems(dstItems);
-        } else {
-            console.error("Not sure how we got here...");
-        }
+        handleParsonsItemMove(result, currentIndent, availableItems, setAvailableItems, attemptItems, setAttemptItems);
         setDraggedElement(null);
         setInitialX(null);
         setCurrentIndent(null);
@@ -379,8 +397,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
-                                        setItems={(items: Immutable<ParsonsItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
-                                        items={(currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[]} canIndent={canIndent} isParsons/>
+                                        setItems={setAttemptItems} items={attemptItems} canIndent={canIndent} isParsons />
                                 )}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
                                     <div className="text-muted text-center">
