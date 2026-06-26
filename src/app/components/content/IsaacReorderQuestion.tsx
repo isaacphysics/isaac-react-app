@@ -86,7 +86,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             >
                                 {availableItems && availableItems.map((item, index) =>
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
-                                        setItems={setAvailableItems} items={availableItems}/>)}
+                                        setItems={setAvailableItems} items={availableItems} setAttemptItems={setAttemptItems} attemptItems={attemptItems}/>)}
                                 {(!availableItems || availableItems.length === 0)
                                     ? <div>&nbsp;</div>
                                     : provided.placeholder}

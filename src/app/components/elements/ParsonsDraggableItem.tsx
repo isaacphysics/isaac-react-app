@@ -161,20 +161,36 @@ const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentB
     </div>;
 };
 
-interface ParsonsDraggableItemProps {
+type BaseDraggableProps = {
     currentItem: Immutable<ParsonsItemDTO>;
     index: number;
     items: Immutable<ParsonsItemDTO>[];
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
-    canIndent?: boolean;
-    inAvailableItems?: boolean;
-    isParsons?: boolean;
     readonly?: boolean;
-}
+};
 
-export const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIndent, inAvailableItems, isParsons, readonly}: ParsonsDraggableItemProps) => {
+type AvailableItemsProps = {
+    inAvailableItems: true;
+    attemptItems: Immutable<ParsonsItemDTO>[];
+    setAttemptItems: (items: Immutable<ParsonsItemDTO>[]) => void;
+    isParsons?: boolean;
+    canIndent?: false;
+};
+
+type AttemptItemsProps = {
+    inAvailableItems?: false;
+    attemptItems?: undefined;
+    setAttemptItems?: undefined;
+} & (
+    { isParsons: true; canIndent?: boolean; } |
+    { isParsons?: false; canIndent?: false; }
+);
+
+export type ParsonsDraggableItemProps = BaseDraggableProps & (AvailableItemsProps | AttemptItemsProps);
+
+export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAvailableItems, readonly, attemptItems, setAttemptItems, canIndent, isParsons}: ParsonsDraggableItemProps) => {
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
-        if (!snapshot.isDropAnimating) return style;
+        if (!snapshot.isDropAnimating || !isParsons) return style;
         
         return {
             ...style,
@@ -197,7 +213,7 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIn
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-                style={isParsons ? getStyle(provided.draggableProps.style, snapshot) : provided.draggableProps.style}
+                style={getStyle(provided.draggableProps.style, snapshot)}
             >
                 <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation}/>
                 <pre>
@@ -205,6 +221,18 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, canIn
                         {currentItem.value}
                     </Markup>
                 </pre>
+                {inAvailableItems && <>
+                    <Spacer/>
+                    <button type="button" className="btn btn-blank py-1 px-0 m-0 border-0" title="Add item to end of answer" onClick={() => {
+                        const srcItems = [...items];
+                        const dstItems = [...attemptItems];
+                        moveParsonsItem(srcItems, index, dstItems, attemptItems.length + 1, isParsons ? 0 : undefined);
+                        setItems(srcItems);
+                        setAttemptItems(dstItems);
+                    }}>
+                        <i className="icon icon-arrow-right icon-color-muted-hoverable icon-color-theme-on-hover" />
+                    </button>
+                </>}
                 {canIndent && <>
                     <Spacer/>
                     <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>

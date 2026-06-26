@@ -182,7 +182,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
                                 {availableItems && availableItems.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
-                                        setItems={setAvailableItems} items={availableItems} isParsons/>
+                                        setItems={setAvailableItems} items={availableItems} isParsons attemptItems={attemptItems} setAttemptItems={setAttemptItems}/>
                                 )}
                                 {(!availableItems || availableItems.length === 0) && <div>&nbsp;</div>}
                                 {provided.placeholder}
@@ -196,7 +196,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         {(provided: DroppableProvided) => {
                             return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => 
-                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
+                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
                                         setItems={setAttemptItems} items={attemptItems} canIndent={canIndent} isParsons />
                                 )}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
