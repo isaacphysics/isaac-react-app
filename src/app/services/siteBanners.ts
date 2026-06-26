@@ -1,27 +1,28 @@
 import { AlertProps } from "reactstrap";
 import { ReactNode } from "react";
-import { AppDispatch } from "../state";
-import { researchNotificationBanner } from "../components/elements/banners/ResearchNotificationBanner";
-import { isaacScienceLaunchBanner } from "../components/elements/banners/IsaacScienceLaunchBanner";
-import { downtimeWarningBanner } from "../components/elements/banners/DowntimeWarningBanner";
-import { emailVerificationBanner } from "../components/elements/banners/EmailVerificationBanner";
+import { useResearchNotificationBanner } from "../components/elements/banners/ResearchNotificationBanner";
+import { useIsaacScienceLaunchBanner } from "../components/elements/banners/IsaacScienceLaunchBanner";
+import { useDowntimeWarningBanner } from "../components/elements/banners/DowntimeWarningBanner";
+import { useEmailVerificationBanner } from "../components/elements/banners/EmailVerificationBanner";
 
 interface BannerProps extends AlertProps {
     type: string;
     children: ReactNode;
     theme: "light" | "info" | "warning" | "danger";
+    show: boolean;
 }
 
 export interface DismissibleBannerProps extends BannerProps {
     type: "dismissibleBanner"
     dismissText?: ReactNode; // undefined generates a close button
-    onDismiss?: (dispatch: AppDispatch) => void;
+    onDismiss?: () => void;
 }
 
+// this can't extend the above as using e.g. Omit<> to remove the "type" temporarily breaks type checking of other props (not sure why?)
 export interface DismissibleCookieBannerProps extends BannerProps {
     type: "dismissibleCookieBanner",
     dismissText?: ReactNode; // undefined generates a close button
-    onDismiss?: (dispatch: AppDispatch) => void;
+    onDismiss?: () => void;
     cookieName: string;
     cookieExpiry?: number; // in days, default 720 (2 years)
 }
@@ -33,6 +34,10 @@ export interface SiteBanner {
 }
 
 export const useSiteBanners = () : SiteBanner[] => {
+    const isaacScienceLaunchBanner = useIsaacScienceLaunchBanner();
+    const researchNotificationBanner = useResearchNotificationBanner();
+    const downtimeWarningBanner = useDowntimeWarningBanner();
+    const emailVerificationBanner = useEmailVerificationBanner();
     return [
         {
             banner: isaacScienceLaunchBanner,

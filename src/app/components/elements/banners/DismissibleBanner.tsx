@@ -3,12 +3,10 @@ import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { Alert, Button, Col, Row } from "reactstrap";
 import { DismissibleBannerProps, DismissibleCookieBannerProps } from "../../../services/siteBanners";
-import { useAppDispatch } from "../../../state";
 
 // a banner type that tracks a cookie to determine whether it should be shown or not (so as to persist across page reloads and sessions)
 export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => {
     const { cookieName, cookieExpiry=720, children, dismissText, theme, onDismiss, ...rest } = props;
-    const dispatch = useAppDispatch();
 
     const [show, setShown] = useState(() => {
         const currentCookieValue = Cookies.get(cookieName);
@@ -18,7 +16,7 @@ export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => 
     function clickDismiss() {
         setShown(false);
         Cookies.set(cookieName, "1", {expires: cookieExpiry /* days*/});
-        onDismiss?.(dispatch);
+        onDismiss?.();
     }
 
     if (!show) {
@@ -57,12 +55,11 @@ export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => 
 // a banner type that can be dismissed in a session, but will reappear when state is lost (e.g. on page reload)
 export const DismissibleBanner = (props: DismissibleBannerProps) => {
     const { children, dismissText, theme, onDismiss, ...rest } = props;
-    const dispatch = useAppDispatch();
     const [show, setShown] = useState(true);
 
     function clickDismiss() {
         setShown(false);
-        onDismiss?.(dispatch);
+        onDismiss?.();
     }
 
     return show && <Alert 

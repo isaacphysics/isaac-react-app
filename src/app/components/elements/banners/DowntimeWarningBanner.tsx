@@ -19,10 +19,13 @@ const DowntimeWarningBannerBody = () => {
     </Row>;
 };
 
-export const downtimeWarningBanner : DismissibleCookieBannerProps = {
-    type: "dismissibleCookieBanner",
-    cookieName: DOWNTIME_COOKIE,
-    theme: siteSpecific("danger", "warning"),
-    dismissText: <>Dismiss<span className="visually-hidden"> downtime notification</span></>,
-    children: <DowntimeWarningBannerBody />
+export const useDowntimeWarningBanner = () : DismissibleCookieBannerProps => {
+    return {
+        type: "dismissibleCookieBanner",
+        cookieName: DOWNTIME_COOKIE,
+        theme: siteSpecific("danger", "warning"),
+        dismissText: <>Dismiss<span className="visually-hidden"> downtime notification</span></>,
+        children: <DowntimeWarningBannerBody />,
+        show: true,
+    };
 };

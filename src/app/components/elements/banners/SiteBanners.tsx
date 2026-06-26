@@ -10,7 +10,8 @@ export const SiteBanners = () => {
     return siteBanners.map((banner) => {
         if (
             (!isDefined(banner.startDate) || now >= banner.startDate) && 
-            (!isDefined(banner.endDate) || now <= banner.endDate)
+            (!isDefined(banner.endDate) || now <= banner.endDate) &&
+            banner.banner.show
         ) {
             switch (banner.banner.type) {
                 case "dismissibleCookieBanner":

@@ -7,15 +7,16 @@ import {
 import {Link} from "react-router-dom";
 import {Button, Col, Row} from 'reactstrap';
 import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../../services";
+import { EmailVerificationStatus } from '../../../../IsaacApiTypes';
 import { DismissibleBannerProps } from '../../../services/siteBanners';
 
-const EmailVerificationBannerBody = () => {
-    const [hidden, setHidden] = useState(false);
+interface EmailVerificationBannerProps {
+    setHidden: React.Dispatch<React.SetStateAction<boolean>>;
+    status: EmailVerificationStatus | null;
+}
+
+const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBannerProps) => {
     const user = useAppSelector(selectors.user.orNull);
-    const {cookieConsent} = useUserConsent();
-    const isHiddenViaCookie = !!(user?.loggedIn && user?.emailVerificationStatus === "DELIVERY_FAILED" && cookieConsent?.disableEmailVerificationWarningCookiesAccepted);
-    const status = user?.loggedIn && user?.emailVerificationStatus || null;
-    const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     function clickVerify() {
@@ -25,7 +26,7 @@ const EmailVerificationBannerBody = () => {
         setHidden(true);
     }
 
-    return show && <Row className="align-items-center" id="email-status-banner">
+    return <Row className="align-items-center" id="email-status-banner">
         <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
             <h3 className="d-flex align-items-center justify-content-center gap-2">
                 <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
@@ -55,9 +56,19 @@ const EmailVerificationBannerBody = () => {
     </Row>;
 };
 
-export const emailVerificationBanner : DismissibleBannerProps = {
-    type: "dismissibleBanner",
-    dismissText: "Snooze",
-    theme: "light",
-    children: <EmailVerificationBannerBody />
+export const useEmailVerificationBanner = () : DismissibleBannerProps => {
+    const [hidden, setHidden] = useState(false);
+    const user = useAppSelector(selectors.user.orNull);
+    const {cookieConsent} = useUserConsent();
+    const isHiddenViaCookie = !!(user?.loggedIn && user?.emailVerificationStatus === "DELIVERY_FAILED" && cookieConsent?.disableEmailVerificationWarningCookiesAccepted);
+    const status = user?.loggedIn && user?.emailVerificationStatus || null;
+    const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
+
+    return {
+        type: "dismissibleBanner",
+        dismissText: "Snooze",
+        theme: "light",
+        children: <EmailVerificationBannerBody setHidden={setHidden} status={status} />,
+        show: !!show,
+    };
 };
