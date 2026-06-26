@@ -11,15 +11,12 @@ export interface Tier {id: TierID; name: string; for: string}
 
 const disabledSubjectStageTopics: Record<string, Record<string, TAG_ID[]>> = {
     "biology": {
-        "gcse": [TAG_ID.genetics, TAG_ID.physiology, TAG_ID.ecology, TAG_ID.evolution, TAG_ID.bioMathsSkills],
+        "gcse": [TAG_ID.genetics, TAG_ID.ecology, TAG_ID.evolution, TAG_ID.bioMathsSkills],
     },
 };
 
-const comingSoonSubjectStageTopics: Record<string, Record<string, TAG_ID[]>> = {
-    "biology": {
-        "gcse": [TAG_ID.physiology],
-    },
-};
+// No topics are currently coming soon, but this might be still be used for to-be-released GCSE Biology topics so leaving it here for now
+const comingSoonSubjectStageTopics: Record<string, Record<string, TAG_ID[]>> = {};
 
 interface HierarchyFilterProps {
     choices: ChoiceTree[];
