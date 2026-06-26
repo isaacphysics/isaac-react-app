@@ -8,7 +8,7 @@ import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import { handleParsonsItemMove, ParsonsDraggableItem } from "./IsaacParsonsQuestion";
+import { handleParsonsItemDrag, ParsonsDraggableItem } from "../elements/ParsonsDraggableItem";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
@@ -23,7 +23,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     };
 
     const onDragEnd = (result: DropResult) => {
-        handleParsonsItemMove(result, availableItems, setAvailableItems, attemptItems, setAttemptItems);
+        handleParsonsItemDrag(result, availableItems, setAvailableItems, attemptItems, setAttemptItems);
     };
 
     const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ItemChoiceDTO>, newAvailableItems?: Immutable<ItemDTO>[]) => {

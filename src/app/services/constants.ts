@@ -1301,6 +1301,10 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 
 export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
 
+// REMINDER: If you change this, you also have to change $parsons-step in questions.scss
+export const PARSONS_MAX_INDENT = 3;
+export const PARSONS_INDENT_STEP = 45;
+
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
