@@ -5,10 +5,11 @@ import {
     useRequestEmailVerificationMutation
 } from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, Col, Container, Row} from 'reactstrap';
+import {Button, Col, Row} from 'reactstrap';
 import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../../services";
+import { DismissibleBannerProps } from '../../../services/siteBanners';
 
-export const EmailVerificationBanner = () => {
+const EmailVerificationBannerBody = () => {
     const [hidden, setHidden] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const {cookieConsent} = useUserConsent();
@@ -24,44 +25,39 @@ export const EmailVerificationBanner = () => {
         setHidden(true);
     }
 
-    return show && <div className="banner d-print-none" id="email-status-banner">
-        <Container className="py-3">
-            <Row className="align-items-center">
-                <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
-                    <h3 className="d-flex align-items-center justify-content-center gap-2">
-                        <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
-                        <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
-                    </h3>
-                </Col>
-                {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
-                    <Col xs={12} sm={siteSpecific(10, 7)} md={8}>
-                        Your email address is not verified - please find our email in your inbox and follow the
-                        verification link. You can{" "}
-                        <Button color="link primary-font-link" onClick={clickVerify} id="email-verification-request">
-                            request a new verification email
-                        </Button>{" "}
-                        if necessary. To change your account email,
-                        go to <Link to="/account">My account</Link>.
-                    </Col>
-                    <Col xs={12} sm={siteSpecific(12, 2)} md={3} className="text-center">
-                        <Button
-                            color={siteSpecific("keyline", "solid")} className="mt-3 mb-2 d-block d-md-inline-block banner-button"
-                            onClick={() => setHidden(true)} id="email-verification-snooze"
-                        >
-                            Snooze
-                        </Button>
-                    </Col>
-                </React.Fragment>}
-                {(status == "DELIVERY_FAILED") &&
-                    <Col xs={12} sm={10} md={11}>
-                        One or more email(s) sent to your email
-                        address failed. This means you won&apos;t receive emails from {SITE_TITLE_SHORT}, and may prevent you
-                        regaining access to your account. <br/>To start receiving emails again, update your email
-                        address on your <Link to="/account">My account</Link> page. If you believe this is in
-                        error, please <a href={`mailto:${WEBMASTER_EMAIL}`}>email us</a>.
-                    </Col>
-                }
-            </Row>
-        </Container>
-    </div>;
+    return show && <Row className="align-items-center" id="email-status-banner">
+        <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
+            <h3 className="d-flex align-items-center justify-content-center gap-2">
+                <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
+                <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
+            </h3>
+        </Col>
+        {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
+            <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
+                Your email address is not verified - please find our email in your inbox and follow the
+                verification link. You can{" "}
+                <Button color="link primary-font-link" onClick={clickVerify} id="email-verification-request">
+                    request a new verification email
+                </Button>{" "}
+                if necessary. To change your account email,
+                go to <Link to="/account">My account</Link>.
+            </Col>
+        </React.Fragment>}
+        {(status == "DELIVERY_FAILED") &&
+            <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
+                One or more email(s) sent to your email
+                address failed. This means you won&apos;t receive emails from {SITE_TITLE_SHORT}, and may prevent you
+                regaining access to your account. <br/>To start receiving emails again, update your email
+                address on your <Link to="/account">My account</Link> page. If you believe this is in
+                error, please <a href={`mailto:${WEBMASTER_EMAIL}`}>email us</a>.
+            </Col>
+        }
+    </Row>;
+};
+
+export const emailVerificationBanner : DismissibleBannerProps = {
+    type: "dismissibleBanner",
+    dismissText: "Snooze",
+    theme: "light",
+    children: <EmailVerificationBannerBody />
 };

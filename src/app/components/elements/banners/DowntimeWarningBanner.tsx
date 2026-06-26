@@ -1,38 +1,28 @@
-import React, {useState} from 'react';
-import {Alert, Button, Col, Container, Row} from 'reactstrap';
-import Cookies from 'js-cookie';
+import React from 'react';
 import {SITE_TITLE, siteSpecific} from "../../../services";
+import { DismissibleCookieBannerProps } from '../../../services/siteBanners';
+import { Col, Row } from 'reactstrap';
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
-export const DowntimeWarningBanner = () => {
-    const [noCookie, setCookie] = useState(() => {
-        const currentCookieValue = Cookies.get(DOWNTIME_COOKIE);
-        return currentCookieValue != "1";
-    });
+const DowntimeWarningBannerBody = () => {
+    return <Row className="align-items-center">
+        <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
+            <h3 className="d-flex align-items-center justify-content-center gap-2">
+                <i className="icon icon-warning icon-sm icon-color-black" aria-hidden="true" />
+                <span id="research-heading" className="d-inline-block d-sm-none">&nbsp;Research</span>
+            </h3>
+        </Col>
+        <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
+            {SITE_TITLE} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance.
+        </Col>
+    </Row>;
+};
 
-    function clickDismiss() {
-        setCookie(false);
-        Cookies.set(DOWNTIME_COOKIE, "1", {expires: 14 /* days*/});
-    }
-
-    const inDateRange = new Date(1752480000000) <= new Date() && new Date() <= new Date(1752566400000);
-    const colour = siteSpecific("danger", "warning"); // Ada doesn't support "danger" colours!
-
-    return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
-        <Alert color={colour} className="mb-0">
-            <Container>
-                <Row style={{alignItems: "center"}}>
-                    <Col xs={12} md={9}>
-                        {SITE_TITLE} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance.
-                    </Col>
-                    <Col xs={12} md={3} className="text-center">
-                        <Button color="keyline" className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
-                            Dismiss<span className="visually-hidden"> downtime notification</span>
-                        </Button>
-                    </Col>
-                </Row>
-            </Container>
-        </Alert>
-    </div>: null;
+export const downtimeWarningBanner : DismissibleCookieBannerProps = {
+    type: "dismissibleCookieBanner",
+    cookieName: DOWNTIME_COOKIE,
+    theme: siteSpecific("danger", "warning"),
+    dismissText: <>Dismiss<span className="visually-hidden"> downtime notification</span></>,
+    children: <DowntimeWarningBannerBody />
 };
