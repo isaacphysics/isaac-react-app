@@ -35,7 +35,7 @@ export const useSiteBanners = () : SiteBanner[] => {
     return [
         {
             banner: isaacScienceLaunchBanner,
-            endDate: new Date("2026-07-01T00:00:00Z"),
+            endDate: new Date("2026-08-01T00:00:00Z"),
         },
         {
             banner: researchNotificationBanner,
@@ -43,7 +43,7 @@ export const useSiteBanners = () : SiteBanner[] => {
         {
             banner: downtimeWarningBanner,
             startDate: new Date("2023-01-01T00:00:00Z"),
-            endDate: new Date("2028-01-01T00:00:00Z"),
+            endDate: new Date("2023-01-01T00:00:00Z"),
         },
         {
             banner: emailVerificationBanner,
