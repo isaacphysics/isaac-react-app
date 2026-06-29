@@ -1,4 +1,4 @@
-import {QuizAttemptProps, QuizPagination} from "./QuizContentsComponent";
+import {FullQuizInfo, QuizPagination, QuizProps} from "./QuizContentsComponent";
 import {
     mutationSucceeded,
     showSuccessToast,
@@ -10,7 +10,7 @@ import React from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {confirmThen, siteSpecific} from "../../../services";
+import {confirmThen, isDefined, siteSpecific} from "../../../services";
 import {QuizSidebarLayout} from "./QuizSidebarLayout";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
@@ -18,8 +18,8 @@ function extractSectionIdFromQuizQuestionId(questionId: string) {
     return ids[0] + "|" + ids[1];
 }
 
-export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: string}) {
-    const {attempt, page, sections, questions, pageLink} = props;
+export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLink: string}) {
+    const {attempt, page, quizContents: {sections, questions, pageLink}} = props;
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
     const sectionCount = Object.keys(sections).length;
 
     let controls;
-    if (page === null) {
+    if (!isDefined(page)) {
         let anyAnswered = false;
         const completedSections = Object.keys(sections).reduce((map, sectionId) => {
             map[sectionId] = true;

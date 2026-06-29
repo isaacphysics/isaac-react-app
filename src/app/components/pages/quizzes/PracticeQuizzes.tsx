@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Input, Col } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, LearningStage, siteSpecific, sortByStringValue, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
+import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, isTeacherOrAbove, LearningStage, siteSpecific, sortByStringValue, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
@@ -113,16 +113,17 @@ export const PracticeQuizzes = () => {
                         {isAda && <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
                         <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
                             if (filterText.trim()) {
-                                navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                void navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
                             }
                             setCopied(true);
                         }} onMouseLeave={() => setCopied(false)} />
                     </Col>
                     <ListView
                         type="quiz"
-                        items={quizzes.filter((quiz) => isRelevant(quiz)).sort(sortByStringValue("title"))}
+                        items={quizzes.filter(isRelevant).sort(sortByStringValue("title"))}
                         className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
-                        useViewQuizLink
+                        useViewQuizLink={!isTeacherOrAbove(user)}
+                        isQuizSetter={isTeacherOrAbove(user)}
                     />
                 </>}
             </ShowLoading>
