@@ -9,7 +9,7 @@ import { LoginLogoutButton } from "./HeaderPhy";
 import { Link, useNavigate } from "react-router-dom";
 import { HoverableNavigationContext, PageContextState } from "../../../../IsaacAppTypes";
 import max from "lodash/max";
-import { FeatureFlagWrapper } from "../../../services/featureFlag";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
