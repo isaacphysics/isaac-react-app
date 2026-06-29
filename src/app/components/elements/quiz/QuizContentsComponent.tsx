@@ -199,7 +199,7 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
     const {attempt, page, studentUser, user, quizAssignmentId} = quizProps;
     const deviceSize = useDeviceSize();
     const sections = attempt.quiz?.children;
-    const section = !!(page && sections) && sections[page - 1];
+    const section = page && sections?.[page - 1];
     const attribution = attempt.quiz?.attribution;
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
 
@@ -333,8 +333,8 @@ function QuizQuestions(props: QuizProps & FullQuizInfo) {
 export function QuizContentsComponent(props: QuizProps) {
     const {quiz, studentUser, user} = props;
 
-    const questions = isFullQuizProps(props) ? (props as QuizProps & FullQuizInfo).quizContents.questions : [];
-    const sections = isFullQuizProps(props) ? (props as QuizProps & FullQuizInfo).quizContents.sections : {};
+    const questions = isFullQuizProps(props) ? props.quizContents.questions : [];
+    const sections = isFullQuizProps(props) ? props.quizContents.sections : {};
 
     const sectionState = (section: IsaacQuizSectionDTO) => {
         const sectionQs = section ? inSection(section, questions) : undefined;
@@ -347,7 +347,6 @@ export function QuizContentsComponent(props: QuizProps) {
 
     const sidebarProps: QuizSidebarProps = {
         quiz,
-        viewingAsSomeoneElse,
         totalSections: Object.keys(sections).length,
         currentSection: props.page ? props.page : undefined,
         sectionStates: Object.values(sections).map(section => sectionState(section)),

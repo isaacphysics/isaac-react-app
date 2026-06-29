@@ -53,7 +53,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const pageNumber = isDefined(page) ? parseInt(page, 10) : undefined;
 
     const pageLink = useCallback((page?: number) => {
-        const pagePath = isDefined(page) ? `/${page}` : "";
+        const pagePath = isDefined(page) ? `/page/${page}` : "";
         if (isDefined(studentId) && isDefined(quizAssignmentId)) {
             return `/test/attempt/feedback/${quizAssignmentId}/${studentId}` + pagePath;
         } else {

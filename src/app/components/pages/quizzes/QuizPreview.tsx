@@ -20,9 +20,10 @@ const QuizFooter = (props: QuizProps & FullQuizInfo) => {
             ? <QuizPagination {...props} finalLabel="Back to Contents" />
             : <>
                 <div className="d-flex w-100 align-items-center mt-2 gap-2">
-                    {isTeacherOrAbove(user) && <Button color="primary" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
+                    {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
                     <Spacer/>
-                    <Button color="secondary" tag={Link} to={pageLink(1)}>{"View questions"}</Button>
+                    <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{"Attempt quiz yourself"}</Button>
+                    <Button color="solid" tag={Link} to={pageLink(1)}>{"Preview questions"}</Button>
                 </div>
             </>}
     </QuizSidebarLayout>;
