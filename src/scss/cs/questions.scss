@@ -191,8 +191,13 @@
 
 .parsons-question {
   .parsons-item, .reorder-item {
-    .reorder-buttons button.disabled {
-      opacity: 0.5;
+    .reorder-buttons button {
+      &.disabled {
+        opacity: 0.5;
+      }
+      &:hover .icon {
+        background-color: $pink-200;
+      }
     }
   }
 }

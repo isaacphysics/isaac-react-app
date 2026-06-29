@@ -83,6 +83,40 @@ export const handleParsonsItemDrag = (
     }
 };
 
+export const onParsonsCurrentAttemptUpdate = (
+    availableItems: Immutable<ParsonsItemDTO>[],
+    setAvailableItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>>,
+    attemptItems: Immutable<ParsonsItemDTO>[],
+    docItems?: ParsonsItemDTO[]
+) => {
+    // This makes sure that available items and current attempt items contain different items.
+    // This is because available items always start from the document's available items (see constructor)
+    // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
+    // This also takes care of updating the two lists when a user moves items from one to the other.
+    let fixedAvailableItems: ParsonsItemDTO[] = [];
+    const currentAttemptItems = attemptItems;
+    if (docItems) {
+        fixedAvailableItems = docItems.filter(item => {
+            let found = false;
+            for (const i of currentAttemptItems) {
+                if (i.id === item.id) {
+                    found = true;
+                    break;
+                }
+            }
+            return !found;
+        });
+    }
+    // WARNING: Inverting the order of the arrays breaks this.
+    // TODO: Investigate if there is a method that gives more formal guarantees.
+    const diff = _differenceBy(availableItems, fixedAvailableItems, 'id');
+    // This stops re-rendering when availableItems have not changed from one state update to the next.
+    // The set difference is empty if the two sets contain the same elements (by 'id', see above).
+    if (diff.length > 0) {
+        setAvailableItems(fixedAvailableItems);
+    }
+};
+
 interface ReorderButtonsProps {
     index: number;
     items: Immutable<ParsonsItemDTO>[];

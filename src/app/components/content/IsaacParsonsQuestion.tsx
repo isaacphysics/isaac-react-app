@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
 import {Col, Row} from "reactstrap";
@@ -15,19 +15,19 @@ import {isDefined, PARSONS_INDENT_STEP, PARSONS_MAX_INDENT, useCurrentQuestionAt
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import { handleParsonsItemDrag, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
+import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
-    const attemptItems = (currentAttempt?.items || []) as Immutable<ParsonsItemDTO>[];
-    const setAttemptItems = (items: Immutable<ParsonsItemDTO>[]) => {
+    const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[], [currentAttempt?.items]);
+    const setAttemptItems = useCallback((items: Immutable<ParsonsChoiceDTO>[]) => {
         if (currentAttempt) {
             dispatchSetCurrentAttempt({...currentAttempt, items});
         } else {
             dispatchSetCurrentAttempt({type: "parsonsChoice", items});
         }
-    };
+    }, [currentAttempt, dispatchSetCurrentAttempt]);
 
     const [draggedElement, setDraggedElement] = useState<HTMLElement | null>(null);
     const [initialX, setInitialX] = useState<number | null>(null);
@@ -130,42 +130,11 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
 
     useEffect(() => {
         if (!currentAttempt) {
-            const defaultAttempt: ParsonsChoiceDTO = {
-                type: "parsonsChoice",
-                items: [],
-            };
-            dispatchSetCurrentAttempt(defaultAttempt);
+            setAttemptItems([]);
+        } else {
+            onParsonsCurrentAttemptUpdate(availableItems, setAvailableItems, attemptItems, doc.items);
         }
-
-        if (currentAttempt) {
-            // This makes sure that available items and current attempt items contain different items.
-            // This is because available items always start from the document's available items (see constructor)
-            // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
-            // This also takes care of updating the two lists when a user moves items from one to the other.
-            let fixedAvailableItems: ParsonsItemDTO[] = [];
-            const currentAttemptItems = currentAttempt.items || [];
-            if (doc.items) {
-                fixedAvailableItems = doc.items.filter(item => {
-                    let found = false;
-                    for (const i of currentAttemptItems) {
-                        if (i.id === item.id) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    return !found;
-                });
-            }
-            // WARNING: Inverting the order of the arrays breaks this.
-            // TODO: Investigate if there is a method that gives more formal guarantees.
-            const diff = _differenceBy(availableItems, fixedAvailableItems, 'id');
-            // This stops re-rendering when availableItems have not changed from one state update to the next.
-            // The set difference is empty if the two sets contain the same elements (by 'id', see above).
-            if (diff.length > 0) {
-                setAvailableItems(fixedAvailableItems);
-            }
-        }
-    }, [currentAttempt, availableItems, dispatchSetCurrentAttempt, doc.items]);
+    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems]);
 
     return <div className="parsons-question">
         <div className="question-content">
