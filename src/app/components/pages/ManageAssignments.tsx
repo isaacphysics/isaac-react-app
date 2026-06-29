@@ -1,5 +1,7 @@
 import {
+    closeActiveModal,
     openActiveModal,
+    openIsaacBooksModal,
     useAppDispatch,
     useGetGroupsQuery,
     useGetMySetAssignmentsQuery,
@@ -25,6 +27,7 @@ import {
     isTeacherOrAbove,
     Item,
     MONTH_NAMES,
+    PATHS,
     TAG_ID,
     tags,
 } from "../../services";
@@ -40,11 +43,45 @@ import {combineQueries, discardResults, ShowLoadingQuery} from "../handlers/Show
 import {formatDate} from "../elements/DateString";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
-import { PhyAddGameboardButtons } from "./SetAssignments";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { ManageAssignmentCard, ManageTestCard } from "../elements/ManageAssignedCards";
+
+const FindDeckButtons = () => {
+    const dispatch = useAppDispatch();
+    return <>
+        <PageFragment fragmentId={"manage_assignments_set_new_modal_text"} ifNotFound={RenderNothing} />
+        <h4 className="mb-3">
+            Find a deck from...
+        </h4>
+        <Row className="d-flex row-cols-1 row-cols-md-2 row-gap-3 mb-5">
+            <Col>
+                <Button onClick={() => {
+                    void dispatch(closeActiveModal());
+                    void dispatch(openIsaacBooksModal());
+                }} block color="keyline" className="px-3">
+                    our books
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/physics/a_level/question_decks"} block color="keyline" className="px-3">
+                    our topic questions decks
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/my_question_decks"} block color="keyline" className="px-3">
+                    your saved decks
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={PATHS.GAMEBOARD_BUILDER} block color="keyline" className="px-3">
+                    a new question deck
+                </Button>
+            </Col>
+        </Row>
+    </>;
+};
 
 const isValidWork = (a: IAssignmentLike) => {
     return (isAssignment(a) && a.gameboardId) || (isQuiz(a) && a.quizId && a.quizSummary);
@@ -385,7 +422,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     const setNewAssignmentModal = () : ActiveModalProps => ({
         title: "Set a new assignment",
-        body: <PhyAddGameboardButtons />
+        body: <FindDeckButtons />
     });
 
     return <PageContainer className="mb-7"
@@ -445,7 +482,7 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                     Show work before {formatDate(earliestShowDate)}
                                 </Button>
                             </div>}
-                            {workGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastWorkIsListed})}>
+                            {workGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastWorkIsListed})} data-testid="timeline">
                                 {workGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
                                         <div className="year-label w-100 text-end">

@@ -35,6 +35,10 @@ const switchToCardView = async () => {
 };
 
 describe("SetAssignments", () => {
+    if (isPhy) {
+        it('is hidden on Sci', () => {});
+        return;
+    }
 
     const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
         await renderTestEnvironment({

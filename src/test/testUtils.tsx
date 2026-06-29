@@ -188,6 +188,10 @@ export const navigateToSetAssignments = async () => {
     await followMainMenuLink(siteSpecific("Set assignments", "Quizzes"));
 };
 
+export const navigateToSetManageWork = async () => {
+    await followMainMenuLink(siteSpecific("Set / manage work", "Manage work"));
+};
+
 // Open a given tab in the account page.
 export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     // Switch to the correct tab
