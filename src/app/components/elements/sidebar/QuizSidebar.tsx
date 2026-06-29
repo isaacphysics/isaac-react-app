@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { Row, Col } from "reactstrap";
 import { DetailedQuizSummaryDTO, IsaacQuizDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
@@ -22,7 +22,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     const deviceSize = useDeviceSize();
     const location = useLocation();
 
-    const rubricPath = location.pathname.split(new RegExp(/\/page\/\d+/))[0]; // i.e. "/test/{view|preview|attempt|assignment}/{id}".
+    const rubricPath = location.pathname.split(new RegExp(/\/page\/\d+/))[0]; // i.e. "/test/{view|preview|attempt|assignment}/{id}(/feedback)?".
     const hasSections = totalSections > 0;
     const subjects = tagsService.getSubjectTags(quiz.tags as TAG_ID[]);
     const topics = tagsService.getTopicTags(quiz.tags as TAG_ID[]);

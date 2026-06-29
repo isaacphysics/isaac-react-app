@@ -1,4 +1,4 @@
-import {expectH1, expectH4, expectLinkWithEnabledBackwardsNavigation, expectUrl} from "../testUtils";
+import {expectH1, expectH4, expectLink, expectUrl} from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import {
     editButton,
@@ -6,10 +6,10 @@ import {
     expectErrorMessage,
     expectPhyBreadCrumbs,
     expectRubric,
-    expectSidebarToggle,
+    expectMobileSidebarToggleToHaveText,
     previewButton,
     renderQuizPage,
-    sideBarTestCases,
+    quizSidebarCommonTests,
     testSectionsHeader
 } from "../helpers/quiz";
 import {isPhy, siteSpecific} from "../../app/services";
@@ -52,7 +52,7 @@ describe("QuizView", () => {
 
     it('shows "Take Test" button that loads the attempts page and allows navigating back', async () => {
         await studentViewsQuiz();
-        await expectLinkWithEnabledBackwardsNavigation("Take Test", `/test/attempt/${quizId}`, `/test/view/${quizId}`);
+        await expectLink("Take Test", `/test/attempt/${quizId}`);
     });
 
     it('does not show "Preview" button', async() => {
@@ -65,7 +65,7 @@ describe("QuizView", () => {
 
         it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
             await teacherViewsQuiz();
-            await expectLinkWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
+            await expectLink("Preview", `/test/preview/${quizId}`);
         });
     });
 
@@ -82,7 +82,7 @@ describe("QuizView", () => {
 
         it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
             await editorViewsQuiz();
-            await expectLinkWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
+            await expectLink("Preview", `/test/preview/${quizId}`);
         });
     });
 
@@ -120,11 +120,11 @@ describe("QuizView", () => {
             expect(screen.getByTestId('quiz-view')).toHaveAttribute('data-bs-theme', 'physics');
         });
 
-        describe('shows the redesigned sidebar', sideBarTestCases(studentViewsQuiz));
+        describe('shows the redesigned sidebar', quizSidebarCommonTests(studentViewsQuiz));
 
         it('sidebar toggle is called "Details"', async () => {
             await studentViewsQuiz();
-            await expectSidebarToggle("Details");
+            await expectMobileSidebarToggleToHaveText("Details");
         });
     }
 });

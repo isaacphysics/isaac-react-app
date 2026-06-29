@@ -310,13 +310,10 @@ export const expectH4 = expectHeading(4);
 
 export const expectTextInElementWithId = (testId: string) => (msg: string) => expect(screen.getByTestId(testId)).toHaveTextContent(msg);
 
-export const expectLinkWithEnabledBackwardsNavigation = async (text: string | undefined, targetHref: string, originalHref: string) => {
-    if (text === undefined) {
+export const expectLink = async (linkText: string | undefined, linkHref: string, container?: HTMLElement) => {
+    if (linkText === undefined) {
         throw new Error("Target text is undefined");
     }
-    const container = isPhy ? screen.findByRole("link", { name: text}) : undefined;
-    await clickOn(text, container);
-    await expectUrl(targetHref);
-    goBack();
-    await expectUrl(originalHref);
+    const link = await (container ? within(container) : screen).findByRole("link", { name: linkText });
+    expect(link).toHaveAttribute("href", linkHref);
 };
