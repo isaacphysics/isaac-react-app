@@ -21,7 +21,7 @@ export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (di
 };
 
 export const clearQuizAttempt = () => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: {}});
+    dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_CLEAR});
 };
 
 const debouncedDispatch = debounce(async (dispatch: Dispatch<Action>, quizAttemptId: number, questionId: string, attempt) => {

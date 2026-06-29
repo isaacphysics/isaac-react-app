@@ -2,7 +2,7 @@ import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isEventLeaderOrStaff, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
 import { Button, ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -153,20 +153,35 @@ type QuizListViewItemProps = ListViewItemBaseProps<"quiz", "list" | "card"> & {
 
 export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}: QuizListViewItemProps) => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ?
-        <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
             Set test
         </AffixButton> :
-        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
             Take the test
         </AffixButton>;
+
+    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
+    // Otherwise, show if the quiz is visible to students
+    const roleVisibilitySummary = (quiz: QuizSummaryDTO): string | undefined => {
+        if (isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER")) {
+            return "Hidden from teachers";
+        }
+        if (((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents)) {
+            return "Visible to students";
+        }
+    };
+
     return <AbstractListViewItem
-        icon={{type: "icon", icon: {name: "icon-tests", size: "lg"}}}
+        icon={siteSpecific({type: "icon", icon: {name: "icon-tests", size: "lg"}}, undefined)}
         title={item.title ?? ""}
+        subtitle={roleVisibilitySummary(item)}
         subject={itemSubject}
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
         quizButton={useViewQuizLink ? undefined : quizButton}
+        className={siteSpecific(undefined, "px-4 py-2")}
         {...rest}
     />;
 };

@@ -3,23 +3,24 @@ import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {getThemeFromTags, isDefined, isPhy, useQuizAttemptFeedback} from "../../../services";
 import {
+    FullQuizInfo,
     myQuizzesCrumbs,
     QuizContentsComponent,
-    QuizAttemptProps,
-    QuizPagination
+    QuizPagination,
+    QuizProps
 } from "../../elements/quiz/QuizContentsComponent";
-import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Col, Container} from "reactstrap";
 import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import classNames from "classnames";
 
-function QuizAttemptFeedbackFooter(props: QuizAttemptProps) {
-    const {page, pageLink, studentUser} = props;
+function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
+    const {page, studentUser, quizContents: {pageLink}} = props;
     let controls;
     let prequel = null;
-    if (page === null) {
+    if (!isDefined(page)) {
         prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>
@@ -49,10 +50,10 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const numericQuizAttemptId = quizAttemptId ? parseInt(quizAttemptId, 10) : undefined;
     const {attempt, studentUser, questions, sections, error} = useQuizAttemptFeedback(numericQuizAttemptId, numericQuizAssignmentId, numericStudentId);
 
-    const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
+    const pageNumber = isDefined(page) ? parseInt(page, 10) : undefined;
 
     const pageLink = useCallback((page?: number) => {
-        const pagePath = isDefined(page) ? `/${page}` : "";
+        const pagePath = isDefined(page) ? `/page/${page}` : "";
         if (isDefined(studentId) && isDefined(quizAssignmentId)) {
             return `/test/attempt/feedback/${quizAssignmentId}/${studentId}` + pagePath;
         } else {
@@ -60,8 +61,20 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
         }
     }, [quizAttemptId, quizAssignmentId, studentId]);
 
-    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
-        questions, sections, pageLink, pageHelp, studentUser, user, quizAssignmentId};
+    const subProps: QuizProps & FullQuizInfo = {
+        user,
+        pageHelp,
+        studentUser,
+        quizAssignmentId,
+        page: pageNumber,   
+        quiz: attempt?.quiz as IsaacQuizDTO,
+        attempt: attempt as QuizAttemptDTO,
+        quizContents: {
+            questions, 
+            sections, 
+            pageLink,
+        },
+    };
 
     return <Container className="mb-7" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>

@@ -16,7 +16,7 @@ export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {r
     await waitForLoaded();
 };
 
-export const sideBarTestCases = (init: () => Promise<void>) => () => {
+export const quizSidebarCommonTests = (init: () => Promise<void>) => () => {
     it('shows subject on sidebar', async () => {
         await init();
         expect(subject()).toHaveTextContent('Physics');
@@ -70,7 +70,7 @@ const topic = () => within(
 
 const sidebarToggle = () => screen.getByTestId('sidebar-toggle');
 
-export const expectSidebarToggle = async (text: string) => {
+export const expectMobileSidebarToggleToHaveText = async (text: string) => {
     await withSizedWindow(400, 400, () => {
         expect(sidebarToggle()).toHaveTextContent(text);
     });
