@@ -1,8 +1,8 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, persistence, KEY, trackEvent, isLoggedIn, isTeacherPending, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
-import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
+import {DOCUMENT_TYPE, persistence, KEY, trackEvent, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
+import {attemptQuestion, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
@@ -118,14 +118,6 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
         }
 
         const attempt = dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
-
-        if (isLoggedIn(currentUser) && !isTeacherPending(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-            dispatch(saveGameboard({
-                boardId: currentGameboard.id,
-                user: currentUser,
-                redirectOnSuccess: false
-            }));
-        }
 
         return attempt;
     }

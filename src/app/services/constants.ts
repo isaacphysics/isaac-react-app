@@ -15,7 +15,6 @@ import {
     ItemDTO,
     QuestionPartState,
     Stage,
-    UserRole
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
@@ -1091,16 +1090,6 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
 );
 export const BOOKS_CRUMB = {title: "Books", to: "/books"};
 
-export const UserFacingRole: {[role in UserRole]: string} = {
-    ADMIN: "admin",
-    EVENT_MANAGER: "event manager",
-    CONTENT_EDITOR: "content editor",
-    EVENT_LEADER: "event leader",
-    TEACHER: "teacher",
-    TUTOR: "tutor",
-    STUDENT: "student"
-};
-
 export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
@@ -1351,6 +1340,10 @@ export const reactSelectDarkModeStyles = siteSpecific({
         ...base,
         backgroundColor: "unset",
     }),
+    input: (base: CSSObjectWithLabel) => ({
+        ...base,
+        color: "var(--color-neutral-900)",
+    }),
     menu: (base: CSSObjectWithLabel) => ({
         ...base,
         backgroundColor: "var(--color-neutral-50)",
@@ -1361,8 +1354,8 @@ export const reactSelectDarkModeStyles = siteSpecific({
     }),
     multiValue: (base: CSSObjectWithLabel) => ({
         ...base,
-        backgroundColor: "var(--subject-color-200)",
-        border: "1px solid var(--subject-color-400)",
+        backgroundColor: "var(--subject-color-100)",
+        border: "1px solid var(--subject-color-300)",
     }),
     multiValueLabel: (base: CSSObjectWithLabel) => ({
         ...base,
@@ -1370,11 +1363,20 @@ export const reactSelectDarkModeStyles = siteSpecific({
     }),
     multiValueRemove: (base: CSSObjectWithLabel) => ({
         ...base,
-        backgroundColor: "var(--subject-color-200)",
+        backgroundColor: "var(--subject-color-100)",
     }),
     singleValue: (base: CSSObjectWithLabel) => ({
         ...base,
         color: "var(--color-neutral-900)",
+    }),
+    option: (base: CSSObjectWithLabel, state: {isDisabled: boolean, isFocused: boolean, isSelected: boolean}) => ({
+        ...base,
+        color: state.isDisabled ? "var(--color-neutral-500)" : "var(--color-neutral-900)",
+        backgroundColor: state.isFocused ? "var(--color-neutral-200)" : "unset",
+        ":active": {
+            // isSelected doesn't seem to work? using :active instead
+            backgroundColor: "var(--subject-color-300)",
+        }
     }),
 }, 
 {

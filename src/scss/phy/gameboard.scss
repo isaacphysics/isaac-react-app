@@ -44,9 +44,10 @@ button.btn.delete-button {
   border-bottom-left-radius: 0;
   padding: 0.625rem;
   min-width: 36px;
-  > img {
-    filter: invert(1);
-  }
+}
+
+[data-ld-theme="light"] button.btn.delete-button > img {
+  filter: invert(1);
 }
 
 .board-sidebar-content {
@@ -61,4 +62,18 @@ button.btn.delete-button {
 
 .bg-wildcard {
   background-color: $color-misc-pale-yellow;
+}
+
+%hex-status-indicator {
+  position: absolute;
+  top: 2px;
+  z-index: 7;
+  > i {
+    display: inline-block;
+  }
+}
+
+.board-card-status-indicator {
+  @extend %hex-status-indicator;
+  right: 0px;
 }

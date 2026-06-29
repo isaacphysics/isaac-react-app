@@ -89,10 +89,8 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
             const element = document.getElementById(hashAnchor);
             if (element) { // exists on page
                 if (hashAnchor === anchorId) {
-                    scrollVerticallyIntoView(element);
+                    scrollVerticallyIntoView(element, -50);
                     setOpen(true);
-                } else {
-                    setOpen(false);
                 }
             }
         }

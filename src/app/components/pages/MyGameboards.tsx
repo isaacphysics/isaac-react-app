@@ -189,7 +189,7 @@ export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
+            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My saved decks", "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         }
         sidebar={siteSpecific(
             <MyGameboardsSidebar
