@@ -390,7 +390,7 @@ figure .inline-container {
           padding: 0;
           background-color: $gray-120;
 
-          &.show:hover {
+          &.show:focus, &.show:hover {
             background-color: $primary;
           }
 
@@ -402,14 +402,6 @@ figure .inline-container {
           &.show {
             opacity: 1.0;
           }
-        }
-
-        // Use negative z-index rather than `display: none` to hide buttons so they can still be selected using keyboard controls
-        &:not(:has(:focus)) button {
-          z-index: -999;
-        }
-        &:has(:focus) button {
-          z-index: 2;
         }
       }
     }
@@ -440,8 +432,33 @@ figure .inline-container {
         }
       }
 
+      .swap-button {
+        display: flex;
+        justify-content: center;
+        
+        .icon {
+          background-color: $gray-120;
+        }
+
+        &:hover, &:focus {
+          .icon {
+            background-color: $primary;
+          }
+        }
+      }
+
+      // Use negative z-index rather than `display: none` to hide buttons so they can still be selected using keyboard controls
+      .hidden-buttons {
+        position: absolute;
+        right: 2px;
+        background-color: var(--color-neutral-white, white);
+        padding: 2px 0;
+
+        z-index: -100;
+      }
+      
       &:hover, &:focus-within {
-        .indent-buttons button {
+        .hidden-buttons {
           z-index: 2;
         }
       }

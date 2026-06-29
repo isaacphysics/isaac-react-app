@@ -234,12 +234,14 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                     </Markup>
                 </pre>
                 <Spacer/>
-                <button type="button" className="btn btn-blank py-1 ps-0 pe-2 m-0 border-0" 
-                    title={`Move item to ${inAvailableItems ? "your answer" : "available items"}`} onClick={swapItemList}
-                >
-                    <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
-                </button>
-                {canIndent && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>}
+                <div className="hidden-buttons d-flex">
+                    <button type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
+                        title={`Move item to ${inAvailableItems ? "your answer" : "available items"}`} onClick={swapItemList}
+                    >
+                        <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
+                    </button>
+                    {canIndent && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>}
+                </div>
             </div>;
         }}
     </Draggable>;
