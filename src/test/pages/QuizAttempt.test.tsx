@@ -1,7 +1,7 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
 import {mockAttempts} from "../../mocks/data";
 import { isPhy, siteSpecific } from "../../app/services";
-import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectSidebarToggle, expectRubric, renderQuizPage, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
+import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectMobileSidebarToggleToHaveText, expectRubric, renderQuizPage, quizSidebarCommonTests, testSectionsHeader } from "../helpers/quiz";
 import { screen } from "@testing-library/react";
 
 describe("QuizAttempt", () => {
@@ -104,11 +104,11 @@ describe("QuizAttempt", () => {
             expect(screen.getByTestId('quiz-attempt')).toHaveAttribute('data-bs-theme', 'physics');
         });
 
-        describe('sidebar on redesigned Physics site', sideBarTestCases(studentAttemptsQuiz));
+        describe('sidebar on redesigned Physics site', quizSidebarCommonTests(studentAttemptsQuiz));
 
         it('sidebar toggle is called "Sections"', async () => {
             await studentAttemptsQuiz();
-            await expectSidebarToggle("Sections");
+            await expectMobileSidebarToggleToHaveText("Sections");
         });
     }
 });

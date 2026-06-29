@@ -6,10 +6,10 @@ import {
     expectErrorMessage,
     expectPhyBreadCrumbs,
     expectRubric,
-    expectSidebarToggle,
+    expectMobileSidebarToggleToHaveText,
     previewButton,
     renderQuizPage,
-    sideBarTestCases,
+    quizSidebarCommonTests,
     testSectionsHeader
 } from "../helpers/quiz";
 import {isPhy, siteSpecific} from "../../app/services";
@@ -120,11 +120,11 @@ describe("QuizView", () => {
             expect(screen.getByTestId('quiz-view')).toHaveAttribute('data-bs-theme', 'physics');
         });
 
-        describe('shows the redesigned sidebar', sideBarTestCases(studentViewsQuiz));
+        describe('shows the redesigned sidebar', quizSidebarCommonTests(studentViewsQuiz));
 
         it('sidebar toggle is called "Details"', async () => {
             await studentViewsQuiz();
-            await expectSidebarToggle("Details");
+            await expectMobileSidebarToggleToHaveText("Details");
         });
     }
 });
