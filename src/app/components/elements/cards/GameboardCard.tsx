@@ -48,7 +48,7 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
-    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})}>
+    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})} data-testid="card-usage-info">
         {usageDisplay?.type === "correctness" && <>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
@@ -124,7 +124,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
             : `${PATHS.GAMEBOARD}#${gameboard.id}`
         );
 
-    const card = <div className="px-3 py-2 flex-grow-1">
+    const card = <div className="px-3 py-2 flex-grow-1" data-testid="gameboard-card">
         <Row data-testid="my-assignment">
             <Col className="d-flex flex-column align-items-start">
                 <div className="d-flex align-items-center w-100">

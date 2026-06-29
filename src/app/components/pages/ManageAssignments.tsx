@@ -167,15 +167,20 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
     }, [collapsed]);
 
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyDown={(e) => {
-            if (e.key === "Enter") {
+        <div 
+            tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} 
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    setOpen(o => !o);
+                    setCollapsed(false);
+                }
+            }} onClick={() => {
                 setOpen(o => !o);
                 setCollapsed(false);
-            }
-        }} onClick={() => {
-            setOpen(o => !o);
-            setCollapsed(false);
-        }} className={"hexagon-date"}>
+            }}
+            className={"hexagon-date"}
+            data-testid="day-label"
+        >
             <div className={classNames("d-flex align-items-center gap-2", {"text-muted": !open, "fw-bold": open})}>
                 <svg height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2}>
                     <Hexagon className={"fill-secondary"} {...dateHexagon}/>
@@ -224,7 +229,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
     }, [collapsed]);
     return <>
         <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
-            className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
+            className={"month-label w-100 text-end d-flex"} data-testid="month-label" onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
                     setCollapsed(false);
