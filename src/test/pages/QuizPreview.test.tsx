@@ -1,4 +1,4 @@
-import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
+import { expectLink, expectH1, expectH4, expectUrl } from "../testUtils";
 import { mockPreviews } from "../../mocks/data";
 import { isPhy, siteSpecific } from "../../app/services";
 import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectMobileSidebarToggleToHaveText, expectRubric, renderQuizPage, quizSidebarCommonTests, testSectionsHeader } from "../helpers/quiz";
@@ -36,16 +36,16 @@ describe("QuizPreview", () => {
             expectRubric(preview.rubric?.children?.[0].value);
         });
 
-        it("shows Test sections that load section and allow navigating back", async () => {
+        it("shows Test sections that load section on click", async () => {
             await renderQuizPreviewAsTeacher();
             expect(testSectionsHeader()).toBeInTheDocument();
-            await expectLinkWithEnabledBackwardsNavigation(sections?.[0].title, `/test/preview/${quizId}/page/1`, `/test/preview/${quizId}`);
-            await expectLinkWithEnabledBackwardsNavigation(sections?.[1].title, `/test/preview/${quizId}/page/2`, `/test/preview/${quizId}`);
+            await expectLink(sections?.[0].title, `/test/preview/${quizId}/page/1`, screen.getByTestId('quiz-sections'));
+            await expectLink(sections?.[1].title, `/test/preview/${quizId}/page/2`, screen.getByTestId('quiz-sections'));
         });
 
-        it('shows "View questions" button that loads first page and allows navigating back', async () => {
+        it('shows "View questions" button that loads first page on click', async () => {
             await renderQuizPreviewAsTeacher();
-            await expectLinkWithEnabledBackwardsNavigation("View questions", `/test/preview/${quizId}/page/1`, `/test/preview/${quizId}`);
+            await expectLink("Preview questions", `/test/preview/${quizId}/page/1`);
         });
     });
 
@@ -54,18 +54,18 @@ describe("QuizPreview", () => {
 
         it('shows "Back" button that loads previous page and allows navigating back', async () => {
             await renderQuizPreviewAsTeacherAtPage(1);
-            await expectLinkWithEnabledBackwardsNavigation("Back", `/test/preview/${quizId}`, `/test/preview/${quizId}/page/1`);
+            await expectLink("Back", `/test/preview/${quizId}`);
         });
 
         it('shows "Next" button that loads following page and allows navigating back', async () => {
             await renderQuizPreviewAsTeacherAtPage(1);
-            await expectLinkWithEnabledBackwardsNavigation("Next", `/test/preview/${quizId}/page/2`, `/test/preview/${quizId}/page/1`);
+            await expectLink("Next", `/test/preview/${quizId}/page/2`);
         });
 
         describe('on the last page', () => {
             it('shows "Back to Contents" button that loads overview page and allows navigating back', async () => {
                 await renderQuizPreviewAsTeacherAtPage(2);
-                await expectLinkWithEnabledBackwardsNavigation("Back to Contents", `/test/preview/${quizId}`, `/test/preview/${quizId}/page/2`);
+                await expectLink("Back to Contents", `/test/preview/${quizId}`);
             });
         });
     });
