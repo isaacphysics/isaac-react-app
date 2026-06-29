@@ -15,7 +15,7 @@ import {isDefined, PARSONS_INDENT_STEP, PARSONS_MAX_INDENT, useCurrentQuestionAt
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import { handleParsonsItemDrag, ParsonsDraggableItem } from "../elements/ParsonsDraggableItem";
+import { handleParsonsItemDrag, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
@@ -182,7 +182,9 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
                                 {availableItems && availableItems.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
-                                        setItems={setAvailableItems} items={availableItems} isParsons attemptItems={attemptItems} setAttemptItems={setAttemptItems}/>
+                                        setItems={setAvailableItems} items={availableItems} isParsons
+                                        swapItemList={() => swapItemList(availableItems, setAvailableItems, attemptItems, setAttemptItems, index, true)}
+                                    />
                                 )}
                                 {(!availableItems || availableItems.length === 0) && <div>&nbsp;</div>}
                                 {provided.placeholder}
@@ -197,7 +199,9 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
-                                        setItems={setAttemptItems} items={attemptItems} canIndent={canIndent} isParsons />
+                                        items={attemptItems} setItems={setAttemptItems} canIndent={canIndent} isParsons
+                                        swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index, true)}
+                                    />
                                 )}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
                                     <div className="text-muted text-center">

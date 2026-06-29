@@ -8,7 +8,7 @@ import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import { handleParsonsItemDrag, ParsonsDraggableItem } from "../elements/ParsonsDraggableItem";
+import { handleParsonsItemDrag, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
@@ -86,7 +86,10 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             >
                                 {availableItems && availableItems.map((item, index) =>
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
-                                        setItems={setAvailableItems} items={availableItems} setAttemptItems={setAttemptItems} attemptItems={attemptItems}/>)}
+                                        setItems={setAvailableItems} items={availableItems}
+                                        swapItemList={() => swapItemList(availableItems, setAvailableItems, attemptItems, setAttemptItems, index)}
+                                    />
+                                )}
                                 {(!availableItems || availableItems.length === 0)
                                     ? <div>&nbsp;</div>
                                     : provided.placeholder}
@@ -104,7 +107,10 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) =>
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
                                         setItems={(items: Immutable<ItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
-                                        items={(currentAttempt?.items || []) as Immutable<ItemDTO>[]}/>)}
+                                        items={(currentAttempt?.items || []) as Immutable<ItemDTO>[]}
+                                        swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index)}
+                                    />
+                                )}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0)
                                     ? <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}

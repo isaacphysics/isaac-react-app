@@ -27,12 +27,27 @@ export const moveParsonsItem = (
     dst.splice(toIndex, 0, {...srcItem, indentation: indent});
 };
 
+export const swapItemList = (
+    srcItems: Immutable<ParsonsItemDTO>[],
+    setSrcItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void),
+    dstItems: Immutable<ParsonsItemDTO>[],
+    setDstItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void),
+    index: number,
+    isParsons?: boolean
+) => {
+    const newSrcItems = [...srcItems];
+    const newDstItems = [...dstItems];
+    moveParsonsItem(newSrcItems, index, newDstItems, dstItems.length + 1, isParsons ? 0 : undefined);
+    setSrcItems(newSrcItems);
+    setDstItems(newDstItems);
+};
+
 export const handleParsonsItemDrag = (
     result: DropResult,
     availableItems: Immutable<ParsonsItemDTO>[],
     setAvailableItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>>,
     attemptItems: Immutable<ParsonsItemDTO>[],
-    setAttemptItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void),
+    setAttemptItems: ((items: Immutable<ParsonsItemDTO>[]) => void),
     isParsons?: boolean,
     currentIndent?: number | null
 ) => {
@@ -166,21 +181,18 @@ type BaseDraggableProps = {
     index: number;
     items: Immutable<ParsonsItemDTO>[];
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
+    swapItemList: () => void;
     readonly?: boolean;
 };
 
 type AvailableItemsProps = {
     inAvailableItems: true;
-    attemptItems: Immutable<ParsonsItemDTO>[];
-    setAttemptItems: (items: Immutable<ParsonsItemDTO>[]) => void;
     isParsons?: boolean;
     canIndent?: false;
 };
 
 type AttemptItemsProps = {
     inAvailableItems?: false;
-    attemptItems?: undefined;
-    setAttemptItems?: undefined;
 } & (
     { isParsons: true; canIndent?: boolean; } |
     { isParsons?: false; canIndent?: false; }
@@ -188,7 +200,7 @@ type AttemptItemsProps = {
 
 export type ParsonsDraggableItemProps = BaseDraggableProps & (AvailableItemsProps | AttemptItemsProps);
 
-export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAvailableItems, readonly, attemptItems, setAttemptItems, canIndent, isParsons}: ParsonsDraggableItemProps) => {
+export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAvailableItems, readonly, swapItemList, canIndent, isParsons}: ParsonsDraggableItemProps) => {
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
         if (!snapshot.isDropAnimating || !isParsons) return style;
         
@@ -221,22 +233,13 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                         {currentItem.value}
                     </Markup>
                 </pre>
-                {inAvailableItems && <>
-                    <Spacer/>
-                    <button type="button" className="btn btn-blank py-1 px-0 m-0 border-0" title="Add item to end of answer" onClick={() => {
-                        const srcItems = [...items];
-                        const dstItems = [...attemptItems];
-                        moveParsonsItem(srcItems, index, dstItems, attemptItems.length + 1, isParsons ? 0 : undefined);
-                        setItems(srcItems);
-                        setAttemptItems(dstItems);
-                    }}>
-                        <i className="icon icon-arrow-right icon-color-muted-hoverable icon-color-theme-on-hover" />
-                    </button>
-                </>}
-                {canIndent && <>
-                    <Spacer/>
-                    <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>
-                </>}
+                <Spacer/>
+                <button type="button" className="btn btn-blank py-1 ps-0 pe-2 m-0 border-0" 
+                    title={`Move item to ${inAvailableItems ? "your answer" : "available items"}`} onClick={swapItemList}
+                >
+                    <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
+                </button>
+                {canIndent && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>}
             </div>;
         }}
     </Draggable>;
