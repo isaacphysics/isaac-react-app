@@ -214,7 +214,7 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                     void navigateComponentless(`${PATHS.MY_GAMEBOARDS}#${boardId}`);
                 }
             }
-            dispatch(showSuccessToast("Deck saved", `The deck '${boardTitle}' has successfully been saved to your account.`) as any);
+            dispatch(showSuccessToast("Deck saved", `The deck ${boardTitle ? `${boardTitle} ` : ''}has successfully been saved to your account.`) as any);
             return {boardId, boardTitle};
         } catch (e) {
             dispatch(showRTKQueryErrorToastIfNeeded("Error saving question deck", e) as any);
