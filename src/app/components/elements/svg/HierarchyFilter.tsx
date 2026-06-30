@@ -35,7 +35,7 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
 
     return <>
         {choices[tier] && choices[tier][index] && 
-            choices[tier][index].sort((choice) => getIsDisabled(choice) ? 1 : 0).map((choice, i) => {
+            choices[tier][index].sort((choiceA, choiceB) => Number(getIsDisabled(choiceA)) - Number(getIsDisabled(choiceB))).map((choice, i) => {
                 const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
                 const isLeaf = getChoiceTreeLeaves(selections).map(l => l.value).includes(choice.value);
                 function selectValue() {
