@@ -3,7 +3,7 @@ import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
 import { AppQuestionDTO, InlineQuestionDTO, InlineContext, QuestionCorrectness } from "../../../IsaacAppTypes";
 import { ContentDTO, GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
 import { selectors, useAppSelector } from "../../state";
-import { submitCurrentAttempt } from "../../services";
+import { isDefined, submitCurrentAttempt } from "../../services";
 
 // TODO: generify this (IsaacContentProps?), reuse also for IsaacCardDeck
 interface IsaacInlineRegionProps {
@@ -44,8 +44,11 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
 
     useEffect(() => {
         const isFeedbackShown = currentAttempts?.some(vr => vr !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
+        const firstIncorrectPart = currentAttempts?.findIndex(vr => vr?.correct !== true);
         if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined && inlineQuestions && inlineQuestions.length > 0) {
-            inlineContext.setFeedbackIndex(0);
+            if (isDefined(firstIncorrectPart) && firstIncorrectPart >= 0) {
+                inlineContext.setFeedbackIndex(firstIncorrectPart);
+            }
         }
     }, [canSubmit, currentAttempts, inlineContext]);
     
@@ -88,7 +91,7 @@ export const submitInlineRegion = async (inlineContext: ContextType<typeof Inlin
     if (inlineContext && inlineContext.docId && pageQuestions) {
         inlineContext.setSubmitting(true);
         inlineContext.canShowWarningToast = true;
-        if (Object.keys(inlineContext.elementToQuestionMap).length > 1) inlineContext.setFeedbackIndex(0);
+        if (Object.keys(inlineContext.elementToQuestionMap).length > 1) inlineContext.setFeedbackIndex(undefined);
         
         const inlineQuestions = pageQuestions.filter(q => inlineContext.docId && q.id?.startsWith(inlineContext.docId) && q.id.includes("|inline-question:"));
         // we submit all modified answers, and those with undefined values. we must submit this latter group to get a validation response at the same time as the other answers
@@ -132,7 +135,8 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
         if (inlineContext?.submitting && inlineContext.modifiedQuestionIds?.length === 0) {
             inlineContext.setSubmitting(false);
             inlineContext.setIsModifiedSinceLastSubmission(false);
-            inlineContext.setFeedbackIndex(0);
+            const firstIncorrectPart = inlineQuestions?.findIndex(q => q.validationResponse?.correct !== true);
+            inlineContext.setFeedbackIndex(isDefined(firstIncorrectPart) && firstIncorrectPart >= 0 ? firstIncorrectPart : undefined);
             inlineContext.canShowWarningToast = true;
         }
     }, [inlineContext?.modifiedQuestionIds]);
