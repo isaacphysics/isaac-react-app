@@ -4,11 +4,11 @@ import { sortBy } from "lodash";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
 import { AssignmentDTO } from "../../../../IsaacApiTypes";
-import { AppGroup, LoggedInUser } from "../../../../IsaacAppTypes";
+import { AppGroup } from "../../../../IsaacAppTypes";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { selectors, useAppSelector } from "../../../state";
 
 interface HeaderProps {
-    user: LoggedInUser;
     assignmentsSetByMe?: AssignmentDTO[];
     viewBy: "startDate" | "dueDate";
     setViewBy: (vb: "startDate" | "dueDate") => void;
@@ -24,8 +24,8 @@ interface HeaderProps {
     collapse: () => void;
 } 
 
-export const ManageAssignmentsSidebar = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
-
+export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
+    const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
     return <ContentSidebar buttonTitle="Filter & sort">

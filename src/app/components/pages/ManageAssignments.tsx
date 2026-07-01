@@ -437,7 +437,6 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
         }
         sidebar={
             <ManageAssignmentsSidebar
-                user={user}
                 assignmentsSetByMe={assignmentsSetByMe}
                 groupsToInclude={groupsToInclude} 
                 setGroupsToInclude={setGroupsToInclude}
