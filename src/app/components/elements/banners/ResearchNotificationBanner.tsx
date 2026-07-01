@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {logAction, useAppDispatch} from "../../../state";
 import {isAda, siteSpecific} from "../../../services";
 import { Row, Col } from 'reactstrap';
-import { DismissibleCookieBannerProps } from '../../../services/siteBanners';
+import { DismissibleCookieBanner } from './DismissibleBanner';
 
 const RESEARCH_NOTIFICATION_COOKIE = "researchNotificationDismissed";
 
@@ -23,15 +23,16 @@ const ResearchNotificationBannerBody = () => {
     </Row>;
 };
 
-export const useResearchNotificationBanner = () : DismissibleCookieBannerProps => {
+export const ResearchNotificationBanner = () => {
     const dispatch = useAppDispatch();
-    return {
-        type: "dismissibleCookieBanner",
-        cookieName: RESEARCH_NOTIFICATION_COOKIE,
-        theme: "light",
-        dismissText: "Got it",
-        onDismiss: () => void dispatch(logAction({type: "RESEARCH_NOTIFICATION_DISMISSED"})),
-        children: <ResearchNotificationBannerBody />,
-        show: true,
-    };
+
+    return <DismissibleCookieBanner
+        cookieName={RESEARCH_NOTIFICATION_COOKIE}
+        theme="light"
+        dismissText="Got it"
+        onDismiss={() => dispatch(logAction({type: "RESEARCH_NOTIFICATION_DISMISSED"}))}
+        show={true}
+    >
+        <ResearchNotificationBannerBody />
+    </DismissibleCookieBanner>;
 };

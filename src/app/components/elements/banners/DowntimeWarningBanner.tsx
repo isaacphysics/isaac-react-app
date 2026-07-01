@@ -1,7 +1,7 @@
 import React from 'react';
 import {SITE_TITLE, siteSpecific} from "../../../services";
-import { DismissibleCookieBannerProps } from '../../../services/siteBanners';
 import { Col, Row } from 'reactstrap';
+import { DismissibleCookieBanner } from './DismissibleBanner';
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
@@ -19,13 +19,16 @@ const DowntimeWarningBannerBody = () => {
     </Row>;
 };
 
-export const useDowntimeWarningBanner = () : DismissibleCookieBannerProps => {
-    return {
-        type: "dismissibleCookieBanner",
-        cookieName: DOWNTIME_COOKIE,
-        theme: siteSpecific("danger", "warning"),
-        dismissText: <>Dismiss<span className="visually-hidden"> downtime notification</span></>,
-        children: <DowntimeWarningBannerBody />,
-        show: true,
-    };
+export const DowntimeWarningBanner = () => {
+    return <DismissibleCookieBanner
+        cookieName={DOWNTIME_COOKIE}
+        theme={siteSpecific("danger", "warning")}
+        dismissText={<>
+            Dismiss
+            <span className="visually-hidden"> downtime notification</span>
+        </>}
+        show={true}
+    >
+        <DowntimeWarningBannerBody />
+    </DismissibleCookieBanner>;
 };

@@ -6,20 +6,20 @@ import { DismissibleBannerProps, DismissibleCookieBannerProps } from "../../../s
 
 // a banner type that tracks a cookie to determine whether it should be shown or not (so as to persist across page reloads and sessions)
 export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => {
-    const { cookieName, cookieExpiry=720, children, dismissText, theme, onDismiss, ...rest } = props;
+    const { cookieName, cookieExpiry=720, children, dismissText, theme, onDismiss, show, ...rest } = props;
 
-    const [show, setShown] = useState(() => {
+    const [closed, setClosed] = useState(() => {
         const currentCookieValue = Cookies.get(cookieName);
-        return currentCookieValue != "1";
+        return currentCookieValue === "1";
     });
 
     function clickDismiss() {
-        setShown(false);
+        setClosed(true);
         Cookies.set(cookieName, "1", {expires: cookieExpiry /* days*/});
         onDismiss?.();
     }
 
-    if (!show) {
+    if (!show || closed) {
         return null;
     }
 
@@ -54,15 +54,15 @@ export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => 
 
 // a banner type that can be dismissed in a session, but will reappear when state is lost (e.g. on page reload)
 export const DismissibleBanner = (props: DismissibleBannerProps) => {
-    const { children, dismissText, theme, onDismiss, ...rest } = props;
-    const [show, setShown] = useState(true);
+    const { children, dismissText, theme, onDismiss, show, ...rest } = props;
+    const [closed, setClosed] = useState(false);
 
     function clickDismiss() {
-        setShown(false);
+        setClosed(true);
         onDismiss?.();
     }
 
-    return show && <Alert 
+    return show && !closed && <Alert 
         {...rest}
         color={theme} 
         className={classNames("mb-0 border-radius-0 mx-0 px-5 no-print", {"d-flex align-items-center": !dismissText})} 

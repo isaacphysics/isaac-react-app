@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { DismissibleCookieBannerProps } from "../../../services/siteBanners";
 import { isPhy } from "../../../services";
+import { DismissibleCookieBanner } from "./DismissibleBanner";
 
 const IsaacScienceLaunchBannerBody = () => {
     return <>
@@ -10,12 +10,12 @@ const IsaacScienceLaunchBannerBody = () => {
     </>;
 };
 
-export const useIsaacScienceLaunchBanner = () : DismissibleCookieBannerProps => {
-    return {
-        type: "dismissibleCookieBanner",
-        cookieName: "isaacScienceLaunchBannerDismissed",
-        theme: "info",
-        children: <IsaacScienceLaunchBannerBody />,
-        show: isPhy,
-    };
+export const IsaacScienceLaunchBanner = () => {
+    return <DismissibleCookieBanner 
+        cookieName="isaacScienceLaunchBannerDismissed"
+        theme="info"
+        show={isPhy}
+    >
+        <IsaacScienceLaunchBannerBody />
+    </DismissibleCookieBanner>;
 };

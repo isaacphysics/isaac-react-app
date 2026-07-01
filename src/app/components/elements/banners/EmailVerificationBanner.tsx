@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import {Button, Col, Row} from 'reactstrap';
 import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../../services";
 import { EmailVerificationStatus } from '../../../../IsaacApiTypes';
-import { DismissibleBannerProps } from '../../../services/siteBanners';
+import { DismissibleBanner } from './DismissibleBanner';
 
 interface EmailVerificationBannerProps {
     setHidden: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +56,7 @@ const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBanne
     </Row>;
 };
 
-export const useEmailVerificationBanner = () : DismissibleBannerProps => {
+export const EmailVerificationBanner = () => {
     const [hidden, setHidden] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const {cookieConsent} = useUserConsent();
@@ -64,11 +64,11 @@ export const useEmailVerificationBanner = () : DismissibleBannerProps => {
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
     const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
-    return {
-        type: "dismissibleBanner",
-        dismissText: "Snooze",
-        theme: "light",
-        children: <EmailVerificationBannerBody setHidden={setHidden} status={status} />,
-        show: !!show,
-    };
+    return <DismissibleBanner
+        dismissText={"Snooze"}
+        theme={"light"}
+        show={!!show}
+    >
+        <EmailVerificationBannerBody setHidden={setHidden} status={status} />
+    </DismissibleBanner>;
 };
