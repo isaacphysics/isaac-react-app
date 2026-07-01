@@ -3,7 +3,6 @@ import {
     useAppDispatch,
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
-    useCancelQuizAssignmentMutation,
     useUpdateQuizAssignmentMutation,
     openActiveModal
 } from "../../../state";
@@ -15,7 +14,7 @@ import {formatDate, formatISODateOnly} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     above,
-    below, confirmThen,
+    below, 
     ifKeyIsEnter,
     isAda,
     isDefined,
@@ -28,7 +27,8 @@ import {
     tags,
     TODAY,
     useDeviceSize,
-    useFilteredQuizzes
+    useFilteredQuizzes,
+    useManageQuizAssignments
 } from "../../../services";
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -37,7 +37,6 @@ import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
-import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
 import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";
 import { HexIcon } from "../../elements/svg/HexIcon";
@@ -110,10 +109,9 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const [currentSort, setCurrentSort] = useState(() => compareCreationDates);
     const [reverseSort, setReverseSort] = useState(false);
     const [selectedCol, setSelectedCol] = useState<string | undefined>(undefined);
-    const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [selectedQuiz, setSelectedQuiz] = useState<QuizAssignmentDTO | undefined>(undefined);
+    
     const [_updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
+    const {cancel, isCancelling, openExtendDueDateModal, openAssignModal} = useManageQuizAssignments();
 
     if (assignedGroups.length === 0) return <></>;
 
@@ -139,11 +137,6 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const assignment = assignedGroups[0].assignment;
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId);
 
-    const cancel = () => confirmThen(
-        "Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.",
-        () => markQuizAsCancelled(assignment.id as number)
-    );
-
     const determineQuizSubject = (quizSummary?: QuizSummaryDTO) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
     };
@@ -158,12 +151,6 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     ].filter(isDefined);
 
     return <>
-        {selectedQuiz && selectedQuiz.dueDate && <ExtendDueDateModal
-            isOpen={isModalOpen}
-            toggle={() => setIsModalOpen(false)}
-            currDueDate={selectedQuiz.dueDate}
-            numericQuizAssignmentId={selectedQuiz.id as number}
-        />}
         <tr className={classNames("bg-white set-quiz-table-dropdown p-0 w-100", {"active": isExpanded, "list-group-item": isPhy})} tabIndex={0}
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
@@ -207,8 +194,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                     <td className="align-middle pe-4 d-none d-sm-table-cell">
                         <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                             onClick={(e) => {
-                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
+                                openAssignModal(assignment);
                                 e.stopPropagation();
                             }}
                         >
@@ -270,13 +256,13 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                             More
                                         </DropdownToggle>
                                         <DropdownMenu>
-                                            <DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} onClick={() => {
-                                                setSelectedQuiz(assignedGroup.assignment);
-                                                setIsModalOpen(true);
-                                            }}>
+                                            {assignedGroup.assignment.dueDate && <DropdownItem 
+                                                color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} 
+                                                onClick={() => openExtendDueDateModal(assignedGroup.assignment)}
+                                            >
                                                 Extend Due Date
-                                            </DropdownItem>
-                                            <DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
+                                            </DropdownItem>}
+                                            <DropdownItem color="tertiary" size="sm" onClick={() => cancel(assignedGroup.assignment)} disabled={isCancelling}>
                                                 {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : "Cancel test"}
                                             </DropdownItem>
                                         </DropdownMenu>

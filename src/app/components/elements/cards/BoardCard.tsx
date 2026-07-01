@@ -281,7 +281,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
             // sci
             <GameboardCard 
                 gameboard={board} linkLocation={GameboardLinkLocation.Card} data-testid="gameboard-card"
-                openAssignModal={openAssignModal} groupCount={isSetAssignments ? assignees?.length : undefined}
+                openAssignModal={openAssignModal} usageDisplay={isSetAssignments ? {type: "group", groupCount: assignees?.length} : {type: "correctness"}}
             >
                 <Row>
                     <Col>

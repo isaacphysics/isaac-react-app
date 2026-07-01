@@ -14,9 +14,10 @@ interface ShareLinkProps {
     innerClassName?: string;
     size?: "sm" | "md"; // "md" default (as used for PageMetadata buttons); "sm" aligns with regular .btn padding
     buttonProps?: Partial<IconButtonProps>;
+    inputInfo?: string;
 }
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, innerClassName, size, buttonProps}: ShareLinkProps) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, innerClassName, size, buttonProps, inputInfo}: ShareLinkProps) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
@@ -57,6 +58,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     return <div ref={shareLinkDivRef} className={classNames(className, "position-relative", {"w-max-content d-inline-flex": isPhy})}>
         <div className={`action-buttons-popup-container ${showShareLink ? "" : "d-none"} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
             <input type="text" readOnly ref={shareLink} value={shareUrl} onClick={(e) => e.preventDefault()} aria-label="Share URL" />
+            {inputInfo && <span className="small text-muted">{inputInfo}</span>}
         </div>
         {showShareLink && showDuplicateAndEdit && <div className="duplicate-and-edit" style={{width: linkWidth}}>
             <a href={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
@@ -64,7 +66,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             </a>
         </div>}
         <IconButton
-            icon={{name: "icon-share icon-color-black-hoverable", color: outline ? "" : "white"}}
+            icon={{name: classNames("icon-share", buttonProps?.disabled ? "icon-color-grey" : "icon-color-black-hoverable"), color: outline ? "" : "white"}}
             className={classNames(innerClassName, "w-max-content h-max-content action-button", {"icon-button-sm": size == "sm"})}
             aria-label={buttonAriaLabel}
             title="Share page"

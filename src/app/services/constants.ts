@@ -1336,6 +1336,10 @@ export const CODE_EDITOR_RUN_BUTTON_SPACING = 96;
 
 export const reactSelectDarkModeStyles = siteSpecific({
     // sci
+    container: (base: CSSObjectWithLabel) => ({
+        ...base,
+        backgroundColor: "var(--color-neutral-white)",
+    }),
     control: (base: CSSObjectWithLabel) => ({
         ...base,
         backgroundColor: "unset",

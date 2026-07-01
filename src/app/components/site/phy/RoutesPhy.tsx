@@ -46,6 +46,9 @@ import { Navigate, Route } from "react-router";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { MyBookmarks } from "../../pages/MyBookmarks";
+import { ManageAssignments } from "../../pages/ManageAssignments";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
+import { NotFound } from "../../pages/NotFound";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -85,6 +88,9 @@ export const RoutesPhy = [
 
     // Assignments
     <Route key={key++} path="/assignment_schedule" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentSchedule user={authUser} />} />} />,
+    <Route key={key++} path="/assigned" element={<FeatureFlagWrapper flag={FeatureFlag.MANAGE_ASSIGNMENTS} onUnset={<NotFound />} onSet={
+        <RequireAuth auth={isTutorOrAbove} element={<ManageAssignments />} />} />
+    } />,
 
     // Teacher test pages
     <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,

@@ -32,7 +32,8 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     return <GameboardCard 
         gameboard={assignment.gameboard} 
         linkLocation={GameboardLinkLocation.Card} 
-        assignment={assignment} 
+        assignment={assignment}
+        usageDisplay={{type: "correctness"}} 
         openAssignModal={openAssignModal}
     >
         <Row className="w-100">

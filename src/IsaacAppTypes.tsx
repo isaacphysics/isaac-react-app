@@ -10,6 +10,7 @@ import {
     Difficulty,
     GameboardDTO,
     GameboardItem,
+    IAssignmentLike,
     ItemDTO,
     QuestionDTO,
     QuestionValidationResponseDTO,
@@ -422,6 +423,13 @@ export interface ValidAssignmentWithListingDate extends AssignmentDTO {
     listingDate: Date;
 }
 
+export interface ValidWorkWithListingDate extends IAssignmentLike {
+    groupId: number;
+    additionalManagerPrivileges: boolean;
+    id: number;
+    listingDate: Date;
+}
+
 export interface AssignmentProgressPageSettings {
     colourBlind: boolean;
     setColourBlind: (colourBlind: boolean) => void;
@@ -487,6 +495,16 @@ export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
 export const AssignmentProgressPageSettingsContext = React.createContext<AssignmentProgressPageSettings | undefined>(undefined);
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
+
+export const ManageAssignmentsContext = React.createContext<{
+    groupsById: {[id: number]: AppGroup | undefined};
+    workByGroup: {[id: number]: {boards?: IAssignmentLike[], tests?: IAssignmentLike[]} | undefined};
+    groups: AppGroup[];
+    collapsed: boolean;
+    setCollapsed: (b: boolean) => void;
+    viewBy: "startDate" | "dueDate";
+}>({groupsById: {}, workByGroup: {}, groups: [], collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
     groupsById: {[id: number]: AppGroup | undefined};
@@ -499,6 +517,7 @@ export const AssignmentScheduleContext = React.createContext<{
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
 }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+
 export const SidebarContext = React.createContext<{sidebarPresent: boolean} | undefined>(undefined);
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
