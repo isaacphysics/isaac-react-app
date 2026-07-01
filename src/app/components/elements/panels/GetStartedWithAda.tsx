@@ -68,7 +68,9 @@ export const GetStartedWithAda = () => {
                             </CompletableTask> */}
                         </ul>
 
-                        <span>Prefer a video overview? Try our <strong><Link to="https://www.youtube.com/playlist?list=PLxyaWvsfmq49mjnh8LQeztQSZAcrvB6bk" target="_blank">YouTube playlist</Link></strong>!</span>
+                        <div className="text-md-end">
+                            Prefer a video overview? Try our <strong><Link to="https://www.youtube.com/playlist?list=PLxyaWvsfmq49mjnh8LQeztQSZAcrvB6bk" target="_blank">YouTube playlist</Link></strong>!
+                        </div>
                     </>}
                 />
             </AccordionBody>
