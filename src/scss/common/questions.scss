@@ -468,7 +468,10 @@ figure .inline-container {
       @for $i from 0 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
-            white #{$i * $parsons-step + 5}px, $gray-400 #{$i * $parsons-step + 5}px, $gray-400 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
+            var(--color-neutral-white, white) #{$i * $parsons-step + 5}px, 
+            var(--color-neutral-700, $gray-400) #{$i * $parsons-step + 5}px, 
+            var(--color-neutral-700, $gray-400) #{$i * $parsons-step + 7}px, 
+            var(--color-neutral-white, white) #{$i * $parsons-step + 7}px
           );
         }
       }
