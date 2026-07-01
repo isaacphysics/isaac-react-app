@@ -2,7 +2,6 @@ import React from "react";
 import {
     isDefined,
     QUIZ_FEEDBACK_NAMES,
-    siteSpecific,
 } from "../../../services";
 import {
     Label,
