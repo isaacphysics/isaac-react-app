@@ -33,6 +33,7 @@ import {
 } from "../../services";
 import {
     ActiveModalProps,
+    LoggedInUser,
     ManageAssignmentsContext,
     ValidWorkWithListingDate
 } from "../../../IsaacAppTypes";
@@ -264,7 +265,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
 };
 
 type WorkGroupedByDate = [number, [number, [number, ValidWorkWithListingDate[]][]][]][];
-export const ManageAssignments = () => {
+export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const testsSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
@@ -435,7 +436,8 @@ export const ManageAssignments = () => {
             <TitleAndBreadcrumb currentPageTitle="Set / manage work" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
         }
         sidebar={
-            <ManageAssignmentsSidebar 
+            <ManageAssignmentsSidebar
+                user={user}
                 assignmentsSetByMe={assignmentsSetByMe}
                 groupsToInclude={groupsToInclude} 
                 setGroupsToInclude={setGroupsToInclude}

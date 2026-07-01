@@ -4,10 +4,11 @@ import { sortBy } from "lodash";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
 import { AssignmentDTO } from "../../../../IsaacApiTypes";
-import { AppGroup } from "../../../../IsaacAppTypes";
+import { AppGroup, LoggedInUser } from "../../../../IsaacAppTypes";
 import { StyledSelect } from "../inputs/StyledSelect";
 
 interface HeaderProps {
+    user: LoggedInUser;
     assignmentsSetByMe?: AssignmentDTO[];
     viewBy: "startDate" | "dueDate";
     setViewBy: (vb: "startDate" | "dueDate") => void;
@@ -23,7 +24,7 @@ interface HeaderProps {
     collapse: () => void;
 } 
 
-export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
+export const ManageAssignmentsSidebar = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
 
     const deviceSize = useDeviceSize();
 
