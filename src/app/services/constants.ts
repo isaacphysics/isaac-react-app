@@ -15,7 +15,6 @@ import {
     ItemDTO,
     QuestionPartState,
     Stage,
-    UserRole
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
@@ -225,6 +224,7 @@ export enum ACTION_TYPE {
     QUIZ_START_FREE_ATTEMPT_REQUEST = "QUIZ_START_FREE_ATTEMPT_REQUEST",
     QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS = "QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS",
     QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE = "QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE",
+    QUIZ_ATTEMPT_CLEAR = "QUIZ_ATTEMPT_CLEAR",
 }
 
 export enum PROGRAMMING_LANGUAGE {
@@ -1090,16 +1090,6 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
 );
 export const BOOKS_CRUMB = {title: "Books", to: "/books"};
 
-export const UserFacingRole: {[role in UserRole]: string} = {
-    ADMIN: "admin",
-    EVENT_MANAGER: "event manager",
-    CONTENT_EDITOR: "content editor",
-    EVENT_LEADER: "event leader",
-    TEACHER: "teacher",
-    TUTOR: "tutor",
-    STUDENT: "student"
-};
-
 export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
@@ -1346,6 +1336,10 @@ export const CODE_EDITOR_RUN_BUTTON_SPACING = 96;
 
 export const reactSelectDarkModeStyles = siteSpecific({
     // sci
+    container: (base: CSSObjectWithLabel) => ({
+        ...base,
+        backgroundColor: "var(--color-neutral-white)",
+    }),
     control: (base: CSSObjectWithLabel) => ({
         ...base,
         backgroundColor: "unset",

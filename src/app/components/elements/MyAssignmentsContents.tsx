@@ -11,6 +11,7 @@ import {
 import {formatDate, getFriendlyDaysUntil} from "./DateString";
 import {Circle} from "./svg/Circle";
 import { GameboardCard, GameboardLinkLocation } from "./cards/GameboardCard";
+import { useSetAssignment } from "../../services/setAssignment";
 
 const CSCircle = ({label, percentage}: {percentage: number | unknown, label: string}) => {
     return <Label>
@@ -26,8 +27,15 @@ const CSCircle = ({label, percentage}: {percentage: number | unknown, label: str
 
 const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
+    const { openAssignModal } = useSetAssignment(assignment.gameboard!); // remove ! when merging with future changes
 
-    return <GameboardCard gameboard={assignment.gameboard} linkLocation={GameboardLinkLocation.Card} assignment={assignment}>
+    return <GameboardCard 
+        gameboard={assignment.gameboard} 
+        linkLocation={GameboardLinkLocation.Card} 
+        assignment={assignment}
+        usageDisplay={{type: "correctness"}} 
+        openAssignModal={openAssignModal}
+    >
         <Row className="w-100">
             <Col xs={12} md={6}>
                 {isDefined(assignmentStartDate) && 

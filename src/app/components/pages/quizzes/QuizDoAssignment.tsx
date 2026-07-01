@@ -3,8 +3,8 @@ import {clearQuizAttempt, loadQuizAssignmentAttempt, useAppDispatch} from "../..
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {getThemeFromTags, isDefined, useCurrentQuizAttempt} from "../../../services";
-import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps} from "../../elements/quiz/QuizContentsComponent";
-import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {FullQuizInfo, myQuizzesCrumbs, QuizContentsComponent, QuizProps} from "../../elements/quiz/QuizContentsComponent";
+import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
@@ -28,7 +28,7 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
         };
     }, [dispatch, quizAssignmentId]);
 
-    const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
+    const pageNumber = isDefined(page) ? parseInt(page, 10) : undefined;
     useSectionViewLogging(attempt, pageNumber);
 
     const pageLink = useCallback((page?: number) =>
@@ -38,7 +38,19 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
     const feedbackLink = attempt?.quizAssignment?.quizFeedbackMode !== "NONE" ? `/test/attempt/${attempt?.id}/feedback` : `/tests`;
 
     // Importantly, these are only used if attempt is defined
-    const subProps: QuizAttemptProps & {feedbackLink: string} = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
+    const subProps: QuizProps & FullQuizInfo & {feedbackLink: string} = {
+        user,
+        pageHelp,
+        page: pageNumber,
+        quiz: attempt?.quiz as IsaacQuizDTO,
+        attempt: attempt as QuizAttemptDTO, 
+        quizContents: {
+            questions,
+            sections,
+            pageLink,
+        },
+        feedbackLink
+    };
 
     return <Container className="mb-7" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>

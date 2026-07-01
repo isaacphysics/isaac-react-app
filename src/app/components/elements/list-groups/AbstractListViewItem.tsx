@@ -3,7 +3,7 @@ import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Badge, Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
+import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { above, below, isAda, isDefined, isLoggedIn, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { TitleIcon, TitleIconProps } from "../PageTitle";
@@ -16,6 +16,8 @@ import { ContentPropertyTags } from "../ContentPropertyTags";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
+import { SaveBoardButton } from "../SaveBoardButton";
+import { BoardItemIndicator } from "../cards/GameboardCard";
 import { useBookmarks } from "../../../services/bookmarks";
 import { PreviewQuestionButton } from "../PreviewButton";
 
@@ -54,16 +56,6 @@ export const StatusDisplay = (props: StatusDisplayProps) => {
     }
 };
 
-interface ItemCountProps extends React.HTMLAttributes<HTMLSpanElement> {
-    count: number;
-}
-
-const ItemCount = ({count, ...rest}: ItemCountProps) => {
-    return <Badge color="theme" {...rest} className={classNames("list-view-status-indicator count-tag", rest.className)}>
-        {count < 100 ? count : "99+"}
-    </Badge>;
-};
-
 export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
     tag: string;
     url?: string;
@@ -88,7 +80,7 @@ const LinkTags = ({linkTags, disabled}: LinkTagProps) => {
 const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl?: string, quizButton?: ReactNode}) => {
     const { previewQuizUrl, quizButton, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
-        {previewQuizUrl && <Button to={previewQuizUrl} color={siteSpecific("keyline", "solid")} tag={Link} className="set-quiz-button-md">
+        {previewQuizUrl && <Button to={previewQuizUrl} color={"keyline"} tag={Link} className="set-quiz-button-md h-100">
             {previewQuizUrl.includes("/preview/") ? "Preview" : "View test"}
         </Button>}
         {quizButton}
@@ -101,7 +93,8 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
     const [ getAssignments ] = useLazyGetMySetAssignmentsQuery();
     const [ unassignBoard ] = useUnassignGameboardMutation();
 
-    return <Button color="solid" 
+    return <Button 
+        color="keyline" 
         onClick={async (e) => {
             e.stopPropagation();
             const {data: groups} = await getGroups(false, true);
@@ -146,7 +139,7 @@ type ALVIType = {
     audienceViews?: ViewingContext[];
     status?: CompletionState;
 } | {
-    // gameboards – have exclusive "assign" buttons
+    // gameboards – have exclusive "assign" and "save to my decks" buttons
     alviType: "gameboard";
     board?: GameboardDTO;
 } | {
@@ -203,7 +196,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isLLM = tags?.includes("llm_question_page");
 
     const flatLayout = style === "flat" && above['lg'](deviceSize);
-    const stackedLayout = style === "stacked" || below["sm"](deviceSize);
+    const stackedLayout = style === "stacked" || (isPhy && below["sm"](deviceSize)) || (isAda && below["xs"](deviceSize));
     const wrapTitleTags = below["xs"](deviceSize);
 
     const cardBody = <>
@@ -217,7 +210,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                         <StatusDisplay status={typedProps.status} showText={false} />
                     </div>}
-                    {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
+                    {isGameboard && typedProps.board?.contents && <BoardItemIndicator type="list-view" count={typedProps.board.contents.length} />}
                 </div>
                 <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2 ps-1 ms-n1", "py-3"))}>
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
@@ -264,13 +257,15 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isPhy && isItem && stackedLayout && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                         <StatusDisplay status={typedProps.status} showText className="py-1" />
                     }
-                    {isGameboard && stackedLayout && isTeacherOrAbove(user) && <div className="d-flex pt-3">
-                        <GameboardAssign board={typedProps.board} />
+                    {isGameboard && stackedLayout && isDefined(typedProps.board) && <div className="d-flex pt-3 gap-3">
+                        {/* note order flipped relative to non-stackedLayout to keep Assign at highest priority visually */}
+                        {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
+                        <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                     </div>}
                     {isItem && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
                         <LinkTags linkTags={typedProps.linkTags}/>
                     </div>}
-                    {isQuiz && stackedLayout && <div className="d-flex d-md-none align-items-center">
+                    {isQuiz && stackedLayout && <div className={classNames("d-flex align-items-center mt-2")}>
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/>
                     </div>}
                 </div>
@@ -291,10 +286,11 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
-                    {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
-                        <GameboardAssign board={typedProps.board} />
-                    </Col>}
-                    {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                    {isGameboard && typedProps.board && <div className="d-flex align-items-center justify-content-end gap-3 ms-3">
+                        <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
+                        {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
+                    </div>}
+                    {isQuiz && <Col md={6} className="d-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
                     {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && <div

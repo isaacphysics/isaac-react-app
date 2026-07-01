@@ -9,6 +9,7 @@ import { LoginLogoutButton } from "./HeaderPhy";
 import { Link, useNavigate } from "react-router-dom";
 import { HoverableNavigationContext, PageContextState } from "../../../../IsaacAppTypes";
 import max from "lodash/max";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
@@ -310,7 +311,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                         {isTutorOrAbove(user) && <h5 className="pt-2 pt-sm-0">STUDENT</h5>}
                         <ul className="plain-list flex-grow-1">
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
-                                My question decks
+                                My saved decks
                             </NavigationItemClose>
                             <NavigationItemClose href={PATHS.BOOKMARKS}>
                                 My bookmarks
@@ -363,12 +364,21 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                 <NavigationItemClose href="/question_deck_builder">
                                     Create a question deck
                                 </NavigationItemClose>
-                                <NavigationItemClose href="/set_assignments">
-                                    Set assignments
-                                </NavigationItemClose>
-                                <NavigationItemClose href="/assignment_schedule">
-                                    Assignment schedule
-                                </NavigationItemClose>
+                                <FeatureFlagWrapper flag={FeatureFlag.MANAGE_ASSIGNMENTS} 
+                                    onUnset={<>
+                                        <NavigationItemClose href="/set_assignments">
+                                            Set assignments
+                                        </NavigationItemClose>
+                                        <NavigationItemClose href="/assignment_schedule">
+                                            Assignment schedule
+                                        </NavigationItemClose>
+                                    </>} 
+                                    onSet={<>
+                                        <NavigationItemClose href="/assigned">
+                                            Set / manage work
+                                        </NavigationItemClose>
+                                    </>}
+                                />
                                 <NavigationItemClose href="/assignment_progress">
                                     Assignment progress
                                 </NavigationItemClose>

@@ -103,12 +103,12 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     );
 
     const tooManySigFigsFeedback = <p>
-        Whether your answer is correct or not, it has the wrong number of&nbsp;
+        Your answer <b>looks right</b>, but it needs <b>fewer</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
     const tooFewSigFigsFeedback = <p>
-        We can&apos;t mark this until you provide more&nbsp;
+        Your answer may be <b>right or wrong</b>, but it needs <b>more</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 

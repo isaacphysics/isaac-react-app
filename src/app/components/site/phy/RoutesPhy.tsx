@@ -46,6 +46,9 @@ import { Navigate, Route } from "react-router";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { MyBookmarks } from "../../pages/MyBookmarks";
+import { ManageAssignments } from "../../pages/ManageAssignments";
+import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
+import { NotFound } from "../../pages/NotFound";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -85,6 +88,9 @@ export const RoutesPhy = [
 
     // Assignments
     <Route key={key++} path="/assignment_schedule" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentSchedule user={authUser} />} />} />,
+    <Route key={key++} path="/assigned" element={<FeatureFlagWrapper flag={FeatureFlag.MANAGE_ASSIGNMENTS} onUnset={<NotFound />} onSet={
+        <RequireAuth auth={isTutorOrAbove} element={<ManageAssignments />} />} />
+    } />,
 
     // Teacher test pages
     <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
@@ -98,9 +104,9 @@ export const RoutesPhy = [
     <Route key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
     <Route key={key++} path="/test/assignment/:quizAssignmentId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
     <Route key={key++} path="/test/attempt/:quizAttemptId/feedback" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
     <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/page/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
     <Route key={key++} path="/test/assignment/:quizAssignmentId/feedback" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizTeacherFeedback user={authUser} />} />} />,
     // Tutors can preview tests iff the test is student only
     <Route key={key++} path="/test/preview/:quizId" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
@@ -112,9 +118,9 @@ export const RoutesPhy = [
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId/feedback" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId/feedback" replace />} />,
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId/page/:page" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId/page/:page" replace />} />,
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId" replace />} />,
-    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId/page/:page" replace />} />,
     <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId" replace />} />,
-    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback/:page" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback/:page" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback/page/:page" replace />} />,
     <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback" replace />} />,
     <Route key={key++} path="/quiz/preview/:quizId/page/:page" element={<NavigateWithSlug to="/test/preview/:quizId/page/:page" replace />} />,
     <Route key={key++} path="/quiz/preview/:quizId" element={<NavigateWithSlug to="/test/preview/:quizId" replace />} />,

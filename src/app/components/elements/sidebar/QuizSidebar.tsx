@@ -1,61 +1,38 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { Row, Col } from "reactstrap";
-import { QuizAttemptDTO } from "../../../../IsaacApiTypes";
+import { DetailedQuizSummaryDTO, IsaacQuizDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { SectionProgress, QuizView, QuizRubricButton } from "../quiz/QuizContentsComponent";
+import { SectionProgress, QuizRubricButton } from "../quiz/QuizContentsComponent";
 import { tags as tagsService } from "../../../services";
 import { Pill, KeyItem } from "./SidebarElements";
 
-interface QuizSidebarProps {
-    viewingAsSomeoneElse: boolean;
+export interface QuizSidebarProps {
+    quiz: IsaacQuizDTO | DetailedQuizSummaryDTO;
     totalSections: number;
     currentSection?: number;
     sectionStates: SectionProgress[];
     sectionTitles: string[];
 }
 
-export interface QuizSidebarAttemptProps extends QuizSidebarProps {
-    attempt: QuizAttemptDTO;
-    view?: undefined;
-}
-
-export interface QuizSidebarViewProps extends QuizSidebarProps {
-    attempt?: undefined;
-    view: QuizView;
-}
-
-export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
-    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
+export const QuizSidebar = (props: QuizSidebarProps) => {
+    const { quiz, totalSections, currentSection, sectionStates, sectionTitles } = props;
     const deviceSize = useDeviceSize();
-    const navigate = useNavigate();
     const location = useLocation();
-    const rubricPath =
-        viewingAsSomeoneElse ? location.pathname.split("/").slice(0, 6).join("/") :
-            attempt && attempt.feedbackMode ? location.pathname.split("/").slice(0, 5).join("/") :
-                location.pathname.split("/page")[0];
+
+    const rubricPath = location.pathname.split(new RegExp(/\/page\/\d+/))[0]; // i.e. "/test/{view|preview|attempt|assignment}/{id}(/feedback)?".
     const hasSections = totalSections > 0;
-    const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
-    const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
-    const topics = tagsService.getTopicTags(tags as TAG_ID[]);
-    const fields = tagsService.getFieldTags(tags as TAG_ID[]);
+    const subjects = tagsService.getSubjectTags(quiz.tags as TAG_ID[]);
+    const topics = tagsService.getTopicTags(quiz.tags as TAG_ID[]);
+    const fields = tagsService.getFieldTags(quiz.tags as TAG_ID[]);
     const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A", alias: undefined}];
 
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon icon-raw icon-in-progress"
                 : "icon icon-raw icon-not-started";
-    };
-
-    const switchToPage = (page: string) => {
-        if (viewingAsSomeoneElse || attempt && attempt.feedbackMode) {
-            void navigate(rubricPath.concat("/", page));
-        }
-        else {
-            void navigate(rubricPath.concat("/page/", page));
-        }
     };
 
     const SidebarContents = () => {
@@ -76,12 +53,15 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <h5 className="mb-3">Section(s)</h5>
                 <ul>
                     <li>
-                        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => navigate(rubricPath)}/>
+                        <StyledTabPicker type="link" checkboxTitle={"Overview"} checked={!isDefined(currentSection)} to={rubricPath} />
                     </li>
                     {Array.from({length: totalSections}, (_, i) => i).map(section =>
                         <li key={section}>
-                            <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
-                                suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
+                            <StyledTabPicker 
+                                key={section} type="link" checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} 
+                                to={`${rubricPath}/page/${section+1}`}
+                                suffix={{icon: progressIcon(section), info: sectionStates[section]}}
+                            />
                         </li>)}
                 </ul>
 
@@ -101,13 +81,13 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     };
 
     return <>
-        {below["md"](deviceSize) && attempt && isPhy && currentSection ?
+        {below["md"](deviceSize) && isPhy && currentSection ?
             <Row className="d-flex align-items-center">
                 <Col>
                     <SidebarContents/>
                 </Col>
                 <Col className="d-flex justify-content-end">
-                    <QuizRubricButton attempt={attempt}/>
+                    <QuizRubricButton rubric={quiz.rubric}/>
                 </Col>
             </Row> :
             <SidebarContents/>

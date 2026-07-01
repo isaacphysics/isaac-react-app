@@ -428,6 +428,17 @@ figure .inline-container {
         }
       }
     }
+    
+    // The fixed position of a selected parsons-item causes the box-shadow to be drawn in the wrong place,
+    // so we need to apply it to the correctly positioned child instead
+    .parsons-item, .reorder-item {
+      &:focus-visible:focus-visible {
+        box-shadow: none;
+        > * {
+          @include focus-outline;
+        }
+      }
+    }
 
     &#parsons-choice-area {
       @for $i from 0 through $parsons-max-indent {

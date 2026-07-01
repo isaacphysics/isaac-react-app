@@ -4,11 +4,17 @@ import { useBookmarks } from "../../services/bookmarks";
 import classNames from "classnames";
 import { ContentDTO } from "../../../IsaacApiTypes";
 import { Tooltip } from "reactstrap";
+import { selectors, useAppSelector } from "../../state";
+import { isLoggedIn } from "../../services";
 
 export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
     const { isBookmarked, bookmarkItem } = useBookmarks();
-    const isQuestionBookmarked = doc?.type === "isaacQuestionPage" && doc.id ? isBookmarked(doc.id) : false;
     const [showBookmarkTooltip, setShowBookmarkTooltip] = useState(false);
+    const user = useAppSelector(selectors.user.orNull);
+
+    if (!doc?.id || !isLoggedIn(user)) return null;
+
+    const isQuestionBookmarked = doc?.type === "isaacQuestionPage" && doc.id ? isBookmarked(doc.id) : false;
 
     return <>
         <IconButton 

@@ -297,8 +297,9 @@ $sidebar-width: 220px;
 
 $grid-breakpoints: (
   xs: 0,
-  sm: 576px, // sidebar only appears at md and above; sm remains the same
-  md: calc(768px + $sidebar-width),
+  sm: 576px,
+  md: 768px, 
+  // sidebar appears at $md + $sidebar-width = 988px, which changes the effective screen size back to 768px. as such, we should remain at md until the effective screen size reaches 992px.
   lg: calc(992px + $sidebar-width),
   xl: calc(1200px + $sidebar-width),
   nav: 1256px, // nav expansion is independent of sidebar
@@ -384,10 +385,11 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 // Utility
 @import "../common/mixins";
 @import "../common/_utils";
+@import "_accessibility";
 @import "../common/transitions";
+@import "../common/animation";
 
 // Theming
-@import "accessibility";
 @import "color-theme";
 
 // Atoms

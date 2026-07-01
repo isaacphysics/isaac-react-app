@@ -180,6 +180,8 @@ $tooltip-max-width: 370px;
 
 $badge-font-weight: $font-weight-medium;
 
+$font-family-base: $primary-font;
+
 @import "bootstrap/scss/maps";
 
 $custom-colors-text: (
@@ -227,11 +229,12 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 // Utility
 @import "../common/mixins";
 @import "../common/_utils";
+@import "../common/_accessibility";
 @import "../common/transitions";
+@import "../common/animation";
 
 // theming
 @import "color-theme";
-@import "../common/accessibility";
 
 // Atoms
 @import "fonts";
