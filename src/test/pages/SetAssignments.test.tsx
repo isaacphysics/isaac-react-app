@@ -36,10 +36,8 @@ const switchToCardView = async () => {
 
 describe("SetAssignments", () => {
     if (isPhy) {
-        it('is hidden on Sci', () => {});
-        return;
+        return it("should run new test for the unified Set assignments / Assignments schedule page", () => {});
     }
-
     const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
         await renderTestEnvironment({
             extraEndpoints: endpoints

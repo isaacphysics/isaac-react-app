@@ -79,7 +79,10 @@ export const TestCard = (props: TestCardProps) => {
                         <h4 className="text-break m-0">
                             {isDefined(quizAssignment) && (
                                 linkLocation === GameboardLinkLocation.Title
-                                    ? <Link to={`${PATHS.TEST}/${quizAssignment.id}`} target="_blank">
+                                    ? <Link to={isTeacherOrAbove(user)
+                                        ? `/test/preview/${quizAssignment.quizId}`
+                                        : `${PATHS.TEST}/${quizAssignment.id}`
+                                    } target="_blank">
                                         {quizAssignment.quizSummary?.title}
                                         <i className="icon icon-new-tab ms-2 icon-color-black" />
                                     </Link>
@@ -105,7 +108,10 @@ export const TestCard = (props: TestCardProps) => {
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
                 {isPhy && testUrl && <div className="card-share-link">
-                    <ShareLink linkUrl={testUrl} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline", disabled: !!(quizAssignment && isOverdue(quizAssignment))}} />
+                    <ShareLink 
+                        linkUrl={testUrl} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline", disabled: !!(quizAssignment && isOverdue(quizAssignment))}}
+                        inputInfo="(student-only link)"
+                    />
                 </div>}
                 {allowManaging
                     ? isTutorOrAbove(user) && <>

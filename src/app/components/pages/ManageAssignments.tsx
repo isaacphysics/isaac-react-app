@@ -6,7 +6,7 @@ import {
     useGetGroupsQuery,
     useGetMySetAssignmentsQuery,
     useGetQuizAssignmentsSetByMeQuery} from "../../state";
-import {IAssignmentLike, QuizAssignmentDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {IAssignmentLike, QuizAssignmentDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import groupBy from "lodash/groupBy";
 import mapValues from "lodash/mapValues";
 import sortBy from "lodash/sortBy";
@@ -264,7 +264,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
 };
 
 type WorkGroupedByDate = [number, [number, [number, ValidWorkWithListingDate[]][]][]][];
-export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
+export const ManageAssignments = () => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const testsSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
@@ -449,7 +449,6 @@ export const ManageAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 setViewBy={setViewBy}
                 collapse={() => setCollapsed(true)}
                 groups={groups} 
-                user={user}
             />
         }
     >

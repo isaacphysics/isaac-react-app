@@ -29,11 +29,11 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
     const { openAssignModal } = useSetAssignment(assignment.gameboard);
 
-    return <GameboardCard
-        gameboard={assignment.gameboard}
-        linkLocation={GameboardLinkLocation.Card}
+    return <GameboardCard 
+        gameboard={assignment.gameboard} 
+        linkLocation={GameboardLinkLocation.Card} 
         assignment={assignment}
-        usageDisplay={{type: "correctness"}}
+        usageDisplay={{type: "correctness"}} 
         openAssignModal={openAssignModal}
     >
         <Row className="w-100">

@@ -3,7 +3,7 @@ import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, sele
 import { sortBy } from "lodash";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
-import { AssignmentDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { AssignmentDTO } from "../../../../IsaacApiTypes";
 import { AppGroup } from "../../../../IsaacAppTypes";
 import { StyledSelect } from "../inputs/StyledSelect";
 
@@ -20,11 +20,10 @@ interface HeaderProps {
     workTitleToInclude: string;
     setWorkTitleToInclude: (title: string) => void;
     groups?: AppGroup[];
-    user: RegisteredUserDTO;
     collapse: () => void;
-}
+} 
 
-export const ManageAssignmentsSidebar = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
+export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
 
     const deviceSize = useDeviceSize();
 
