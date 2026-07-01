@@ -14,7 +14,6 @@ import {
 } from "reactstrap";
 import {Link, useLocation} from "react-router-dom";
 import {
-    closeActiveModal,
     openIsaacBooksModal,
     selectors,
     setAssignBoardPath,

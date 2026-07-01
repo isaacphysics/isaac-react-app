@@ -2,7 +2,6 @@ import React, {ChangeEvent, useState} from "react";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {
     AppDispatch,
-    changePage,
     closeActiveModal,
     selectors,
     useAppDispatch,
