@@ -117,6 +117,12 @@ export const onParsonsCurrentAttemptUpdate = (
     }
 };
 
+const getAccessibleItemName = (item: ParsonsItemDTO | Immutable<ParsonsItemDTO>) => {
+    return (item?.altText || item?.value) 
+        ? `item "${item?.altText || item?.value}"`
+        : 'item';
+};
+
 interface ReorderButtonsProps {
     index: number;
     items: Immutable<ParsonsItemDTO>[];
@@ -130,7 +136,7 @@ const ReorderButtons = ({index, items, setItems, isParsons, currentIndent}: Reor
     const canReorderDown = index !== items.length - 1;
     return <div className="reorder-buttons">
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderUp})}
-            disabled={!canReorderUp} title="Move item up" onClick={() => {
+            disabled={!canReorderUp} title={`Move ${getAccessibleItemName(items[index])} up`} onClick={() => {
                 const newItems = [...items];
                 moveParsonsItem(newItems, index, newItems, index-1, isParsons ? currentIndent || 0 : undefined);
                 setItems(newItems);
@@ -139,7 +145,7 @@ const ReorderButtons = ({index, items, setItems, isParsons, currentIndent}: Reor
             <i className={classNames("icon icon-chevron-up", canReorderUp ? "icon-color-muted-hoverable icon-color-theme-on-hover" : "icon-color-disabled")} />
         </button>
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderDown})}
-            disabled={!canReorderDown} title="Move item down" onClick={() => {
+            disabled={!canReorderDown} title={`Move ${getAccessibleItemName(items[index])} down`} onClick={() => {
                 const newItems = [...items];
                 moveParsonsItem(newItems, index, newItems, index+1, isParsons ? currentIndent || 0 : undefined);
                 setItems(newItems);
@@ -195,14 +201,14 @@ const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentB
     return <div className="indent-buttons">
         <button
             type="button" className={`reduce ${canDecreaseIndentation ? 'show' : 'hide'} me-1`}
-            onClick={() => reduceIndentation(index)} aria-label={classNames("reduce indentation", {"(disabled)": !canDecreaseIndentation})}
+            onClick={() => reduceIndentation(index)} aria-label={classNames(`Reduce indentation for ${getAccessibleItemName(currentItem)}`, {"(disabled)": !canDecreaseIndentation})}
             disabled={!canDecreaseIndentation}
         >
             <i className="icon icon-chevron-left icon-color-white" />
         </button>
         <button
             type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} me-2`}
-            onClick={() => increaseIndentation(index)} aria-label={classNames("increase indentation", {"(disabled)": !canIncreaseIndentation})}
+            onClick={() => increaseIndentation(index)} aria-label={classNames(`Increase indentation for ${getAccessibleItemName(currentItem)}`, {"(disabled)": !canIncreaseIndentation})}
             disabled={!canIncreaseIndentation}
         >
             <i className="icon icon-chevron-right icon-color-white" />
@@ -257,6 +263,7 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                 id={`${currentItem.id || index}|${itemType}-${inAvailableItems ? "available" : "choice"}`}
                 className={`${itemType} indent-${currentItem.indentation}`}
                 ref={provided.innerRef}
+                aria-label={getAccessibleItemName(currentItem)}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 style={getStyle(provided.draggableProps.style, snapshot)}
@@ -269,8 +276,14 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                 </pre>
                 <Spacer/>
                 <div className="hidden-buttons d-flex">
-                    <button type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
-                        title={`Move item to ${inAvailableItems ? "your answer" : "available items"}`} onClick={swapItemList}
+                    <button
+                        type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
+                        title={
+                            inAvailableItems
+                                ? `Move ${getAccessibleItemName(currentItem)} into your answer`
+                                : `Move ${getAccessibleItemName(currentItem)} back to the items list`
+                        }
+                        onClick={swapItemList}
                     >
                         <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
                     </button>
