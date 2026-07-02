@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { Link } from "react-router";
-import { Row, Col, Button } from "reactstrap";
+import { Row, Col, Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from "reactstrap";
 import { QuizAssignmentDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY, isOverdue, isTeacherOrAbove } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
@@ -23,7 +23,7 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ quizAssignment, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
     if (!quizAssignment) return;
-    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})}>
+    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})} data-testid="card-usage-info">
         {usageDisplay?.type === "progressLink" && <>
             {isDefined(quizAssignment.scheduledStartDate) && quizAssignment.scheduledStartDate >= TODAY()
                 ? <div className="d-flex align-items-center">
@@ -48,6 +48,7 @@ type TestCardProps = React.HTMLAttributes<HTMLElement> & {
     openAssignModal?: () => void;
     cancel?: () => void;
     extendDueDate?: () => void;
+    openSetFeedbackModeModal?: () => void;
     // useAssignmentLink?: boolean; // whether to use /assignment/:id over /gameboards#:i
     allowManaging?: boolean; // replaces "assign" with both "unset" and "set again" buttons for more precise assignment management
     usageDisplay?: TestCardUsageDisplay;
@@ -56,7 +57,7 @@ type TestCardProps = React.HTMLAttributes<HTMLElement> & {
 
 // any children passed into this component will be rendered in the card body
 export const TestCard = (props: TestCardProps) => {
-    const {quizAssignment, linkLocation, children, openAssignModal, cancel, extendDueDate, allowManaging, usageDisplay, ...rest} = props;
+    const {quizAssignment, linkLocation, children, openAssignModal, cancel, extendDueDate, allowManaging, usageDisplay, openSetFeedbackModeModal, ...rest} = props;
 
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
@@ -64,7 +65,7 @@ export const TestCard = (props: TestCardProps) => {
     const testUrl = quizAssignment ? `${PATHS.TEST}/${quizAssignment.id}` : undefined;
     const subjects = tags.getSubjectTags(quizAssignment?.quizSummary?.tags as TAG_ID[] || []).map(t => t.id);
 
-    const card = <div className="px-3 py-2 flex-grow-1">
+    const card = <div className="px-3 py-2 flex-grow-1" data-testid="test-card">
         <Row data-testid="my-assignment">
             <Col className="d-flex flex-column align-items-start">
                 <div className="d-flex align-items-center w-100">
@@ -114,12 +115,16 @@ export const TestCard = (props: TestCardProps) => {
                 </div>}
                 {allowManaging
                     ? isTutorOrAbove(user) && <>
-                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); cancel?.();}}>
-                            Unassign
-                        </Button>
-                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); extendDueDate?.();}}>
-                            Extend due date
-                        </Button>
+                        <UncontrolledButtonDropdown size="sm">
+                            <DropdownToggle caret className="text-nowrap" color="keyline" size="md">
+                                Manage
+                            </DropdownToggle>
+                            <DropdownMenu container={"root"}>
+                                <DropdownItem onClick={cancel}>Unassign</DropdownItem>
+                                <DropdownItem onClick={openSetFeedbackModeModal}>Change feedback type</DropdownItem>
+                                <DropdownItem onClick={extendDueDate}>Extend due date</DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
                             Set again
                         </Button>

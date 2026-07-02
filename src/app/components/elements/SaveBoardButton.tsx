@@ -17,15 +17,14 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
 
+    const isLinked = useMemo(() => board.savedToCurrentUser, [board]);
     const [justLinked, setJustLinked] = useState(false);
-    const isLinked = useMemo(() => board.savedToCurrentUser || justLinked, [board, justLinked]);
 
     const linkBoard = useCallback(() => {
         if (!user || !board) return;
         setJustLinked(true);
         void dispatch(saveGameboard({
             boardId: board.id ?? "",
-            boardTitle: board.title,
             user,
         }));
     }, [user, board, dispatch]);
@@ -48,7 +47,7 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
 
     return <IconButton
         icon={{
-            name: classNames("icon-star", siteSpecific("icon-color-black-hoverable", undefined), { "fill": isLinked, "anim-star-select": justLinked }),
+            name: classNames("icon-star-sparkle", siteSpecific("icon-color-black-hoverable", undefined), { "fill": isLinked, "anim-star-select": justLinked }),
             color: siteSpecific(undefined, props.color === "solid" ? "white" : "primary")
         }}
         className={classNames(className, "w-max-content h-max-content action-button", {"icon-button-sm": size === "sm"})}

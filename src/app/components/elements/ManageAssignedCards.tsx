@@ -29,10 +29,12 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
         <Row className="w-100">
             <Col>
                 {isDefined(assignment.groupName) &&
-                    <p className="mb-0">Set to <strong>{assignment.groupName}</strong></p>
+                    <p className="mb-0" data-testid={"gameboard-assigned-group"}>
+                        Set to <strong>{assignment.groupName}</strong>
+                    </p>
                 }
                 {isDefined(assignmentStartDate) && 
-                    <p className="mb-0" data-testid={"gameboard-assigned"}>
+                    <p className="mb-0" data-testid={"gameboard-assigned-date"}>
                         Assigned <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
                     </p>
                 }
@@ -49,7 +51,7 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
 
 export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignmentDTO}) => {
 
-    const { cancel, openExtendDueDateModal, openAssignModal } = useManageQuizAssignments();
+    const { cancel, openExtendDueDateModal, openAssignModal, openSetFeedbackModeModal } = useManageQuizAssignments();
 
     return <TestCard
         className="mt-2"
@@ -58,6 +60,7 @@ export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignment
         usageDisplay={{type: "progressLink"}}
         openAssignModal={() => openAssignModal(quizAssignment)}
         cancel={() => cancel(quizAssignment)} 
+        openSetFeedbackModeModal={() => openSetFeedbackModeModal(quizAssignment)}
         extendDueDate={() => openExtendDueDateModal(quizAssignment)}
         allowManaging
     >

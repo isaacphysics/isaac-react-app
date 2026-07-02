@@ -4,6 +4,7 @@ import {
     logAction,
     mutationSucceeded,
     openActiveModal,
+    saveGameboard,
     useAppDispatch,
     useCreateGameboardMutation,
     useGenerateTemporaryGameboardMutation,
@@ -218,7 +219,13 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 title: `${siteSpecific("Question deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
                 body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
             }));
-            if (gameboardId) setSubmissionAttempted(false);
+            if (gameboardId) {
+                setSubmissionAttempted(false);
+                void dispatch(saveGameboard({
+                    boardId: gameboardId ?? "",
+                    user: {...user, loggedIn: true},
+                }));
+            }
         });
 
         logEvent(eventLog, "SAVE_GAMEBOARD", {});

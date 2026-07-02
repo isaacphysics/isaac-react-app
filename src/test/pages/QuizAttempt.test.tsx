@@ -1,7 +1,7 @@
 import { expectLink, expectH1, expectH4, expectUrl } from "../testUtils";
 import {mockAttempts} from "../../mocks/data";
 import { isPhy, siteSpecific } from "../../app/services";
-import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectMobileSidebarToggleToHaveText, expectRubric, renderQuizPage, quizSidebarCommonTests, testSectionsHeader } from "../helpers/quiz";
+import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectMobileSidebarToggleToHaveText, expectRubric, renderQuizPage, quizSidebarCommonTests, testSectionsHeaderLocator } from "../helpers/quiz";
 import { screen } from "@testing-library/react";
 
 describe("QuizAttempt", () => {
@@ -16,7 +16,7 @@ describe("QuizAttempt", () => {
         it('shows quiz title on the breadcrumbs', async () => {
             await studentAttemptsQuiz();
             siteSpecific(
-                () => expectPhyBreadCrumbs({href: "/tests", text: "My tests"}),
+                () => expectPhyBreadCrumbs({href: "/view_tests", text: "View tests"}),
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "Tests"}, attempt.quiz?.title])
             )();
         });
@@ -38,7 +38,7 @@ describe("QuizAttempt", () => {
 
         it("shows Test sections that load section and allow navigating back", async () => {
             await studentAttemptsQuiz();
-            expect(testSectionsHeader()).toBeInTheDocument();
+            expect(testSectionsHeaderLocator()).toBeInTheDocument();
             await expectLink(sections?.[0].title, `/test/attempt/${quizId}/page/1`, screen.getByTestId('quiz-sections'));
             await expectLink(sections?.[1].title, `/test/attempt/${quizId}/page/2`, screen.getByTestId('quiz-sections'));
         });

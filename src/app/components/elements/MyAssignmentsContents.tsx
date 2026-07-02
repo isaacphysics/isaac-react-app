@@ -27,7 +27,7 @@ const CSCircle = ({label, percentage}: {percentage: number | unknown, label: str
 
 const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
-    const { openAssignModal } = useSetAssignment(assignment.gameboard!); // remove ! when merging with future changes
+    const { openAssignModal } = useSetAssignment(assignment.gameboard);
 
     return <GameboardCard 
         gameboard={assignment.gameboard} 

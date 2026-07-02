@@ -77,7 +77,7 @@ export const TeacherOverview = () => {
                     title: "Tests",
                     icon: {name: "icon-school", color:"secondary"},
                     bodyText: "Set a test curated by the Ada Computer Science team.",
-                    clickUrl: "/set_tests",
+                    clickUrl: "/view_tests",
                     buttonText: "Set a test",
                     buttonStyle: "link",
                 }}/>

@@ -98,9 +98,9 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 method: "POST",
                 params: {title: newTitle},
             }),
-            invalidatesTags: ["AllGameboards"],
+            invalidatesTags: (_, error, {boardId}) => error ? ["AllGameboards"] : ["AllGameboards", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Linking the ${siteSpecific("question deck", "quiz")} to your account failed`
+                errorTitle: `Linking the ${siteSpecific("deck", "quiz")} to your account failed`
             })
         }),
 
@@ -109,9 +109,9 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 url: `gameboards/user_gameboards/${encodeURIComponent(boardId)}`,
                 method: "POST"
             }),
-            invalidatesTags: (_, error, boardId) => !error ? ["AllGameboards", {type: "Gameboard", id: boardId} as const] : [],
+            invalidatesTags: (_, error, boardId) => error ? ["AllGameboards"] : ["AllGameboards", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Linking the ${siteSpecific("question deck", "quiz")} to your account failed`
+                errorTitle: `Linking the ${siteSpecific("deck", "quiz")} to your account failed`
             })
         }),
 

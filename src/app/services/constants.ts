@@ -14,6 +14,7 @@ import {
     IsaacQuestionPageDTO,
     ItemDTO,
     QuestionPartState,
+    QuizFeedbackMode,
     Stage,
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
@@ -987,6 +988,13 @@ export const getContextSpecificTags = (map: ContextSpecificTags, pageContext: Pa
         return [];
     }
     return map[pageContext.subject][pageContext.stage[0]] || [];
+};
+
+export const QUIZ_FEEDBACK_NAMES: Record<QuizFeedbackMode, string> = {
+    NONE: "No feedback for students",
+    OVERALL_MARK: "Overall mark only",
+    SECTION_MARKS: "Section-by-section mark breakdown",
+    DETAILED_FEEDBACK: "Detailed feedback on each question",
 };
 
 
