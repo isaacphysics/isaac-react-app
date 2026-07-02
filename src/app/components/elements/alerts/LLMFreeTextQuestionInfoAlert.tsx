@@ -1,12 +1,12 @@
 import React from "react";
 
 import {Button, Col, Row} from "reactstrap";
-import {ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent} from "../../services";
+import {ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent} from "../../../services";
 import {Link, useLocation} from "react-router-dom";
-import {PotentialUser} from "../../../IsaacAppTypes";
-import {ContentBaseDTO} from "../../../IsaacApiTypes";
-import {useLinkableSetting} from "../../services/linkableSetting";
-import {selectors, useAppSelector, useUpdateCurrentMutation} from "../../state";
+import {PotentialUser} from "../../../../IsaacAppTypes";
+import {ContentBaseDTO} from "../../../../IsaacApiTypes";
+import {useLinkableSetting} from "../../../services/linkableSetting";
+import {selectors, useAppSelector, useUpdateCurrentMutation} from "../../../state";
 
 const locationOfFAQEntry = "/support/student/general#llm_questions";
 
@@ -112,7 +112,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
     </>;
 }
 
-export function LLMFreeTextQuestionInfoBanner({doc}: InfoBannerProps) {
+export function LLMFreeTextQuestionInfoAlert({doc}: InfoBannerProps) {
     const user = useAppSelector(selectors.user.orNull);
     const userConsent = useUserConsent();
 

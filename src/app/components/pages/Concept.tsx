@@ -11,7 +11,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {Markup} from "../elements/markup";
-import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
+import {IntendedAudienceWarningAlert} from "../elements/alerts/IntendedAudienceWarningAlert";
 import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -22,7 +22,7 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
-import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
+import { InaccessibleContentWarningAlert } from "../elements/alerts/InaccessibleContentWarningAlert";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { ConceptSidebar } from "../elements/sidebar/RelatedContentSidebar";
@@ -100,14 +100,14 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                 >
                     <PageMetadata doc={doc} />
 
-                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
+                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
                     <Row className="concept-content-container">
                         <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
                             <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
-                            {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                            {isAda && <IntendedAudienceWarningAlert doc={doc} />}
 
                             <WithFigureNumbering doc={doc}>
                                 <IsaacContent doc={doc} />

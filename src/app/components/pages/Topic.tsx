@@ -16,7 +16,7 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
-import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
+import { IntendedAudienceWarningAlert } from "../elements/alerts/IntendedAudienceWarningAlert";
 
 export const Topic = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -39,7 +39,7 @@ export const Topic = () => {
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
-                    {isAda && <IntendedAudienceWarningBanner doc={topicPage} />}
+                    {isAda && <IntendedAudienceWarningAlert doc={topicPage} />}
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }

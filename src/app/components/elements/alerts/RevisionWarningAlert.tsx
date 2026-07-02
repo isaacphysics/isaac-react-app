@@ -1,9 +1,9 @@
 import React from "react";
-import {AppState, selectors, useAppSelector} from "../../state";
-import {RenderNothing} from "../elements/RenderNothing";
+import {AppState, selectors, useAppSelector} from "../../../state";
+import {RenderNothing} from "../RenderNothing";
 import { Alert } from "reactstrap";
 
-export function RevisionWarningBanner() {
+export function RevisionWarningAlert() {
 
     const hideAttempts: boolean = useAppSelector(
         (state: AppState) => state?.userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
