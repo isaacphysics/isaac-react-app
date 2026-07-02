@@ -15,6 +15,7 @@ import {
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
     isAda,
+    isDefined,
     isPhy,
     QUESTION_TYPES,
     RESTRICTED_QUESTION_TYPES,
@@ -239,7 +240,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
-                        {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
+                        {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 && isDefined(inlineContext?.feedbackIndex) ? <>
                             <span>View feedback for a specific box by selecting it above or using the arrows below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
