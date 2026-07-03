@@ -43,9 +43,11 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     isIntendedAudience(item.audience, userContext, user)
                 );
 
+                const documentType = (item.type && ["isaacQuestionPage", "isaacFastTrackQuestionPage"].includes(item.type)) ? DOCUMENT_TYPE.QUESTION : DOCUMENT_TYPE.CONCEPT;
+
                 return <ListGroupItem key={item.id} className="topic-summary-link">
                     <Button
-                        tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
+                        tag={Link} to={{pathname: `/${documentTypePathPrefix[documentType]}/${item.id}`, search}}
                         block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                     >
                         <div className={classNames("stage-label d-flex align-items-center justify-content-center", audienceStyle(audienceString))}>
