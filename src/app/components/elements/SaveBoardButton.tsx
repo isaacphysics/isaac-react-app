@@ -52,7 +52,7 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
             color: siteSpecific(undefined, props.color === "solid" ? "white" : "primary")
         }}
         className={classNames(className, "w-max-content h-max-content action-button", {"icon-button-sm": size === "sm"})}
-        title={isLinked ? "Unsave board" : "Save board"}
+        title={isLinked ? `Unsave ${siteSpecific("deck", "quiz")}` : `Save ${siteSpecific("deck", "quiz")}`}
         onClick={(e) => { 
             e.preventDefault();
             if (isLinked) {
