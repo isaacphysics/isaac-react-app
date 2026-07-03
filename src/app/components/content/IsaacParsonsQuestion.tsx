@@ -17,6 +17,23 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
+const enforceValidIndentation = (items: Immutable<ParsonsItemDTO>[]) => {
+    const newItems = [...items];
+    for (let i = 0; i < newItems.length; i++) {
+        const currentItem = newItems[i];
+        if (i === 0 && currentItem.indentation && currentItem.indentation > 0) {
+            newItems[i] = {...currentItem, indentation: 0};
+        }
+        if (i > 0 && currentItem.indentation && currentItem.indentation > (newItems[i-1].indentation || 0) + 1) {
+            newItems[i] = {...currentItem, indentation: (newItems[i-1].indentation || 0) + 1};
+        }
+        if (currentItem.indentation && currentItem.indentation > PARSONS_MAX_INDENT) {
+            newItems[i] = {...currentItem, indentation: PARSONS_MAX_INDENT};
+        }
+    }
+    return newItems;
+};
+
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
     const deviceSize = useDeviceSize();
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
@@ -24,9 +41,9 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[], [currentAttempt?.items]);
     const setAttemptItems = useCallback((items: Immutable<ParsonsChoiceDTO>[]) => {
         if (currentAttempt) {
-            dispatchSetCurrentAttempt({...currentAttempt, items});
+            dispatchSetCurrentAttempt({...currentAttempt, items: enforceValidIndentation(items)});
         } else {
-            dispatchSetCurrentAttempt({type: "parsonsChoice", items});
+            dispatchSetCurrentAttempt({type: "parsonsChoice", items: enforceValidIndentation(items)});
         }
     }, [currentAttempt, dispatchSetCurrentAttempt]);
 
@@ -151,13 +168,8 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         To pick up an item, press space or enter.
                         Use the up and down arrow keys to move the item within the current list.
                         {above['md'](deviceSize) ? 
-                            <span>
-                                Use the left and right arrow keys to move the item between the available items and your answer.
-                            </span> : 
-                            <span>
-                                Use the contained list swap button to move the item between the available items and your answer.
-                            </span>
-                        }
+                            "Use the left and right arrow keys to move the item between the available items and your answer." : 
+                            "Use the contained list swap button to move the item between the available items and your answer."}
                         Press space or enter again to move the item to a new position.
                         Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
                     </Label>

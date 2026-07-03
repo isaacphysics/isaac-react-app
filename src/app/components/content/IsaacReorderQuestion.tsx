@@ -49,13 +49,8 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         To pick up an item, press space or enter.
                         Use the up and down arrow keys to move the item within the current list.
                         {above['md'](deviceSize) ? 
-                            <span>
-                                Use the left and right arrow keys to move the item between the available items and your answer.
-                            </span> : 
-                            <span>
-                                Use the contained list swap button to move the item between the available items and your answer.
-                            </span>
-                        }
+                            "Use the left and right arrow keys to move the item between the available items and your answer." : 
+                            "Use the contained list swap button to move the item between the available items and your answer."}
                         Press space or enter again to move the item to a new position.
                     </Label>
                     <Droppable droppableId="availableItems">
