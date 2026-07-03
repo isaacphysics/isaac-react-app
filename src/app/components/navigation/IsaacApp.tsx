@@ -91,7 +91,6 @@ const RootLayout = () => {
         <Toasts />
         <ActiveModals />
         <SiteBanners />
-        {/* TODO: turn notification banners into a useBanners hook or similar; c.f. REVISION_CHALLENGES – we could reuse the auto-expiry logic */}
         <OnPageLoad />
         <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
