@@ -4,13 +4,14 @@ import {IsaacReorderQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApi
 import {Col, Label, Row} from "reactstrap";
 import {DragDropContext, Droppable, DropResult} from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
-import {useCurrentQuestionAttempt} from "../../services";
+import {above, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
+    const deviceSize = useDeviceSize();
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
     const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ItemChoiceDTO>[], [currentAttempt?.items]);
@@ -47,7 +48,14 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                     <Label className="visually-hidden" id="item-section-info">
                         To pick up an item, press space or enter.
                         Use the up and down arrow keys to move the item within the current list.
-                        Use the left and right arrow keys to move the item between the available items and your answer.
+                        {above['md'](deviceSize) ? 
+                            <span>
+                                Use the left and right arrow keys to move the item between the available items and your answer.
+                            </span> : 
+                            <span>
+                                Use the contained list swap button to move the item between the available items and your answer.
+                            </span>
+                        }
                         Press space or enter again to move the item to a new position.
                     </Label>
                     <Droppable droppableId="availableItems">

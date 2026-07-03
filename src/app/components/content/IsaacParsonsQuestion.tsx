@@ -11,13 +11,14 @@ import {
     DropResult,
 } from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
-import {isDefined, PARSONS_INDENT_STEP, PARSONS_MAX_INDENT, useCurrentQuestionAttempt} from "../../services";
+import {above, isDefined, PARSONS_INDENT_STEP, PARSONS_MAX_INDENT, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
+    const deviceSize = useDeviceSize();
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
     const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[], [currentAttempt?.items]);
@@ -149,9 +150,16 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                     <Label className="visually-hidden" id="item-section-info">
                         To pick up an item, press space or enter.
                         Use the up and down arrow keys to move the item within the current list.
-                        Use the left and right arrow keys to move the item between the available items and your answer.
+                        {above['md'](deviceSize) ? 
+                            <span>
+                                Use the left and right arrow keys to move the item between the available items and your answer.
+                            </span> : 
+                            <span>
+                                Use the contained list swap button to move the item between the available items and your answer.
+                            </span>
+                        }
                         Press space or enter again to move the item to a new position.
-                        Items in your answer can be indented using the [ and ] keys.
+                        Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
                     </Label>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
