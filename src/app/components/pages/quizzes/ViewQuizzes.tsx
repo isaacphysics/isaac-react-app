@@ -12,7 +12,7 @@ import { selectors, useAppSelector } from "../../../state";
 import { ListView } from "../../elements/list-groups/ListView";
 import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
-import { ViewQuizzesSidebar } from "../../elements/sidebar/PracticeQuizzesSidebar";
+import { ViewQuizzesSidebar } from "../../elements/sidebar/ViewQuizzesSidebar";
 import { PageContainer } from "../../elements/layout/PageContainer";
 
 export const ViewQuizzes = () => {
