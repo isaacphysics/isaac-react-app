@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
-import {Col, Row} from "reactstrap";
+import {Col, Label, Row} from "reactstrap";
 import {
     DragDropContext,
     DragStart,
@@ -146,6 +146,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
                 <Col md={6} className="parsons-available-items">
                     <h4>Available items</h4>
+                    <Label className="visually-hidden" id="item-section-info">
+                        To pick up an item, press space or enter.
+                        Use the up and down arrow keys to move the item within the current list.
+                        Use the left and right arrow keys to move the item between the available items and your answer.
+                        Press space or enter again to move the item to a new position.
+                        Items in your answer can be indented using the [ and ] keys.
+                    </Label>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>

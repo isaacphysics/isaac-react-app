@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacReorderQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {Col, Row} from "reactstrap";
+import {Col, Label, Row} from "reactstrap";
 import {DragDropContext, Droppable, DropResult} from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
 import {useCurrentQuestionAttempt} from "../../services";
@@ -44,6 +44,12 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             <DragDropContext onDragEnd={onDragEnd}>
                 <Col md={{size: 6}} className="parsons-available-items">
                     <h4>Available items</h4>
+                    <Label className="visually-hidden" id="item-section-info">
+                        To pick up an item, press space or enter.
+                        Use the up and down arrow keys to move the item within the current list.
+                        Use the left and right arrow keys to move the item between the available items and your answer.
+                        Press space or enter again to move the item to a new position.
+                    </Label>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
                             <div ref={provided.innerRef}

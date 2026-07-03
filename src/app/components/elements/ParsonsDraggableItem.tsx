@@ -267,6 +267,7 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 style={getStyle(provided.draggableProps.style, snapshot)}
+                aria-describedby={undefined}
             >
                 <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation}/>
                 <pre>
