@@ -26,23 +26,23 @@ import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
-import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
+import {IntendedAudienceWarningAlert} from "../elements/alerts/IntendedAudienceWarningAlert";
 import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
-import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
-import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
+import { RevisionWarningAlert } from "../elements/alerts/RevisionWarningAlert";
+import { LLMFreeTextQuestionInfoAlert } from "../elements/alerts/LLMFreeTextQuestionInfoAlert";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
-import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
+import { InaccessibleContentWarningAlert } from "../elements/alerts/InaccessibleContentWarningAlert";
 import { QuestionMetaData } from "../elements/QuestionMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
-import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../navigation/AssignedQuestionWarningBanner";
+import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../elements/alerts/AssignedQuestionWarningAlert";
 
 interface QuestionPageProps{
     questionIdOverride?: string;
@@ -124,7 +124,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                             anyQuestionAttempted={anyQuestionAttempted}
                         />}
                     </PageMetadata>
-                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
+                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
                     <Row className="question-content-container">
                         <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
@@ -133,11 +133,11 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
                             <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
-                            {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                            {isAda && <IntendedAudienceWarningAlert doc={doc} />}
 
-                            {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner doc={doc} />}
+                            {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoAlert doc={doc} />}
 
-                            <RevisionWarningBanner />
+                            <RevisionWarningAlert />
 
                             <WithFigureNumbering doc={doc}>
                                 <IsaacContent doc={doc} preview={preview}/>

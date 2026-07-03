@@ -45,8 +45,6 @@ import {AuthError} from "../pages/AuthError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyError} from "../pages/ConsistencyError";
 import {Search} from "../pages/Search";
-import {ResearchNotificationBanner} from "./ResearchNotificationBanner";
-import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
@@ -62,7 +60,6 @@ import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
 import {surveyNotificationModal} from "../elements/modals/SurveyNotificationModal";
-import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -74,13 +71,13 @@ import {QuestionFinder} from "../pages/QuestionFinder";
 import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 import { AccountDeletion } from '../pages/AccountDeletion';
 import { AccountDeletionSuccess } from '../pages/AccountDeletionSuccess';
-import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
 import { RequireAuth } from './UserAuthentication';
 import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
 import { QualtricsRedirect } from './external/QualtricsRedirect';
 import { NavigateWithSlug } from './NavigateWithSlug';
 import { FeatureFlag, FeatureFlagProvider, FeatureFlagWrapper } from '../../services/featureFlag';
 import { Assignment } from '../pages/Assignment';
+import { SiteBanners } from '../elements/banners/SiteBanners';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -93,11 +90,7 @@ const RootLayout = () => {
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
-        {/* TODO: turn notification banners into a useBanners hook or similar; c.f. REVISION_CHALLENGES – we could reuse the auto-expiry logic */}
-        <IsaacScienceLaunchBanner />
-        <ResearchNotificationBanner />
-        <DowntimeWarningBanner />
-        <EmailVerificationBanner />
+        <SiteBanners />
         <OnPageLoad />
         <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
