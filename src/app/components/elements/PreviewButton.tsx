@@ -15,7 +15,7 @@ export const PreviewQuestionButton = ({id, className}: {id?: string, className?:
     if (!id) return null;
 
     return <button
-        type="button" title="Preview question in modal" className={classNames("d-flex pointer-cursor new-tab bg-transparent vertical-center", className)}
+        type="button" title={`Preview question '${id}' in modal`} className={classNames("d-flex pointer-cursor new-tab bg-transparent vertical-center", className)}
         aria-label="Preview question"
         onClick={() => id && openQuestionModal(id)}
     >
