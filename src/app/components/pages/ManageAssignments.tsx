@@ -48,6 +48,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { ManageAssignmentCard, ManageTestCard } from "../elements/ManageAssignedCards";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const FindDeckButtons = () => {
     const dispatch = useAppDispatch();
@@ -267,7 +268,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
 type WorkGroupedByDate = [number, [number, [number, ValidWorkWithListingDate[]][]][]][];
 export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
-    const testsSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
+    const testsSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
     const { data: testsSetByMe } = testsSetByMeQuery;
     const { data: groups } = useGetGroupsQuery(false);
@@ -458,7 +459,10 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
         </PageMetadata>
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or question decks"
-            query={combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, discardResults)}
+            query={isTeacherOrAbove(user) 
+                ? combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, () => []) 
+                : assignmentsSetByMeQuery
+            }
         >
             <ManageAssignmentsContext.Provider value={{groupsById, workByGroup, groups: groups ?? [], collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
@@ -479,8 +483,11 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                                 You have not created any groups to assign work to.
                                 Please <Link to="/groups">create a group here first.</Link>
                             </div>}
-                            {someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
+                            {groups && groups.length > 0 && someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
                                 There is no work matching your filters.
+                            </div>}
+                            {groups && groups.length > 0 && !someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
+                                You have not set any work yet. Use the buttons above to set a new assignment or test.
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
