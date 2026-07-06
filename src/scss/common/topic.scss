@@ -4,7 +4,7 @@
   border-top: 1px solid $shadow-08 !important;
   padding: 0;
   &:first-of-type {border-top: 0;}
-  a {
+  > a {
     border-radius: 0;
     font-family: $secondary-font;
     font-weight: 600;
