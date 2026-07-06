@@ -138,7 +138,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             {generateGameboardSubjectHexagons(boardSubjects)}
                         </div>
                         <HexIcon icon="icon-question-deck" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
-                        {gameboard?.contents && <BoardItemIndicator count={gameboard.contents.length} type="board-card" data-bs-theme={boardSubjects[0]} />}
+                        {gameboard?.contents && <BoardItemIndicator count={gameboard.contents.length} type="board-card" data-bs-theme={boardSubjects[0] ?? "neutral"} />}
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
                         <h4 className="text-break m-0">
