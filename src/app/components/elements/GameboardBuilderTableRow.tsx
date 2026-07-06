@@ -57,7 +57,7 @@ const GameboardBuilderTableRow = (
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
                 <div className="d-flex">
-                    {isDnd && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
+                    {isDnd && <i aria-label="Drag to reorder" className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
                     <div>
                         <div className="d-flex">
                             <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
