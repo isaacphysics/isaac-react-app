@@ -40,7 +40,7 @@ import {
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
-import {combineQueries, discardResults, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {formatDate} from "../elements/DateString";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
