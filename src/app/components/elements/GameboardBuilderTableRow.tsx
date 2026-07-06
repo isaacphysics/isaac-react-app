@@ -60,7 +60,7 @@ const GameboardBuilderTableRow = (
                     {isDnd && <i aria-label="Drag to reorder" className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
                     <div>
                         <div className="d-flex">
-                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={`Preview question '${question.id}' in new tab`}>
                                 <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
                             <PreviewQuestionButton id={question.id} className="ms-2" />
