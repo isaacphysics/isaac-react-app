@@ -395,13 +395,14 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             componentTag={"div"}
             icon={deviceSize !== "xs" ? icon : undefined}
             title={item.title ?? ""}
+            subtitle={item.subtitle}
             subject={itemSubject !== "neutral" ? itemSubject : undefined}
             url={url}
             tags={item.tags}
             deprecated={item.deprecated}
             supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
             style="flat"
-            subtitle={topic}
+            breadcrumb={topic ? [topic] : undefined}
             audienceViews={audienceViews}
             className="flex-grow-1 align-content-center bg-transparent"
             questionPreviewId={item.id}
