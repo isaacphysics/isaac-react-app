@@ -61,6 +61,8 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                             </Markup>
                             <ContentPropertyTags 
                                 className="ps-sm-2"
+                                deprecated={item.deprecated}
+                                supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
                                 tags={item.tags}
                             />
                         </div>
