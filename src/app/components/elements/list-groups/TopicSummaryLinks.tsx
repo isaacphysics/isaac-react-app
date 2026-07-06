@@ -17,6 +17,7 @@ import classNames from "classnames";
 import {Markup} from "../markup";
 import { ListGroup, ListGroupItem, Button } from "reactstrap";
 import { Spacer } from "../Spacer";
+import { ContentPropertyTags } from "../ContentPropertyTags";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const userContext = useUserViewingContext();
@@ -54,12 +55,14 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                             {above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n").split("\n").map((line, i, arr) => 
                                 <>{line}{i < arr.length && <br/>}</>)}
                         </div>
-                        <div className="title ps-3 d-flex">
-                            <div className="p-3">
-                                <Markup encoding={"latex"}>
-                                    {item.title}
-                                </Markup>
-                            </div>
+                        <div className="title p-3 ps-6 d-block d-sm-flex">
+                            <Markup encoding={"latex"}>
+                                {item.title}
+                            </Markup>
+                            <ContentPropertyTags 
+                                className="ps-sm-2"
+                                tags={item.tags}
+                            />
                         </div>
                         <Spacer />
                         <div className="d-flex align-items-center">
