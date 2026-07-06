@@ -93,6 +93,7 @@ export const RoutesPhy = [
     // Student test pages
     <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,
     <Route key={key++} path="/quizzes" element={<Navigate to="/tests" replace />} />,
+    <Route key={key++} path="/practice_tests" element={<Navigate to="/view_tests" replace />} />,
     <Route key={key++} path="/view_tests" element={<ViewQuizzes />} />,
 
     // Quiz (test) pages

@@ -23,7 +23,7 @@ import {
 } from "../../../services";
 import {Spacer} from "../Spacer";
 import {formatDate} from "../DateString";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {QuizAttemptContext} from "../../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
@@ -236,11 +236,14 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
 export const myQuizzesCrumbs = [{title: siteSpecific("My tests", "Tests"), to: `/tests`}];
 export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage work", "Tests"), to: siteSpecific("/assigned", "/set_tests")}];
 export const viewQuizzesCrumbs = [{title: "View tests", to: "/view_tests"}];
-const getCrumbs = (preview: boolean | undefined, user: RegisteredUserDTO) => {
+const getCrumbs = (preview: boolean | undefined, isFromAssignment: boolean, user: RegisteredUserDTO) => {
     if (preview && isTeacherOrAbove(user)) {
         return teacherQuizzesCrumbs;
+    } else if (isFromAssignment) {
+        return myQuizzesCrumbs;
+    } else {
+        return viewQuizzesCrumbs;
     }
-    return viewQuizzesCrumbs;
 };
 
 const generateQuizTitle = (quiz: IsaacQuizDTO | DetailedQuizSummaryDTO | undefined, preview: boolean | undefined, attempt: QuizAttemptDTO | undefined, studentUser: RegisteredUserDTO | undefined) => {
@@ -262,7 +265,10 @@ const generateQuizTitle = (quiz: IsaacQuizDTO | DetailedQuizSummaryDTO | undefin
 const QuizTitle = (quizProps: QuizProps) => {
     const {page, pageHelp, preview, studentUser, user, quiz} = quizProps as QuizProps;
 
-    const crumbs = getCrumbs(preview, user);
+    const location = useLocation();
+    const isFromAssignment = location.pathname.includes("/assignment/");
+
+    const crumbs = getCrumbs(preview, isFromAssignment, user);
     if (!isDefined(page) || !isFullQuizProps(quizProps)) {
         const quizTitle = generateQuizTitle(quiz, preview, undefined, studentUser);
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
