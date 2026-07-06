@@ -48,7 +48,12 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
-    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})} data-testid="card-usage-info">
+    const deviceSize = useDeviceSize();
+    return <div {...rest} data-testid="card-usage-info" className={classNames(
+        className,
+        "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4",
+        usageDisplay?.type === "progressLink" && (above['sm'](deviceSize) ? "card-usage-branded-corner" : "my-4")
+    )}>
         {usageDisplay?.type === "correctness" && <>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
@@ -169,10 +174,12 @@ export const GameboardCard = (props: GameboardCardProps) => {
             </Button>}
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
-                {gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
-                {boardLink && <div className="card-share-link">
-                    <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
-                </div>}
+                {above['sm'](deviceSize) && <>
+                    {gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
+                    {boardLink && <div className="card-share-link">
+                        <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
+                    </div>}
+                </>}
                 {allowManaging
                     ? isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); unassign?.();}}>

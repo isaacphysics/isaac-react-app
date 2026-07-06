@@ -22,8 +22,14 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
     
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ quizAssignment, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
+    const deviceSize = useDeviceSize();
     if (!quizAssignment) return;
-    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})} data-testid="card-usage-info">
+
+    return <div {...rest} data-testid="card-usage-info" className={classNames(
+        className, 
+        "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", 
+        usageDisplay?.type === "progressLink" && (above['sm'](deviceSize) ? "card-usage-branded-corner" : "my-4")
+    )}>
         {usageDisplay?.type === "progressLink" && <>
             {isDefined(quizAssignment.scheduledStartDate) && quizAssignment.scheduledStartDate >= TODAY()
                 ? <div className="d-flex align-items-center">
@@ -107,7 +113,7 @@ export const TestCard = (props: TestCardProps) => {
         <div className="d-flex flex-column flex-sm-row align-items-start mt-2">
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
-                {isPhy && testUrl && <div className="card-share-link">
+                {isPhy && testUrl && above['sm'](deviceSize) && <div className="card-share-link">
                     <ShareLink 
                         linkUrl={testUrl} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline", disabled: !!(quizAssignment && isOverdue(quizAssignment))}}
                         inputInfo="(student-only link)"
