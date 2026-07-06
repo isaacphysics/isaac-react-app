@@ -126,11 +126,11 @@ export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: Gameb
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        if (searchParams.get("set") === "1") {
+        if (isTutorOrAbove(user) && searchParams.get("set") === "1") {
             openAssignModal();
         }
         return () => {void dispatch(closeActiveModal());};
-    }, [searchParams, openAssignModal, dispatch]);
+    }, [searchParams, openAssignModal, dispatch, user]);
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
