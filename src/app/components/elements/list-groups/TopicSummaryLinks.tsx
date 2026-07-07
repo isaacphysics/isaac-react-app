@@ -44,11 +44,11 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     isIntendedAudience(item.audience, userContext, user)
                 );
 
-                const documentType = (item.type && ["isaacQuestionPage", "isaacFastTrackQuestionPage"].includes(item.type)) ? DOCUMENT_TYPE.QUESTION : DOCUMENT_TYPE.CONCEPT;
+                const documentPrefix = documentTypePathPrefix[item.type as DOCUMENT_TYPE];
 
                 return <ListGroupItem key={item.id} className="topic-summary-link">
                     <Button
-                        tag={Link} to={{pathname: `/${documentTypePathPrefix[documentType]}/${item.id}`, search}}
+                        tag={Link} to={{pathname: `/${documentPrefix}/${item.id}`, search}}
                         block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                     >
                         <div className={classNames("stage-label d-flex align-items-center justify-content-center", audienceStyle(audienceString))}>
@@ -62,7 +62,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                             <ContentPropertyTags 
                                 className="ps-sm-2"
                                 deprecated={item.deprecated}
-                                supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
+                                supersededByPath={item.supersededBy ? `/${documentPrefix}/${item.supersededBy}` : undefined}
                                 tags={item.tags}
                             />
                         </div>
