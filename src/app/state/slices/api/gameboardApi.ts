@@ -98,7 +98,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 method: "POST",
                 params: {title: newTitle},
             }),
-            invalidatesTags: (_, error, {boardId}) => error ? ["AllGameboards"] : ["AllGameboards", {type: "Gameboard", id: boardId}],
+            invalidatesTags: (_, _error, {boardId}) => ["AllGameboards", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: `Linking the ${siteSpecific("deck", "quiz")} to your account failed`
             })
@@ -109,7 +109,8 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 url: `gameboards/user_gameboards/${encodeURIComponent(boardId)}`,
                 method: "POST"
             }),
-            invalidatesTags: (_, error, boardId) => error ? ["AllGameboards"] : ["AllGameboards", {type: "Gameboard", id: boardId}],
+            // TODO requires invalidating AllSetAssignments as the assignment's gameboard can be updated by this and so should not be cached
+            invalidatesTags: (_, _error, boardId) => ["AllGameboards", "AllSetAssignments", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: `Linking the ${siteSpecific("deck", "quiz")} to your account failed`
             })
@@ -120,7 +121,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 url: `/gameboards/user_gameboards/${encodeURIComponent(boardId)}`,
                 method: "DELETE",
             }),
-            invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
+            invalidatesTags: (_, _error, boardId) => ["AllGameboards", "AllSetAssignments", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: `${siteSpecific("Deck", "Quiz")} removed`,
                 successMessage: siteSpecific("The deck has been removed from your saved decks.", "You have successfully unlinked your account from this quiz."),
