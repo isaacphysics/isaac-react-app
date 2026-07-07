@@ -17,7 +17,7 @@ describe("QuizAttempt", () => {
             await studentAttemptsQuiz();
             siteSpecific(
                 () => expectPhyBreadCrumbs({href: "/view_tests", text: "View tests"}),
-                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "Tests"}, attempt.quiz?.title])
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}, attempt.quiz?.title])
             )();
         });
 
