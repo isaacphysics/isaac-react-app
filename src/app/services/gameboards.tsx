@@ -113,7 +113,7 @@ export const determineGameboardSubjects = (board?: GameboardDTO) => {
     if (isAda) {
         return ["compsci"];
     } else if (!board) {
-        return ["physics"];
+        return [];
     }
     const subjects = ["physics", "maths", "chemistry", "biology"];
     const allSubjects: string[] = [];
@@ -122,9 +122,9 @@ export const determineGameboardSubjects = (board?: GameboardDTO) => {
         tags.forEach(tag => allSubjects.push(tag));
     }
     );
-    // If none of the questions have a subject tag, default to physics
+    // If none of the questions have a subject tag, default to neutral
     if (allSubjects.length === 0) {
-        allSubjects.push("physics");
+        return [];
     }
     const enumeratedSubjects = countBy(allSubjects);
     return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b);})

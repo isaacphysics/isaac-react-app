@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { AssignmentDTO, GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse, Badge } from "reactstrap";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy, below, isTutorOrAbove, TODAY } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, below, isTutorOrAbove, TODAY } from "../../../services";
 import { HexIcon } from "../svg/HexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -48,7 +48,12 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
-    return <div {...rest} className={classNames(className, "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4", {"card-usage-branded-corner": usageDisplay?.type === "progressLink"})}>
+    const deviceSize = useDeviceSize();
+    return <div {...rest} data-testid="card-usage-info" className={classNames(
+        className,
+        "d-flex justify-content-center justify-content-md-end align-self-start column-gap-7 column-gap-md-4",
+        usageDisplay?.type === "progressLink" && (above['sm'](deviceSize) ? "card-usage-branded-corner" : "my-4")
+    )}>
         {usageDisplay?.type === "correctness" && <>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
@@ -124,7 +129,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
             : `${PATHS.GAMEBOARD}#${gameboard.id}`
         );
 
-    const card = <div className="px-3 py-2 flex-grow-1">
+    const card = <div className="px-3 py-2 flex-grow-1" data-testid="gameboard-card">
         <Row data-testid="my-assignment">
             <Col className="d-flex flex-column align-items-start">
                 <div className="d-flex align-items-center w-100">
@@ -133,7 +138,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             {generateGameboardSubjectHexagons(boardSubjects)}
                         </div>
                         <HexIcon icon="icon-question-deck" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
-                        {gameboard?.contents && <BoardItemIndicator count={gameboard.contents.length} type="board-card" data-bs-theme={boardSubjects[0]} />}
+                        {gameboard?.contents && <BoardItemIndicator count={gameboard.contents.length} type="board-card" data-bs-theme={boardSubjects[0] ?? "neutral"} />}
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
                         <h4 className="text-break m-0">
@@ -169,10 +174,12 @@ export const GameboardCard = (props: GameboardCardProps) => {
             </Button>}
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
-                {isPhy && gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
-                {isPhy && boardLink && <div className="card-share-link">
-                    <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
-                </div>}
+                {above['sm'](deviceSize) && <>
+                    {gameboard && <SaveBoardButton board={gameboard} color="keyline" size="sm" />}
+                    {boardLink && <div className="card-share-link">
+                        <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
+                    </div>}
+                </>}
                 {allowManaging
                     ? isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); unassign?.();}}>

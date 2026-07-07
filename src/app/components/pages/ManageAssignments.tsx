@@ -1,5 +1,7 @@
 import {
+    closeActiveModal,
     openActiveModal,
+    openIsaacBooksModal,
     useAppDispatch,
     useGetGroupsQuery,
     useGetMySetAssignmentsQuery,
@@ -22,28 +24,66 @@ import {
     isAssignment,
     isDefined,
     isQuiz,
+    isTeacherOrAbove,
     Item,
     MONTH_NAMES,
+    PATHS,
     TAG_ID,
     tags,
 } from "../../services";
 import {
     ActiveModalProps,
+    LoggedInUser,
     ManageAssignmentsContext,
     ValidWorkWithListingDate
 } from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
-import {combineQueries, discardResults, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {formatDate} from "../elements/DateString";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { ManageAssignmentsSidebar } from "../elements/sidebar/ManageAssignmentsSidebar";
-import { PhyAddGameboardButtons } from "./SetAssignments";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { ManageAssignmentCard, ManageTestCard } from "../elements/ManageAssignedCards";
+import { skipToken } from "@reduxjs/toolkit/query";
+
+const FindDeckButtons = () => {
+    const dispatch = useAppDispatch();
+    return <>
+        <PageFragment fragmentId={"manage_assignments_set_new_modal_text"} ifNotFound={RenderNothing} />
+        <h4 className="mb-3">
+            Find a deck from...
+        </h4>
+        <Row className="d-flex row-cols-1 row-cols-md-2 row-gap-3 mb-5">
+            <Col>
+                <Button onClick={() => {
+                    void dispatch(closeActiveModal());
+                    void dispatch(openIsaacBooksModal());
+                }} block color="keyline" className="px-3">
+                    our books
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/physics/a_level/question_decks"} block color="keyline" className="px-3">
+                    our topic questions decks
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/my_question_decks"} block color="keyline" className="px-3">
+                    your saved decks
+                </Button>
+            </Col>
+            <Col>
+                <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={PATHS.GAMEBOARD_BUILDER} block color="keyline" className="px-3">
+                    a new question deck
+                </Button>
+            </Col>
+        </Row>
+    </>;
+};
 
 const isValidWork = (a: IAssignmentLike) => {
     return (isAssignment(a) && a.gameboardId) || (isQuiz(a) && a.quizId && a.quizSummary);
@@ -129,15 +169,20 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
     }, [collapsed]);
 
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyDown={(e) => {
-            if (e.key === "Enter") {
+        <div 
+            tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} 
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    setOpen(o => !o);
+                    setCollapsed(false);
+                }
+            }} onClick={() => {
                 setOpen(o => !o);
                 setCollapsed(false);
-            }
-        }} onClick={() => {
-            setOpen(o => !o);
-            setCollapsed(false);
-        }} className={"hexagon-date"}>
+            }}
+            className={"hexagon-date"}
+            data-testid="day-label"
+        >
             <div className={classNames("d-flex align-items-center gap-2", {"text-muted": !open, "fw-bold": open})}>
                 <svg height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2}>
                     <Hexagon className={"fill-secondary"} {...dateHexagon}/>
@@ -186,7 +231,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
     }, [collapsed]);
     return <>
         <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
-            className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
+            className={"month-label w-100 text-end d-flex"} data-testid="month-label" onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
                     setCollapsed(false);
@@ -221,9 +266,9 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
 };
 
 type WorkGroupedByDate = [number, [number, [number, ValidWorkWithListingDate[]][]][]][];
-export const ManageAssignments = () => {
+export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
-    const testsSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
+    const testsSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
     const { data: testsSetByMe } = testsSetByMeQuery;
     const { data: groups } = useGetGroupsQuery(false);
@@ -384,7 +429,7 @@ export const ManageAssignments = () => {
 
     const setNewAssignmentModal = () : ActiveModalProps => ({
         title: "Set a new assignment",
-        body: <PhyAddGameboardButtons />
+        body: <FindDeckButtons />
     });
 
     return <PageContainer className="mb-7"
@@ -392,7 +437,7 @@ export const ManageAssignments = () => {
             <TitleAndBreadcrumb currentPageTitle="Set / manage work" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
         }
         sidebar={
-            <ManageAssignmentsSidebar 
+            <ManageAssignmentsSidebar
                 assignmentsSetByMe={assignmentsSetByMe}
                 groupsToInclude={groupsToInclude} 
                 setGroupsToInclude={setGroupsToInclude}
@@ -414,19 +459,22 @@ export const ManageAssignments = () => {
         </PageMetadata>
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or question decks"
-            query={combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, discardResults)}
+            query={isTeacherOrAbove(user) 
+                ? combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, () => []) 
+                : assignmentsSetByMeQuery
+            }
         >
             <ManageAssignmentsContext.Provider value={{groupsById, workByGroup, groups: groups ?? [], collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
                     <Card>
                         <CardBody>
-                            <Row className="row-cols-1 row-cols-md-2">
+                            <Row className={classNames("row-cols-1", { "row-cols-md-2": isTeacherOrAbove(user) })}>
                                 <Col>
                                     <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><h5 className="mb-0">Set a new assignment</h5></Button>
                                 </Col>
-                                <Col>
-                                    <Button block tag={Link} to="/set_tests" color="keyline" className="mt-2"><h5 className="mb-0">Set a new test</h5></Button>
-                                </Col>
+                                {isTeacherOrAbove(user) && <Col>
+                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><h5 className="mb-0">Set a new test</h5></Button>
+                                </Col>}
                             </Row>
                             <div className="section-divider-bold" />
 
@@ -435,15 +483,18 @@ export const ManageAssignments = () => {
                                 You have not created any groups to assign work to.
                                 Please <Link to="/groups">create a group here first.</Link>
                             </div>}
-                            {someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
+                            {groups && groups.length > 0 && someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
                                 There is no work matching your filters.
+                            </div>}
+                            {groups && groups.length > 0 && !someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
+                                You have not set any work yet. Use the buttons above to set a new assignment or test.
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
                                     Show work before {formatDate(earliestShowDate)}
                                 </Button>
                             </div>}
-                            {workGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastWorkIsListed})}>
+                            {workGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastWorkIsListed})} data-testid="timeline">
                                 {workGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
                                         <div className="year-label w-100 text-end">

@@ -1,11 +1,12 @@
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { above, Item, itemise, reactSelectDarkModeStyles, selectOnChange, Subjects, useDeviceSize } from "../../../services";
+import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, selectOnChange, Subjects, useDeviceSize } from "../../../services";
 import { sortBy } from "lodash";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
 import { AssignmentDTO } from "../../../../IsaacApiTypes";
 import { AppGroup } from "../../../../IsaacAppTypes";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { selectors, useAppSelector } from "../../../state";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -24,7 +25,7 @@ interface HeaderProps {
 } 
 
 export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
-
+    const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
     return <ContentSidebar buttonTitle="Filter & sort">
@@ -58,13 +59,15 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
             styles={reactSelectDarkModeStyles}
         />
 
-        <h5 className="mt-3">Filter by work type</h5>
-        <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
-            value={workTypesToInclude}
-            onChange={selectOnChange(setWorkTypesToInclude, false)}
-            options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
-            styles={reactSelectDarkModeStyles}
-        />
+        {isTeacherOrAbove(user) && <>
+            <h5 className="mt-3">Filter by work type</h5>
+            <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
+                value={workTypesToInclude}
+                onChange={selectOnChange(setWorkTypesToInclude, false)}
+                options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
+                styles={reactSelectDarkModeStyles}
+            />
+        </>}
 
         <details>
             <summary className="mt-3">More filters</summary>

@@ -44,8 +44,6 @@ interface AssignmentsPanelProps {
 };
 
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
-    const user = useAppSelector(selectors.user.orNull);
-    
     const upcomingAssignments = assignments?.filter(a => a.dueDate && !isOverdue(a) ); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
@@ -75,12 +73,9 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
         />
         <Spacer/>
         <div className="d-flex align-items-center mt-3">
-            <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
-                See assignment schedule
+            <Link to="/assigned" className="d-inline text-center panel-link me-3">
+                See all set work
             </Link>
-            {!isTutor(user) && <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
-                See all set tests
-            </Link>}
         </div>
     </div>;
 };
@@ -104,19 +99,12 @@ const MyIsaacPanel = () => {
                 <Link to="/question_deck_builder" className='d-block panel-my-isaac-link'>
                     Create a question deck
                 </Link>
-                <Link to="/set_assignments" className='d-block panel-my-isaac-link'>
-                    Set assignments
-                </Link>
-                <Link to="/assignment_schedule" className='d-block panel-my-isaac-link'>
-                    Assignment schedule
+                <Link to="/assigned" className='d-block panel-my-isaac-link'>
+                    Set / manage work
                 </Link>
                 <Link to="/assignment_progress" className='d-block panel-my-isaac-link'>
                     Assignment progress
                 </Link>
-                {!isTutor(user) &&
-                    <Link to="/set_tests" className='d-block panel-my-isaac-link'>
-                        Set / manage tests
-                    </Link>}
             </div>
         </div>
         <div className="section-divider" />
