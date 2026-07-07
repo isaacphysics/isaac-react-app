@@ -72,16 +72,17 @@ export const AnvilApp = ({doc, skillId}: AnvilAppProps) => {
 
     useEffect(() => {
         const onMessage = function(e: MessageEvent<ResizeEvent | SubmissionMarkedEvent>) {
-            if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) {
+            if (!iframeRef.current || e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow
+                    || e.origin !== `https://${doc.appId?.toLowerCase()}.anvil.app`) {
                 return;
             }
 
             const data = e.data;
 
-            if (iframeRef.current && (data.fn == "newAppHeight")) {
+            if (data.fn == "newAppHeight") {
                 (iframeRef.current as HTMLIFrameElement).height = `${data.newHeight + 15}`;
-            } else if (iframeRef.current && user?.loggedIn && e.origin === `https://${doc.appId?.toLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED' && skillId) {
-                void postSkillsAnswer({ appId: skillId, body: { hmac: data.hmac, payload: data.payload } });
+            } else if (user?.loggedIn  && data.type === 'SUBMISSION_MARKED') {
+                void postSkillsAnswer({ appId: skillId!, body: { hmac: data.hmac, payload: data.payload } });
             }
         };
 
