@@ -239,14 +239,12 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             />
                         </>}
                     </div>
-                    {!flatLayout && <>
-                        {subtitle && <div className="small text-muted text-wrap">
-                            <Markup encoding="latex">{subtitle}</Markup>
-                        </div>}
-                        {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
-                            <Breadcrumb breadcrumb={breadcrumb}/>
-                        </span>}
-                    </>}
+                    {subtitle && <div className="small text-muted text-wrap">
+                        <Markup encoding="latex">{subtitle}</Markup>
+                    </div>}
+                    {!flatLayout && breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                        <Breadcrumb breadcrumb={breadcrumb}/>
+                    </span>}
                     {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                     </div>}
@@ -274,14 +272,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             {!stackedLayout &&
                 <>
                     {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
-                    {flatLayout && (subtitle || breadcrumb) && <div className="list-view-border wf-10 pe-3 d-flex align-items-center">
-                        {subtitle && <div className="small text-muted text-wrap">
-                            <Markup encoding="latex">{subtitle}</Markup>
-                        </div>}
-                        {/* additional `&& !subtitle` as compared to stacked, as flat layout only has room for one */}
-                        {breadcrumb && !subtitle && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                    {flatLayout && breadcrumb && <div className="list-view-border wf-10 pe-3 d-flex align-items-center">
+                        <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                             <Breadcrumb breadcrumb={breadcrumb}/>
-                        </span>}
+                        </span>
                     </div>}
                     {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
