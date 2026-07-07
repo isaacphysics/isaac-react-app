@@ -69,7 +69,10 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
             />
         </>}
 
-        <details>
+        <h5 className="mt-3">Filter by title</h5>
+        <Input type="text" placeholder="Search by title" value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
+        {/* TODO swap the above title filter with the below filters pair, once subject information is available for assignments */}
+        {/* <details>
             <summary className="mt-3">More filters</summary>
 
             <h5 className="mt-3">Filter by title</h5>
@@ -82,7 +85,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
                 options={Subjects.map(s => itemise(s, s.charAt(0).toUpperCase() + s.slice(1)))}
                 styles={reactSelectDarkModeStyles}
             />
-        </details>
+        </details> */}
 
 
         <div className="section-divider" />
