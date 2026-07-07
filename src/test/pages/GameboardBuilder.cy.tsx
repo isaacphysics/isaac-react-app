@@ -15,7 +15,7 @@ it('Gameboard builder should have no visual regressions', () => {
     cy.get('button').contains('Add questions').click();
 
     cy.get('.modal-content').within(() => {
-        cy.get('.plain-list input[type=checkbox]').first().click();
+        cy.get('input[id=question-search-stage]').first().type('GCSE');
 
         cy.get('table').within(() => {
             for (let i = 0; i < 5; i++) {
