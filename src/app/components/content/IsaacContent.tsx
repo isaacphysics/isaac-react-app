@@ -24,6 +24,7 @@ import InlineContextProvider from "../elements/InlineContextProvider";
 import { useLocation } from "react-router";
 import { DesmosEmbedding } from "./DesmosEmbedding";
 import { GeogebraEmbedding } from "./GeogebraEmbedding";
+import { SkillsApp } from "./SkillsApp";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
@@ -84,6 +85,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} key={props.doc.id} />; break;
             case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} key={props.doc.id} />; break;
             case "anvilApp": selectedComponent = <AnvilApp {...props} key={props.doc.id} />; break;
+            case "skillsApp": selectedComponent = <SkillsApp {...props} key = {props.doc.id}/>; break;
             case "desmosEmbedding": selectedComponent = <DesmosEmbedding {...props} key={props.doc.id} />; break;
             case "geogebraEmbedding": selectedComponent = <GeogebraEmbedding {...props} key={props.doc.id} />; break;
             case "isaacCard": selectedComponent = <IsaacCard {...props} key={props.doc.id} />; break;

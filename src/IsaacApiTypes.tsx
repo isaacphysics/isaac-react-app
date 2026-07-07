@@ -407,6 +407,9 @@ export interface AnvilAppDTO extends ContentDTO {
     appAccessKey?: string;
 }
 
+export interface SkillsAppDTO extends ContentDTO {
+    anvilApp?: AnvilAppDTO
+}
 export interface ChemicalFormulaDTO extends ChoiceDTO {
     mhchemExpression?: string;
 }
@@ -878,6 +881,11 @@ export interface MisuseStatisticDTO {
     isOverSoftThreshold: boolean;
     lastEventTimestamp?: number;
     currentCounter: number;
+}
+
+export interface AnvilMarkingRequestDTO {
+    payload: string;
+    hmac: string;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
