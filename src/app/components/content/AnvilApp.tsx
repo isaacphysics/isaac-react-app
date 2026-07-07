@@ -71,7 +71,7 @@ export const AnvilApp = ({doc, skillId}: AnvilAppProps) => {
     const [postSkillsAnswer] = usePostSkillsAnswerMutation();
 
     useEffect(() => {
-        const onMessage = function(e: any) {
+        const onMessage = function(e: MessageEvent<ResizeEvent | SubmissionMarkedEvent>) {
             if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) {
                 return;
             }
@@ -79,7 +79,7 @@ export const AnvilApp = ({doc, skillId}: AnvilAppProps) => {
             const data = e.data;
 
             if (iframeRef.current && (data.fn == "newAppHeight")) {
-                (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
+                (iframeRef.current as HTMLIFrameElement).height = `${data.newHeight + 15}`;
             } else if (iframeRef.current && user?.loggedIn && e.origin === `https://${doc.appId?.toLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED' && skillId) {
                 void postSkillsAnswer({ appId: skillId, body: { hmac: data.hmac, payload: data.payload } });
             }
@@ -96,3 +96,6 @@ export const AnvilApp = ({doc, skillId}: AnvilAppProps) => {
         <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>
     } />;
 };
+
+type ResizeEvent = { fn: "newAppHeight", type: undefined, newHeight: number }
+type SubmissionMarkedEvent =  { fn: undefined, type: 'SUBMISSION_MARKED', hmac: string, payload: string};
