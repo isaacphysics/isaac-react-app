@@ -7,11 +7,12 @@ import { AnvilCookieHandler } from '../handlers/InterstitialCookieHandler';
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
+    skillId?: string
 }
 
 const sessionIdentifier = Math.random();
 
-export const AnvilApp = ({doc}: AnvilAppProps) => {
+export const AnvilApp = ({doc, skillId}: AnvilAppProps) => {
     const baseURL = `https://${doc.appId}.anvil.app/${doc.appAccessKey}?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useAppSelector(selectors.doc.get);
@@ -79,8 +80,8 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
 
             if (iframeRef.current && (data.fn == "newAppHeight")) {
                 (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
-            } else if (iframeRef.current && user?.loggedIn && e.origin === `https://${doc.appId?.toLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED') {
-                void postSkillsAnswer({ appId: `${typeof page === 'object' && page?.id}`, body: { hmac: data.hmac, payload: data.payload } });
+            } else if (iframeRef.current && user?.loggedIn && e.origin === `https://${doc.appId?.toLowerCase()}.anvil.app` && data.type === 'SUBMISSION_MARKED' && skillId) {
+                void postSkillsAnswer({ appId: skillId, body: { hmac: data.hmac, payload: data.payload } });
             }
         };
 
@@ -89,7 +90,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [postSkillsAnswer, doc.appId, page, user?.loggedIn]);
+    }, [postSkillsAnswer, skillId, doc.appId, user?.loggedIn]);
 
     return <AnvilCookieHandler afterAcceptedElement={
         <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>

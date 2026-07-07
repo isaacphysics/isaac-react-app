@@ -407,6 +407,7 @@ export interface AnvilAppDTO extends ContentDTO {
     appAccessKey?: string;
 }
 
+export interface SkillsAppDTO extends ContentDTO {}
 export interface ChemicalFormulaDTO extends ChoiceDTO {
     mhchemExpression?: string;
 }
