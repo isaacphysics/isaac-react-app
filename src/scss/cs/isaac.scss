@@ -303,7 +303,7 @@ $grid-breakpoints: (
   lg: calc(992px + $sidebar-width),
   xl: calc(1200px + $sidebar-width),
   nav: 1256px, // nav expansion is independent of sidebar
-  // xxl: 1400px // we don't need xxl
+  xxl: 1400px
 );
 
 $element-sizes: (
