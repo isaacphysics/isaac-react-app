@@ -187,7 +187,10 @@ const MyProgress = ({user}: MyProgressProps) => {
                         </Row>
                     </div>}
 
-                    <AttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>
+                    {isPhy
+                        ? <PhyAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
+                        : <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />}
+
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
@@ -214,30 +217,52 @@ const MyProgress = ({user}: MyProgressProps) => {
     </PageContainer>;
 };
 
-const AttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
-    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
-    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
-    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
-    const [activeTab, setActiveTab] = useState(ActiveAttemptsTab.Questions);
+const PhyAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
+    const [activeTabIndex, setActiveTabIndex] = useState(ActiveAttemptsTabIndex.Questions);
     const { mentalMaths } = useGetUserSkillsAttempts();
 
     return <Card className="mt-4">
         <CardBody>
             <h4>Attempts over time</h4>
             <div>
-                <Tabs style="tabs" tabContentClass='mt-4' activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+                <Tabs style="tabs" tabContentClass='mt-4' activeTabOverride={activeTabIndex} onActiveTabChange={setActiveTabIndex}>
                     {{"Questions": undefined, "Skills": undefined}}
                 </Tabs>
                 {{
-                    [ActiveAttemptsTab.Questions]: answeredQuestionsByDate && <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />,
-                    [ActiveAttemptsTab.Skills]: <ActivityGraph answeredQuestionsByDate={mentalMaths} />
-                }[activeTab]}
+                    [ActiveAttemptsTabIndex.Questions]: <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />,
+                    // TODO: dynamic subject colouring once we support more apps
+                    [ActiveAttemptsTabIndex.Skills]: <Row data-bs-theme="maths"> 
+                        <Col md={9}>
+                            <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" colour="var(--subject-color-300)"/>
+                        </Col>
+                        <div className='vr px-0'/>
+                        <Col>
+                            <div className='mb-2'>
+                                <strong>Subjects</strong> 
+                                <i className="icon icon-chevron-right icon-inline icon-color-black" />
+                                <strong>Maths</strong>
+                            </div>
+                            <div className='legend-item'>Overall Mental Maths</div>
+                        </Col>
+                    </Row>
+                }[activeTabIndex]}
             </div>
         </CardBody>
     </Card>;
 };
 
-enum ActiveAttemptsTab {
+const QuestionAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
+    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
+    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
+    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+    
+    return answeredQuestionsByDate && <ActivityGraph
+        answeredQuestionsByDate={answeredQuestionsByDate}
+        caption={siteSpecific("Question attempts", "activity")}
+        colour={siteSpecific("#FEA102",  "#FF4DC9")}/>;
+};
+
+enum ActiveAttemptsTabIndex {
     Questions = 1, Skills = 2
 }
 

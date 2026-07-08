@@ -2,9 +2,8 @@ import React, {useEffect} from 'react';
 import {areaSpline, bb, zoom} from "billboard.js";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
-import {siteSpecific} from "../../../services";
 
-export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
+export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour }: ActivityGraphProps) => {
 
     let selectedDates: string[] = [];
     const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
@@ -33,10 +32,10 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                 x: "x",
                 columns: [
                     ["x", ...selectedDates],
-                    ["activity", ...selectedDates.map((date) => answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)]
+                    [caption, ...selectedDates.map((date) => answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)]
                 ],
-                types: {activity: areaSpline()},
-                colors: {activity: siteSpecific("#FEA102", "#FF4DC9")},
+                types: {[caption]: areaSpline()},
+                colors: {[caption]: colour},
                 xFormat: "%Y-%m-%d",
             },
             axis: {
@@ -53,7 +52,9 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
             bindto: "#activityGraph",
             padding: {top: 0, right: 30, bottom: 30, left: 35}  // Pad sides to avoid tick labels being truncated!
         });
-    }, [answeredQuestionsByDate, selectedDates]);
+    }, [answeredQuestionsByDate, selectedDates, caption, colour]);
 
     return selectedDates.length > 0 ? <div id="activityGraph"/> : <div className="text-center-width"><strong>No data</strong></div>;
 };
+
+type ActivityGraphProps = { answeredQuestionsByDate: AnsweredQuestionsByDate, caption: string, colour: string };
