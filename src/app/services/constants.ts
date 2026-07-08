@@ -14,6 +14,7 @@ import {
     IsaacQuestionPageDTO,
     ItemDTO,
     QuestionPartState,
+    QuizFeedbackMode,
     Stage,
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
@@ -989,6 +990,13 @@ export const getContextSpecificTags = (map: ContextSpecificTags, pageContext: Pa
     return map[pageContext.subject][pageContext.stage[0]] || [];
 };
 
+export const QUIZ_FEEDBACK_NAMES: Record<QuizFeedbackMode, string> = {
+    NONE: "No feedback for students",
+    OVERALL_MARK: "Overall mark only",
+    SECTION_MARKS: "Section-by-section mark breakdown",
+    DETAILED_FEEDBACK: "Detailed feedback on each question",
+};
+
 
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
@@ -1290,6 +1298,10 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 };
 
 export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
+
+// REMINDER: If you change this, you also have to change $parsons-step in questions.scss
+export const PARSONS_MAX_INDENT = 3;
+export const PARSONS_INDENT_STEP = 45;
 
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]

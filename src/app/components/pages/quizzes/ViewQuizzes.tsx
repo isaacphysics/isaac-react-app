@@ -12,10 +12,10 @@ import { selectors, useAppSelector } from "../../../state";
 import { ListView } from "../../elements/list-groups/ListView";
 import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
-import { PracticeQuizzesSidebar } from "../../elements/sidebar/PracticeQuizzesSidebar";
+import { ViewQuizzesSidebar } from "../../elements/sidebar/ViewQuizzesSidebar";
 import { PageContainer } from "../../elements/layout/PageContainer";
 
-export const PracticeQuizzes = () => {
+export const ViewQuizzes = () => {
     const pageContext = useUrlPageTheme();
     const pageSubject = pageContext?.subject;
     const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
@@ -91,13 +91,13 @@ export const PracticeQuizzes = () => {
     return <PageContainer { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={"Practice tests"}
+                currentPageTitle={"View tests"}
                 icon={{"type": "icon", "icon": "icon-tests"}}
                 intermediateCrumbs={crumb ? [crumb] : []}
             />
         }
         sidebar={siteSpecific(
-            <PracticeQuizzesSidebar {...sidebarProps} hideButton />,
+            <ViewQuizzesSidebar {...sidebarProps} hideButton />,
             undefined
         )}
     >

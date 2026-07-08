@@ -2,7 +2,7 @@ import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isEventLeaderOrStaff, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isEventLeaderOrStaff, isPhy, isTeacherOrAbove, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
 import { Button, ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -177,7 +177,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     return <AbstractListViewItem
         icon={siteSpecific({type: "icon", icon: {name: "icon-tests", size: "lg"}}, undefined)}
         title={item.title ?? ""}
-        subtitle={roleVisibilitySummary(item)}
+        subtitle={isTeacherOrAbove(user) ? roleVisibilitySummary(item) : undefined}
         subject={itemSubject}
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
         quizButton={useViewQuizLink ? undefined : quizButton}

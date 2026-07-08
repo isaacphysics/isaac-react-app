@@ -29,7 +29,7 @@ import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirecto
 import { StudentResources } from "../../pages/StudentResources";
 import { TeacherResources } from "../../pages/TeacherResources";
 import { CSProjects } from "../../pages/CSProjects";
-import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
+import { ViewQuizzes } from "../../pages/quizzes/ViewQuizzes";
 import {StudentChallenges} from "../../pages/StudentChallenges";
 import { QuizView } from "../../pages/quizzes/QuizView";
 import {Overview} from "../../pages/Overview";
@@ -68,10 +68,12 @@ export const RoutesCS = [
 
     // Teacher test pages
     <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
+    <Route key={key++} path="/practice_tests" element={<Navigate to="/view_tests" replace />} />,
+
     // Student test pages
     <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,
 
-    <Route key={key++} path="/practice_tests" element={<RequireAuth auth={isLoggedIn} element={<PracticeQuizzes />} />} />,
+    <Route key={key++} path="/view_tests" element={<RequireAuth auth={isLoggedIn} element={<ViewQuizzes />} />} />,
     // Quiz (test) pages
     <Route key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
     <Route key={key++} path="/test/assignment/:quizAssignmentId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,

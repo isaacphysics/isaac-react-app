@@ -1,11 +1,12 @@
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { above, Item, itemise, reactSelectDarkModeStyles, selectOnChange, Subjects, useDeviceSize } from "../../../services";
+import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, selectOnChange, useDeviceSize } from "../../../services";
 import { sortBy } from "lodash";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
 import { AssignmentDTO } from "../../../../IsaacApiTypes";
 import { AppGroup } from "../../../../IsaacAppTypes";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { selectors, useAppSelector } from "../../../state";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -23,8 +24,8 @@ interface HeaderProps {
     collapse: () => void;
 } 
 
-export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
-
+export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
+    const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
     return <ContentSidebar buttonTitle="Filter & sort">
@@ -58,15 +59,20 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
             styles={reactSelectDarkModeStyles}
         />
 
-        <h5 className="mt-3">Filter by work type</h5>
-        <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
-            value={workTypesToInclude}
-            onChange={selectOnChange(setWorkTypesToInclude, false)}
-            options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
-            styles={reactSelectDarkModeStyles}
-        />
+        {isTeacherOrAbove(user) && <>
+            <h5 className="mt-3">Filter by work type</h5>
+            <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
+                value={workTypesToInclude}
+                onChange={selectOnChange(setWorkTypesToInclude, false)}
+                options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
+                styles={reactSelectDarkModeStyles}
+            />
+        </>}
 
-        <details>
+        <h5 className="mt-3">Filter by title</h5>
+        <Input type="text" placeholder="Search by title" value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
+        {/* TODO swap the above title filter with the below filters pair, once subject information is available for assignments */}
+        {/* <details>
             <summary className="mt-3">More filters</summary>
 
             <h5 className="mt-3">Filter by title</h5>
@@ -79,7 +85,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
                 options={Subjects.map(s => itemise(s, s.charAt(0).toUpperCase() + s.slice(1)))}
                 styles={reactSelectDarkModeStyles}
             />
-        </details>
+        </details> */}
 
 
         <div className="section-divider" />

@@ -7,7 +7,6 @@ import {
     ALL_TOPICS_CRUMB,
     atLeastOne,
     getRelatedDocs,
-    isAda,
     PATHS,
 } from "../../services";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
@@ -39,7 +38,7 @@ export const Topic = () => {
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
-                    {isAda && <IntendedAudienceWarningAlert doc={topicPage} />}
+                    <IntendedAudienceWarningAlert doc={topicPage} />
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }

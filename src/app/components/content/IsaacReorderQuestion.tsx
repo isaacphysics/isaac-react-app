@@ -1,127 +1,39 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacReorderQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {Col, Row} from "reactstrap";
-import {DragDropContext, Draggable, Droppable, DropResult} from "@hello-pangea/dnd";
+import {Col, Label, Row} from "reactstrap";
+import {DragDropContext, Droppable, DropResult} from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
-import {useCurrentQuestionAttempt} from "../../services";
+import {above, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
-import {Markup} from "../elements/markup";
 import {Immutable} from "immer";
-
-const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: Immutable<ItemDTO>; index: number; inAvailableItems?: boolean; readonly?: boolean}) => {
-    return <Draggable
-        key={item.id}
-        draggableId={`${item.id || index}|reorder-item-choice`}
-        index={index}
-        isDragDisabled={readonly}
-    >
-        {(provided) => {
-            return <div
-                id={`${item.id || index}|reorder-item-${inAvailableItems ? "available" : "choice"}`}
-                className={`reorder-item`}
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                style={provided.draggableProps.style}
-            >
-                <Markup trusted-markup-encoding={"html"}>
-                    {item?.value ?? ""}
-                </Markup>
-            </div>;
-        }}
-    </Draggable>;
-};
+import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
-
+    const deviceSize = useDeviceSize();
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
-
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
-
-    const moveItem = (src: Immutable<ItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ItemDTO>[] | undefined, toIndex: number) => {
-        if (!src || !dst) return;
-        const srcItem = src.splice(fromIndex, 1)[0];
-        dst.splice(toIndex, 0, srcItem);
-    };
+    const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ItemChoiceDTO>[], [currentAttempt?.items]);
+    const setAttemptItems = useCallback((items: Immutable<ItemChoiceDTO>[]) => {
+        if (currentAttempt) {
+            dispatchSetCurrentAttempt({...currentAttempt, items});
+        } else {
+            dispatchSetCurrentAttempt({type: "itemChoice", items});
+        }
+    }, [currentAttempt, dispatchSetCurrentAttempt]);
 
     const onDragEnd = (result: DropResult) => {
-        if (!result.source || !result.destination) {
-            return;
-        }
-        if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'answerItems' && currentAttempt) {
-            // Reorder currentAttempt
-            const items = [...(currentAttempt?.items || [])];
-            moveItem(items, result.source.index, items, result.destination.index);
-            dispatchSetCurrentAttempt({...currentAttempt, items});
-        } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
-            // Reorder availableItems
-            const items = [...availableItems];
-            moveItem(items, result.source.index, items, result.destination.index);
-            setAvailableItems(items);
-        } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems') {
-            // Move from availableItems to currentAttempt
-            const srcItems = [...availableItems];
-            const dstItems = [...(currentAttempt?.items || [])];
-            moveItem(srcItems, result.source.index, dstItems, result.destination.index);
-            // We can't guarantee that `currentAttempt` is defined, so we have to explicitly state `type: "itemChoice"` here.
-            dispatchSetCurrentAttempt({type: "itemChoice", items: dstItems});
-            setAvailableItems(srcItems);
-        } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && currentAttempt) {
-            // Move from currentAttempt to availableItems
-            const srcItems = [...(currentAttempt?.items || [])];
-            const dstItems = [...availableItems];
-            moveItem(srcItems, result.source.index, dstItems, result.destination.index);
-            dispatchSetCurrentAttempt({...currentAttempt, items: srcItems});
-            setAvailableItems(dstItems);
-        } else {
-            console.error("Not sure how we got here...");
-        }
-    };
-
-    const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ItemChoiceDTO>, newAvailableItems?: Immutable<ItemDTO>[]) => {
-        if (!newCurrentAttempt) {
-            const defaultAttempt: ItemChoiceDTO = {
-                type: "itemChoice",
-                items: [],
-            };
-            dispatchSetCurrentAttempt(defaultAttempt);
-        }
-        if (newCurrentAttempt) {
-            // This makes sure that available items and current attempt items contain different items.
-            // This is because available items always start from the document's available items (see constructor)
-            // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
-            // This also takes care of updating the two lists when a user moves items from one to the other.
-            let fixedAvailableItems: ItemDTO[] = [];
-            const currentAttemptItems = newCurrentAttempt.items || [];
-            if (doc.items) {
-                fixedAvailableItems = doc.items.filter(item => {
-                    let found = false;
-                    for (const i of currentAttemptItems) {
-                        if (i.id === item.id) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    return !found;
-                });
-            }
-            // WARNING: Inverting the order of the arrays breaks this.
-            // TODO: Investigate if there is a method that gives more formal guarantees.
-            const diff = _differenceBy(newAvailableItems, fixedAvailableItems, 'id');
-            // This stops re-rendering when availableItems have not changed from one state update to the next.
-            // The set difference is empty if the two sets contain the same elements (by 'id', see above).
-            if (diff.length > 0) {
-                setAvailableItems(fixedAvailableItems);
-            }
-        }
+        handleParsonsItemDrag(result, availableItems, setAvailableItems, attemptItems, setAttemptItems);
     };
 
     useEffect(() => {
-        onCurrentAttemptUpdate(currentAttempt, availableItems);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentAttempt, availableItems]);
+        if (!currentAttempt) {
+            setAttemptItems([]);
+        } else {
+            onParsonsCurrentAttemptUpdate(availableItems, setAvailableItems, attemptItems, doc.items);
+        }
+    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems]);
 
     return <div className="parsons-question">
         <div className="question-content">
@@ -133,13 +45,25 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             <DragDropContext onDragEnd={onDragEnd}>
                 <Col md={{size: 6}} className="parsons-available-items">
                     <h4>Available items</h4>
+                    <Label className="visually-hidden" id="item-section-info">
+                        To pick up an item, press space or enter.
+                        Use the up and down arrow keys to move the item within the current list.
+                        {above['md'](deviceSize) ? 
+                            "Use the left and right arrow keys to move the item between the available items and your answer." : 
+                            "Use the contained list swap button to move the item between the available items and your answer."}
+                        Press space or enter again to move the item to a new position.
+                    </Label>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
                             <div ref={provided.innerRef}
                                 className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {availableItems && availableItems.map((item, index) =>
-                                    <ReorderDraggableItem key={item.id} item={item} index={index} inAvailableItems readonly={readonly}/>)}
+                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
+                                        setItems={setAvailableItems} items={availableItems}
+                                        swapItemList={() => swapItemList(availableItems, setAvailableItems, attemptItems, setAttemptItems, index)}
+                                    />
+                                )}
                                 {(!availableItems || availableItems.length === 0)
                                     ? <div>&nbsp;</div>
                                     : provided.placeholder}
@@ -155,7 +79,12 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                 className={classNames("parsons-items", {"empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) =>
-                                    <ReorderDraggableItem key={item.id} item={item} index={index} readonly={readonly}/>)}
+                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
+                                        setItems={(items: Immutable<ItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
+                                        items={(currentAttempt?.items || []) as Immutable<ItemDTO>[]}
+                                        swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index)}
+                                    />
+                                )}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0)
                                     ? <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}

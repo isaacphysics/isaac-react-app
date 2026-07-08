@@ -257,7 +257,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Physics practice admissions tests",
         terms: ["pat", "esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
-        url: "/physics/university/practice_tests",
+        url: "/physics/university/view_tests",
         tags: ["physics"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -265,7 +265,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Maths practice admissions tests",
         terms: ["tmua", "esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
-        url: "/maths/university/practice_tests",
+        url: "/maths/university/view_tests",
         tags: ["maths"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -273,7 +273,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Chemistry practice admissions tests",
         terms: ["esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
-        url: "/chemistry/university/practice_tests",
+        url: "/chemistry/university/view_tests",
         tags: ["chemistry"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -281,7 +281,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Biology practice admissions tests",
         terms: ["esat"],
         summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
-        url: "/biology/a_level/practice_tests",
+        url: "/biology/a_level/view_tests",
         tags: ["biology"],
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -289,7 +289,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Practice tests",
         terms: ["tests", "test", "practice tests", "practice test"],
         summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
-        url: "/practice_tests",
+        url: "/view_tests",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "teacher_features",

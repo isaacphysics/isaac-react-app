@@ -103,6 +103,10 @@ img[aria-disabled="true"] {
   rotate: 180deg;
 }
 
+.icon-arrow-left-right {
+  @include svg-icon('/assets/common/icons/arrow-left-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-search {
   @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
@@ -188,6 +192,25 @@ img[aria-disabled="true"] {
   margin: calc(var(--icon-size) * (1 - 1.2)/2) !important;
 
   @extend %icon-fillable;
+}
+
+.icon-star-sparkle {
+  @include svg-icon-layered(
+    '/assets/common/icons/star.svg',
+    '/assets/common/icons/star-sparkle-fill.svg',
+    calc(var(--icon-size) * 1.2), calc(var(--icon-size) * 1.2), var(--mask-size, 60%)
+  );
+  margin: calc(var(--icon-size) * (1 - 1.2)/2) !important;
+
+  @extend %icon-fillable;
+
+  // TODO below is a nasty hack to allow the ::before to be larger (the sparkles exceed the bbox of the star svg) without changing the icon size.
+  // maybe find a nicer way?
+  align-items: center;
+  justify-content: center;
+  &::before {
+    --icon-size: 20px;
+  }
 }
 
 .icon-ai {

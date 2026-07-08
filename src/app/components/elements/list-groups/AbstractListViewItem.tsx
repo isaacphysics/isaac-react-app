@@ -228,16 +228,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                                     <Markup encoding="latex">{title}</Markup>
                                 </span>
                             }
-                        </>
-                        {isItem && <>
-                            {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                            <ContentPropertyTags 
+                            {isItem && typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
+                            {(isItem || isBuilder) && <ContentPropertyTags 
                                 className={classNames("justify-self-end", {"ms-2": !wrapTitleTags})}
                                 deprecated={typedProps.deprecated}
                                 supersededByPath={typedProps.supersededByPath}
                                 tags={tags}
-                            />
-                        </>}
+                            />}
+                        </>
                     </div>
                     {subtitle && <div className="small text-muted text-wrap">
                         <Markup encoding="latex">{subtitle}</Markup>

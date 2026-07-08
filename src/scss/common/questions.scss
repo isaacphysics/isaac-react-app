@@ -352,7 +352,7 @@ figure .inline-container {
 
 .parsons-question {
   .parsons-items {
-    border: solid 1px #00000021;
+    border: solid 1px $gray-136;
     padding: 0 0.5em;
 
     &.empty {
@@ -360,23 +360,6 @@ figure .inline-container {
       &.drag-over {
         padding-top: 1.1em;
         padding-bottom: 1.1em;
-      }
-    }
-
-    .parsons-item > pre {
-      margin: 0.5rem 0;
-      padding: 0.5em 1em;
-      cursor: grab; // Doesn't work?
-    }
-
-    .reorder-item {
-      > * {
-        overflow-x: auto;
-        margin: 0.5rem 0;
-        padding: 0.5em 1em;
-        cursor: grab;
-        background: var(--color-neutral-white, white);
-        border: solid 1px #00000021;
       }
     }
 
@@ -392,50 +375,91 @@ figure .inline-container {
         }
       }
 
-      position: relative;
+      .indent-buttons {
+        display: flex;
+        align-items: center;
 
-      .controls {
-        display: none;
-      }
+        button {
+          display: grid;
+          position: relative;
+          justify-content: center;
+          align-content: center;
 
-      .show-controls {
-        .controls {
-          position: absolute;
-          right: 0.5rem;
-          top: 0.5rem;
-          display: block;
+          width: 20px;
+          height: 20px;
+          padding: 0;
+          background-color: $gray-120;
 
-          button {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            padding: 0;
-            background: $gray-120;
+          &.show:focus, &.show:hover {
+            background-color: $primary;
+          }
 
-            &.show:hover {
-              background-color: $primary !important;
-            }
+          &.hide {
+            opacity: 0.2;
+            cursor: default;
+          }
 
-            &.hide {
-              opacity: 0.2;
-              cursor: default;
-            }
-
-            &.show {
-              opacity: 1.0;
-            }
+          &.show {
+            opacity: 1.0;
           }
         }
       }
     }
     
-    // The fixed position of a selected parsons-item causes the box-shadow to be drawn in the wrong place,
-    // so we need to apply it to the correctly positioned child instead
     .parsons-item, .reorder-item {
-      &:focus-visible:focus-visible {
-        box-shadow: none;
-        > * {
-          @include focus-outline;
+      display: flex;
+      align-items: center;
+      position: relative;
+      border: solid 1px $gray-136;
+      margin: 0.5rem 0;
+      background: var(--color-neutral-white, white);
+
+      pre {
+        margin: 0.25em 0.5em;
+        padding: 0.25em 0;
+        border: none;
+        background: none;
+      }
+
+      .reorder-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        button {
+          display: grid;
+          justify-content: center;
+        }
+      }
+
+      .swap-button {
+        display: flex;
+        justify-content: center;
+        
+        .icon {
+          background-color: $gray-120;
+        }
+
+        &:hover, &:focus {
+          .icon {
+            background-color: $primary;
+          }
+        }
+      }
+
+      // Use negative z-index rather than `display: none` to hide buttons so they can still be selected using keyboard controls
+      .hidden-buttons {
+        position: absolute;
+        right: 2px;
+        background-color: var(--color-neutral-white, white);
+        padding: 2px 0;
+
+        z-index: -100;
+      }
+      
+      &:hover, &:focus-within {
+        .hidden-buttons {
+          z-index: 2;
         }
       }
     }
@@ -444,7 +468,10 @@ figure .inline-container {
       @for $i from 0 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
-            white #{$i * $parsons-step + 5}px, $gray-400 #{$i * $parsons-step + 5}px, $gray-400 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
+            var(--color-neutral-white, white) #{$i * $parsons-step + 5}px, 
+            var(--color-neutral-700, $gray-400) #{$i * $parsons-step + 5}px, 
+            var(--color-neutral-700, $gray-400) #{$i * $parsons-step + 7}px, 
+            var(--color-neutral-white, white) #{$i * $parsons-step + 7}px
           );
         }
       }

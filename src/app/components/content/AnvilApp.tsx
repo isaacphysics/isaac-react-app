@@ -1,17 +1,18 @@
 import React, {RefObject, useContext, useEffect} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
-import {selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector, usePostSkillsAnswerMutation} from "../../state";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
 import {selectQuestionPart} from "../../services";
 import { AnvilCookieHandler } from '../handlers/InterstitialCookieHandler';
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
+    skillId?: string
 }
 
 const sessionIdentifier = Math.random();
 
-export const AnvilApp = ({doc}: AnvilAppProps) => {
+export const AnvilApp = ({doc, skillId}: AnvilAppProps) => {
     const baseURL = `https://${doc.appId}.anvil.app/${doc.appAccessKey}?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useAppSelector(selectors.doc.get);
@@ -67,28 +68,35 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     }).join('&');
 
     const iframeSrc = `${baseURL}#?${queryParams}`;
-
-    const onMessage = function(e: any) {
-        if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) {
-            return;
-        }
-
-        const data = e.data;
-
-        if (iframeRef.current && (data.fn == "newAppHeight")) {
-            (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
-        }
-    };
+    const [postSkillsAnswer] = usePostSkillsAnswerMutation();
 
     useEffect(() => {
+        const onMessage = function(e: MessageEvent<ResizeEvent | SubmissionMarkedEvent>) {
+            if (!iframeRef.current || e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow
+                    || e.origin !== `https://${doc.appId?.toLowerCase()}.anvil.app`) {
+                return;
+            }
+
+            const data = e.data;
+
+            if (data.fn == "newAppHeight") {
+                (iframeRef.current as HTMLIFrameElement).height = `${data.newHeight + 15}`;
+            } else if (user?.loggedIn  && data.type === 'SUBMISSION_MARKED') {
+                void postSkillsAnswer({ appId: skillId!, body: { hmac: data.hmac, payload: data.payload } });
+            }
+        };
+
         window.addEventListener("message", onMessage);
 
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [onMessage]);
+    }, [postSkillsAnswer, skillId, doc.appId, user?.loggedIn]);
 
     return <AnvilCookieHandler afterAcceptedElement={
         <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>
     } />;
 };
+
+type ResizeEvent = { fn: "newAppHeight", type: undefined, newHeight: number }
+type SubmissionMarkedEvent =  { fn: undefined, type: 'SUBMISSION_MARKED', hmac: string, payload: string};
