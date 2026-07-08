@@ -59,7 +59,7 @@ function EditorListener() {
 
     return doc 
         ? <Row className={`${type}-content-container`}>
-            <Col className={classNames("py-4", colClasses, {"mw-760": isAda})}>
+            <Col className={classNames("py-4", colClasses, {"mw-1600": isAda})}>
                 <FigureNumberingContext.Provider value={{}}>
                     <WithFigureNumbering doc={doc}>
                         <IsaacContent doc={doc}/>

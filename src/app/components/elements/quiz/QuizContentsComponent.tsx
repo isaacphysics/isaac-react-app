@@ -205,7 +205,7 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
 
     return section ?
         <Row className="question-content-container">
-            <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
+            <Col className={classNames("py-4 question-panel", {"mw-1600": isAda})}>
                 {viewingAsSomeoneElse && <div className="mb-2">
                     You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
                 </div>}

@@ -34,7 +34,7 @@ export const Topic = () => {
             <MetaDescription description={topicPage.summary} />
             <CanonicalHrefElement />
             <Row>
-                <Col className={"py-3 mw-760"}>
+                <Col className={"py-3 mw-1600"}>
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
@@ -52,7 +52,7 @@ export const Topic = () => {
             </Row>
 
             {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="mb-3">
-                <Col className={"py-0 mw-760"}>
+                <Col className={"py-0 mw-1600"}>
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
                             <CardTitle>Gameboards</CardTitle>
@@ -73,7 +73,7 @@ export const Topic = () => {
             </Row>}
 
             <Row className="mt-3 mb-7">
-                <Col className={"pb-3 mw-760"}>
+                <Col className={"pb-3 mw-1600"}>
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="keyline" size="lg" block>

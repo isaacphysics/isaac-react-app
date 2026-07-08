@@ -120,7 +120,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                 {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
                 <Row className="generic-content-container">
-                    <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
+                    <Col className={classNames("pb-4 generic-panel", {"mw-1600": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

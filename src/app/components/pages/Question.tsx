@@ -127,7 +127,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                     {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
                     <Row className="question-content-container">
-                        <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
+                        <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-1600": isAda})}>
 
                             <AccessingAssignedQuestionOutsideAssignmentWarning question={doc} assignment={assignment} />
 
