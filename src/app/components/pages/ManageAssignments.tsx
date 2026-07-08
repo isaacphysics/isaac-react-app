@@ -463,6 +463,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                 ? combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, () => []) 
                 : assignmentsSetByMeQuery
             }
+            maintainOnRefetch
         >
             <ManageAssignmentsContext.Provider value={{groupsById, workByGroup, groups: groups ?? [], collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
