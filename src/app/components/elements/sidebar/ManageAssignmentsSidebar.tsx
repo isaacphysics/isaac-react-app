@@ -1,5 +1,5 @@
 import { ContentSidebar } from "../layout/SidebarLayout";
-import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, selectOnChange, Subjects, useDeviceSize } from "../../../services";
+import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, selectOnChange, useDeviceSize } from "../../../services";
 import { sortBy } from "lodash";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
@@ -24,7 +24,7 @@ interface HeaderProps {
     collapse: () => void;
 } 
 
-export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, setSubjectsToInclude, subjectsToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
+export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, workTypesToInclude, setWorkTypesToInclude, workTitleToInclude, setWorkTitleToInclude, collapse}: HeaderProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
