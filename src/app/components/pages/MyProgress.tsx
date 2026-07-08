@@ -34,6 +34,7 @@ import { ListView } from '../elements/list-groups/ListView';
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
+import { AnsweredQuestionsByDate } from '../../../IsaacApiTypes';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -218,6 +219,7 @@ const AttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, use
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
     const [activeTab, setActiveTab] = useState(ActiveAttemptsTab.Questions);
+    const { mentalMaths } = useGetUserSkillsAttempts();
 
     return <Card className="mt-4">
         <CardBody>
@@ -228,7 +230,7 @@ const AttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, use
                 </Tabs>
                 {{
                     [ActiveAttemptsTab.Questions]: answeredQuestionsByDate && <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />,
-                    [ActiveAttemptsTab.Skills]: <></>
+                    [ActiveAttemptsTab.Skills]: <ActivityGraph answeredQuestionsByDate={mentalMaths} />
                 }[activeTab]}
             </div>
         </CardBody>
@@ -238,5 +240,14 @@ const AttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, use
 enum ActiveAttemptsTab {
     Questions = 1, Skills = 2
 }
+
+const useGetUserSkillsAttempts = (): Record<string | number | symbol, AnsweredQuestionsByDate> => {
+    return {
+        mentalMaths: {
+            ["2026-06-01"]: 60,
+            ["2026-07-01"]: 20
+        }
+    };
+};
 
 export default MyProgress;
