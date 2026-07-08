@@ -39,7 +39,7 @@ export const PromptBanner = ({card, ...props}: PromptBannerProps) => {
     const {title, icon, bodyText, color, buttons} = card;
     const {name, altText, size, color: iconColor, raw} = typeof icon === "string" ? {name: icon} : icon;
 
-    return <Container {...props} className={classNames( "icon-card-container px-3 my-3", props?.className ?? "")}>
+    return <div {...props} className={classNames( "icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card prompt-banner", `bg-${color ?? "cyan-100"}`, card.className)}>
             <div className={"d-flex flex-column h-100 icon-card-main-content"}>
                 <CardTitle className={classNames("px-4 mt-4 d-flex flex-column flex-md-row align-items-start gap-2")}>
@@ -74,5 +74,5 @@ export const PromptBanner = ({card, ...props}: PromptBannerProps) => {
                 </CardFooter>}
             </div>
         </Card>
-    </Container>;
+    </div>;
 };
