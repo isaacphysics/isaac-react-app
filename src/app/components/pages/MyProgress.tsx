@@ -217,18 +217,26 @@ const AttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, use
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+    const [activeTab, setActiveTab] = useState(ActiveAttemptsTab.Questions);
 
-    return answeredQuestionsByDate && <Card className="mt-4">
+    return <Card className="mt-4">
         <CardBody>
             <h4>Attempts over time</h4>
             <div>
-                <Tabs style="tabs" tabContentClass='mt-4'>
+                <Tabs style="tabs" tabContentClass='mt-4' activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                     {{"Questions": undefined, "Skills": undefined}}
                 </Tabs>
-                <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
+                {{
+                    [ActiveAttemptsTab.Questions]: answeredQuestionsByDate && <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />,
+                    [ActiveAttemptsTab.Skills]: <></>
+                }[activeTab]}
             </div>
         </CardBody>
     </Card>;
 };
+
+enum ActiveAttemptsTab {
+    Questions = 1, Skills = 2
+}
 
 export default MyProgress;
