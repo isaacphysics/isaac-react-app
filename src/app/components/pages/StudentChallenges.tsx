@@ -16,7 +16,7 @@ export const StudentChallenges = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Student challenges"} />
         <Row>
-            <Col lg={{size: 8, offset: 2}}>
+            <Col>
                 <PageFragment fragmentId={"student_challenges_intro"} />
                 {!isError ?
                     <PageFragment fragmentId={liveChallengeId} />

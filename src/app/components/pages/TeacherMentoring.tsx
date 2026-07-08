@@ -28,7 +28,7 @@ export const TeacherMentoring = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Teacher mentoring programme"} />
         <Row className="mb-3">
-            <Col lg={{size: 8, offset: 2}}>
+            <Col>
                 <PageFragment fragmentId={"teacher_mentoring_2025_intro"} />
                 {!userInGroup && groupJoinPrompt}
                 <PageFragment fragmentId={"teacher_mentoring_2025_info"} />

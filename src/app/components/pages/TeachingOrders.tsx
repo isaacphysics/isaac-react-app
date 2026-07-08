@@ -55,7 +55,7 @@ export const TeachingOrders = () => {
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>
-            <Col lg={{size: 8, offset: 2}}>
+            <Col>
                 {fragmentId && <PageFragment fragmentId={fragmentId}/>}
             </Col>
         </Row>
