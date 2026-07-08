@@ -11,6 +11,7 @@ import {
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import {
+    above,
     BookHiddenState,
     HUMAN_QUESTION_TYPES,
     ISAAC_BOOKS_BY_TAG,
@@ -218,24 +219,26 @@ const MyProgress = ({user}: MyProgressProps) => {
 };
 
 const PhyAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
+    const deviceSize = useDeviceSize();
+    
     const [activeTabIndex, setActiveTabIndex] = useState(ActiveAttemptsTabIndex.Questions);
     const { mentalMaths } = useGetUserSkillsAttempts();
 
-    return <Card className="mt-4">
-        <CardBody>
+    return <Card className="mt-4 attempts-over-time">
+        <CardBody className='h-100 d-flex flex-column'>
             <h4>Attempts over time</h4>
-            <div>
+            <div className='flex-grow-1 d-flex flex-column'>
                 <Tabs style="tabs" tabContentClass='mt-4' activeTabOverride={activeTabIndex} onActiveTabChange={setActiveTabIndex}>
                     {{"Questions": undefined, "Skills": undefined}}
                 </Tabs>
                 {{
                     [ActiveAttemptsTabIndex.Questions]: <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />,
                     // TODO: dynamic subject colouring once we support more apps
-                    [ActiveAttemptsTabIndex.Skills]: <Row data-bs-theme="maths"> 
+                    [ActiveAttemptsTabIndex.Skills]: <Row data-bs-theme="maths" className='flex-grow-1'> 
                         <Col md={9}>
                             <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" colour="var(--subject-color-300)"/>
                         </Col>
-                        <div className='vr px-0'/>
+                        {above['md'](deviceSize) && <div className='vr px-0'/>}
                         <Col>
                             <div className='mb-2'>
                                 <strong>Subjects</strong> 
