@@ -75,8 +75,6 @@ const MyProgress = ({user}: MyProgressProps) => {
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
-    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
-    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const [chartTab, setChartTab] = useState<"correct" | "attempted">("correct");
     const deviceSize = useDeviceSize();
 
@@ -99,7 +97,6 @@ const MyProgress = ({user}: MyProgressProps) => {
     }
 
     const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;
-    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? siteSpecific("My progress", "Progress") : `Progress for ${userName || "user"}`;
@@ -189,12 +186,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                         </Row>
                     </div>}
 
-                    {answeredQuestionsByDate && <div className="mt-4">
-                        <h4>Question attempts over time</h4>
-                        <div>
-                            <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
-                        </div>
-                    </div>}
+                    <AttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
@@ -220,4 +212,23 @@ const MyProgress = ({user}: MyProgressProps) => {
         </Card>
     </PageContainer>;
 };
+
+const AttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
+    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
+    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
+    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+
+    return answeredQuestionsByDate && <Card className="mt-4">
+        <CardBody>
+            <h4>Attempts over time</h4>
+            <div>
+                <Tabs style="tabs" tabContentClass='mt-4'>
+                    {{"Questions": undefined, "Skills": undefined}}
+                </Tabs>
+                <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
+            </div>
+        </CardBody>
+    </Card>;
+};
+
 export default MyProgress;
