@@ -32,6 +32,7 @@ export const ResearchNotificationBanner = () => {
         dismissText="Got it"
         onDismiss={() => dispatch(logAction({type: "RESEARCH_NOTIFICATION_DISMISSED"}))}
         show={true}
+        id="research-banner"
     >
         <ResearchNotificationBannerBody />
     </DismissibleCookieBanner>;
