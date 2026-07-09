@@ -191,7 +191,10 @@ const MyProgress = ({user}: MyProgressProps) => {
 
                     {isPhy
                         ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
-                        : <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />}
+                        : <div className="mt-4">
+                            <h4> Question attempts over time</h4>
+                            <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
+                        </div>}
 
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
@@ -238,7 +241,8 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnD
                         // TODO: dynamic subject colouring once we support more apps
                         [ActiveAttemptsTabIndex.Skills]: <Row data-bs-theme="maths" className='flex-grow-1'> 
                             <Col md={9} className='d-flex align-items-center'>
-                                <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" colour="var(--subject-color-300)"/>
+                                <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" 
+                                    emptyText = <span><br/> <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to try our mental maths skills practice.</span> colour="var(--subject-color-300)"/>
                             </Col>
                             {above['md'](deviceSize) && <div className='vr px-0' />}
                             <Col>
@@ -260,7 +264,7 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnD
 const QuestionAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
-    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+    const answeredQuestionsByDate = {}; //(!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
     
     return answeredQuestionsByDate && <ActivityGraph
         answeredQuestionsByDate={answeredQuestionsByDate}
@@ -275,8 +279,8 @@ enum ActiveAttemptsTabIndex {
 const useGetUserSkillsAttempts = (): Record<string | number | symbol, AnsweredQuestionsByDate> => {
     return {
         mentalMaths: {
-            ["2026-06-01"]: 60,
-            ["2026-07-01"]: 20
+            // ["2026-06-01"]: 60,
+            // ["2026-07-01"]: 20
         }
     };
 };
