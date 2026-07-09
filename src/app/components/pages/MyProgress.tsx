@@ -264,7 +264,7 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnD
 const QuestionAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
-    const answeredQuestionsByDate = {}; //(!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
     
     return answeredQuestionsByDate && <ActivityGraph
         answeredQuestionsByDate={answeredQuestionsByDate}
@@ -279,8 +279,8 @@ enum ActiveAttemptsTabIndex {
 const useGetUserSkillsAttempts = (): Record<string | number | symbol, AnsweredQuestionsByDate> => {
     return {
         mentalMaths: {
-            // ["2026-06-01"]: 60,
-            // ["2026-07-01"]: 20
+            ["2026-06-01"]: 60,
+            ["2026-07-01"]: 20
         }
     };
 };

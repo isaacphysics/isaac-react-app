@@ -3,7 +3,7 @@ import {areaSpline, bb, zoom} from "billboard.js";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
 
-export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour }: ActivityGraphProps) => {
+export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour, emptyText }: ActivityGraphProps) => {
     console.log('another render');
     let selectedDates: string[] = [];
     const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
@@ -57,7 +57,12 @@ export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour }: Acti
 
     return selectedDates.length > 0
         ? <div id="activityGraph" key="graph-with-data"/>
-        : <div key="graph-empty-state" className="text-center-width"><strong>No data</strong></div>;
+        : <div key="graph-empty-state" className="text-center-width"><strong>No data{emptyText ? '.' : ''} {emptyText}</strong></div>;
 };
 
-type ActivityGraphProps = { answeredQuestionsByDate: AnsweredQuestionsByDate, caption: string, colour: string };
+type ActivityGraphProps = {
+    answeredQuestionsByDate: AnsweredQuestionsByDate,
+    caption: string,
+    colour: string,
+    emptyText?: React.JSX.Element
+};
