@@ -239,21 +239,24 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnD
                     {{
                         [ActiveAttemptsTabIndex.Questions]: <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>,
                         // TODO: dynamic subject colouring once we support more apps
-                        [ActiveAttemptsTabIndex.Skills]: <Row data-bs-theme="maths" className='flex-grow-1'> 
-                            <Col md={9} className='d-flex align-items-center'>
+                        [ActiveAttemptsTabIndex.Skills]: <div data-bs-theme="maths" className={`flex-grow-1 ${above['md'](deviceSize) ? 'row': 'd-flex flex-column'}`}> 
+                            <div className={`d-flex align-items-center ${above['md'](deviceSize) ? 'col-md-9' : 'flex-grow-1'}`}>
                                 <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" 
-                                    emptyText = <span><br/> <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to try our mental maths skills practice.</span> colour="var(--subject-color-300)"/>
-                            </Col>
+                                    emptyText = <span><br/>
+                                        <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a>
+                                        to try our mental maths skills practice.
+                                    </span> colour="var(--subject-color-300)"/>
+                            </div>
                             {above['md'](deviceSize) && <div className='vr px-0' />}
-                            <Col>
-                                <div className='mb-2'>
+                            <div id="legend" className={above['md'](deviceSize) ? 'col' : 'order-first align-self-center'}>
+                                <div className='mb-md-2'>
                                     <strong>Subjects</strong> 
                                     <i className="icon icon-chevron-right icon-inline icon-color-black" />
                                     <strong>Maths</strong>
                                 </div>
                                 <div className='legend-item'>Overall Mental Maths</div>
-                            </Col>
-                        </Row>
+                            </div>
+                        </div>
                     }[activeTabIndex]}
                 </div>
             </div>
