@@ -248,7 +248,7 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnD
                                     </span> colour="var(--subject-color-300)"/>
                             </div>
                             {above['md'](deviceSize) && <div className='vr px-0' />}
-                            <div id="legend" className={above['md'](deviceSize) ? 'col' : 'order-first align-self-center'}>
+                            <div id="legend" className={above['md'](deviceSize) ? 'col' : 'order-first mb-2 align-self-center'}>
                                 <div className='mb-md-2'>
                                     <strong>Subjects</strong> 
                                     <i className="icon icon-chevron-right icon-inline icon-color-black" />
