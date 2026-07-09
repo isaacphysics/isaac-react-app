@@ -36,6 +36,7 @@ import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
 import { AnsweredQuestionsByDate } from '../../../IsaacApiTypes';
+import classNames from 'classnames';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -189,7 +190,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </div>}
 
                     {isPhy
-                        ? <PhyAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
+                        ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
                         : <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />}
 
                     <Row id="progress-questions">
@@ -218,7 +219,7 @@ const MyProgress = ({user}: MyProgressProps) => {
     </PageContainer>;
 };
 
-const PhyAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
+const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
     const deviceSize = useDeviceSize();
     
     const [activeTabIndex, setActiveTabIndex] = useState(ActiveAttemptsTabIndex.Questions);
@@ -231,24 +232,26 @@ const PhyAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, 
                 <Tabs style="tabs" tabContentClass='mt-4' activeTabOverride={activeTabIndex} onActiveTabChange={setActiveTabIndex}>
                     {{"Questions": undefined, "Skills": undefined}}
                 </Tabs>
-                {{
-                    [ActiveAttemptsTabIndex.Questions]: <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />,
-                    // TODO: dynamic subject colouring once we support more apps
-                    [ActiveAttemptsTabIndex.Skills]: <Row data-bs-theme="maths" className='flex-grow-1'> 
-                        <Col md={9}>
-                            <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" colour="var(--subject-color-300)"/>
-                        </Col>
-                        {above['md'](deviceSize) && <div className='vr px-0'/>}
-                        <Col>
-                            <div className='mb-2'>
-                                <strong>Subjects</strong> 
-                                <i className="icon icon-chevron-right icon-inline icon-color-black" />
-                                <strong>Maths</strong>
-                            </div>
-                            <div className='legend-item'>Overall Mental Maths</div>
-                        </Col>
-                    </Row>
-                }[activeTabIndex]}
+                <div className={`flex-grow-1 d-flex ${classNames({'align-items-center': activeTabIndex === ActiveAttemptsTabIndex.Questions})}`}>
+                    {{
+                        [ActiveAttemptsTabIndex.Questions]: <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>,
+                        // TODO: dynamic subject colouring once we support more apps
+                        [ActiveAttemptsTabIndex.Skills]: <Row data-bs-theme="maths" className='flex-grow-1'> 
+                            <Col md={9} className='d-flex align-items-center'>
+                                <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" colour="var(--subject-color-300)"/>
+                            </Col>
+                            {above['md'](deviceSize) && <div className='vr px-0' />}
+                            <Col>
+                                <div className='mb-2'>
+                                    <strong>Subjects</strong> 
+                                    <i className="icon icon-chevron-right icon-inline icon-color-black" />
+                                    <strong>Maths</strong>
+                                </div>
+                                <div className='legend-item'>Overall Mental Maths</div>
+                            </Col>
+                        </Row>
+                    }[activeTabIndex]}
+                </div>
             </div>
         </CardBody>
     </Card>;
