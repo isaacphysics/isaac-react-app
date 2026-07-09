@@ -4,7 +4,7 @@ import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
 
 export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour }: ActivityGraphProps) => {
-
+    console.log('another render');
     let selectedDates: string[] = [];
     const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
     if (foundDates && foundDates.length > 0) {
@@ -15,6 +15,7 @@ export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour }: Acti
     }
 
     useEffect(() => {
+        console.log('in useEffect');
         if (selectedDates.length === 0) {
             return;
         }
@@ -54,7 +55,9 @@ export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour }: Acti
         });
     }, [answeredQuestionsByDate, selectedDates, caption, colour]);
 
-    return selectedDates.length > 0 ? <div id="activityGraph"/> : <div className="text-center-width"><strong>No data</strong></div>;
+    return selectedDates.length > 0
+        ? <div id="activityGraph" key="graph-with-data"/>
+        : <div key="graph-empty-state" className="text-center-width"><strong>No data</strong></div>;
 };
 
 type ActivityGraphProps = { answeredQuestionsByDate: AnsweredQuestionsByDate, caption: string, colour: string };
