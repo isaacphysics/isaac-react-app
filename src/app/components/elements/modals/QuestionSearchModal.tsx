@@ -312,7 +312,7 @@ export const QuestionSearchModal = (
                 }} />}
 
                 {isPhy && isStaff(user) && <>
-                    <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack questions</span>} onChange={e => {
+                    <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack only</span>} onChange={e => {
                         startTransition(() => {
                             setSearchFastTrack(e.target.checked);
                         });
