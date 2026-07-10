@@ -282,6 +282,14 @@ enum ActiveAttemptsTabIndex {
 const useGetUserSkillsAttempts = (): Record<string | number | symbol, AnsweredQuestionsByDate> => {
     return {
         mentalMaths: {
+            ["2025-10-01"]: 60,
+            ["2025-11-01"]: 140,
+            ["2025-12-01"]: 0,
+            ["2026-01-01"]: 0,
+            ["2026-02-01"]: 30,
+            ["2026-03-01"]: 0,
+            ["2026-04-01"]: 0,
+            ["2026-05-01"]: 0,
             ["2026-06-01"]: 60,
             ["2026-07-01"]: 20
         }
