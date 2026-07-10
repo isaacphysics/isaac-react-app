@@ -81,7 +81,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
             {isDefined(attempt) && <>
                 <QuizContentsComponent {...subProps} />
                 <SidebarLayout show={isPhy}>
-                    <Col lg={4} xl={3} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0")} />
+                    {isPhy && <Col lg={4} xl={3} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0")} />}
                     <MainContent>
                         {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
                     </MainContent>
