@@ -18,6 +18,7 @@ import {
     groupTagSelectionsByParent,
     isAda,
     isPhy,
+    isStaff,
     Item,
     logEvent,
     searchResultIsPublic,
@@ -310,8 +311,8 @@ export const QuestionSearchModal = (
                     });
                 }} />}
 
-                {isPhy && <>
-                    <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack questions</span>} onChange={e => {
+                {isPhy && isStaff(user) && <>
+                    <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack only</span>} onChange={e => {
                         startTransition(() => {
                             setSearchFastTrack(e.target.checked);
                         });
