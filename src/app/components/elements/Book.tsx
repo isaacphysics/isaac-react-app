@@ -13,6 +13,7 @@ import { PageMetadata } from "./PageMetadata";
 import { WithFigureNumbering } from "./WithFigureNumbering";
 import { ContentControlledSidebar } from "./sidebar/ContentControlledSidebar";
 import { PageContainer } from "./layout/PageContainer";
+import { IsaacContent } from "../content/IsaacContent";
 
 export const Book = () => {
 
@@ -79,7 +80,7 @@ export const Book = () => {
                             <div className="d-flex">
                                 <div className="flex-grow-1">
                                     <WithFigureNumbering doc={definedBookIndexPage}>
-                                        <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
+                                        <IsaacContent doc={definedBookIndexPage.children[0] as ContentDTO} />
                                     </WithFigureNumbering>
                                 </div>
                                 <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
