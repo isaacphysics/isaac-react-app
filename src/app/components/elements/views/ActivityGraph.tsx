@@ -8,11 +8,11 @@ type ActivityGraphProps = {
     id: string, // unique ID for the graph, so that multiple graphs can be rendered on the same page
     answeredQuestionsByDate: AnsweredQuestionsByDate,
     caption: string,
-    colour: string,
+    color: string,
     emptyText?: React.JSX.Element
 };
 
-export const ActivityGraph = ({ id, answeredQuestionsByDate, caption, colour, emptyText }: ActivityGraphProps) => {
+export const ActivityGraph = ({ id, answeredQuestionsByDate, caption, color, emptyText }: ActivityGraphProps) => {
     const graphRef = useRef<HTMLDivElement>(null);
 
     const selectedDates = useMemo(() => {
@@ -48,7 +48,7 @@ export const ActivityGraph = ({ id, answeredQuestionsByDate, caption, colour, em
                         [caption, ...selectedDates.map((date) => answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)]
                     ],
                     types: {[caption]: areaSpline()},
-                    colors: {[caption]: colour},
+                    colors: {[caption]: color},
                     xFormat: "%Y-%m-%d",
                 },
                 axis: {
@@ -66,7 +66,7 @@ export const ActivityGraph = ({ id, answeredQuestionsByDate, caption, colour, em
                 padding: {top: 0, right: 30, bottom: 30, left: 35}  // Pad sides to avoid tick labels being truncated!
             });
         }, 250);
-    }, [answeredQuestionsByDate, selectedDates, caption, colour, id]);
+    }, [answeredQuestionsByDate, selectedDates, caption, color, id]);
 
     useEffect(() => {
         // rerun the graph generation if any dependencies change

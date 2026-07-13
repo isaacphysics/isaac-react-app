@@ -263,7 +263,7 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
                             <br/>
                             <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to try our mental maths skills practice.
                         </span>}
-                        colour="var(--subject-color-300)"
+                        color="var(--subject-color-300)"
                     />;
                 }}
             />
@@ -288,7 +288,7 @@ const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: bo
         id="question-attempts"
         answeredQuestionsByDate={answeredQuestionsByDate}
         caption={siteSpecific("Question attempts", "activity")}
-        colour={siteSpecific("#FEA102",  "#FF4DC9")}/>;
+        color={siteSpecific("#FEA102",  "#FF4DC9")}/>;
 };
 
 type UserProps = { viewingOwnData: boolean, user: PotentialUser, userIdOfInterest: string }
