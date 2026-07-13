@@ -36,8 +36,8 @@ import { ListView } from '../elements/list-groups/ListView';
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
-import classNames from 'classnames';
 import { skipToken } from '@reduxjs/toolkit/query';
+import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -247,26 +247,36 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
     } else if (isTeacherOrAbove(user)) {
         userId = userIdOfInterest;
     }
-    const { data, isSuccess } = useGetUserSkillsAttemptsQuery(userId);
+    const query = useGetUserSkillsAttemptsQuery(userId);
 
-    return <div data-bs-theme="maths" className={`flex-grow-1 ${above['md'](deviceSize) ? 'row': 'd-flex flex-column'}`}> 
-        <div className={`d-flex align-items-center ${above['md'](deviceSize) ? 'col-md-9' : 'flex-grow-1'}`}>
-            <ActivityGraph answeredQuestionsByDate={isSuccess && data ? data.mental_maths_overall : {}} caption="Overall Mental Maths" 
-                emptyText = <span><br/>
-                    <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to
-                    try our mental maths skills practice.
-                </span> colour="var(--subject-color-300)"/>
-        </div>
-        {above['md'](deviceSize) && <div className='vr px-0' />}
-        <div id="legend" className={above['md'](deviceSize) ? 'col' : 'order-first mb-2 align-self-center'}>
+    return <Row data-bs-theme="maths" className="flex-row-reverse flex-md-row row-gap-2">
+        <Col md={9} className="d-flex align-items-center">
+            <ShowLoadingQuery 
+                query={query}
+                defaultErrorTitle='Failed to load skills attempts.'
+                thenRender={(data) => {
+                    return <ActivityGraph
+                        id="skills-attempts"
+                        answeredQuestionsByDate={data ? data.mental_maths_overall : {}} 
+                        caption="Overall Mental Maths" 
+                        emptyText={<span>
+                            <br/>
+                            <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to try our mental maths skills practice.
+                        </span>}
+                        colour="var(--subject-color-300)"
+                    />;
+                }}
+            />
+        </Col>
+        <Col md={3} id="legend" className={above['md'](deviceSize) ? "border-start" : ""}>
             <div className='mb-md-2'>
                 <strong>Subjects</strong> 
                 <i className="icon icon-chevron-right icon-inline icon-color-black" />
                 <strong>Maths</strong>
             </div>
             <div className='legend-item'>Overall Mental Maths</div>
-        </div>
-    </div>;
+        </Col>
+    </Row>;
 };
 
 const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: boolean, user: PotentialUser}) => {
@@ -280,10 +290,6 @@ const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: bo
         caption={siteSpecific("Question attempts", "activity")}
         colour={siteSpecific("#FEA102",  "#FF4DC9")}/>;
 };
-
-enum ActiveAttemptsTabIndex {
-    Questions = 1, Skills = 2
-}
 
 type UserProps = { viewingOwnData: boolean, user: PotentialUser, userIdOfInterest: string }
 export default MyProgress;
