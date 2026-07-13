@@ -368,7 +368,8 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
 
     const url = `/${documentTypePathPrefix[item.type as keyof typeof documentTypePathPrefix]}/${item.id}`;
 
-    const topic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[])?.title;
+    const topicTag = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
+    const topic = topicTag ? topicTag.alias ?? topicTag.title : undefined;
 
     const icon: TitleIconProps = { type: "icon", label: "Question",
         icon: isPhy
@@ -384,7 +385,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
                 <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
                     <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
-                <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mx-1 grab-cursor" />
+                <i aria-label="Drag to reorder" className="mx-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black" />
                 <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
                     <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
@@ -395,13 +396,14 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
             componentTag={"div"}
             icon={deviceSize !== "xs" ? icon : undefined}
             title={item.title ?? ""}
+            subtitle={item.subtitle}
             subject={itemSubject !== "neutral" ? itemSubject : undefined}
             url={url}
             tags={item.tags}
             deprecated={item.deprecated}
             supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
             style="flat"
-            subtitle={topic}
+            breadcrumb={topic ? [topic] : undefined}
             audienceViews={audienceViews}
             className="flex-grow-1 align-content-center bg-transparent"
             questionPreviewId={item.id}

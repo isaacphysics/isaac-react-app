@@ -39,6 +39,8 @@ const GameboardBuilderTableRow = (
     const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
+    const topicTag = tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);
+
     return filteredAudienceViews.map((view, i, arr) => <tr key={`${question.id} ${i}`}>
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
@@ -57,10 +59,10 @@ const GameboardBuilderTableRow = (
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
                 <div className="d-flex">
-                    {isDnd && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
+                    {isDnd && <i aria-label="Drag to reorder" className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
                     <div>
                         <div className="d-flex">
-                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={`Preview question '${question.id}' in new tab`}>
                                 <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
                             <PreviewQuestionButton id={question.id} className="ms-2" />
@@ -80,7 +82,7 @@ const GameboardBuilderTableRow = (
                 </div>
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
-                {tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[])?.title}
+                {topicTag ? topicTag.alias ?? topicTag.title : topicTag}
             </td>
         </>}
         <td className={classNames(cellClasses, "w-15")}>

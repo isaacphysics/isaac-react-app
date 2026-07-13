@@ -183,14 +183,16 @@ export const QuestionSearchModal = (
         </div>
         <div>
             <Input
-                type="button"
+                type="button" data-testid="add-selections-button"
                 value={siteSpecific("Add selections to question deck", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={classNames("btn w-100 h-100", siteSpecific("btn-keyline", "btn-solid border-0"))}
                 onClick={() => {
                     undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
-                    currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
-                    currentQuestions.setQuestionOrder(modalQuestions.questionOrder);
+                    startTransition(() => {
+                        currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
+                        currentQuestions.setQuestionOrder(modalQuestions.questionOrder);
+                    });
                     redoStack.clear();
                     dispatch(closeActiveModal());
                 }}

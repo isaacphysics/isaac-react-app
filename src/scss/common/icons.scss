@@ -230,6 +230,10 @@ img[aria-disabled="true"] {
   }
 }
 
+.icon-drag-indicator {
+  @include svg-icon('/assets/common/icons/drag_indicator.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 // Icon sizing
 .icon {
   --icon-size: 16px;
