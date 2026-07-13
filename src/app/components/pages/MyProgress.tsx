@@ -249,8 +249,8 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
     }
     const query = useGetUserSkillsAttemptsQuery(userId);
 
-    return <Row data-bs-theme="maths" className="flex-row-reverse flex-md-row row-gap-2">
-        <Col md={9} className="d-flex align-items-center">
+    return <Row data-bs-theme="maths" className="flex-row-reverse flex-md-row row-gap-3">
+        <Col md={9} className="d-flex align-items-center order-1 order-md-0">
             <ShowLoadingQuery 
                 query={query}
                 defaultErrorTitle='Failed to load skills attempts.'
