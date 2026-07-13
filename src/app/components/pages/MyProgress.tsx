@@ -224,22 +224,16 @@ const MyProgress = ({user}: MyProgressProps) => {
 };
 
 const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfInterest}: UserProps) => {
-    const [activeTabIndex, setActiveTabIndex] = useState(ActiveAttemptsTabIndex.Questions);
-
     return <Card className="mt-4 attempts-over-time">
         <CardBody className='h-100 d-flex flex-column'>
             <h4>Attempts over time</h4>
             <div className='flex-grow-1 d-flex flex-column'>
-                <Tabs style="tabs" tabContentClass='mt-4' activeTabOverride={activeTabIndex} onActiveTabChange={setActiveTabIndex}>
-                    {{"Questions": undefined, "Skills": undefined}}
-                </Tabs>
-                <div className={`flex-grow-1 d-flex ${classNames({'align-items-center': activeTabIndex === ActiveAttemptsTabIndex.Questions})}`}>
+                <Tabs style="tabs" tabContentClass='mt-4' renderHiddenTabs={false}>
                     {{
-                        [ActiveAttemptsTabIndex.Questions]: <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>,
-                        // TODO: dynamic subject colouring once we support more apps
-                        [ActiveAttemptsTabIndex.Skills]: <SkillsAttemptsOverTime user={user} viewingOwnData={viewingOwnData} userIdOfInterest={userIdOfInterest} />
-                    }[activeTabIndex]}
-                </div>
+                        "Questions": <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>,
+                        "Skills": <SkillsAttemptsOverTime user={user} viewingOwnData={viewingOwnData} userIdOfInterest={userIdOfInterest} />
+                    }}
+                </Tabs>
             </div>
         </CardBody>
     </Card>;
