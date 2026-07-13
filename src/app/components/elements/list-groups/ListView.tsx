@@ -368,7 +368,8 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
 
     const url = `/${documentTypePathPrefix[item.type as keyof typeof documentTypePathPrefix]}/${item.id}`;
 
-    const topic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[])?.title;
+    const topicTag = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
+    const topic = topicTag ? topicTag.alias ?? topicTag.title : undefined;
 
     const icon: TitleIconProps = { type: "icon", label: "Question",
         icon: isPhy

@@ -39,6 +39,8 @@ const GameboardBuilderTableRow = (
     const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
+    const topicTag = tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);
+
     return filteredAudienceViews.map((view, i, arr) => <tr key={`${question.id} ${i}`}>
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
@@ -80,7 +82,7 @@ const GameboardBuilderTableRow = (
                 </div>
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
-                {tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[])?.title}
+                {topicTag ? topicTag.alias ?? topicTag.title : topicTag}
             </td>
         </>}
         <td className={classNames(cellClasses, "w-15")}>
