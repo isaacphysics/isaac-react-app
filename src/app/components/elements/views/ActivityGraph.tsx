@@ -1,21 +1,29 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {areaSpline, bb, zoom} from "billboard.js";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
 
-export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour, emptyText }: ActivityGraphProps) => {
-    console.log('another render');
-    let selectedDates: string[] = [];
-    const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
-    if (foundDates && foundDates.length > 0) {
-        const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
-        if (nonZeroDates.length > 0) {
-            selectedDates = foundDates.sort();
+type ActivityGraphProps = {
+    id: string, // unique ID for the graph, so that multiple graphs can be rendered on the same page
+    answeredQuestionsByDate: AnsweredQuestionsByDate,
+    caption: string,
+    colour: string,
+    emptyText?: React.JSX.Element
+};
+
+export const ActivityGraph = ({ id, answeredQuestionsByDate, caption, colour, emptyText }: ActivityGraphProps) => {
+    const selectedDates = useMemo(() => {
+        const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
+        if (foundDates && foundDates.length > 0) {
+            const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
+            if (nonZeroDates.length > 0) {
+                return foundDates.sort();
+            }
         }
-    }
+        return [];
+    }, [answeredQuestionsByDate]);
 
     useEffect(() => {
-        console.log('in useEffect');
         if (selectedDates.length === 0) {
             return;
         }
@@ -50,19 +58,12 @@ export const ActivityGraph = ({ answeredQuestionsByDate, caption, colour, emptyT
             zoom: {enabled: zoom()},
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
-            bindto: "#activityGraph",
+            bindto: `#activity-graph-${id}`,
             padding: {top: 0, right: 30, bottom: 30, left: 35}  // Pad sides to avoid tick labels being truncated!
         });
-    }, [answeredQuestionsByDate, selectedDates, caption, colour]);
+    }, [answeredQuestionsByDate, selectedDates, caption, colour, id]);
 
     return selectedDates.length > 0
-        ? <div id="activityGraph" key="graph-with-data"/>
+        ? <div id={`activity-graph-${id}`} key={`activity-graph-${id}`}/>
         : <div key="graph-empty-state" className="text-center-width"><strong>No data{emptyText ? '.' : ''} {emptyText}</strong></div>;
-};
-
-type ActivityGraphProps = {
-    answeredQuestionsByDate: AnsweredQuestionsByDate,
-    caption: string,
-    colour: string,
-    emptyText?: React.JSX.Element
 };

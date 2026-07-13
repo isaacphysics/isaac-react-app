@@ -275,6 +275,7 @@ const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: bo
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
     
     return answeredQuestionsByDate && <ActivityGraph
+        id="question-attempts"
         answeredQuestionsByDate={answeredQuestionsByDate}
         caption={siteSpecific("Question attempts", "activity")}
         colour={siteSpecific("#FEA102",  "#FF4DC9")}/>;
