@@ -410,6 +410,7 @@ export interface AnvilAppDTO extends ContentDTO {
 export interface SkillsAppDTO extends ContentDTO {
     anvilApp?: AnvilAppDTO
 }
+
 export interface ChemicalFormulaDTO extends ChoiceDTO {
     mhchemExpression?: string;
 }
@@ -868,6 +869,9 @@ export interface AnsweredQuestionsByDate {
     [date: string]: number;
 }
 
+export interface SkillAttemptsByDate {
+    'mental_maths_overall': AnsweredQuestionsByDate
+}
 export interface TOTPSharedSecretDTO {
     userId: number;
     sharedSecret: string;

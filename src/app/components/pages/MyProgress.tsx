@@ -6,7 +6,8 @@ import {
     getUserProgress,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetUserSkillsAttemptsQuery
 } from "../../state";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Card, CardBody, Col, Row } from "reactstrap";
@@ -35,8 +36,8 @@ import { ListView } from '../elements/list-groups/ListView';
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
-import { AnsweredQuestionsByDate } from '../../../IsaacApiTypes';
 import classNames from 'classnames';
+import { skipToken } from '@reduxjs/toolkit/query';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -190,7 +191,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </div>}
 
                     {isPhy
-                        ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
+                        ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} userIdOfInterest={userIdOfInterest} />
                         : <div className="mt-4">
                             <h4> Question attempts over time</h4>
                             <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
@@ -222,11 +223,8 @@ const MyProgress = ({user}: MyProgressProps) => {
     </PageContainer>;
 };
 
-const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
-    const deviceSize = useDeviceSize();
-    
+const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfInterest}: UserProps) => {
     const [activeTabIndex, setActiveTabIndex] = useState(ActiveAttemptsTabIndex.Questions);
-    const { mentalMaths } = useGetUserSkillsAttempts();
 
     return <Card className="mt-4 attempts-over-time">
         <CardBody className='h-100 d-flex flex-column'>
@@ -239,24 +237,7 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnD
                     {{
                         [ActiveAttemptsTabIndex.Questions]: <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>,
                         // TODO: dynamic subject colouring once we support more apps
-                        [ActiveAttemptsTabIndex.Skills]: <div data-bs-theme="maths" className={`flex-grow-1 ${above['md'](deviceSize) ? 'row': 'd-flex flex-column'}`}> 
-                            <div className={`d-flex align-items-center ${above['md'](deviceSize) ? 'col-md-9' : 'flex-grow-1'}`}>
-                                <ActivityGraph answeredQuestionsByDate={mentalMaths} caption="Overall Mental Maths" 
-                                    emptyText = <span><br/>
-                                        <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to
-                                        try our mental maths skills practice.
-                                    </span> colour="var(--subject-color-300)"/>
-                            </div>
-                            {above['md'](deviceSize) && <div className='vr px-0' />}
-                            <div id="legend" className={above['md'](deviceSize) ? 'col' : 'order-first mb-2 align-self-center'}>
-                                <div className='mb-md-2'>
-                                    <strong>Subjects</strong> 
-                                    <i className="icon icon-chevron-right icon-inline icon-color-black" />
-                                    <strong>Maths</strong>
-                                </div>
-                                <div className='legend-item'>Overall Mental Maths</div>
-                            </div>
-                        </div>
+                        [ActiveAttemptsTabIndex.Skills]: <SkillsAttemptsOverTime user={user} viewingOwnData={viewingOwnData} userIdOfInterest={userIdOfInterest} />
                     }[activeTabIndex]}
                 </div>
             </div>
@@ -264,7 +245,37 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnD
     </Card>;
 };
 
-const QuestionAttemptsOverTime = ({viewingOwnData, user}: { viewingOwnData: boolean, user: PotentialUser}) => {
+const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: UserProps) => {
+    const deviceSize = useDeviceSize();
+    let userId: string | typeof skipToken = skipToken;
+    if (viewingOwnData && user.loggedIn && user.id) {
+        userId = user.id.toString();
+    } else if (isTeacherOrAbove(user)) {
+        userId = userIdOfInterest;
+    }
+    const { data, isSuccess } = useGetUserSkillsAttemptsQuery(userId);
+
+    return <div data-bs-theme="maths" className={`flex-grow-1 ${above['md'](deviceSize) ? 'row': 'd-flex flex-column'}`}> 
+        <div className={`d-flex align-items-center ${above['md'](deviceSize) ? 'col-md-9' : 'flex-grow-1'}`}>
+            <ActivityGraph answeredQuestionsByDate={isSuccess && data ? data.mental_maths_overall : {}} caption="Overall Mental Maths" 
+                emptyText = <span><br/>
+                    <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to
+                    try our mental maths skills practice.
+                </span> colour="var(--subject-color-300)"/>
+        </div>
+        {above['md'](deviceSize) && <div className='vr px-0' />}
+        <div id="legend" className={above['md'](deviceSize) ? 'col' : 'order-first mb-2 align-self-center'}>
+            <div className='mb-md-2'>
+                <strong>Subjects</strong> 
+                <i className="icon icon-chevron-right icon-inline icon-color-black" />
+                <strong>Maths</strong>
+            </div>
+            <div className='legend-item'>Overall Mental Maths</div>
+        </div>
+    </div>;
+};
+
+const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: boolean, user: PotentialUser}) => {
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
@@ -279,21 +290,5 @@ enum ActiveAttemptsTabIndex {
     Questions = 1, Skills = 2
 }
 
-const useGetUserSkillsAttempts = (): Record<string | number | symbol, AnsweredQuestionsByDate> => {
-    return {
-        mentalMaths: {
-            // ["2025-10-01"]: 60,
-            // ["2025-11-01"]: 140,
-            // ["2025-12-01"]: 0,
-            // ["2026-01-01"]: 0,
-            // ["2026-02-01"]: 30,
-            // ["2026-03-01"]: 0,
-            // ["2026-04-01"]: 0,
-            // ["2026-05-01"]: 0,
-            // ["2026-06-01"]: 60,
-            // ["2026-07-01"]: 20
-        }
-    };
-};
-
+type UserProps = { viewingOwnData: boolean, user: PotentialUser, userIdOfInterest: string }
 export default MyProgress;
