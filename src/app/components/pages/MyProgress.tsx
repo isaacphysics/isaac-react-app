@@ -224,7 +224,7 @@ const MyProgress = ({user}: MyProgressProps) => {
 };
 
 const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfInterest}: UserProps) => {
-    return <Card className="mt-4 attempts-over-time">
+    return <Card className="mt-4 attempts-min-height">
         <CardBody className='h-100 d-flex flex-column'>
             <h4>Attempts over time</h4>
             <div className='flex-grow-1 d-flex flex-column'>
@@ -250,7 +250,7 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
     const query = useGetUserSkillsAttemptsQuery(userId);
 
     return <Row data-bs-theme="maths" className="flex-row-reverse flex-md-row row-gap-3">
-        <Col md={9} className="d-flex align-items-center order-1 order-md-0">
+        <Col md={9} className="d-flex align-items-center order-1 order-md-0 graph-min-height">
             <ShowLoadingQuery 
                 query={query}
                 defaultErrorTitle='Failed to load skills attempts.'
