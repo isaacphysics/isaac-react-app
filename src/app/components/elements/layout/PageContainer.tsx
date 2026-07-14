@@ -47,7 +47,7 @@ export const PageContainer = (props: PageContainerProps) => {
         <SidebarLayout className="g-md-0" id={id} show={!!sidebar}>
             {sidebar}
             <MainContent className="overflow-x-auto">
-                <Container fluid {...rest} className={classNames("my-ada-container mw-1600 px-md-4 px-lg-6 mb-2", rest.className)}>
+                <Container fluid {...rest} className={classNames("my-ada-container overflow-x-auto mw-1600 px-md-4 px-lg-6 mb-2", rest.className)}>
                     {pageTitle}
                     {children}
                 </Container>

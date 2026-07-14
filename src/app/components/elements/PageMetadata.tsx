@@ -51,14 +51,14 @@ interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
 export const ActionButtons = ({location, isQuestion, helpModalId, doc, additionalActionButtons, ...rest}: ActionButtonsProps) => {
     const deviceSize = useDeviceSize();
 
-    const anyActionButtonShown = isPhy && helpModalId || above['sm'](deviceSize) || doc?.id;
+    const anyActionButtonShown = isPhy && helpModalId || (above['sm'](deviceSize) && (doc || isPhy)) || doc?.id;
 
     return anyActionButtonShown && <div {...rest} className={classNames("d-flex no-print gap-2", rest.className)}>
         {additionalActionButtons}
         {isPhy && isQuestion && <BookmarkButton doc={doc} />}
         {isPhy && helpModalId && <HelpButton modalId={helpModalId} />}
         {above['sm'](deviceSize) && <>
-            <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
+            {(doc || isPhy) && <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
             {doc && <PrintButton questionPage={isQuestion} />} {/* don't show print for internal (non content-driven) pages */}
         </>}
         {doc?.id && <ReportButton pageId={doc.id} />}
