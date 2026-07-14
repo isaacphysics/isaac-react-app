@@ -53,7 +53,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
                 method: "POST",
                 body: assignments
             }),
-            invalidatesTags: result => result ? ["AssignmentProgress", "AllMyAssignments"] : []
+            invalidatesTags: result => result ? ["AssignmentProgress", "AllMyAssignments", "AllSetAssignments"] : []
         }),
 
         unassignGameboard: build.mutation<void, {boardId: string, groupId: number}>({
