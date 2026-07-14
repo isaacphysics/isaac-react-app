@@ -56,8 +56,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
     const questionQuery = useGetQuestionQuery(questionId);
     const {data: doc, isLoading} = questionQuery;
     const user = useAppSelector(selectors.user.orNull);
-    const pageContainsQuestions = (useAppSelector(selectors.questions.getQuestions) || []).length !== 0; // For the sake of (invalid) question pages containing only quick questions
-    const allQuestionsCorrect = useAppSelector(selectors.questions.allQuestionsCorrect) || !pageContainsQuestions;
+    const allQuestionsCorrect = useAppSelector(selectors.questions.allQuestionsCorrect);
     const allQuestionsAttempted = useAppSelector(selectors.questions.allQuestionsAttempted);
     const anyQuestionAttempted = useAppSelector(selectors.questions.anyQuestionPreviouslyAttempted);
     const navigation = useNavigation(doc ?? null);

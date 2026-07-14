@@ -27,7 +27,8 @@ export const selectors = {
     questions: {
         getQuestions: (state: AppState) => state?.questions?.questions,
         allQuestionsCorrect: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.every(q => !!q.bestAttempt?.correct);
+            // Invalid question pages without any markable questions (e.g. just a quick question) should still have a "correct" status for consistency
+            return !!state && (!state.questions || state.questions.questions.every(q => !!q.bestAttempt?.correct));
         },
         anyQuestionCorrect: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.some(q => !!q.bestAttempt?.correct);
