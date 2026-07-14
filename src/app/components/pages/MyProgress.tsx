@@ -6,11 +6,13 @@ import {
     getUserProgress,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetUserSkillsAttemptsQuery
 } from "../../state";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import {
+    above,
     BookHiddenState,
     HUMAN_QUESTION_TYPES,
     ISAAC_BOOKS_BY_TAG,
@@ -34,6 +36,8 @@ import { ListView } from '../elements/list-groups/ListView';
 import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
+import { skipToken } from '@reduxjs/toolkit/query';
+import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -75,8 +79,6 @@ const MyProgress = ({user}: MyProgressProps) => {
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
-    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
-    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const [chartTab, setChartTab] = useState<"correct" | "attempted">("correct");
     const deviceSize = useDeviceSize();
 
@@ -99,7 +101,6 @@ const MyProgress = ({user}: MyProgressProps) => {
     }
 
     const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;
-    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? siteSpecific("My progress", "Progress") : `Progress for ${userName || "user"}`;
@@ -189,12 +190,13 @@ const MyProgress = ({user}: MyProgressProps) => {
                         </Row>
                     </div>}
 
-                    {answeredQuestionsByDate && <div className="mt-4">
-                        <h4>Question attempts over time</h4>
-                        <div>
-                            <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
-                        </div>
-                    </div>}
+                    {isPhy
+                        ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} userIdOfInterest={userIdOfInterest} />
+                        : <div className="mt-4">
+                            <h4> Question attempts over time</h4>
+                            <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
+                        </div>}
+
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
@@ -220,4 +222,74 @@ const MyProgress = ({user}: MyProgressProps) => {
         </Card>
     </PageContainer>;
 };
+
+const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfInterest}: UserProps) => {
+    return <Card className="mt-4 attempts-min-height">
+        <CardBody className='h-100 d-flex flex-column'>
+            <h4>Attempts over time</h4>
+            <div className='flex-grow-1 d-flex flex-column'>
+                <Tabs style="tabs" tabContentClass='mt-4' renderHiddenTabs={false}>
+                    {{
+                        "Questions": <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user}/>,
+                        "Skills": <SkillsAttemptsOverTime user={user} viewingOwnData={viewingOwnData} userIdOfInterest={userIdOfInterest} />
+                    }}
+                </Tabs>
+            </div>
+        </CardBody>
+    </Card>;
+};
+
+const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: UserProps) => {
+    const deviceSize = useDeviceSize();
+    let userId: string | typeof skipToken = skipToken;
+    if (viewingOwnData && user.loggedIn && user.id) {
+        userId = user.id.toString();
+    } else if (isTeacherOrAbove(user)) {
+        userId = userIdOfInterest;
+    }
+    const query = useGetUserSkillsAttemptsQuery(userId);
+
+    return <Row data-bs-theme="maths" className="flex-row-reverse flex-md-row row-gap-3">
+        <Col md={9} className="d-flex align-items-center order-1 order-md-0 graph-min-height">
+            <ShowLoadingQuery 
+                query={query}
+                defaultErrorTitle='Failed to load skills attempts.'
+                thenRender={(data) => {
+                    return <ActivityGraph
+                        id="skills-attempts"
+                        answeredQuestionsByDate={data ? data.mental_maths_overall : {}} 
+                        caption="Overall Mental Maths" 
+                        emptyText={<span>
+                            <br/>
+                            <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to try our mental maths skills practice.
+                        </span>}
+                        color="var(--subject-color-300)"
+                    />;
+                }}
+            />
+        </Col>
+        <Col md={3} id="legend" className={above['md'](deviceSize) ? "border-start" : ""}>
+            <div className='mb-md-2'>
+                <strong>Subjects</strong> 
+                <i className="icon icon-chevron-right icon-inline icon-color-black" />
+                <strong>Maths</strong>
+            </div>
+            <div className='legend-item'>Overall Mental Maths</div>
+        </Col>
+    </Row>;
+};
+
+const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: boolean, user: PotentialUser}) => {
+    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
+    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
+    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+    
+    return answeredQuestionsByDate && <ActivityGraph
+        id="question-attempts"
+        answeredQuestionsByDate={answeredQuestionsByDate}
+        caption={siteSpecific("Question attempts", "activity")}
+        color={siteSpecific("#FEA102",  "#FF4DC9")}/>;
+};
+
+type UserProps = { viewingOwnData: boolean, user: PotentialUser, userIdOfInterest: string }
 export default MyProgress;
