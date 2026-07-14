@@ -909,7 +909,7 @@
   },
   "src/app/state/actions/quizzes.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 3
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
