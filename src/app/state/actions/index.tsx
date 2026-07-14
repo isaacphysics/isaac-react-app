@@ -78,12 +78,12 @@ export function fetchErrorFromParameters(parameters: string): { error?: string, 
     }
 }
 
-export function showAxiosErrorToastIfNeeded(error: string, e: any) {
+export function showAxiosErrorToastIfNeeded(error: string, e: any, timeout: number = 5000) {
     if (e) {
         if (e.response) {
             if (e.response.status < 500) {
                 return showToast({
-                    color: "danger", title: error, timeout: 5000,
+                    color: "danger", title: error, timeout,
                     body: extractMessage(e),
                 }) as any;
             }
@@ -95,7 +95,7 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                 }
             });
             return showToast({
-                color: "danger", title: error, timeout: 5000,
+                color: "danger", title: error, timeout,
                 body: API_REQUEST_FAILURE_MESSAGE
             });
         }
