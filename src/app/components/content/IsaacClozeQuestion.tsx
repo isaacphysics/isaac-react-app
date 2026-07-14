@@ -1,4 +1,4 @@
-import React, {lazy, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
     ItemValidationResponseDTO,
@@ -48,7 +48,7 @@ const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 const isDropZone = (item: {id: UniqueIdentifier} | null) => item?.id === CLOZE_ITEM_SECTION_ID || String(item?.id).slice(0, 10) === CLOZE_DROP_ZONE_ID_PREFIX;
 
 const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ReplaceableItem> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}|${uuid_v4()}`}) : undefined;
-const augmentNonSelectedItemWithReplacementID = (item: Immutable<ReplaceableItem>) => ({...item, replacementId: item.id});
+const augmentNonSelectedItemWithReplacementID = (item: Immutable<ReplaceableItem>, questionId: string) => ({...item, replacementId: `${questionId}-${item.id}`});
 const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ItemDTO> | undefined)[]}) => (i: Immutable<ReplaceableItem> | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
 
 const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
@@ -141,9 +141,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<Immutable<ReplaceableItem>[]>(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
+    const [nonSelectedItems, setNonSelectedItems] = useState<Immutable<ReplaceableItem>[]>(doc.items ? [...doc.items].map((item) => augmentNonSelectedItemWithReplacementID(item, questionId)) : []);
 
-    const allItems = doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : [];
+    const allItems = doc.items ? [...doc.items].map((item) => augmentNonSelectedItemWithReplacementID(item, questionId)) : [];
 
     const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
 
@@ -196,10 +196,10 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
             if (!withReplacement) {
-                setNonSelectedItems(nsis => nsis.filter(itemNotNullAndNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) || []);
+                setNonSelectedItems(nsis => nsis.filter(itemNotNullAndNotInAttempt(currentAttempt)).map((item) => augmentNonSelectedItemWithReplacementID(item, questionId)) || []);
             }
         }
-    }, [currentAttempt, withReplacement]);
+    }, [currentAttempt, questionId, withReplacement]);
 
     // The following is to fix an issue with tests containing cloze qs across multiple sections - if the doc changes underneath
     // this component, the inline drop values and non-selected items don't get updated. It's reasonable to assume that
@@ -207,9 +207,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     useEffect(function updateStateOnDocChange() {
         setInlineDropValues((currentAttempt?.items ?? []).map(augmentInlineItemWithUniqueReplacementID));
         if (currentAttempt && !withReplacement) {
-            setNonSelectedItems(doc.items ? [...doc.items].filter(itemNotNullAndNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) : []);
+            setNonSelectedItems(doc.items ? [...doc.items].filter(itemNotNullAndNotInAttempt(currentAttempt)).map((item) => augmentNonSelectedItemWithReplacementID(item, questionId)) : []);
         } else {
-            setNonSelectedItems(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
+            setNonSelectedItems(doc.items ? [...doc.items].map((item) => augmentNonSelectedItemWithReplacementID(item, questionId)) : []);
         }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
