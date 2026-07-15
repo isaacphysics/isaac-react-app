@@ -8,6 +8,7 @@ import {
     showAxiosErrorToastIfNeeded
 } from "../index";
 import debounce from "lodash/debounce";
+import { isAxiosError } from "axios";
 
 export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST, quizAssignmentId});
@@ -27,8 +28,16 @@ export const clearQuizAttempt = () => (dispatch: Dispatch<Action>) => {
 const debouncedDispatch = debounce(async (dispatch: Dispatch<Action>, quizAttemptId: number, questionId: string, attempt) => {
     // This clears the canSubmit flag so we need to dispatch it, even though we're crossing reducers.
     dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
-    await api.quizzes.answer(quizAttemptId, questionId, attempt);
-    // Response is empty, so dispatch nothing
+    try {
+        await api.quizzes.answer(quizAttemptId, questionId, attempt);
+    } catch (e: any) {
+        if (isAxiosError(e) && e.response?.data?.errorMessage) {
+            if (![401, 403].includes(e.response.status)) { // 401 is not logged in, 403 is the "Assignment cancelled" error – the instructions below do not apply
+                e.response.data.errorMessage += " We recommend reloading the page and trying again, after carefully saving your answer elsewhere."; 
+            }
+        }
+        dispatch(showAxiosErrorToastIfNeeded("Failed to save", e, 20000)); // longer timeout than most, as test errors are likely serious
+    }
 }, 500);
 
 export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
@@ -40,7 +49,7 @@ export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: str
         if (question) {
             const attempt = question.currentAttempt;
             if (attempt && question.canSubmit) {
-                debouncedDispatch(dispatch, quizAttemptId, questionId, attempt);
+                void debouncedDispatch(dispatch, quizAttemptId, questionId, attempt);
             }
         }
     }

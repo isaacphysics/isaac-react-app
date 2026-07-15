@@ -18,7 +18,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         return () => {
             // Submit answer when unmounting if it is dirty
             if (isDefined(quizAttempt) && quizAttempt.completedDate === undefined) {
-                dispatch(submitQuizQuestionIfDirty(quizAttempt.id as number, doc.id as string));
+                void dispatch(submitQuizQuestionIfDirty(quizAttempt.id as number, doc.id as string));
             }
         };
     }, [dispatch, doc.id, quizAttempt]);
