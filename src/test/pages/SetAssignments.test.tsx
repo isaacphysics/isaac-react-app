@@ -8,7 +8,7 @@ import {
     SOME_FIXED_FUTURE_DATE,
     TEXTUAL_DATE_REGEX
 } from "../dateUtils";
-import {clickOn, navigateToSetAssignments, renderTestEnvironment, withMockedDate} from "../testUtils";
+import {navigateToSetAssignments, renderTestEnvironment, withMockedDate} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
 import {http, HttpHandler, HttpResponse} from "msw";
@@ -138,23 +138,48 @@ describe("SetAssignments", () => {
         within(gameboard).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
     });
 
-    // TODO fix test. is not broken when testing manually, fails in test – broke when AllSetAssignments was added to the invalidatesTags for assignGameboard in assignmentsApi.ts
-    it.skip('should let you assign a gameboard in card view (using the modal)', async () => {
-        const requestGroupIds = (body: AssignmentDTO[]) => body?.map((x) => x.groupId!);
-        const requestAssignment = (body: AssignmentDTO[]) => body[0];
-        const observer = parameterObserver<AssignmentDTO[]>();
+    it('should let you assign a gameboard in card view (using the modal)', async () => {
+        const setAssignmentsHandler = jest.fn(async () => {
+            return HttpResponse.json(mockSetAssignments, {
+                status: 200,
+            });
+        });
 
+        const gameboardToAssign = mockGameboards.results[0];
+        const newAssignmentToSet = {
+            groupId: mockActiveGroups[1].id,
+            gameboardId: gameboardToAssign.id,
+            notes: "Test notes to test groups for test assignments",
+            dueDate: "some-date",
+            scheduledStartDate: "some-date"
+        };
+
+        const assignHandler = jest.fn(async () => {
+            // the response to this method isn't too relevant – importantly however it invalidates the cache for the list of set assignments, causing the frontend to re-fetch it;
+            // as such we need to update the mock data for that to ensure it is displayed correctly after assignment
+            setAssignmentsHandler.mockImplementation(async () => {
+                return HttpResponse.json([
+                    ...mockSetAssignments,
+                    newAssignmentToSet,
+                ], {
+                    status: 200,
+                });
+            });
+            return HttpResponse.json({groupId: newAssignmentToSet.groupId, gameboardId: newAssignmentToSet.gameboardId}, { status: 200 });
+        });
+        
+        
         await renderSetAssignments({
             endpoints: [
-                buildPostHandler(
-                    "/assignments/assign_bulk",
-                    observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
-                ),
+                http.post(API_PATH + "/assignments/assign_bulk", assignHandler),
+                http.get(API_PATH + "/assignments/assign", setAssignmentsHandler),
             ]
         });
         await switchToCardView();
         const gameboards = await screen.findAllByTestId("gameboard-card");
-        const mockGameboard = mockGameboards.results[0];
+
+        const groupsAssignedHexagonPre = await within(gameboards[0]).findByTitle("Number of groups assigned");
+        expect(groupsAssignedHexagonPre.textContent?.replace(" ", "")).toEqual(siteSpecific("Assignedto1group", "1group"));
 
         // Find and click assign gameboard button for the first gameboard
         const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
@@ -162,9 +187,9 @@ describe("SetAssignments", () => {
 
         // Wait for modal to appear, for the gameboard we expect
         const modal = await screen.findByTestId("active-modal");
-        expect(modal).toHaveModalTitle(`Assign "${mockGameboard.title}"`);
+        expect(modal).toHaveModalTitle(`Assign "${gameboardToAssign.title}"`);
         // Ensure all active groups are selectable in the drop-down
-        await selectGroup(mockActiveGroups[1].groupName);
+        await selectGroup(mockActiveGroups.find((g) => g.id === newAssignmentToSet.groupId)?.groupName ?? "Unknown group");
 
         // Check scheduled start date and due date are there
         within(modal).getByLabelText("Start date:", {exact: false});
@@ -176,9 +201,8 @@ describe("SetAssignments", () => {
         await userEvent.selectOptions(dueDateSelector, "1"); // set some due date
 
         // Add some notes
-        const testNotes = "Test notes to test groups for test assignments";
         const notesBox = within(modal).getByLabelText("Notes", {exact: false});
-        await userEvent.type(notesBox, testNotes);
+        await userEvent.type(notesBox, newAssignmentToSet.notes);
 
         // Assert that only first group is currently assigned to this board
         const currentAssignments = within(modal).queryAllByTestId("current-assignment");
@@ -188,15 +212,16 @@ describe("SetAssignments", () => {
         expect(allAssignments[0].textContent).toContain(mockActiveGroups[0].groupName);
 
         // Click button
-        await clickOn('Assign to group', Promise.resolve(modal));
+        const text = await within(modal).findByText("Assign to group");
+        await userEvent.click(text);
 
         // Expect request to be sent off with expected parameters
         await waitFor(() => {
-            expect(requestGroupIds(observer.observedParams!)).toEqual([mockActiveGroups[1].id]);
-            expect(requestAssignment(observer.observedParams!).gameboardId).toEqual(mockGameboard.id);
-            expect(requestAssignment(observer.observedParams!).notes).toEqual(testNotes);
-            expect(requestAssignment(observer.observedParams!).dueDate).toBeDefined();
-            expect(requestAssignment(observer.observedParams!).scheduledStartDate).toBeDefined();
+            expect(assignHandler).toHaveBeenRequestedWith(async (req) => {
+                const json = await req.request.json();
+                expect(json).toMatchObject([{...newAssignmentToSet, dueDate: expect.any(String), scheduledStartDate: expect.any(String)}]);
+                return true;
+            });
         });
 
         // Close modal
