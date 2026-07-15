@@ -1,4 +1,4 @@
-import React, {lazy, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
     ItemValidationResponseDTO,
