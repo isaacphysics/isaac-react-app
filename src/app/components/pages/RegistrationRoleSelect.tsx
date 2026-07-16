@@ -26,7 +26,7 @@ export const RegistrationRoleSelect = () => {
                 <p>Knowing if you are a student or a teacher means we can make sure you have access to the right features.</p>
                 <Row>
                     <Col xs={12} lg={6}>
-                        <Card className="h-100">
+                        <Card className="h-100 border-1">
                             <CardBody className="d-flex flex-column">
                                 <CardTitle>
                                     <h3>Student</h3>
@@ -44,7 +44,7 @@ export const RegistrationRoleSelect = () => {
                         </Card>
                     </Col>
                     <Col xs={12} lg={6}>
-                        <Card className="h-100">
+                        <Card className="h-100 border-1">
                             <CardBody className="d-flex flex-column">
                                 <CardTitle>
                                     <h3>Teacher</h3>
