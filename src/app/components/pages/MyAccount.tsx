@@ -206,7 +206,6 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
 
     const isBlocked = useMemo(() => accountInfoChanged && !saving, [accountInfoChanged, saving]);
-    console.log(saving);
     const blocker = useBlocker(
         useCallback(() => isBlocked, [isBlocked]),
     );
