@@ -7,7 +7,7 @@ import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
 interface MyAccountSidebarProps extends SidebarProps {
     editingOtherUser: boolean;
     activeTab: ACCOUNT_TAB;
-    setActiveTab: React.Dispatch<React.SetStateAction<ACCOUNT_TAB>>;
+    setActiveTab: (tab: ACCOUNT_TAB) => void;
 }
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {

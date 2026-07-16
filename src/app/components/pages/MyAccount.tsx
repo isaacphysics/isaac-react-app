@@ -182,6 +182,19 @@ export const MyAccount = ({user}: AccountPageProps) => {
 
     const formSpecificTabs = [ACCOUNT_TAB.passwordreset, ACCOUNT_TAB.teacherconnections];
 
+    const [clearUnsavedChanges, setShouldClearUnsavedChanges] = useState(false);
+    const resetState = useCallback(() => {
+        setUserToUpdate({...(editingOtherUser ? userToEdit : user), password: ""});
+        setMyUserPreferences(userPreferences);
+        setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
+        setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
+        setAttemptedAccountUpdate(false);
+        setSaving(false);
+        setCurrentPassword("");
+        setNewPassword("");
+        setShouldClearUnsavedChanges(true);
+    }, [editingOtherUser, userToEdit, user, userPreferences, setEmailPreferences, userToUpdate.registeredContexts]);
+
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
         setMyUserPreferences(userPreferences);
@@ -190,6 +203,37 @@ export const MyAccount = ({user}: AccountPageProps) => {
 
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
+    const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
+
+    const isBlocked = useMemo(() => accountInfoChanged && !saving, [accountInfoChanged, saving]);
+    console.log(saving);
+    const blocker = useBlocker(
+        useCallback(() => isBlocked, [isBlocked]),
+    );
+
+    useEffect(() => {
+        // the blocker is triggered by page navigations, but not hash changes
+        if (blocker.state === "blocked") {
+            if (window.confirm("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?")) {
+                blocker.proceed?.();
+            } else {
+                blocker.reset?.();
+            }
+        }
+    }, [blocker]);
+
+    const safelyChangeTab = useCallback((newTab: ACCOUNT_TAB) => {
+        // use this in place of setActiveTab to prevent losing unsaved changes when switching tabs
+        if (isBlocked) {
+            if (window.confirm("You have unsaved changes on this page. Are you sure you want to leave without saving?")) {
+                resetState();
+                setActiveTab(newTab);
+            }
+        } else {
+            setActiveTab(newTab);
+        }
+    }, [isBlocked, resetState]);
+
     useEffect(() => {
         // @ts-ignore
         const tab: ACCOUNT_TAB =
@@ -199,6 +243,10 @@ export const MyAccount = ({user}: AccountPageProps) => {
             ACCOUNT_TAB.account;
         setActiveTab(tab);
     }, [hashAnchor, authToken]);
+
+    useEffect(() => {
+        setShouldClearUnsavedChanges(false);
+    }, [activeTab]);
 
     // Values derived from inputs (props and state)
     const isNewPasswordValid = validatePassword(newPassword);
@@ -238,22 +286,6 @@ export const MyAccount = ({user}: AccountPageProps) => {
         }));
     }
 
-    const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
-
-    const blocker = useBlocker(
-        useCallback(() => accountInfoChanged && !isFirstLoginInPersistence() && !saving, [accountInfoChanged, saving]),
-    );
-
-    useEffect(() => {
-        if (blocker.state === "blocked") {
-            if (window.confirm("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?")) {
-                blocker.proceed?.();
-            } else {
-                blocker.reset?.();
-            }
-        }
-    }, [blocker]);
-
     // Handling teachers changing school
     useEffect(() => {
         const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined;
@@ -277,6 +309,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
             if (validateEmailPreferences(emailPreferences)) {
                 newPreferences = {...newPreferences, EMAIL_PREFERENCE: {...emailPreferences}};
             } else {
+                setSaving(false);
                 return; // early exit
             }
         }
@@ -305,6 +338,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                 redirect: true
             });
 
+            setSaving(false);
             return;
         } else if (activeTab !== ACCOUNT_TAB.account) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
@@ -312,19 +346,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
         setSaving(false);
     }
 
-    // Changing tab clears the email preferences - stops the user from modifying them when not explicitly on the
-    // email preferences tab
-    useEffect(() => {
-        setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeTab]);
-
     return <PageContainer id="account-page" className="mb-7"
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
         }
         sidebar={siteSpecific(
-            <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>,
+            <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={safelyChangeTab}/>,
             <MyAdaSidebar />
         )}
     >
@@ -342,7 +369,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             <NavItem key={tab} className={classnames({active: activeTab === tab})}>
                                 <NavLink
                                     className="px-2" tabIndex={0}
-                                    onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
+                                    onClick={() => safelyChangeTab(tab)} onKeyDown={ifKeyIsEnter(() => safelyChangeTab(tab))}
                                 >
                                     {titleShort ? <>
                                         <span className="d-none d-lg-block">{title}</span>
@@ -359,7 +386,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                                 </ExigentAlert>
                         }
-                        <TabContent activeTab={activeTab}>
+                        <TabContent activeTab={activeTab} key={clearUnsavedChanges ? activeTab : undefined}>
+                            {/* the key above ensures that any state inside tabs is reset to initial values if activeTab is changed while accountInfo is dirty 
+                                (i.e. user has unsaved changes they do *not* want to commit) */}
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserProfile
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
