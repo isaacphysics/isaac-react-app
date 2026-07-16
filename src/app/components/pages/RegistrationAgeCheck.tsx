@@ -11,14 +11,14 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {confirmThen, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
+import {confirmThen, isAda, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classNames from "classnames";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
 
-type AgePermission = "denied" | "additional_info" | "allowed";
+type AgePermission = "denied" | "additional_info" | "sso_only" | "allowed";
 
 export const RegistrationAgeCheck = () => {
 
@@ -38,6 +38,9 @@ export const RegistrationAgeCheck = () => {
             case "additional_info":
                 void navigate("/register/student/additional_info");
                 break;
+            case "sso_only":
+                void navigate("/register/student/sso_only");
+                break;
             case "denied":
                 void navigate("/register/student/age_denied");
                 break;
@@ -49,6 +52,8 @@ export const RegistrationAgeCheck = () => {
             "Are you sure you want go back? Any information you have entered will be lost.",
             () => navigate("/register"));
     };
+
+    const AGE_LOWER_LIMIT = siteSpecific(10, 11);
 
     return <PageContainer
         pageTitle={
@@ -62,10 +67,7 @@ export const RegistrationAgeCheck = () => {
         <Card className="my-7">
             <CardBody>
                 <div className={siteSpecific("h4", "h3")}>How old are you?</div>
-                <p>{siteSpecific(
-                    "We can only create accounts for users 10 years old or over.",
-                    "We can only create accounts for people over 13 years old."
-                )}</p>
+                <p>We can only create accounts for users {AGE_LOWER_LIMIT} years old or over.</p>
                 <Form onSubmit={submit}>
                     <FormGroup check className="d-flex align-items-center my-2">
                         <Input
@@ -79,18 +81,18 @@ export const RegistrationAgeCheck = () => {
                         />
                         <Label for="registration-age-check-over" className="ms-2 mb-0">13 and over</Label>
                     </FormGroup>
-                    {isPhy && <FormGroup check className="d-flex align-items-center my-2">
+                    <FormGroup check className="d-flex align-items-center my-2">
                         <Input
-                            id="registration-age-check-additional-info"
+                            id={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`}
                             className={classNames("d-inline", {"mb-1" : isAda})}
                             type="radio"
-                            checked={agePermission === "additional_info"}
-                            onChange={() => {setAgePermission("additional_info");}}
+                            checked={agePermission === siteSpecific("additional_info", "sso_only")}
+                            onChange={() => {setAgePermission(siteSpecific("additional_info", "sso_only"));}}
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-additional-info" className="ms-2 mb-0">10 - 12 years old</Label>
-                    </FormGroup>}
+                        <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{AGE_LOWER_LIMIT} - 12 years old</Label>
+                    </FormGroup>
                     <FormGroup check className="d-flex align-items-center my-2">
                         <Input
                             id="registration-age-check-under"
@@ -101,7 +103,7 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-under" className="ms-2 mb-0">Under {siteSpecific("10 years old", "13")}</Label>
+                        <Label for="registration-age-check-under" className="ms-2 mb-0">Under {AGE_LOWER_LIMIT} years old</Label>
                         <FormFeedback>
                             Please make a selection.
                         </FormFeedback>
