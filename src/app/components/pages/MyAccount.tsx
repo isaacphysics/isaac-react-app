@@ -36,7 +36,6 @@ import {
     isAda,
     isDefined,
     isDobOldEnoughForSite,
-    isFirstLoginInPersistence,
     isPhy,
     isStaff,
     isTeacherOrAbove,
