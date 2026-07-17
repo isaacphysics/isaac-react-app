@@ -280,7 +280,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         validationResponse={validationResponse}
                     />
                     : (!correct || canSubmit || (isFastTrack && (fastTrackPrimaryAction || fastTrackSecondaryAction))) && !locked &&
-                        <div className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-7 mb-n3": correct})}>
+                        <div className={classNames("submission-buttons d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-7 mb-n3": correct})}>
                             {isFastTrack 
                                 ? <FastTrackSubmissionButtons fastTrackPrimaryAction={fastTrackPrimaryAction} fastTrackSecondaryAction={fastTrackSecondaryAction} />
                                 : <Button {...checkAnswerButtonProps} className="mx-auto mt-3 w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>

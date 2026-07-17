@@ -171,7 +171,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   border-radius: 8px;
   margin-bottom: 1rem;
 
-  .question-component:not(.isaac-accordion *) > div:has(> .btn-secondary) {
+  .question-component:not(.isaac-accordion *) .submission-buttons {
     margin: 0 2rem;
   }
 
