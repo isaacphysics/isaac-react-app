@@ -31,13 +31,13 @@ export const selectors = {
             return !!state && (!state.questions || state.questions.questions.every(q => !!q.bestAttempt?.correct));
         },
         anyQuestionCorrect: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.some(q => !!q.bestAttempt?.correct);
+            return !!state && (!state.questions || state.questions.questions.some(q => !!q.bestAttempt?.correct));
         },
         allQuestionsAttempted: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev && current);
+            return !!state && (!state.questions || state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev && current));
         },
         anyQuestionPreviouslyAttempted: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
+            return !!state && (!state.questions || state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current));
         },
         anyQuestionHidden: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.some(q => q.bestAttempt === BEST_ATTEMPT_HIDDEN);
