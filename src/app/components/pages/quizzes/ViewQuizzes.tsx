@@ -50,7 +50,7 @@ export const ViewQuizzes = () => {
             case "TEACHER":
                 // Practice attempts are only possible on quizzes that are visible to students
                 // (most quizzes that are hidden from students may be previewed by teachers, but may not be practised)
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || !!quiz.visibleToStudents;
             default:
                 return true;
         }
