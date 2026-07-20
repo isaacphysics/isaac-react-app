@@ -198,7 +198,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 classNames(
                     "question-component",
                     doc.type,
-                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)},
+                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string) && isAda},
                     {"p-md-7": isAda}
                 )}>
 
