@@ -129,11 +129,12 @@ interface ReorderButtonsProps {
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
     isParsons?: boolean;
     currentIndent?: number | null;
+    inAvailableItems?: boolean;
 }
 
-const ReorderButtons = ({index, items, setItems, isParsons, currentIndent}: ReorderButtonsProps) => {
-    const canReorderUp = index !== 0;
-    const canReorderDown = index !== items.length - 1;
+const ReorderButtons = ({index, items, setItems, isParsons, currentIndent, inAvailableItems}: ReorderButtonsProps) => {
+    const canReorderUp = index !== 0 && !inAvailableItems;
+    const canReorderDown = index !== items.length - 1 && !inAvailableItems;
     return <div className="reorder-buttons">
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderUp})}
             disabled={!canReorderUp} title={`Move ${getAccessibleItemName(items[index])} up`} onClick={() => {
@@ -251,6 +252,10 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
         };
     };
 
+    const markupItem = <Markup trusted-markup-encoding={"html"}>
+        {currentItem.value}
+    </Markup>;
+
     const itemType = `${isParsons ? "parsons" : "reorder"}-item`;
     return <Draggable
         key={currentItem.id}
@@ -269,12 +274,8 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                 style={getStyle(provided.draggableProps.style, snapshot)}
                 aria-describedby={undefined}
             >
-                <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation}/>
-                <pre>
-                    <Markup trusted-markup-encoding={"html"}>
-                        {currentItem.value}
-                    </Markup>
-                </pre>
+                <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation} inAvailableItems={inAvailableItems} />
+                {isParsons ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
                 <Spacer/>
                 <div className="hidden-buttons d-flex">
                     <button
