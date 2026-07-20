@@ -41,19 +41,8 @@ export const ViewQuizzes = () => {
     const showQuiz = (quiz: QuizSummaryDTO) => {
         if (pageSubject && !quiz.tags?.includes(pageSubject)) return false;
         if (pageStage && !quiz.audience?.some(audienceMatch(pageStage))) return false;
-
-        // Anonymous users can list student-visible quizzes
-        const userRole = user && isLoggedIn(user) ? user.role : "STUDENT";
-        switch (userRole) {
-            case "STUDENT":
-            case "TUTOR":
-            case "TEACHER":
-                // Practice attempts are only possible on quizzes that are visible to students
-                // (most quizzes that are hidden from students may be previewed by teachers, but may not be practised)
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || !!quiz.visibleToStudents;
-            default:
-                return true;
-        }
+        // the API uses the user object to filter available quizzes; no further frontend filtering required
+        return true;
     };
 
     const textMatch = (quiz: QuizSummaryDTO) => quiz.title?.toLowerCase().includes(filterText.toLowerCase());
