@@ -525,7 +525,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                             ? <li key={g.id} className="d-flex align-items-center group-item" data-testid={"group-item"}>
                                 <StyledTabPicker
                                     id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
-                                    onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
+                                    onChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
                                     suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: "Delete group"} : undefined}
                                 />
                             </li>

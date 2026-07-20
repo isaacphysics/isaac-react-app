@@ -22,8 +22,8 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
                     <li key={tab}>
                         <ContentSidebarContext.Consumer>
                             {(context) =>
-                                <StyledTabPicker id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                                    onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}
+                                <StyledTabPicker id={title} type="radio" tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                                    onChange={() => { setActiveTab(tab); context?.close(); }}
                                 />
                             }
                         </ContentSidebarContext.Consumer>

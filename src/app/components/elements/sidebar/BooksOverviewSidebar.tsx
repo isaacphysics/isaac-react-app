@@ -11,7 +11,7 @@ export const BooksOverviewSidebar = (props: ContentSidebarProps) => {
         <h5>Our books</h5>
         <ul>
             {ISAAC_BOOKS.filter(book => book.hidden !== BookHiddenState.HIDDEN).map((book, index) => <li key={index}>
-                <StyledTabPicker checkboxTitle={book.title} checked={false} onClick={() => navigate(book.path)}/>
+                <StyledTabPicker checkboxTitle={book.title} checked={false} onChange={() => navigate(book.path)}/>
             </li>)}
         </ul>
     </ContentSidebar>;

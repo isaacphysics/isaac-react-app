@@ -34,7 +34,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
                             checkboxTitle={HUMAN_STAGES[stage]}
                             checked={context.stage.includes(stage)}
                             disabled={!isValidStage(stage)}
-                            onClick={() => isValidStage(stage) && navigate(`/${context.subject}/${stage}/question_decks`)}
+                            onChange={() => isValidStage(stage) && navigate(`/${context.subject}/${stage}/question_decks`)}
                         />
                     </li>
                 )}
@@ -49,7 +49,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
                                 checkboxTitle={HUMAN_SUBJECTS[subject]}
                                 checked={context.subject === subject}
                                 disabled={!isValidSubject(stages)}
-                                onClick={() => isValidSubject(stages) && navigate(`/${subject}/${context.stage}/question_decks`)}
+                                onChange={() => isValidSubject(stages) && navigate(`/${subject}/${context.stage}/question_decks`)}
                             />
                         </li>
                     )

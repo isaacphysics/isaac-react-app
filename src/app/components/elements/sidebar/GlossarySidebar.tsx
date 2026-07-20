@@ -92,7 +92,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                         <li key={index}>
                             <StyledTabPicker
                                 checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage}
-                                onClick={() => navigate(`/${pageContext.subject}/${stage}/glossary`, { replace: true })}
+                                onChange={() => navigate(`/${pageContext.subject}/${stage}/glossary`, { replace: true })}
                             />
                         </li>
                     )}
