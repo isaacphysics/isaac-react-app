@@ -1,6 +1,6 @@
 import React from "react";
 import { ContentSidebarContext } from "../../../../IsaacAppTypes";
-import { ACCOUNT_TAB, ACCOUNT_TABS, ifKeyIsEnter } from "../../../services";
+import { ACCOUNT_TAB, ACCOUNT_TABS } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
 
