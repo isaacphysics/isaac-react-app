@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Input, Col } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, isTeacherOrAbove, LearningStage, siteSpecific, sortByStringValue, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
+import { getFilteredStageOptions, isAda, isDefined, isPhy, isTeacherOrAbove, LearningStage, siteSpecific, sortByStringValue, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
@@ -41,19 +41,8 @@ export const ViewQuizzes = () => {
     const showQuiz = (quiz: QuizSummaryDTO) => {
         if (pageSubject && !quiz.tags?.includes(pageSubject)) return false;
         if (pageStage && !quiz.audience?.some(audienceMatch(pageStage))) return false;
-
-        // Anonymous users can list student-visible quizzes
-        const userRole = user && isLoggedIn(user) ? user.role : "STUDENT";
-        switch (userRole) {
-            case "STUDENT":
-            case "TUTOR":
-            case "TEACHER":
-                // Practice attempts are only possible on quizzes that are visible to students
-                // (most quizzes that are hidden from students may be previewed by teachers, but may not be practised)
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || !!quiz.visibleToStudents;
-            default:
-                return true;
-        }
+        // the API uses the user object to filter available quizzes; no further frontend filtering required
+        return true;
     };
 
     const textMatch = (quiz: QuizSummaryDTO) => quiz.title?.toLowerCase().includes(filterText.toLowerCase());
