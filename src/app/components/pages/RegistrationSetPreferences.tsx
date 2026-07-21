@@ -29,11 +29,14 @@ import classNames from "classnames";
 import {SignupTab} from "../elements/panels/SignupTab";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useNavigate } from "react-router-dom";
 
 export const RegistrationSetPreferences = () => {
 
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
+
+    const navigate = useNavigate();
 
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
@@ -69,7 +72,9 @@ export const RegistrationSetPreferences = () => {
                 passwordCurrent: null,
                 redirect: true
             });
-            if (isPhy) continueToAfterAuthPath(user);
+            if (isPhy) {
+                void navigate("/register/success");
+            }
         }
     }
 

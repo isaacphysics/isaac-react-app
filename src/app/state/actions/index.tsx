@@ -11,6 +11,7 @@ import {
     trackEvent,
     isTeacherAuthResponsePendingVerification,
     navigateComponentless,
+    siteSpecific,
 } from "../../services";
 import {
     Action,
@@ -346,12 +347,13 @@ export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigat
             });
         }
 
-        // On first login (registration), redirect to /account if there is no after-auth path.
-        // After-auth path should take presedence for the case where users register while following a group invite - /account?authToken=GROUP1, for example.
-        // They will see the required account information modal either way on registration.
-        const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
-        const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
-        await navigate(nextPage || defaultNextPage);
+        // hide the required info modal for a while - the signup flow will ask the user to enter missing info
+        persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
+
+        // On first login (registration), redirect to the signup flow. Leave the after-auth path in persistence for when the flow is completed.
+        // SSO login does not require an age check, so we can jump to student details (sci) / role selection (ada)
+        const nextPage = providerResponse.data.firstLogin ? siteSpecific("/register/student/details/sso", "/register/role") : "/";
+        await navigate(nextPage);
     } catch (error: any) {
         const providerErrors = fetchErrorFromParameters(parameters);
         trackEvent("sign_in_failure", { props: {

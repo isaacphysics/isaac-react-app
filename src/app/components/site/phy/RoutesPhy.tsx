@@ -46,6 +46,7 @@ import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { MyBookmarks } from "../../pages/MyBookmarks";
 import { ManageAssignments } from "../../pages/ManageAssignments";
+import { RegistrationSetDetailsSSO } from "../../pages/RegistrationSetDetailsSSO";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -79,6 +80,7 @@ export const RoutesPhy = [
     <Route key={key++} path="/register/student/additional_info" element={<RegistrationAgeCheckParentalConsent />} />,
     <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
     <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
+    <Route key={key++} path="/register/student/details/sso" element={<RegistrationSetDetailsSSO userRole="STUDENT" />} />,
     <Route key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
     <Route key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,
     <Route key={key++} path="/register/success" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSuccess />} />} />,

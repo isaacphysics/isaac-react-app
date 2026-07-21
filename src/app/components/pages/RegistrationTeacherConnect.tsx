@@ -120,7 +120,7 @@ export const RegistrationTeacherConnect = () => {
                             </div>
                         }
                     </Col>
-                    <hr />
+                    {siteSpecific(<div className="section-divider my-4" />, <hr />)}
                     <Row className="justify-content-end">
                         {siteSpecific(
                             <>
