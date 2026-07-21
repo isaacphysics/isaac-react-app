@@ -27,16 +27,19 @@ export const RegistrationSuccess = () => {
         <Container>
             <Card className="my-7">
                 <Row>
-                    <Col xs={5}>
-                        <div className="w-100 h-100 rounded-4 login-flow-bg d-flex justify-content-center align-items-center">
-                            <img className="w-60 py-5" src="/assets/phy/decor/science-tick.svg" alt="" />
-                        </div>
-                    </Col>
-                    <Col xs={7} className="py-3 d-flex flex-column align-items-start">
+                    <Col sm={7} className="py-3 d-flex flex-column align-items-start px-5">
                         <h3>Account created!</h3>
                         <p>You&apos;re all set up and ready to go!</p>
                         <Spacer />
-                        <Button className={"my-2"} onClick={returnToHomepage}>Home</Button>
+                        <Button className={"d-none d-sm-block my-2"} onClick={returnToHomepage}>Home</Button>
+                    </Col>
+                    <Col sm={5}>
+                        <div className="rounded-4 login-flow-bg d-flex justify-content-center align-items-center">
+                            <img className="w-60 py-5" src="/assets/phy/decor/science-tick.svg" alt="" />
+                        </div>
+                        <div className="mx-3 d-sm-none">
+                            <Button className={"w-100 my-3"} onClick={returnToHomepage}>Home</Button>
+                        </div>
                     </Col>
                 </Row>
             </Card>
