@@ -1,21 +1,31 @@
 import React from "react";
 import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {SITE_TITLE} from "../../services";
+import {SITE_TITLE, useQueryParams} from "../../services";
 import { useNavigate } from "react-router";
 
 
 export const RegistrationRoleSelect = () => {
     const navigate = useNavigate();
+    const params = useQueryParams();
 
     const teacherSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
-        void navigate("/register/teacher/details");
+        if (params.method === "sso") {
+            void navigate("/register/teacher/details/sso");
+        } else {
+            void navigate("/register/teacher/details");
+        }
     };
 
     const studentSignup = (event: React.MouseEvent) => {
         event.preventDefault();
-        void navigate("/register/student/age");
+        if (params.method === "sso") {
+            // skip age check, as sso is assumed to provide this for us
+            void navigate("/register/student/details/sso");
+        } else {
+            void navigate("/register/student/age");
+        }
     };
 
     return <Container>

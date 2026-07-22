@@ -352,7 +352,7 @@ export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigat
 
         // On first login (registration), redirect to the signup flow. Leave the after-auth path in persistence for when the flow is completed.
         // SSO login does not require an age check, so we can jump to student details (sci) / role selection (ada)
-        const nextPage = providerResponse.data.firstLogin ? siteSpecific("/register/student/details/sso", "/register/role") : "/";
+        const nextPage = providerResponse.data.firstLogin ? siteSpecific("/register/student/details/sso", "/register/role?method=sso") : "/";
         await navigate(nextPage);
     } catch (error: any) {
         const providerErrors = fetchErrorFromParameters(parameters);

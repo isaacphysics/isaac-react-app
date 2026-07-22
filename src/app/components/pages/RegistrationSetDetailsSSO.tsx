@@ -18,7 +18,7 @@ import {
     validateName,
     validateUserSchool
 } from "../../services";
-import {getRTKQueryErrorMessage, selectors, useAppSelector, useCreateNewMutation} from "../../state";
+import {getRTKQueryErrorMessage, mutationSucceeded, requestCurrentUser, selectors, useAppDispatch, useAppSelector, useCreateNewMutation, useUpdateCurrentMutation, useUpgradeToTeacherAccountMutation} from "../../state";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "../elements/inputs/SchoolInput";
@@ -55,9 +55,14 @@ export const RegistrationSetDetailsSSO = ({userRole}: RegistrationSetDetailsProp
             role: userRole,
             teacherAccountPending: undefined
         }, user)
+        // SSO forcibly creates a student account, so we must go through the student flow first, then upgrade.
+        // if user came via SSO, their role will be prefilled to STUDENT and will override userRole - this is intentional!
     );
 
+    const dispatch = useAppDispatch();
     const [createNewUser, {error: createNewUserError}] = useCreateNewMutation();
+    const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
+    const [upgradeToTeacherAccount] = useUpgradeToTeacherAccountMutation();
 
     const [tosAccepted, setTosAccepted] = useState(false);
 
@@ -76,6 +81,8 @@ export const RegistrationSetDetailsSSO = ({userRole}: RegistrationSetDetailsProp
             ((userRole == 'STUDENT') || schoolIsValid) && tosAccepted 
         ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
+
+            const isTeacherSSO = (user?.loggedIn && user.role === "STUDENT") && userRole === "TEACHER";
             
             if (isAda && isTeacherOrAbove({ role: userRole })) {
                 scheduleTeacherOnboardingModalForNextOverviewVisit();
@@ -85,14 +92,40 @@ export const RegistrationSetDetailsSSO = ({userRole}: RegistrationSetDetailsProp
             persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
 
             setAttemptedSignUp(true);
-            Object.assign(registrationUser, {loggedIn: false});
 
-            await createNewUser({
-                newUser: registrationUser,
-                newUserPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
-                newUserContexts: undefined,
-                passwordCurrent: null
-            });
+            if (isTeacherSSO) {
+                await updateCurrentUser({
+                    currentUser: user,
+                    updatedUser: registrationUser,
+                    userPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
+                    registeredUserContexts: undefined,
+                    passwordCurrent: null,
+                    redirect: false
+                });
+
+                if (isAda) {
+                    // if the user came via SSO (and thus has a student account already), but they want to upgrade to a teacher, do that here
+                    const response = await upgradeToTeacherAccount();
+                    if (mutationSucceeded(response)) {
+                        await dispatch(requestCurrentUser()); // Refresh user details locally
+                    }
+                }
+
+                if (user.emailVerificationStatus !== "VERIFIED") {
+                    void navigate('/verifyemail');
+                } else {
+                    void navigate('/register/preferences');
+                }
+            } else {
+                Object.assign(registrationUser, {loggedIn: false});
+
+                await createNewUser({
+                    newUser: registrationUser,
+                    newUserPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
+                    newUserContexts: undefined,
+                    passwordCurrent: null
+                });
+            }
 
             trackEvent("registration", {
                 props:
@@ -128,10 +161,11 @@ export const RegistrationSetDetailsSSO = ({userRole}: RegistrationSetDetailsProp
     >
         <Card className="my-7">
             <CardBody>
-                {createNewUserError &&
+                {(createNewUserError || updateCurrentUserError) &&
                     <ExigentAlert color="warning">
                         <p className="alert-heading fw-bold">Unable to create your account</p>
-                        <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>
+                        {createNewUserError && <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>}
+                        {updateCurrentUserError && <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>}
                     </ExigentAlert>
                 }
                 <SignupTab

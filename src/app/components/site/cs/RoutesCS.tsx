@@ -38,6 +38,7 @@ import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
+import { RegistrationSetDetailsSSO } from "../../pages/RegistrationSetDetailsSSO";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -53,7 +54,9 @@ export const RoutesCS = [
     <Route key={key++} path="/register/student/sso_only" element={<RegistrationAgeCheckSSOOnly />} />,
     <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
     <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
+    <Route key={key++} path="/register/student/details/sso" element={<RegistrationSetDetailsSSO userRole="STUDENT" />} />,
     <Route key={key++} path="/register/teacher/details" element={<RegistrationSetDetails userRole="TEACHER" />} />,
+    <Route key={key++} path="/register/teacher/details/sso" element={<RegistrationSetDetailsSSO userRole="TEACHER" />} />,
     <Route key={key++} path="/verifyemail" element={<RegistrationVerifyEmail />} />,
     <Route key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
     <Route key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,

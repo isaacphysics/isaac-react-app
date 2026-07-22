@@ -49,7 +49,7 @@ export const RegistrationTeacherConnect = () => {
 
     const continueToNext = (event: React.MouseEvent) => {
         event.preventDefault();
-        void navigate(siteSpecific("/register/preferences", "/register/success"));
+        void navigate("/register/preferences");
     };
 
     useEffect(() => {
