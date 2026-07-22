@@ -158,7 +158,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
-            <SignupSidebar activeTab={2}/>,
+            <SignupSidebar activeTab={2} sso={isSSO} />,
             undefined
         )}
     >
