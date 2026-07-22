@@ -11,18 +11,14 @@ export const RegistrationRoleSelect = () => {
 
     const teacherSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
-        if (params.method === "sso") {
-            void navigate("/register/teacher/details/sso");
-        } else {
-            void navigate("/register/teacher/details");
-        }
+        void navigate("/register/teacher/details");
     };
 
     const studentSignup = (event: React.MouseEvent) => {
         event.preventDefault();
         if (params.method === "sso") {
             // skip age check, as sso is assumed to provide this for us
-            void navigate("/register/student/details/sso");
+            void navigate("/register/student/details");
         } else {
             void navigate("/register/student/age");
         }
