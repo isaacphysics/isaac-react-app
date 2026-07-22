@@ -69,7 +69,7 @@ export const RegistrationSetPreferences = () => {
                 userPreferences: userPreferencesToUpdate,
                 registeredUserContexts: userContexts,
                 passwordCurrent: null,
-                redirect: true
+                redirect: false
             });
 
             void navigate("/register/success");

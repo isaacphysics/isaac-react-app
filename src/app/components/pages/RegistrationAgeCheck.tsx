@@ -103,7 +103,7 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-under" className="ms-2 mb-0">Under {AGE_LOWER_LIMIT} years old</Label>
+                        <Label for="registration-age-check-under" className="ms-2 mb-0">{AGE_LOWER_LIMIT - 1} or under</Label>
                         <FormFeedback>
                             Please make a selection.
                         </FormFeedback>
