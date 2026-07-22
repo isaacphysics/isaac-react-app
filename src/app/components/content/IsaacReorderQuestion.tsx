@@ -16,7 +16,6 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
     const attemptItems = useMemo(() => {
-        console.log("find", currentAttempt?.items, currentAttempt?.items?.every(item => doc.items?.some(docItem => item.id === docItem.id)), doc.items);
         if (doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id))) {
             return currentAttempt?.items as Immutable<ItemChoiceDTO>[] || [];
         } else {
@@ -79,7 +78,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         }
                     </Droppable>
                 </Col>}
-                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
+                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": attemptItems?.length === 0})}>
                     <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>
@@ -88,8 +87,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             >
                                 {attemptItems.map((item, index) =>
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
-                                        setItems={(items: Immutable<ItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
-                                        items={(currentAttempt?.items || []) as Immutable<ItemDTO>[]} useSingleList={useSingleList}
+                                        setItems={setAttemptItems}  items={attemptItems} useSingleList={useSingleList}
                                         swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index)}
                                     />
                                 )}

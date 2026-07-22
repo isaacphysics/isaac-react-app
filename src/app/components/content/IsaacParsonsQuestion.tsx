@@ -79,7 +79,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         // movingElement.style.transform = `translate(${i*PARSONS_INDENT_STEP}px, 0px)`;
                     }
                 }
-                const previousItem = currentAttempt?.items?.[(currentDestinationIndex || 0) - 1];
+                const previousItem = attemptItems?.[(currentDestinationIndex || 0) - 1];
                 setCurrentMaxIndent(previousItem ? (previousItem.indentation || 0) + 1 : 0);
                 setCurrentIndent(i);
             }
@@ -102,7 +102,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 }
             }
             let newCurrentMaxIndent = 0;
-            const previousItem = currentAttempt?.items?.[(currentDestinationIndex || 0) - 1];
+            const previousItem = attemptItems?.[(currentDestinationIndex || 0) - 1];
             if (previousItem) {
                 newCurrentMaxIndent = (previousItem.indentation || 0) + 1;
             }
@@ -195,18 +195,18 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         }}
                     </Droppable>
                 </Col>}
-                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
+                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": attemptItems?.length === 0})}>
                     <h4 className="mt-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
-                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
-                                {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => 
+                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>
+                                {attemptItems.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
-                                        items={attemptItems} setItems={setAttemptItems} canIndent={canIndent} isParsons
+                                        items={attemptItems} setItems={setAttemptItems} canIndent={canIndent} isParsons useSingleList={useSingleList}
                                         swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index, true)}
                                     />
                                 )}
-                                {(!currentAttempt || currentAttempt?.items?.length === 0) &&
+                                {attemptItems?.length === 0 &&
                                     <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
                                     </div>
