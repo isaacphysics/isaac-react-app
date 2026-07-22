@@ -47,7 +47,7 @@ type PageMetadataProps = {
 export const DragAndDropInputModeToggle = ({className}: {className?: string}) => {
     const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
 
-    return siteSpecific(<div className={classNames("d-flex flex-column align-items-center w-min-content", className)}>
+    return siteSpecific(<div className={classNames("no-print d-flex flex-column align-items-center w-min-content", className)}>
         <span>Question input mode</span>
         <Spacer />
         <StyledToggle
@@ -57,7 +57,7 @@ export const DragAndDropInputModeToggle = ({className}: {className?: string}) =>
             onChange={toggleDragAndDropEnabled}
         />
     </div>,
-    <div className={className}>
+    <div className={classNames("no-print", className)}>
         <StyledCheckbox checked={!dragAndDropEnabled} onChange={toggleDragAndDropEnabled} label={<span className="text-muted">Use dropdowns for drag and drop questions</span>} /> 
     </div>
     );
