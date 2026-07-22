@@ -1,6 +1,6 @@
 import React from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import {isDefined, isDobOldEnoughForSite, siteSpecific} from "../../../services";
+import {isAda, isDefined, isDobOldEnoughForSite, siteSpecific} from "../../../services";
 import {currentYear, DateInput} from "./DateInput";
 import {Immutable} from "immer";
 import range from "lodash/range";
@@ -13,10 +13,14 @@ interface DobInputProps {
     editingOtherUser?: boolean;
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
+    const isInvalid = submissionAttempted && (
+        !isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isAda && !isDefined(userToUpdate.dateOfBirth))
+    );
+
     return <FormGroup className="form-group">
         <Label className="fw-bold" htmlFor="dob-input">Date of birth</Label>
         <DateInput
-            invalid={isDefined(userToUpdate.dateOfBirth) && !isDobOldEnoughForSite(userToUpdate.dateOfBirth)}
+            invalid={isInvalid}
             id="dob-input"
             name="date-of-birth"
             defaultValue={userToUpdate.dateOfBirth as unknown as string}
@@ -30,7 +34,10 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
             labelSuffix=" of birth"
         />
         <FormFeedback id="age-validation-message">
-            {`${editingOtherUser ? "The user" : "You"} must be over ${siteSpecific("10", "13")} years old to create an account.`}
+            {isDefined(userToUpdate.dateOfBirth)
+                ? `${editingOtherUser ? "The user" : "You"} must be over ${siteSpecific("10", "13")} years old to create an account.`
+                : "Please enter a valid date of birth."
+            }
         </FormFeedback>
     </FormGroup>;
 };

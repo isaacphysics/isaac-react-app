@@ -6,7 +6,6 @@ import {
     EMAIL_PREFERENCE_DEFAULTS,
     FIRST_LOGIN_STATE,
     isAda,
-    isDobOldEnoughForSite,
     isPhy,
     isTeacherOrAbove,
     KEY,
@@ -15,6 +14,7 @@ import {
     siteSpecific,
     trackEvent,
     validateCountryCode,
+    validateDob,
     validateEmail,
     validateName,
     validateUserSchool
@@ -75,7 +75,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const familyNameIsValid = validateName(registrationUser.familyName);
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
-    const dobValidOrUnset = !isPhy || !registrationUser.dateOfBirth || isDobOldEnoughForSite(registrationUser.dateOfBirth);
+    const dobValid = validateDob(registrationUser.dateOfBirth);
 
     const register = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -84,8 +84,8 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
         if (
             familyNameIsValid && givenNameIsValid && 
             (isSSO || (passwordValid && emailIsValid)) &&
-            countryCodeIsValid && (!isPhy || dobValidOrUnset) &&
-            ((userRole == 'STUDENT') || schoolIsValid) && tosAccepted 
+            countryCodeIsValid && dobValid &&
+            ((userRole === 'STUDENT') || schoolIsValid) && tosAccepted 
         ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
@@ -225,11 +225,11 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                             required={isAda && isTeacherOrAbove({ role: userRole })}
                         />
                         <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
-                        {isPhy && <DobInput
+                        <DobInput
                             userToUpdate={registrationUser}
                             setUserToUpdate={setRegistrationUser}
                             submissionAttempted={attemptedSignUp}
-                        />}
+                        />
                         <GenderInput
                             className="mt-4 mb-7"
                             userToUpdate={registrationUser}
