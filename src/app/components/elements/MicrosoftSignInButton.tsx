@@ -1,12 +1,13 @@
 import React from "react";
 import {handleProviderLoginRedirect, useAppDispatch} from "../../state";
 import { Spacer } from "./Spacer";
+import { UserRole } from "../../../IsaacApiTypes";
 
 // Button prompting the user to sign in via Microsoft
-export const MicrosoftSignInButton = () => {
+export const MicrosoftSignInButton = ({isSignup, knownRole}: {isSignup?: boolean, knownRole?: UserRole}) => {
     const dispatch = useAppDispatch();
 
-    const logInWithMicrosoft = () => dispatch(handleProviderLoginRedirect("MICROSOFT"));
+    const logInWithMicrosoft = () => dispatch(handleProviderLoginRedirect("MICROSOFT", isSignup, knownRole));
 
     return <button className="d-flex w-100 align-items-center linked-account-button-outer bg-white mb-1 p-3" onClick={logInWithMicrosoft}>
         <img className="authenticator-logo" src={"/assets/common/logos/microsoft-logo.svg"} alt={"Microsoft logo"}/>

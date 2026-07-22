@@ -43,9 +43,9 @@ export const RegistrationAgeCheckSSOOnly = () => {
                 <p>Please try again, using either {authProviderListString}.</p>
                 {isAda && <hr/>}
                 <div className="d-flex flex-column gap-2">
-                    {isAda && <RaspberryPiSignInButton />}
-                    <GoogleSignInButton />
-                    {isPhy && <MicrosoftSignInButton />}
+                    {isAda && <RaspberryPiSignInButton knownRole="STUDENT" />}
+                    <GoogleSignInButton knownRole="STUDENT" />
+                    {isPhy && <MicrosoftSignInButton knownRole="STUDENT" />}
                     {isPhy && <SsoHelpLink />}
                 </div>
                 <Row className="justify-content-end">
