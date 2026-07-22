@@ -35,10 +35,17 @@ const enforceValidIndentation = (items: Immutable<ParsonsItemDTO>[]) => {
 };
 
 const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
+    const useSingleList = true;
     const deviceSize = useDeviceSize();
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
-    const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[], [currentAttempt?.items]);
+    const attemptItems = useMemo(() => {
+        if (doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id))) {
+            return currentAttempt?.items as Immutable<ParsonsChoiceDTO>[] || [];
+        } else {
+            return useSingleList ? [...doc.items as Immutable<ParsonsChoiceDTO>[] ?? []] : [];
+        }
+    }, [currentAttempt?.items, doc.items, useSingleList]);
     const setAttemptItems = useCallback((items: Immutable<ParsonsChoiceDTO>[]) => {
         if (currentAttempt) {
             dispatchSetCurrentAttempt({...currentAttempt, items: enforceValidIndentation(items)});
@@ -154,7 +161,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         }
     }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems]);
 
-    const useSingleList = true;
     return <div className="parsons-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
