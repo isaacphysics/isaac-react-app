@@ -154,6 +154,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         }
     }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems]);
 
+    const useSingleList = true;
     return <div className="parsons-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
@@ -162,7 +163,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
-                <Col md={6} className="parsons-available-items">
+                {!useSingleList && <Col md={6} className="parsons-available-items">
                     <h4>Available items</h4>
                     <Label className="visually-hidden" id="item-section-info">
                         To pick up an item, press space or enter.
@@ -187,8 +188,8 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             </div>;
                         }}
                     </Droppable>
-                </Col>
-                <Col md={6} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
+                </Col>}
+                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
                     <h4 className="mt-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {

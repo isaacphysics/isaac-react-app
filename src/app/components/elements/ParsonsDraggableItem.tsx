@@ -223,6 +223,7 @@ type BaseDraggableProps = {
     items: Immutable<ParsonsItemDTO>[];
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
     swapItemList: () => void;
+    useSingleList?: boolean;
     readonly?: boolean;
 };
 
@@ -241,7 +242,7 @@ type AttemptItemsProps = {
 
 export type ParsonsDraggableItemProps = BaseDraggableProps & (AvailableItemsProps | AttemptItemsProps);
 
-export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAvailableItems, readonly, swapItemList, canIndent, isParsons}: ParsonsDraggableItemProps) => {
+export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapItemList, useSingleList, readonly, inAvailableItems, isParsons, canIndent}: ParsonsDraggableItemProps) => {
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
         if (!snapshot.isDropAnimating || !isParsons) return style;
         
@@ -278,7 +279,7 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                 {isParsons ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
                 <Spacer/>
                 <div className="hidden-buttons d-flex">
-                    <button
+                    {!useSingleList && <button
                         type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
                         title={
                             inAvailableItems
@@ -288,7 +289,7 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                         onClick={swapItemList}
                     >
                         <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
-                    </button>
+                    </button>}
                     {canIndent && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>}
                 </div>
             </div>;
