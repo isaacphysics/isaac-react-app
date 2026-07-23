@@ -17,6 +17,7 @@ import {
     validateDob,
     validateEmail,
     validateName,
+    validateUserGender,
     validateUserSchool
 } from "../../services";
 import {getRTKQueryErrorMessage, mutationSucceeded, requestCurrentUser, selectors, useAppDispatch, useAppSelector, useCreateNewMutation, useUpdateCurrentMutation, useUpgradeToTeacherAccountMutation} from "../../state";
@@ -76,6 +77,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const dobValid = validateDob(registrationUser.dateOfBirth);
+    const isGenderValid = validateUserGender(registrationUser);
 
     const register = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -84,7 +86,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
         if (
             familyNameIsValid && givenNameIsValid && 
             (isSSO || (passwordValid && emailIsValid)) &&
-            countryCodeIsValid && dobValid &&
+            countryCodeIsValid && dobValid && isGenderValid &&
             ((userRole === 'STUDENT') || schoolIsValid) && tosAccepted 
         ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
@@ -235,7 +237,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                             userToUpdate={registrationUser}
                             setUserToUpdate={setRegistrationUser}
                             submissionAttempted={attemptedSignUp}
-                            required={false}
+                            required={isAda}
                         />
                         <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
                         <FormGroup className="form-group my-4">

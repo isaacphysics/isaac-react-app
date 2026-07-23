@@ -88,7 +88,7 @@ export const validateUserSchool = (user?: Immutable<ValidationUser> | null) => {
 };
 
 export const validateUserGender = (user?: Immutable<ValidationUser> | null) => {
-    return user && user.gender && user.gender !== "UNKNOWN";
+    return isPhy || (user && user.gender && user.gender !== "UNKNOWN");
 };
 
 export const wasTodayUTC = (dateOfAction: string | null) => {

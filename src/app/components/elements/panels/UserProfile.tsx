@@ -187,7 +187,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
-                required={false}
+                required={isAda}
             />
             {isPhy &&
                 <UserContextAccountInput
