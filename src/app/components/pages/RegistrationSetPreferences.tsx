@@ -122,7 +122,7 @@ export const RegistrationSetPreferences = () => {
                         <UserEmailPreferencesInput 
                             emailPreferences={emailPreferences} 
                             setEmailPreferences={setEmailPreferences}
-                            submissionAttempted={false}
+                            submissionAttempted={submissionAttempted}
                         />
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <Row className="justify-content-end">

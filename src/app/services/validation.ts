@@ -52,8 +52,9 @@ export const validatePassword = (password: string) => {
 export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences | null) => {
     return !!emailPreferences && [
         emailPreferences.ASSIGNMENTS,
-        emailPreferences.NEWS_AND_UPDATES
-    ].concat(siteSpecific([emailPreferences.EVENTS], [])).reduce(
+        emailPreferences.NEWS_AND_UPDATES,
+        emailPreferences.EVENTS
+    ].reduce(
         // Make sure all expected values are either true or false
         (prev, next) => prev && (next === true || next === false),
         true

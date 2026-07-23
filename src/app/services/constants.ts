@@ -1324,18 +1324,11 @@ export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific([
 
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
 
-export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = siteSpecific(
-    {
-        ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: undefined,
-        EVENTS: undefined
-    },
-    {
-        ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: false,
-        EVENTS: false
-    }
-);
+export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = {
+    ASSIGNMENTS: true,
+    NEWS_AND_UPDATES: undefined,
+    EVENTS: undefined
+};
 
 // this must exist outside of ActiveModals to avoid circular dependencies
 export const MODAL_TYPES = {
