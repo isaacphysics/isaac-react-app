@@ -11,6 +11,7 @@ import {
     trackEvent,
     isTeacherAuthResponsePendingVerification,
     navigateComponentless,
+    siteSpecific,
 } from "../../services";
 import {
     Action,
@@ -312,13 +313,16 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
     }
 };
 
-export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false, knownRole?: UserRole) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
     try {
         const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
         trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: false } });
+        if (knownRole) {
+            persistence.session.save(KEY.SSO_SIGNUP_ROLE, knownRole);
+        }
         window.location.href = redirectUrl;
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
@@ -346,12 +350,23 @@ export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigat
             });
         }
 
-        // On first login (registration), redirect to /account if there is no after-auth path.
-        // After-auth path should take presedence for the case where users register while following a group invite - /account?authToken=GROUP1, for example.
-        // They will see the required account information modal either way on registration.
-        const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
-        const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
-        await navigate(nextPage || defaultNextPage);
+        // hide the required info modal for a while - the signup flow will ask the user to enter missing info
+        persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
+
+        const signupRole = persistence.session.load(KEY.SSO_SIGNUP_ROLE) as UserRole | null;
+
+        // On first login (registration), redirect to the signup flow. Leave the after-auth path in persistence for when the flow is completed.
+        // SSO login does not require an age check, so we can jump to student details (sci OR ada 11-12) / role selection (ada, not known to be 11-12)
+        const nextPage = providerResponse.data.firstLogin 
+            ? siteSpecific(
+                "/register/student/details",
+                signupRole === "STUDENT"
+                    ? "/register/student/details"
+                    : "/register/role?method=sso"
+            )
+            : "/";
+            
+        await navigate(nextPage);
     } catch (error: any) {
         const providerErrors = fetchErrorFromParameters(parameters);
         trackEvent("sign_in_failure", { props: {

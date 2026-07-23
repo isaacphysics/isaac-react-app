@@ -6,7 +6,6 @@ import {
     EMAIL_PREFERENCE_DEFAULTS,
     FIRST_LOGIN_STATE,
     isAda,
-    isDobOldEnoughForSite,
     isPhy,
     isTeacherOrAbove,
     KEY,
@@ -15,11 +14,13 @@ import {
     siteSpecific,
     trackEvent,
     validateCountryCode,
+    validateDob,
     validateEmail,
     validateName,
+    validateUserGender,
     validateUserSchool
 } from "../../services";
-import {getRTKQueryErrorMessage, selectors, useAppSelector, useCreateNewMutation} from "../../state";
+import {getRTKQueryErrorMessage, mutationSucceeded, requestCurrentUser, selectors, useAppDispatch, useAppSelector, useCreateNewMutation, useUpdateCurrentMutation, useUpgradeToTeacherAccountMutation} from "../../state";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "../elements/inputs/SchoolInput";
@@ -45,12 +46,13 @@ interface RegistrationSetDetailsProps {
 
 export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) => {
 
-    // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
     const user = useAppSelector(selectors.user.orNull);
+    const isSSO = user?.loggedIn && user.role === "STUDENT";
+
     const navigate = useNavigate();
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
     const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>(
-        Object.assign({}, user,{
+        Object.assign({
             email: undefined,
             dateOfBirth: undefined,
             password: null,
@@ -58,11 +60,14 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             givenName: undefined,
             role: userRole,
             teacherAccountPending: undefined
-        })
+        }, user)
     );
 
+    const dispatch = useAppDispatch();
     const [createNewUser, {error: createNewUserError}] = useCreateNewMutation();
-
+    const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
+    const [upgradeToTeacherAccount] = useUpgradeToTeacherAccountMutation();
+    
     const [passwordValid, setPasswordValid] = useState(false);
     const [tosAccepted, setTosAccepted] = useState(false);
 
@@ -71,17 +76,22 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const familyNameIsValid = validateName(registrationUser.familyName);
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
-    const dobValidOrUnset = !isPhy || !registrationUser.dateOfBirth || isDobOldEnoughForSite(registrationUser.dateOfBirth);
+    const dobValid = validateDob(registrationUser.dateOfBirth);
+    const isGenderValid = validateUserGender(registrationUser);
 
     const register = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordValid && emailIsValid &&
-            countryCodeIsValid && (!isPhy || dobValidOrUnset) &&
-            ((userRole == 'STUDENT') || schoolIsValid) && tosAccepted 
+        if (
+            familyNameIsValid && givenNameIsValid && 
+            (isSSO || (passwordValid && emailIsValid)) &&
+            countryCodeIsValid && dobValid && isGenderValid &&
+            ((userRole === 'STUDENT') || schoolIsValid) && tosAccepted 
         ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
+
+            const isTeacherSSO = isSSO && userRole === "TEACHER";
             
             if (isAda && isTeacherOrAbove({ role: userRole })) {
                 scheduleTeacherOnboardingModalForNextOverviewVisit();
@@ -91,22 +101,44 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
 
             setAttemptedSignUp(true);
-            Object.assign(registrationUser, {loggedIn: false});
 
-            await createNewUser({
-                newUser: registrationUser,
-                newUserPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
-                newUserContexts: undefined,
-                passwordCurrent: null
-            });
+            if (isSSO) {
+                await updateCurrentUser({
+                    currentUser: user,
+                    updatedUser: registrationUser,
+                    userPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
+                    registeredUserContexts: undefined,
+                    passwordCurrent: null,
+                    redirect: false
+                });
 
-            trackEvent("registration", {
-                props:
-                        {
-                            provider: "SEGUE"
-                        }
+                if (isAda && isTeacherSSO) {
+                    // if the user came via SSO (and thus has a student account already), but they want to upgrade to a teacher, do that here
+                    const response = await upgradeToTeacherAccount();
+                    if (mutationSucceeded(response)) {
+                        await dispatch(requestCurrentUser()); // Refresh user details locally
+                    }
+
+                    if (user.emailVerificationStatus !== "VERIFIED") {
+                        void navigate('/verifyemail');
+                    } else {
+                        void navigate('/register/preferences');
+                    }
+                }
+
+                void navigate('/register/connect');
+            } else {
+                Object.assign(registrationUser, {loggedIn: false});
+
+                trackEvent("registration", { props: { provider: "SEGUE" } });
+    
+                await createNewUser({
+                    newUser: registrationUser,
+                    newUserPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
+                    newUserContexts: undefined,
+                    passwordCurrent: null
+                });
             }
-            );
         }
     };
 
@@ -128,16 +160,17 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
-            <SignupSidebar activeTab={2}/>,
+            <SignupSidebar activeTab={2} sso={isSSO} />,
             undefined
         )}
     >
         <Card className="my-7">
             <CardBody>
-                {createNewUserError &&
+                {(createNewUserError || updateCurrentUserError) &&
                     <ExigentAlert color="warning">
                         <p className="alert-heading fw-bold">Unable to create your account</p>
-                        <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>
+                        {createNewUserError && <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>}
+                        {updateCurrentUserError && <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>}
                     </ExigentAlert>
                 }
                 <SignupTab
@@ -161,22 +194,22 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                                 required={true}
                             />
                         </div>
-                        <EmailInput
+                        {!isSSO && <EmailInput
                             className="my-4"
                             userToUpdate={registrationUser}
                             setUserToUpdate={setRegistrationUser}
                             submissionAttempted={attemptedSignUp}
                             emailIsValid={!!emailIsValid}
                             required={true}
-                        />
-                        <SetPasswordInput
+                        />}
+                        {!isSSO && <SetPasswordInput
                             className="my-4"
                             password={registrationUser.password}
                             onChange={(password) => setRegistrationUser(Object.assign({}, registrationUser, {password: password}))}
                             onValidityChange={setPasswordValid}
                             submissionAttempted={attemptedSignUp}
                             required={true}
-                        />
+                        />}
                         <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
                         <CountryInput
                             className="my-4"
@@ -194,17 +227,17 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                             required={isAda && isTeacherOrAbove({ role: userRole })}
                         />
                         <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
-                        {isPhy && <DobInput
+                        <DobInput
                             userToUpdate={registrationUser}
                             setUserToUpdate={setRegistrationUser}
                             submissionAttempted={attemptedSignUp}
-                        />}
+                        />
                         <GenderInput
                             className="mt-4 mb-7"
                             userToUpdate={registrationUser}
                             setUserToUpdate={setRegistrationUser}
                             submissionAttempted={attemptedSignUp}
-                            required={false}
+                            required={isAda}
                         />
                         <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
                         <FormGroup className="form-group my-4">
