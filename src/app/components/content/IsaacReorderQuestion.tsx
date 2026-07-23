@@ -10,9 +10,9 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
-const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
+const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
     const deviceSize = useDeviceSize();
-    const useSingleList = true;
+    const useSingleList = useMemo(() => doc.useSingleList, [doc.useSingleList]);
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
     const attemptItems = useMemo(() => {

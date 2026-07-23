@@ -34,9 +34,9 @@ const enforceValidIndentation = (items: Immutable<ParsonsItemDTO>[]) => {
     return newItems;
 };
 
-const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
-    const useSingleList = true;
+const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
     const deviceSize = useDeviceSize();
+    const useSingleList = useMemo(() => doc.useSingleList, [doc.useSingleList]);
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
     const attemptItems = useMemo(() => {
@@ -79,12 +79,12 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         // movingElement.style.transform = `translate(${i*PARSONS_INDENT_STEP}px, 0px)`;
                     }
                 }
-                const previousItem = attemptItems?.[(currentDestinationIndex || 0) - 1];
+                const previousItem = attemptItems[(currentDestinationIndex || 0) - 1] as Immutable<ParsonsItemDTO> | undefined;
                 setCurrentMaxIndent(previousItem ? (previousItem.indentation || 0) + 1 : 0);
                 setCurrentIndent(i);
             }
         }
-    }, [draggedElement, currentAttempt, initialX, currentMaxIndent, canIndent, currentDestinationIndex]);
+    }, [draggedElement, canIndent, initialX, currentMaxIndent, attemptItems, currentDestinationIndex]);
 
     const onKeyUp = useCallback((e: KeyboardEvent) => {
         // There's a bug somewhere that adds this event twice, but only one has a non-zero timestamp.
@@ -102,7 +102,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 }
             }
             let newCurrentMaxIndent = 0;
-            const previousItem = attemptItems?.[(currentDestinationIndex || 0) - 1];
+            const previousItem = attemptItems[(currentDestinationIndex || 0) - 1] as Immutable<ParsonsItemDTO> | undefined;
             if (previousItem) {
                 newCurrentMaxIndent = (previousItem.indentation || 0) + 1;
             }
