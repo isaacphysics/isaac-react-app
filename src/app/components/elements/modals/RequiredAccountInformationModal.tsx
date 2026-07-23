@@ -27,6 +27,8 @@ import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/User
 import {Button, CardBody, Col, Form, Row} from "reactstrap";
 import {CountryInput} from "../inputs/CountryInput";
 import {ExigentAlert} from "../ExigentAlert";
+import { DobInput } from "../inputs/DobInput";
+import { GenderInput } from "../inputs/GenderInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -116,6 +118,27 @@ const RequiredAccountInfoBody = () => {
                     />}
                 </Col>
                 <Col xs={12}>
+                    {!validity.school && <SchoolInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required
+                    />}
+                </Col>
+                <Col xs={12}>
+                    {!validity.dateOfBirth && <DobInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted} editingOtherUser={false}
+                    />}
+                </Col>
+                <Col xs={12}>
+                    {!validity.gender && <GenderInput
+                        userToUpdate={userToUpdate}
+                        setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted}
+                        required
+                    />}
+                </Col>
+                <Col xs={12}>
                     {!validity.userContexts &&
                         <UserContextAccountInput
                             user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
@@ -123,13 +146,6 @@ const RequiredAccountInfoBody = () => {
                             setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                         />
                     }
-                </Col>
-                <Col xs={12}>
-                    {!validity.school && <SchoolInput
-                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                        submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required
-                    />}
                 </Col>
             </Row>
             <div className="text-muted small pb-2">
