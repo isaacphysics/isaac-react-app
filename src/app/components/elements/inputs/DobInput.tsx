@@ -1,6 +1,6 @@
 import React from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import {isAda, isDefined, isDobOldEnoughForSite, siteSpecific} from "../../../services";
+import {isAda, isDefined, isDobOldEnoughForSite, isPhy, siteSpecific} from "../../../services";
 import {currentYear, DateInput} from "./DateInput";
 import {Immutable} from "immer";
 import range from "lodash/range";
@@ -13,7 +13,7 @@ interface DobInputProps {
     editingOtherUser?: boolean;
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
-    const isInvalid = submissionAttempted && (
+    const isInvalid = submissionAttempted && !(isPhy && !isDefined(userToUpdate.dateOfBirth)) && (
         !isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isAda && !isDefined(userToUpdate.dateOfBirth))
     );
 
@@ -32,6 +32,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
             disableDefaults
             aria-describedby="age-validation-message"
             labelSuffix=" of birth"
+            hideDay={isAda}
         />
         <FormFeedback id="age-validation-message">
             {isDefined(userToUpdate.dateOfBirth)
