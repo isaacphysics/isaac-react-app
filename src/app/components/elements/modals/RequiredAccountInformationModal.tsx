@@ -109,44 +109,42 @@ const RequiredAccountInfoBody = () => {
             }
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
             <Row className="d-flex flex-wrap my-2">
-                <Col xs={12}>
-                    {!validity.countryCode && <CountryInput
+                {!validity.countryCode && <Col xs={12} id="rai-missing-country-code">
+                    <CountryInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                         textOverride={siteSpecific("This is now required information to better help us measure our reach and impact.", undefined)}
-                    />}
-                </Col>
-                <Col xs={12}>
-                    {!validity.school && <SchoolInput
+                    />
+                </Col>}
+                {!validity.school && <Col xs={12} id="rai-missing-school">
+                    <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required
-                    />}
-                </Col>
-                <Col xs={12}>
-                    {!validity.dateOfBirth && <DobInput
+                    />
+                </Col>}
+                {!validity.dateOfBirth && <Col xs={12} id="rai-missing-date-of-birth">
+                    <DobInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} editingOtherUser={false}
-                    />}
-                </Col>
-                <Col xs={12}>
-                    {!validity.gender && <GenderInput
+                    />
+                </Col>}
+                {!validity.gender && <Col xs={12} id="rai-missing-gender">
+                    <GenderInput
                         userToUpdate={userToUpdate}
                         setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted}
                         required
-                    />}
-                </Col>
-                <Col xs={12}>
-                    {!validity.userContexts &&
-                        <UserContextAccountInput
-                            user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
-                            displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
-                            setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
-                        />
-                    }
-                </Col>
+                    />
+                </Col>}
+                {!validity.userContexts && <Col xs={12} id="rai-missing-user-contexts">
+                    <UserContextAccountInput
+                        user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                        displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
+                        setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
+                    />
+                </Col>}
             </Row>
             <div className="text-muted small pb-2">
                 Providing a few extra pieces of information helps us understand the usage of {SITE_TITLE} across the UK and beyond.
