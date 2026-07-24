@@ -230,6 +230,20 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   }
 }
 
+.isaac-accordion form > .question-component:has(> .quick-question) {
+  // for accordion-based quick questions specifically, use a subject-coloured background to distinguish them from the rest of the content
+  background-color: var(--subject-color-50);
+  border: 1px solid var(--subject-color-100);
+  border-radius: 4px;
+
+  @include respond-below(md) {
+    padding: 0.5rem 0;
+  }
+  @include respond-above(md) {
+    padding: 1rem
+  }
+}
+
 .coordinate-input-separator, .coordinate-input > span {
   font-size: 1.2rem;
 }
