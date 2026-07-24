@@ -34,11 +34,18 @@ const enforceValidIndentation = (items: Immutable<ParsonsItemDTO>[]) => {
     return newItems;
 };
 
-const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
+const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
     const deviceSize = useDeviceSize();
+    const useSingleList = useMemo(() => doc.useSingleList, [doc.useSingleList]);
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
-    const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[], [currentAttempt?.items]);
+    const attemptItems: Immutable<ParsonsChoiceDTO>[] = useMemo(() => {
+        if (!(useSingleList && !doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id)))) {
+            return (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[];
+        } else {
+            return [...doc.items ?? []];
+        }
+    }, [currentAttempt?.items, doc.items, useSingleList]);
     const setAttemptItems = useCallback((items: Immutable<ParsonsChoiceDTO>[]) => {
         if (currentAttempt) {
             dispatchSetCurrentAttempt({...currentAttempt, items: enforceValidIndentation(items)});
@@ -72,12 +79,12 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         // movingElement.style.transform = `translate(${i*PARSONS_INDENT_STEP}px, 0px)`;
                     }
                 }
-                const previousItem = currentAttempt?.items?.[(currentDestinationIndex || 0) - 1];
+                const previousItem = attemptItems[(currentDestinationIndex || 0) - 1] as Immutable<ParsonsItemDTO> | undefined;
                 setCurrentMaxIndent(previousItem ? (previousItem.indentation || 0) + 1 : 0);
                 setCurrentIndent(i);
             }
         }
-    }, [draggedElement, currentAttempt, initialX, currentMaxIndent, canIndent, currentDestinationIndex]);
+    }, [draggedElement, canIndent, initialX, currentMaxIndent, attemptItems, currentDestinationIndex]);
 
     const onKeyUp = useCallback((e: KeyboardEvent) => {
         // There's a bug somewhere that adds this event twice, but only one has a non-zero timestamp.
@@ -95,7 +102,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 }
             }
             let newCurrentMaxIndent = 0;
-            const previousItem = currentAttempt?.items?.[(currentDestinationIndex || 0) - 1];
+            const previousItem = attemptItems[(currentDestinationIndex || 0) - 1] as Immutable<ParsonsItemDTO> | undefined;
             if (previousItem) {
                 newCurrentMaxIndent = (previousItem.indentation || 0) + 1;
             }
@@ -162,23 +169,23 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
-                <Col md={6} className="parsons-available-items">
+                <Label className="visually-hidden" id="item-section-info">
+                    To pick up an item, press space or enter.
+                    Use the up and down arrow keys to move the item within the current list.
+                    {!useSingleList && (above['md'](deviceSize) ? 
+                        "Use the left and right arrow keys to move the item between the available items and your answer." : 
+                        "Use the contained list swap button to move the item between the available items and your answer.")}
+                    Press space or enter again to move the item to a new position.
+                    Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
+                </Label>
+                {!useSingleList && <Col md={6} className="parsons-available-items">
                     <h4>Available items</h4>
-                    <Label className="visually-hidden" id="item-section-info">
-                        To pick up an item, press space or enter.
-                        Use the up and down arrow keys to move the item within the current list.
-                        {above['md'](deviceSize) ? 
-                            "Use the left and right arrow keys to move the item between the available items and your answer." : 
-                            "Use the contained list swap button to move the item between the available items and your answer."}
-                        Press space or enter again to move the item to a new position.
-                        Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
-                    </Label>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
                                 {availableItems && availableItems.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
-                                        setItems={setAvailableItems} items={availableItems} isParsons
+                                        setItems={setAvailableItems} items={availableItems} canIndent={canIndent} isParsons
                                         swapItemList={() => swapItemList(availableItems, setAvailableItems, attemptItems, setAttemptItems, index, true)}
                                     />
                                 )}
@@ -187,19 +194,19 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             </div>;
                         }}
                     </Droppable>
-                </Col>
-                <Col md={6} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
+                </Col>}
+                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": attemptItems?.length === 0})}>
                     <h4 className="mt-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
-                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "is-dragging": draggedElement})}>
-                                {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => 
+                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>
+                                {attemptItems.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
-                                        items={attemptItems} setItems={setAttemptItems} canIndent={canIndent} isParsons
+                                        items={attemptItems} setItems={setAttemptItems} canIndent={canIndent} isParsons useSingleList={useSingleList}
                                         swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index, true)}
                                     />
                                 )}
-                                {(!currentAttempt || currentAttempt?.items?.length === 0) &&
+                                {attemptItems?.length === 0 &&
                                     <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
                                     </div>

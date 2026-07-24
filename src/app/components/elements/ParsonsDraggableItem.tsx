@@ -129,11 +129,12 @@ interface ReorderButtonsProps {
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
     isParsons?: boolean;
     currentIndent?: number | null;
+    inAvailableItems?: boolean;
 }
 
-const ReorderButtons = ({index, items, setItems, isParsons, currentIndent}: ReorderButtonsProps) => {
-    const canReorderUp = index !== 0;
-    const canReorderDown = index !== items.length - 1;
+const ReorderButtons = ({index, items, setItems, isParsons, currentIndent, inAvailableItems}: ReorderButtonsProps) => {
+    const canReorderUp = index !== 0 && !inAvailableItems;
+    const canReorderDown = index !== items.length - 1 && !inAvailableItems;
     return <div className="reorder-buttons">
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderUp})}
             disabled={!canReorderUp} title={`Move ${getAccessibleItemName(items[index])} up`} onClick={() => {
@@ -164,7 +165,7 @@ interface IndentButtonsProps {
     canIndent?: boolean;
 }
 
-const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentButtonsProps) => {
+const IndentButtons = ({currentItem, index, items, setItems}: IndentButtonsProps) => {
     const getPreviousItemIndentation = (index: number) => {
         const newItems = [...(items || [])];
     
@@ -195,8 +196,8 @@ const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentB
         setItems(newItems);
     };
 
-    const canDecreaseIndentation = canIndent && isDefined(currentItem?.indentation) && currentItem.indentation > 0;
-    const canIncreaseIndentation = canIndent && isDefined(currentItem?.indentation) && index !== 0 && 
+    const canDecreaseIndentation = isDefined(currentItem?.indentation) && currentItem.indentation > 0;
+    const canIncreaseIndentation = isDefined(currentItem?.indentation) && index !== 0 && 
         currentItem.indentation <= getPreviousItemIndentation(index) && currentItem.indentation < PARSONS_MAX_INDENT;
     return <div className="indent-buttons">
         <button
@@ -207,7 +208,7 @@ const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentB
             <i className="icon icon-chevron-left icon-color-white" />
         </button>
         <button
-            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} me-2`}
+            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'}`}
             onClick={() => increaseIndentation(index)} aria-label={classNames(`Increase indentation for ${getAccessibleItemName(currentItem)}`, {"(disabled)": !canIncreaseIndentation})}
             disabled={!canIncreaseIndentation}
         >
@@ -222,13 +223,14 @@ type BaseDraggableProps = {
     items: Immutable<ParsonsItemDTO>[];
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
     swapItemList: () => void;
+    useSingleList?: boolean;
     readonly?: boolean;
 };
 
 type AvailableItemsProps = {
     inAvailableItems: true;
     isParsons?: boolean;
-    canIndent?: false;
+    canIndent?: boolean;
 };
 
 type AttemptItemsProps = {
@@ -240,7 +242,7 @@ type AttemptItemsProps = {
 
 export type ParsonsDraggableItemProps = BaseDraggableProps & (AvailableItemsProps | AttemptItemsProps);
 
-export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAvailableItems, readonly, swapItemList, canIndent, isParsons}: ParsonsDraggableItemProps) => {
+export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapItemList, useSingleList, readonly, inAvailableItems, isParsons, canIndent}: ParsonsDraggableItemProps) => {
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
         if (!snapshot.isDropAnimating || !isParsons) return style;
         
@@ -250,6 +252,10 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
             transitionDuration: `0.001s`,
         };
     };
+
+    const markupItem = <Markup trusted-markup-encoding={"html"}>
+        {currentItem.value}
+    </Markup>;
 
     const itemType = `${isParsons ? "parsons" : "reorder"}-item`;
     return <Draggable
@@ -269,27 +275,23 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, inAva
                 style={getStyle(provided.draggableProps.style, snapshot)}
                 aria-describedby={undefined}
             >
-                <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation}/>
-                <pre>
-                    <Markup trusted-markup-encoding={"html"}>
-                        {currentItem.value}
-                    </Markup>
-                </pre>
+                <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation} inAvailableItems={inAvailableItems} />
+                {isParsons && canIndent ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
                 <Spacer/>
                 <div className="hidden-buttons d-flex">
-                    <button
-                        type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
-                        title={
-                            inAvailableItems
-                                ? `Move ${getAccessibleItemName(currentItem)} into your answer`
-                                : `Move ${getAccessibleItemName(currentItem)} back to the items list`
-                        }
-                        onClick={swapItemList}
-                    >
-                        <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
-                    </button>
-                    {canIndent && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>}
+                    {canIndent && !inAvailableItems && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems}/>}
                 </div>
+                {!useSingleList && <button
+                    type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
+                    title={
+                        inAvailableItems
+                            ? `Move ${getAccessibleItemName(currentItem)} into your answer`
+                            : `Move ${getAccessibleItemName(currentItem)} back to the items list`
+                    }
+                    onClick={swapItemList}
+                >
+                    <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
+                </button>}
             </div>;
         }}
     </Draggable>;

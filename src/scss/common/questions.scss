@@ -414,7 +414,7 @@ figure .inline-container {
       margin: 0.5rem 0;
       background: var(--color-neutral-white, white);
 
-      pre {
+      .item-text {
         margin: 0.25em 0.5em;
         padding: 0.25em 0;
         border: none;
@@ -450,9 +450,9 @@ figure .inline-container {
       // Use negative z-index rather than `display: none` to hide buttons so they can still be selected using keyboard controls
       .hidden-buttons {
         position: absolute;
-        right: 2px;
+        right: 38px;
         background-color: var(--color-neutral-white, white);
-        padding: 2px 0;
+        padding: 4px 0;
 
         z-index: -100;
       }

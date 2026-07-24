@@ -35,7 +35,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         <div className={
             classnames(
                 "question-component", siteSpecific("p-md-2", "p-md-4"),
-                {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
+                {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string) && isAda}
             )}>
             {isAda && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 
