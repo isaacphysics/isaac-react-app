@@ -148,7 +148,7 @@ export const Support = () => {
                 {Object.values(section.categories).map((category, index) => 
                     <StyledTabPicker
                         key={index} id={category.category} tabIndex={0} checkboxTitle={category.title} checked={categoryIndex === index}
-                        onClick={() => activeTabChanged(index)} onKeyDown={ifKeyIsEnter(() => activeTabChanged(index))}
+                        onChange={() => activeTabChanged(index)}
                     />
                 )}
             </FAQSidebar>,

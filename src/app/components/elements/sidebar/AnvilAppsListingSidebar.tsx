@@ -15,7 +15,7 @@ export const AnvilAppsListingSidebar = (props: ContentSidebarProps) => {
             {isFullyDefinedContext(context) && Object.keys(VALID_APPS_CONTEXTS[context.subject] ?? {}).map((stage, index) => <li key={index}>
                 <StyledTabPicker
                     checkboxTitle={HUMAN_STAGES[stage as LearningStage]} checked={context?.stage?.includes(stage as LearningStage)}
-                    onClick={() => navigate(`/${context?.subject}/${stage}/tools`)}
+                    onChange={() => navigate(`/${context?.subject}/${stage}/tools`)}
                 />
             </li>)}
         </ul>

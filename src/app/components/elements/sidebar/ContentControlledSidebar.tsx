@@ -37,7 +37,7 @@ const SidebarEntries = ({ entry }: { entry: SidebarEntryDTO }) => {
                     <span className="flex-grow-1"><Markup encoding="latex">{entry.title}</Markup></span>
                 </div>}
                 checked={isActive}
-                onClick={(() => navigate(calculateSidebarLink(entry) ?? ""))}
+                onChange={(() => navigate(calculateSidebarLink(entry) ?? ""))}
             />
         </li>;
 };
