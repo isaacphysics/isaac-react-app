@@ -279,19 +279,19 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapI
                 {isParsons ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
                 <Spacer/>
                 <div className="hidden-buttons d-flex">
-                    {!useSingleList && <button
-                        type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
-                        title={
-                            inAvailableItems
-                                ? `Move ${getAccessibleItemName(currentItem)} into your answer`
-                                : `Move ${getAccessibleItemName(currentItem)} back to the items list`
-                        }
-                        onClick={swapItemList}
-                    >
-                        <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
-                    </button>}
                     {canIndent && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>}
                 </div>
+                {!useSingleList && <button
+                    type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
+                    title={
+                        inAvailableItems
+                            ? `Move ${getAccessibleItemName(currentItem)} into your answer`
+                            : `Move ${getAccessibleItemName(currentItem)} back to the items list`
+                    }
+                    onClick={swapItemList}
+                >
+                    <i className="icon icon-sm icon-arrow-left-right icon-color-muted-hoverable icon-color-theme-on-hover" />
+                </button>}
             </div>;
         }}
     </Draggable>;
