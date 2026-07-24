@@ -4485,6 +4485,78 @@ export const mockRegressionTestQuestionParts = [
                     "placeholder"
                 ]
             }
+        ],
+    },
+    {
+        "id": "_regression_test_acc_reorder",
+        "type": "content",
+        "children": [
+            {
+                "value": "Order the following sections reverse-alphabetically within a single list.\n\n```\nD\nC\nB\nA\n```",
+                "encoding": "markdown",
+                "type": "isaacReorderQuestion",
+                "items": [
+                    {
+                        "type": "item",
+                        "value": "D",
+                        "id": "dddd"
+                    },
+                    {
+                        "type": "item",
+                        "value": "A",
+                        "id": "aaaa"
+                    },
+                    {
+                        "type": "item",
+                        "value": "C",
+                        "id": "cccc"
+                    },
+                    {
+                        "type": "item",
+                        "value": "B",
+                        "id": "bbbb"
+                    }
+                ],
+                "choices": [
+                    {
+                        "encoding": "markdown",
+                        "value": "",
+                        "explanation": {
+                            "type": "content",
+                            "children": []
+                        },
+                        "type": "itemChoice",
+                        "children": [],
+                        "correct": true,
+                        "items": [
+                            {
+                                "type": "item",
+                                "id": "dddd"
+                            },
+                            {
+                                "type": "item",
+                                "id": "cccc"
+                            },
+                            {
+                                "type": "item",
+                                "id": "bbbb"
+                            },
+                            {
+                                "type": "item",
+                                "id": "aaaa"
+                            }
+                        ]
+                    }
+                ],
+                "answer": {
+                    "type": "content",
+                    "value": "_Enter answer here_",
+                    "encoding": "markdown"
+                },
+                "id": "_regression_test_reorder_",
+                "title": "Reorder Question",
+                "useSingleList": true
+            }
         ]
     }
 ];
@@ -5454,6 +5526,72 @@ export const mockRegressionTestQuestions = {
                             ]
                         }
                     ]
+                },
+                {
+                    "value": "Order the following sections reverse-alphabetically within a single list.\n\n```\nD\nC\nB\nA\n```",
+                    "encoding": "markdown",
+                    "type": "isaacReorderQuestion",
+                    "items": [
+                        {
+                            "type": "item",
+                            "value": "D",
+                            "id": "dddd"
+                        },
+                        {
+                            "type": "item",
+                            "value": "A",
+                            "id": "aaaa"
+                        },
+                        {
+                            "type": "item",
+                            "value": "C",
+                            "id": "cccc"
+                        },
+                        {
+                            "type": "item",
+                            "value": "B",
+                            "id": "bbbb"
+                        }
+                    ],
+                    "choices": [
+                        {
+                            "encoding": "markdown",
+                            "value": "",
+                            "explanation": {
+                                "type": "content",
+                                "children": []
+                            },
+                            "type": "itemChoice",
+                            "children": [],
+                            "correct": true,
+                            "items": [
+                                {
+                                    "type": "item",
+                                    "id": "dddd"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "cccc"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "bbbb"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "aaaa"
+                                }
+                            ]
+                        }
+                    ],
+                    "answer": {
+                        "type": "content",
+                        "value": "_Enter answer here_",
+                        "encoding": "markdown"
+                    },
+                    "id": "_regression_test_reorder_",
+                    "title": "Reorder Question",
+                    "useSingleList": true
                 }
             ],
             "tags": []
