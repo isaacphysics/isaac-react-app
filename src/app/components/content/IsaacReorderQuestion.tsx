@@ -50,16 +50,16 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd}>
+                <Label className="visually-hidden" id="item-section-info">
+                    To pick up an item, press space or enter.
+                    Use the up and down arrow keys to move the item within the current list.
+                    {!useSingleList && (above['md'](deviceSize) ? 
+                        "Use the left and right arrow keys to move the item between the available items and your answer." : 
+                        "Use the contained list swap button to move the item between the available items and your answer.")}
+                    Press space or enter again to move the item to a new position.
+                </Label>
                 {!useSingleList && <Col md={{size: 6}} className="parsons-available-items">
                     <h4>Available items</h4>
-                    <Label className="visually-hidden" id="item-section-info">
-                        To pick up an item, press space or enter.
-                        Use the up and down arrow keys to move the item within the current list.
-                        {above['md'](deviceSize) ? 
-                            "Use the left and right arrow keys to move the item between the available items and your answer." : 
-                            "Use the contained list swap button to move the item between the available items and your answer."}
-                        Press space or enter again to move the item to a new position.
-                    </Label>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
                             <div ref={provided.innerRef}

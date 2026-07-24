@@ -169,17 +169,17 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
+                <Label className="visually-hidden" id="item-section-info">
+                    To pick up an item, press space or enter.
+                    Use the up and down arrow keys to move the item within the current list.
+                    {!useSingleList && (above['md'](deviceSize) ? 
+                        "Use the left and right arrow keys to move the item between the available items and your answer." : 
+                        "Use the contained list swap button to move the item between the available items and your answer.")}
+                    Press space or enter again to move the item to a new position.
+                    Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
+                </Label>
                 {!useSingleList && <Col md={6} className="parsons-available-items">
                     <h4>Available items</h4>
-                    <Label className="visually-hidden" id="item-section-info">
-                        To pick up an item, press space or enter.
-                        Use the up and down arrow keys to move the item within the current list.
-                        {above['md'](deviceSize) ? 
-                            "Use the left and right arrow keys to move the item between the available items and your answer." : 
-                            "Use the contained list swap button to move the item between the available items and your answer."}
-                        Press space or enter again to move the item to a new position.
-                        Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
-                    </Label>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
