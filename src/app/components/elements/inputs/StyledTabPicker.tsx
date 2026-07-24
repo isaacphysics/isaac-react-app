@@ -24,6 +24,7 @@ export type StyledTabPickerProps = Omit<React.HTMLAttributes<HTMLElement>, 'onCh
     checked?: boolean;
     disabled?: boolean;
     onClick?: never;  // use onChange instead (supports non-clickable interactions, e.g. keyboard)
+    onKeyDown?: never; // use onChange instead
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     checkboxTitle: ReactNode;
     count?: number;
