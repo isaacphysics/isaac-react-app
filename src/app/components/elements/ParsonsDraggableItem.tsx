@@ -165,7 +165,7 @@ interface IndentButtonsProps {
     canIndent?: boolean;
 }
 
-const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentButtonsProps) => {
+const IndentButtons = ({currentItem, index, items, setItems}: IndentButtonsProps) => {
     const getPreviousItemIndentation = (index: number) => {
         const newItems = [...(items || [])];
     
@@ -196,8 +196,8 @@ const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentB
         setItems(newItems);
     };
 
-    const canDecreaseIndentation = canIndent && isDefined(currentItem?.indentation) && currentItem.indentation > 0;
-    const canIncreaseIndentation = canIndent && isDefined(currentItem?.indentation) && index !== 0 && 
+    const canDecreaseIndentation = isDefined(currentItem?.indentation) && currentItem.indentation > 0;
+    const canIncreaseIndentation = isDefined(currentItem?.indentation) && index !== 0 && 
         currentItem.indentation <= getPreviousItemIndentation(index) && currentItem.indentation < PARSONS_MAX_INDENT;
     return <div className="indent-buttons">
         <button
@@ -208,7 +208,7 @@ const IndentButtons = ({currentItem, index, items, setItems, canIndent}: IndentB
             <i className="icon icon-chevron-left icon-color-white" />
         </button>
         <button
-            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'} me-2`}
+            type="button" className={`increase ${canIncreaseIndentation ? 'show' : 'hide'}`}
             onClick={() => increaseIndentation(index)} aria-label={classNames(`Increase indentation for ${getAccessibleItemName(currentItem)}`, {"(disabled)": !canIncreaseIndentation})}
             disabled={!canIncreaseIndentation}
         >
@@ -230,7 +230,7 @@ type BaseDraggableProps = {
 type AvailableItemsProps = {
     inAvailableItems: true;
     isParsons?: boolean;
-    canIndent?: false;
+    canIndent?: boolean;
 };
 
 type AttemptItemsProps = {
@@ -276,10 +276,10 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapI
                 aria-describedby={undefined}
             >
                 <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation} inAvailableItems={inAvailableItems} />
-                {isParsons ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
+                {isParsons && canIndent ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
                 <Spacer/>
                 <div className="hidden-buttons d-flex">
-                    {canIndent && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems} canIndent={canIndent}/>}
+                    {canIndent && !inAvailableItems && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems}/>}
                 </div>
                 {!useSingleList && <button
                     type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
