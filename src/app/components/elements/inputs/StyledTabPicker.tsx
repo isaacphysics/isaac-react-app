@@ -23,9 +23,6 @@ import { Link } from "react-router-dom";
 export type StyledTabPickerProps = Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> & {
     checked?: boolean;
     disabled?: boolean;
-    onClick?: never;  // use onChange instead (supports non-clickable interactions, e.g. keyboard)
-    onKeyDown?: never; // use onChange instead
-    onChange?: React.ChangeEventHandler<HTMLInputElement>;
     checkboxTitle: ReactNode;
     count?: number;
     indicatorPosition?: "left" | "right";
@@ -36,9 +33,14 @@ export type StyledTabPickerProps = Omit<React.HTMLAttributes<HTMLElement>, 'onCh
     }
 } & ({
     type?: "checkbox" | "radio";
+    // onClick / keyboard listeners can be used too (e.g. if clicking an already-selected tab should do something), but onChange is required.
+    // it can be undefined if the tab shouldn't do anything, but this is rare and should be explicit.
+    onChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
     to?: never;
 } | {
     type: "link";
+    // onChange doesn't work for links. use onClick / keyboard listeners instead, if required
+    onChange?: never;
     to: string;
 })
 
@@ -59,12 +61,12 @@ const PickerContents = ({checkboxTitle, count, suffix, disabled}: Pick<StyledTab
  * @returns {JSX.Element}
  */
 export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
-    const { checked, disabled, onChange, checkboxTitle, count, suffix, ...rest } = props;
+    const { checked, disabled, checkboxTitle, onChange, count, suffix, ...rest } = props;
     const id = checkboxTitle?.toString().replace(" ", "-");
     const type = props.type ?? "checkbox";
 
     if (type === "link") {
-        return <Link {...rest} id={props.id ?? id} className={classNames("d-flex align-items-center py-2 w-100 tab-picker", rest.className, {"checked": checked})}
+        return <Link {...rest as typeof rest & { type: "link" }} id={props.id ?? id} className={classNames("d-flex align-items-center py-2 w-100 tab-picker", rest.className, {"checked": checked})}
             to={rest.to as string}
         >
             <PickerContents checkboxTitle={checkboxTitle} count={count} suffix={suffix} disabled={disabled} />
@@ -72,7 +74,7 @@ export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
     }
 
     return <Label {...rest} id={props.id ?? id} tabIndex={-1} className={classNames("d-flex align-items-center py-2 my-1 w-100 tab-picker", rest.className, {"checked": checked})}>
-        <Input type={type} checked={checked ?? false} onChange={onChange} readOnly={onChange === undefined} disabled={disabled} aria-labelledby={props.id ?? id} />
+        <Input type={type} checked={checked ?? false} onChange={onChange as React.ChangeEventHandler<HTMLInputElement> | undefined} readOnly={onChange === undefined} disabled={disabled} aria-labelledby={props.id ?? id} />
         <PickerContents checkboxTitle={checkboxTitle} count={count} suffix={suffix} disabled={disabled} />
     </Label>;
 };

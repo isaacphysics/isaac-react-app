@@ -1,6 +1,6 @@
 import React from "react";
 import { ContentSidebarContext } from "../../../../IsaacAppTypes";
-import { ACCOUNT_TAB, ACCOUNT_TABS } from "../../../services";
+import { ACCOUNT_TAB, ACCOUNT_TABS, ifKeyIsEnter } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
 
@@ -23,7 +23,9 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
                         <ContentSidebarContext.Consumer>
                             {(context) =>
                                 <StyledTabPicker id={title} type="radio" tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                                    onChange={() => { setActiveTab(tab); context?.close(); }}
+                                    onChange={() => setActiveTab(tab)}
+                                    onClick={() => context?.close()}
+                                    onKeyDown={ifKeyIsEnter(() => context?.close())}
                                 />
                             }
                         </ContentSidebarContext.Consumer>
