@@ -74,7 +74,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
 
     useEffect(() => {
         if (preview) return; // Don't set the document title if we're in preview mode
-        document.title = currentPageTitle + " — " + SITE_TITLE;
+        document.title = currentPageTitle + " – " + SITE_TITLE;
     }, [currentPageTitle, preview]);
 
     return <h1 id="main-heading" data-testid="main-heading" className={classNames("h-title d-flex pb-0 mb-0", {"flex-column w-100": isAda})}>
