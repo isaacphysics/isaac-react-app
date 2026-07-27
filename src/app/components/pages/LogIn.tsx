@@ -220,7 +220,7 @@ export const LogIn = () => {
     const subHeadingRef = useRef<HTMLHeadingElement>(null);
 
     useEffect( () => {
-        document.title = "Login — " + SITE_TITLE;
+        document.title = "Login – " + SITE_TITLE;
         if (!(window as any).followedAtLeastOneSoftLink) {
             return;
         }

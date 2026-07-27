@@ -179,7 +179,7 @@ export const TutorRequest = () => {
                                     {!emailVerified &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-start">Your email address is not verified —
+                                            <small className="text-danger text-start">Your email address is not verified –
                                                 please click on the link in the verification email to confirm your
                                                 email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a
                                                 new verification email</Button> if necessary.
