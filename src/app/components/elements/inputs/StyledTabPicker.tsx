@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
  * @property {string} id - A unique identifier for the tab picker.
  * @property {boolean} [checked] - Whether the tab is checked.
  * @property {boolean} [disabled] - Whether the tab is disabled.
- * @property {React.ChangeEventHandler<HTMLInputElement>} [onInputChange] - The function to call when the tab is clicked.
+ * @property {React.ChangeEventHandler<HTMLInputElement>} [onChange] - The function to call when the tab is clicked.
  * @property {ReactNode} checkboxTitle - The title of the tab.
  * @property {number} [count] - The number to display on the tab.
  * @property {"left" | "right"} [indicatorPosition] - The position of the indicator.
@@ -20,10 +20,9 @@ import { Link } from "react-router-dom";
  * @property {string} [to] - The URL to navigate to when the tab is clicked (only for type "link").
  */
 
-type StyledTabPickerProps = React.HTMLAttributes<HTMLElement> & {
+export type StyledTabPickerProps = Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> & {
     checked?: boolean;
     disabled?: boolean;
-    onInputChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
     checkboxTitle: ReactNode;
     count?: number;
     indicatorPosition?: "left" | "right";
@@ -34,9 +33,14 @@ type StyledTabPickerProps = React.HTMLAttributes<HTMLElement> & {
     }
 } & ({
     type?: "checkbox" | "radio";
+    // onClick / keyboard listeners can be used too (e.g. if clicking an already-selected tab should do something), but onChange is required.
+    // it can be undefined if the tab shouldn't do anything, but this is rare and should be explicit.
+    onChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
     to?: never;
 } | {
     type: "link";
+    // onChange doesn't work for links. use onClick / keyboard listeners instead, if required
+    onChange?: never;
     to: string;
 })
 
@@ -51,18 +55,18 @@ const PickerContents = ({checkboxTitle, count, suffix, disabled}: Pick<StyledTab
 
 /**
  * A StyledTabPicker component, used to render a list of selectable tabs, each with a title and optional counter (as to indicate how many options selecting that would provide).
- * This can work as either a radio button or a multi-select checkbox, depending on the functionality of onInputChange.
+ * This can work as either a radio button or a multi-select checkbox, depending on the functionality of onChange.
  *
  * @param {StyledTabPickerProps} props
  * @returns {JSX.Element}
  */
 export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
-    const { checked, disabled, onInputChange, checkboxTitle, count, suffix, ...rest } = props;
+    const { checked, disabled, checkboxTitle, onChange, count, suffix, ...rest } = props;
     const id = checkboxTitle?.toString().replace(" ", "-");
     const type = props.type ?? "checkbox";
 
     if (type === "link") {
-        return <Link {...rest} id={props.id ?? id} className={classNames("d-flex align-items-center py-2 w-100 tab-picker", rest.className, {"checked": checked})}
+        return <Link {...rest as typeof rest & { type: "link" }} id={props.id ?? id} className={classNames("d-flex align-items-center py-2 w-100 tab-picker", rest.className, {"checked": checked})}
             to={rest.to as string}
         >
             <PickerContents checkboxTitle={checkboxTitle} count={count} suffix={suffix} disabled={disabled} />
@@ -70,7 +74,7 @@ export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
     }
 
     return <Label {...rest} id={props.id ?? id} tabIndex={-1} className={classNames("d-flex align-items-center py-2 my-1 w-100 tab-picker", rest.className, {"checked": checked})}>
-        <Input type={type} checked={checked ?? false} onChange={onInputChange} readOnly={onInputChange === undefined} disabled={disabled} aria-labelledby={props.id ?? id} />
+        <Input type={type} checked={checked ?? false} onChange={onChange as React.ChangeEventHandler<HTMLInputElement> | undefined} readOnly={onChange === undefined} disabled={disabled} aria-labelledby={props.id ?? id} />
         <PickerContents checkboxTitle={checkboxTitle} count={count} suffix={suffix} disabled={disabled} />
     </Label>;
 };

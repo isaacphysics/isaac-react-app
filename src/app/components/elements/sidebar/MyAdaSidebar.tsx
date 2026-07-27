@@ -3,7 +3,7 @@ import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { isStudent, isTeacherOrAbove, isTutorOrAbove, useFullSidebarLayout, useUserNotifications } from "../../../services";
+import { ifKeyIsEnter, isStudent, isTeacherOrAbove, isTutorOrAbove, useFullSidebarLayout, useUserNotifications } from "../../../services";
 import { Spacer } from "../Spacer";
 import { useLocation } from "react-router";
 
@@ -132,6 +132,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         checked={isActive}
                         className={classNames("nav-link my-ada-tab ps-1")}
                         onClick={() => !fullSidebarLayout && isOpen && toggleSidebar()}
+                        onKeyDown={ifKeyIsEnter(() => !fullSidebarLayout && isOpen && toggleSidebar())}
                         type="link"
                         to={tab.url}
                     />;
