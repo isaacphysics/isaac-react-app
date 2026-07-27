@@ -39,13 +39,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
     const useSingleList = useMemo(() => doc.useSingleList, [doc.useSingleList]);
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
-    const attemptItems: Immutable<ParsonsChoiceDTO>[] = useMemo(() => {
-        if (!(useSingleList && !doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id)))) {
-            return (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[];
-        } else {
-            return [...doc.items ?? []];
-        }
-    }, [currentAttempt?.items, doc.items, useSingleList]);
     const setAttemptItems = useCallback((items: Immutable<ParsonsChoiceDTO>[]) => {
         if (currentAttempt) {
             dispatchSetCurrentAttempt({...currentAttempt, items: enforceValidIndentation(items)});
@@ -53,6 +46,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
             dispatchSetCurrentAttempt({type: "parsonsChoice", items: enforceValidIndentation(items)});
         }
     }, [currentAttempt, dispatchSetCurrentAttempt]);
+    const attemptItems: Immutable<ParsonsChoiceDTO>[] = useMemo(() => {
+        if (!(useSingleList && !doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id)))) {
+            return (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[];
+        } else {
+            if (!currentAttempt) setAttemptItems([...doc.items ?? []]);
+            return [...doc.items ?? []];
+        }
+    }, [currentAttempt, doc.items, setAttemptItems, useSingleList]);
 
     const [draggedElement, setDraggedElement] = useState<HTMLElement | null>(null);
     const [initialX, setInitialX] = useState<number | null>(null);
