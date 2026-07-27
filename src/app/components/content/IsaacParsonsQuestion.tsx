@@ -47,7 +47,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         }
     }, [currentAttempt, dispatchSetCurrentAttempt]);
     const attemptItems: Immutable<ParsonsChoiceDTO>[] = useMemo(() => {
-        if (!(useSingleList && !doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id)))) {
+        if (!useSingleList || doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id))) {
             return (currentAttempt?.items || []) as Immutable<ParsonsChoiceDTO>[];
         } else {
             if (!currentAttempt) setAttemptItems([...doc.items ?? []]);
@@ -156,11 +156,11 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
 
     useEffect(() => {
         if (!currentAttempt) {
-            setAttemptItems([]);
+            setAttemptItems(useSingleList ? [...doc.items ?? []] : []);
         } else {
             onParsonsCurrentAttemptUpdate(availableItems, setAvailableItems, attemptItems, doc.items);
         }
-    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems]);
+    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems, useSingleList]);
 
     return <div className="parsons-question">
         <div className="question-content">

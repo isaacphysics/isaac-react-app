@@ -15,13 +15,6 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
     const useSingleList = useMemo(() => doc.useSingleList, [doc.useSingleList]);
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
-    const attemptItems: Immutable<ItemChoiceDTO>[] = useMemo(() => {
-        if (!(useSingleList && !doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id)))) {
-            return (currentAttempt?.items || []) as Immutable<ItemChoiceDTO>[];
-        } else {
-            return [...doc.items ?? []];
-        }
-    }, [currentAttempt?.items, doc.items, useSingleList]);
     const setAttemptItems = useCallback((items: Immutable<ItemChoiceDTO>[]) => {
         if (currentAttempt) {
             dispatchSetCurrentAttempt({...currentAttempt, items});
@@ -29,6 +22,14 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
             dispatchSetCurrentAttempt({type: "itemChoice", items});
         }
     }, [currentAttempt, dispatchSetCurrentAttempt]);
+    const attemptItems: Immutable<ItemChoiceDTO>[] = useMemo(() => {
+        if (!useSingleList || doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id))) {
+            return (currentAttempt?.items || []) as Immutable<ItemChoiceDTO>[];
+        } else {
+            if (!currentAttempt) setAttemptItems([...doc.items ?? []]);
+            return [...doc.items ?? []];
+        }
+    }, [currentAttempt, doc.items, setAttemptItems, useSingleList]);
 
     const onDragEnd = (result: DropResult) => {
         handleParsonsItemDrag(result, availableItems, setAvailableItems, attemptItems, setAttemptItems);
@@ -36,11 +37,11 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
 
     useEffect(() => {
         if (!currentAttempt) {
-            setAttemptItems([]);
+            setAttemptItems(useSingleList ? [...doc.items ?? []] : []);
         } else {
             onParsonsCurrentAttemptUpdate(availableItems, setAvailableItems, attemptItems, doc.items);
         }
-    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems]);
+    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems, useSingleList]);
 
     return <div className="parsons-question">
         <div className="question-content">
