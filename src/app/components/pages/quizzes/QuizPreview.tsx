@@ -8,25 +8,20 @@ import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
-import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 
 const QuizFooter = (props: QuizProps & FullQuizInfo) => {
     const {user, page, quiz, quizContents: {pageLink}} = props;
     const dispatch = useAppDispatch();
-    return <QuizSidebarLayout>
-        {isDefined(page)
-            ? <QuizPagination {...props} finalLabel="Back to Contents" />
-            : <>
-                <div className="d-flex w-100 align-items-center mt-2 gap-2">
-                    {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
-                    <Spacer/>
-                    <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{"Attempt quiz yourself"}</Button>
-                    <Button color="solid" tag={Link} to={pageLink(1)}>{"Preview questions"}</Button>
-                </div>
-            </>}
-    </QuizSidebarLayout>;
+    return isDefined(page)
+        ? <QuizPagination {...props} finalLabel="Back to Contents" />
+        : <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
+            {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
+            <Spacer/>
+            <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{"Attempt quiz yourself"}</Button>
+            <Button color="solid" tag={Link} to={pageLink(1)}>{"Preview questions"}</Button>
+        </div>;
 };
 
 const pageHelp = <span>
@@ -74,8 +69,9 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container data-testid="quiz-preview" className="mb-7" data-bs-theme={getThemeFromTags(quiz?.tags)}>
         <ShowLoadingQuery query={quizPreviewQuery} ifError={Error}>
-            <QuizContentsComponent preview {...subProps} />
-            <QuizFooter {...subProps} />
+            <QuizContentsComponent preview {...subProps}>
+                <QuizFooter {...subProps} />
+            </QuizContentsComponent>
         </ShowLoadingQuery>
     </Container>;
 };

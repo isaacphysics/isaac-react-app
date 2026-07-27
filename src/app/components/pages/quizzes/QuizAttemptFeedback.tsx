@@ -1,7 +1,7 @@
 import React, {useCallback} from "react";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {getThemeFromTags, isDefined, isPhy, useQuizAttemptFeedback} from "../../../services";
+import {getThemeFromTags, isDefined, useQuizAttemptFeedback} from "../../../services";
 import {
     FullQuizInfo,
     myQuizzesCrumbs,
@@ -12,9 +12,7 @@ import {
 import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {Alert, Button, Col, Container} from "reactstrap";
-import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
-import classNames from "classnames";
+import {Alert, Button, Container} from "reactstrap";
 
 function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
     const {page, studentUser, quizContents: {pageLink}} = props;
@@ -32,7 +30,7 @@ function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
 
     return <>
         {prequel}
-        <div className="d-flex border-top pt-2 my-2 align-items-center">
+        <div className="d-flex pt-2 my-2 align-items-center mt-4 pt-2 border-top">
             {controls}
         </div>
     </>;
@@ -78,15 +76,9 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container className="mb-7" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
-            {isDefined(attempt) && <>
-                <QuizContentsComponent {...subProps} />
-                <SidebarLayout show={isPhy}>
-                    {isPhy && <Col lg={4} xl={3} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0")} />}
-                    <MainContent>
-                        {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
-                    </MainContent>
-                </SidebarLayout>
-            </>}
+            {isDefined(attempt) && <QuizContentsComponent {...subProps}>
+                {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
+            </QuizContentsComponent>}
             {isDefined(error) && <>
                 <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">

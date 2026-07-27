@@ -55,8 +55,9 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
     return <Container className="mb-7" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
-                <QuizContentsComponent {...subProps} />
-                <QuizAttemptFooter {...subProps} />
+                <QuizContentsComponent {...subProps} >
+                    <QuizAttemptFooter {...subProps} />
+                </QuizContentsComponent>
             </>}
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
