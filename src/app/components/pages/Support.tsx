@@ -4,7 +4,7 @@ import {Route} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Navigate, useNavigate, useParams} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {ifKeyIsEnter, isAda, isDefined, siteSpecific} from "../../services";
+import {isAda, isDefined, siteSpecific} from "../../services";
 import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -148,7 +148,7 @@ export const Support = () => {
                 {Object.values(section.categories).map((category, index) => 
                     <StyledTabPicker
                         key={index} id={category.category} tabIndex={0} checkboxTitle={category.title} checked={categoryIndex === index}
-                        onClick={() => activeTabChanged(index)} onKeyDown={ifKeyIsEnter(() => activeTabChanged(index))}
+                        onChange={() => activeTabChanged(index)}
                     />
                 )}
             </FAQSidebar>,
