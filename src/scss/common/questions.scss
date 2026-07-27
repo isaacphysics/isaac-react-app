@@ -351,6 +351,11 @@ figure .inline-container {
 }
 
 .parsons-question {
+  // REMINDER: If you change the PARSONS_MAX_INDENT and PARSONS_INDENT_STEP
+  // constants, you also have to change these two in here.
+  $parsons-max-indent: 3;
+  $parsons-step: 45;
+
   .parsons-items {
     border: solid 1px $gray-136;
     padding: 0 0.5em;
@@ -362,11 +367,6 @@ figure .inline-container {
         padding-bottom: 1.1em;
       }
     }
-
-    // REMINDER: If you change the PARSONS_MAX_INDENT and PARSONS_INDENT_STEP
-    // constants, you also have to change these two in here.
-    $parsons-max-indent: 3;
-    $parsons-step: 45;
 
     .parsons-item {
       @for $i from 0 through $parsons-max-indent {
@@ -463,8 +463,8 @@ figure .inline-container {
         }
       }
     }
-
-    &#parsons-choice-area {
+  }
+  .parsons-choice-items .parsons-items {
       @for $i from 0 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
@@ -482,7 +482,6 @@ figure .inline-container {
         }
       }
     }
-  }
 }
 
 .inequality-results {

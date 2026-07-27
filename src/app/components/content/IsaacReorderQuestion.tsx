@@ -66,7 +66,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                                 className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {availableItems && availableItems.map((item, index) =>
-                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
+                                    <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} inAvailableItems readonly={readonly}
                                         setItems={setAvailableItems} items={availableItems}
                                         swapItemList={() => swapItemList(availableItems, setAvailableItems, attemptItems, setAttemptItems, index)}
                                     />
@@ -78,16 +78,16 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                         }
                     </Droppable>
                 </Col>}
-                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": attemptItems?.length === 0})}>
+                <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})}>
                     <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>
-                            <div id="parsons-choice-area" ref={provided.innerRef}
+                            <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef}
                                 className={classNames("parsons-items", {"empty": !(attemptItems.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {attemptItems.map((item, index) =>
-                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
-                                        setItems={setAttemptItems}  items={attemptItems} useSingleList={useSingleList}
+                                    <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} readonly={readonly}
+                                        setItems={setAttemptItems} items={attemptItems} useSingleList={useSingleList}
                                         swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index)}
                                     />
                                 )}

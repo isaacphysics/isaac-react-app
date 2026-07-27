@@ -223,6 +223,7 @@ type BaseDraggableProps = {
     items: Immutable<ParsonsItemDTO>[];
     setItems: Dispatch<SetStateAction<Immutable<ParsonsItemDTO>[]>> | ((items: Immutable<ParsonsItemDTO>[]) => void);
     swapItemList: () => void;
+    questionId?: string;
     useSingleList?: boolean;
     readonly?: boolean;
 };
@@ -242,7 +243,7 @@ type AttemptItemsProps = {
 
 export type ParsonsDraggableItemProps = BaseDraggableProps & (AvailableItemsProps | AttemptItemsProps);
 
-export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapItemList, useSingleList, readonly, inAvailableItems, isParsons, canIndent}: ParsonsDraggableItemProps) => {
+export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapItemList, questionId, useSingleList, readonly, inAvailableItems, isParsons, canIndent}: ParsonsDraggableItemProps) => {
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
         if (!snapshot.isDropAnimating || !isParsons) return style;
         
@@ -258,15 +259,16 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapI
     </Markup>;
 
     const itemType = `${isParsons ? "parsons" : "reorder"}-item`;
+    const draggableId = `${questionId}-${currentItem.id || index}|${itemType}-${inAvailableItems ? "available" : "choice"}`;
     return <Draggable
         key={currentItem.id}
-        draggableId={`${currentItem.id || index}|${itemType}-${inAvailableItems ? "available" : "choice"}`}
+        draggableId={draggableId}
         index={index}
         isDragDisabled={readonly}
     >
         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
             return <div
-                id={`${currentItem.id || index}|${itemType}-${inAvailableItems ? "available" : "choice"}`}
+                id={draggableId}
                 className={`${itemType} indent-${currentItem.indentation}`}
                 ref={provided.innerRef}
                 aria-label={getAccessibleItemName(currentItem)}

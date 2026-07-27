@@ -120,7 +120,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
 
     const onDragStart = (initial: DragStart) => {
         const draggedElement: HTMLElement | null = document.getElementById(initial.draggableId);
-        const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
+        const choiceElement: HTMLElement | null = document.getElementById(`${questionId}-parsons-choice-area`);
         setDraggedElement(draggedElement);
         setInitialX(choiceElement && choiceElement.getBoundingClientRect().left);
         setCurrentIndent(draggedElement?.className.match(/indent-([0-3])/g)?.map((match) => parseInt(match.split('-')[1]))?.[0] || 0);
@@ -185,7 +185,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
                                 {availableItems && availableItems.map((item, index) => 
-                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
+                                    <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} inAvailableItems readonly={readonly}
                                         setItems={setAvailableItems} items={availableItems} canIndent={canIndent} isParsons
                                         swapItemList={() => swapItemList(availableItems, setAvailableItems, attemptItems, setAttemptItems, index, true)}
                                     />
@@ -196,13 +196,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                         }}
                     </Droppable>
                 </Col>}
-                <Col md={useSingleList ? 12 : 6} className={classNames({"no-print": attemptItems?.length === 0})}>
+                <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})}>
                     <h4 className="mt-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
-                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>
+                            return <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>
                                 {attemptItems.map((item, index) => 
-                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
+                                    <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} readonly={readonly}
                                         items={attemptItems} setItems={setAttemptItems} canIndent={canIndent} isParsons useSingleList={useSingleList}
                                         swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index, true)}
                                     />
