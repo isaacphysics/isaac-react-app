@@ -368,7 +368,7 @@ export function QuizContentsComponent(props: QuizProps) {
                 {!isDefined(props.page)
                     ? <QuizOverview {...props} viewingAsSomeoneElse={viewingAsSomeoneElse} />
                     : <QuizQuestions {...props as QuizProps & FullQuizInfo} page={props.page} /> }
-                {props.children && props.children}
+                {props.children}
             </MainContent>
         </SidebarLayout>
     </>;
