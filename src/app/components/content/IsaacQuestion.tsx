@@ -25,7 +25,7 @@ import {
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
-import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {IsaacHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
@@ -222,7 +222,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 </Row>}
 
                 {/* CS Hints */}
-                {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
+                {isAda && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="modal"/>}
 
                 {/* Validation Response */}
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
@@ -289,7 +289,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 }
             </div>
             {/* Physics Hints and LLM free-text response */}
-            {isPhy && doc.hints && !!doc.hints.length && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
+            {isPhy && doc.hints && !!doc.hints.length && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="tabbed"/>}
             {isPhy && possibleLLMFreeTextQuestionFeedbackView}
         </Form>
 

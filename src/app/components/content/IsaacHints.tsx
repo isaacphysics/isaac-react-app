@@ -5,68 +5,17 @@ import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {IsaacContent} from "./IsaacContent";
 import {AppState, useAppDispatch, useAppSelector, logAction, openActiveModal, closeActiveModal} from "../../state";
 import {Tabs} from "../elements/Tabs";
-import classNames from "classnames";
-
-const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
-    const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
-    return printHints && hints?.map((hint, index) => (
-        <div key={index} className={"question-hints ps-0 py-1 only-print"}>
-            <h4>{`Hint ${index + 1}`}</h4>
-            <IsaacContent doc={hint}/>
-        </div>
-    ));
-};
 
 interface HintsProps {
     hints?: ContentDTO[];
     questionPartId: string;
+    style: "tabbed" | "modal";
 }
-export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
+
+export const IsaacHints = ({hints, questionPartId, style}: HintsProps) => {
     const dispatch = useAppDispatch();
     const {recordConfidence} = useContext(ConfidenceContext);
-
-    return <div>
-        <Row className="question-hints mt-2 mb-3 no-print justify-content-xs-center justify-content-lg-start">
-            {
-                hints?.map((hint, index) =>
-                    <Col key={index} xs={3} lg={2}>
-                        <Button color="link" size="sm" onClick={async () => {
-                            dispatch(openActiveModal(({
-                                closeAction: () => dispatch(closeActiveModal()),
-                                title: hint.title || `Hint ${index + 1}`,
-                                body: <IsaacContent doc={hint} />,
-                                size: "lg",
-                            })));
-                            if (recordConfidence) {
-                                await dispatch(logAction({
-                                    type: "QUESTION_CONFIDENCE_HINT",
-                                    questionPartId,
-                                    hintIndex: index
-                                }));
-                            }
-                            await dispatch(logAction({
-                                type: "VIEW_HINT",
-                                questionPartId,
-                                hintIndex: index
-                            }));
-                        }}>
-                            {hint.title || `Hint ${index + 1}`}
-                        </Button>
-                        {/*<IsaacHintModal questionPartId={questionPartId} hintIndex={index}
-                            label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
-                            body={hint} scrollable
-                        />*/}
-                    </Col>
-                )
-            }
-        </Row>
-        <PrintOnlyHints hints={hints} />
-    </div>;
-};
-
-export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
-    const dispatch = useAppDispatch();
-    const {recordConfidence} = useContext(ConfidenceContext);
+    const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
 
     async function logHintView(viewedHintIndex: number) {
         if (viewedHintIndex > -1) {
@@ -101,10 +50,8 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
         }
     }, [hints]);
 
-    const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
-
-    return <div className={classNames("tabbed-hints", {"no-print": !printHints})}>
-        {hints && !!hints.length && <>
+    return <>
+        {style === "tabbed" && hints && !!hints.length && <div className="tabbet-hints no-print">
             <h5 className="text-theme mb-2">Need some help?</h5>
             <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
                 {Object.assign({}, ...hints.map((hint, index) => ({
@@ -113,7 +60,29 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
                     </div>
                 })))}
             </Tabs>
-        </>}
-        <PrintOnlyHints hints={hints} />
-    </div>;
+        </div>}
+        {style === "modal" && <Row className="question-hints mt-2 mb-3 no-print justify-content-xs-center justify-content-lg-start">
+            {hints?.map((hint, index) =>
+                <Col key={index} xs={3} lg={2}>
+                    <Button color="link" size="sm" onClick={async () => {
+                        dispatch(openActiveModal(({
+                            closeAction: () => dispatch(closeActiveModal()),
+                            title: titles[index],
+                            body: <IsaacContent doc={hint} />,
+                            size: "lg",
+                        })));
+                        await logHintView(index);
+                    }}>
+                        {titles[index]}
+                    </Button>
+                </Col>
+            )}
+        </Row>}
+        {printHints && hints?.map((hint, index) => (
+            <div key={index} className={"question-hints ps-0 py-1 only-print"}>
+                <h4>{titles[index]}</h4>
+                <IsaacContent doc={hint}/>
+            </div>
+        ))}
+    </>;
 };
