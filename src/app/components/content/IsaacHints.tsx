@@ -51,7 +51,7 @@ export const IsaacHints = ({hints, questionPartId, style}: HintsProps) => {
     }, [hints]);
 
     return <>
-        {style === "tabbed" && hints && !!hints.length && <div className="tabbet-hints no-print">
+        {style === "tabbed" && hints && !!hints.length && <div className="tabbed-hints no-print">
             <h5 className="text-theme mb-2">Need some help?</h5>
             <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
                 {Object.assign({}, ...hints.map((hint, index) => ({
