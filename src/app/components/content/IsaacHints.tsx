@@ -1,10 +1,9 @@
-import {Col, Row} from "reactstrap";
-import {IsaacHintModal} from "./IsaacHintModal";
+import {Button, Col, Row} from "reactstrap";
 import React, {useContext, useEffect, useState} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {IsaacContent} from "./IsaacContent";
-import {AppState, useAppDispatch, useAppSelector, logAction} from "../../state";
+import {AppState, useAppDispatch, useAppSelector, logAction, openActiveModal, closeActiveModal} from "../../state";
 import {Tabs} from "../elements/Tabs";
 import classNames from "classnames";
 
@@ -23,15 +22,40 @@ interface HintsProps {
     questionPartId: string;
 }
 export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
+    const dispatch = useAppDispatch();
+    const {recordConfidence} = useContext(ConfidenceContext);
+
     return <div>
         <Row className="question-hints mt-2 mb-3 no-print justify-content-xs-center justify-content-lg-start">
             {
                 hints?.map((hint, index) =>
-                    <Col key={index} xs={{size: 3}} lg={{size: 2}}>
-                        <IsaacHintModal questionPartId={questionPartId} hintIndex={index}
+                    <Col key={index} xs={3} lg={2}>
+                        <Button color="link" size="sm" onClick={async () => {
+                            dispatch(openActiveModal(({
+                                closeAction: () => dispatch(closeActiveModal()),
+                                title: hint.title || `Hint ${index + 1}`,
+                                body: <IsaacContent doc={hint} />,
+                                size: "lg",
+                            })));
+                            if (recordConfidence) {
+                                await dispatch(logAction({
+                                    type: "QUESTION_CONFIDENCE_HINT",
+                                    questionPartId,
+                                    hintIndex: index
+                                }));
+                            }
+                            await dispatch(logAction({
+                                type: "VIEW_HINT",
+                                questionPartId,
+                                hintIndex: index
+                            }));
+                        }}>
+                            {hint.title || `Hint ${index + 1}`}
+                        </Button>
+                        {/*<IsaacHintModal questionPartId={questionPartId} hintIndex={index}
                             label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
                             body={hint} scrollable
-                        />
+                        />*/}
                     </Col>
                 )
             }
