@@ -21,18 +21,18 @@ export const IsaacHintModal = (props: HintModalProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const {recordConfidence} = useContext(ConfidenceContext);
 
-    const toggle = () => {
+    const toggle = async () => {
         const isNowOpen = !isOpen;
         setIsOpen(isNowOpen);
         if (isNowOpen) {
             if (recordConfidence) {
-                dispatch(logAction({
+                await dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_HINT",
                     questionPartId,
                     hintIndex
                 }));
             }
-            dispatch(logAction({
+            await dispatch(logAction({
                 type: "VIEW_HINT",
                 questionPartId,
                 hintIndex

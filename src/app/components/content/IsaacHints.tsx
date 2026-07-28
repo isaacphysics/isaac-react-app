@@ -10,14 +10,12 @@ import classNames from "classnames";
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
-    return <React.Fragment>
-        {printHints && hints?.map((hint, index) => (
-            <div key={index} className={"question-hints ps-0 py-1 only-print"}>
-                <h4>{`Hint ${index + 1}`}</h4>
-                <IsaacContent doc={hint}/>
-            </div>
-        ))}
-    </React.Fragment>;
+    return printHints && hints?.map((hint, index) => (
+        <div key={index} className={"question-hints ps-0 py-1 only-print"}>
+            <h4>{`Hint ${index + 1}`}</h4>
+            <IsaacContent doc={hint}/>
+        </div>
+    ));
 };
 
 interface HintsProps {
@@ -46,16 +44,16 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
     const dispatch = useAppDispatch();
     const {recordConfidence} = useContext(ConfidenceContext);
 
-    function logHintView(viewedHintIndex: number) {
+    async function logHintView(viewedHintIndex: number) {
         if (viewedHintIndex > -1) {
             if (recordConfidence) {
-                dispatch(logAction({
+                await dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_HINT",
                     questionPartId,
                     hintIndex: viewedHintIndex
                 }));
             }
-            dispatch(logAction({
+            await dispatch(logAction({
                 type: "VIEW_HINT",
                 questionId: questionPartId,
                 hintIndex: viewedHintIndex
