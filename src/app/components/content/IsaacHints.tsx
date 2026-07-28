@@ -10,9 +10,10 @@ interface HintsProps {
     hints?: ContentDTO[];
     questionPartId: string;
     style: "tabbed" | "modal";
+    includePreamble?: boolean;
 }
 
-export const IsaacHints = ({hints, questionPartId, style}: HintsProps) => {
+export const IsaacHints = ({hints, questionPartId, style, includePreamble}: HintsProps) => {
     const dispatch = useAppDispatch();
     const {recordConfidence} = useContext(ConfidenceContext);
     const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
@@ -50,8 +51,9 @@ export const IsaacHints = ({hints, questionPartId, style}: HintsProps) => {
         }
     }, [hints]);
 
-    return <>
-        {style === "tabbed" && hints && !!hints.length && <div className="tabbed-hints no-print">
+    return hints && !!hints.length && <>
+        {includePreamble && <small className="no-print mb-0">{"Don't forget to use the hints if you need help."}</small>}
+        {style === "tabbed" && <div className="tabbed-hints no-print">
             <h5 className="text-theme mb-2">Need some help?</h5>
             <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
                 {Object.assign({}, ...hints.map((hint, index) => ({
