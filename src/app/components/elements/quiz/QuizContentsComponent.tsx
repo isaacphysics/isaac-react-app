@@ -37,7 +37,6 @@ import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 import { QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps } from "../sidebar/QuizSidebar";
-import { DragAndDropInputModeToggle } from "../PageMetadata";
 
 type PageLinkCreator = (page?: number) => string;
 export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId?: SUBJECTS | TAG_ID }, quizId: string | undefined };
@@ -197,16 +196,13 @@ export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
     }
 }
 
-export function QuizSectionPreamble({attempt, questions}: {attempt: QuizAttemptDTO; questions: QuestionDTO[]}) {
-    const containsClozeOrDragAndDropQuestions = questions.some(q => ["isaacClozeQuestion", "isaacDragAndDropQuestion"].includes(q.type as string));
-
+export function QuizSectionPreamble({attempt}: {attempt: QuizAttemptDTO}) {
     return <Col className="d-flex justify-content-end">
-        {containsClozeOrDragAndDropQuestions && <DragAndDropInputModeToggle/>}
         <QuizRubricButton attempt={attempt}/>
     </Col>;
 }
 
-function QuizSection({attempt, page, studentUser, user, quizAssignmentId, questions}: QuizAttemptProps & {page: number}) {
+function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
     const deviceSize = useDeviceSize();
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
@@ -221,7 +217,7 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId, questi
                 </div>}
 
                 {(isAda || above["lg"](deviceSize)) && <Row className={classNames({"mb-3": isPhy})}>
-                    <QuizSectionPreamble attempt={attempt} questions={questions}/>
+                    <QuizSectionPreamble attempt={attempt}/>
                 </Row>}
 
                 <WithFigureNumbering doc={section}>

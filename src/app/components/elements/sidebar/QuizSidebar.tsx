@@ -107,7 +107,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <Col>
                     <SidebarContents/>
                 </Col>
-                <QuizSectionPreamble attempt={attempt} questions={questions}/>
+                <QuizSectionPreamble attempt={attempt}/>
             </Row> :
             <SidebarContents/>
         }

@@ -9,7 +9,7 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, siteSpecific, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
@@ -18,10 +18,6 @@ import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { selectors, useAppSelector } from '../../state';
 import { BookmarkButton } from './BookmarkButton';
 import { FeatureFlag, FeatureFlagWrapper } from '../../services/featureFlag';
-import { Spacer } from './Spacer';
-import StyledToggle from "../elements/inputs/StyledToggle";
-import { StyledCheckbox } from './inputs/StyledCheckbox';
-import { useDragAndDropAccessibility } from '../../services/accessibility';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -43,25 +39,6 @@ type PageMetadataProps = {
         sidebarInTitle?: never;
     }
 );
-
-export const DragAndDropInputModeToggle = ({className}: {className?: string}) => {
-    const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
-
-    return siteSpecific(<div className={classNames("no-print d-flex flex-column align-items-center w-min-content", className)}>
-        <span>Question input mode</span>
-        <Spacer />
-        <StyledToggle
-            checked={dragAndDropEnabled}
-            falseLabel="Dropdown"
-            trueLabel="Drag and drop"
-            onChange={toggleDragAndDropEnabled}
-        />
-    </div>,
-    <div className={classNames("no-print", className)}>
-        <StyledCheckbox checked={!dragAndDropEnabled} onChange={toggleDragAndDropEnabled} label={<span className="text-muted">Use dropdowns for drag and drop questions</span>} /> 
-    </div>
-    );
-};
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
     location: Location;
@@ -96,18 +73,13 @@ interface TagStackProps extends React.HTMLAttributes<HTMLDivElement> {
 const TagStack = ({doc, className}: TagStackProps) => {
     const isCrossTopic = doc?.tags?.includes("cross_topic");
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
-    const displayDragAndDropToggle = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion) && isAda;
 
     return <div className={className}>
         {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
             {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
             {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
-            {displayDragAndDropToggle && <DragAndDropInputModeToggle className="mt-1 ms-1"/>}
         </div>}
-        <div>
-            <EditContentButton doc={doc}/>
-            {displayDragAndDropToggle && !(isCrossTopic || pageContainsLLMFreeTextQuestion) && <DragAndDropInputModeToggle className="mt-1 ms-1"/>}
-        </div>
+        <EditContentButton doc={doc}/>
     </div>;
 };
 
@@ -144,7 +116,6 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const location = useLocation();
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
-    const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
 
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
@@ -169,11 +140,6 @@ export const PageMetadata = (props: PageMetadataProps) => {
             <div className="d-flex align-items-end">
                 {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
                 {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
-                {isPhy && pageContainsClozeOrDragAndDropQuestion && <>
-                    <Spacer />
-                    <DragAndDropInputModeToggle className="mb-1"/>
-                </>
-                }
             </div>
 
             {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
