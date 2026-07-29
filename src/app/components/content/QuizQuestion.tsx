@@ -58,9 +58,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </div>}
 
             {/* Physics Hints */}
-            {isPhy && <div className={correct ? "mt-7" : ""}>
-                <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="tabbed"/>
-            </div>}
+            {isPhy && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="tabbed"/>}
         </div>
     </div>;
 };

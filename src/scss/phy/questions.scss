@@ -189,7 +189,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     }
   }
 
-  > .tabbed-hints {
+  > .tabbed-hints, .question-component > .tabbed-hints {
     padding: 0 2rem;
   }
 
