@@ -387,7 +387,7 @@ export const useManageQuizAssignments = () => {
     const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
 
     const cancel = (quiz: QuizAssignmentDTO) => confirmThen(
-        `Are you sure you want to cancel "${quiz.quizSummary?.title}"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.`,
+        `Are you sure you want to cancel "${quiz.quizSummary?.title}"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all student attempts at this test will be lost.`,
         () => markQuizAsCancelled(quiz.id as number)
     );
     const openExtendDueDateModal = (quiz: QuizAssignmentDTO) => dispatch(openActiveModal(extendDueDateModal({

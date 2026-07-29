@@ -12,7 +12,7 @@ import classNames from "classnames";
 import { ExternalLink } from "../elements/ExternalLink";
 
 export const TeacherResources = () => {
-    useEffect( () => {document.title = "Teachers — " + SITE_TITLE;}, []);
+    useEffect( () => {document.title = "Teachers – " + SITE_TITLE;}, []);
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredStudentChallengePod = studentChallengesPods?.[0];
 

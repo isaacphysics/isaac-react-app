@@ -6,10 +6,10 @@ import { useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
-import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { StyledTabPicker, StyledTabPickerProps } from "../inputs/StyledTabPicker";
 import { SearchInputWithIcon } from "../SearchInputs";
 
-interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
+type QuizStatusCheckboxProps = Partial<StyledTabPickerProps> & {
     status: QuizStatus;
     statusFilter: QuizStatus[];
     setStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
@@ -19,19 +19,23 @@ interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement>
 const QuizStatusCheckbox = (props: QuizStatusCheckboxProps) => {
     const {status, statusFilter, setStatusFilter, count, ...rest} = props;
     return <StyledTabPicker
+        {...rest}
+        type="checkbox" to={undefined}
         id={status ?? ""} checkboxTitle={status}
-        onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== QuizStatus.All), status]) : setStatusFilter(c => c.filter(s => s !== status))}
+        onChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== QuizStatus.All), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
-        count={count} {...rest}
+        count={count}
     />;
 };
 
-const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) => {
+const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status" | "checkboxTitle">) => {
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<QuizStatus[]>([]);
     return <StyledTabPicker
+        {...rest}
+        type="checkbox" to={undefined}
         id="all" checkboxTitle="All"
-        onInputChange={(e) => {
+        onChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(statusFilter);
                 setStatusFilter([QuizStatus.All]);
@@ -40,7 +44,7 @@ const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) =
             }
         }}
         checked={statusFilter.includes(QuizStatus.All)}
-        count={count} {...rest}
+        count={count}
     />;
 };
 

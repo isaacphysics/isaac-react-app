@@ -477,7 +477,7 @@ export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
 };
 
 export const HUMAN_STAGES: {[key: string]: string} = {
-    "11_14": "11-14",
+    "11_14": "11–14",
     "gcse": "GCSE",
     "a_level": "A\u00A0Level",
     "university": "University",

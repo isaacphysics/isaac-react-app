@@ -22,7 +22,7 @@ export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps)
                         key={programme.id}
                         checkboxTitle={programme.title}
                         checked={false}
-                        onClick={() => {
+                        onChange={() => {
                             if (programme.id) {
                                 void navigate({pathname: location.pathname, hash: `${programme.id.slice(programme.id.indexOf("_") + 1)}`}, {replace: true});
                                 document.getElementById(programme.id.slice(programme.id.indexOf("_") + 1))?.scrollIntoView({behavior: "smooth"});

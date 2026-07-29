@@ -20,16 +20,16 @@ export const formatEventDetailsDate = (event: AugmentedEvent) => {
     if (event.isRecurring) {
         return <span>Series starts <DateString>{event.date}</DateString></span>;
     } else if (event.isMultiDay) {
-        return <><DateString>{event.date}</DateString>{" — "}<DateString>{event.endDate}</DateString></>;
+        return <><DateString>{event.date}</DateString>{" – "}<DateString>{event.endDate}</DateString></>;
     } else {
-        return <><DateString>{event.date}</DateString>{" — "}<DateString formatter={TIME_ONLY}>{event.endDate}</DateString></>;
+        return <><DateString>{event.date}</DateString>{" – "}<DateString formatter={TIME_ONLY}>{event.endDate}</DateString></>;
     }
 };
 
 export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) => {
     if (event.isRecurring) {
         return <span>Series starts <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString><br />
-            <DateString formatter={TIME_ONLY}>{event.date}</DateString> — <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
+            <DateString formatter={TIME_ONLY}>{event.date}</DateString> – <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
         </span>;
     } else if (event.isMultiDay) {
         return <>
@@ -39,7 +39,7 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
     } else {
         return <>
             <DateString formatter={FRIENDLY_DATE}>{event.endDate}</DateString>{podView ? " " : <br />}
-            <DateString formatter={TIME_ONLY}>{event.date}</DateString> — <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
+            <DateString formatter={TIME_ONLY}>{event.date}</DateString> – <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
         </>;
     }
 };
@@ -48,7 +48,7 @@ export const formatEventCardDateSlim = (event: AugmentedEvent) => {
     // no recurring events – these have moved to programs
     if (event.isMultiDay) {
         return <>
-            <DateString formatter={SHORT_FRIENDLY_DATE}>{event.date}</DateString> — <DateString formatter={SHORT_FRIENDLY_DATE}>{event.endDate}</DateString>
+            <DateString formatter={SHORT_FRIENDLY_DATE}>{event.date}</DateString> – <DateString formatter={SHORT_FRIENDLY_DATE}>{event.endDate}</DateString>
         </>;
     } else {
         return <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString>;

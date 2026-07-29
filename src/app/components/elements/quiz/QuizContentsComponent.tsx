@@ -8,7 +8,7 @@ import {
     RegisteredUserDTO,
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
-import React from "react";
+import React, { ReactNode } from "react";
 import {
     above,
     below,
@@ -60,6 +60,7 @@ export type QuizProps = {
     quizAssignmentId?: string;
     preview?: boolean;
     page?: number;
+    children?: ReactNode
 } & (FullQuizInfo | QuizSummaryInfo);
 
 const isFullQuizProps = (props: QuizProps): props is QuizProps & FullQuizInfo => {
@@ -152,7 +153,7 @@ function QuizHeader(quizProps: QuizProps) {
             {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && !isDefined(attempt.completedDate) && <Alert color={siteSpecific("info", "warning")}>
                 {siteSpecific(<>
                     Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
-                    you submit your test</b> so that they can provide further feedback and support if they wish to do so.
+                        you submit your test</b> so that they can provide further feedback and support if they wish to do so.
                     <br />
                     Assignments are different. We do not share with your teachers any of your entered answers or the
                     number of your attempts to questions in assignments.
@@ -367,6 +368,7 @@ export function QuizContentsComponent(props: QuizProps) {
                 {!isDefined(props.page)
                     ? <QuizOverview {...props} viewingAsSomeoneElse={viewingAsSomeoneElse} />
                     : <QuizQuestions {...props as QuizProps & FullQuizInfo} page={props.page} /> }
+                {props.children}
             </MainContent>
         </SidebarLayout>
     </>;

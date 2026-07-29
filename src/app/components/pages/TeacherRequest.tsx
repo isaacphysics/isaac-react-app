@@ -225,7 +225,7 @@ export const TeacherRequest = () => {
                                     {!emailVerified &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-start">Your email address is not verified —
+                                            <small className="text-danger text-start">Your email address is not verified –
                                                 please click on the link in the verification email to confirm your
                                                 email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a
                                                     new verification email</Button> if necessary.
@@ -237,7 +237,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col>
                                             <small className="text-danger text-start">
-                                                You have not provided your school — please add your school on your{" "}
+                                                You have not provided your school – please add your school on your{" "}
                                                 <Link to="/account">My Account</Link> page.
                                                 If you are a private tutor or parent, you can{" "}
                                                 <Link to="/tutor_account_request">request an {SITE_TITLE} Tutor account</Link>.
@@ -249,7 +249,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col>
                                             <small className="text-danger text-start">You have not used your school
-                                            email address — please change your email address on your <Link to="/account">My Account</Link> page.
+                                            email address – please change your email address on your <Link to="/account">My Account</Link> page.
                                             </small>
                                         </Col>
                                     </Row>

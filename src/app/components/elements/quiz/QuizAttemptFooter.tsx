@@ -11,7 +11,6 @@ import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
 import {confirmThen, isDefined, siteSpecific} from "../../../services";
-import {QuizSidebarLayout} from "./QuizSidebarLayout";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -87,8 +86,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
         controls = <QuizPagination {...props} page={page} finalLabel="Finish"/>;
     }
 
-    // Empty sidebar to match layout of quiz attempt component
-    return <QuizSidebarLayout>
+    return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
         {controls}
-    </QuizSidebarLayout>;
+    </div>;
 }
