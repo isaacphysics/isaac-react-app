@@ -345,8 +345,7 @@ export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
         totalSections: Object.keys(sections).length,
         currentSection: props.page ? props.page : undefined,
         sectionStates: Object.values(sections).map(section => sectionState(section)),
-        sectionTitles: Object.keys(sections).map(k => sections[k].title || "Section " + k),
-        questions
+        sectionTitles: Object.keys(sections).map(k => sections[k].title || "Section " + k)
     }, attempt ? {attempt} : {view});
 
     return <>

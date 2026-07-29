@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Row, Col } from "reactstrap";
-import { QuestionDTO, QuizAttemptDTO } from "../../../../IsaacApiTypes";
+import { QuizAttemptDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar } from "../layout/SidebarLayout";
@@ -15,7 +15,6 @@ interface QuizSidebarProps {
     currentSection?: number;
     sectionStates: SectionProgress[];
     sectionTitles: string[];
-    questions: QuestionDTO[];
 }
 
 export interface QuizSidebarAttemptProps extends QuizSidebarProps {
@@ -29,7 +28,7 @@ export interface QuizSidebarViewProps extends QuizSidebarProps {
 }
 
 export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
-    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles, questions } = props;
+    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles } = props;
     const deviceSize = useDeviceSize();
     const navigate = useNavigate();
     const location = useLocation();
