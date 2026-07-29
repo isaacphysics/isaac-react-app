@@ -103,7 +103,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                             intermediateCrumbs={navigation.breadcrumbHistory}
                             collectionType={navigation.collectionType}
                             audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
-                            preview={preview} icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-question"}}
+                            preview={preview} icon={{type: "icon", icon: "icon-question"}}
                         />
                     }
                     sidebar={siteSpecific(

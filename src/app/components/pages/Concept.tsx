@@ -75,7 +75,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
         thenRender={supertypedDoc => {
             const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
             return <GameboardContext.Provider value={navigation.currentGameboard}>
-                <PageContainer data-bs-theme={doc.subjectId ?? pageContext?.subject}
+                <PageContainer data-bs-theme={pageContext?.subject ?? doc.subjectId}
                     pageTitle={<>
                         <TitleAndBreadcrumb
                             intermediateCrumbs={navigation.breadcrumbHistory}
@@ -84,7 +84,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                             collectionType={navigation.collectionType}
                             subTitle={doc.subtitle}
                             preview={preview}
-                            icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-concept"}}
+                            icon={{type: "icon", icon: "icon-concept"}}
                         />
                         {!preview && <>
                             <MetaDescription description={doc.summary} />
