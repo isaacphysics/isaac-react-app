@@ -13,7 +13,6 @@ import {
     isPhy,
     isStudent,
     siteSpecific,
-    Subject,
     useNavigation,
     isDefined,
     showWildcard} from "../../services";
