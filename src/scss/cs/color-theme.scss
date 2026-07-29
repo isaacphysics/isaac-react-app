@@ -4,6 +4,9 @@
 // - copy any required theming from phy/isaac.scss
 // - ensure all variables are named equivalently across the two files
 
+$color-bookmark-saved: #4487fa;
+$color-bookmark-unsaved: $gray-110;
+
 :root {
     --tab-active: #{$dark-pink-300};
     --tab-hover: #{$cs-light-gray};
@@ -22,4 +25,6 @@
     --subject-color-700: #{$dark-pink-200};
     --subject-color-800: #{$dark-pink-200};
     --subject-color-900: #{$dark-pink-100};
+
+    --bs-btn-disabled-border-color: transparent;
 }

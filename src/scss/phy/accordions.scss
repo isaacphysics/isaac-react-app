@@ -58,6 +58,10 @@
     &.de-emphasised {
       .accordion-title {
         color: var(--color-neutral-800);
+
+        > span.inline-stage-label {
+          color: var(--color-neutral-500);
+        }
       }
     }
   

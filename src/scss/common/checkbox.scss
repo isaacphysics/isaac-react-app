@@ -50,8 +50,8 @@
 
       &.hover-override + div input[type="checkbox"]:not(:checked) {
         &:hover {
-          background: #f8f8f8;
-          border-color: #666;
+          background: var(--color-neutral-100);
+          border-color: var(--color-neutral-600);
         }
       }
     }

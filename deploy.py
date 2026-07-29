@@ -173,7 +173,7 @@ def run_db_migrations(ctx):
     print("# Print migration SQL to terminal (to copy)?")
     ask_to_run_command(f"cd /local/src/isaac-api && git diff --name-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations | xargs cat")
     print("# If there are any DB migrations, run them (in a transaction with a BEGIN; ROLLBACK; or COMMIT;). The following should be run in a separate terminal:")
-    print(f"docker exec -it {ctx['subject']}-pg-{ctx['env']} psql -U rutherford")
+    print(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
 
 
 def write_changelog():
@@ -222,14 +222,14 @@ def volume_exists(ctx):
     print("\n# Determining whether necessary containers exist\nMay return exit code 1.")
 
     volume_grep = ask_to_run_command(
-        "docker volume list | " + f"grep {ctx['subject']}-pg-{ctx['env']}",
+        "docker volume list | " + f"grep {ctx['site']}-pg-{ctx['env']}",
         expected_nonzero_exit_codes=[1],
         run_anyway=True
     )
     volume_exists = volume_grep != ""
 
     if not volume_exists:
-        print(f"\n# Could not find necessary volume {ctx['subject']}-pg-{ctx['env']}.")
+        print(f"\n# Could not find necessary volume {ctx['site']}-pg-{ctx['env']}.")
         print(f"Create this volume if you want to deploy {ctx['env']}.")
 
     return volume_exists

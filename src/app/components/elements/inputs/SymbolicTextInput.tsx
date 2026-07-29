@@ -4,11 +4,11 @@ import { FormulaDTO, LogicFormulaDTO, ChemicalFormulaDTO } from "../../../../Isa
 import { EditorMode } from "../modals/inequality/constants";
 import { parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError } from "inequality-grammar";
 import { ValidatedChoice } from "../../../../IsaacAppTypes";
-import { sanitiseInequalityState } from "../../../services/questions";
 import { isPhy, siteSpecific } from "../../../services";
 import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
 import QuestionInputValidation from "./QuestionInputValidation";
 import classNames from "classnames";
+import { sanitiseInequalityState } from "../../../services/inequalityUtils";
 
 interface ModeConstantTypes {
     badInputCharacters: RegExp;
@@ -132,7 +132,8 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
         }
     }
 
-    if (["chemistry", "nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) {
+    const decimalsOutsideCompound = input.match(/(?<![A-Za-z])\d+\.\d+\s*([A-Z]|$)|[A-Za-z]\d+\.\d+\s*$/);
+    if ((["nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) || (editorMode === "chemistry" && decimalsOutsideCompound)) {
         errors.push('Please convert decimal numbers to fractions.');
     }
     if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {

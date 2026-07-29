@@ -5,6 +5,7 @@ import { CompletableTask } from "../CompletableTask";
 import { ProgressBar } from "../views/ProgressBar";
 import { useAdaGetStartedTasks } from "../../../services/adaOnboardingTasks";
 import { useLinkableSetting } from "../../../services/linkableSetting";
+import { Link } from "react-router-dom";
 
 export const GetStartedWithAda = () => {
     const [getStartedOpen, setGetStartedOpen] = useState(false);
@@ -65,7 +66,11 @@ export const GetStartedWithAda = () => {
                             {/* <CompletableTask tag={"li"} complete={tasks.viewMarkbook} disabled={!tasks.assignQuiz}>
                                 <strong>View your markbook</strong>
                             </CompletableTask> */}
-                        </ul>  
+                        </ul>
+
+                        <div className="text-md-end">
+                            Prefer a video overview? Try our <strong><Link to="https://www.youtube.com/playlist?list=PLxyaWvsfmq49mjnh8LQeztQSZAcrvB6bk" target="_blank">YouTube playlist</Link></strong>!
+                        </div>
                     </>}
                 />
             </AccordionBody>

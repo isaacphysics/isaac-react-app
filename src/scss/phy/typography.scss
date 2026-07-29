@@ -36,10 +36,9 @@ hr {
 }
 
 pre {
-  background: white;
+  background: var(--color-neutral-white);
   padding: 1rem;
   font-weight: 400;
-  border: solid 1px #00000021;
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.875rem;
 
@@ -55,7 +54,7 @@ code {
   display: inline-block;
   color: unset;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.08);
-  background: white;
+  background: var(--color-neutral-white);
   margin: 0 -0.05rem;
   padding: 0 0.05rem;
 }
@@ -66,31 +65,8 @@ code {
 
 ul {
   list-style-position: outside;
+  // overridden for content lists to allow subject colour-coding –– see color-theme.scss
   list-style-image: url('/assets/phy/icons/hexagon-bullet.svg');
-}
-
-.content-value {
-  ul:not(.list-unstyled) {
-    list-style-type: none;
-    list-style-image: none;
-    > li {
-      position: relative;
-      &::before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0.6rem;
-        left: -1.2rem;
-
-        width: 8px;
-        height: 8px;
-
-        mask: url("/assets/phy/icons/redesign/hexagon.svg") center center no-repeat;
-        mask-size: 90%;
-        background-color: var(--subject-color-500);
-      }
-    }
-  }
 }
 
 .validation-response-panel.correct .content-value ul li::before {

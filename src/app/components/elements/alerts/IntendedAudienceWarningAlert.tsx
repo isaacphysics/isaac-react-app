@@ -1,0 +1,32 @@
+import React from "react";
+import {ContentBaseDTO} from "../../../../IsaacApiTypes";
+import {examBoardLabelMap, isAda, isIntendedAudience, isLoggedIn, stageLabelMap, useUserViewingContext} from "../../../services";
+import {selectors, useAppSelector} from "../../../state";
+import {RenderNothing} from "../RenderNothing";
+import { Link } from "react-router-dom";
+import { Alert } from "reactstrap";
+
+export function IntendedAudienceWarningAlert({doc}: {doc: ContentBaseDTO}) {
+    const user = useAppSelector(selectors.user.orNull);
+    const userContext = useUserViewingContext();
+
+    // If this page is intended for this user's context no need to show a warning banner
+    if (isIntendedAudience(doc.audience, userContext, user)) {
+        return RenderNothing;
+    }
+
+    return <Alert color="warning" className={"no-print"}>
+        {userContext.contexts.length === 1 && userContext.contexts[0].examBoard && userContext.contexts[0].stage ?
+            `There is no content on this page for ${examBoardLabelMap[userContext.contexts[0].examBoard]} ${stageLabelMap[userContext.contexts[0].stage]}. ` :
+            `There is no content on this page for your stage ${isAda && "and exam board"} preferences. `
+        }
+        { isLoggedIn(user) &&
+            <>
+                You can change your preferences <strong>by updating your profile <Link to="/account">here</Link>.</strong>
+            </>
+        }
+        <br/><br/>
+        {"If you think that the page is incorrectly tagged, please "}
+        <strong><Link to={`/contact?preset=contentProblem&page=${doc.id}`}>contact us</Link></strong>.
+    </Alert>;
+}

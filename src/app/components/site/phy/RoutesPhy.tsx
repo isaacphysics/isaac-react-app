@@ -3,7 +3,6 @@ import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} f
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {Concepts} from "../../pages/Concepts";
-import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
 import {QuizTeacherFeedback} from "../../pages/quizzes/QuizTeacherFeedback";
@@ -23,7 +22,7 @@ import {RegistrationSetDetails} from "../../pages/RegistrationSetDetails";
 import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
-import {PracticeQuizzes} from "../../pages/quizzes/PracticeQuizzes";
+import {ViewQuizzes} from "../../pages/quizzes/ViewQuizzes";
 import {SubjectLandingPage} from "../../pages/SubjectLandingPage";
 import {QuestionFinder} from "../../pages/QuestionFinder";
 import {QuestionDecks} from "../../pages/QuestionDecks";
@@ -46,8 +45,7 @@ import { Navigate, Route } from "react-router";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { MyBookmarks } from "../../pages/MyBookmarks";
-import { FeatureFlag, FeatureFlagWrapper } from "../../../services/featureFlag";
-import { NotFound } from "../../pages/NotFound";
+import { ManageAssignments } from "../../pages/ManageAssignments";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -58,7 +56,7 @@ const subjectStagePairPages : Record<string, React.ComponentType<any>> = {
     "": SubjectLandingPage,
     "/questions": QuestionFinder,
     "/concepts": Concepts,
-    "/practice_tests": PracticeQuizzes,
+    "/view_tests": ViewQuizzes,
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
@@ -87,22 +85,24 @@ export const RoutesPhy = [
 
     // Assignments
     <Route key={key++} path="/assignment_schedule" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentSchedule user={authUser} />} />} />,
+    <Route key={key++} path="/assigned" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <ManageAssignments user={authUser} />} />} />,
 
     // Teacher test pages
-    <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
-    <Route key={key++} path="/set_quizzes" element={<Navigate to="/set_tests" replace />} />,
+    <Route key={key++} path="/set_tests" element={<Navigate to="/view_tests" replace />} />,
+    <Route key={key++} path="/set_quizzes" element={<Navigate to="/view_tests" replace />} />,
     // Student test pages
     <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,
     <Route key={key++} path="/quizzes" element={<Navigate to="/tests" replace />} />,
-    <Route key={key++} path="/practice_tests" element={<PracticeQuizzes />} />,
+    <Route key={key++} path="/practice_tests" element={<Navigate to="/view_tests" replace />} />,
+    <Route key={key++} path="/view_tests" element={<ViewQuizzes />} />,
 
     // Quiz (test) pages
     <Route key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
     <Route key={key++} path="/test/assignment/:quizAssignmentId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
     <Route key={key++} path="/test/attempt/:quizAttemptId/feedback" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
     <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/page/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
     <Route key={key++} path="/test/assignment/:quizAssignmentId/feedback" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizTeacherFeedback user={authUser} />} />} />,
     // Tutors can preview tests iff the test is student only
     <Route key={key++} path="/test/preview/:quizId" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
@@ -114,9 +114,9 @@ export const RoutesPhy = [
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId/feedback" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId/feedback" replace />} />,
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId/page/:page" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId/page/:page" replace />} />,
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId" element={<NavigateWithSlug to="/test/assignment/:quizAssignmentId" replace />} />,
-    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId/page/:page" replace />} />,
     <Route key={key++} path="/quiz/attempt/feedback/:quizAssignmentId/:studentId" element={<NavigateWithSlug to="/test/attempt/feedback/:quizAssignmentId/:studentId" replace />} />,
-    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback/:page" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback/:page" replace />} />,
+    <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback/:page" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback/page/:page" replace />} />,
     <Route key={key++} path="/quiz/attempt/:quizAttemptId/feedback" element={<NavigateWithSlug to="/test/attempt/:quizAttemptId/feedback" replace />} />,
     <Route key={key++} path="/quiz/preview/:quizId/page/:page" element={<NavigateWithSlug to="/test/preview/:quizId/page/:page" replace />} />,
     <Route key={key++} path="/quiz/preview/:quizId" element={<NavigateWithSlug to="/test/preview/:quizId" replace />} />,
@@ -163,14 +163,10 @@ export const RoutesPhy = [
     <Route key={key++} path="/concepts" element={<Concepts />} />,
 
     // Bookmarks
-    <Route key={key++} path="/bookmarks" element={<FeatureFlagWrapper flag={FeatureFlag.ENABLE_SCI_BOOKMARKS}
-        onSet={<RequireAuth auth={isLoggedIn} element={<MyBookmarks />} />}
-        onUnset={<NotFound />}
-    />} />,
+    <Route key={key++} path="/bookmarks" element={<RequireAuth auth={isLoggedIn} element={<MyBookmarks />} />} />,
 
     // Static pages
     <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us_index"} />} />,
-    <Route key={key++} path="/apply_uni" element={<Generic pageIdOverride={"apply_uni"} />} />,
     <Route key={key++} path="/publications" element={<Generic pageIdOverride={"publications"} />} />,
     <Route key={key++} path="/books" element={<Generic pageIdOverride={"books_overview"} />} />,
     <Route key={key++} path="/solving_problems" element={<Generic pageIdOverride={"solving_problems"} />} />,
@@ -179,13 +175,10 @@ export const RoutesPhy = [
     <Route key={key++} path="/bios" element={<Generic pageIdOverride={"bios"} />} />,
     <Route key={key++} path="/why_physics" element={<Generic pageIdOverride={"why_physics"} />} />,
     <Route key={key++} path="/fast_track_14" element={<Generic pageIdOverride={"fast_track_14_index"} />} />,
-    <Route key={key++} path="/prize_draws" element={<Generic pageIdOverride={"prize_draws"} />} />,
     <Route key={key++} path="/spc" element={<Generic pageIdOverride={"spc"} />} />,
     <Route key={key++} path="/pre_made_gameboards" element={<Generic pageIdOverride={"pre_made_gameboards"} />} />,
-    <Route key={key++} path="/chemistry" element={<Generic pageIdOverride={"chemistry_landing_page"} />} />,
     <Route key={key++} path="/survey" element={<Generic pageIdOverride={"survey"} />} />,
     <Route key={key++} path="/book/question" element={<Generic pageIdOverride={"book_question"} />} />,
-    <Route key={key++} path="/exam_uni_help" element={<Generic pageIdOverride={"exam_uni_help"} />} />,
     <Route key={key++} path="/coronavirus" element={<Generic pageIdOverride={"2020_03_coronavirus"} />} />,
     <Route key={key++} path="/gameboards/new" element={<Generic pageIdOverride={"question_finder_redirect"} />} />,
     <Route key={key++} path="/teacher_features" element={<TeacherFeatures />}/>,
@@ -202,7 +195,8 @@ export const RoutesPhy = [
     <Route key={key++} path="/my_gameboards" element={<Navigate to={PATHS.MY_GAMEBOARDS} replace />} />,
     <Route key={key++} path="/game_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
     <Route key={key++} path="/gameboard_builder" element={<Navigate to={PATHS.GAMEBOARD_BUILDER} replace />} />,
-    <Route key={key++} path="/add_gameboard/:id" element={<NavigateWithSlug to={`${PATHS.ADD_GAMEBOARD}/:id`} replace />} />,
+    <Route key={key++} path="/add_gameboard/:id" element={<NavigateWithSlug to={`${PATHS.GAMEBOARD}?set=1#:id`} replace />} />,
+    <Route key={key++} path={`${PATHS.ADD_GAMEBOARD}/:id`} element={<NavigateWithSlug to={`${PATHS.GAMEBOARD}?set=1#:id`} replace />} />,
     <Route key={key++} path="/board/:id" element={<NavigateWithSlug to={`${PATHS.GAMEBOARD}#:id`} replace />} />,
     <Route key={key++} path="/gameboards" element={<Navigate to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} replace />} />,
     <Route key={key++} path="/gcsebook" element={<Navigate to="/books/phys_book_gcse" replace />} />,

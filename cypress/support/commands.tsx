@@ -37,6 +37,7 @@
 // }
 
 import {mount, MountOptions} from 'cypress/react';
+import { RegisteredUserDTO } from '../../src/IsaacApiTypes';
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -46,7 +47,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
         interface Chainable {
-            mountWithStoreAndRouter(component: ReactNode, routes: string[], initialRoute?: To, mountOptions?: MountOptions): Chainable<Element>;
+            mountWithStoreAndRouter(component: ReactNode, routes: string[], initialRoute?: To, user?: RegisteredUserDTO, mountOptions?: MountOptions): Chainable<Element>;
 
             openSidebar(): Chainable<JQuery<HTMLElement>>;
             closeSidebar(): Chainable<JQuery<HTMLElement>>;
@@ -60,14 +61,19 @@ import {Provider} from "react-redux";
 import {store} from "../../src/app/state";
 import {createBrowserRouter, createRoutesFromElements, Route, To} from "react-router";
 import { RouterProvider } from 'react-router-dom';
+import { ACTION_TYPE } from '../../src/app/services';
 
-Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], mountOptions) => {
+Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], user, mountOptions) => {
     const router = createBrowserRouter(createRoutesFromElements(<>
         {routes?.length
             ? routes.map(route => <Route key={route} element={component} path={route} />)
             : <Route path="*" element={component} />
         }
     </>));
+
+    if (user) {
+        void store.dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user});
+    }
 
     void router.navigate(initialRoute || '/');
     

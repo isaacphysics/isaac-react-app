@@ -16,7 +16,7 @@ export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {r
     await waitForLoaded();
 };
 
-export const sideBarTestCases = (init: () => Promise<void>) => () => {
+export const quizSidebarCommonTests = (init: () => Promise<void>) => () => {
     it('shows subject on sidebar', async () => {
         await init();
         expect(subject()).toHaveTextContent('Physics');
@@ -34,13 +34,11 @@ export const expectActionMessage = expectTextInElementWithId('quiz-action');
 
 export const expectRubric = expectTextInElementWithId('quiz-rubric');
 
-export const setTestButton = () => screen.queryByRole('button', {name: "Set test"});
+export const setTestButtonLocator = () => screen.queryByRole('button', {name: "Set test"});
 
-export const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
+export const previewTestButtonLocator = () => screen.queryByRole('link', {name: "Preview"});
 
-export const previewButton = () => screen.queryByRole('link', {name: "Preview"});
-
-export const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test section(s)"});
+export const testSectionsHeaderLocator = () => screen.queryByRole('heading', {name: "Test section(s)"});
 
 export const expectPhyBreadCrumbs = ({href, text}: {href: string, text: string}) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
@@ -70,7 +68,7 @@ const topic = () => within(
 
 const sidebarToggle = () => screen.getByTestId('sidebar-toggle');
 
-export const expectSidebarToggle = async (text: string) => {
+export const expectMobileSidebarToggleToHaveText = async (text: string) => {
     await withSizedWindow(400, 400, () => {
         expect(sidebarToggle()).toHaveTextContent(text);
     });

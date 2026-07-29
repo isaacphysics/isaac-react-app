@@ -1,6 +1,7 @@
 // TODO: move to slices when API exists
 
-import { useBookmarkItemMutation, useDeleteBookmarkMutation, useGetBookmarksQuery } from "../state";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { selectors, useAppSelector, useBookmarkItemMutation, useDeleteBookmarkMutation, useGetBookmarksQuery } from "../state";
 
 // TODO 
 // - add these endpoints in the backend (see bookmarksApi.ts)
@@ -11,7 +12,9 @@ export const useBookmarks = () => {
     const [bookmarkItemMutation] = useBookmarkItemMutation();
     const [deleteBookmarkMutation] = useDeleteBookmarkMutation();
 
-    const {data: bookmarks = []} = useGetBookmarksQuery();
+    const user = useAppSelector(selectors.user.loggedInOrNull);
+
+    const {data: bookmarks = []} = useGetBookmarksQuery(user ? undefined : skipToken);
 
     const bookmarkIds = bookmarks.flatMap((bookmark) => bookmark.id ?? []);
 

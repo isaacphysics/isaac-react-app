@@ -2,7 +2,7 @@
 
 .label-radio:hover {
     input:not(:checked) {
-      background: $gray-103;
+      background: var(--color-neutral-100);
       cursor: pointer;
     }
   }
@@ -63,7 +63,7 @@
     }
     
     &:hover:not(:disabled)::after {
-        background-color: #f8f8f8;
+        background-color: var(--color-neutral-100);
     }
 }
   
@@ -76,7 +76,7 @@
 
     background: var(--color-neutral-white);
     &:hover:not(:disabled) {
-        background: #f8f8f8;
+        background: var(--color-neutral-100);
     }
 
     &::after {
@@ -93,7 +93,7 @@
 
     background: var(--color-neutral-white);
     &:hover:not(:disabled) {
-        background: #f8f8f8;
+        background: var(--color-neutral-100)
     }
 
     &::after {

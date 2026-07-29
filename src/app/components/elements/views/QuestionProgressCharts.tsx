@@ -32,7 +32,7 @@ interface QuestionProgressChartsProps {
 export type FlushableRef = MutableRefObject<(() => void) | undefined>;
 
 const OPTIONS = {
-    size: { width: 240, height: 330 }
+    size: { width: 240, height: 330 },
 };
 
 const colourPicker = (names: string[]): { [key: string]: string } => {

@@ -9,10 +9,15 @@ import { useLocation } from "react-router";
 import { scrollVerticallyIntoView } from "../../services";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
-
+    
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
     const hasExtension = page.extensionGameboards && page.extensionGameboards.length > 0;
+
+    const bookPageUrlParam = (() => {
+        const [,, bookId, sectionId] = window.location.pathname.split("/");
+        return `?book=${encodeURIComponent(bookId)}&section=${encodeURIComponent(sectionId)}`;
+    })();
 
     const { hash } = useLocation();
 
@@ -50,6 +55,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                 <ListView
                     type="gameboard"
                     items={convertToALVIGameboards(page.gameboards as GameboardDTO[])}
+                    linkedBookSection={bookPageUrlParam}
                 />
             </div>
         </>}
@@ -61,6 +67,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                     <ListView
                         type="item"
                         items={page.relatedContent}
+                        linkedBookSection={bookPageUrlParam}
                     />
                 </div>
             </>}

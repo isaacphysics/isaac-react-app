@@ -123,10 +123,14 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                         <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
-                    <div className={classNames("d-flex item-list-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
-                        {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
-                        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-7">View more books</Button>}
-                    </div>
+                    <Col className={classNames("item-list-container", {"flex-column": !fullWidthBooks})}>
+                        <Row className={classNames("mx-0", {"row-cols-1 row-cols-md-2": fullWidthBooks})}>
+                            {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
+                        </Row>
+                        <Row className="px-7 mx-0">
+                            {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">View more books</Button>}
+                        </Row>
+                    </Col>
                 </>
                 : <>
                     <div className="d-flex flex-column">
@@ -150,7 +154,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             </div>
             <Row className="h-100 item-list-container">
                 {relevantEvents.map((event, i) =>
-                    <Col xs={12} key={i} className={classNames({"mb-3": ['xs', 'md'].includes(deviceSize)})}>
+                    <Col xs={12} key={i} className={classNames("mt-1", {"mb-3": ['xs', 'md'].includes(deviceSize)})}>
                         {event && <EventCard event={event} layout={"landing-page"} className={classNames({"force-horizontal": !['xs', 'md'].includes(deviceSize)})} />}
                     </Col>
                 )}

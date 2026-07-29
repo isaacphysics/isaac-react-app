@@ -1,25 +1,28 @@
 import React, {useCallback, useMemo} from "react";
-import {useGetQuizPreviewQuery} from "../../../state";
+import {openActiveModal, useAppDispatch, useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {getThemeFromTags, isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
-import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizContentsComponent";
-import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {getThemeFromTags, isDefined, isTeacherOrAbove, tags, useQuizQuestions, useQuizSections} from "../../../services";
+import {FullQuizInfo, myQuizzesCrumbs, QuizContentsComponent, QuizPagination, QuizProps} from "../../elements/quiz/QuizContentsComponent";
+import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
-import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 
-const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
-    <QuizSidebarLayout>
-        {isDefined(page)
-            ? <QuizPagination {...rest} page={page} pageLink={pageLink} finalLabel="Back to Contents" />
-            : <>
-                <Spacer/>
-                <Button color="secondary" tag={Link} to={pageLink(1)}>{"View questions"}</Button>
-            </>}
-    </QuizSidebarLayout>;
+const QuizFooter = (props: QuizProps & FullQuizInfo) => {
+    const {user, page, quiz, quizContents: {pageLink}} = props;
+    const dispatch = useAppDispatch();
+    return isDefined(page)
+        ? <QuizPagination {...props} finalLabel="Back to Contents" />
+        : <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
+            {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
+            <Spacer/>
+            <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{"Attempt quiz yourself"}</Button>
+            <Button color="solid" tag={Link} to={pageLink(1)}>{"Preview questions"}</Button>
+        </div>;
+};
 
 const pageHelp = <span>
     Preview the questions on this test.
@@ -33,7 +36,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
     const quizPreviewQuery = useGetQuizPreviewQuery(isDefined(quizId) ? quizId : skipToken);
     const {data: quiz} = quizPreviewQuery;
 
-    const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
+    const pageNumber = isDefined(page) ? parseInt(page, 10) : undefined;
 
     const attempt = useMemo(() =>
         quiz
@@ -51,12 +54,24 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
         `/test/preview/${quizId}` + (isDefined(page) ? `/page/${page}` : "")
     , [quizId]);
 
-    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
+    const subProps: QuizProps = {
+        user,
+        pageHelp,
+        page: pageNumber,
+        quiz: attempt?.quiz as IsaacQuizDTO,
+        quizContents: {
+            questions, 
+            sections,
+            pageLink,
+        },
+        attempt: attempt as QuizAttemptDTO,
+    };
 
     return <Container data-testid="quiz-preview" className="mb-7" data-bs-theme={getThemeFromTags(quiz?.tags)}>
         <ShowLoadingQuery query={quizPreviewQuery} ifError={Error}>
-            <QuizContentsComponent preview {...subProps} />
-            <QuizFooter {...subProps} />
+            <QuizContentsComponent preview {...subProps}>
+                <QuizFooter {...subProps} />
+            </QuizContentsComponent>
         </ShowLoadingQuery>
     </Container>;
 };

@@ -407,6 +407,10 @@ export interface AnvilAppDTO extends ContentDTO {
     appAccessKey?: string;
 }
 
+export interface SkillsAppDTO extends ContentDTO {
+    anvilApp?: AnvilAppDTO
+}
+
 export interface ChemicalFormulaDTO extends ChoiceDTO {
     mhchemExpression?: string;
 }
@@ -543,6 +547,7 @@ export interface MediaDTO extends ContentDTO {
 
 export interface DesmosEmbeddingDTO extends MediaDTO {
     calculatorId?: string;
+    calculatorType?: string;
 }
 
 export interface GeogebraEmbeddingDTO extends MediaDTO {
@@ -864,6 +869,9 @@ export interface AnsweredQuestionsByDate {
     [date: string]: number;
 }
 
+export interface SkillAttemptsByDate {
+    'mental_maths_overall': AnsweredQuestionsByDate
+}
 export interface TOTPSharedSecretDTO {
     userId: number;
     sharedSecret: string;
@@ -877,6 +885,11 @@ export interface MisuseStatisticDTO {
     isOverSoftThreshold: boolean;
     lastEventTimestamp?: number;
     currentCounter: number;
+}
+
+export interface AnvilMarkingRequestDTO {
+    payload: string;
+    hmac: string;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";

@@ -1,5 +1,7 @@
 import React from "react";
 import {logAction, useAppDispatch} from "../../state";
+import { siteSpecific } from "../../services";
+import classNames from "classnames";
 
 interface ReportAccordionButtonProps {
     pageId?: string,
@@ -35,16 +37,20 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
             accordionTitle: sectionTitle,
             accordionIndex: sectionIndex
         };
-        dispatch(logAction(eventDetails));
+        void dispatch(logAction(eventDetails));
     }
 
-    return <button
-        className="accordion-icon accordion-icon-report btn-action"
-        aria-label="Report a problem (opens in new tab)"
-        title="Report a problem (opens in new tab)"
-        onClick={() => {
-            logAccordionReport();
-            window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
-        }}
-    />;
+    return <div className="d-flex w-100 justify-content-end mb-4 px-4">
+        <button
+            className="btn-action bg-transparent btn-blank p-0 wf-2 hf-2 vertical-center"
+            aria-label="Report a problem (opens in new tab)"
+            title="Report a problem (opens in new tab)"
+            onClick={() => {
+                logAccordionReport();
+                window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
+            }}
+        >
+            <i className={classNames("icon icon-flag", siteSpecific("icon-color-grey", "icon-color-muted icon-sm"))} />
+        </button>
+    </div>;
 };

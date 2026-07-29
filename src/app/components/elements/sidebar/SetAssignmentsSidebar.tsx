@@ -5,6 +5,7 @@ import { AssignmentBoardOrder } from "../../../../IsaacAppTypes";
 import { BoardViews, BoardLimit, BoardSubjects, BoardCreators, useDeviceSize, above, getSearchPlaceholder, BOARD_ORDER_NAMES } from "../../../services";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Spacer } from "../Spacer";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface SetAssignmentsSidebarProps extends ContentSidebarProps {
     displayMode: BoardViews;
@@ -31,8 +32,8 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
             <h5>Search question decks</h5>
-            <Input
-                className='search--filter-input my-3'
+            <SearchInputWithIcon
+                outerClassName="my-3"
                 type="search" value={boardTitleFilter || ""}
                 placeholder={`e.g. ${getSearchPlaceholder()}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}

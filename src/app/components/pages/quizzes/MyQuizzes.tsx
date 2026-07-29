@@ -310,7 +310,6 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
                             setShowCompleted(newValues.map(v => v.value).includes(QuizStatus.Complete) || newValues.map(v => v.value).includes(QuizStatus.Overdue));
                         }}
                         menuPortalTarget={document.body}
-                        styles={{ menuPortal: base => ({ ...base, zIndex: 1000 }) }}
                     />
                 </Label>
             </Col>
@@ -454,7 +453,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
     }</span>;
 
     const emptyPracticeMessage = <span className="text-muted">{!freeAttempts || freeAttempts.length === 0
-        ? <>You have no practice tests. Take some new tests <Link to="/practice_tests">here</Link>!</>
+        ? <>You have no practice tests. Take some new tests <Link to="/view_tests">here</Link>!</>
         : "No practice tests match your filters."
     }</span>;
 

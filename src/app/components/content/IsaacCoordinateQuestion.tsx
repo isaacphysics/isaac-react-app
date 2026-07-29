@@ -130,7 +130,6 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
 
     const numberOfDimensions = useRef(doc.numberOfDimensions ?? 2);
     const numberOfCoordinates = useRef(doc.numberOfCoordinates);
-    const buttonText = doc.buttonText ?? "Add coordinate";
 
     const emptyCoordItem = () => generateEmptyCoordItem(numberOfDimensions.current);
     const emptyCoord = () => generateEmptyCoord(numberOfCoordinates.current ?? 2, numberOfDimensions.current);
@@ -202,7 +201,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
         ))}
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
-            <Markup encoding="latex">{buttonText}</Markup>
+            {doc.buttonText ? <Markup encoding="latex">{doc.buttonText}</Markup> : "Add coordinate"}
         </Button>}
     </div>;
 };

@@ -1,7 +1,7 @@
 @import "../common/progress-bar";
 
 .progress-bar-outer {
-  background: $gray-110;
+  background: var(--color-neutral-200);
 
   .progress-bar-inner, .progress-bar-secondary {
     background: var(--color-brand-500);

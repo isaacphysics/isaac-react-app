@@ -38,29 +38,16 @@
   right: 0;
 }
 
-.responsive {
-  max-height: 60vh;
-  .table.table-bordered {
-    thead {
-      @include table-sticky();
-      background: $gray-103;
-    }
-    tr {
-      &.disabled {
-        background-color: lightgrey;
-      }
-    }
-  }
-}
-
 button.btn.delete-button {
   border-radius: inherit;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 0.625rem;
-  > img {
-    filter: invert(1);
-  }
+  min-width: 36px;
+}
+
+[data-ld-theme="light"] button.btn.delete-button > img {
+  filter: invert(1);
 }
 
 .board-sidebar-content {
@@ -75,4 +62,18 @@ button.btn.delete-button {
 
 .bg-wildcard {
   background-color: $color-misc-pale-yellow;
+}
+
+%hex-status-indicator {
+  position: absolute;
+  top: 2px;
+  z-index: 7;
+  > i {
+    display: inline-block;
+  }
+}
+
+.board-card-status-indicator {
+  @extend %hex-status-indicator;
+  right: 0px;
 }

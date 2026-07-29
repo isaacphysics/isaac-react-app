@@ -199,3 +199,16 @@
 .alert-warning .input-mode-toggle > .styled-toggle {
   background-color: #FFEEB7;
 }
+
+.parsons-question {
+  .parsons-item, .reorder-item {
+    .reorder-buttons button {
+      &.disabled {
+        opacity: 0.5;
+      }
+      &:hover .icon {
+        background-color: $pink-200;
+      }
+    }
+  }
+}

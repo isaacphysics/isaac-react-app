@@ -148,7 +148,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                 return <figure>
                     <div className="w-100 d-flex flex-column align-items-center justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
                         {(doc.figureRegions && contextType && path)
-                            ? <div className="position-relative w-fit-content align-self-center">
+                            ? <div className="position-relative w-fit-content align-self-center overflow-anchor-none">
                                 {fullscreenButton(figureString)}
                                 {!isCondensed
                                     ? generateFigureRegionObjects({
@@ -188,7 +188,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                             isCondensed 
                                 ? <>
                                     <hr />
-                                    <div className="d-flex flex-column w-100 gap-2 mt-3">
+                                    <div className="d-flex flex-column w-100 gap-2 mt-3 overflow-anchor-none">
                                         {generateFigureRegionObjects({
                                             figureRegions: doc.figureRegions, 
                                             contextType,

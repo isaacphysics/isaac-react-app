@@ -1,9 +1,9 @@
-import React from "react";
+import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { ListGroup } from "reactstrap";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isEventLeaderOrStaff, isPhy, isTeacherOrAbove, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
+import { Button, ListGroup } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
@@ -13,6 +13,8 @@ import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 import { IconProps } from "../svg/HexIcon";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
+
+const DraggableListViewWrapper = lazy(() => import("../DraggableListViewItemWrapper"));
 
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
@@ -28,15 +30,17 @@ type QuestionListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> 
     item: ContentSummaryDTO;
     hideIconLabel?: boolean;
     linkedBoardId?: string;
+    linkedBookSection?: string;
 }
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
-    const { item, hideIconLabel, linkedBoardId, ...rest } = props;
+    const { item, hideIconLabel, linkedBoardId, linkedBookSection, ...rest } = props;
     const breadcrumb = (isPhy || rest.hasCaret) ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
+    const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "") + bookSectionUrlParams;
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
     const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
@@ -63,13 +67,14 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
 type ConceptListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
     item: ContentSummaryDTO;
+    linkedBookSection?: string;
 }
 
-export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
+export const ConceptListViewItem = ({item, linkedBookSection, ...rest}: ConceptListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}${linkedBookSection ?? ""}`;
     const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-concept", size: "lg"}};
     
     if (isAda) {
@@ -148,20 +153,35 @@ type QuizListViewItemProps = ListViewItemBaseProps<"quiz", "list" | "card"> & {
 
 export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}: QuizListViewItemProps) => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ?
-        <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
             Set test
         </AffixButton> :
-        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
             Take the test
         </AffixButton>;
+
+    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
+    // Otherwise, show if the quiz is visible to students
+    const roleVisibilitySummary = (quiz: QuizSummaryDTO): string | undefined => {
+        if (isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER")) {
+            return "Hidden from teachers";
+        }
+        if (((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents)) {
+            return "Visible to students";
+        }
+    };
+
     return <AbstractListViewItem
-        icon={{type: "icon", icon: {name: "icon-tests", size: "lg"}}}
+        icon={siteSpecific({type: "icon", icon: {name: "icon-tests", size: "lg"}}, undefined)}
         title={item.title ?? ""}
+        subtitle={isTeacherOrAbove(user) ? roleVisibilitySummary(item) : undefined}
         subject={itemSubject}
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
         quizButton={useViewQuizLink ? undefined : quizButton}
+        className={siteSpecific(undefined, "px-4 py-2")}
         {...rest}
     />;
 };
@@ -176,9 +196,10 @@ export const convertToALVIGameboards = (gameboards: GameboardDTO[]): ALVIGameboa
 };
 type QuestionDeckListViewItemProps = ListViewItemBaseProps<"gameboard", "list" | "card"> & {
     item: ALVIGameboard;
+    linkedBookSection?: string;
 }
 
-export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
+export const QuestionDeckListViewItem = ({item, linkedBookSection, ...rest}: QuestionDeckListViewItemProps) => {
     const questionTagsCountMap = item.contents?.filter(c => c.contentType === "isaacQuestionPage").map(q => q.tags as TAG_ID[]).reduce((acc, tags) => {
         tags?.forEach(tag => {
             acc[tag] = (acc[tag] || 0) + 1;
@@ -190,7 +211,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
 
-    const url = `${PATHS.GAMEBOARD}#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}${linkedBookSection ?? ""}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
@@ -263,13 +284,16 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
 type ShortcutListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
     item: ShortcutResponse;
     linkedBoardId?: string;
+    linkedBookSection?: string;
 }
 
-export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
+export const ShortcutListViewItem = ({item, linkedBoardId, linkedBookSection, ...rest}: ShortcutListViewItemProps) => {
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
+    const boardUrlParams = linkedBoardId ? `?board=${linkedBoardId}` : "";
+    const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
+    const url = `${item.url}${boardUrlParams}${bookSectionUrlParams}${item.hash ? `#${item.hash}` : ""}`;
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
     const icon: TitleIconProps = isPhy ?
         {type: "icon", icon: {name: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}} :
@@ -327,7 +351,71 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
     />;
 };
 
-export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> & {
+type BuilderListViewItemProps = ListViewItemBaseProps<"builder", "list" | "card"> & {
+    item: ContentSummaryDTO;
+    index?: number;
+    totalItems?: number;
+    onMove?: (id: string, adjustment: number) => void;
+    onDelete?: (id: string) => void;
+}
+
+export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
+    const { item, index, onDelete, onMove, totalItems, ...rest } = props;
+    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const pageSubject = useAppSelector(selectors.pageContext.subject);
+    const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
+    const state = item.state ?? CompletionState.NOT_ATTEMPTED;
+
+    const url = `/${documentTypePathPrefix[item.type as keyof typeof documentTypePathPrefix]}/${item.id}`;
+
+    const topicTag = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
+    const topic = topicTag ? topicTag.alias ?? topicTag.title : undefined;
+
+    const icon: TitleIconProps = { type: "icon", label: "Question",
+        icon: isPhy
+            ? {name: "icon-question", size: "md"}
+            : {name: QUESTION_STATUS_TO_ICON[CompletionState.NOT_ATTEMPTED], size: "md", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
+    };
+
+    const deviceSize = useDeviceSize();
+
+    return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
+        {deviceSize !== "xs" && <div className="d-flex vertical-center rounded-2">
+            <div className="d-flex flex-column align-items-center">
+                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
+                    <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                </button>
+                <i aria-label="Drag to reorder" className="mx-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black" />
+                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
+                    <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
+                </button>
+            </div>
+        </div>}
+        <AbstractListViewItem
+            {...rest}
+            componentTag={"div"}
+            icon={deviceSize !== "xs" ? icon : undefined}
+            title={item.title ?? ""}
+            subtitle={item.subtitle}
+            subject={itemSubject !== "neutral" ? itemSubject : undefined}
+            url={url}
+            tags={item.tags}
+            deprecated={item.deprecated}
+            supersededByPath={item.supersededBy ? `/questions/${item.supersededBy}` : undefined}
+            style="flat"
+            breadcrumb={topic ? [topic] : undefined}
+            audienceViews={audienceViews}
+            className="flex-grow-1 align-content-center bg-transparent"
+            questionPreviewId={item.id}
+            disableRedirect
+        />
+        <Button className="delete-button" color={siteSpecific("solid", "keyline")} onClick={(e) => {if (item.id && onDelete) onDelete(item.id); e.preventDefault();}}>
+            <img src="/assets/common/icons/bin.svg" alt="Delete board"/>
+        </Button>
+    </DraggableListViewWrapper>;
+};
+
+export type CustomListViewItemProps = ListViewItemBaseProps<"item", "list" | "list" | "card"> & {
     item: Omit<Extract<AbstractListViewItemProps, {alviType: "item"}>, "alviType"> & {
         type?: string;
     }
@@ -356,6 +444,7 @@ type ListViewItemProps =
     | ShortcutListViewItemProps
     | BookIndexListViewItemProps
     | BookDetailListViewItemProps
+    | BuilderListViewItemProps
     | CustomListViewItemProps
 ;
 
@@ -459,6 +548,18 @@ export const ListView = <T extends {type?: string}, G extends alviTypes>(props: 
                         }
                     });
                 }
+                case "builder": {
+                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "list" as const};
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.QUESTION):
+                            case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
+                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                }
                 default:
                     return null;
             }
@@ -519,6 +620,17 @@ export const ListViewCards = <T extends {type?: string}, G extends alviTypes>(pr
                         switch (item.type) {
                             case (DOCUMENT_TYPE.QUIZ):
                                 return <QuizListViewItem key={index} item={item} {...lviProps} />;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                }
+                case "builder": {
+                    const lviProps = {...rest, alviType: "builder" as const, alviLayout: "card" as const};
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.QUESTION):
+                                return <BuilderListViewItem key={index} index={index} item={item} {...lviProps}  />;
                             default:
                                 return failedToRender(item);
                         }

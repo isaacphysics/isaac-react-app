@@ -25,6 +25,7 @@ interface TabsProps {
     singleLine?: boolean;
     style?: TabStyle;
     dataTestId?: string;
+    renderHiddenTabs?: boolean;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
@@ -110,10 +111,23 @@ const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass="", dataTest
     </div>;
 };
 
+const PrintOnlyTabNav = ({tabProps, tabIndex, changeTab}: {tabProps: TabsProps, tabIndex: number, changeTab: (i: number) => void}) => {
+    const {style, children, tabContentClass} = tabProps;
+    return style === "tabs" ?
+        <TabNavbar {...tabProps} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": tabIndex === 1 && tabContentClass?.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
+            {children}
+        </TabNavbar> :
+        style === "dropdowns" && isPhy && 
+        <DropdownNavbar {...tabProps} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": tabIndex === 1 && tabContentClass?.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
+            {children}
+        </DropdownNavbar>;
+};
+
 export const Tabs = (props: TabsProps) => {
     const {
         className, tabContentClass, tabNavbarClass, children, activeTabOverride, onActiveTabChange,
         deselectable=undefined, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
+        renderHiddenTabs=true
     } = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
@@ -156,19 +170,14 @@ export const Tabs = (props: TabsProps) => {
                     {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
                         const tabIndex = mapIndex + 1;
                         return <React.Fragment key={tabTitle}>
-                            {/* This navbar exists only when printing so each tab has its own heading */}
-                            {style === "tabs" ?
-                                <TabNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass?.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
-                                    {children}
-                                </TabNavbar> :
-                                style === "dropdowns" && isPhy && 
-                                <DropdownNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass?.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
-                                    {children}
-                                </DropdownNavbar>
-                            }
-                            <TabPane key={tabTitle} tabId={tabIndex} data-testid={tabIndex === activeTab ? "active-tab-pane" : undefined}>
-                                {tabBody as ReactNode}
-                            </TabPane>
+                            {(renderHiddenTabs || tabIndex === activeTab) && <>
+                                {/* include a print-only navbar so each tab appears to have its own heading when printing */}
+                                <PrintOnlyTabNav tabProps={props} tabIndex={tabIndex} changeTab={changeTab}/>
+
+                                <TabPane key={tabTitle} tabId={tabIndex} data-testid={tabIndex === activeTab ? "active-tab-pane" : undefined}>
+                                    {tabBody as ReactNode}
+                                </TabPane>
+                            </>}
                         </React.Fragment>;
                     })}
                 </TabContent>

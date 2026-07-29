@@ -14,11 +14,12 @@ import {
     IsaacQuestionPageDTO,
     ItemDTO,
     QuestionPartState,
+    QuizFeedbackMode,
     Stage,
-    UserRole
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
+import { CSSObjectWithLabel } from "react-select";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -226,6 +227,7 @@ export enum ACTION_TYPE {
     QUIZ_START_FREE_ATTEMPT_REQUEST = "QUIZ_START_FREE_ATTEMPT_REQUEST",
     QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS = "QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS",
     QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE = "QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE",
+    QUIZ_ATTEMPT_CLEAR = "QUIZ_ATTEMPT_CLEAR",
 }
 
 export enum PROGRAMMING_LANGUAGE {
@@ -477,7 +479,7 @@ export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
 };
 
 export const HUMAN_STAGES: {[key: string]: string} = {
-    "11_14": "11-14",
+    "11_14": "11–14",
     "gcse": "GCSE",
     "a_level": "A\u00A0Level",
     "university": "University",
@@ -990,6 +992,13 @@ export const getContextSpecificTags = (map: ContextSpecificTags, pageContext: Pa
     return map[pageContext.subject][pageContext.stage[0]] || [];
 };
 
+export const QUIZ_FEEDBACK_NAMES: Record<QuizFeedbackMode, string> = {
+    NONE: "No feedback for students",
+    OVERALL_MARK: "Overall mark only",
+    SECTION_MARKS: "Section-by-section mark breakdown",
+    DETAILED_FEEDBACK: "Detailed feedback on each question",
+};
+
 
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
@@ -1090,16 +1099,6 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Markbook", to: "/my_markbook"}
 );
 export const BOOKS_CRUMB = {title: "Books", to: "/books"};
-
-export const UserFacingRole: {[role in UserRole]: string} = {
-    ADMIN: "admin",
-    EVENT_MANAGER: "event manager",
-    CONTENT_EDITOR: "content editor",
-    EVENT_LEADER: "event leader",
-    TEACHER: "teacher",
-    TUTOR: "tutor",
-    STUDENT: "student"
-};
 
 export enum SortOrder {
     ASC = "ASC",
@@ -1302,6 +1301,10 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 
 export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
 
+// REMINDER: If you change this, you also have to change $parsons-step in questions.scss
+export const PARSONS_MAX_INDENT = 3;
+export const PARSONS_INDENT_STEP = 45;
+
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
@@ -1344,3 +1347,69 @@ export const MODAL_TYPES = {
 export const CODE_EDITOR_IFRAME_HEIGHT_SMALL = 278;
 export const CODE_EDITOR_IFRAME_HEIGHT_LARGE = 354;
 export const CODE_EDITOR_RUN_BUTTON_SPACING = 96;
+
+export const reactSelectDarkModeStyles = siteSpecific({
+    // sci
+    container: (base: CSSObjectWithLabel) => ({
+        ...base,
+        backgroundColor: "var(--color-neutral-white)",
+    }),
+    control: (base: CSSObjectWithLabel) => ({
+        ...base,
+        backgroundColor: "unset",
+    }),
+    input: (base: CSSObjectWithLabel) => ({
+        ...base,
+        color: "var(--color-neutral-900)",
+    }),
+    menu: (base: CSSObjectWithLabel) => ({
+        ...base,
+        backgroundColor: "var(--color-neutral-50)",
+    }),
+    menuPortal: (base: CSSObjectWithLabel) => ({
+        ...base,
+        zIndex: 1080,
+    }),
+    multiValue: (base: CSSObjectWithLabel) => ({
+        ...base,
+        backgroundColor: "var(--subject-color-100)",
+        border: "1px solid var(--subject-color-300)",
+    }),
+    multiValueLabel: (base: CSSObjectWithLabel) => ({
+        ...base,
+        color: "var(--subject-color-900)",
+    }),
+    multiValueRemove: (base: CSSObjectWithLabel) => ({
+        ...base,
+        backgroundColor: "var(--subject-color-100)",
+    }),
+    singleValue: (base: CSSObjectWithLabel) => ({
+        ...base,
+        color: "var(--color-neutral-900)",
+    }),
+    option: (base: CSSObjectWithLabel, state: {isDisabled: boolean, isFocused: boolean, isSelected: boolean}) => ({
+        ...base,
+        color: state.isDisabled ? "var(--color-neutral-500)" : "var(--color-neutral-900)",
+        backgroundColor: state.isFocused ? "var(--color-neutral-200)" : "unset",
+        ":active": {
+            // isSelected doesn't seem to work? using :active instead
+            backgroundColor: "var(--subject-color-300)",
+        }
+    }),
+}, 
+{
+    // ada
+    menuPortal: (base: CSSObjectWithLabel) => ({
+        ...base,
+        zIndex: 1080,
+    }),
+    multiValue: (styles: CSSObjectWithLabel) => ({
+        ...styles,
+        backgroundColor: "rgb(135, 13, 90)",
+        color: "white",
+    }),
+    multiValueLabel: (styles: CSSObjectWithLabel) => ({
+        ...styles,
+        color: "white",
+    }),
+});

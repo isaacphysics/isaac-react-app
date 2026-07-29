@@ -3,7 +3,6 @@ import {
     useAppDispatch,
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
-    useCancelQuizAssignmentMutation,
     useUpdateQuizAssignmentMutation,
     openActiveModal
 } from "../../../state";
@@ -15,11 +14,10 @@ import {formatDate, formatISODateOnly} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     above,
-    below, confirmThen,
+    below, 
     ifKeyIsEnter,
     isAda,
     isDefined,
-    isEventLeaderOrStaff,
     isPhy, KEY,
     MANAGE_QUIZ_TAB,
     nthHourOf, persistence, SITE_TITLE_SHORT,
@@ -28,7 +26,8 @@ import {
     tags,
     TODAY,
     useDeviceSize,
-    useFilteredQuizzes
+    useFilteredQuizzes,
+    useManageQuizAssignments
 } from "../../../services";
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -37,8 +36,7 @@ import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
-import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
-import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
+import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";
 import { HexIcon } from "../../elements/svg/HexIcon";
 import { AffixButton } from "../../elements/AffixButton";
@@ -110,10 +108,9 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const [currentSort, setCurrentSort] = useState(() => compareCreationDates);
     const [reverseSort, setReverseSort] = useState(false);
     const [selectedCol, setSelectedCol] = useState<string | undefined>(undefined);
-    const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [selectedQuiz, setSelectedQuiz] = useState<QuizAssignmentDTO | undefined>(undefined);
+    
     const [_updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
+    const {cancel, isCancelling, openExtendDueDateModal, openAssignModal} = useManageQuizAssignments();
 
     if (assignedGroups.length === 0) return <></>;
 
@@ -139,11 +136,6 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const assignment = assignedGroups[0].assignment;
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId);
 
-    const cancel = () => confirmThen(
-        "Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.",
-        () => markQuizAsCancelled(assignment.id as number)
-    );
-
     const determineQuizSubject = (quizSummary?: QuizSummaryDTO) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
     };
@@ -158,12 +150,6 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     ].filter(isDefined);
 
     return <>
-        {selectedQuiz && selectedQuiz.dueDate && <ExtendDueDateModal
-            isOpen={isModalOpen}
-            toggle={() => setIsModalOpen(false)}
-            currDueDate={selectedQuiz.dueDate}
-            numericQuizAssignmentId={selectedQuiz.id as number}
-        />}
         <tr className={classNames("bg-white set-quiz-table-dropdown p-0 w-100", {"active": isExpanded, "list-group-item": isPhy})} tabIndex={0}
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
@@ -207,8 +193,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                     <td className="align-middle pe-4 d-none d-sm-table-cell">
                         <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                             onClick={(e) => {
-                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
+                                openAssignModal(assignment);
                                 e.stopPropagation();
                             }}
                         >
@@ -270,13 +255,13 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                             More
                                         </DropdownToggle>
                                         <DropdownMenu>
-                                            <DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} onClick={() => {
-                                                setSelectedQuiz(assignedGroup.assignment);
-                                                setIsModalOpen(true);
-                                            }}>
+                                            {assignedGroup.assignment.dueDate && <DropdownItem 
+                                                color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} 
+                                                onClick={() => openExtendDueDateModal(assignedGroup.assignment)}
+                                            >
                                                 Extend Due Date
-                                            </DropdownItem>
-                                            <DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
+                                            </DropdownItem>}
+                                            <DropdownItem color="tertiary" size="sm" onClick={() => cancel(assignedGroup.assignment)} disabled={isCancelling}>
                                                 {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : "Cancel test"}
                                             </DropdownItem>
                                         </DropdownMenu>
@@ -291,8 +276,8 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     </>;
 }
 
+// 06/26 now deprecated for Isaac, still used on Ada for now
 export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
-    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useHistoryState("currentTab", MANAGE_QUIZ_TAB.set);
@@ -328,13 +313,6 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <br />
         Students in the group will be emailed when you set a new test.
     </span>;
-
-    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
-    // Otherwise, show if the quiz is visible to students
-    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
-        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
-    </>;
 
     const rowFiltersView = above["md"](deviceSize);
 
@@ -417,48 +395,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
                         {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
 
-                        {siteSpecific(
-                            <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>,
-                            <ListGroup className="mb-2 quiz-list">
-                                {undeprecatedQuizzes.map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                    <Row className="w-100">
-                                        <Col xs={9} md={8} lg={9} className="d-flex align-items-center">
-                                            <div className="p-3">
-                                                <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
-                                                {roleVisibilitySummary(quiz)}
-                                            </div>
-                                        </Col>
-                                        <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
-                                            <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))}>
-                                                Set test
-                                            </Button>
-                                        </Col>
-                                        <Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
-                                            <Link className={`my-3 d-flex justify-content-end me-1`} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                <span>Preview</span>
-                                            </Link>
-                                        </Col>
-                                        <Col xs={3} className="d-flex align-items-center justify-content-end">
-                                            <UncontrolledButtonDropdown className="d-flex d-md-none ">
-                                                <DropdownToggle caret className="text-nowrap" size="sm" color="link">
-                                                    Actions
-                                                </DropdownToggle>
-                                                <DropdownMenu>
-                                                    <DropdownItem onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))} style={{zIndex: '1'}}>
-                                                        Set test
-                                                    </DropdownItem>
-                                                    <DropdownItem divider />
-                                                    <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                        <DropdownItem>
-                                                            Preview
-                                                        </DropdownItem>
-                                                    </Link>
-                                                </DropdownMenu>
-                                            </UncontrolledButtonDropdown>
-                                        </Col>
-                                    </Row>
-                                </ListGroupItem>)}
-                            </ListGroup>)}
+                        <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>
                     </>}
                 </ShowLoading>,
 

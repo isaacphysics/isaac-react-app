@@ -7,9 +7,10 @@ import { filterAssignmentsByStatus, getSearchPlaceholder, ASSIGNMENT_STATE_MAP, 
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
-import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { StyledTabPicker, StyledTabPickerProps } from "../inputs/StyledTabPicker";
+import { SearchInputWithIcon } from "../SearchInputs";
 
-interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
+type AssignmentStatusCheckboxProps = Partial<StyledTabPickerProps> & {
     status: AssignmentState;
     statusFilter: AssignmentState[];
     setStatusFilter: React.Dispatch<React.SetStateAction<AssignmentState[]>>;
@@ -19,10 +20,12 @@ interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelEl
 const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
     const {status, statusFilter, setStatusFilter, count, ...rest} = props;
     return <StyledTabPicker
+        {...rest}
+        type="checkbox" to={undefined}
         id={status ?? ""} checkboxTitle={status}
-        onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
+        onChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
-        count={count} {...rest}
+        count={count}
     />;
 };
 
@@ -30,8 +33,10 @@ const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, 
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<AssignmentState[]>([]);
     return <StyledTabPicker
+        {...rest}
+        type="checkbox" to={undefined}
         id="all" checkboxTitle="All"
-        onInputChange={(e) => {
+        onChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(statusFilter);
                 setStatusFilter([AssignmentState.ALL]);
@@ -40,7 +45,7 @@ const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, 
             }
         }}
         checked={statusFilter.includes(AssignmentState.ALL)}
-        count={count} {...rest}
+        count={count}
     />;
 };
 
@@ -88,8 +93,8 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                 <div className="section-divider"/>
                 <search data-testid="my-assignments-sidebar">
                     <h5>Search assignments</h5>
-                    <Input
-                        className='search--filter-input my-3'
+                    <SearchInputWithIcon
+                        outerClassName='my-3'
                         type="search" value={titleFilter || ""}
                         placeholder={`e.g. ${getSearchPlaceholder()}`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}

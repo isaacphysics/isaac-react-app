@@ -22,6 +22,8 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
             return {attempt: action.attempt};
         case ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE:
             return {error: action.error};
+        case ACTION_TYPE.QUIZ_ATTEMPT_CLEAR:
+            return null;
         case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST:
             if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.quizAssignmentId === action.quizAssignmentId) {
                 // Optimistically keep current attempt

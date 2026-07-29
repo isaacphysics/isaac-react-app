@@ -3,7 +3,7 @@ import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Badge, Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
+import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { above, below, isAda, isDefined, isLoggedIn, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { TitleIcon, TitleIconProps } from "../PageTitle";
@@ -16,8 +16,10 @@ import { ContentPropertyTags } from "../ContentPropertyTags";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
+import { SaveBoardButton } from "../SaveBoardButton";
+import { BoardItemIndicator } from "../cards/GameboardCard";
 import { useBookmarks } from "../../../services/bookmarks";
-import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
+import { PreviewQuestionButton } from "../PreviewButton";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -54,16 +56,6 @@ export const StatusDisplay = (props: StatusDisplayProps) => {
     }
 };
 
-interface ItemCountProps extends React.HTMLAttributes<HTMLSpanElement> {
-    count: number;
-}
-
-const ItemCount = ({count, ...rest}: ItemCountProps) => {
-    return <Badge color="theme" {...rest} className={classNames("list-view-status-indicator count-tag", rest.className)}>
-        {count < 100 ? count : "99+"}
-    </Badge>;
-};
-
 export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
     tag: string;
     url?: string;
@@ -88,7 +80,7 @@ const LinkTags = ({linkTags, disabled}: LinkTagProps) => {
 const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl?: string, quizButton?: ReactNode}) => {
     const { previewQuizUrl, quizButton, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
-        {previewQuizUrl && <Button to={previewQuizUrl} color={siteSpecific("keyline", "solid")} tag={Link} className="set-quiz-button-md">
+        {previewQuizUrl && <Button to={previewQuizUrl} color={"keyline"} tag={Link} className="set-quiz-button-md h-100">
             {previewQuizUrl.includes("/preview/") ? "Preview" : "View test"}
         </Button>}
         {quizButton}
@@ -101,7 +93,8 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
     const [ getAssignments ] = useLazyGetMySetAssignmentsQuery();
     const [ unassignBoard ] = useUnassignGameboardMutation();
 
-    return <Button color="solid" 
+    return <Button 
+        color="keyline" 
         onClick={async (e) => {
             e.stopPropagation();
             const {data: groups} = await getGroups(false, true);
@@ -137,6 +130,7 @@ type ALVIType = {
     hasCaret?: boolean;
     linkTags?: ListViewTagProps[];
     allowBookmarking?: boolean; // if set, displays a bookmark for logged-in users that will save the alvi to the user's bookmarks on click
+    disableRedirect?: boolean; // the URL is required for bookmarks to show; if we do not want the item to redirect on click, enable
 } | {
     // quizzes – have exclusive "preview" and "view test" buttons
     alviType: "quiz";
@@ -145,7 +139,7 @@ type ALVIType = {
     audienceViews?: ViewingContext[];
     status?: CompletionState;
 } | {
-    // gameboards – have exclusive "assign" buttons
+    // gameboards – have exclusive "assign" and "save to my decks" buttons
     alviType: "gameboard";
     board?: GameboardDTO;
 } | {
@@ -154,6 +148,9 @@ type ALVIType = {
     deprecated?: boolean;
     supersededByPath?: string;
     audienceViews?: ViewingContext[];
+    allowBookmarking?: boolean; // as in item type
+    disableRedirect?: boolean; // as in item type
+    questionPreviewId?: string; // shows a preview button next to the title; preview opens in modal
 };
 
 type ALVILayout = {
@@ -186,8 +183,6 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const user = useAppSelector(selectors.user.orNull);
 
-    const bookmarksFeatureFlag = useFeatureFlag(FeatureFlag.ENABLE_SCI_BOOKMARKS);
-
     const contentId = (url?.includes("/questions/") || url?.includes("/concepts/")) && url.split("/").slice(-1)[0];
 
     const isItem = typedProps.alviType === "item";
@@ -200,14 +195,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isCrossTopic = isAda && tags?.includes("cross_topic");
     const isLLM = tags?.includes("llm_question_page");
 
-    const flatLayout = style === "flat" && above['md'](deviceSize);
-    const stackedLayout = style === "stacked" || below["sm"](deviceSize);
+    const flatLayout = style === "flat" && above['lg'](deviceSize);
+    const stackedLayout = style === "stacked" || (isPhy && below["sm"](deviceSize)) || (isAda && below["xs"](deviceSize));
     const wrapTitleTags = below["xs"](deviceSize);
 
     const cardBody = <>
         <div className="w-100 d-flex flex-row">
             <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard})}>
-                <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
+                <div className={classNames("position-relative", {"question-progress-icon": isAda, "d-flex vertical-center": flatLayout})}>
                     {icon && <div className="inner-progress-icon">
                         <TitleIcon icon={icon} />
                         {icon.label && isAda && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
@@ -215,37 +210,37 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                         <StatusDisplay status={typedProps.status} showText={false} />
                     </div>}
-                    {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
+                    {isGameboard && typedProps.board?.contents && <BoardItemIndicator type="list-view" count={typedProps.board.contents.length} />}
                 </div>
-                <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
+                <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2 ps-1 ms-n1", "py-3"))}>
                     <div className={classNames("text-wrap mt-n1", {"d-flex": !wrapTitleTags})}>
-                        {url && !isDisabled
-                            ? (url.startsWith("http")
-                                ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                        <>
+                            {url && !isDisabled && !("disableRedirect" in typedProps && typedProps.disableRedirect)
+                                ? (url.startsWith("http")
+                                    ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
+                                        <Markup encoding="latex">{title}</Markup>
+                                    </ExternalLink>
+                                    : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
+                                        <Markup encoding="latex">{title}</Markup>
+                                    </Link>
+                                )
+                                : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz, "title-small": flatLayout})}>
                                     <Markup encoding="latex">{title}</Markup>
-                                </ExternalLink>
-                                : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
-                                    <Markup encoding="latex">{title}</Markup>
-                                </Link>
-                            )
-                            : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
-                                <Markup encoding="latex">{title}</Markup>
-                            </span>
-                        }
-                        {isItem && <>
-                            {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                            <ContentPropertyTags 
+                                </span>
+                            }
+                            {isItem && typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
+                            {(isItem || isBuilder) && <ContentPropertyTags 
                                 className={classNames("justify-self-end", {"ms-2": !wrapTitleTags})}
                                 deprecated={typedProps.deprecated}
                                 supersededByPath={typedProps.supersededByPath}
                                 tags={tags}
-                            />
-                        </>}
+                            />}
+                        </>
                     </div>
                     {subtitle && <div className="small text-muted text-wrap">
                         <Markup encoding="latex">{subtitle}</Markup>
                     </div>}
-                    {breadcrumb && !(flatLayout && subtitle) && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                    {!flatLayout && breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                         <Breadcrumb breadcrumb={breadcrumb}/>
                     </span>}
                     {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
@@ -258,33 +253,48 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {isPhy && isItem && stackedLayout && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                         <StatusDisplay status={typedProps.status} showText className="py-1" />
                     }
-                    {isGameboard && stackedLayout && isTeacherOrAbove(user) && <div className="d-flex pt-3">
-                        <GameboardAssign board={typedProps.board} />
+                    {isGameboard && stackedLayout && isDefined(typedProps.board) && <div className="d-flex pt-3 gap-3">
+                        {/* note order flipped relative to non-stackedLayout to keep Assign at highest priority visually */}
+                        {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
+                        <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                     </div>}
                     {isItem && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
                         <LinkTags linkTags={typedProps.linkTags}/>
                     </div>}
-                    {isQuiz && stackedLayout && <div className="d-flex d-md-none align-items-center">
+                    {isQuiz && stackedLayout && <div className={classNames("d-flex align-items-center mt-2")}>
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/>
                     </div>}
                 </div>
+                {isBuilder && typedProps.questionPreviewId && <PreviewQuestionButton id={typedProps.questionPreviewId} />}
             </Col>
             {!stackedLayout &&
                 <>
                     {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
-                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
+                    {flatLayout && breadcrumb && <div className="list-view-border wf-10 pe-3 d-flex align-items-center">
+                        <span className="hierarchy-tags d-flex flex-wrap mw-auto">
+                            <Breadcrumb breadcrumb={breadcrumb}/>
+                        </span>
+                    </div>}
+                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
-                    {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
-                        <GameboardAssign board={typedProps.board} />
-                    </Col>}
-                    {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                    {isGameboard && typedProps.board && <div className="d-flex align-items-center justify-content-end gap-3 ms-3">
+                        <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
+                        {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
+                    </div>}
+                    {isQuiz && <Col md={6} className="d-flex align-items-center justify-content-end">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
-                    {isItem && contentId && typedProps.allowBookmarking && isLoggedIn(user) && bookmarksFeatureFlag && <button 
-                        className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
-                        onClick={() => bookmarkItem(contentId)}
-                    /> }
+                    {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && <div
+                        className="alvi-bookmark-container"
+                    >
+                        <button 
+                            className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
+                            onClick={() => bookmarkItem(contentId)}
+                            type="button"
+                        /> 
+                    </div>
+                    }
                 </>
             }
             {isItem && typedProps.hasCaret && <div className="list-caret align-content-center" aria-hidden="true">
@@ -295,7 +305,13 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     </>;
 
     return <ListGroupItem
-        className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
+        className={classNames(
+            "content-summary-item", 
+            {"thin": flatLayout},
+            {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT},
+            className, 
+            state
+        )} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
         data-testid={"list-view-item"}
         tag={componentTag}

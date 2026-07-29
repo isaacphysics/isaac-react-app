@@ -29,7 +29,7 @@ import {
     UTC_MIDNIGHT_IN_SIX_DAYS,
     addDays,
     nthUtcHourOf,
-    isPhy
+    isPhy,
 } from "../../../services";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {GameboardDTO, UserGroupDTO} from "../../../../IsaacApiTypes";

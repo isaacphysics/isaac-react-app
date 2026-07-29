@@ -56,7 +56,8 @@ describe("IsaacSymbolicQuestion", () => {
         // misc errors
         expect(symbolicChemistryInputValidator("2H2O -> 2H2 + O2")).toEqual([]);
         expect(symbolicChemistryInputValidator("2(H2O")).toEqual(['You are missing some brackets.']);
-        expect(symbolicChemistryInputValidator(".5")).toEqual(['Please convert decimal numbers to fractions.']);
+        expect(symbolicChemistryInputValidator("2.5")).toEqual(['Please convert decimal numbers to fractions.']);
+        expect(symbolicChemistryInputValidator("C2.5H2O")).toEqual([]);
         expect(symbolicChemistryInputValidator("2H2O(l) -> 2H2(g) + O2(g)")).toEqual(['This question does not require state symbols.']);
         expect(symbolicTextInputValidator("2H2O(l) -> 2H2(g) + O2(g)", "chemistry", true)).toEqual([]);
     });

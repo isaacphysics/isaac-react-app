@@ -39,7 +39,7 @@ div:has(> .featured-profile:first-child:nth-last-child(2)) {
     .profile-description {
       padding: 1rem 0;
       font-size: initial;
-      color: black;
+      color: var(--color-neutral-900);
     }
 
     .profile-image {

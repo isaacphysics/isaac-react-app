@@ -1,9 +1,9 @@
 import React, { useState, ChangeEvent } from "react";
-import { Input } from "reactstrap";
 import { getQuestionPlaceholder } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { QuestionFinderFilterPanelProps, QuestionFinderFilterPanel } from "../panels/QuestionFinderFilterPanel";
+import { SearchInputWithIcon } from "../SearchInputs";
 
 interface QuestionFinderSidebarProps extends ContentSidebarProps {
     searchText: string;
@@ -23,8 +23,8 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
         <div className="section-divider"/>
         <search>
             <h5>Search questions</h5>
-            <Input
-                className='search--filter-input my-4'
+            <SearchInputWithIcon
+                outerClassName="my-4"
                 type="search" value={internalSearchText || ""}
                 placeholder={`e.g. ${getQuestionPlaceholder(pageContext)}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {

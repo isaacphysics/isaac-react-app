@@ -25,6 +25,8 @@ import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PolicyPageSidebar } from "../elements/sidebar/PolicyPageSidebar";
 import { GenericSidebarWithRelatedContent } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
+import { InaccessibleContentWarningAlert } from "../elements/alerts/InaccessibleContentWarningAlert";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -47,7 +49,9 @@ const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: 
         return <NewsSidebar {...sidebarProps} />;
     }
     if (gameboard?.id && showWildcard(gameboard) && gameboard.wildCard?.url === window.location.pathname) {
-        return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} {...sidebarProps} />;
+        const urlParams = new URLSearchParams(location.search);
+        const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+        return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} linkedBookSection={linkedBookSection} {...sidebarProps} />;
     }
     if (relatedContent) {
         return <GenericSidebarWithRelatedContent relatedContent={relatedContent} {...sidebarProps} />;
@@ -57,6 +61,7 @@ const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: 
 
 export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
     const params = useParams();
+    const accessibilitySettings = useAccessibilitySettings();
     const pageId = pageIdOverride || params.pageId || "";
 
     const pageQuery = useGetGenericPageQuery(pageId);
@@ -111,6 +116,8 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                     ? <PageMetadata doc={doc} />
                     : <PageMetadata doc={{...doc, subtitle: undefined}} title={doc.subtitle} noTitle={!doc.subtitle} />
                 }
+
+                {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
                 <Row className="generic-content-container">
                     <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>

@@ -38,7 +38,7 @@ const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): Ca
     subtitle: `Use tests to ${context.stage.includes("university") ? "prepare for university admissions tests" : "practise a range of topics"}. These tests are available for you to freely attempt.`,
     icon: {type: "icon", icon: "icon-tests"},
     subject: context.subject,
-    linkTags: [{tag: "Find a test", url: extendUrl(context, 'practice_tests')}]
+    linkTags: [{tag: "Find a test", url: extendUrl(context, 'view_tests')}]
 });
 
 const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({

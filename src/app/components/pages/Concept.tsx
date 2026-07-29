@@ -11,7 +11,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {Markup} from "../elements/markup";
-import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
+import {IntendedAudienceWarningAlert} from "../elements/alerts/IntendedAudienceWarningAlert";
 import {SupersededDeprecatedStandaloneContentWarning} from "../navigation/SupersededDeprecatedWarning";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -22,7 +22,7 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
-import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
+import { InaccessibleContentWarningAlert } from "../elements/alerts/InaccessibleContentWarningAlert";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { ConceptSidebar } from "../elements/sidebar/RelatedContentSidebar";
@@ -50,6 +50,9 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
     const wildcard = (gameboard && showWildcard(gameboard)) ? gameboard.wildCard : undefined;
+
+    const urlParams = new URLSearchParams(location.search);
+    const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
 
     useEffect(() => {
         if (pageContext) {
@@ -90,21 +93,21 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                     </>}
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
-                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={doc.id}/>
-                            : <ConceptSidebar relatedContent={doc.relatedContent}/>,
+                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={doc.id} linkedBookSection={linkedBookSection} />
+                            : <ConceptSidebar relatedContent={doc.relatedContent} linkedBookSection={linkedBookSection} />,
                         undefined
                     )}
                 >
                     <PageMetadata doc={doc} />
 
-                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
+                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
                     <Row className="concept-content-container">
                         <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
                             <SupersededDeprecatedStandaloneContentWarning doc={doc} />
 
-                            {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                            {isAda && <IntendedAudienceWarningAlert doc={doc} />}
 
                             <WithFigureNumbering doc={doc}>
                                 <IsaacContent doc={doc} />

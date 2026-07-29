@@ -16,6 +16,10 @@
   }
 }
 
+.pod-img > img {
+  background-color: $color-neutral-white; // enforce that pod images use a white background, independent of dark mode styling
+}
+
 div:has(> .pod) {
   container: pod-parent / inline-size;
 
@@ -130,5 +134,31 @@ div:has(> .pod) {
 
   .fixed-height {
     @include fixed-text-height(1.5rem, 2);
+  }
+}
+
+.card-usage-branded-corner {
+  $height: 50px;
+  $circle-radius: 16px;
+  $edge-width: calc($height * tan(30deg));
+  $circle-origin-offset: calc($circle-radius * tan(30deg));
+  $arc-x: calc($circle-radius * cos(30deg) * -1);
+  $arc-y: calc($circle-radius * sin(30deg) * -1);
+  height: $height;
+  min-width: max-content;
+  margin: -0.5rem -1rem 0 0;
+  padding: 0.5rem 1rem 0.8rem calc(0.5rem + $edge-width);
+  background-color: var(--color-brand-400);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, $edge-width 100%);
+  // if supported, curve the lower left corner in such a way that maintains the 30 degree closure angle
+  // it'd be nicer to do this a simpler way, e.g. if corner radius / `smooth` worked for polygons -- but this produces a reasonable result and scales arbitrarily
+  clip-path: shape(from 0 0, hline to 100%, vline to 100%, hline to $edge-width + $circle-origin-offset, arc by $arc-x $arc-y of $circle-radius $circle-radius cw small);
+  border-top-right-radius: 7px;
+
+  --icon-primary: white; // independent of lightness theme
+
+  > *, > a:hover {
+    color: white;
+    text-underline-position: from-font; // perhaps we should add this more widely? it looks better here owing to the bold font, but looks fine in general on all link types
   }
 }

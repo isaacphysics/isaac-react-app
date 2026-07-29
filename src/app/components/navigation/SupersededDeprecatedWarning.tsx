@@ -27,7 +27,7 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
 
     const isBookBoard = Object.keys(ISAAC_BOOKS_BY_TAG).some(tag => gameboard?.tags?.includes(tag));
 
-    return (containsSuperseded || containsDeprecated) && isTutorOrAbove(user) && <Alert {...rest} color="warning" className={classNames("mt-2 d-flex", props.className)}>
+    return (containsSuperseded || containsDeprecated) && isTutorOrAbove(user) && <Alert {...rest} color="warning" fade={false} className={classNames("mt-2 d-flex", props.className)}>
         <i className="icon icon-warning icon-color-alert icon-sm me-3" />
         <div>
             <h5>{containsDeprecated ? "Deprecated content" : "Superseded content"}</h5>

@@ -5,6 +5,7 @@ import {
     deregisterQuestions,
     getRTKQueryErrorMessage,
     mutationSucceeded,
+    openActiveModal,
     quizApi,
     registerQuestions,
     selectors,
@@ -13,11 +14,13 @@ import {
     showSuccessToast,
     useAppDispatch,
     useAppSelector,
+    useCancelQuizAssignmentMutation,
     useGetAvailableQuizzesQuery,
     useGetMyQuizAttemptWithFeedbackQuery,
     useGetStudentQuizAttemptWithFeedbackQuery
 } from "../state";
 import {
+    confirmThen,
     extractTeacherName,
     getValue,
     isDefined,
@@ -44,6 +47,9 @@ import {
 import partition from "lodash/partition";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {createAsyncThunk} from "@reduxjs/toolkit";
+import { extendDueDateModal } from "../components/elements/modals/ExtendDueDateModal";
+import { SetQuizzesModal } from "../components/elements/modals/SetQuizzesModal";
+import { setFeedbackModeModal } from "../components/elements/modals/SetFeedbackModeModal";
 
 export interface QuizSpec {
     quizId: string;
@@ -375,3 +381,27 @@ export const getDistinctQuizSetters = (quizzes: DisplayableQuiz[] | undefined | 
 export function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmentDTO {
     return (assignment as QuizAssignmentDTO).quizId !== undefined;
 }
+
+export const useManageQuizAssignments = () => {
+    const dispatch = useAppDispatch();
+    const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
+
+    const cancel = (quiz: QuizAssignmentDTO) => confirmThen(
+        `Are you sure you want to cancel "${quiz.quizSummary?.title}"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all student attempts at this test will be lost.`,
+        () => markQuizAsCancelled(quiz.id as number)
+    );
+    const openExtendDueDateModal = (quiz: QuizAssignmentDTO) => dispatch(openActiveModal(extendDueDateModal({
+        currDueDate: quiz.dueDate as Date | number,
+        numericQuizAssignmentId: quiz.id as number
+    })));
+
+    const openAssignModal = (quiz: QuizAssignmentDTO) => {
+        if (quiz.quizSummary) {
+            dispatch(openActiveModal(SetQuizzesModal({quiz: quiz.quizSummary})));
+        }
+    };
+
+    const openSetFeedbackModeModal = async (quiz: QuizAssignmentDTO) => dispatch(openActiveModal(setFeedbackModeModal({quiz})));
+
+    return {cancel, isCancelling, openExtendDueDateModal, openSetFeedbackModeModal, openAssignModal};
+};

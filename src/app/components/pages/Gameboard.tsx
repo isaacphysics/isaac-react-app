@@ -1,8 +1,9 @@
 import React, {useEffect} from "react";
 import {
+    closeActiveModal,
     logAction,
+    saveGameboard,
     selectors,
-    setAssignBoardPath,
     useAppDispatch,
     useAppSelector,
     useGetGameboardByIdQuery,
@@ -24,9 +25,12 @@ import {
     PATHS,
     SEARCH_RESULT_TYPE,
     showWildcard,
-    siteSpecific
+    siteSpecific,
+    isStudent,
+    persistence,
+    KEY
 } from "../../services";
-import {Navigate, useLocation} from "react-router";
+import {Navigate, useLocation, useSearchParams} from "react-router";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {LoadingPlaceholder, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -35,6 +39,8 @@ import {ListView} from "../elements/list-groups/ListView";
 import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
 import { SupersededDeprecatedBoardContentWarning } from "../navigation/SupersededDeprecatedWarning";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { SaveBoardButton } from "../elements/SaveBoardButton";
+import { useSetAssignment } from "../../services/setAssignment";
 
 export const Gameboard = () => {
     const location = useLocation();
@@ -45,6 +51,11 @@ export const Gameboard = () => {
     const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId))) || undefined;
+
+    const urlParams = new URLSearchParams(location.search);
+    const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
+    const hasLinkedBookSection = linkedBookSection[0] && linkedBookSection[1];
+    const linkedBookSectionUrlParams = hasLinkedBookSection ? `?book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
 
     const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
     const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;
@@ -66,6 +77,7 @@ export const Gameboard = () => {
             query={gameboardQuery}
             defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
             ifNotFound={notFoundComponent}
+            maintainOnRefetch
             placeholder={<Container><LoadingPlaceholder /></Container>}
             thenRender={(gameboard) => {
                 return <PageContainer className="mb-7" data-bs-theme={singleSubject}
@@ -76,14 +88,23 @@ export const Gameboard = () => {
                         />
                     }
                     sidebar={siteSpecific(
-                        <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />,
+                        <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} linkedBookSection={linkedBookSection} hideButton />,
                         undefined
                     )}
                 >
-                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
+                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"
+                        additionalActionButtons={
+                            // hide for Ada students, who have no *accessible* page to see saved quizzes
+                            !(isAda && isStudent(user)) && <SaveBoardButton 
+                                board={gameboard} 
+                                color={siteSpecific("tint", "solid")} 
+                                data-bs-theme="neutral"
+                            />
+                        }
+                    />
                     <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                             
-                    <GameboardContents gameboard={gameboard} />
+                    <GameboardContents gameboard={gameboard} linkedBookSectionUrlParams={linkedBookSectionUrlParams}/>
                 </PageContainer>;
             }}
         />;
@@ -91,14 +112,25 @@ export const Gameboard = () => {
 
 interface GameboardContentsProps {
     gameboard: GameboardDTO;
+    linkedBookSectionUrlParams?: string;
 }
 
-export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
+export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: GameboardContentsProps) => {
     const dispatch = useAppDispatch();
+    const {openAssignModal} = useSetAssignment(gameboard);
     const user = useAppSelector(selectors.user.orNull);
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
     const displayQuestions = (gameboard?.wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
+
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        if (isTutorOrAbove(user) && searchParams.get("set") === "1") {
+            openAssignModal();
+        }
+        return () => {void dispatch(closeActiveModal());};
+    }, [searchParams, openAssignModal, dispatch, user]);
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -108,11 +140,11 @@ export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
     }, [dispatch, gameboard]);
 
     return <>
-        <ListView type="item" items={displayQuestions} linkedBoardId={gameboard.id} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
-        {user && isTutorOrAbove(user)
+        <ListView type="item" items={displayQuestions} linkedBoardId={gameboard.id} linkedBookSection={linkedBookSectionUrlParams} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
+        {user && (isTutorOrAbove(user)
             ? <Row>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
-                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`} color="keyline" block>
+                    <Button onClick={openAssignModal} color="keyline" block>
                         {"Set as assignment"}
                     </Button>
                 </Col>
@@ -124,14 +156,23 @@ export const GameboardContents = ({gameboard}: GameboardContentsProps) => {
             </Row>
             : gameboard && !gameboard.savedToCurrentUser && <Row>
                 <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}
-                        onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
-                        color="keyline" block
-                    >
-                        {siteSpecific("Save to My question decks", "Save to My quizzes")}
-                    </Button>
+                    {user.loggedIn
+                        ? <Button color="keyline" block onClick={() => {
+                            void dispatch(saveGameboard({
+                                boardId: gameboard.id ?? "",
+                                user,
+                            }));
+                        }}>
+                            {siteSpecific("Save this deck", "Save to My quizzes")}
+                        </Button>
+                        : <Button color="keyline" block tag={Link} to={"/login"} onClick={() => {
+                            persistence.save(KEY.AFTER_AUTH_PATH, location.pathname + location.search + location.hash);
+                        }}>
+                            {siteSpecific("Log in to save this deck", "Log in to save to My quizzes")}
+                        </Button>
+                    }
                 </Col>
             </Row>
-        }
+        )}
     </>;
 };

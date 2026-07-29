@@ -26,7 +26,6 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
-import {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
@@ -48,17 +47,6 @@ function itemise(document: SearchableDocumentType): Item<SearchableDocumentType>
 function deitemise(item: Item<SearchableDocumentType>) {
     return item.value;
 }
-
-
-const selectStyle: StylesConfig<Item<SearchableDocumentType>, true, GroupBase<Item<SearchableDocumentType>>> = {
-    multiValue: (styles: CSSObjectWithLabel) => ({
-        ...styles,
-        backgroundColor: siteSpecific("#448525", "rgba(135, 12, 90, 0.9)"),
-        color: "white",
-    }),
-    multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "white"}),
-    menuPortal: base => ({ ...base, zIndex: 19 })
-};
 
 // Interacting with the page's filters change the query parameters.
 // Whenever the query parameters change we send a search request to the API.
@@ -128,7 +116,6 @@ export const Search = () => {
                                                 .map(itemise)
                                         }
                                         onChange={selectOnChange(setFiltersState, false)}
-                                        styles={selectStyle}
                                         menuPortalTarget={document.body}
                                     />
                                 </div>

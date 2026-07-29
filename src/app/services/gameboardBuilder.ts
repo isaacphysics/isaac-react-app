@@ -1,7 +1,8 @@
-import {determineAudienceViews, difficultiesOrdered, SortOrder, sortStringsNumerically, tags} from "./";
+import {determineAudienceViews, difficultiesOrdered, sortByStringValue, SortOrder, sortStringsNumerically, tags} from "./";
 import orderBy from "lodash/orderBy";
 import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
-import {ContentSummary, Tag} from "../../IsaacAppTypes";
+import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, Tag} from "../../IsaacAppTypes";
+import { DraggableStateSnapshot } from "@hello-pangea/dnd";
 
 export const sortQuestions = (sortState: {[s: string]: string}, creationContext?: AudienceContext) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
@@ -18,6 +19,10 @@ export const sortQuestions = (sortState: {[s: string]: string}, creationContext?
             return (sortState.difficulty === SortOrder.ASC && aIndex > bIndex) ? 1 : -1;
         });
         return questions;
+    }
+    if (sortState.book && sortState.book != SortOrder.NONE) {
+        const sortedQuestions = questions.sort(sortByStringValue("subtitle"));
+        return sortState.book == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
     }
     const keys: string[] = [];
     const order: ("asc" | "desc")[] = [];
@@ -96,4 +101,34 @@ export const logEvent = (eventsLog: any[], event: string, params: any) => {
         timestamp: new Date().getTime(),
         ...params
     });
+};
+
+export interface GameboardBuilderRowInterface {
+    isDnd?: boolean;
+    snapshot?: DraggableStateSnapshot;
+    question: ContentSummary;
+    currentQuestions: GameboardBuilderQuestions;
+    undoStack: GameboardBuilderQuestionsStackProps;
+    redoStack: GameboardBuilderQuestionsStackProps;
+    creationContext?: AudienceContext;
+}
+
+export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext }: GameboardBuilderRowInterface) => {
+    if (question.id) {
+        const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
+        const newQuestionOrder = [...currentQuestions.questionOrder];
+        if (newSelectedQuestions.has(question.id)) {
+            newSelectedQuestions.delete(question.id);
+            newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
+        } else {
+            newSelectedQuestions.set(question.id, {...question, creationContext});
+            newQuestionOrder.push(question.id);
+        }
+        currentQuestions.setSelectedQuestions(newSelectedQuestions);
+        currentQuestions.setQuestionOrder(newQuestionOrder);
+        if (isDnd) {
+            undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+            redoStack.clear();
+        }
+    }
 };

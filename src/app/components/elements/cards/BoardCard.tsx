@@ -6,7 +6,6 @@ import {
     formatBoardOwner,
     generateGameboardSubjectHexagons,
     isAda,
-    isAdminOrEventManager,
     isDefined,
     isPhy,
     PATHS,
@@ -14,7 +13,6 @@ import {
     stageLabelMap,
     useDeviceSize
 } from "../../../services";
-import {showErrorToast, unlinkUserFromGameboard, useAppDispatch} from "../../../state";
 import {GameboardDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Circle} from "../svg/Circle";
 import classNames from "classnames";
@@ -37,8 +35,9 @@ import {Link} from "react-router-dom";
 import {BoardAssignee, Boards} from "../../../../IsaacAppTypes";
 import indexOf from "lodash/indexOf";
 import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
-import { IconButton } from "../AffixButton";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
+import { useSetAssignment } from "../../../services/setAssignment";
+import { SaveBoardButton } from "../SaveBoardButton";
 
 
 interface HexagonGroupsButtonProps {
@@ -101,7 +100,7 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
 const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal}: InfoShapeProps) => {
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
-    return <svg className={"board-circle"} id={hexagonId} width={48} height={48}>
+    return <svg className={"board-circle d-flex overflow-auto mx-auto"} id={hexagonId} width={48} height={48}>
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
@@ -128,23 +127,20 @@ type BoardCardProps = {
     board: GameboardDTO;
     boards?: Boards | null;
     boardView: BoardViews;
-    // Set assignments only
-    assignees?: BoardAssignee[];
-    toggleAssignModal?: () => void;
+    displayAssignmentInfo: boolean;
     // My gameboards only
     setSelectedBoards?: (selectedBoards: GameboardDTO[]) => void;
     selectedBoards?: GameboardDTO[];
 };
 
-export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal, setSelectedBoards, selectedBoards}: BoardCardProps) => {
+export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSelectedBoards, selectedBoards}: BoardCardProps) => {
     // Decides whether we show the "Assign/Unassign" button, along with other "Set Assignments"-specific stuff
-    const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
+    const isSetAssignments = displayAssignmentInfo;
 
     const hexagonId = (`board-hex-${board.id}`).replace(/[^a-z0-9-]+/gi, '');
     const boardLink = isSetAssignments ? `/assignment/${board.id}` : `${PATHS.GAMEBOARD}#${board.id}`;
-    const hasAssignedGroups = assignees && assignees.length > 0;
 
-    const dispatch = useAppDispatch();
+    const { openAssignModal, assignees } = useSetAssignment(board);
 
     const deviceSize = useDeviceSize();
 
@@ -157,21 +153,6 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         }
     };
 
-    function confirmDeleteBoard() {
-        if (hasAssignedGroups) {
-            if (isAdminOrEventManager(user)) {
-                alert(`Warning: You currently have groups assigned to this ${siteSpecific("question deck", "quiz")}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Quizzes")} page.`);
-            } else {
-                dispatch(showErrorToast(`${siteSpecific("Question Deck", "Quiz")} Deletion Not Allowed`, `You have groups assigned to this gameboard. To delete this ${siteSpecific("question deck", "quiz")}, you must unassign all groups.`));
-                return;
-            }
-        }
-
-        if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title}));
-        }
-    }
-
     const boardSubjects = determineGameboardSubjects(board);
     const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(board);
 
@@ -183,7 +164,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         hexagonId,
         boardSubjects,
         assignees,
-        toggleAssignModal,
+        toggleAssignModal: isSetAssignments ? openAssignModal : undefined,
         isTable,
     };
 
@@ -221,15 +202,18 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                     {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
                     <br/>
-                    {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board} />}
+                    <SupersededDeprecatedBoardContentWarning gameboard={board} />
                 </td>
                 {stagesAndDifficultiesTD}
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
                 <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
                 <td className={"align-middle text-center"}>
-                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "solid")} size="sm" onClick={toggleAssignModal}>
-                        Assign{hasAssignedGroups && "\u00a0/ Unassign"}
-                    </Button>
+                    <div className="d-flex gap-2 align-items-center">
+                        {isPhy && <SaveBoardButton board={board} color="keyline" size="sm" />}
+                        <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
+                            {isSetAssignments ? "Assign / Unassign" : "Assign"}
+                        </Button>
+                    </div>
                 </td>
                 {isAda && <td className={"align-middle text-center"}>
                     <div className="table-share-link">
@@ -237,7 +221,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </div>
                 </td>}
                 {isAda && <td className={"align-middle text-center"}>
-                    <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                    <SaveBoardButton board={board} color="keyline" size="sm" />
                 </td>}
             </> 
                 : 
@@ -245,6 +229,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                         <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                         {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                        <br/>
+                        <SupersededDeprecatedBoardContentWarning gameboard={board} hideFullDetails />
                     </td>
                     {stagesAndDifficultiesTD}
                     {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
@@ -266,27 +252,37 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <ShareLink linkUrl={boardLink} gameboardId={board.id} innerClassName="btn-keyline" outline clickAwayClose />
                         </div>
                     </td>}
-                    {siteSpecific(<td className={"text-center align-middle"}>
-                        <IconButton icon={{name: "icon-bin", size: "sm", color: siteSpecific("tertiary", "primary")}} color={siteSpecific("", "keyline")} className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
-                    </td>,
-                    <td className={"text-center align-middle overflow-hidden"}>
-                        <Input
-                            id={`board-delete-${board.id}`}
-                            type="checkbox"
-                            color="secondary"
-                            className={"isaac-checkbox me-n2"}
-                            checked={board && selectedBoards?.some(e => e.id === board.id)}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                board && updateBoardSelection(board, event.target.checked)
-                            } aria-label="Delete quiz"
-                        />
-                    </td>)}
+                    {siteSpecific(
+                        <td className={"text-center align-middle"}>
+                            <div className="d-flex gap-2">
+                                <SaveBoardButton board={board} color="keyline" size="sm" />
+                                <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
+                                    {isSetAssignments ? "Assign / Unassign" : "Assign"}
+                                </Button>
+                            </div>
+                        </td>,
+                        <td className={"text-center align-middle overflow-hidden"}>
+                            <Input
+                                id={`board-delete-${board.id}`}
+                                type="checkbox"
+                                color="secondary"
+                                className={"isaac-checkbox me-n2"}
+                                checked={board && selectedBoards?.some(e => e.id === board.id)}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                    board && updateBoardSelection(board, event.target.checked)
+                                } aria-label="Delete quiz"
+                            />
+                        </td>
+                    )}
                 </>}
         </tr>)
         :
         siteSpecific(
-            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
-                {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
+            // sci
+            <GameboardCard 
+                gameboard={board} linkLocation={GameboardLinkLocation.Card} data-testid="gameboard-card"
+                openAssignModal={openAssignModal} usageDisplay={isSetAssignments ? {type: "group", groupCount: assignees?.length} : {type: "correctness"}}
+            >
                 <Row>
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
@@ -295,10 +291,11 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
                             Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
                         </p>}
-                        {isSetAssignments && <SupersededDeprecatedBoardContentWarning gameboard={board} />}
                     </Col>
                 </Row>
             </GameboardCard>,
+
+            // ada
             <Card className={"board-card"} data-testid={"gameboard-card"}>
                 <CardBody className="pb-7 pt-4">
                     <Row className={"mb-2"}>
@@ -347,14 +344,15 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                     `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                                 ).join(", ") || "-"}
                             </p>
-                            <br/>
                         </Col>
                     </Row>
+                    <SupersededDeprecatedBoardContentWarning gameboard={board}/>
+                    <br/>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
-                        <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
-                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={toggleAssignModal}>
-                            Assign{hasAssignedGroups && " / Unassign"}
+                        <SaveBoardButton board={board} color="keyline" size="sm" />
+                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={openAssignModal}>
+                            Assign / Unassign
                         </Button>}
                     </CardFooter>
                 </CardBody>

@@ -37,6 +37,7 @@ export * from "./slices/api/accountApi";
 export * from "./slices/api/gameboardApi";
 export * from "./slices/api/assignmentsApi";
 export * from "./slices/api/bookmarksApi";
+export * from "./slices/api/skillsApi";
 export * from "./slices/api/contentApi";
 export * from "./slices/api/groupsApi";
 export * from "./slices/api/emailApi";

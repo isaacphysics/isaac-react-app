@@ -2,7 +2,7 @@ import React, {Suspense, useContext, useEffect} from "react";
 import {submitQuizQuestionIfDirty, useAppDispatch} from "../../state";
 import classnames from "classnames";
 import {isAda, isDefined, isPhy, QUESTION_TYPES, siteSpecific} from "../../services";
-import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {IsaacHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {QuizAttemptContext} from "../../../IsaacAppTypes";
@@ -18,7 +18,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         return () => {
             // Submit answer when unmounting if it is dirty
             if (isDefined(quizAttempt) && quizAttempt.completedDate === undefined) {
-                dispatch(submitQuizQuestionIfDirty(quizAttempt.id as number, doc.id as string));
+                void dispatch(submitQuizQuestionIfDirty(quizAttempt.id as number, doc.id as string));
             }
         };
     }, [dispatch, doc.id, quizAttempt]);
@@ -45,9 +45,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </Suspense>
 
             {/* CS Hints */}
-            {isAda && <React.Fragment>
-                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
-            </React.Fragment>}
+            {isAda && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="modal"/>}
 
             {/* Validation Response */}
             {validated && <div className={`validation-response-panel p-2 mt-2 ${correct ? "correct" : ""}`}>
@@ -60,9 +58,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </div>}
 
             {/* Physics Hints */}
-            {isPhy && <div className={correct ? "mt-7" : ""}>
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
-            </div>}
+            {isPhy && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="tabbed"/>}
         </div>
     </div>;
 };

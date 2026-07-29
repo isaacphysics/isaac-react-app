@@ -14,7 +14,8 @@ import { Markup } from "../markup";
 export const ICON = {
     correct: <i className={classNames("icon-md", siteSpecific("icon-correct", "icon-correctness-correct"))}/>,
     incorrect: <i className={classNames("icon-md", siteSpecific("icon-incorrect", "icon-correctness-incorrect"))}/>,
-    notAttempted: <i className={classNames("icon-md", siteSpecific("icon-not-attempted", "icon-correctness-not-attempted"))}/>,
+    attempted: <i className={classNames("icon-md", siteSpecific("icon-attempted-markbook", "icon-correctness-correct"))}/>,
+    notAttempted: <i className={classNames("icon-md", siteSpecific("icon-not-attempted-markbook", "icon-correctness-not-attempted"))}/>,
     partial: <i className={classNames("icon-md", siteSpecific("icon-in-progress", "icon-correctness-partial"))}/>,
 };
 
@@ -81,20 +82,30 @@ const getQuizQuestionCorrectnessIcon = (attemptedOrCorrect: "ATTEMPTED" | "CORRE
         return ICON.notAttempted;
     } else {
         if ((studentProgress.correctPartResults || [])[questionIndex] === 1 || (studentProgress.incorrectPartResults || [])[questionIndex] === 1) {
-            return ICON.correct;
+            return ICON.attempted;
         }
         return ICON.notAttempted;
     }
 };
 
-export const getQuizQuestionPartCorrectnessIcon = (state: QuestionPartState) => {
-    switch (state) {
-        case "CORRECT":
-            return ICON.correct;
-        case "INCORRECT":
-            return ICON.incorrect;
-        case "NOT_ATTEMPTED":
-            return ICON.notAttempted;
+export const getQuizQuestionPartCorrectnessIcon = (state: QuestionPartState, attemptedOrCorrect?: "ATTEMPTED" | "CORRECT") => {
+    if (attemptedOrCorrect === "CORRECT") {
+        switch (state) {
+            case "CORRECT":
+                return ICON.correct;
+            case "INCORRECT":
+                return ICON.incorrect;
+            case "NOT_ATTEMPTED":
+                return ICON.notAttempted;
+        }
+    } else {
+        switch (state) {
+            case "CORRECT":
+            case "INCORRECT":
+                return ICON.attempted;
+            case "NOT_ATTEMPTED":
+                return ICON.notAttempted;
+        }
     }
 };
 
@@ -542,7 +553,9 @@ export function ResultsTablePartBreakdown({
             case "name":
                 return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
             case "totalPartPercentage":
+                return -item.correctQuestionPartsCount; 
             case "totalAttemptedPartPercentage":
+                return -(item.correctQuestionPartsCount + item.incorrectQuestionPartsCount);
             case "totalQuestionPercentage":
             case "totalAttemptedQuestionPercentage":
                 return 0; // These sorts are not applicable for part breakdown
@@ -583,8 +596,8 @@ export function ResultsTablePartBreakdown({
                         {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                             ? <SortItemHeader<ProgressSortOrder>
                                 className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
-                                defaultOrder={"totalQuestionPercentage"}
-                                reverseOrder={"totalQuestionPercentage"}
+                                defaultOrder={"totalPartPercentage"}
+                                reverseOrder={"totalPartPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                                 label={"Total correct"}
                             >
@@ -598,8 +611,8 @@ export function ResultsTablePartBreakdown({
                             </SortItemHeader>
                             : <SortItemHeader<ProgressSortOrder>
                                 className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
-                                defaultOrder={"totalAttemptedQuestionPercentage"}
-                                reverseOrder={"totalAttemptedQuestionPercentage"}
+                                defaultOrder={"totalAttemptedPartPercentage"}
+                                reverseOrder={"totalAttemptedPartPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                                 label={"Total attempted"}
                             >
@@ -662,7 +675,7 @@ export function ResultsTablePartBreakdown({
                             {/* main data */}
                             {studentProgress.questionPartResults &&
                                 studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
-                                    <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
+                                    <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult, pageSettings?.attemptedOrCorrect)}</td>
                                 ))
                             }
                         </tr>

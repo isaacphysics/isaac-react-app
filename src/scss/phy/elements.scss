@@ -37,17 +37,6 @@ details.teacher-notes {
     &::marker {
       content: '';
     }
-
-    &::after {
-      content: "";
-      display: inline-block;
-      background: url('/assets/phy/icons/redesign/chevron-down.svg') no-repeat center center;
-      height: 16px;
-      width: 16px;
-      margin-left: 8px;
-      transform: rotate(-90deg);
-      transition: transform 0.1s ease-in-out;
-    }
   }
 
   > div {
@@ -63,10 +52,6 @@ details.teacher-notes {
     border-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-
-    &::after {
-      transform: rotate(0deg);
-    }
   }
 }
 
@@ -96,7 +81,7 @@ details.teacher-notes {
 }
 
 .warning-tag {
-  @include pill-tag(var(--color-neutral-white), $color-misc-orange-500, $color-misc-orange-500);
+  @include pill-tag($color-neutral-white, $color-misc-orange-500, $color-misc-orange-500);
   padding: 0.03rem 0.6rem;
 }
 

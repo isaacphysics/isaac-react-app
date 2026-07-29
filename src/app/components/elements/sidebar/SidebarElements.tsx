@@ -9,11 +9,13 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { Tag } from "../../../../IsaacAppTypes";
+import { AffixButton } from "../AffixButton";
+import { Spacer } from "../Spacer";
 
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
     return <li {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}>
-        <i className={`icon icon-raw icon-${icon} me-2`} />
+        <i className={`icon icon-raw icon-${icon} icon-inline me-2`} />
         {text}
     </li>;
 };
@@ -76,8 +78,8 @@ export const FilterCheckbox = (props : FilterCheckboxProps) => {
                 label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
                 partial={partial}
             />
-            : <StyledTabPicker {...rest} id={tag.id} checked={checked}
-                onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
+            : <StyledTabPicker className={rest.className} id={tag.id} checked={checked}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
                 checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
             />
         }
@@ -85,13 +87,14 @@ export const FilterCheckbox = (props : FilterCheckboxProps) => {
 };
 
 export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
-    const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, ...rest } = props;
+    const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, className } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return <StyledTabPicker {...rest}
+    return <StyledTabPicker
         id="all" checked={forceEnabled || !conceptFilters.length}
         checkboxTitle="All"
+        className={className}
         count={tagCounts &&
             (baseTag
                 ? tagCounts[baseTag.id] + (pageContext?.subject && pageContext?.stage?.length === 1
@@ -100,7 +103,7 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
                 : Object.values(tagCounts).reduce((a, b) => a + b, 0)
             )
         }
-        onInputChange={(e) => {
+        onChange={(e) => {
             if (forceEnabled) {
                 setConceptFilters([]);
                 return;
@@ -118,13 +121,17 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
 interface QuestionLinkProps {
     question: ContentSummaryDTO | GameboardItem;
     gameboardId?: string;
+    linkedBookSection?: string[];
 }
 
 export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
-    const { question, gameboardId, ...rest } = props;
+    const { question, gameboardId, linkedBookSection, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
-    const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
+    const boardUrlParams = isDefined(gameboardId) ? `?board=${gameboardId}` : "";
+    const hasLinkedBookSection = linkedBookSection && linkedBookSection[0] && linkedBookSection[1];
+    const linkedBookUrlParams = hasLinkedBookSection ? `${isDefined(gameboardId) ? "&" : "?"}book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
+    const link = `/questions/${question.id}${boardUrlParams}${linkedBookUrlParams}`;
 
     const progressIcon = question.state && (question.state === CompletionState.ALL_CORRECT
         ? "icon icon-raw icon-correct"
@@ -152,3 +159,27 @@ export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}>
         {title}
     </span>;
+
+interface BackToBookButtonProps extends React.HTMLAttributes<HTMLElement> {
+    linkedBookSection: string[];
+}
+
+export const BackToBookButton = (props: BackToBookButtonProps) => {
+    const { linkedBookSection, ...rest } = props;
+    const bookId = linkedBookSection[0];
+    const sectionId = linkedBookSection[1];
+    const path = `/books/${bookId}/${sectionId}`;
+    return <AffixButton
+        {...rest}
+        tag={Link}
+        to={path}
+        affix={{
+            affix: "icon-arrow-left",
+            position: "prefix",
+            type: "icon",
+            affixClassName: "icon-inline me-2"
+        }}>
+        Back to book section
+        <Spacer />
+    </AffixButton>;
+};

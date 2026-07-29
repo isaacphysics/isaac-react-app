@@ -93,6 +93,18 @@ svg.book-page-icon {
   }
 }
 
+.book-card {
+  padding: 0;
+
+  // To allow for a visible focus outlines across all book-card contexts, book-containers within book-cards
+  // should have a small margin to prevent the box shadow from being cut off, and a width that accomodates this margin
+  .book-container {
+    padding: 0.25rem;
+    margin: 0.25rem;
+    max-width: calc(100% - 0.5rem);
+  }
+}
+
 .book-image-container {
   position: relative;
   width: max-content;

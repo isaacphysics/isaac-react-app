@@ -4,6 +4,9 @@
 // bootstrap/scss/mixins/_color-mode.scss
 @mixin color-mode($mode: light, $root: false) {
   @if $color-mode-type == "media-query" {
+    // we don't use this (i think?), but maintaining as in the original mixin
+    // note – $root doesn't do anything outside of this version (we apply styles to [data-ld-theme=...] selectors which must be extant elements),
+    // but am keeping and using it for root-level props for consistency
     @if $root == true {
       @media (prefers-color-scheme: $mode) {
         :root {
@@ -16,8 +19,46 @@
       }
     }
   } @else {
-    [data-ld-theme="#{$mode}"] {
-      @content;
+    // --- we use this! --- //
+    @media screen {
+      [data-ld-theme="#{$mode}"] {
+        @content;
+      }
     }
+
+    @if $mode == light {
+      @media print {
+        [data-ld-theme] {
+          // if printing, apply all light mode properties to any [data-ld-theme=...] element, so as to force light mode regardless of theme
+          @content;
+        }
+      }
+    }
+  }
+}
+
+// generate bg-, text-, and border- color variables (with light/dark support) from CSS vars
+
+$css-var-compatible-themes: (
+  theme: var(--subject-color-500),
+  neutral-light: var(--color-neutral-100),
+  neutral: var(--color-neutral-200),
+);
+
+@each $theme, $color in $css-var-compatible-themes {
+  .bg-#{$theme} {
+    background-color: #{$color} !important;
+  }
+  .text-#{$theme} {
+    color: #{$color} !important;
+
+    &:is(a), a {
+      &:hover, &:focus {
+        color: var(--subject-color-600);
+      }
+    }
+  }
+  .border-#{$theme} {
+    border-color: #{$color} !important;
   }
 }

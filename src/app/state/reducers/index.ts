@@ -24,7 +24,7 @@ import {
     gameboardsSlice,
     adminUserSearchSlice,
     userSlice,
-    interstitialCookieSlice,
+    cookieConsentSlice,
     pageContextSlice,
     topicSlice,
     linkableSettingSlice,
@@ -51,7 +51,7 @@ export const rootReducer = combineReducers({
     notifications,
 
     // Cookies
-    cookieConsent: interstitialCookieSlice.reducer,
+    cookieConsent: cookieConsentSlice.reducer,
 
     // Static Content
     glossaryTerms,

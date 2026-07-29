@@ -3,11 +3,11 @@ import { GameboardDTO, AssignmentDTO } from "../../../../IsaacApiTypes";
 import { determineGameboardSubjects, isDefined, TAG_ID, tags, HUMAN_SUBJECTS, extractTeacherName } from "../../../services";
 import { getFriendlyDaysUntil } from "../DateString";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
-import { Pill, CompletionKey } from "./SidebarElements";
-
+import { Pill, CompletionKey, BackToBookButton } from "./SidebarElements";
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments?: AssignmentDTO[];
+    linkedBookSection?: string[];
 };
 
 const GameboardDetails = ({ gameboard }: { gameboard: GameboardDTO }) => {
@@ -61,9 +61,10 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
 };
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
-    const {gameboard, assignments, ...rest} = props;
+    const {gameboard, assignments, linkedBookSection, ...rest} = props;
 
     return <ContentSidebar buttonTitle="Details" {...rest}>
+        {linkedBookSection && linkedBookSection[0] && linkedBookSection[1] && <BackToBookButton linkedBookSection={linkedBookSection} />}
         <GameboardDetails gameboard={gameboard} />
         <AllAssignmentDetails assignments={assignments} />
         <div className="section-divider"/>

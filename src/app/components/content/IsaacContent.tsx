@@ -24,6 +24,7 @@ import InlineContextProvider from "../elements/InlineContextProvider";
 import { useLocation } from "react-router";
 import { DesmosEmbedding } from "./DesmosEmbedding";
 import { GeogebraEmbedding } from "./GeogebraEmbedding";
+import { SkillsApp } from "./SkillsApp";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
@@ -39,7 +40,8 @@ const classBasedLayouts = {
 
 export interface IsaacContentProps {
     doc: ContentDTO,
-    contentIndex?: number
+    contentIndex?: number,
+    preview?: boolean;
 }
 
 export const IsaacContent = (props: IsaacContentProps) => {
@@ -83,6 +85,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} key={props.doc.id} />; break;
             case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} key={props.doc.id} />; break;
             case "anvilApp": selectedComponent = <AnvilApp {...props} key={props.doc.id} />; break;
+            case "skillsApp": selectedComponent = <SkillsApp {...props} key = {props.doc.id}/>; break;
             case "desmosEmbedding": selectedComponent = <DesmosEmbedding {...props} key={props.doc.id} />; break;
             case "geogebraEmbedding": selectedComponent = <GeogebraEmbedding {...props} key={props.doc.id} />; break;
             case "isaacCard": selectedComponent = <IsaacCard {...props} key={props.doc.id} />; break;
@@ -97,7 +100,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
                     case "horizontal": selectedComponent = <IsaacHorizontal {...props} key={props.doc.id} />; break;
                     case "clearfix": selectedComponent = <>&nbsp;</>; break;
                     default: selectedComponent =
-                        <IsaacContentValueOrChildren encoding={encoding} value={value} key={props.doc.id} >
+                        <IsaacContentValueOrChildren encoding={encoding} value={value} key={props.doc.id} preview={props.preview}>
                             {children}
                         </IsaacContentValueOrChildren>;
                 }

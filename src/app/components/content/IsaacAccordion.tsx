@@ -50,7 +50,7 @@ const StageInsert = ({stage}: {stage: string}) => {
     </>;
 };
 
-export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
+export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boolean}) => {
     const page = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
@@ -186,6 +186,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                     deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
                     audienceString={audienceString}
+                    preview={preview}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>

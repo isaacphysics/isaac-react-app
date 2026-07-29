@@ -24,6 +24,7 @@ import {
     isQuestion,
     nthHourOf,
     PATHS,
+    QUIZ_FEEDBACK_NAMES,
     siteSpecific,
     TODAY,
     useAssignmentProgressAccessibilitySettings
@@ -153,13 +154,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
         See the feedback for your students for this test assignment.
     </span>;
 
-    const feedbackNames: Record<QuizFeedbackMode, string> = {
-        NONE: "No feedback for students",
-        OVERALL_MARK: "Overall mark only",
-        SECTION_MARKS: "Section-by-section mark breakdown",
-        DETAILED_FEEDBACK: "Detailed feedback on each question",
-    };
-
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
             <h4 className="alert-heading">Error loading test feedback</h4>
@@ -195,7 +189,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         </Label>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={"sm"} disabled={isUpdatingQuiz}>
-                                {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
+                                {QUIZ_FEEDBACK_NAMES[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
                             </DropdownToggle>
                             <DropdownMenu container={"root"} className="z-1050">
                                 {QuizFeedbackModes.map(mode =>
@@ -203,7 +197,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                         onClick={() => setFeedbackMode(mode)}
                                         active={mode === quizAssignment?.quizFeedbackMode}
                                     >
-                                        {feedbackNames[mode]}
+                                        {QUIZ_FEEDBACK_NAMES[mode]}
                                     </DropdownItem>
                                 )}
                             </DropdownMenu>

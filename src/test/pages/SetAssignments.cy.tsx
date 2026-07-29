@@ -5,7 +5,7 @@ import {SetAssignments} from "../../app/components/pages/SetAssignments";
 
 it('Set Assignments should have no visual regressions', () => {
     // @ts-ignore
-    cy.mountWithStoreAndRouter(<SetAssignments user={mockUser}/>, [PATHS.SET_ASSIGNMENTS]);
+    cy.mountWithStoreAndRouter(<SetAssignments user={mockUser}/>, [PATHS.SET_ASSIGNMENTS], PATHS.SET_ASSIGNMENTS, mockUser);
     cy.get('[data-testid="loading"]').should('not.exist');
     cy.matchImage();
 });

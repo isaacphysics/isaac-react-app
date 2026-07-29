@@ -1,36 +1,27 @@
 import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {getThemeFromTags, isDefined, isTeacherOrAbove, tags} from "../../../services";
-import {QuizContentsComponent, rubricCrumbs} from "../../elements/quiz/QuizContentsComponent";
-import {Button, Col, Container, Row} from "reactstrap";
+import {getThemeFromTags, isDefined, tags} from "../../../services";
+import {QuizContentsComponent, viewQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
+import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
 import { Spacer } from "../../elements/Spacer";
-import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 const pageHelp = <span>
     View information about a test without adding it to {'"My tests"'}. This page does not show any questions.
 </span>;
 
-const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", rubricCrumbs);
+const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", viewQuizzesCrumbs);
 
-const FooterButton = ({link, label}: {link: string, label: string}) => <Col className="d-flex">
-    <Button className="flex-fill d-flex text-nowrap align-items-center justify-content-center mb-3" color="secondary" tag={Link} to={link}>
-        {label}
-    </Button>
-</Col>;
-
-const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =>
-    <QuizSidebarLayout>
+const QuizFooter = ({quizId}: {quizId: string}) => {
+    return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
         <Spacer />
-        <Row>
-            {isTeacherOrAbove(user) && <FooterButton link={`/test/preview/${quizId}`} label="Preview" />}
-            <FooterButton link={`/test/attempt/${quizId}`} label="Take Test" />
-        </Row>
-    </QuizSidebarLayout>;
+        <Button tag={Link} to={`/test/attempt/${quizId}`}>Take Test</Button>
+    </div>;
+};
 
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     const {quizId} = useParams();
@@ -41,9 +32,10 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     return <Container data-testid="quiz-view" className="mb-7" data-bs-theme={getThemeFromTags(view.quiz?.tags)}>
-        <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
-            <QuizContentsComponent view={view} pageHelp={pageHelp} user={user} />
-            <QuizFooter quizId={quizId as string} user={user} />
-        </ShowLoadingQuery>
+        <ShowLoadingQuery query={quizRubricQuery} ifError={Error} thenRender={(quizSummary => <>
+            <QuizContentsComponent user={user} pageHelp={pageHelp} quiz={quizSummary}>
+                <QuizFooter quizId={quizId as string} />
+            </QuizContentsComponent>
+        </>)} />
     </Container>;
 };

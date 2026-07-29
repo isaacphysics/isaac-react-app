@@ -1,9 +1,10 @@
 import React from "react";
 import { DisplaySettings } from "../../../../IsaacAppTypes";
 import { MyAccountTab } from "./MyAccountTab";
-import { Label } from "reactstrap";
+import { Alert, Label } from "reactstrap";
 import { LightnessTheme, lightnessThemes, useLightnessTheme } from "../../../services/theme";
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 
 interface UserThemeProps {
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
@@ -39,6 +40,12 @@ export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
                     onChange={() => setDisplaySettings?.(prev => ({...prev, DARK_MODE: theme.value === "dark"}))}
                 />)}
             </div>
+            <Alert color="warning" className="mt-4">
+                Please note that dark mode is a new and extensive feature and, as such, certain areas of the site may not yet be fully optimised for this theme. 
+                We also cannot guarantee e.g. AA accessibility compliance for dark mode at this time.
+                <br/><br/>
+                If you encounter any issues, particularly regarding legibility, please report them to us via the <Link to="/contact?subject=Dark%20mode%20issue">contact form</Link> for further investigation. Please include a link to the page containing the issue if possible.
+            </Alert>
         </>}
     />;
 };

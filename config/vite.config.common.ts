@@ -1,6 +1,7 @@
 import type { Plugin, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs/promises';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // Vite requires an index.html file at the project root. Since we have two sites and each needs its own index.html,
 // we use this plugin to load the appropriate site-specific index.html file to replace the default one.
@@ -69,7 +70,16 @@ const generateConfigInternal = (site: "sci" | "ada", renderer = false, options: 
             react({}),
             // purgeCssPlugin(), // see above
             renameIndexPlugin(indexPath),
-            ...options.additionalPlugins || []
+            isBuild && viteStaticCopy({
+                targets: [
+                    {
+                        src: `public/unsupported_browsers/unsupported-${oldStyleSite}.html`,
+                        dest: '.',
+                        rename: {name: 'unsupported_browser.html', stripBase: true},
+                    },
+                ],
+            }),
+            ...options.additionalPlugins || [],
         ],
 
         build: {
