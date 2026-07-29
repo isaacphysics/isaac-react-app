@@ -77,7 +77,6 @@ services:
       default:
         aliases:
           - $SITE-etl
-          - $SUBJECT-etl
     logging:
       driver: journald
       options:
