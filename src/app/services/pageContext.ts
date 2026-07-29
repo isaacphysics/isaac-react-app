@@ -7,7 +7,7 @@ import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
 import { pageContextSlice, selectors, useAppDispatch, useAppSelector } from "../state";
 import { useEffect, useState } from "react";
 
-const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
+export const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
     // filtering this const list against the passed-in tags maintains the order (and thus precedence) of the subjects
     return [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology].filter(tag => tags.includes(tag)) as SiteTheme[];
 };
