@@ -3,15 +3,12 @@ import { Alert } from 'reactstrap';
 import { ACCESSIBILITY_WARNINGS, useDragAndDropAccessibility } from '../../services/accessibility';
 import { Spacer } from '../elements/Spacer';
 import { selectors, useAppSelector } from '../../state';
-import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
-import classNames from 'classnames';
-import { siteSpecific } from '../../services';
 import StyledToggle from '../elements/inputs/StyledToggle';
 
-export const DragAndDropInputModeToggle = ({className}: {className?: string}) => {
+export const DragAndDropInputModeToggle = () => {
     const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
 
-    return siteSpecific(<div className={classNames("no-print d-flex flex-column align-items-center w-min-content", className)}>
+    return <div className="input-mode-toggle">
         <span>Question input mode</span>
         <Spacer />
         <StyledToggle
@@ -20,11 +17,7 @@ export const DragAndDropInputModeToggle = ({className}: {className?: string}) =>
             trueLabel="Drag and drop"
             onChange={(e) => {toggleDragAndDropEnabled(); e.stopPropagation();}}
         />
-    </div>,
-    <div className={classNames("no-print", className)}>
-        <StyledCheckbox checked={!dragAndDropEnabled} onChange={toggleDragAndDropEnabled} label={<span className="text-muted">Use dropdowns for drag and drop questions</span>} /> 
     </div>
-    );
 };
 
 export const InaccessibleContentWarningBanner = ({type}: {type: keyof typeof ACCESSIBILITY_WARNINGS}) => {

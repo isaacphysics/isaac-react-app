@@ -11,7 +11,7 @@
     white-space: nowrap;
     border-radius: 3rem;
     padding: 1px;
-    background: var(--color-neutral-300);
+    background: var(--color-neutral-300, $gray-118);
 
     > input {
         appearance: none;
@@ -28,7 +28,7 @@
         border-radius: 3rem;
 
         &:checked ~ span:last-of-type, &:not(:checked) ~ span:first-of-type {
-            background: var(--color-neutral-white);
+            background: var(--color-neutral-white, white);
             box-shadow: $shadow-25 0px 0px 2px;
             color: var(--color-neutral-900);
             padding: 7px $toggle-span-normal-x-padding;

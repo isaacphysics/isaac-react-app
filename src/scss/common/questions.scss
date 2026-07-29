@@ -756,3 +756,10 @@ p > .katex, .katex-display {
 .spaced-tooltip br {
     margin-bottom: 0.5rem;
 }
+
+.input-mode-toggle {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: min-content;
+}
