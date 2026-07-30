@@ -8,7 +8,6 @@ import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
 import { Spacer } from "../../elements/Spacer";
-import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 const pageHelp = <span>
@@ -18,13 +17,10 @@ const pageHelp = <span>
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", viewQuizzesCrumbs);
 
 const QuizFooter = ({quizId}: {quizId: string}) => {
-    return <QuizSidebarLayout>
+    return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
         <Spacer />
-        <div className="d-flex w-100 align-items-center mt-2 gap-2">
-            <Spacer />
-            <Button tag={Link} to={`/test/attempt/${quizId}`}>Take Test</Button>
-        </div>
-    </QuizSidebarLayout>;
+        <Button tag={Link} to={`/test/attempt/${quizId}`}>Take Test</Button>
+    </div>;
 };
 
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
@@ -37,8 +33,9 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container data-testid="quiz-view" className="mb-7" data-bs-theme={getThemeFromTags(view.quiz?.tags)}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error} thenRender={(quizSummary => <>
-            <QuizContentsComponent user={user} pageHelp={pageHelp} quiz={quizSummary} />
-            <QuizFooter quizId={quizId as string} />
+            <QuizContentsComponent user={user} pageHelp={pageHelp} quiz={quizSummary}>
+                <QuizFooter quizId={quizId as string} />
+            </QuizContentsComponent>
         </>)} />
     </Container>;
 };

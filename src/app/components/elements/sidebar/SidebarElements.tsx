@@ -78,8 +78,8 @@ export const FilterCheckbox = (props : FilterCheckboxProps) => {
                 label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
                 partial={partial}
             />
-            : <StyledTabPicker {...rest} id={tag.id} checked={checked}
-                onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
+            : <StyledTabPicker className={rest.className} id={tag.id} checked={checked}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
                 checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
             />
         }
@@ -87,13 +87,14 @@ export const FilterCheckbox = (props : FilterCheckboxProps) => {
 };
 
 export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
-    const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, ...rest } = props;
+    const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, className } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return <StyledTabPicker {...rest}
+    return <StyledTabPicker
         id="all" checked={forceEnabled || !conceptFilters.length}
         checkboxTitle="All"
+        className={className}
         count={tagCounts &&
             (baseTag
                 ? tagCounts[baseTag.id] + (pageContext?.subject && pageContext?.stage?.length === 1
@@ -102,7 +103,7 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
                 : Object.values(tagCounts).reduce((a, b) => a + b, 0)
             )
         }
-        onInputChange={(e) => {
+        onChange={(e) => {
             if (forceEnabled) {
                 setConceptFilters([]);
                 return;

@@ -11,7 +11,7 @@ import { isLoggedIn, SITE_TITLE } from "../../services";
 import { ExternalLink } from "../elements/ExternalLink";
 
 export const StudentResources = () => {
-    useEffect( () => {document.title = "Students — " + SITE_TITLE;}, []);
+    useEffect( () => {document.title = "Students – " + SITE_TITLE;}, []);
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredStudentChallengePod = studentChallengesPods?.[0];
     

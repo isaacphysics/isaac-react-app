@@ -19,8 +19,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 
     const cards: (CustomListViewItemProps['item'] | null)[] = [
         {
-            title: "11-14",
-            subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`,
+            title: "11–14",
+            subtitle: `Our 11–14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,

@@ -50,7 +50,7 @@ export const TeacherAccountSelfUpgrade = () => {
             <Col className="pt-4 pb-7">
                 <PageFragment fragmentId={"teacher_account_self_upgrade"}></PageFragment>
                 <Button className="my-3" disabled={!emailVerified} onClick={upgrade}>Get a teacher account</Button>
-                {!emailVerified && <small className="text-danger d-block">Your email address is not verified — please click on the link in the verification email to confirm your email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a new verification email</Button> if necessary.</small>}
+                {!emailVerified && <small className="text-danger d-block">Your email address is not verified – please click on the link in the verification email to confirm your email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a new verification email</Button> if necessary.</small>}
             </Col>
         </Row>
     </Container>;
