@@ -16,8 +16,6 @@ interface TrueFalseRadioProps {
 export function TrueFalseRadioInput({id, className, stateObject, propertyName, accessibleName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps) {
     const invalid = submissionAttempted && (typeof stateObject?.[propertyName] !== "boolean");
 
-    console.log(stateObject);
-
     return <FormGroup>
         <div className={className}>
             <div className="d-flex flex-nowrap flex-grow-1">
