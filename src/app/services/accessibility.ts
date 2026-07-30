@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { AppState, selectors, useAppDispatch, useAppSelector } from "../state";
-import { isTeacherOrAbove } from "./user";
+import { isLoggedIn, isTeacherOrAbove } from "./user";
 import { below, isTouchDevice, useDeviceSize } from "./device";
 import { isDefined } from "./miscUtils";
 import { ACTION_TYPE } from "./constants";
@@ -79,6 +79,6 @@ export const useAccessibilitySettings = () => {
     const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
     const user = useAppSelector((state: AppState) => state?.user);
 
-    accessibilitySettings.SHOW_INACCESSIBLE_WARNING = accessibilitySettings?.SHOW_INACCESSIBLE_WARNING ?? isTeacherOrAbove(user);
+    accessibilitySettings.SHOW_INACCESSIBLE_WARNING = accessibilitySettings?.SHOW_INACCESSIBLE_WARNING ?? (isTeacherOrAbove(user) || !isLoggedIn(user));
     return accessibilitySettings;
 };

@@ -17,7 +17,7 @@ export const DragAndDropInputModeToggle = () => {
             trueLabel="Drag and drop"
             onChange={(e) => {toggleDragAndDropEnabled(); e.stopPropagation();}}
         />
-    </div>
+    </div>;
 };
 
 export const InaccessibleContentWarningAlert = ({type}: {type: keyof typeof ACCESSIBILITY_WARNINGS}) => {
