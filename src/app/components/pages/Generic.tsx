@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Col, Row} from "reactstrap";
 import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {isAda, isPhy, showWildcard, siteSpecific, useUrlHashValue} from "../../services";
+import {isAda, isPhy, showWildcard, siteSpecific, useContextFromContentObjectTags, useUrlHashValue} from "../../services";
 import {useParams} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -64,6 +64,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId || "";
 
     const pageQuery = useGetGenericPageQuery(pageId);
+    const pageContext = useContextFromContentObjectTags(pageQuery.currentData);
 
     const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
 
@@ -94,7 +95,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                     undefined
                 );
 
-            return <PageContainer data-bs-theme={"biology"}
+            return <PageContainer data-bs-theme={pageContext?.subject}
                 pageTitle={
                     <TitleAndBreadcrumb 
                         currentPageTitle={doc.title as string} 
