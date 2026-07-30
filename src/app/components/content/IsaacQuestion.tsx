@@ -25,14 +25,14 @@ import {
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
-import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {IsaacHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { Alert, Button, Col, Form, Row } from "reactstrap";
+import { Alert, Button, Form} from "reactstrap";
 import { useLocation } from "react-router";
 
 function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
@@ -212,17 +212,10 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     </div>
                 }
 
-                {/* CS Hint Reminder */}
-                {isAda && (!validationResponse || !correct || canSubmit) && <Row>
-                    <Col xl={{size: 10}} >
-                        {doc.hints && !!doc.hints.length && <p className="no-print mb-0">
-                            <small>{"Don't forget to use the hints if you need help."}</small>
-                        </p>}
-                    </Col>
-                </Row>}
-
                 {/* CS Hints */}
-                {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
+                {isAda && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="modal" 
+                    includePreamble={!validationResponse || !correct || canSubmit}
+                />}
 
                 {/* Validation Response */}
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
@@ -289,7 +282,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 }
             </div>
             {/* Physics Hints and LLM free-text response */}
-            {isPhy && doc.hints && !!doc.hints.length && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
+            {isPhy && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="tabbed"/>}
             {isPhy && possibleLLMFreeTextQuestionFeedbackView}
         </Form>
 
