@@ -3,9 +3,8 @@ import {useLocation, useParams} from "react-router-dom";
 import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
-import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
 import {usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
-import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
+import {GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -72,10 +71,9 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
         query={conceptQuery}
         defaultErrorTitle="Unable to load concept"
         ifNotFound={<NotFound />}
-        thenRender={supertypedDoc => {
-            const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
+        thenRender={doc => {
             return <GameboardContext.Provider value={navigation.currentGameboard}>
-                <PageContainer data-bs-theme={pageContext?.subject ?? doc.subjectId}
+                <PageContainer data-bs-theme={pageContext?.subject}
                     pageTitle={<>
                         <TitleAndBreadcrumb
                             intermediateCrumbs={navigation.breadcrumbHistory}

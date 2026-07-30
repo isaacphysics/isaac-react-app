@@ -2,7 +2,6 @@ import React from "react";
 import {Button, Col, Row} from "reactstrap";
 import {useLocation, useParams} from "react-router-dom";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery, useGetQuestionQuery} from "../../state";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {
     determineAudienceViews,
     DOCUMENT_TYPE,
@@ -21,7 +20,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
-import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
+import {GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
@@ -87,13 +86,12 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
         query={questionQuery}
         defaultErrorTitle="Unable to load question"
         ifNotFound={<NotFound />}
-        thenRender={supertypedDoc => {
-            const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+        thenRender={doc => {
             const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
             const audienceViews = determineAudienceViews(doc.audience, navigation.creationContext);
 
             return <GameboardContext.Provider value={navigation.currentGameboard}>
-                <PageContainer className="no-shadow" data-bs-theme={pageContext?.subject ?? doc.subjectId}
+                <PageContainer className="no-shadow" data-bs-theme={pageContext?.subject}
                     pageTitle={
                         <TitleAndBreadcrumb
                             currentPageTitle={generateQuestionTitle(doc)}

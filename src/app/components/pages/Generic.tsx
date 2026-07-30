@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
 import {Col, Row} from "reactstrap";
-import {ContentSummaryDTO, GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
 import {isAda, isPhy, showWildcard, siteSpecific, useUrlHashValue} from "../../services";
 import {useParams} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
-import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -86,11 +85,8 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
         query={pageQuery}
         defaultErrorTitle="Unable to load page"
         ifNotFound={<NotFound />}
-        thenRender={supertypedDoc => {
-            const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
-
+        thenRender={doc => {
             const isNews = doc.tags?.includes("news") || false;
-
             const sidebar = doc.sidebar
                 ? <ContentControlledSidebar sidebar={doc.sidebar} />
                 : siteSpecific(
@@ -98,7 +94,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                     undefined
                 );
 
-            return <PageContainer data-bs-theme={doc.subjectId}
+            return <PageContainer data-bs-theme={"biology"}
                 pageTitle={
                     <TitleAndBreadcrumb 
                         currentPageTitle={doc.title as string} 
