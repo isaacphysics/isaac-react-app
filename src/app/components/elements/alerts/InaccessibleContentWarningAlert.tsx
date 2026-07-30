@@ -4,6 +4,7 @@ import { ACCESSIBILITY_WARNINGS, useDragAndDropAccessibility } from '../../../se
 import { Spacer } from '../Spacer';
 import { selectors, useAppSelector } from '../../../state';
 import StyledToggle from '../inputs/StyledToggle';
+import { isAda } from '../../../services';
 
 export const DragAndDropInputModeToggle = () => {
     const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
@@ -24,10 +25,13 @@ export const InaccessibleContentWarningAlert = ({type}: {type: keyof typeof ACCE
     const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
 
     return <Alert color="warning" className="no-print d-flex align-items-center my-2">
-        {ACCESSIBILITY_WARNINGS[type].description}
-        {pageContainsClozeOrDragAndDropQuestion && <>
-            <Spacer/>
+        <div className="d-flex">
+            {isAda && <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[type].icon} icon-access-visual icon-color-black me-2 mb-1`} />}
+            {ACCESSIBILITY_WARNINGS[type].description}
+        </div>
+        <Spacer/>
+        {pageContainsClozeOrDragAndDropQuestion && type === "access:motor" && <div className="d-none d-sm-flex ms-1 mt-1 mt-sm-0">
             <DragAndDropInputModeToggle/>
-        </>}
+        </div>}
     </Alert>;
 };

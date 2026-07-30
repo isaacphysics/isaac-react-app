@@ -36,11 +36,12 @@ export function useDragAndDropAccessibility() {
     const deviceSize = useDeviceSize();
     const accessibilityType = useAppSelector(selectors.accessibility.type);
 
-    // Drag and drop is disabled if the user has selected a manual accessibility override, or if they have selected non-dragging inputs as an accessibility preference,
-    // or if they are on a touch device or very small screen and haven't explicitly enabled drag and drop.
-    const dragAndDropEnabled = (isDefined(accessibilityType) && (accessibilityType.MANUAL_OVERRIDE || accessibilityType?.NON_DRAGGING_INPUTS))
-        ? !accessibilityType?.NON_DRAGGING_INPUTS
-        : !(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)));
+    // Drag and drop is disabled if the user is on a very small screen, if they have selected a manual accessibility override, 
+    // if they have selected non-dragging inputs as an accessibility preference, or if they are on a touch device and haven't explicitly enabled it.
+    const dragAndDropEnabled = deviceSize === "xs" ? false 
+        : (isDefined(accessibilityType) && (accessibilityType.MANUAL_OVERRIDE || accessibilityType?.NON_DRAGGING_INPUTS))
+            ? !accessibilityType?.NON_DRAGGING_INPUTS
+            : !(isTouchDevice() && below['md'](deviceSize));
 
     const toggleDragAndDropEnabled = () => {
         dispatch({type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET, accessibilityType: {"NON_DRAGGING_INPUTS": dragAndDropEnabled}});
