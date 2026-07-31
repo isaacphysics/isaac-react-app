@@ -39,7 +39,7 @@ const LoginOrSignUpBody = () => {
         return null;
     }
 
-    return <Row id={"login-page"}>
+    return <Row id={"login-page"} className="mb-n3">
         <div className="position-absolute w-fit-content end-0">
             <button className="close mt-3 me-1 btn-link" onClick={closeModal}>{siteSpecific("CLOSE", "Close")}</button>
         </div>
@@ -114,10 +114,12 @@ const LoginOrSignUpBody = () => {
                         {isAda && <div className="mb-2">
                             <RaspberryPiSignInButton concise={true} />
                         </div>}
-                        <GoogleSignInButton/>
-                        {isPhy && <div className="mt-2 mb-2">
+                        <div className="mb-2">
+                            <GoogleSignInButton/>
+                        </div>
+                        <div className="mb-2">
                             <MicrosoftSignInButton />
-                        </div>}
+                        </div>
                         {isPhy && <SsoHelpLink />}
                     </>}
             </Form>
