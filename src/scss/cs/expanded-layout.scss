@@ -20,12 +20,12 @@
 }
 
 @include media-breakpoint-up(lg) {
-  .expansion-layout:not(.expansion-layout .expansion-layout) {
+  .expanded-layout:not(.expanded-layout .expanded-layout) {
     @include make-col-offset(-2, 8);
     width: 150%;
   }
 
-  .isaac-accordion .card-body .expansion-layout:not(.expansion-layout .expansion-layout) {
+  .isaac-accordion .card-body .expanded-layout:not(.expanded-layout .expanded-layout) {
     -webkit-animation: gutter-overflow 0.5s; /* Safari 4+ */
     -moz-animation:    gutter-overflow 0.5s; /* Fx 5+ */
     -o-animation:      gutter-overflow 0.5s; /* Opera 12+ */

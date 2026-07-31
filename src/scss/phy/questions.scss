@@ -50,7 +50,7 @@
     }
   }
 
-  .question-component:not(.expansion-layout) {
+  .question-component:not(.expanded-layout) {
     margin-left: -0.5rem;
     margin-right: -0.5rem;
 
@@ -59,7 +59,7 @@
     margin-bottom: 1.5rem;
   }
   // Make sure the banner does not overflow on reorder questions on Phy
-  div:not(.expansion-layout) > .validation-response-panel {
+  div:not(.expanded-layout) > .validation-response-panel {
     border-radius: 0 0 8px 8px;
     &.correct, &.almost {
       margin-left: -1.5rem;
