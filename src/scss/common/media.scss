@@ -64,6 +64,7 @@ figure {
 
   .figure-fullscreen {
     position: absolute;
+    display: flex;
     right: 0.25rem;
     bottom: 0.25rem;
     opacity: 0.5;
