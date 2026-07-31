@@ -1,6 +1,5 @@
-import {AbstractBaseTagService, STAGE, SUBJECTS, TAG_ID, TAG_LEVEL} from "./";
+import {AbstractBaseTagService, STAGE, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
-import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
 const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoonDate: "2022"}};
 const GCSE_HIDDEN = {[STAGE.GCSE]: {hidden: true}};
@@ -109,7 +108,4 @@ export class CsTagService extends AbstractBaseTagService {
     ];
     public getTagHierarchy() {return CsTagService.tagHierarchy;}
     public getBaseTags() {return CsTagService.baseTags;}
-    public augmentDocWithSubject<T extends ContentDTO | ContentSummaryDTO>(doc: T) {
-        return {...doc, subjectId: SUBJECTS.CS};
-    }
 }

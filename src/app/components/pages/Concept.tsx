@@ -3,9 +3,8 @@ import {useLocation, useParams} from "react-router-dom";
 import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
-import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
-import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
+import {usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
+import {GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -72,10 +71,9 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
         query={conceptQuery}
         defaultErrorTitle="Unable to load concept"
         ifNotFound={<NotFound />}
-        thenRender={supertypedDoc => {
-            const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
+        thenRender={doc => {
             return <GameboardContext.Provider value={navigation.currentGameboard}>
-                <PageContainer data-bs-theme={doc.subjectId ?? pageContext?.subject}
+                <PageContainer data-bs-theme={pageContext?.subject}
                     pageTitle={<>
                         <TitleAndBreadcrumb
                             intermediateCrumbs={navigation.breadcrumbHistory}
@@ -84,7 +82,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                             collectionType={navigation.collectionType}
                             subTitle={doc.subtitle}
                             preview={preview}
-                            icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-concept"}}
+                            icon={{type: "icon", icon: "icon-concept"}}
                         />
                         {!preview && <>
                             <MetaDescription description={doc.summary} />
