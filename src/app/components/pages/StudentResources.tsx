@@ -175,25 +175,18 @@ export const StudentResources = () => {
                 </TextBlock>
                 <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
-                        title: "Max Fordham",
-                        image: {src: "/assets/cs/decor/stories/max-fordham.png"},
-                        bodyText: "Explore how Max’s passion for computer science led him to become a software engineer through a digital technology solutions apprenticeship.",
+                        title: "Joe Miles",
+                        image: {src: "/assets/cs/decor/stories/joe-miles.jpg"},
+                        bodyText: "Meet Joe, a passionate computer science educator who shares ideas to keep lessons fun and engaging.",
                         buttonText: "Read more",
-                        clickUrl: "/pages/20240730_max_fordham"
+                        clickUrl: "/pages/20260327_joe_miles"
                     }}/>
                     <AdaCard card={{
-                        title: "Meghna Asthana",
-                        image: {src: "/assets/cs/decor/stories/meghna-asthana.png"},
-                        bodyText: "Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.",
+                        title: "Matt Arnmor",
+                        image: {src: "/assets/cs/decor/stories/matt-arnmor.png"},
+                        bodyText: "Teaching computer science in the age of AI: how Matt Arnmor helps students find confidence and creativity.",
                         buttonText: "Read more",
-                        clickUrl: "/pages/20240313_meghna_asthana"
-                    }}/>
-                    <AdaCard card={{
-                        title: "Lella Halloum",
-                        image: {src: "/assets/cs/decor/stories/lella-halloum.png"},
-                        bodyText: "Meet Lella, a young digital changemaker who uses technology to inspire, engage, and upskill the next generation of talent.",
-                        buttonText: "Read more",
-                        clickUrl: "/pages/20240215_lella_halloum"
+                        clickUrl: "/pages/20260225_matt_arnmor"
                     }}/>
                 </ColumnSlice>
                 <div className="d-flex justify-content-center mt-6">
