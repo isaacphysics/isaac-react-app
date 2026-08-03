@@ -255,7 +255,7 @@ export const LogIn = () => {
                             {isPhy &&  // FIXME: post-launch cleanup
                                 <Alert color="info">
                                     Already use Isaac Physics? <a href="/pages/isaacscience">Your login details and account
-                                    are the same here<span className="visually-hidden"> as on Isaac Physics</span>!</a>
+                                        are the same here<span className="visually-hidden"> as on Isaac Physics</span>!</a>
                                 </Alert>
                             }
                             {totpChallengePending ?
@@ -312,16 +312,16 @@ export const LogIn = () => {
                                                 <RaspberryPiSignInButton/>
                                             </Col>
                                         </Row>}
-                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))} >
+                                    <Row className="mb-2 justify-content-center" >
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
-                                    {isPhy && <Row className="mb-2 justify-content-center">
+                                    <Row className="mb-2 justify-content-center">
                                         <Col sm={9}>
                                             <MicrosoftSignInButton/>
                                         </Col>
-                                    </Row>}
+                                    </Row>
                                     {isPhy && <Row className="mb-2">
                                         <Col>
                                             <SsoHelpLink />

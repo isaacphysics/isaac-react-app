@@ -50,10 +50,12 @@ export const RegistrationStart = () => {
                             {isAda && <div className="mb-2">
                                 <RaspberryPiSignInButton />
                             </div>}
-                            <GoogleSignInButton />
-                            {isPhy && <div className="mt-2 mb-2">
+                            <div className="mb-2">
+                                <GoogleSignInButton />
+                            </div>
+                            <div className="mb-2">
                                 <MicrosoftSignInButton />
-                            </div>}
+                            </div>
                             {isPhy && <SsoHelpLink />}
                         </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
