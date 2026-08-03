@@ -1,42 +1,14 @@
-@-webkit-keyframes gutter-overflow {
-  0%  {width: 100%; @include make-col-offset(0, 8);}
-  60%  {width: 100%; @include make-col-offset(0, 8);}
-  100% {width: 110%; @include make-col-offset(-1, 20);}
-}
-@-moz-keyframes gutter-overflow {
-  0%  {width: 100%; @include make-col-offset(0, 8);}
-  60%  {width: 100%; @include make-col-offset(0, 8);}
-  100% {width: 110%; @include make-col-offset(-1, 20);}
-}
-@-o-keyframes gutter-overflow {
-  0%  {width: 100%; @include make-col-offset(0, 8);}
-  60%  {width: 100%; @include make-col-offset(0, 8);}
-  100% {width: 110%; @include make-col-offset(-1, 20);}
-}
 @keyframes gutter-overflow {
   0%  {width: 100%; @include make-col-offset(0, 8);}
   60%  {width: 100%; @include make-col-offset(0, 8);}
   100% {width: 110%; @include make-col-offset(-1, 20);}
 }
 
-.isaac-accordion .expanded-layout {
-  -webkit-animation: gutter-overflow 0.5s; /* Safari 4+ */
-  -moz-animation:    gutter-overflow 0.5s; /* Fx 5+ */
-  -o-animation:      gutter-overflow 0.5s; /* Opera 12+ */
-  animation:         gutter-overflow 0.5s; /* IE 10+, Fx 29+ */
-}
-
 @include media-breakpoint-up(md) {
-  .isaac-accordion .expanded-layout {
+  .isaac-accordion .expanded-layout:not(.expanded-layout .expanded-layout) {
+    animation: gutter-overflow 0.5s;
+
     @include make-col-offset(-1, 20);
     width: 110%;
   }
 }
-
-@include media-breakpoint-down(md) {
-  .isaac-accordion .expanded-layout {
-    @include make-col-offset(-2, 20);
-    width: 120%;
-  }
-}
-  
