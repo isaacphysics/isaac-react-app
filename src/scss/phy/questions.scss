@@ -160,11 +160,12 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   margin-bottom: 1rem;
 
   .question-component:not(.isaac-accordion *) .submission-buttons {
-    margin: 0 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
   }
 
   .submission-buttons {
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
   }
 
   > .question-component > div:first-child {
