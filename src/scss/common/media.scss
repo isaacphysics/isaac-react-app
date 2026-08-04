@@ -12,7 +12,6 @@ figure {
   font-size: 1rem !important;
   padding-left: 1rem !important;
   padding-right: 1rem !important;
-  background-color: $gray-103;
   p {
     margin: 0;
   }
@@ -58,7 +57,6 @@ figure {
   box-shadow: 0 2px 30px 0 $shadow-08;
 
   .figure-caption {
-    border-top: 1px solid $gray-110;
     color: $black;
     font-size: .8125rem;
     padding: .5rem;
@@ -66,6 +64,7 @@ figure {
 
   .figure-fullscreen {
     position: absolute;
+    display: flex;
     right: 0.25rem;
     bottom: 0.25rem;
     opacity: 0.5;
