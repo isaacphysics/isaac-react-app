@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Row} from "reactstrap";
-import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, AUTHENTICATOR_PROVIDERS, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
+import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, AUTHENTICATOR_PROVIDERS, isAda, isPhy, SITE_LOWER_AGE_LIMIT, SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
@@ -39,7 +39,7 @@ export const RegistrationAgeCheckSSOOnly = () => {
         <Card className="my-7">
             <CardBody>
                 <h3>Unable to use email</h3>
-                <p>As you are between {siteSpecific(10, 11)}-12 years old, we need you to <strong>sign up using a third-party provider</strong>.</p>
+                <p>As you are between {SITE_LOWER_AGE_LIMIT}-{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old, we need you to <strong>sign up using a third-party provider</strong>.</p>
                 <p>Please try again, using either {authProviderListString}.</p>
                 {isAda && <hr/>}
                 <div className="d-flex flex-column gap-2">

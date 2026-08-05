@@ -11,7 +11,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {confirmThen, isAda, SITE_TITLE, siteSpecific} from "../../services";
+import {confirmThen, isAda, SITE_LOWER_AGE_LIMIT, SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classNames from "classnames";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
@@ -53,8 +53,6 @@ export const RegistrationAgeCheck = () => {
             () => navigate("/register"));
     };
 
-    const AGE_LOWER_LIMIT = siteSpecific(10, 11);
-
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
@@ -67,7 +65,7 @@ export const RegistrationAgeCheck = () => {
         <Card className="my-7">
             <CardBody>
                 <div className={siteSpecific("h4", "h3")}>How old are you?</div>
-                <p>We can only create accounts for users {AGE_LOWER_LIMIT} years old or over.</p>
+                <p>We can only create accounts for users {SITE_LOWER_AGE_LIMIT} years old or over.</p>
                 <Form onSubmit={submit}>
                     <FormGroup check className="d-flex align-items-center my-2">
                         <Input
@@ -79,7 +77,7 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-over" className="ms-2 mb-0">13 and over</Label>
+                        <Label for="registration-age-check-over" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT} and over</Label>
                     </FormGroup>
                     <FormGroup check className="d-flex align-items-center my-2">
                         <Input
@@ -91,7 +89,7 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{AGE_LOWER_LIMIT} - 12 years old</Label>
+                        <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT} - {SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old</Label>
                     </FormGroup>
                     <FormGroup check className="d-flex align-items-center my-2">
                         <Input
@@ -103,11 +101,11 @@ export const RegistrationAgeCheck = () => {
                             color="primary"
                             invalid={submissionAttempted && agePermission === undefined}
                         />
-                        <Label for="registration-age-check-under" className="ms-2 mb-0">{AGE_LOWER_LIMIT - 1} or under</Label>
-                        <FormFeedback>
-                            Please make a selection.
-                        </FormFeedback>
+                        <Label for="registration-age-check-under" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT - 1} or under</Label>
                     </FormGroup>
+                    <FormFeedback>
+                        Please make a selection.
+                    </FormFeedback>
                     {isAda && <hr/>}
                     <Row className="justify-content-end">
                         <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">

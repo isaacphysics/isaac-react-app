@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isAda, isDefined, isPhy, isStudent, isTutor, STAGE} from "./";
+import {EXAM_BOARD, isAda, isDefined, isPhy, isStudent, isTutor, SITE_LOWER_AGE_LIMIT, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0;}
@@ -40,7 +40,7 @@ const isDobOverN = (n: number, dateOfBirth?: Date | number) => {
     }
 };
 
-export const isDobOldEnoughForSite = (dateOfBirth?: Date | number) => isDobOverN(10, dateOfBirth);
+export const isDobOldEnoughForSite = (dateOfBirth?: Date | number) => isDobOverN(SITE_LOWER_AGE_LIMIT, dateOfBirth);
 
 export const validateDob = (dateOfBirth?: Date | number) => isDobOldEnoughForSite(dateOfBirth) || (isPhy && !isDefined(dateOfBirth));
 

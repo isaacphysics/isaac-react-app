@@ -1404,3 +1404,6 @@ export const reactSelectDarkModeStyles = siteSpecific({
         color: "white",
     }),
 });
+
+export const SITE_LOWER_AGE_LIMIT = siteSpecific(10, 11);
+export const SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT = 13;
