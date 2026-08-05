@@ -37,7 +37,7 @@ export const RegistrationAgeCheckFailed = () => {
                         <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>Back</Button>
                     </Col>}
                     <Col sm={6} lg={4}>
-                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{siteSpecific("Take me back", "Back to the site")}</Button>
+                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{siteSpecific("Take me back", "Go home")}</Button>
                     </Col>
                 </Row>
             </CardBody>
