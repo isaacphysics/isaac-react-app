@@ -1,6 +1,6 @@
 import React from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import {isAda, isDefined, isDobOldEnoughForSite, isPhy, SITE_LOWER_AGE_LIMIT, siteSpecific} from "../../../services";
+import {isAda, isDefined, isDobOldEnoughForSite, isPhy, SITE_LOWER_AGE_LIMIT} from "../../../services";
 import {currentYear, DateInput} from "./DateInput";
 import {Immutable} from "immer";
 import range from "lodash/range";
