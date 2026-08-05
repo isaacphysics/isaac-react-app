@@ -169,16 +169,18 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   }
 
   > .question-component > div:first-child {
-    &:not(.freetext-question) {
-      padding: 2rem 2rem 0.5rem;
+    padding: 2rem 2rem 0.5rem;
 
-      &:last-child:not(.quick-question) {
-        padding-bottom: 3rem;
-      }
+    &.quick-question {
+      padding-bottom: 2rem;
     }
 
     &.freetext-question {
-      padding: 2rem 2rem 0rem;
+      padding-bottom: 0rem;
+    }
+
+    &:last-child:not(.quick-question) {
+      padding-bottom: 3rem;
     }
   }
 
