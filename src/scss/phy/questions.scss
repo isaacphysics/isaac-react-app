@@ -174,14 +174,14 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     padding: 2rem 2rem 0.5rem;
 
     &.quick-question {
-      padding-bottom: 2rem;
+      padding-bottom: 1.5rem;
     }
 
     &.freetext-question {
       padding-bottom: 0rem;
     }
 
-    &:last-child:not(.quick-question) {
+    &:last-child:not(.quick-question, .freetext-question) {
       padding-bottom: 3rem;
     }
   }
@@ -219,12 +219,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   border: 1px solid var(--subject-color-100);
   border-radius: 4px;
 
-  @include respond-below(md) {
-    padding: 0.5rem 0;
-  }
-  @include respond-above(md) {
-    padding: 1rem
-  }
+  padding: 1rem;
 }
 
 .coordinate-input-separator, .coordinate-input > span {
