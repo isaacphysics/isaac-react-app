@@ -319,7 +319,7 @@ export function katexify(
                 }
 
                 // prevent browser auto-translation
-                katexRenderResult = katexRenderResult.replace('<span class="katex', '<span translate="no" class="katex');
+                katexRenderResult = katexRenderResult.replace('<span class="katex"', '<span class="katex" translate="no"');
 
                 output += katexRenderResult;
 
