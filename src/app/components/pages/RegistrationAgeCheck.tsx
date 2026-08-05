@@ -53,6 +53,8 @@ export const RegistrationAgeCheck = () => {
             () => navigate("/register"));
     };
 
+    const isInvalid = submissionAttempted && agePermission === undefined;
+
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
@@ -67,45 +69,47 @@ export const RegistrationAgeCheck = () => {
                 <div className={siteSpecific("h4", "h3")}>How old are you?</div>
                 <p>We can only create accounts for users {SITE_LOWER_AGE_LIMIT} years old or over.</p>
                 <Form onSubmit={submit}>
-                    <FormGroup check className="d-flex align-items-center my-2">
-                        <Input
-                            id="registration-age-check-over"
-                            className={classNames("d-inline", {"mb-1" : isAda})}
-                            type="radio"
-                            checked={agePermission === "allowed"}
-                            onChange={() => {setAgePermission("allowed");}}
-                            color="primary"
-                            invalid={submissionAttempted && agePermission === undefined}
-                        />
-                        <Label for="registration-age-check-over" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT} and over</Label>
-                    </FormGroup>
-                    <FormGroup check className="d-flex align-items-center my-2">
-                        <Input
-                            id={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`}
-                            className={classNames("d-inline", {"mb-1" : isAda})}
-                            type="radio"
-                            checked={agePermission === siteSpecific("additional_info", "sso_only")}
-                            onChange={() => {setAgePermission(siteSpecific("additional_info", "sso_only"));}}
-                            color="primary"
-                            invalid={submissionAttempted && agePermission === undefined}
-                        />
-                        <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT} - {SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old</Label>
-                    </FormGroup>
-                    <FormGroup check className="d-flex align-items-center my-2">
-                        <Input
-                            id="registration-age-check-under"
-                            className={classNames("d-inline", {"mb-1" : isAda})}
-                            type="radio"
-                            checked={agePermission === "denied"}
-                            onChange={() => {setAgePermission("denied");}}
-                            color="primary"
-                            invalid={submissionAttempted && agePermission === undefined}
-                        />
-                        <Label for="registration-age-check-under" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT - 1} or under</Label>
-                    </FormGroup>
-                    <FormFeedback>
-                        Please make a selection.
-                    </FormFeedback>
+                    <fieldset>
+                        <FormGroup check className="d-flex align-items-center my-2">
+                            <Input
+                                id="registration-age-check-over"
+                                className={classNames("d-inline", {"mb-1" : isAda})}
+                                type="radio"
+                                checked={agePermission === "allowed"}
+                                onChange={() => {setAgePermission("allowed");}}
+                                color="primary"
+                                invalid={isInvalid}
+                            />
+                            <Label for="registration-age-check-over" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT} and over</Label>
+                        </FormGroup>
+                        <FormGroup check className="d-flex align-items-center my-2">
+                            <Input
+                                id={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`}
+                                className={classNames("d-inline", {"mb-1" : isAda})}
+                                type="radio"
+                                checked={agePermission === siteSpecific("additional_info", "sso_only")}
+                                onChange={() => {setAgePermission(siteSpecific("additional_info", "sso_only"));}}
+                                color="primary"
+                                invalid={isInvalid}
+                            />
+                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT} - {SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old</Label>
+                        </FormGroup>
+                        <FormGroup check className="my-2">
+                            <Input
+                                id="registration-age-check-under"
+                                className={classNames("d-inline", {"mb-1" : isAda})}
+                                type="radio"
+                                checked={agePermission === "denied"}
+                                onChange={() => {setAgePermission("denied");}}
+                                color="primary"
+                                invalid={isInvalid}
+                            />
+                            <Label for="registration-age-check-under" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT - 1} or under</Label>
+                        </FormGroup>
+                        <FormFeedback className={classNames({"d-block": isInvalid})}>
+                            Please make a selection.
+                        </FormFeedback>
+                    </fieldset>
                     {isAda && <hr/>}
                     <Row className="justify-content-end">
                         <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
