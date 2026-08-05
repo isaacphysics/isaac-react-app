@@ -146,7 +146,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
         if (isPhy || userRole === "STUDENT") {
             confirmThen(
                 "Are you sure you want go back? Any information you have entered will be lost.",
-                () => navigate("age"));
+                () => navigate("/register/student/age"));
         }
         else { // teachers skip age check on Ada
             confirmThen(
