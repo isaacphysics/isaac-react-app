@@ -181,11 +181,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
       padding-bottom: 1.5rem;
     }
 
-    &.freetext-question {
-      padding-bottom: 0rem;
-    }
-
-    &:last-child:not(.quick-question, .freetext-question) {
+    &:last-child:not(.quick-question) {
       padding-bottom: 3rem;
     }
   }
