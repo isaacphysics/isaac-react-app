@@ -30,7 +30,7 @@
       padding: 0;
     }
 
-    // content directly inside an accordion on a question page is indented to match that of a question-component
+    // content directly inside an accordion on a question page is indented to match that inside a question-component
     > .content-chunk > .content-value {
       @include respond-above(xs) {
         padding-left: 1.625rem;
@@ -76,7 +76,7 @@
   }
 }
 
-.concept-content-container, .generic-content-container {
+.concept-panel, .generic-panel {
   .quick-question {
     .question-content, .content-value, .btn {
       font-size: 1rem !important;
@@ -159,39 +159,43 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   border-radius: 8px;
   margin-bottom: 1rem;
 
+  > .question-component {
+    > div:first-child {
+      padding: 2rem 2rem 0.5rem;
+
+      &.quick-question {
+        padding-bottom: 1.5rem;
+      }
+
+      &.freetext-question {
+        padding-bottom: 0rem;
+      }
+
+      &:last-child:not(.quick-question, .freetext-question) {
+        padding-bottom: 3rem;
+      }
+    }
+
+    &:has(+.tabbed-hints, .validation-response-panel) .freetext-question {
+      margin-bottom: 1.5rem;
+    }
+
+    &:has(.submission-buttons) .freetext-question {
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  > .tabbed-hints {
+    padding: 0 2rem;
+  }
+
   .submission-buttons {
-    margin-top: 1rem;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
+    margin: 1rem 1.5rem;
   }
 
   .question-component:not(.isaac-accordion *) .submission-buttons {
     margin-left: 2rem;
     margin-right: 2rem;
-  }
-
-  &:not(:not(.isaac-accordion *):has(.tabbed-hints)) .submission-buttons{
-    padding-bottom: 1rem;
-  }
-
-  > .question-component > div:first-child {
-    padding: 2rem 2rem 0.5rem;
-
-    &.quick-question {
-      padding-bottom: 1.5rem;
-    }
-
-    &:last-child:not(.quick-question) {
-      padding-bottom: 3rem;
-    }
-  }
-
-  > .tabbed-hints, .question-component > .tabbed-hints {
-    padding: 0 2rem;
-  }
-
-  &:has(> .question-component .quick-question) {
-    background-color: initial;
   }
 
   &:not(:has(.tabbed-hints)) .validation-response-panel {
