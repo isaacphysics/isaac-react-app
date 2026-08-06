@@ -159,15 +159,19 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   border-radius: 8px;
   margin-bottom: 1rem;
 
+  .submission-buttons {
+    margin-top: 1rem;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+  }
+
   .question-component:not(.isaac-accordion *) .submission-buttons {
     margin-left: 2rem;
     margin-right: 2rem;
   }
 
-  .submission-buttons {
-    margin-bottom: 1rem;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
+  &:not(:not(.isaac-accordion *):has(.tabbed-hints)) .submission-buttons{
+    padding-bottom: 1rem;
   }
 
   > .question-component > div:first-child {

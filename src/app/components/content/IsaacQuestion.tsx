@@ -55,11 +55,11 @@ interface FastTrackSubmissionButtonsProps {
 const FastTrackSubmissionButtons = ({fastTrackPrimaryAction, fastTrackSecondaryAction}: FastTrackSubmissionButtonsProps) => {
     return <>
         {fastTrackSecondaryAction && <div
-            className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3 pb-3": fastTrackPrimaryAction})}>
+            className={classNames("m-auto pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-lg-3 pb-3": fastTrackPrimaryAction})}>
             <input {...fastTrackSecondaryAction} className="h-100 btn btn-outline-primary w-100"/>
         </div>}
         {fastTrackPrimaryAction && <div
-            className={classNames("m-auto pt-3 w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("px-4 px-md-0 pb-3", "pb-1"), {"ps-sm-2 ps-md-0 ps-lg-3": fastTrackSecondaryAction})}>
+            className={classNames("m-auto w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("pb-3", "pb-1"), {"ps-sm-2 ps-lg-3": fastTrackSecondaryAction})}>
             <input {...fastTrackPrimaryAction} className="h-100 btn btn-secondary w-100"/>
         </div>}
     </>;
@@ -272,10 +272,10 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         validationResponse={validationResponse}
                     />
                     : (!correct || canSubmit || (isFastTrack && (fastTrackPrimaryAction || fastTrackSecondaryAction))) && !locked &&
-                        <div className={classNames("submission-buttons d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row")}>
+                        <div className={classNames("submission-buttons d-flex align-items-stretch flex-column-reverse flex-sm-row flex-lg-row")}>
                             {isFastTrack 
                                 ? <FastTrackSubmissionButtons fastTrackPrimaryAction={fastTrackPrimaryAction} fastTrackSecondaryAction={fastTrackSecondaryAction} />
-                                : <Button {...checkAnswerButtonProps} className="mx-auto mt-3 w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
+                                : <Button {...checkAnswerButtonProps} className="mx-auto w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
                             }
                         </div>
                 }
