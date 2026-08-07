@@ -4098,7 +4098,7 @@ export const mockRegressionTestQuestionParts = [
             }
         ],
         "published": true,
-        "tags": []
+        "tags": ["access:motor"]
     },
     {
         "id": "_regression_test_acc_inline_q",
@@ -4323,6 +4323,7 @@ export const mockRegressionTestQuestionParts = [
     {
         "id": "_regression_test_acc_drag_and_drop",
         "type": "content",
+        "tags": ["access:motor"],
         "children": [
             {
                 "type": "isaacDndQuestion",
