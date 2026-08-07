@@ -248,7 +248,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "forms";
 @import "elements";
 @import "breadcrumbs";
-@import "../common/media";
+@import "media";
 @import "../common/cookies";
 @import "tabs";
 @import "../common/cards";

@@ -41,7 +41,7 @@ const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBanne
                     request a new verification email
                 </Button>{" "}
                 if necessary. To change your account email,
-                go to <Link to="/account">My account</Link>.
+                go to <strong><Link to="/account">My account</Link></strong>.
             </Col>
         </React.Fragment>}
         {(status == "DELIVERY_FAILED") &&

@@ -318,6 +318,9 @@ export function katexify(
                         }"`);
                 }
 
+                // prevent browser auto-translation
+                katexRenderResult = katexRenderResult.replace('<span class="katex"', '<span class="katex" translate="no"');
+
                 output += katexRenderResult;
 
                 index = match.index + match[0].length;
