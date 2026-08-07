@@ -261,7 +261,7 @@ export const LogIn = () => {
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
                                 :
-                                <React.Fragment>
+                                <>
                                     <EmailPasswordInputs
                                         setEmail={setEmail} setPassword={setPassword}
                                         validEmail={isValidEmail} logInAttempted={logInAttempted}
@@ -306,28 +306,13 @@ export const LogIn = () => {
 
                                     {siteSpecific(<div className="section-divider"/>, <hr className="text-center mb-4"/>)}
                                     <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>Log in with:</div>
-                                    {isAda &&
-                                        <Row className="mb-2 justify-content-center">
-                                            <Col sm={9}>
-                                                <RaspberryPiSignInButton/>
-                                            </Col>
-                                        </Row>}
-                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))} >
-                                        <Col sm={9}>
-                                            <GoogleSignInButton/>
-                                        </Col>
-                                    </Row>
-                                    {isPhy && <Row className="mb-2 justify-content-center">
-                                        <Col sm={9}>
-                                            <MicrosoftSignInButton/>
-                                        </Col>
-                                    </Row>}
-                                    {isPhy && <Row className="mb-2">
-                                        <Col>
-                                            <SsoHelpLink />
-                                        </Col>
-                                    </Row>}
-                                </React.Fragment>
+                                    <div className="d-flex flex-column gap-2">
+                                        {isAda && <RaspberryPiSignInButton/>}
+                                        <GoogleSignInButton/>
+                                        {isPhy && <MicrosoftSignInButton/>}
+                                        {isPhy && <SsoHelpLink />}
+                                    </div>
+                                </>
                             }
                         </Form>
                     </CardBody>
