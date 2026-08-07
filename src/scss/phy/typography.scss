@@ -50,11 +50,11 @@ pre {
   }
 }
 
-code {
+:not(pre) > code {
   display: inline-block;
   color: unset;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.08);
-  background: rgba(0, 0, 0, 0.1);
+  background: color-mix(in srgb, var(--color-neutral-900) 10%, transparent);
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   margin: 0 -0.05rem;
