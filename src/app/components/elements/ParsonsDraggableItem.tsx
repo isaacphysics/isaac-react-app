@@ -278,7 +278,7 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapI
                 aria-describedby={undefined}
             >
                 <ReorderButtons index={index} items={items} setItems={setItems} isParsons={isParsons} currentIndent={currentItem.indentation} inAvailableItems={inAvailableItems} />
-                {isParsons && canIndent ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
+                {isParsons ? <pre className="item-text">{markupItem}</pre> : <div className="item-text">{markupItem}</div>}
                 <Spacer/>
                 <div className="hidden-buttons d-flex">
                     {canIndent && !inAvailableItems && <IndentButtons currentItem={currentItem} index={index} items={items} setItems={setItems}/>}
