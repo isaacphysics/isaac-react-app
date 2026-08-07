@@ -30,14 +30,14 @@ export const isValidGameboardId = (gameboardId?: string) => {
 };
 
 const isDobOverN = (n: number, dateOfBirth?: Date | number) => {
-    if (dateOfBirth) {
-        const today = new Date();
-        const nYearsAgo = new Date(today.getFullYear() - n, today.getMonth(), today.getDate());
-        const hundredAndTwentyYearsAgo = new Date(today.getFullYear() - 120, today.getMonth(), today.getDate());
-        return hundredAndTwentyYearsAgo <= dateOfBirth && dateOfBirth <= nYearsAgo;
-    } else {
-        return false;
-    }
+    if (!dateOfBirth) return false;
+
+    const dob = new Date(dateOfBirth);
+    if (Number.isNaN(dob.getTime())) return false;
+
+    const today = new Date();
+    const nYearsAgo = new Date(today.getFullYear() - n, today.getMonth(), today.getDate());
+    return dob <= nYearsAgo;
 };
 
 export const isDobOverThirteen = (dateOfBirth?: Date | number) => isDobOverN(13, dateOfBirth);
