@@ -65,13 +65,11 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>;
 
-    const { className, buttonTitle, hideButton, optionBar, children, ...rest } = props;
+    const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return fullSidebarLayout
         ? siteSpecific(
-            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print ps-lg-3 pe-lg-5 order-0", className)}>
-                <div className="sidebar-inner py-lg-4">{children}</div>
-            </Col>,
-            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)}>{children}</Col>
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print ps-lg-3 py-lg-4 pe-lg-5 order-0", className)} />,
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
         )
         : siteSpecific(
             <>
@@ -93,7 +91,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                     }/>
                     <OffcanvasBody>
                         <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
-                            <Col {...rest} className={classNames("sidebar p-4 pt-0", className)}>{children}</Col>
+                            <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
@@ -105,7 +103,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                             <span className="fw-bold">{buttonTitle}</span>
                         </AccordionHeader>
                         <AccordionBody accordionId="myAda" className="accordion-flush-body">
-                            <Col {...rest} className={classNames("flex-column", className)}>{children}</Col>
+                            <Col {...rest} className={classNames("flex-column", className)} />
                         </AccordionBody>
                     </AccordionItem>
                 </Accordion>
