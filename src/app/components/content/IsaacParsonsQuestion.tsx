@@ -200,7 +200,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     <h4 className="mt-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
-                            return <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>
+                            return <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && canIndent && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>
                                 {attemptItems.map((item, index) => 
                                     <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} readonly={readonly}
                                         items={attemptItems} setItems={setAttemptItems} canIndent={canIndent} isParsons useSingleList={useSingleList}
