@@ -450,9 +450,12 @@ figure .inline-container {
       // Use negative z-index rather than `display: none` to hide buttons so they can still be selected using keyboard controls
       .hidden-buttons {
         position: absolute;
-        right: 38px;
         background-color: var(--color-neutral-white, white);
         padding: 4px 0;
+        right: 10px;
+        &:has(+ .swap-button) {
+          right: 38px;
+        }
 
         z-index: -100;
       }
