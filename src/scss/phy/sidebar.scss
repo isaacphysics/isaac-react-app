@@ -1,4 +1,11 @@
 .sidebar {
+  .sticky {
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow: auto;
+  }
+
   ul {
     list-style: none;
     list-style-image: none;
