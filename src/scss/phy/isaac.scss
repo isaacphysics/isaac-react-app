@@ -306,7 +306,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "stats";
 @import "../common/billboard";
 
-@import "expansion-layout";
+@import "expanded-layout";
 @import "../common/callout";
 
 @import "body";

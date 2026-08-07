@@ -35,7 +35,8 @@ const classBasedLayouts = {
     textleft: "text-start",
     textcentre: "text-center",
     textcentrecolumn: "text-center-column",
-    clearfix: "clearfix w-100"
+    clearfix: "clearfix w-100",
+    expanded: "expanded-layout"
 };
 
 export interface IsaacContentProps {

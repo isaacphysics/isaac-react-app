@@ -1,0 +1,20 @@
+@keyframes gutter-overflow {
+  0%  {width: 100%; @include make-col-offset(0, 8);}
+  60%  {width: 100%; @include make-col-offset(0, 8);}
+  100% {width: 150%; @include make-col-offset(-2, 8);}
+}
+
+@include media-breakpoint-up(lg) {
+  .expanded-layout:not(.expanded-layout .expanded-layout) {
+    @include make-col-offset(-2, 8);
+    width: 150%;
+  }
+
+  .isaac-accordion .card-body .expanded-layout:not(.expanded-layout .expanded-layout) {
+    animation: gutter-overflow 0.5s;
+
+    background: white;
+    box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+  }
+}

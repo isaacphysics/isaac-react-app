@@ -461,7 +461,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "overview";
 @import "modals";
 
-@import "expansion-layout";
+@import "expanded-layout";
 
 // Print
 @import "../common/print";
