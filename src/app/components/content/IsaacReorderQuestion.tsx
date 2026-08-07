@@ -80,11 +80,13 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     </Droppable>
                 </Col>}
                 <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})}>
-                    <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
+                    {useSingleList 
+                        ? <i className="text-muted d-print-none">Drag these items to put them in the correct order</i>
+                        : <h4 className="mt-sm-4 mt-md-0">Your answer</h4>}
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>
                             <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef}
-                                className={classNames("parsons-items", {"empty": !(attemptItems.length > 0), "drag-over": snapshot.isDraggingOver})}
+                                className={classNames("parsons-items mt-1", {"empty": !(attemptItems.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {attemptItems.map((item, index) =>
                                     <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} readonly={readonly}
