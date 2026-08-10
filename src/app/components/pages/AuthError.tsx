@@ -3,7 +3,7 @@ import {Link, useLocation} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { Container, Row, Col } from "reactstrap";
 import { type fetchErrorFromParameters } from "../../state";
-import { siteSpecific } from "../../services";
+import { isPhy, siteSpecific } from "../../services";
 
 type State = { errorMessage?: string, provider?: string, providerErrors: ReturnType<typeof fetchErrorFromParameters>};
 
@@ -56,9 +56,9 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
         <ul>
             <li>
                 If you&apos;ve not yet enabled sign-in with {provider}, first log in with another method (e.g. email and
-                password). Then, on <Link to="/account#security" aria-label="My Account link">My Account</Link>, next
-                to &quot;{provider}&quot;, click &quot;Link&quot;. <SSOLink>Read more about signing in with {provider}.
-                </SSOLink>
+                password). Then, on <Link to="/account#security" aria-label="My Account link">{siteSpecific(
+                    "My Account", "My Ada > Account")}</Link>, on &quot;Security&quot;, next to &quot;{provider}&quot;, click &quot;Link&quot;.
+                <SSOLink> Read more about signing in with {provider}.</SSOLink>
             </li>
             <li>
                 If you&apos;d like to switch which {provider} account you log in with, follow the same instructions, but
@@ -83,7 +83,7 @@ const ConsentMissingMicrosoft = () => <>
     <p>If you need more help signing in, <ContactUs />.</p>
 </>;
 
-const SSOLink = ({ children }: { children: ReactNode}) =>
+const SSOLink = ({ children }: { children: ReactNode}) => isPhy && 
     <Link to="/pages/single_sign_on" aria-label="Link to Single Sign-On documentation">{children}</Link>;
 
 const ContactUs = () => <Link to="/contact" aria-label="Link to contact form">contact us</Link>;

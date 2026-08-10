@@ -67,8 +67,8 @@ describe("Microsoft SSO Authentication", () => {
                 );
                 expect(authenticationError.element).toHaveTextContent(dedent`
                     If you've not yet enabled sign-in with Microsoft, first log in with another method (e.g. email and
-                    password). Then, on My Account, next to "Microsoft", click "Link". Read more about signing in with
-                    Microsoft.`
+                    password). Then, on ${siteSpecific("My Account", "My Ada > Account")}, on "Security", next to
+                    "Microsoft", click "Link".${siteSpecific(" Read more about signing in with Microsoft", "")}`
                 );
                 expect(authenticationError.element).toHaveTextContent(dedent`
                     If you'd like to switch which Microsoft account you log in with, follow the same instructions, but
@@ -76,9 +76,11 @@ describe("Microsoft SSO Authentication", () => {
                 );
             });
 
-            it('shows a link to the SSO help page', async () => {
-                expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
-            });
+            if (isPhy) {
+                it('shows a link to the SSO help page', async () => {
+                    expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
+                });
+            }
 
             testContactLinkPresent(/If you need more help signing in, contact us./);
         });
@@ -98,9 +100,11 @@ describe("Microsoft SSO Authentication", () => {
                 expect(authenticationError.element).toHaveTextContent("We need your consent");
             });
 
-            it('shows a link to the SSO help page', async () => {
-                expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
-            });
+            if (isPhy) {
+                it('shows a link to the SSO help page', async () => {
+                    expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
+                });
+            }
 
             testContactLinkPresent(/If you need more help signing in, contact us./);
         });
@@ -127,8 +131,8 @@ describe("Google SSO Authentication", () => {
                     );
                     expect(authenticationError.element).toHaveTextContent(dedent`
                         If you've not yet enabled sign-in with Google, first log in with another method (e.g. email and
-                        password). Then, on My Account, next to "Google", click "Link". Read more about signing in with
-                        Google.`
+                        password). Then, on ${siteSpecific("My Account", "My Ada > Account")}, on "Security", next to
+                        "Google", click "Link".${siteSpecific(" Read more about signing in with Google.", "")}`
                     );
                     expect(authenticationError.element).toHaveTextContent(dedent`
                         If you'd like to switch which Google account you log in with, follow the same instructions, but
