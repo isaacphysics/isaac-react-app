@@ -317,7 +317,7 @@ export const LogIn = () => {
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
-                                    <Row className="mb-2 justify-content-center">
+                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))}>
                                         <Col sm={9}>
                                             <MicrosoftSignInButton/>
                                         </Col>
