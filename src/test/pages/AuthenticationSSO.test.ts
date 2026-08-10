@@ -1,16 +1,12 @@
 import { http, HttpHandler, HttpResponse } from "msw";
 import { expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
-import { API_PATH, isPhy } from "../../app/services";
+import { API_PATH, isPhy, siteSpecific } from "../../app/services";
 import { mockUser } from "../../mocks/data";
 import { screen, waitFor, within } from "@testing-library/react";
 import { errorResponses } from "../test-factory";
 import userEvent from "@testing-library/user-event";
 
 describe("Microsoft SSO Authentication", () => {
-    if (!isPhy) {
-        return it('does not apply', () => {});
-    }
-
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
         await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/microsoft/callback', search });
@@ -27,7 +23,12 @@ describe("Microsoft SSO Authentication", () => {
     describe('when the token from the provider belongs to a valid user', () => {
         it('signs them in', async () => {
             await renderProviderCallback(microsoftSignInSuccess);
-            expect(dashboard.welcomeText).toHaveTextContent('Welcome back, T. Admin!');
+            if (isPhy) {
+                expect(dashboard.isaacWelcomeText).toHaveTextContent('Welcome back, T. Admin!');
+            } else {
+                await setUrl({ pathname: '/dashboard'});
+                expect(dashboard.adaTitle).toHaveTextContent('Overview');
+            }
         });
     });
 
@@ -60,9 +61,9 @@ describe("Microsoft SSO Authentication", () => {
             it('shows a specific error message', async () => {
                 expect(authenticationError.element).toHaveTextContent("You don't use this Microsoft account to log in");
                 expect(authenticationError.element).toHaveTextContent(dedent`
-                    We've found an Isaac account with the email address from this Microsoft account. However, the Isaac
+                    We've found an ${site} account with the email address from this Microsoft account. However, the ${site}
                     account isn't configured to allow access to this Microsoft account. You've either not enabled
-                    sign-in with Microsoft on your Isaac account, or you used a different Microsoft account to log in.`
+                    sign-in with Microsoft on your ${site} account, or you used a different Microsoft account to log in.`
                 );
                 expect(authenticationError.element).toHaveTextContent(dedent`
                     If you've not yet enabled sign-in with Microsoft, first log in with another method (e.g. email and
@@ -107,10 +108,6 @@ describe("Microsoft SSO Authentication", () => {
 });
 
 describe("Google SSO Authentication", () => {
-    if (!isPhy) {
-        return it('does not apply', () => {});
-    }
-
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
         await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/google/callback', search });
@@ -124,9 +121,9 @@ describe("Google SSO Authentication", () => {
                 await waitFor(async () => {
                     expect(authenticationError.element).toHaveTextContent("You don't use this Google account to log in");
                     expect(authenticationError.element).toHaveTextContent(dedent`
-                        We've found an Isaac account with the email address from this Google account. However, the Isaac
+                        We've found an ${site} account with the email address from this Google account. However, the ${site}
                         account isn't configured to allow access to this Google account. You've either not enabled
-                        sign-in with Google on your Isaac account, or you used a different Google account to log in.`
+                        sign-in with Google on your ${site} account, or you used a different Google account to log in.`
                     );
                     expect(authenticationError.element).toHaveTextContent(dedent`
                         If you've not yet enabled sign-in with Google, first log in with another method (e.g. email and
@@ -142,6 +139,8 @@ describe("Google SSO Authentication", () => {
         });
     });
 });
+
+const site = siteSpecific("Isaac", "Ada CS");
 
 const microsoftSignInSuccess = http.get(API_PATH + "/auth/microsoft/callback",
     () => HttpResponse.json(mockUser, { status: 200, })
@@ -169,9 +168,12 @@ const microsoftSignInDeniedAccess = http.get(API_PATH + "/auth/microsoft/callbac
 const toast = () => screen.getByTestId('toasts');
 
 const dashboard = {
-    get welcomeText() {
+    get isaacWelcomeText() {
         const element = screen.getByRole('region', { name: 'Dashboard' });
         return within(element).getByRole('heading', { level: 3 });
+    },
+    get adaTitle() {
+        return screen.getByRole('heading', { level: 1 });
     }
 };
 
@@ -189,7 +191,7 @@ const authenticationError = {
     }
 };
 
-const dedent = (s: TemplateStringsArray) => s
-    .join('')
+const dedent = (strings: TemplateStringsArray, ...values: unknown[]) => strings
+    .reduce((acc, str, i) => acc + str + (values[i] ?? ''), '')
     .replace(/\s+/g, ' ')
     .trim();
