@@ -13,7 +13,7 @@ const getSocialIcon = (name: string) => {
 export const SocialLinksRow = () => {
     return (
         <div className={siteSpecific('', 'footer-links footer-links-social')}>
-            {siteSpecific(<p className="pb-1 footer-link-header">Follow us</p>, <h2>Get social</h2>)}
+            {siteSpecific(<p className="pb-1 footer-link-header">Follow us</p>, <span className="h2">Get social</span>)}
             <ul className='ps-0 mt-1 text-nowrap'>
                 {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i, a) =>
                     <li key={name} className={classNames(siteSpecific(i !== a.length - 1 ? "me-2" : "", "me-3"), siteSpecific("d-inline", "d-inline-block"))}>
