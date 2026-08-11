@@ -1,13 +1,43 @@
+@use 'sass:map';
+
 @keyframes gutter-overflow {
   0%  {width: 100%; @include make-col-offset(0, 8);}
   60%  {width: 100%; @include make-col-offset(0, 8);}
   100% {width: 150%; @include make-col-offset(-2, 8);}
 }
 
+$expanded-bp-widths: (
+    // the spacing on either side of the container
+    /*xs: 24px,
+    sm: 30px,
+    md: 30px,*/
+    lg: 1140px,
+    xl: 1140px,
+    xxl: 1140px
+);
+
+$expansion-breakpoints: (
+  /*xs: 0,
+  sm: 576px,
+  md: 768px,*/
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
 @include media-breakpoint-up(lg) {
+  .expanded-layout-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
   .expanded-layout:not(.expanded-layout .expanded-layout) {
-    @include make-col-offset(-2, 8);
-    width: 150%;
+      @each $bp, $_ in $expansion-breakpoints {
+          @include media-breakpoint-only($bp, $expansion-breakpoints) {
+              width: map.get($expanded-bp-widths, $bp);
+          }
+      }
   }
 
   .isaac-accordion .card-body .expanded-layout:not(.expanded-layout .expanded-layout) {
