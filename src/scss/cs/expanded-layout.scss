@@ -1,50 +1,43 @@
 @use 'sass:map';
 
-@keyframes gutter-overflow {
-  0%  {width: 100%; @include make-col-offset(0, 8);}
-  60%  {width: 100%; @include make-col-offset(0, 8);}
-  100% {width: 150%; @include make-col-offset(-2, 8);}
-}
-
 $expanded-bp-widths: (
-    // the spacing on either side of the container
-    /*xs: 24px,
-    sm: 30px,
-    md: 30px,*/
-    lg: 1140px,
-    xl: 1140px,
-    xxl: 1140px
+  // the width of the expanded layout at each breakpoint
+  lg: 916px,
+  xl: 1116px,
+  xxl: 1116px
 );
 
 $expansion-breakpoints: (
-  /*xs: 0,
-  sm: 576px,
-  md: 768px,*/
   lg: 992px,
   xl: 1200px,
   xxl: 1400px
 );
 
-@include media-breakpoint-up(lg) {
-  .expanded-layout-container {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
-  }
+@each $bp, $breakpoint in $expansion-breakpoints {
+  @include media-breakpoint-only($bp, $expansion-breakpoints) {
+    $expanded-width: map.get($expanded-bp-widths, $bp);
 
-  .expanded-layout:not(.expanded-layout .expanded-layout) {
-      @each $bp, $_ in $expansion-breakpoints {
-          @include media-breakpoint-only($bp, $expansion-breakpoints) {
-              width: map.get($expanded-bp-widths, $bp);
-          }
-      }
-  }
+    .expanded-layout-container:not(.expanded-layout .expanded-layout-container) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+    }
 
-  .isaac-accordion .card-body .expanded-layout:not(.expanded-layout .expanded-layout) {
-    animation: gutter-overflow 0.5s;
+    .expanded-layout:not(.expanded-layout .expanded-layout) {
+      width: $expanded-width;
+    }
 
-    background: white;
-    box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
-    padding: 1rem;
+    @keyframes gutter-overflow {
+      0% { width: 100%; }
+      60% { width: 100%; }
+      100% { width: $expanded-width; }
+    }
+
+    .isaac-accordion .card-body .expanded-layout:not(.expanded-layout .expanded-layout) {
+      animation: gutter-overflow 0.5s;
+      background: #fff;
+      box-shadow: 0 2px 30px 0 rgb(0 0 0 / 8%);
+      padding: 1rem;
+    }
   }
 }
