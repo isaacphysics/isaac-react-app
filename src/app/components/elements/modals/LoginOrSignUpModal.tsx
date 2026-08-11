@@ -111,13 +111,9 @@ const LoginOrSignUpBody = () => {
                         </Button>
 
                         {siteSpecific(<div className="section-divider"/>, <hr className="text-center hr-or"/>)}
-                        {isAda && <div className="mb-2">
-                            <RaspberryPiSignInButton concise={true} />
-                        </div>}
-                        <div className="mb-2">
+                        <div className="d-flex flex-column gap-2 mb-2">
+                            {isAda && <RaspberryPiSignInButton concise={true} />}
                             <GoogleSignInButton/>
-                        </div>
-                        <div className="mb-2">
                             <MicrosoftSignInButton />
                         </div>
                         {isPhy && <SsoHelpLink />}
