@@ -47,16 +47,12 @@ export const RegistrationStart = () => {
                         </div>
                         <div className="my-7">
                             <div className={siteSpecific("h4 mb-3", "h3")}>Or log in with:</div>
-                            {isAda && <div className="mb-2">
-                                <RaspberryPiSignInButton />
-                            </div>}
-                            <div className="mb-2">
+                            <div className="d-flex flex-column gap-2 mb-2">
+                                {isAda && <RaspberryPiSignInButton />}
                                 <GoogleSignInButton />
-                            </div>
-                            <div className="mb-2">
                                 <MicrosoftSignInButton />
                             </div>
-                            {isPhy && <SsoHelpLink />}
+                            {isPhy && <SsoHelpLink />}                            
                         </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <div className="mt-7">
