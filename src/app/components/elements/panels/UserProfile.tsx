@@ -57,7 +57,7 @@ export const UserProfile = (props: UserProfileProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Account details</h3>
+            <h2>Account details</h2>
             <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
             <p>
                 <AccountTypeMessage role={userToUpdate?.role} />
