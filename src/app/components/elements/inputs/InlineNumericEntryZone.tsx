@@ -9,7 +9,7 @@ import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/Inline
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
 
-export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, focusRef, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
+export const InlineNumericEntryZone = ({questionDTO, setModified, index, correctness, focusRef, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
@@ -71,6 +71,8 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
                     // if the answer is incorrect because the units are wrong but the value is correct, hide the green outline from the value
                     correctnessClass((correctness === "INCORRECT" && valueCorrectness === "CORRECT") ? "NOT_SUBMITTED" : valueCorrectness)
                 )}
+                name={`Input field for part ${questionDTO?.title ?? (index+1)}`}
+                aria-label={`Input field for part ${questionDTO?.title ?? (index+1)}`}
                 style={contentStyle}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
