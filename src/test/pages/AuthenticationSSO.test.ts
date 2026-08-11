@@ -131,7 +131,7 @@ describe("Google SSO Authentication", () => {
                     );
                     expect(authenticationError.element).toHaveTextContent(dedent`
                         If you've not yet enabled sign-in with Google, first log in with another method (e.g. email and
-                        password). Then, on ${siteSpecific("My Account", "My Ada > Account")}, on "Security", next to
+                        password). Then, on ${siteSpecific("My Account", "your Account page")}, on "Security", next to
                         "Google", click "Link".${siteSpecific(" Read more about signing in with Google.", "")}`
                     );
                     expect(authenticationError.element).toHaveTextContent(dedent`
