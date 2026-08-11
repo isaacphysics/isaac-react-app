@@ -3,7 +3,7 @@ import {Link, useLocation} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { Container, Row, Col } from "reactstrap";
 import { type fetchErrorFromParameters } from "../../state";
-import { isPhy, siteSpecific } from "../../services";
+import { isPhy, SITE_TITLE_SHORT, siteSpecific } from "../../services";
 
 type State = { errorMessage?: string, provider?: string, providerErrors: ReturnType<typeof fetchErrorFromParameters>};
 
@@ -48,9 +48,9 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
     return <>
         <h3>You don&apos;t use this {provider} account to log in</h3>
         <p>
-            We&apos;ve found an {site} account with the email address from this {provider} account. However,
-            the {site} account isn&apos;t configured to allow access to this {provider} account. You&apos;ve either not
-            enabled sign-in with {provider} on your {site} account, or you used a different {provider} account to log
+            We&apos;ve found an {SITE_TITLE_SHORT} account with the email address from this {provider} account. However,
+            the {SITE_TITLE_SHORT} account isn&apos;t configured to allow access to this {provider} account. You&apos;ve either not
+            enabled sign-in with {provider} on your {SITE_TITLE_SHORT} account, or you used a different {provider} account to log
             in.
         </p>
         <ul>
@@ -73,12 +73,12 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
 const ConsentMissingMicrosoft = () => <>
     <h3>We need your consent</h3>
     <p>
-        If you&apos;d like to use your Microsoft account for signing in to {site}, you need to let us read your name and 
+        If you&apos;d like to use your Microsoft account for signing in to {SITE_TITLE_SHORT}, you need to let us read your name and 
         email address from your Microsoft account.
     </p>
     <p>
-        If you&apos;re using a school account and you&apos;re the first person using {site} from your school, your
-        IT department may need to pre-approve {site} before you can consent. <SSOLink>Read more about signing in with Microsoft.</SSOLink>
+        If you&apos;re using a school account and you&apos;re the first person using {SITE_TITLE_SHORT} from your school, your
+        IT department may need to pre-approve {SITE_TITLE_SHORT} before you can consent. <SSOLink>Read more about signing in with Microsoft.</SSOLink>
     </p>
     <p>If you need more help signing in, <ContactUs />.</p>
 </>;
@@ -87,5 +87,3 @@ const SSOLink = ({ children }: { children: ReactNode}) => isPhy &&
     <Link to="/pages/single_sign_on" aria-label="Link to Single Sign-On documentation">{children}</Link>;
 
 const ContactUs = () => <Link to="/contact" aria-label="Link to contact form">contact us</Link>;
-
-const site = siteSpecific("Isaac", "Ada CS");
