@@ -67,7 +67,7 @@ describe("Microsoft SSO Authentication", () => {
                 );
                 expect(authenticationError.element).toHaveTextContent(dedent`
                     If you've not yet enabled sign-in with Microsoft, first log in with another method (e.g. email and
-                    password). Then, on ${siteSpecific("My Account", "My Ada > Account")}, on "Security", next to
+                    password). Then, on ${siteSpecific("My Account", "your Account page")}, on "Security", next to
                     "Microsoft", click "Link".${siteSpecific(" Read more about signing in with Microsoft", "")}`
                 );
                 expect(authenticationError.element).toHaveTextContent(dedent`
