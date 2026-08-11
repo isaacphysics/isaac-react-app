@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import { expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
+import { dedent, expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
 import { API_PATH, isPhy, SITE_TITLE_SHORT, siteSpecific } from "../../app/services";
 import { mockUser } from "../../mocks/data";
 import { screen, waitFor, within } from "@testing-library/react";
@@ -192,8 +192,3 @@ const authenticationError = {
         return screen.getByRole('region', { name: 'Authentication Error' });
     }
 };
-
-const dedent = (strings: TemplateStringsArray, ...values: unknown[]) => strings
-    .reduce((acc, str, i) => acc + str + (values[i] ?? ''), '')
-    .replace(/\s+/g, ' ')
-    .trim();
