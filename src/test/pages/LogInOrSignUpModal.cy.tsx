@@ -9,10 +9,10 @@ it('LogInOrSignUpModal should have no visual regressions', () => {
     cy.stub(persistence.session, 'load').withArgs(KEY.FIRST_ANON_QUESTION).returns("some_question_id");
 
     // Act
-    cy.mountWithStoreAndRouter(<ActiveModals/>, ["/"]);
-    store.dispatch({ type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST });    
-    cy.get('[data-testid="active-modal"]').should('be.visible');
+    cy.mountWithStoreAndRouter(<div style={{height: "1200px"}}><ActiveModals /></div>, ["/"]);
+    store.dispatch({ type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST });
             
     // Assert
+    cy.get('body').invoke('css', 'transform', 'scale(1)');
     cy.get('[data-testid="active-modal"]').matchImage();
 });
