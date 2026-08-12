@@ -4,6 +4,8 @@
   100% {width: 110%; @include make-col-offset(-1, 20);}
 }
 
+// Content is already an unrestricted width on sci, so this uses percentage-based widths rather than fixed pixel widths
+// and is purposely minimal compared to the cs version
 @include media-breakpoint-up(md) {
   .isaac-accordion .expanded-layout:not(.expanded-layout .expanded-layout) {
     @include make-col-offset(-1, 20);
@@ -12,7 +14,7 @@
     animation: gutter-overflow 0.5s;
   }
 
-  .isaac-accordion .card-body > .expanded-layout:not(.expanded-layout .expanded-layout) {
+  .isaac-accordion .card-body > .expanded-layout-container .expanded-layout:not(.expanded-layout .expanded-layout) {
     background: var(--color-neutral-white);
     box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
     padding: 1rem;
