@@ -209,6 +209,26 @@
   @include svg-icon('/assets/cs/icons/settings.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-learning {
+  @include svg-icon('/assets/cs/icons/learning.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-hook {
+  @include svg-icon('/assets/cs/icons/hook.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-bug {
+  @include svg-icon('/assets/cs/icons/bug.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-shield-lock {
+  @include svg-icon('/assets/cs/icons/shield-lock.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-globe-lock {
+  @include svg-icon('/assets/cs/icons/globe-lock.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 // Icon color overrides
 i.icon.icon-color-black {
   @include icon-color-override($cs-jet);
