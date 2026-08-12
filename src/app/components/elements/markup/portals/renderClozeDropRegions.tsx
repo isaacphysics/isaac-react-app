@@ -70,7 +70,7 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = () => {
                 />
             ) 
             : [];
-    }, [dropIds]);
+    }, [dropIds, dropRegionContext?.dragAndDropEnabled]);
 
     return [
         modifyHtml,
