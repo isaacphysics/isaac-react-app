@@ -59,12 +59,12 @@ declare global {
 import React, {ReactNode} from "react";
 import {Provider} from "react-redux";
 import {store} from "../../src/app/state";
-import {createBrowserRouter, createRoutesFromElements, Route, To} from "react-router";
+import {createMemoryRouter, createRoutesFromElements, Route, To} from "react-router";
 import { RouterProvider } from 'react-router-dom';
 import { ACTION_TYPE } from '../../src/app/services';
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], user, mountOptions) => {
-    const router = createBrowserRouter(createRoutesFromElements(<>
+    const router = createMemoryRouter(createRoutesFromElements(<>
         {routes?.length
             ? routes.map(route => <Route key={route} element={component} path={route} />)
             : <Route path="*" element={component} />
