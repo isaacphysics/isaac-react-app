@@ -3,6 +3,7 @@ import {useGlossaryTermsInHtml} from "./GlossaryTerms";
 import {useAccessibleTablesInHtml} from "./Tables";
 import {useClozeDropRegionsInHtml} from "./renderClozeDropRegions";
 import {useInlineEntryZoneInHtml} from "./renderInlineEntryZone";
+import isEqual from "lodash/isEqual";
 
 export type PortalInHtmlHook = () => [(html: string, parentId?: string) => string, (ref?: HTMLElement) => JSX.Element[]];
 
@@ -49,8 +50,12 @@ const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHo
      * portalFuncs, on the other hand, will change based on the last call to htmlFuncs. we need changes to this to trigger a recalculation of portalFunc,
      * so that React renders portals with the correct target ids. as such, this is stored in state. a useEffect below updates portalFunc when this changes.
      */
-    htmlFuncs.current = [];
+
+    // Portal hooks can return new functions when their internal state changes (e.g. switching
+    // between dropdown and drag-and-drop), so this array must be rebuilt on every render.
+    //eslint-disable-next-line react-hooks/exhaustive-deps
     const newPortalFuncs = [] as ((ref?: HTMLElement) => JSX.Element[])[];
+    htmlFuncs.current = [];
     hookList?.forEach(hook => {
         const [htmlFunc, portalFunc] = hook();
         htmlFuncs.current.push(htmlFunc);
@@ -58,17 +63,10 @@ const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHo
     });
 
     useEffect(() => {
-        setPortalFuncs(current => {
-            if (
-                current.length === newPortalFuncs.length &&
-                current.every((func, index) => func === newPortalFuncs[index])
-            ) {
-                return current;
-            }
-
-            return newPortalFuncs;
-        });
-    }, [newPortalFuncs]);
+        if (!isEqual(portalFuncs, newPortalFuncs)) {
+            setPortalFuncs(newPortalFuncs);
+        }
+    }, [newPortalFuncs, portalFuncs]);
 
     const htmlFunc = useCallback((html: string, parentId?: string): string => {
         const htmlFuncResult = htmlFuncs.current.reduce((modifiedHtml, func) => func(modifiedHtml, parentId), html);
