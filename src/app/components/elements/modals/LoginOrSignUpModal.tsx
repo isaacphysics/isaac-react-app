@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Button, Col, Form, Row} from "reactstrap";
-import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
+import { closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {
     EmailPasswordInputs,
@@ -15,6 +15,7 @@ import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../GoogleSignInButton";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MicrosoftSignInButton } from "../MicrosoftSignInButton";
+import { ActiveModalProps } from "../../../../IsaacAppTypes";
 
 const LoginOrSignUpBody = () => {
 
@@ -39,7 +40,7 @@ const LoginOrSignUpBody = () => {
         return null;
     }
 
-    return <Row id={"login-page"} className="mb-n3">
+    return <Row id={"login-page"}>
         <div className="position-absolute w-fit-content end-0">
             <button className="close mt-3 me-1 btn-link" onClick={closeModal}>{siteSpecific("CLOSE", "Close")}</button>
         </div>
@@ -123,8 +124,8 @@ const LoginOrSignUpBody = () => {
     </Row>;
 };
 
-export const loginOrSignUpModal = {
+export const loginOrSignUpModal: ActiveModalProps = {
     centered: true,
-    noPadding: true,
-    body: LoginOrSignUpBody
+    bodyContainerClassName: "py-0",
+    body: LoginOrSignUpBody,
 };
