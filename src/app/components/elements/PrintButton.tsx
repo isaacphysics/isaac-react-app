@@ -9,6 +9,21 @@ interface PrintProps {
     questionPage?: boolean;
 }
 
+const FONT_LOAD_TIMEOUT = 2000;
+
+// Function that goes through all fonts on the page, waits for them to load/fail, and then prints the page
+async function printWithFontsReady() {
+
+    const loads = Array.from(document.fonts).map(font => (font.status === "unloaded" ? font.load() : font.loaded ).catch(() => undefined));
+    
+    await Promise.race([
+        Promise.all(loads).then(()=> document.fonts.ready),
+        new Promise(resolve => setTimeout(resolve,FONT_LOAD_TIMEOUT)),
+    ]);
+
+    window.print();
+}
+
 export const PrintButton = ({questionPage}: PrintProps ) => {
 
     const [questionPrintOpen, setQuestionPrintOpen] = useState(false);
@@ -25,7 +40,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         className="a-alt"
                         onClick={() => {
                             dispatch(printingSettingsSlice.actions.enableHints(true));
-                            setTimeout(window.print, 100);
+                            setTimeout(printWithFontsReady, 100);
                         }}
                     ><span className="visually-hidden">Print{" "}</span>With hints
                     </Button>
@@ -37,7 +52,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         className="a-alt"
                         onClick={() => {
                             dispatch(printingSettingsSlice.actions.enableHints(false));
-                            setTimeout(window.print, 100);
+                            setTimeout(printWithFontsReady, 100);
                         }}
                     ><span className="visually-hidden">Print{" "}</span>Without hints</Button>
                 </div>
@@ -62,7 +77,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
             data-bs-theme="neutral"
             onClick={() => {
                 dispatch(printingSettingsSlice.actions.enableHints(false)); 
-                setTimeout(window.print, 100);
+                setTimeout(printWithFontsReady, 100);
             }}
         />;
 };
