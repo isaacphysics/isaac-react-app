@@ -91,9 +91,9 @@
     box-shadow: none;
   }
 
-  .expansion-layout, .isaac-accordion .expansion-layout {
-    margin-left: 1px;
-    width: 100%;
+  .expanded-layout {
+    margin-left: 1px !important;
+    width: 100% !important;
   }
 
   .parsons-available-items {

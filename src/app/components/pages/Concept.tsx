@@ -100,7 +100,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
 
                     {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
-                    <Row className="concept-content-container">
+                    <Row>
                         <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
                             <SupersededDeprecatedStandaloneContentWarning doc={doc} />
