@@ -14,8 +14,7 @@ import {store} from "../../app/state";
         store.dispatch({ type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST });
             
         // Assert
-        cy.viewport(size, 750);
-        cy.get('body').invoke('css', 'transform', 'scale(1)');
-        cy.get('[data-testid="active-modal"]').matchImage();
+        cy.viewport(size, 1200);
+        cy.matchModal();
     })
 );
