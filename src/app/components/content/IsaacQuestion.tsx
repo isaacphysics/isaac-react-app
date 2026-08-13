@@ -110,8 +110,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     const tooFewSigFigsFeedback = <p>
         <b>more</b>&nbsp;
-        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>&nbsp;
-        to be able to mark it.
+        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>&nbsp;to be able to mark it.
     </p>;
 
     const invalidFormatFeeback = <p>
