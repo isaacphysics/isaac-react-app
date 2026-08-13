@@ -17,6 +17,10 @@ $expansion-breakpoints: (
   @include media-breakpoint-only($bp, $expansion-breakpoints) {
     $expanded-width: map.get($expanded-bp-widths, $bp);
 
+    // The expanded layout container is used to center the content of the expanded layout
+    // This must be done with a container because "layout": "expanded" can be applied to any Content block
+    // so we can't make assumptions about the parent container of the expanded layout,
+    // and with display: grid for browser-compatibility: https://caniuse.com/wf-justify-self-block
     .expanded-layout-container:not(.expanded-layout .expanded-layout-container) {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
