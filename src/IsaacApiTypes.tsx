@@ -169,9 +169,12 @@ export interface IsaacNumericQuestionDTO extends QuestionDTO {
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
+    useSingleList?: boolean;
 }
 
-export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {}
+export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {
+    useSingleList?: boolean;
+}
 
 export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
     withReplacement?: boolean;

@@ -1,11 +1,9 @@
 import {TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag, Tag} from "../../IsaacAppTypes";
-import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
 export abstract class AbstractBaseTagService {
     abstract getTagHierarchy(): TAG_LEVEL[];
     abstract getBaseTags(): BaseTag[];
-    abstract augmentDocWithSubject<T extends ContentDTO | ContentSummaryDTO>(doc: T): T & {subjectId?: string};
 
     // Augment base allTags
     public allTags: Tag[] = this.getBaseTags().map((baseTag) => {

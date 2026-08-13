@@ -724,10 +724,6 @@ export interface Tag extends BaseTag {
     level: number;
 }
 
-export interface DocumentSubject {
-    subjectId?: string;
-}
-
 export interface Choice extends ChoiceDTO {
     correct?: boolean;
     explanation?: ContentBase;

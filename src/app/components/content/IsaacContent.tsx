@@ -35,7 +35,8 @@ const classBasedLayouts = {
     textleft: "text-start",
     textcentre: "text-center",
     textcentrecolumn: "text-center-column",
-    clearfix: "clearfix w-100"
+    clearfix: "clearfix w-100",
+    expanded: "expanded-layout"
 };
 
 export interface IsaacContentProps {
@@ -108,6 +109,14 @@ export const IsaacContent = (props: IsaacContentProps) => {
     }
 
     if (layout && classBasedLayouts.hasOwnProperty(layout)) {
+        if (layout === "expanded") {
+            return <div className="expanded-layout-container">
+                <div className="expanded-layout">
+                    {selectedComponent}
+                </div>
+            </div>;
+        }
+
         // @ts-ignore because we do the check with hasOwnProperty
         return <div className={classBasedLayouts[layout]}>
             {selectedComponent}
