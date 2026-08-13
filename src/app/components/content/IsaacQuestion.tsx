@@ -104,13 +104,14 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     );
 
     const tooManySigFigsFeedback = <p>
-        Your answer <b>looks right</b>, but it needs <b>fewer</b>&nbsp;
+        your answer needs <b>fewer</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
     const tooFewSigFigsFeedback = <p>
-        Your answer may be <b>right or wrong</b>, but it needs <b>more</b>&nbsp;
-        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+        <b>more</b>&nbsp;
+        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>&nbsp;
+        to be able to mark it.
     </p>;
 
     const invalidFormatFeeback = <p>
@@ -225,11 +226,12 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
                             <h1 className="m-0">
-                                {correct ? "Correct!" : (
-                                    sigFigsError ? "Significant Figures" : (
-                                        almost ? "Partly correct..." : "Incorrect"
-                                    )
-                                )}
+                                {correct ? "Correct!" :
+                                    tooManySigFigsError ? "Looks right, but..." :
+                                        tooFewSigFigsError ? "Your answer needs..." :
+                                            almost ? "Partly correct..." :
+                                                "Incorrect"
+                                }
                             </h1>
                         }
                     </div>
