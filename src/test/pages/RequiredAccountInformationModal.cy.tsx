@@ -1,16 +1,17 @@
 import React from "react";
 
-import { ACTION_TYPE } from "../../app/services";
+import { ACTION_TYPE, STAGE } from "../../app/services";
 import { ActiveModals } from "../../app/components/elements/modals/ActiveModals";
 import {store} from "../../app/state";
 import { mockUser as originalMockUser, mockUserPreferences } from "../../mocks/data";
+import { LoggedInUser } from "../../IsaacAppTypes";
 
 it("RequiredAccountInformationModal should have no visual regressions", () => {
     // Arrange
-    const mockUser = {...originalMockUser} as any;
+    const mockUser: LoggedInUser = {...originalMockUser};
     delete mockUser.countryCode;
     delete mockUser.schoolOther;
-    mockUser.registeredContexts = [{ stage: 'invalid' }];
+    mockUser.registeredContexts = [{ stage: STAGE.SCOTLAND_HIGHER }];
     delete mockUser.registeredContextsLastConfirmed;
 
     // Act
