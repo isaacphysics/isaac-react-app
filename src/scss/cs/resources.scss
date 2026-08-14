@@ -28,9 +28,10 @@
   background: linear-gradient(180deg, $dark-pink-300 0%, #E9418C 100%);
   overflow: hidden;
   position: relative;
-
+  
   &::after {
     @include pseudo-element;
+    pointer-events: none;
     width: 100%;
     height: 184px;
     bottom: -74px;
