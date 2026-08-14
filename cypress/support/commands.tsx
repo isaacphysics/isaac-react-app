@@ -49,6 +49,7 @@ declare global {
         interface Chainable {
             mountWithStoreAndRouter(component: ReactNode, routes: string[], initialRoute?: To, user?: RegisteredUserDTO, mountOptions?: MountOptions): Chainable<Element>;
 
+            matchModal(): Chainable<JQuery<HTMLElement>>;
             openSidebar(): Chainable<JQuery<HTMLElement>>;
             closeSidebar(): Chainable<JQuery<HTMLElement>>;
             getComponent(component: keyof typeof components): Chainable<JQuery<HTMLElement>>;
@@ -91,6 +92,12 @@ import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
 Cypress.Commands.overwrite('matchImage', (matchImage) => {
     cy.wait(2000);
     matchImage();
+});
+
+Cypress.Commands.add('matchModal', () => {
+    // css hack to ensure entire modal is visible on screenshot, even if the modal would require scrolling
+    cy.get('body').invoke('css', 'transform', 'scale(1)');
+    cy.get('[data-testid="active-modal"]').matchImage();
 });
 
 // Skip visual regression tests in interactive mode - the results are not consistent with headless.
