@@ -5,6 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AdaTopicBase, Tag} from "../../../IsaacAppTypes";
 import {
     Ada11To14TopicsToConcepts,
+    AdaTopicsToIcons,
     PATHS,
     STAGE,
     TAG_ID,
@@ -44,7 +45,7 @@ const renderLink = (topic: AdaTopicBase) => {
 
 // used for 14-19 content where the links are to topic pages
 const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GCSE) => {
-    return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6}>
+    return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6} className="g-0">
         {subTags.sort((a, b) => (a.title > b.title) ? 1 : -1)
             // Overwrite subcategory with stage properties
             .map(subcategory => ({...subcategory, ...subcategory.stageOverride?.[stage]}))
@@ -60,14 +61,16 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
                         {renderLink(topic)}
                     </li>);
                 if (!subcategory.hidden && topicComponents.length > 0) {
-                    return <Card key={subcategory.id} className="mb-4">
-                        <CardBody>
-                            <h3>{subcategory.title}</h3>
-                            <ul className="list-unstyled mb-3 link-list">
-                                {topicComponents}
-                            </ul>
-                        </CardBody>
-                    </Card>;
+                    return <IconCard key={subcategory.id} className="mb-4"
+                        card={{
+                            title: subcategory.title,
+                            icon: {name: AdaTopicsToIcons[subcategory.id], size: "md", color: "secondary"},
+                        }}
+                    >
+                        <ul className="list-unstyled mb-3 link-list">
+                            {topicComponents}
+                        </ul>
+                    </IconCard>;
                 }
             })
         }
@@ -76,12 +79,12 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
 
 // used for 11-14 content where the links are to concept pages rather than topics
 const conceptColumn = (subTags: Tag[]) => {
-    return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6}>
+    return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6} className="g-0">
         {subTags.map(subcategory => {
             return <IconCard key={subcategory.id} className={classNames("mb-4")} 
                 card={{
                     title: subcategory.title,
-                    icon: {name: "icon-learning", size: "md", color: "secondary"},
+                    icon: {name: AdaTopicsToIcons[subcategory.id], size: "md", color: "secondary"},
                     className: classNames({"bg-cultured border-2 mt-3": subcategory.comingSoonDate}),
                     tag: subcategory.comingSoonDate,
                 }}

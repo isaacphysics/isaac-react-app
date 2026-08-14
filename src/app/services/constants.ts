@@ -997,6 +997,26 @@ export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> 
     ],
 };
 
+export const AdaTopicsToIcons: Partial<Record<TAG_ID, string>> = {
+    [TAG_ID.cyberSecurity11_14]: "icon-cyber-security",
+    [TAG_ID.aiAndMachineLearning11_14]: "icon-ai-data-science-and-machine-learning",
+    [TAG_ID.designAndDevelopment11_14]: "icon-design-and-development",
+    [TAG_ID.digitalLiteracy11_14]: "icon-digital-literacy",
+    [TAG_ID.aiAndMachineLearning]: "icon-ai-and-machine-learning",
+    [TAG_ID.dataStructuresAndAlgorithms]: "icon-algorithms-and-data-structures",
+    [TAG_ID.computerSystems]: "icon-computing-systems",
+    [TAG_ID.creatingMedia]: "icon-creating-media",
+    [TAG_ID.dataAndInformation]: "icon-data-and-information",
+    [TAG_ID.designAndDevelopment]: "icon-design-and-development",
+    [TAG_ID.effectiveUseOfTools]: "icon-effective-use-of-tools",
+    [TAG_ID.impactsOfDigitalTechnology]: "icon-impact-of-technology",
+    [TAG_ID.computerNetworks]: "icon-networks",
+    [TAG_ID.programming]: "icon-programming",
+    [TAG_ID.cyberSecurity]: "icon-safety-and-security",
+    [TAG_ID.theoryOfComputation]: "icon-models-of-computation",
+    [TAG_ID.projects]: "icon-software-projects",
+};
+
 // A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
 export const SUBJECT_SPECIFIC_CHILDREN_MAP: ContextSpecificTags = {
     [SUBJECTS.MATHS]: {[LEARNING_STAGE.A_LEVEL]: [TAG_ID.mechanics]},
