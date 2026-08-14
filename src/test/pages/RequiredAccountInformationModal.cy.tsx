@@ -19,6 +19,5 @@ it("RequiredAccountInformationModal should have no visual regressions", () => {
     store.dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences: mockUserPreferences});
 
     // Assert
-    cy.get('body').invoke('css', 'transform', 'scale(1)');
-    cy.get('[data-testid="active-modal"]').matchImage();
+    cy.matchModal();
 });
