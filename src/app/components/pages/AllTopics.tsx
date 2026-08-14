@@ -1,6 +1,6 @@
-import React from "react";
-import {Link} from "react-router-dom";
-import {Badge, Button, Card, CardBody, Col, Container, Row} from "reactstrap";
+import React, { useEffect } from "react";
+import {Link, useLocation} from "react-router-dom";
+import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AdaTopicBase, Tag} from "../../../IsaacAppTypes";
 import {
@@ -146,7 +146,15 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
 export const AllTopics = () => {
     const coreAdvancedTags = tags.allSubcategoryTags.filter(s => !s.stageOverride?.[STAGE.CORE]?.hidden && !s.stageOverride?.[STAGE.ADVANCED]?.hidden);
     const ks4Tags = tags.getChildren(TAG_ID.computerScience11_14);
-    const [stageTab, setStageTab] = useHistoryState<typeof TOPICS_STAGES[number]>("topics-tab", "14-19"); // TODO: replace with local storage solution
+    const [stageTab, setStageTab] = useHistoryState<typeof TOPICS_STAGES[number]>("topics-tab", window.location.hash === "#11-14" ? "11-14" : "14-19"); // TODO: replace with local storage solution
+
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.hash === "#11-14") {
+            setStageTab("11-14");
+        }
+    }, [location.hash, setStageTab]);
 
     const metaDescription = "Discover our free computer science topics and questions. Learn or revise for your exams with us today.";
 
