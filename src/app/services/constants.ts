@@ -2,7 +2,7 @@
 import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
-import {BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
+import {AdaTopicBase, BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
@@ -678,6 +678,13 @@ export enum TAG_ID {
     theoryOfComputation = "theory_of_computation",
     projects = "projects",
 
+    // 11-14
+    computerScience11_14 = "computer_science_11_14",
+    cyberSecurity11_14 = "cyber_security_11_14",
+    designAndDevelopment11_14 = "design_and_development_11_14",
+    aiAndMachineLearning11_14 = "ai_and_machine_learning_11_14",
+    digitalLiteracy11_14 = "digital_literacy_11_14",
+
     // AI and machine learning topics
     artificialIntelligence = "artificial_intelligence",
     machineLearning = "machine_learning",
@@ -967,6 +974,28 @@ export enum TAG_LEVEL {
 }
 
 type ContextSpecificTags = Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID[]>>>;
+
+export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> = {
+    [TAG_ID.cyberSecurity11_14]: [
+        {title: "Social engineering", url: undefined},
+        {title: "Malware", url: undefined},
+        {title: "Defending against malware", url: undefined},
+        {title: "Network security", url: undefined},
+    ],
+    [TAG_ID.aiAndMachineLearning11_14]: [
+        {title: "Data driven vs. rule based", url: undefined},
+        {title: "Data science", url: undefined},
+        {title: "Building a data-driven model", url: undefined},
+    ],
+    [TAG_ID.designAndDevelopment11_14]: [
+        {title: "Features of a digital product", url: undefined},
+        {title: "Planning a digital product", url: undefined},
+    ],
+    [TAG_ID.digitalLiteracy11_14]: [
+        {title: "Safe and responsible use of digital devices", url: undefined},
+        {title: "Collaboration using digital tools", url: undefined},
+    ],
+};
 
 // A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
 export const SUBJECT_SPECIFIC_CHILDREN_MAP: ContextSpecificTags = {
