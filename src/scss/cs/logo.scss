@@ -2,14 +2,14 @@
 .header-logo {
   float: left;
 
-  @include respond-above(lg) {
+  @include media-breakpoint-up(nav) {
     float: none;
   }
 
   img {
     width: auto;
     height: 3rem;
-    @include respond-above(lg) {
+    @include media-breakpoint-up(nav) {
       height: 4rem;
       float: none;
     }
