@@ -6,12 +6,6 @@
 // $display: when playing with pseudo element, you mainly use `display: block` (default value).
 @use "sass:math";
 
-@mixin pseudo-element($content: '', $position: absolute, $display: block) {
-  content: $content;
-  display: $display;
-  position: $position;
-}
-
 //
 //  MEDIA QUERIES
 //––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -320,4 +314,10 @@ $breakpoints: (
   -webkit-line-clamp: $lines;
   line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+@mixin pseudo-element($content: '', $position: absolute, $display: block) {
+  content: $content;
+  display: $display;
+  position: $position;
 }
