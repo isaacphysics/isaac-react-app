@@ -428,7 +428,7 @@ $failed-bg-size: 25%;
     right: 50px;
   }
 
-  @include respond-between(xs, sm) {
+  @include media-breakpoint-between(sm, md) {
     font-size: 14px;
     tbody td, tbody th {
       min-width: 65px;
@@ -507,9 +507,6 @@ $failed-bg-size: 25%;
   }
 
   .progress-table-header-footer .correct-attempted-header {
-    @include respond-between(sm, sm) {
-      font-size: 0.9rem;
-    }
     width: var(--correct-attempted-width);
     min-width: var(--correct-attempted-width);
     max-width: var(--correct-attempted-width);

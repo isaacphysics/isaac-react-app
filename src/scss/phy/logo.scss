@@ -10,7 +10,7 @@
     width: 45px;
     vertical-align: top;
 
-    @include respond-between(xs, lg) {
+    @include media-breakpoint-between(sm, xl) {
       width: 9rem;
     }
 

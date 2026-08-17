@@ -1,53 +1,115 @@
-// Helper for playing with pseudo element
-// $width: width of the pseudo element.
-// $height: height of the pseudo element.
-// $content: when playing with pseudo element, you mainly use `content: ""` (default value).
-// $position: when playing with pseudo element, you mainly use `position: absolute` (default value).
-// $display: when playing with pseudo element, you mainly use `display: block` (default value).
-@use "sass:math";
+@mixin pseudo-element($content: '', $position: absolute, $display: block) {
+  content: $content;
+  display: $display;
+  position: $position;
+}
 
-//
-//  MEDIA QUERIES
-//––––––––––––––––––––––––––––––––––––––––––––––––––
-// A map of breakpoints.
-// /!\ WARNING /!\ this is not the same as bootstraps $grid-breakpoints! (although it really should be!!!)
-$breakpoints: (
-  xs: 576px,
-  sm: 768px,
-  md: 992px,
-  lg: 1200px,
-  nav: 1256px
-); 
-
-
-
-//
-//  RESPOND BETWEEN
-//––––––––––––––––––––––––––––––––––––––––––––––––––
-// @include respond-between(sm, md) {}
-@mixin respond-between($lower, $upper) {
-  // If both the lower and upper breakpoints exist in the map.
-  @if map-has-key($breakpoints, $lower) and map-has-key($breakpoints, $upper) {
-    // Get the lower and upper breakpoints.
-    $lower-breakpoint: map-get($breakpoints, $lower);
-    $upper-breakpoint: map-get($breakpoints, $upper);
-    // Write the media query.
-    @media (min-width: $lower-breakpoint) and (max-width: ($upper-breakpoint - 1)) {
-      @content;
-    }
-    // If one or both of the breakpoints don't exist.
-  } @else {
-    // If lower breakpoint is invalid.
-    @if (map-has-key($breakpoints, $lower) == false) {
-      // Log a warning.
-      @warn 'Your lower breakpoint was invalid: #{$lower}.';
-    }
-    // If upper breakpoint is invalid.
-    @if (map-has-key($breakpoints, $upper) == false) {
-      // Log a warning.
-      @warn 'Your upper breakpoint was invalid: #{$upper}.';
-    }
+@mixin placeholder($colour: pink) {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  &::placeholder {
+    color: $colour !important;
+    /* Firefox */
+    opacity: 1;
   }
+  /* Some older WebKit based browsers */
+  &::-webkit-input-placeholder {
+    color: $colour !important;
+    opacity: 1;
+  }
+  /* Internet Explorer 10-11 */
+  &:-ms-input-placeholder {
+    color: $colour !important;
+  }
+  /* Microsoft Edge */
+  &::-ms-input-placeholder {
+    color: $colour !important;
+  }
+}
+
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: calc($width / $height);
+}
+
+// modified from https://css-tricks.com/books/greatest-css-tricks/scroll-shadows/
+@mixin vertical-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
+  background:
+    linear-gradient(
+      $background-color 30%,
+      transparent
+    ) center top,
+    
+    linear-gradient(
+      transparent,
+      $background-color 70%
+    ) center bottom,
+
+    radial-gradient(
+      farthest-side at 50% 0,
+      $shadow-color,
+      transparent
+    ) center top,
+
+    radial-gradient(
+      farthest-side at 50% 100%,
+      $shadow-color,
+      transparent
+    ) center bottom;
+
+  background-repeat: no-repeat;
+  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@mixin horizontal-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
+  background:
+    linear-gradient(
+      to right,
+      $background-color 30%,
+      transparent
+    ) left center,
+    
+    linear-gradient(
+      to right,
+      transparent,
+      $background-color 70%
+    ) right center,
+
+    radial-gradient(
+      farthest-side at 0 50%,
+      $shadow-color,
+      transparent
+    ) left center,
+
+    radial-gradient(
+      farthest-side at 100% 50%,
+      $shadow-color,
+      transparent
+    ) right center;
+
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@mixin no-print {
+  @media not print {
+    @content;
+  }
+}
+
+@mixin only-print {
+  @media print {
+    @content;
+  }
+}
+
+@mixin fixed-text-height($line-height: 1.5rem, $lines: 2) {
+  max-height: calc(#{$line-height} * #{$lines});
+  overflow: hidden;
+  display: -webkit-box !important;
+  -webkit-line-clamp: $lines;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 // ICONS
@@ -168,118 +230,4 @@ $breakpoints: (
     --icon-foreground: #{$color} !important;
     --icon-background: #{$color} !important;
   }
-}
-
-@mixin aspect-ratio($width, $height) {
-  aspect-ratio: calc($width / $height);
-}
-
-@mixin placeholder($colour: pink) {
-  /* Chrome, Firefox, Opera, Safari 10.1+ */
-  &::placeholder {
-    color: $colour !important;
-    /* Firefox */
-    opacity: 1;
-  }
-  /* Some older WebKit based browsers */
-  &::-webkit-input-placeholder {
-    color: $colour !important;
-    opacity: 1;
-  }
-  /* Internet Explorer 10-11 */
-  &:-ms-input-placeholder {
-    color: $colour !important;
-  }
-  /* Microsoft Edge */
-  &::-ms-input-placeholder {
-    color: $colour !important;
-  }
-}
-
-// modified from https://css-tricks.com/books/greatest-css-tricks/scroll-shadows/
-@mixin vertical-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
-  background:
-    linear-gradient(
-      $background-color 30%,
-      transparent
-    ) center top,
-    
-    linear-gradient(
-      transparent,
-      $background-color 70%
-    ) center bottom,
-
-    radial-gradient(
-      farthest-side at 50% 0,
-      $shadow-color,
-      transparent
-    ) center top,
-
-    radial-gradient(
-      farthest-side at 50% 100%,
-      $shadow-color,
-      transparent
-    ) center bottom;
-
-  background-repeat: no-repeat;
-  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
-  background-attachment: local, local, scroll, scroll;
-}
-
-@mixin horizontal-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
-  background:
-    linear-gradient(
-      to right,
-      $background-color 30%,
-      transparent
-    ) left center,
-    
-    linear-gradient(
-      to right,
-      transparent,
-      $background-color 70%
-    ) right center,
-
-    radial-gradient(
-      farthest-side at 0 50%,
-      $shadow-color,
-      transparent
-    ) left center,
-
-    radial-gradient(
-      farthest-side at 100% 50%,
-      $shadow-color,
-      transparent
-    ) right center;
-
-  background-repeat: no-repeat;
-  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-  background-attachment: local, local, scroll, scroll;
-}
-
-@mixin no-print {
-  @media not print {
-    @content;
-  }
-}
-
-@mixin only-print {
-  @media print {
-    @content;
-  }
-}
-
-@mixin fixed-text-height($line-height: 1.5rem, $lines: 2) {
-  max-height: calc(#{$line-height} * #{$lines});
-  overflow: hidden;
-  display: -webkit-box !important;
-  -webkit-line-clamp: $lines;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-@mixin pseudo-element($content: '', $position: absolute, $display: block) {
-  content: $content;
-  display: $display;
-  position: $position;
 }
