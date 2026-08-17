@@ -246,7 +246,7 @@ input[type=date]::-webkit-outer-spin-button {
   margin-top: 0;
 }
 
-@media (min-width: 576px) {
+@include media-breakpoint-above(sm) {
   .form-inline label {
     display: flex;
     align-items: center;
