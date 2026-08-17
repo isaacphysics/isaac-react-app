@@ -1,17 +1,16 @@
 import React, {ChangeEvent, lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
-import {Button, Col, Container, Input, Label, Row} from "reactstrap";
+import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter, isStaff, siteSpecific, jsonHelper, useModalWithScroll} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useLocation} from "react-router";
 import {Inequality, WidgetSpec} from 'inequality';
-import {openActiveModal, selectors, useAppDispatch, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
+import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import { Loading } from "../handlers/IsaacSpinner";
 import { GeneralFormulaDTO, InequalityState, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 import { initialiseInequality, sanitiseInequalityState } from "../../services/inequalityUtils";
-import { loginOrSignUpModal } from "../elements/modals/LoginOrSignUpModal";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -39,8 +38,6 @@ const Equality = () => {
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-
-    const dispatch = useAppDispatch();
 
     function updateState(state: InequalityState) {
         if (["maths", "logic"].includes(editorMode)) {
@@ -154,9 +151,6 @@ const Equality = () => {
                 </>}
             </Col>
         </Row>}
-        <Button onClick={() => dispatch(openActiveModal(loginOrSignUpModal))}>
-            Hello world
-        </Button>
     </Container>;
 };
 export default Equality;
