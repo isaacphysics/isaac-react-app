@@ -405,81 +405,83 @@
             }
         }
 
-        @media screen and (orientation:landscape) and (max-height: 575px) {
-            $button-size: 61px;
-            $button-spacing: 8px;
+        @media (orientation:landscape) {
+            @include media-breakpoint-down(sm) {
+                $button-size: 61px;
+                $button-spacing: 8px;
 
-            #graph-sketcher-ui-debug-window {
-                display: none;
-                top: 2 * $button-spacing;
-                left: 3 * $button-spacing + $button-size;
-            }
-
-            .button {
-                width: $button-size;
-                height: $button-size;
-
-                &#graph-sketcher-ui-trash-button {
+                #graph-sketcher-ui-debug-window {
+                    display: none;
                     top: 2 * $button-spacing;
-                    right: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-reset-button {
-                    top: 3 * $button-spacing + $button-size;
-                    right: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-question-button {
-                    bottom: 3 * $button-spacing + $button-size;
-                    left: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-undo-button {
-                    bottom: 2 * $button-spacing;
-                    left: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-redo-button {
-                    bottom: 2 * $button-spacing;
                     left: 3 * $button-spacing + $button-size;
                 }
 
-                &#graph-sketcher-ui-submit-button {
-                    bottom: 2 * $button-spacing;
-                    right: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-help-button {
-                    bottom: 3 * $button-spacing + $button-size;
-                    right: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-debug-button {
-                    display: none;
-                    top: unset;
-                    bottom: 3 * $button-spacing + $button-size;
-                    left: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-bezier-button {
-                    top: 3 * $button-spacing + $button-size;
-                    left: 2 * $button-spacing;
-                }
-
-                &#graph-sketcher-ui-linear-button {
-                    top: 2 * $button-spacing;
-                    left: 2 * $button-spacing;
-                }
-            }
-
-            div#graph-sketcher-ui-color-select-hexagons {
-                top: 2 * $button-spacing;
-                left: 3 * $button-spacing + $button-size;
-                width: $button-size;
-                height: $button-size;
-                svg {
+                .button {
                     width: $button-size;
-                    height: $button-size;                        
+                    height: $button-size;
+
+                    &#graph-sketcher-ui-trash-button {
+                        top: 2 * $button-spacing;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-reset-button {
+                        top: 3 * $button-spacing + $button-size;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-question-button {
+                        bottom: 3 * $button-spacing + $button-size;
+                        left: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-undo-button {
+                        bottom: 2 * $button-spacing;
+                        left: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-redo-button {
+                        bottom: 2 * $button-spacing;
+                        left: 3 * $button-spacing + $button-size;
+                    }
+
+                    &#graph-sketcher-ui-submit-button {
+                        bottom: 2 * $button-spacing;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-help-button {
+                        bottom: 3 * $button-spacing + $button-size;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-debug-button {
+                        display: none;
+                        top: unset;
+                        bottom: 3 * $button-spacing + $button-size;
+                        left: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-bezier-button {
+                        top: 3 * $button-spacing + $button-size;
+                        left: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-linear-button {
+                        top: 2 * $button-spacing;
+                        left: 2 * $button-spacing;
+                    }
+                }
+
+                div#graph-sketcher-ui-color-select-hexagons {
+                    top: 2 * $button-spacing;
+                    left: 3 * $button-spacing + $button-size;
+                    width: $button-size;
+                    height: $button-size;
+                    svg {
+                        width: $button-size;
+                        height: $button-size;                        
+                    }
                 }
             }
         }
