@@ -6,7 +6,7 @@ tr.board-card {
 }
 .board-card {
   min-width: 30%;
-  @include media-breakpoint-below(md) {
+  @include media-breakpoint-down(md) {
     min-width: 50%;
   }
   margin-top: 25px;

@@ -36,7 +36,7 @@
 
   padding: 0 4px;
 
-  @include media-breakpoint-below(lg) {
+  @include media-breakpoint-down(lg) {
     padding-left: 0px;
     padding-right: 0px;
   }
