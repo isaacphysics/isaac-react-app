@@ -2,14 +2,14 @@
 .header-logo {
   float: left;
 
-  @include respond-above(nav) {
+  @include respond-above(lg) {
     float: none;
   }
 
   img {
     width: auto;
     height: 3rem;
-    @include respond-above(nav) {
+    @include respond-above(lg) {
       height: 4rem;
       float: none;
     }

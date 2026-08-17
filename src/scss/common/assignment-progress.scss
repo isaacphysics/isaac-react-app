@@ -359,7 +359,7 @@ $failed-bg-size: 25%;
 .progress-header {
   text-align: center;
   padding: 0.5rem 0;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     font-size: 1.1rem;
   }
 }
@@ -368,7 +368,7 @@ $failed-bg-size: 25%;
   border-top: 1px solid $gray-118;
   display: flex;
   justify-content: space-between;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     font-size: 1.2rem;
   }
   align-items: center;
@@ -438,7 +438,7 @@ $failed-bg-size: 25%;
     }
   }
 
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     font-size: 17px;
     tbody td, tbody th {
       min-width: 85px;
@@ -516,7 +516,7 @@ $failed-bg-size: 25%;
   }
 
   .sticky-ca-col {
-    @include respond-above(lg) {
+    @include media-breakpoint-up(xl) {
       position: sticky;
       z-index: 2;
       &:nth-child(2) {

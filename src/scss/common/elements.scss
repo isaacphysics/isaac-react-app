@@ -77,7 +77,7 @@ button.btn.btn-link.login-b,
   text-transform: uppercase;
 
   &:hover {
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       text-decoration: underline;
     }
   }
@@ -95,7 +95,7 @@ button.btn.btn-link.login-b,
 .signup {
   display: none;
 
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     display: block;
   }
 
@@ -109,7 +109,7 @@ button.btn.btn-link.login-b,
     display: block;
 
     &:hover {
-      @include respond-above(sm) {
+      @include media-breakpoint-up(md) {
         text-decoration: underline;
       }
     }
@@ -126,7 +126,7 @@ button.btn.btn-link.login-b,
   text-transform: uppercase;
 
   &:hover {
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       text-decoration: underline;
     }
   }
@@ -156,7 +156,7 @@ button.btn.btn-link.login-b,
   display: unset !important;
 
   &:hover {
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       text-decoration: underline;
     }
   }
@@ -178,7 +178,7 @@ button.btn.btn-link.login-b,
 .logout {
   display: none;
 
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     display: inline-block;
   }
 
@@ -190,7 +190,7 @@ button.btn.btn-link.login-b,
     display: unset !important;
 
     &:hover {
-      @include respond-above(sm) {
+      @include media-breakpoint-up(md) {
         text-decoration: underline;
       }
     }
@@ -240,7 +240,7 @@ iframe.email-html {
 //      height: 24px;
 //      width: 24px;
 //
-//      @include respond-above(sm) {
+//      @include media-breakpoint-up(md) {
 //        display: none;
 //      }
 //    }
@@ -257,7 +257,7 @@ iframe.email-html {
 //      width: 1px;
 //
 //
-//      @include respond-above(sm) {
+//      @include media-breakpoint-up(md) {
 //        clip: initial;
 //        height: initial;
 //        position: relative;

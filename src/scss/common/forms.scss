@@ -97,7 +97,7 @@ textarea {
   height: 2.6rem;
   padding: initial 40px initial 1rem;
 
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     max-width: 220px;
   }
 

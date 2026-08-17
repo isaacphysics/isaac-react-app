@@ -2,7 +2,7 @@
 .header-logo {
   float: left;
 
-  @include respond-above(xs) {
+  @include media-breakpoint-up(sm) {
     float: none;
   }
 
@@ -14,7 +14,7 @@
       width: 9rem;
     }
 
-    @include respond-above(lg) {
+    @include media-breakpoint-up(xl) {
       width: 12rem;
     }
 

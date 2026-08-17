@@ -59,7 +59,7 @@
       font-size: 1rem;
       cursor: pointer;
       text-decoration: underline;
-      @include respond-above(sm) {
+      @include media-breakpoint-up(md) {
         font-size: 1.25rem;
       }
     }
@@ -81,7 +81,7 @@
   .feattab-image & {
     border-width: 0;
 
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       margin-top: 6rem;
     }
     .btn-link {
@@ -93,7 +93,7 @@
 .feattab-image {
   padding: 7rem 0;
   position: relative;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     padding: 0;
   }
 
@@ -110,7 +110,7 @@
   .question-hints {
     position: absolute;
     top: 0;
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       position: relative;
     }
   }

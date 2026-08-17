@@ -40,13 +40,13 @@
   }
 
   .finder-filters {
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       justify-content: flex-end;
     }
   }
 
   .finder-filters label {
-    @include respond-above(xs) {
+    @include media-breakpoint-up(sm) {
       margin-left: 0.5rem;
     }
     @include respond-below(xs) {

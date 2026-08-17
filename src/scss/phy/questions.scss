@@ -11,7 +11,7 @@
   font-weight: 400;
 }
 
-@include respond-above(xs) {
+@include media-breakpoint-up(sm) {
   :not(.generic-panel):not(.concept-panel):not(.question-panel) > .content-chunk > .figure-panel {
     // if a figure is in the top level of a content block that is not the top level of a page (i.e. preamble), indent it. otherwise (i.e. when inside a layout component), leave it for that component to handle
     // TODO: move the padding from this to the layout component (usually accordions!)
@@ -32,7 +32,7 @@
 
     // content directly inside an accordion on a question page is indented to match that inside a question-component
     > .content-chunk > .content-value {
-      @include respond-above(xs) {
+      @include media-breakpoint-up(sm) {
         padding-left: 1.625rem;
         padding-right: 1.625rem;
       }
@@ -52,7 +52,7 @@
       @include respond-below(md) {
         padding: 0.5rem 1.5rem;
       }
-      @include respond-above(md) {
+      @include media-breakpoint-up(lg) {
         padding: 0.5rem 2rem;
       }
     }

@@ -22,6 +22,6 @@
 .isaac-accordion .tabbed-hints {
   margin-bottom: 0;
   margin-top: 1rem;
-  @include respond-above(sm) {margin-top: 1.25rem;}
-  @include respond-above(md) {margin-top: 1.5rem;}
+  @include media-breakpoint-up(md) {margin-top: 1.25rem;}
+  @include media-breakpoint-up(lg) {margin-top: 1.5rem;}
 }

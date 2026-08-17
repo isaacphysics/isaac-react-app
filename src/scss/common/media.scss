@@ -20,7 +20,7 @@ figure {
   font-weight: bold;
 }
 
-@include respond-above(md) {
+@include media-breakpoint-up(lg) {
   .align-start {
     float: left;
     width: 300px;
@@ -42,7 +42,7 @@ figure {
 
 .text-center-column {
   text-align: left;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     padding-left: 20%;
     padding-right: 20%;
   }

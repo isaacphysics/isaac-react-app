@@ -176,7 +176,7 @@
             }
         }
 
-        @include respond-above(lg) {
+        @include media-breakpoint-up(xl) {
             $button-size: 90px;
             $button-spacing: 10px;
 
@@ -328,7 +328,7 @@
             }
         }
 
-        @include respond-above(xs) {
+        @include media-breakpoint-up(sm) {
             $button-size: 90px;
             $button-spacing: 10px;
 
