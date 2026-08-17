@@ -94,42 +94,6 @@ $breakpoints: (
   }
 }
 
-$viewport-sizes: (
-  25: 25%,
-  50: 50%,
-  75: 75%,
-  100: 100%,
-  auto: auto,
-);
-
-// Size / viewports -- (correctly) uses Bootstrap's breakpoints, NOT the ones declared in this file
-@each $bp, $bp-width in map-remove($grid-breakpoints, xs) {
-  @media (min-width: $bp-width) {
-    @each $size, $size-value in $viewport-sizes {
-      .w-#{$bp}-#{$size} {
-        width: #{$size-value} !important;
-      }
-      .h-#{$bp}-#{$size} {
-        height: #{$size-value} !important;
-      }
-    }
-  }
-}
-
-// Fixed sizes
-@for $size from 1 through 20 {
-  .wf-#{$size} {
-    width: #{$size}rem !important;
-  }
-  .hf-#{$size} {
-    height: #{$size}rem !important;
-  }
-}
-
-.mw-auto {
-  min-width: auto !important;
-}
-
 // ICONS
 @mixin svg-icon-raw($path, $width, $height, $background-size: none, $background-position: none) {
   // use this only for SVG icons that should not be recoloured; prefer @svg-icon in general
