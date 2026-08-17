@@ -18,7 +18,7 @@
     @include media-breakpoint-up(sm) {
       margin-left: 0.5rem;
     }
-    @include respond-below(xs) {
+    @include media-breakpoint-down(sm) {
       margin-right: 0.5rem;
     }
   }
@@ -48,7 +48,7 @@ nav.search {
     border-width: 0;
     position: absolute;
 
-    @include respond-below(xs) {
+    @include media-breakpoint-down(sm) {
       right: 19%;
       top: 19px;
     }

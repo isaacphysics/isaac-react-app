@@ -98,7 +98,7 @@
   }
 
   img {
-    @include respond-below(sm) {
+    @include media-breakpoint-down(md) {
       position: absolute;
       bottom: -84px;
       left: 0;

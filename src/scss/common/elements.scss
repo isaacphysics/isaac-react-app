@@ -198,7 +198,7 @@ button.btn.btn-link.login-b,
 }
 
 .not-mobile {
-  @include respond-below(sm) {
+  @include media-breakpoint-down(md) {
     display: none !important;
   }
 }

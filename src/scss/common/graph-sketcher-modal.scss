@@ -249,7 +249,7 @@
         }
 
         @media (orientation:portrait) {
-            @include respond-below(xs) {
+            @include media-breakpoint-down(sm) {
                 $button-size: 61px;
                 $button-spacing: 8px;
 

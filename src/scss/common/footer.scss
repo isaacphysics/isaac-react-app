@@ -48,7 +48,7 @@
   }
 
   .logo-col {
-    @include respond-below(sm) {
+    @include media-breakpoint-down(md) {
       padding: 1rem;
     }
     a {

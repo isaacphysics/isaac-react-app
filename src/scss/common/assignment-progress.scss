@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@include respond-below(sm) {
+@include media-breakpoint-down(md) {
   .assignment-progress-gameboard {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -456,7 +456,7 @@ $failed-bg-size: 25%;
     box-shadow: inset 0 1px 0 $gray-118;
   }
 
-  @include respond-below(xs) {
+  @include media-breakpoint-down(sm) {
     button.sort {
       display: none;
     }
@@ -487,7 +487,7 @@ $failed-bg-size: 25%;
     --correct-attempted-width: 7rem;
   }
 
-  @include respond-below(md) {
+  @include media-breakpoint-down(lg) {
     --student-name-width: 12rem;
 
     &:has(thead tr th.narrow-header) {
@@ -495,7 +495,7 @@ $failed-bg-size: 25%;
     }
   }
 
-  @include respond-below(sm) {
+  @include media-breakpoint-down(md) {
     --correct-attempted-width: 8rem;
     --student-name-width: 8rem;
   }

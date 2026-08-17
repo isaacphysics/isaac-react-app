@@ -2,8 +2,8 @@
   margin-top: 1rem;
   margin-bottom: 2rem;
   ul li {
-    @include respond-below(lg) {padding-left: 0.5rem !important; padding-right: 0.5rem !important;}
-    @include respond-below(xs) {padding-left: 0 !important; padding-right: 0 !important;}
+    @include media-breakpoint-down(xl) {padding-left: 0.5rem !important; padding-right: 0.5rem !important;}
+    @include media-breakpoint-down(sm) {padding-left: 0 !important; padding-right: 0 !important;}
   }
 
   li {
