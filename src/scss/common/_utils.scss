@@ -130,25 +130,13 @@
   }
 }
 
-$viewport-sizes: (
-  25: 25%,
-  50: 50%,
-  75: 75%,
-  100: 100%,
-  auto: auto,
-);
+@each $name, $size in $element-sizes {
+  .w-#{$name} {
+    width: $size !important;
+  }
 
-// Size / viewports -- (correctly) uses Bootstrap's breakpoints, NOT the ones declared in this file
-@each $bp, $bp-width in map-remove($grid-breakpoints, xs) {
-  @media (min-width: $bp-width) {
-    @each $size, $size-value in $viewport-sizes {
-      .w-#{$bp}-#{$size} {
-        width: #{$size-value} !important;
-      }
-      .h-#{$bp}-#{$size} {
-        height: #{$size-value} !important;
-      }
-    }
+  .h-#{$name} {
+    height: $size !important;
   }
 }
 
@@ -159,5 +147,27 @@ $viewport-sizes: (
   }
   .hf-#{$size} {
     height: #{$size}rem !important;
+  }
+}
+
+$viewport-sizes: (
+  25: 25%,
+  50: 50%,
+  75: 75%,
+  100: 100%,
+  auto: auto,
+);
+
+// Size / viewports -- uses Bootstrap's breakpoints
+@each $bp, $bp-width in map-remove($grid-breakpoints, xs) {
+  @media (min-width: $bp-width) {
+    @each $size, $size-value in $viewport-sizes {
+      .w-#{$bp}-#{$size} {
+        width: #{$size-value} !important;
+      }
+      .h-#{$bp}-#{$size} {
+        height: #{$size-value} !important;
+      }
+    }
   }
 }

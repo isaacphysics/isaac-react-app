@@ -211,16 +211,6 @@ button.btn.btn-link.login-b,
   cursor: grab;
 }
 
-@each $name, $size in $element-sizes {
-  .w-#{$name} {
-    width: $size !important;
-  }
-
-  .h-#{$name} {
-    height: $size !important;
-  }
-}
-
 .overflow-visible {
   overflow: visible !important;
 }
