@@ -11,25 +11,21 @@
   display: $display;
   position: $position;
 }
-// Detect IE10 and IE11
-@mixin ie() {
-  @media screen and (-ms-high-contrast: active),
-  screen and (-ms-high-contrast: none) {
-    @content;
-  }
-}
+
 //
 //  MEDIA QUERIES
 //––––––––––––––––––––––––––––––––––––––––––––––––––
 // A map of breakpoints.
 // /!\ WARNING /!\ this is not the same as bootstraps $grid-breakpoints! (although it really should be!!!)
 $breakpoints: (
-        xs: 576px,
-        sm: 768px,
-        md: 992px,
-        lg: 1200px,
-        nav: 1256px
-); //
+  xs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  nav: 1256px
+); 
+
+//
 //  RESPOND ABOVE
 //––––––––––––––––––––––––––––––––––––––––––––––––––
 // @include respond-above(sm) {}
@@ -48,6 +44,7 @@ $breakpoints: (
     @warn 'Invalid breakpoint: #{$breakpoint}.';
   }
 }
+
 //
 //  RESPOND BELOW
 //––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -67,6 +64,7 @@ $breakpoints: (
     @warn 'Invalid breakpoint: #{$breakpoint}.';
   }
 }
+
 //
 //  RESPOND BETWEEN
 //––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -93,31 +91,6 @@ $breakpoints: (
       // Log a warning.
       @warn 'Your upper breakpoint was invalid: #{$upper}.';
     }
-  }
-}
-// outline helper
-@mixin out($colour: pink, $width: 1px) {
-  outline: $width solid $colour;
-}
-@mixin placeholder($colour: pink) {
-  /* Chrome, Firefox, Opera, Safari 10.1+ */
-  &::placeholder {
-    color: $colour !important;
-    /* Firefox */
-    opacity: 1;
-  }
-  /* Some older WebKit based browsers */
-  &::-webkit-input-placeholder {
-    color: $colour !important;
-    opacity: 1;
-  }
-  /* Internet Explorer 10-11 */
-  &:-ms-input-placeholder {
-    color: $colour !important;
-  }
-  /* Microsoft Edge */
-  &::-ms-input-placeholder {
-    color: $colour !important;
   }
 }
 
@@ -157,10 +130,7 @@ $viewport-sizes: (
   min-width: auto !important;
 }
 
-@mixin aspect-ratio($width, $height) {
-  aspect-ratio: calc($width / $height);
-}
-
+// ICONS
 @mixin svg-icon-raw($path, $width, $height, $background-size: none, $background-position: none) {
   // use this only for SVG icons that should not be recoloured; prefer @svg-icon in general
   display: inline-block;
@@ -280,6 +250,32 @@ $viewport-sizes: (
   }
 }
 
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: calc($width / $height);
+}
+
+@mixin placeholder($colour: pink) {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  &::placeholder {
+    color: $colour !important;
+    /* Firefox */
+    opacity: 1;
+  }
+  /* Some older WebKit based browsers */
+  &::-webkit-input-placeholder {
+    color: $colour !important;
+    opacity: 1;
+  }
+  /* Internet Explorer 10-11 */
+  &:-ms-input-placeholder {
+    color: $colour !important;
+  }
+  /* Microsoft Edge */
+  &::-ms-input-placeholder {
+    color: $colour !important;
+  }
+}
+
 // modified from https://css-tricks.com/books/greatest-css-tricks/scroll-shadows/
 @mixin vertical-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
   background:
@@ -351,13 +347,6 @@ $viewport-sizes: (
   @media print {
     @content;
   }
-}
-
-@mixin table-sticky() {
-  position: sticky !important;
-  position: -webkit-sticky !important;
-  background-clip:  padding-box !important;
-  z-index: 2;
 }
 
 @mixin fixed-text-height($line-height: 1.5rem, $lines: 2) {
