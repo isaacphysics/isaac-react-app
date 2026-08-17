@@ -1,4 +1,17 @@
 .sidebar {
+  .sticky {
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow: auto;
+    // reserve 5px for elements to overflow (eg. button outlines when selected, on question finder).
+    // preserve original layout by compensating for added padding using negative margin. 
+    padding-left: 5px;
+    margin-left: -5px;
+    padding-bottom: 5px;
+    margin-bottom: -5px;
+  }
+
   ul {
     list-style: none;
     list-style-image: none;
