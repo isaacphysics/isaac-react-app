@@ -253,28 +253,6 @@
     }
   }
 
-  //Button - Primary Outline
-  &.btn-outline-primary {
-    border-color: $black;
-    border-width: 2px;
-    color: $black;
-
-    &:hover {
-      background-color: transparent;
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: $gray-118;
-      border-color: $gray-118;
-    }
-
-    &.disabled,
-    &:disabled {
-      border-color: $gray-136;
-      color: $gray-136;
-    }
-  }
-
   &.btn-xl {
     width: 100%;
     white-space: nowrap;
@@ -344,11 +322,7 @@ a.btn {
   &.btn-positive {
     background-color: $a11y_green;
   }
-
-  &.btn-outline-primary:not(:disabled):not(.disabled):active {
-    color: black;
-  }
-
+  
   //Button - Secondary Outline
   &.btn-outline-secondary {
     background-color: $black;

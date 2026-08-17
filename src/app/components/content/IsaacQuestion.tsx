@@ -56,11 +56,11 @@ const FastTrackSubmissionButtons = ({fastTrackPrimaryAction, fastTrackSecondaryA
     return <>
         {fastTrackSecondaryAction && <div
             className={classNames("m-auto pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-lg-3 pb-3": fastTrackPrimaryAction})}>
-            <input {...fastTrackSecondaryAction} className="h-100 btn btn-outline-primary w-100"/>
+            <input {...fastTrackSecondaryAction} className="h-100 btn btn-keyline w-100"/>
         </div>}
         {fastTrackPrimaryAction && <div
             className={classNames("m-auto w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("pb-3", "pb-1"), {"ps-sm-2 ps-lg-3": fastTrackSecondaryAction})}>
-            <input {...fastTrackPrimaryAction} className="h-100 btn btn-secondary w-100"/>
+            <input {...fastTrackPrimaryAction} className="h-100 btn btn-solid w-100"/>
         </div>}
     </>;
 };
