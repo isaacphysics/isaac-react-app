@@ -228,7 +228,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
 
             <div className="mt-3 text-end">
                 <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle caret color="primary" outline className="me-3 mt-1">
+                    <DropdownToggle caret color="keyline" className="me-3 mt-1">
                         Email Users
                     </DropdownToggle>
                     <DropdownMenu>
