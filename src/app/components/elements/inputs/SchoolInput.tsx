@@ -56,7 +56,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     // Get school associated with urn
     function fetchSchool(urn: string) {
         if (urn !== "") {
-            if (selectedSchoolObject?.urn !== urn) {
+            if (selectedSchoolObject?.schoolId !== urn) {
                 getSchoolByUrn(urn).then(({data}) => {
                     if (data && data.length > 0) {
                         setSelectedSchoolObject(data[0]);
@@ -76,7 +76,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
         const {schoolId: _schoolId, schoolOther: _schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
-        if (school.urn) {
+        if (school.schoolId) {
             setUserToUpdate?.({...userWithoutSchoolInfo, schoolId: school.urn});
             setSelectedSchoolObject(school);
         } else if (school) {
@@ -99,8 +99,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }
 
     const schoolValue: {value: string | School, label: string | undefined} | undefined = (
-        (selectedSchoolObject && selectedSchoolObject.urn ?
-            {value: selectedSchoolObject.urn, label: schoolNameWithPostcode(selectedSchoolObject)} :
+        (selectedSchoolObject && selectedSchoolObject.schoolId ?
+            {value: selectedSchoolObject.schoolId, label: schoolNameWithPostcode(selectedSchoolObject)} :
             (userToUpdate.schoolOther ?
                 {value: "manually entered school", label: userToUpdate.schoolOther} :
                 undefined))
@@ -132,7 +132,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             />
         </React.Fragment>}
 
-        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex flex-column mt-2 align-content-center">
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.schoolName)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex flex-column mt-2 align-content-center">
             <StyledCheckbox
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}

@@ -86,9 +86,9 @@ export function extractTeacherName(teacher: {readonly givenName?: string; readon
 }
 
 export function schoolNameWithPostcode(schoolResult: School): string | undefined {
-    let schoolName = schoolResult.name;
-    if (schoolResult.postcode) {
-        schoolName += ", " + schoolResult.postcode;
+    let schoolName = schoolResult.schoolName;
+    if (schoolResult.postalCode) {
+        schoolName += ", " + schoolResult.postalCode;
     }
     return schoolName;
 }

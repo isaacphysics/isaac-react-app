@@ -7864,9 +7864,11 @@ export const buildMockPage = (pageId: string) => ({
 });
 
 export const mockSchool: School = {
-    name: "University of Cambridge",
-    urn: "133801",
-    postcode: "CB2 1TN",
+    schoolName: "University of Cambridge",
+    schoolId: "133801",
+    countryCode: "GB-ENG",
+    postalCode: "CB2 1TN",
+    excluded: false,
     closed: false,
     dataSource: "somewhere-over-the-rainbow",
 };

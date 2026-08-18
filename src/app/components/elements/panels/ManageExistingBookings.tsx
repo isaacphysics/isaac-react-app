@@ -50,7 +50,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     const augmentedEventBookings = eventBookings?.map(produce((booking: EventBookingDTO & {schoolName?: string}) => {
         if (booking.userBooked && booking.userBooked.id) {
             const schoolDetails = userIdToSchoolMapping?.[booking.userBooked.id];
-            booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
+            booking.schoolName = schoolDetails ? schoolDetails.schoolName : "UNKNOWN";
         }
         return booking;
     }));

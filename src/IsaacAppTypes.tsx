@@ -283,9 +283,12 @@ export interface AppGroupTokenDTO {
 }
 
 export interface School {
-    urn: string;
-    name: string;
-    postcode: string;
+    schoolId: string;
+    countryCode: string;
+    schoolName: string;
+    postalCode?: string;
+    town?: string;
+    excluded: boolean;
     closed: boolean;
     dataSource: string;
 }
