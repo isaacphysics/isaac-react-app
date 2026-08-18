@@ -8,6 +8,8 @@ import {
 } from "../../IsaacAppTypes";
 import {API_PATH, SortOrder} from "./constants";
 import {AssignmentProgressDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import { useLocalStorageState } from "../state/actions/storage";
+import { KEY } from "./localStorage";
 
 // TODO: move to app types without creating circular deps
 export enum GroupSortOrder {
@@ -28,8 +30,8 @@ export function useAssignmentProgressAccessibilitySettings({user}: {user: Regist
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
     const [attemptedOrCorrect, setAttemptedOrCorrect] = useState<"ATTEMPTED" | "CORRECT">("CORRECT");
-    const [assignmentOrder, setAssignmentOrder] = useState<AssignmentOrderSpec>(AssignmentOrder.startDateDescending);
-    const [groupSortOrder, setGroupSortOrder] = useState<GroupSortOrder>(GroupSortOrder.Alphabetical);
+    const [assignmentOrder, setAssignmentOrder] = useLocalStorageState<AssignmentOrderSpec>(KEY.ASSIGNMENT_ORDER, AssignmentOrder.startDateDescending);
+    const [groupSortOrder, setGroupSortOrder] = useLocalStorageState<GroupSortOrder>(KEY.GROUP_SORT_ORDER, GroupSortOrder.Alphabetical);
 
     return {
         colourBlind, setColourBlind,
