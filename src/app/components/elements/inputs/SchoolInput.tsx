@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import {reactSelectDarkModeStyles, schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
+import {reactSelectDarkModeStyles, schoolNameWithTownAndPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -24,7 +24,7 @@ const NOT_APPLICABLE = "N/A";
 
 const schoolSearch = (searchFn: (school : string) => Promise<School[]>) => (schoolSearchText: string, setAsyncSelectOptionsCallback: (options: {value: string | School, label: string | undefined}[]) => void) => {
     searchFn(schoolSearchText).then((schools) => {
-        setAsyncSelectOptionsCallback(schools.map((item) => ({value: item, label: schoolNameWithPostcode(item)})));
+        setAsyncSelectOptionsCallback(schools.map((item) => ({value: item, label: schoolNameWithTownAndPostcode(item)})));
     }).catch((response) => {
         console.error("Error searching for schools. ", response);
     });
@@ -101,7 +101,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const schoolValue: {value: string | School, label: string | undefined} | undefined = (
         (selectedSchoolObject && selectedSchoolObject.schoolId ?
-            {value: selectedSchoolObject.schoolId, label: schoolNameWithPostcode(selectedSchoolObject)} :
+            {value: selectedSchoolObject.schoolId, label: schoolNameWithTownAndPostcode(selectedSchoolObject)} :
             (userToUpdate.schoolOther ?
                 {value: "manually entered school", label: userToUpdate.schoolOther} :
                 undefined))

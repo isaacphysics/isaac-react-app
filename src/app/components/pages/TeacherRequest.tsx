@@ -26,7 +26,7 @@ import {
     isAda,
     isPhy,
     isTeacherOrAbove,
-    schoolNameWithPostcode,
+    schoolNameWithTownAndPostcode,
     SITE_TITLE, SITE_TITLE_SHORT, siteSpecific,
     validateEmail,
     WEBMASTER_EMAIL
@@ -83,7 +83,7 @@ export const TeacherRequest = () => {
         if (urn !== "") {
             getSchoolByUrn(urn).then(({data}) => {
                 if (data && data.length > 0) {
-                    setSchool(schoolNameWithPostcode(data[0]));
+                    setSchool(schoolNameWithTownAndPostcode(data[0]));
                 }
             });
         } else if (user?.loggedIn && user.schoolOther) {
