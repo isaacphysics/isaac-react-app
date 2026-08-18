@@ -121,8 +121,8 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                     <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>
                                     <td className="align-middle">{userBooked.familyName}, {userBooked.givenName}</td>
                                     <td className="align-middle">{additionalInformation?.jobTitle || additionalInformation?.yearGroup || ""}</td>
-                                    {(userSchool === undefined || !userSchool.urn) && <td className="align-middle">{userSchool ? userSchool.name : ""}</td>}
-                                    {userSchool && userSchool.urn && <td className="align-middle">{userSchool.name}</td>} {/* In future can add link to school stats page */}
+                                    {(userSchool === undefined || !userSchool.schoolId) && <td className="align-middle">{userSchool ? userSchool.schoolName : ""}</td>}
+                                    {userSchool && userSchool.schoolId && <td className="align-middle">{userSchool.schoolName}</td>} {/* In future can add link to school stats page */}
                                     <td className="align-middle">{userBooked.role}</td>
                                     <td className="align-middle">{userBooked.email}</td>
                                     <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
