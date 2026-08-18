@@ -199,7 +199,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                     </td>
                                     <td className="align-middle">{booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}</td>
                                     <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
-                                    {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}
+                                    {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.schoolId}/user_list`}>{userSchool.name}</Link>*/}
                                     <td className="align-middle">{booking.schoolName}</td>
                                     <td className="align-middle">
                                         {booking.additionalInformation && (booking.additionalInformation.jobTitle ? booking.additionalInformation.jobTitle : booking.additionalInformation.yearGroup)}
