@@ -430,7 +430,7 @@ export const SetAssignments = () => {
                         Create a quiz
                     </Button>
                     <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
-                        to={"/pages/revision_quizzes"} color={"secondary"} outline>
+                        to={"/pages/revision_quizzes"} color={"keyline"}>
                         View pre-made quizzes
                     </Button>
                 </div>
