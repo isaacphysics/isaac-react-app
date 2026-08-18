@@ -249,7 +249,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
 }
 
 .alert-warning .input-mode-toggle > .styled-toggle {
-  background-color: #FFE088;
+  background-color: var(--color-misc-orange-200);
 
   > input:checked ~ span:first-of-type, > input:not(:checked) ~ span:last-of-type {
     color: var(--color-neutral-800);
