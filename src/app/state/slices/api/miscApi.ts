@@ -11,7 +11,7 @@ export const miscApi = isaacApi.enhanceEndpoints({
         }),
 
         getSchoolByUrn: build.query<School[], string>({
-            query: (urn: string) => `/schools/?urn=${encodeURIComponent(urn)}`,
+            query: (urn: string) => `/schools/?schoolId=${encodeURIComponent(urn)}`,
         }),
 
         getCountries: build.query<Record<string, string>, void>({
