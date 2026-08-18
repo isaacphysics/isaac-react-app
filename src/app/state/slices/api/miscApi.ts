@@ -1,5 +1,5 @@
 import {isaacApi} from "./baseApi";
-import {School} from "../../../../IsaacAppTypes";
+import {School} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 
 export const miscApi = isaacApi.enhanceEndpoints({

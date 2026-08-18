@@ -10,12 +10,13 @@ import {
     EventStatus,
     IsaacQuizDTO,
     QuizAttemptDTO,
+    School,
     SearchResultsWrapper,
     USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
-import {LoggedInUser, School} from "../IsaacAppTypes";
+import {LoggedInUser} from "../IsaacAppTypes";
 import {recordOf} from "./utils";
 
 export const mockUser = {

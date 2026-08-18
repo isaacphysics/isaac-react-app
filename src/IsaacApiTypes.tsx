@@ -868,6 +868,17 @@ export interface Address {
     country?: string;
 }
 
+export interface School {
+    schoolId: string;
+    countryCode: string;
+    schoolName: string;
+    postalCode?: string;
+    town?: string;
+    excluded: boolean;
+    closed: boolean;
+    dataSource: string;
+}
+
 export interface AnsweredQuestionsByDate {
     [date: string]: number;
 }

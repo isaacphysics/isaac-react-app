@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import {School, ValidationUser} from "../../../../IsaacAppTypes";
+import {ValidationUser} from "../../../../IsaacAppTypes";
 import {reactSelectDarkModeStyles, schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
@@ -9,6 +9,7 @@ import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../st
 import {FormFeedback, FormGroup, Label} from "reactstrap";
 import { components, ControlProps, InputProps, SingleValueProps, ValueContainerProps } from "react-select";
 import { StyledCheckbox } from "./StyledCheckbox";
+import { School } from "../../../../IsaacApiTypes";
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;

@@ -1,6 +1,6 @@
 import {isAda, isDefined} from "./";
-import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
-import {AuthenticationResponseDTO, UserRole} from "../../IsaacApiTypes";
+import {LoggedInUser, PotentialUser} from "../../IsaacAppTypes";
+import {AuthenticationResponseDTO, School, UserRole} from "../../IsaacApiTypes";
 import {Immutable} from "immer";
 
 export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immutable<LoggedInUser> {
