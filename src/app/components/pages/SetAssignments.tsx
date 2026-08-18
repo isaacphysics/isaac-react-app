@@ -231,19 +231,19 @@ const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { cla
                 <Button role={"link"} onClick={() => {
                     setAssignBoardPath(redirectBackTo);
                     void dispatch(openIsaacBooksModal());
-                }} color="secondary" block className="px-3">
+                }} color="keyline" block className="px-3">
                     our books
                 </Button>
             </Col>
             <Col md={6} lg={4} className="pt-1">
                 <Button tag={Link} to={"/physics/a_level/question_decks"}
-                    onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    onClick={() => setAssignBoardPath(redirectBackTo)} color="keyline" block>
                     our topic question decks
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
                 <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)}
-                    color="secondary" block>
+                    color="keyline" block>
                     create a question deck
                 </Button>
             </Col>
