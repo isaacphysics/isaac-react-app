@@ -227,7 +227,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
 
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
-            <h4><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></h4>
+            <a className="h4" target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a>
             <div className={"ms-auto text-end"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Set again
@@ -330,7 +330,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
                 </svg>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
                     <div className={"position-relative w-100"}>
-                        <h4 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h4>
+                        <div className={"position-absolute text-white h4"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</div>
                     </div>
                 </foreignObject>}
             </svg>
@@ -374,7 +374,7 @@ const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, 
                     </svg>
                 </svg>
             </div>
-            <h4>{`${MONTH_NAMES[month]}`}</h4>
+            <div className="h4">{`${MONTH_NAMES[month]}`}</div>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
             <span className={"pt-1 month-assignment-count"}>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}</span>
         </div>
@@ -488,9 +488,9 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
     }
     
     return <>
-        <h3>
+        <h2 className="h3">
             Set new assignment{assignmentToCopy ? " (from existing)" : ""}
-        </h3>
+        </h2>
         <Label className="w-100 pb-2">Group(s):
             <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                 value={selectedGroups}
@@ -718,7 +718,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                                 {assignmentsGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
                                         <div className="year-label w-100 text-end">
-                                            <h3 className="mb-n3">{`${y}`}</h3>
+                                            <div className="mb-n3 h3">{`${y}`}</div>
                                             <hr className="ms-4"/>
                                         </div>
                                         {ms.map(([m, ds]) => <MonthAssignmentList key={m} year={y} month={m} datesAndAssignments={ds}/>)}

@@ -36,7 +36,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             classnames(
                 "question-component", siteSpecific("p-md-2", "p-md-4"),
             )}>
-            {isAda && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+            {isAda && doc.id && <div className="mb-3 h3">Question {questionNumbers[doc.id]}</div>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             <Suspense fallback={<Loading/>}>

@@ -68,7 +68,7 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
                         <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
-                        <h3 className="d-inline-block mt-2">Related questions</h3>
+                        <div className="d-inline-block mt-2 h3">Related questions</div>
                     </Col>
                     {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ms-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
                         <ConceptGameboardButton conceptId={conceptId}/>

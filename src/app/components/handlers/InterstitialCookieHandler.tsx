@@ -71,7 +71,7 @@ export const YoutubeCookieHandler = ({afterAcceptedElement} : {afterAcceptedElem
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.youtubeCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow YouTube content?</h3>
+            <div className="h3">Allow YouTube content?</div>
             {youtubeCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button className="" onClick={() => {
@@ -90,7 +90,7 @@ export const AnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElemen
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.anvilCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow Anvil content?</h3>
+            <div className="h3">Allow Anvil content?</div>
             {anvilCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
@@ -109,7 +109,7 @@ export const DesmosCookieHandler = ({afterAcceptedElement} : {afterAcceptedEleme
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.desmosCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow Desmos content?</h3>
+            <div className="h3">Allow Desmos content?</div>
             {desmosCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
@@ -128,7 +128,7 @@ export const GeogebraCookieHandler = ({afterAcceptedElement, onAccepted} : {afte
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.geogebraCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow GeoGebra content?</h3>
+            <div className="h3">Allow GeoGebra content?</div>
             {geogebraCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {

@@ -89,17 +89,17 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <div className="d-flex flex-column gap-3">
                 <div>
-                    {firstTime && <h3>Invite members to join</h3>}
+                    {firstTime && <h2 className="h3">Invite members to join</h2>}
                     <p>Share the link or code to invite people to your group.</p>
                     <p className={"mb-0"}>Students will see the name and email address on your account when they join.</p>
                 </div>
                 <div>
-                    <h3>Share this link</h3>
+                    <h2 className="h3">Share this link</h2>
                     <p>Share this link with students so they can join your group:</p>
                     <ReadonlyClipboardInput data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
                 </div>
                 <div>
-                    <h3>Generate a QR Code</h3>
+                    <h2 className="h3">Generate a QR Code</h2>
                     <p>Students can scan a QR code on their device to join your group:</p>
                     {showQR
                         ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} groupName={group.groupName} />
@@ -113,12 +113,12 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                     }
                 </div>
                 <div>
-                    <h3>Or use this code</h3>
+                    <h2 className="h3">Or use this code</h2>
                     <p>Students can enter this code in their {SITE_TITLE_SHORT} account. They’ll need to go to <b>My account</b>, then <b>Teacher Connections</b>.</p>
                     <ReadonlyClipboardInput data-testid={"share-code"} value={token?.token} />
                 </div>
                 <div>
-                    <h3>What to do next</h3>
+                    <h2 className="h3">What to do next</h2>
                 </div>
             </div>}
         />
@@ -246,8 +246,8 @@ Are you sure you want to promote this manager to group owner?\n
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <h3>Selected group: {group.groupName}</h3>
-        <h4>Sharing permissions</h4>
+        <h2 className="h3">Selected group: {group.groupName}</h2>
+        <h3 className="h4">Sharing permissions</h3>
         <p>
             When you share this group, other teachers can:
             <ul>
@@ -259,7 +259,7 @@ Are you sure you want to promote this manager to group owner?\n
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
-            <h4>Group owner:</h4>
+            <h3 className="h4">Group owner:</h3>
             <Table className="group-table">
                 <tbody>
                     <tr key={group.ownerSummary.email} data-testid={"group-owner"}>
@@ -270,7 +270,7 @@ Are you sure you want to promote this manager to group owner?\n
             </Table>
         </div>}
 
-        <h4>Current group managers</h4>
+        <h3 className="h4">Current group managers</h3>
 
         {additionalManagers.length == 0 &&
             <p>There are no additional group managers for this group.</p>}
@@ -343,7 +343,7 @@ Are you sure you want to promote this manager to group owner?\n
         </Alert>}
 
         {(userIsOwner || group.additionalManagerPrivileges) && <>
-            <h4 className="mt-3">Add additional managers</h4>
+            <h3 className="mt-3 h4">Add additional managers</h3>
             <p>Enter the email of another {SITE_TITLE_SHORT} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>
