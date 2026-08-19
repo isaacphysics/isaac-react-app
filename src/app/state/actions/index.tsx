@@ -347,7 +347,7 @@ export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigat
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
             // if Ada u13 SSO, we can assume student
-            if (user.emailVerificationStatus === "LOCKED") {
+            if (user.emailVerificationStatus === "AGE_RESTRICTED") {
                 persistence.session.save(KEY.SSO_SIGNUP_ROLE, "STUDENT" as UserRole);
             }
 

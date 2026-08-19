@@ -109,7 +109,7 @@ export const UserProfile = (props: UserProfileProps) => {
                     />
                 </>
             )}
-            {userToUpdate.emailVerificationStatus !== "LOCKED" && <EmailInput
+            {userToUpdate.emailVerificationStatus !== "AGE_RESTRICTED" && <EmailInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 emailIsValid={!!validateEmail(userToUpdate.email)}

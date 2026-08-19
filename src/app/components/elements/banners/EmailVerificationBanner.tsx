@@ -62,7 +62,7 @@ export const EmailVerificationBanner = () => {
     const {cookieConsent} = useUserConsent();
     const isHiddenViaCookie = !!(user?.loggedIn && user?.emailVerificationStatus === "DELIVERY_FAILED" && cookieConsent?.disableEmailVerificationWarningCookiesAccepted);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
-    const show = useMemo(() => user?.loggedIn && status !== "VERIFIED" && status !== "LOCKED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
+    const show = useMemo(() => user?.loggedIn && status !== "VERIFIED" && status !== "AGE_RESTRICTED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
     return <DismissibleBanner
         dismissText={"Snooze"}
