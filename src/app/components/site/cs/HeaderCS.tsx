@@ -91,9 +91,9 @@ export const HeaderCS = () => {
 
                         <NavigationSection className={"text-start-nav"} topLevelLink to="/contact" title={"Contact us"}/>
 
-                        <div className={"navbar-separator d-nav-none d-block"} aria-hidden="true"/>
+                        <div className={"navbar-separator d-nav-none d-block"}/>
 
-                        <div className={"ms-nav-auto"} aria-hidden="true"></div>
+                        <div className={"ms-nav-auto"}></div>
                         
                         {(isStaff(user) || isEventLeader(user) || isNonProd) && <NavigationSection title={isStaff(user) || isEventLeader(user) ? "Admin" : "Staging"}>
                             {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
