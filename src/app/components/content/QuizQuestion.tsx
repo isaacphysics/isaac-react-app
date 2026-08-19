@@ -43,13 +43,14 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
                 <QuestionComponent questionId={doc.id as string} doc={doc} readonly={validated} validationResponse={validationResponse} />
             </Suspense>
 
+            {/* TODO Combine shared question footer logic into one component */}
             {/* CS Hints */}
             {isAda && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="modal"/>}
 
             {/* Validation Response */}
             {validated && <div className={`validation-response-panel p-2 mt-2 ${correct ? "correct" : ""}`}>
                 <div className="pb-1">
-                    <h1 className="m-0">{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                    <div className="response-heading">{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</div>
                 </div>
                 {validationResponse && validationResponse.explanation && <div className="mb-1">
                     <IsaacContent doc={validationResponse.explanation as ContentDTO} />
