@@ -10,12 +10,13 @@ import {
     EventStatus,
     IsaacQuizDTO,
     QuizAttemptDTO,
+    School,
     SearchResultsWrapper,
     USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
-import {LoggedInUser, School} from "../IsaacAppTypes";
+import {LoggedInUser} from "../IsaacAppTypes";
 import {recordOf} from "./utils";
 
 export const mockUser = {
@@ -7864,9 +7865,11 @@ export const buildMockPage = (pageId: string) => ({
 });
 
 export const mockSchool: School = {
-    name: "University of Cambridge",
-    urn: "133801",
-    postcode: "CB2 1TN",
+    schoolName: "University of Cambridge",
+    schoolId: "133801",
+    countryCode: "GB-ENG",
+    postalCode: "CB2 1TN",
+    excluded: false,
     closed: false,
     dataSource: "somewhere-over-the-rainbow",
 };

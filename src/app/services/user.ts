@@ -1,6 +1,6 @@
 import {isAda, isDefined} from "./";
-import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
-import {AuthenticationResponseDTO, UserRole} from "../../IsaacApiTypes";
+import {LoggedInUser, PotentialUser} from "../../IsaacAppTypes";
+import {AuthenticationResponseDTO, School, UserRole} from "../../IsaacApiTypes";
 import {Immutable} from "immer";
 
 export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immutable<LoggedInUser> {
@@ -85,10 +85,13 @@ export function extractTeacherName(teacher: {readonly givenName?: string; readon
     return (teacher.givenName ? teacher.givenName.charAt(0) + ". " : "") + teacher.familyName;
 }
 
-export function schoolNameWithPostcode(schoolResult: School): string | undefined {
-    let schoolName = schoolResult.name;
-    if (schoolResult.postcode) {
-        schoolName += ", " + schoolResult.postcode;
+export function schoolNameWithTownAndPostcode(schoolResult: School): string | undefined {
+    let schoolName = schoolResult.schoolName;
+    if (schoolResult.town) {
+        schoolName += ", " + schoolResult.town;
+    }
+    if (schoolResult.postalCode) {
+        schoolName += ", " + schoolResult.postalCode;
     }
     return schoolName;
 }

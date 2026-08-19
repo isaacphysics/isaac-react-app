@@ -1369,7 +1369,7 @@ export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "SEGUE": "your email address and password",
 };
 
-export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific(["GOOGLE", "MICROSOFT"], ["RASPBERRYPI", "GOOGLE"]);
+export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific(["GOOGLE", "MICROSOFT"], ["RASPBERRYPI", "GOOGLE", "MICROSOFT"]);
 
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
 

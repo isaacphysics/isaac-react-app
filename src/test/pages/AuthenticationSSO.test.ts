@@ -1,16 +1,12 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import { expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
-import { API_PATH, isPhy } from "../../app/services";
+import { dedent, expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
+import { API_PATH, isPhy, SITE_TITLE_SHORT, siteSpecific } from "../../app/services";
 import { mockUser } from "../../mocks/data";
 import { screen, waitFor, within } from "@testing-library/react";
 import { errorResponses } from "../test-factory";
 import userEvent from "@testing-library/user-event";
 
 describe("Microsoft SSO Authentication", () => {
-    if (!isPhy) {
-        return it('does not apply', () => {});
-    }
-
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
         await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/microsoft/callback', search });
@@ -27,7 +23,12 @@ describe("Microsoft SSO Authentication", () => {
     describe('when the token from the provider belongs to a valid user', () => {
         it('signs them in', async () => {
             await renderProviderCallback(microsoftSignInSuccess);
-            expect(dashboard.welcomeText).toHaveTextContent('Welcome back, T. Admin!');
+            if (isPhy) {
+                expect(dashboard.isaacWelcomeText).toHaveTextContent('Welcome back, T. Admin!');
+            } else {
+                await setUrl({ pathname: '/dashboard'});
+                expect(dashboard.adaTitle).toHaveTextContent('Overview');
+            }
         });
     });
 
@@ -60,14 +61,14 @@ describe("Microsoft SSO Authentication", () => {
             it('shows a specific error message', async () => {
                 expect(authenticationError.element).toHaveTextContent("You don't use this Microsoft account to log in");
                 expect(authenticationError.element).toHaveTextContent(dedent`
-                    We've found an Isaac account with the email address from this Microsoft account. However, the Isaac
+                    We've found an ${SITE_TITLE_SHORT} account with the email address from this Microsoft account. However, the ${SITE_TITLE_SHORT}
                     account isn't configured to allow access to this Microsoft account. You've either not enabled
-                    sign-in with Microsoft on your Isaac account, or you used a different Microsoft account to log in.`
+                    sign-in with Microsoft on your ${SITE_TITLE_SHORT} account, or you used a different Microsoft account to log in.`
                 );
                 expect(authenticationError.element).toHaveTextContent(dedent`
                     If you've not yet enabled sign-in with Microsoft, first log in with another method (e.g. email and
-                    password). Then, on My Account, next to "Microsoft", click "Link". Read more about signing in with
-                    Microsoft.`
+                    password). Then, on ${siteSpecific("My Account", "your Account page")}, on "Security", next to
+                    "Microsoft", click "Link".${siteSpecific(" Read more about signing in with Microsoft", "")}`
                 );
                 expect(authenticationError.element).toHaveTextContent(dedent`
                     If you'd like to switch which Microsoft account you log in with, follow the same instructions, but
@@ -75,9 +76,11 @@ describe("Microsoft SSO Authentication", () => {
                 );
             });
 
-            it('shows a link to the SSO help page', async () => {
-                expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
-            });
+            if (isPhy) {
+                it('shows a link to the SSO help page', async () => {
+                    expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
+                });
+            }
 
             testContactLinkPresent(/If you need more help signing in, contact us./);
         });
@@ -97,9 +100,11 @@ describe("Microsoft SSO Authentication", () => {
                 expect(authenticationError.element).toHaveTextContent("We need your consent");
             });
 
-            it('shows a link to the SSO help page', async () => {
-                expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
-            });
+            if (isPhy) {
+                it('shows a link to the SSO help page', async () => {
+                    expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
+                });
+            }
 
             testContactLinkPresent(/If you need more help signing in, contact us./);
         });
@@ -107,10 +112,6 @@ describe("Microsoft SSO Authentication", () => {
 });
 
 describe("Google SSO Authentication", () => {
-    if (!isPhy) {
-        return it('does not apply', () => {});
-    }
-
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
         await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/google/callback', search });
@@ -124,14 +125,14 @@ describe("Google SSO Authentication", () => {
                 await waitFor(async () => {
                     expect(authenticationError.element).toHaveTextContent("You don't use this Google account to log in");
                     expect(authenticationError.element).toHaveTextContent(dedent`
-                        We've found an Isaac account with the email address from this Google account. However, the Isaac
+                        We've found an ${SITE_TITLE_SHORT} account with the email address from this Google account. However, the ${SITE_TITLE_SHORT}
                         account isn't configured to allow access to this Google account. You've either not enabled
-                        sign-in with Google on your Isaac account, or you used a different Google account to log in.`
+                        sign-in with Google on your ${SITE_TITLE_SHORT} account, or you used a different Google account to log in.`
                     );
                     expect(authenticationError.element).toHaveTextContent(dedent`
                         If you've not yet enabled sign-in with Google, first log in with another method (e.g. email and
-                        password). Then, on My Account, next to "Google", click "Link". Read more about signing in with
-                        Google.`
+                        password). Then, on ${siteSpecific("My Account", "your Account page")}, on "Security", next to
+                        "Google", click "Link".${siteSpecific(" Read more about signing in with Google.", "")}`
                     );
                     expect(authenticationError.element).toHaveTextContent(dedent`
                         If you'd like to switch which Google account you log in with, follow the same instructions, but
@@ -169,9 +170,12 @@ const microsoftSignInDeniedAccess = http.get(API_PATH + "/auth/microsoft/callbac
 const toast = () => screen.getByTestId('toasts');
 
 const dashboard = {
-    get welcomeText() {
+    get isaacWelcomeText() {
         const element = screen.getByRole('region', { name: 'Dashboard' });
         return within(element).getByRole('heading', { level: 3 });
+    },
+    get adaTitle() {
+        return screen.getByRole('heading', { level: 1 });
     }
 };
 
@@ -188,8 +192,3 @@ const authenticationError = {
         return screen.getByRole('region', { name: 'Authentication Error' });
     }
 };
-
-const dedent = (s: TemplateStringsArray) => s
-    .join('')
-    .replace(/\s+/g, ' ')
-    .trim();
