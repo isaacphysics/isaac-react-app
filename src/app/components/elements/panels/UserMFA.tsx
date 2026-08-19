@@ -72,7 +72,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <CardBody className="pt-0 px-0">
                 <Row>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
-                    <h4>Two-factor Authentication (2FA)</h4>
+                    <h3 className="h4">Two-factor Authentication (2FA)</h3>
                 </Row>
                 {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
                     <Col>
@@ -85,7 +85,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                             <Form onSubmit={setupMFA}>
                                 <Row>
                                     <Col>
-                                        <h5>Configure Two-factor Authentication (2FA)</h5>
+                                        <h4 className="h5">Configure Two-factor Authentication (2FA)</h4>
                                         <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                         <div className="qrcode-mfa vertical-center">
                                             {qrCodeStringBase64SVG && <img

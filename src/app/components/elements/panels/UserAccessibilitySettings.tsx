@@ -16,7 +16,7 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Accessibility settings</h3>
+            <h2 className="h3">Accessibility settings</h2>
             <p>Here you can manage various accessibility features across the site.</p>
         </>}
         rightColumn={<>
