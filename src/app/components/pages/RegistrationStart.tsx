@@ -9,6 +9,7 @@ import { SsoHelpLink } from "./LogIn";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import classNames from "classnames";
 
 export const RegistrationStart = () => {
     const navigate = useNavigate();
@@ -42,11 +43,11 @@ export const RegistrationStart = () => {
                             <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
                         </div>
                         <div className="my-7">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>Create a new account with your email:</div>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Create a new account with your email:</h3>
                             <Button block onClick={emailSignUp}>Continue with email</Button>
                         </div>
                         <div className="my-7">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>Or log in with:</div>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Or log in with:</h3>
                             {isAda && <div className="mb-2">
                                 <RaspberryPiSignInButton />
                             </div>}
@@ -58,7 +59,7 @@ export const RegistrationStart = () => {
                         </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <div className="mt-7">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>Already have an account?</div>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Already have an account?</h3>
                             <Button color={siteSpecific("solid", "keyline")} block onClick={login}>Log in</Button>
                         </div>
                     </Col>

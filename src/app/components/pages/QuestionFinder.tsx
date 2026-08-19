@@ -169,7 +169,7 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
 
 const loadingPlaceholder = <ResultsListContainer>
     <div className="w-100 text-center pb-2">
-        <h2 aria-hidden="true" className="pt-7">Searching...</h2>
+        <div aria-hidden="true" className="pt-7 h2">Searching...</div>
         <IsaacSpinner />
     </div>
 </ResultsListContainer>;

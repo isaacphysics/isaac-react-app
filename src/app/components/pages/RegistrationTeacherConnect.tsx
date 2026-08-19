@@ -74,7 +74,7 @@ export const RegistrationTeacherConnect = () => {
         <Card className={"my-7"}>
             <CardBody>
                 <Form onSubmit={submit}>
-                    <h3>Connect your account to your teacher</h3>
+                    <h2 className="h3">Connect your account to your teacher</h2>
                     {siteSpecific(
                         <>
                             <p>If you&apos;ve been given a group code by your teachers, enter it below. This lets your teachers set you work and see your progress. <a href="/support/student/homework#join_group" target="_blank">Learn more</a>.</p>

@@ -232,7 +232,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
+        {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
         {deviceSize === "lg"
             ? <>
                 <Row>
