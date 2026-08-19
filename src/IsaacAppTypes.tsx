@@ -17,6 +17,7 @@ import {
     QuizAttemptDTO,
     QuizFeedbackMode,
     ResultsWrapper,
+    School,
     TestCaseDTO,
     UserContext
 } from "./IsaacApiTypes";
@@ -280,14 +281,6 @@ export interface AppGroupTokenDTO {
     token: string;
     ownerUserId: number;
     groupId: number;
-}
-
-export interface School {
-    urn: string;
-    name: string;
-    postcode: string;
-    closed: boolean;
-    dataSource: string;
 }
 
 export interface Toast {
@@ -722,10 +715,6 @@ export interface BaseTag {
 export interface Tag extends BaseTag {
     type: TAG_LEVEL;
     level: number;
-}
-
-export interface DocumentSubject {
-    subjectId?: string;
 }
 
 export interface Choice extends ChoiceDTO {

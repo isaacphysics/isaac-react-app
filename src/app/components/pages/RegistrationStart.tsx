@@ -49,12 +49,18 @@ export const RegistrationStart = () => {
                                 </>
                             )}
                         </div>
-                        <div className="d-flex flex-column my-5 gap-2">
-                            <h4>Log in with:</h4>
-                            {isAda && <RaspberryPiSignInButton />}
-                            <GoogleSignInButton />
-                            {isPhy && <MicrosoftSignInButton />}
-                            {isPhy && <SsoHelpLink />}
+                        <div className="my-7">
+                            <div className={siteSpecific("h4 mb-3", "h3")}>Create a new account with your email:</div>
+                            <Button block onClick={emailSignUp}>Continue with email</Button>
+                        </div>
+                        <div className="my-7">
+                            <div className={siteSpecific("h4 mb-3", "h3")}>Or log in with:</div>
+                            <div className="d-flex flex-column gap-2 mb-2">
+                                {isAda && <RaspberryPiSignInButton />}
+                                <GoogleSignInButton />
+                                <MicrosoftSignInButton />
+                            </div>
+                            {isPhy && <SsoHelpLink />}                            
                         </div>
                         <div className="my-5">
                             <h4>Or use an email:</h4>

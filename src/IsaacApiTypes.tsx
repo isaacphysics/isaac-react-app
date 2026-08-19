@@ -169,9 +169,12 @@ export interface IsaacNumericQuestionDTO extends QuestionDTO {
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
+    useSingleList?: boolean;
 }
 
-export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {}
+export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {
+    useSingleList?: boolean;
+}
 
 export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
     withReplacement?: boolean;
@@ -863,6 +866,17 @@ export interface Address {
     county?: string;
     postalCode?: string;
     country?: string;
+}
+
+export interface School {
+    schoolId: string;
+    countryCode: string;
+    schoolName: string;
+    postalCode?: string;
+    town?: string;
+    excluded: boolean;
+    closed: boolean;
+    dataSource: string;
 }
 
 export interface AnsweredQuestionsByDate {
