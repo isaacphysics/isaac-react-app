@@ -17,6 +17,7 @@ import {
     SITE_TITLE,
     siteSpecific,
     validateCountryCode,
+    validateName,
     validateRequiredFields,
 } from "../../../services";
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -29,6 +30,7 @@ import {CountryInput} from "../inputs/CountryInput";
 import {ExigentAlert} from "../ExigentAlert";
 import { DobInput } from "../inputs/DobInput";
 import { GenderInput } from "../inputs/GenderInput";
+import { FamilyNameInput, GivenNameInput } from "../inputs/NameInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -109,6 +111,18 @@ const RequiredAccountInfoBody = () => {
             }
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
             <Row className="d-flex flex-wrap my-2">
+                {(!validity.givenName || !validity.familyName) && <Col xs={12} id="rai-missing-name">
+                    <div className="row row-cols-sm-2">
+                        <GivenNameInput
+                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} nameValid={!!validateName(userToUpdate.givenName)}
+                            submissionAttempted={submissionAttempted} required={true}
+                        />
+                        <FamilyNameInput
+                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} nameValid={!!validateName(userToUpdate.familyName)}
+                            submissionAttempted={submissionAttempted} required={true}
+                        />
+                    </div>
+                </Col>}
                 {!validity.countryCode && <Col xs={12} id="rai-missing-country-code">
                     <CountryInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
