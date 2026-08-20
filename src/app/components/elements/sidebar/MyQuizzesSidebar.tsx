@@ -71,7 +71,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
             return <>
                 {above["lg"](deviceSize) && <div className="section-divider"/>}
                 <search>
-                    <h5>Search tests</h5>
+                    <div className="h5">Search tests</div>
                     <SearchInputWithIcon 
                         outerClassName="my-3" 
                         type="search" 
@@ -79,7 +79,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         placeholder="e.g. Practice" aria-label="Search by title"
                     />
                     <div className="section-divider"/>
-                    <h5 className="mb-3">Filter by status</h5>
+                    <div className="mb-3 h5">Filter by status</div>
                     <ul>
                         <li><QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/></li>
                         <div className="section-divider-small"/>
@@ -88,13 +88,13 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         </li>)}
                     </ul>
                     {activeTab === 1 && <>
-                        <h5 className="my-3">Filter by assigner</h5>
+                        <div className="my-3 h5">Filter by assigner</div>
                         <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
                             {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                         </Input>
                     </>}
                     <div className="section-divider mt-4"/>
-                    <h5 className="mb-3">Display</h5>
+                    <div className="mb-3 h5">Display</div>
                     <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
                         <option value="table">Table View</option>
                         <option value="cards">Card View</option>

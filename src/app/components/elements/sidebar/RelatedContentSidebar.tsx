@@ -40,7 +40,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
         {props.linkedBookSection && props.linkedBookSection[0] && props.linkedBookSection[1] && <BackToBookButton linkedBookSection={props.linkedBookSection} className="w-100"/>}
 
         <div className="section-divider"/>
-        <h5>Related concepts</h5>
+        <div className="h5">Related concepts</div>
         {relatedConcepts && relatedConcepts.length > 0
             ? <ul className="link-list">
                 {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} />)}
@@ -53,7 +53,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
             </>
         }
         <div className="section-divider"/>
-        <h5>Related questions</h5>
+        <div className="h5">Related questions</div>
         {relatedQuestions && relatedQuestions.length > 0
             ? <>
                 {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
@@ -64,12 +64,12 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
                     </>
                     : <>
                         <div className="section-divider"/>
-                        <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
+                        <div className="h5">Related {HUMAN_STAGES[pageContextStage[0]]} questions</div>
                         <ul className="link-list">
                             {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
                         </ul>
                         <div className="section-divider"/>
-                        <h5>Related questions for other learning stages</h5>
+                        <div className="h5">Related questions for other learning stages</div>
                         <ul className="link-list">
                             {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
                         </ul>

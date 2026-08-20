@@ -26,7 +26,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
     return <ContentSidebar buttonTitle="Switch stage/subject" {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Decks by stage</h5>
+            <div className="h5">Decks by stage</div>
             <ul>
                 {[...new Set(Object.values(validStageSubjectPairs).flat())].map((stage, index) =>
                     <li key={index}>
@@ -40,7 +40,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
                 )}
             </ul>
             <div className="section-divider"/>
-            <h5>Decks by subject</h5>
+            <div className="h5">Decks by subject</div>
             <ul>
                 {Object.entries(validStageSubjectPairs)
                     .map(([subject, stages], index) =>

@@ -131,10 +131,10 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
 
     return <Link to={link} className="w-100">
         <Card className="assignment-card px-3 d-flex flex-column h-100">
-            <h5 className="d-inline">
+            <div className="d-inline h5">
                 <i className={`${icon} icon-inline me-2`}/>
                 {title}
-            </h5>
+            </div>
             <Spacer/>
             <div className="d-flex text-nowrap">
                 {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due {getFriendlyDaysUntil(dueDate)}</span>)}

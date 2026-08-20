@@ -45,7 +45,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search practice tests</h5>
+            <div className="h5">Search practice tests</div>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 type="search" placeholder="e.g. Admissions" 
@@ -55,7 +55,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h5>Filter by subject and topic</h5>
+                <div className="h5">Filter by subject and topic</div>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -85,7 +85,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h5>Filter by topic</h5>
+                <div className="h5">Filter by topic</div>
                 <ul className="ps-2">
                     <li>
                         <AllFiltersCheckbox
@@ -105,7 +105,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h5>Filter by stage</h5>
+                <div className="h5">Filter by stage</div>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
                         <li key={i}>

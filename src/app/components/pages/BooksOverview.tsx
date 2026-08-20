@@ -14,7 +14,7 @@ export const BookCard = (book: BookInfo) => {
                 <img src={book.image} alt={book.title} className="h-100"/>
             </div>
             <div className="d-flex flex-column">
-                <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
+                <div className="pt-2 pt-2 pb-1 m-0 h5">{book.title}</div>
                 <div className="section-divider"/>
                 <span className="text-decoration-none">
                     {book.description}

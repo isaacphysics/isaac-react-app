@@ -47,7 +47,7 @@ export const GetStartedWithAda = () => {
                                 onClick: () => setLinkedSetting("account-context")
                             }}>
                                 <div className="d-flex flex-column">
-                                    <h5 className="m-0">Personalise your content</h5>
+                                    <div className="m-0 h5">Personalise your content</div>
                                     <span>Pick a teaching level and exam board, or choose to see all content.</span>
                                 </div>
                             </CompletableTask>

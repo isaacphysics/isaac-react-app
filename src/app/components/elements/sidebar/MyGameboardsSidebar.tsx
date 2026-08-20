@@ -28,7 +28,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h5>Search question decks</h5>
+            <div className="h5">Search question decks</div>
             <SearchInputWithIcon 
                 data-testid="title-filter"
                 outerClassName="my-3"
@@ -37,16 +37,16 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
-            <h5 className="mb-3">Filter by creator</h5>
+            <div className="mb-3 h5">Filter by creator</div>
             <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
                 {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
-            <h5 className="mt-4 mb-3">Filter by completion</h5>
+            <div className="mt-4 mb-3 h5">Filter by completion</div>
             <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
                 {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
             </Input>
             <div className="section-divider"/>
-            <h5 className="mb-4">Display</h5>
+            <div className="mb-4 h5">Display</div>
             <div className="d-flex flex-xl-column flex-xxl-row">
                 <Input className="w-auto" type="select" aria-label="Set display mode" data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}

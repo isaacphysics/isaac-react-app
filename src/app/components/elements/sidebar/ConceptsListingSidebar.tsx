@@ -37,7 +37,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search concepts</h5>
+            <div className="h5">Search concepts</div>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}
@@ -48,7 +48,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <h5>Filter by topic</h5>
+                <div className="h4">Filter by topic</div>
                 <ul>
                     <li>
                         <AllFiltersCheckbox
@@ -103,7 +103,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search concepts</h5>
+            <div className="h5">Search concepts</div>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}
@@ -114,7 +114,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <h5>Filter by subject and topic</h5>
+                <div className="h5">Filter by subject and topic</div>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -142,7 +142,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
                     })}
                 </ul>
                 <div className="section-divider"/>
-                <h5>Filter by stage</h5>
+                <div className="h5">Filter by stage</div>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.value] > 0 || searchStages.includes(s.value)).map((stage) =>
                         <li key={stage.value}>

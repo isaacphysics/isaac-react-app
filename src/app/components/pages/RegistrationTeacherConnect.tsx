@@ -111,7 +111,7 @@ export const RegistrationTeacherConnect = () => {
                         </FormGroup>
                         {activeAuthorisations && activeAuthorisations.length > 0 &&
                             <div className="mb-3">
-                                <h5>Connected teachers:</h5>
+                                <div className="h5">Connected teachers:</div>
                                 <ul>
                                     {activeAuthorisations.map((auth) => (
                                         <li key={auth.id}>{extractTeacherName(auth)} - ({auth.email})</li>

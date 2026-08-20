@@ -52,7 +52,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
     return <ContentSidebar {...rest}>
         <search>
             <div className="section-divider"/>
-            <h5>Search bookmarks</h5>
+            <div className="h5">Search bookmarks</div>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}
@@ -62,7 +62,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
 
             <div className="section-divider"/>
 
-            <h5>Filter bookmarks by...</h5>
+            <div className="h5">Filter bookmarks by...</div>
 
             <div className="d-flex flex-column my-4">
                 <CollapsibleList
@@ -111,7 +111,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
                 </CollapsibleList>
             </div>
 
-            <h5>Sort bookmarks by...</h5>
+            <div className="h5">Sort bookmarks by...</div>
 
             <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as BookmarksOrder)}>
                 {Object.values(BookmarksOrder).map(order => <option key={order} value={order}>{BOOKMARKS_ORDER_NAMES[order]}</option>)}

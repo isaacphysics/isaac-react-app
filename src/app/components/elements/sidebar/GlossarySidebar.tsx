@@ -52,12 +52,12 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search glossary</h5>
+            <div className="h5">Search glossary</div>
             <GlossarySearch searchText={searchText} setSearchText={setSearchText} />
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>
-                <h5>Select subject</h5>
+                <div className="h5">Select subject</div>
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
@@ -70,7 +70,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             {!pageContext?.subject && !pageContext?.stage?.length && <div className="section-divider"/>}
 
             {!pageContext?.stage?.length && <>
-                <h5 className="mt-4">Select stage</h5>
+                <div className="mt-4 h5">Select stage</div>
                 <ul>
                     <li>
                         <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id}
@@ -86,7 +86,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             </>}
 
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
-                <h5>Switch learning stage</h5>
+                <div className="h5">Switch learning stage</div>
                 <ul>
                     {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) =>
                         <li key={index}>

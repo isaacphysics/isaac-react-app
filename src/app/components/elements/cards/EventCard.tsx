@@ -84,7 +84,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
             </Link>}
         <CardBody className="d-flex flex-column">
             <CardTitle className="mb-0 pod-title d-flex align-items-baseline" id={`event-title-${id}`}>
-                {title && <h5 className="mb-0 me-2">{title}</h5>}
+                {title && <div className="mb-0 me-2 h5">{title}</div>}
                 <ContentPropertyTags tags={event.tags} />
             </CardTitle>
             {subtitle && <CardText className="mb-2 fixed-height">

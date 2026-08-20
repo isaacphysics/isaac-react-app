@@ -75,9 +75,9 @@ const LoginOrSignUpBody = () => {
                             passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                             errorMessage={errorMessage} displayLabels={false} />
 
-                        <h5 role="alert" className="text-danger text-end mb-0 py-1">
+                        <div role="alert" className="text-danger text-end mb-0 py-1 h5">
                             {errorMessage}
-                        </h5>
+                        </div>
                         <Row className={classNames("mb-4", {"mt-2": isAda})}>
                             <Col className={"col-6 mt-1 d-flex"}>
                                 <StyledCheckbox

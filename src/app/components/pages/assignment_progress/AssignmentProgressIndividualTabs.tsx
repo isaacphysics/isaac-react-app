@@ -150,10 +150,10 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
         <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
             <div className="d-flex flex-column">
                 <div className="d-flex">
-                    <h5 className="m-0">
+                    <div className="m-0 h5">
                         {questionIndex + 1}.{" "}
                         <Markup encoding="latex">{questions[questionIndex].title}</Markup>
-                    </h5>
+                    </div>
                     <QuestionLink questionId={questions[questionIndex].id} boardId={gameboardId} />
                 </div>
 
