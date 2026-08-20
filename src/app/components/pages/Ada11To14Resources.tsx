@@ -88,14 +88,14 @@ export const Ada11To14Resources = () => {
                         <img className="full-background-img" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                         <h3 className="font-size-1-5 ms-3 my-3 d-flex gap-3 align-items-center">
                             Cyber security
-                            <Badge color="pink-400" className="rounded-5 text-black font-size-1 fw-bold py-1">New</Badge>
+                            <Badge color="pink-400" className="rounded-5 text-black font-size-1 fw-bold py-1">Coming soon</Badge>
                         </h3>
                         <div className="d-flex row row-cols-1 row-cols-sm-2 row-cols-lg-4 mt-3 w-100 g-0">
                             <IconCard className={"without-margin"} card={{
                                 title: "Social engineering",
                                 icon: {name: "icon-hook", color: "secondary"},
                                 bodyText: "Stay safe online and learn how systems are attacked and defended.",
-                                clickUrl: "/topics/social-engineering",
+                                // clickUrl: "/social-engineering",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
@@ -103,7 +103,7 @@ export const Ada11To14Resources = () => {
                                 title: "Malware",
                                 icon: {name: "icon-bug", color: "secondary"},
                                 bodyText: "Learn how malware works and how to recognise and defend against it.",
-                                clickUrl: "/topics/malware",
+                                // clickUrl: "/malware",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
@@ -111,7 +111,7 @@ export const Ada11To14Resources = () => {
                                 title: "Defending against malware",
                                 icon: {name: "icon-shield-lock", color: "secondary"},
                                 bodyText: "Explore the tools and techniques used to detect, stop, and remove malware.",
-                                clickUrl: "/topics/defending-against-malware",
+                                // clickUrl: "/defending-against-malware",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
@@ -119,7 +119,7 @@ export const Ada11To14Resources = () => {
                                 title: "Network security",
                                 icon: {name: "icon-globe-lock", color: "secondary"},
                                 bodyText: "Discover how networks are protected from attacks and kept secure.",
-                                clickUrl: "/topics/network-security",
+                                // clickUrl: "/network-security",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
