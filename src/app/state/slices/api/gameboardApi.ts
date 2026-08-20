@@ -69,29 +69,6 @@ export const gameboardApi = isaacApi.injectEndpoints({
             invalidatesTags: ["AllGameboards"],
         }),
 
-        generateTemporaryGameboard: build.mutation<GameboardDTO, {[key: string]: string}>({
-            query: (params) => {
-                // TODO FILTER: Temporarily force physics to search for problem solving questions
-                if (isPhy) {
-                    if (!Object.keys(params).includes("questionCategories")) {
-                        params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
-                    }
-                    // Swap 'learn_and_practice' to 'problem_solving' and 'books' as that is how the content is tagged
-                    // TODO the content should be modified with a script/change of tagging so that this is the case
-                    params.questionCategories = params.questionCategories?.split(",")
-                        .map(c => c === QUESTION_CATEGORY.LEARN_AND_PRACTICE ? `${QUESTION_CATEGORY.PROBLEM_SOLVING},${QUESTION_CATEGORY.BOOK_QUESTIONS}` : c)
-                        .join(",");
-                }
-                return {
-                    url: "/gameboards",
-                    params
-                };
-            },
-            onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Error creating temporary ${siteSpecific("deck", "quiz")}`
-            })
-        }),
-
         renameAndLinkUserToGameboard: build.mutation<void, {boardId: string, newTitle: string}>({
             query: ({boardId, newTitle}) => ({
                 url: `gameboards/${encodeURIComponent(boardId)}`,
@@ -136,7 +113,6 @@ export const {
     useLazyGetGameboardsQuery,
     useGetGameboardByIdQuery,
     useLazyGetGameboardByIdQuery,
-    useGenerateTemporaryGameboardMutation,
     useGetWildcardsQuery,
     useCreateGameboardMutation
 } = gameboardApi;

@@ -71,7 +71,6 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
                     {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ms-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
-                        <ConceptGameboardButton conceptId={conceptId}/>
                     </Col>}
                 </Row>
                 <hr/>

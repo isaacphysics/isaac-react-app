@@ -7,7 +7,6 @@ import {
     saveGameboard,
     useAppDispatch,
     useCreateGameboardMutation,
-    useGenerateTemporaryGameboardMutation,
     useGetGameboardByIdQuery,
     useGetWildcardsQuery,
 } from "../../state";
@@ -118,14 +117,12 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const {search} = useLocation();
     const queryParams = search && queryString.parse(search);
     const baseGameboardId = queryParams && queryParams.base as string;
-    const concepts = queryParams && queryParams.concepts as string;
 
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const userContext = useUserViewingContext();
     const {data: wildcards} = useGetWildcardsQuery();
     const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
-    const [generateTemporaryGameboard] = useGenerateTemporaryGameboardMutation();
     const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = useCreateGameboardMutation();
     const [dirty, setDirty] = useState(false);
 
@@ -147,12 +144,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
         setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
         setWildcardId(isStaff(user) && gameboard.wildCard && gameboard.wildCard.id || undefined);
-        if (concepts && (!baseGameboardId)) {
-            logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", {concepts: concepts});
-        } else {
-            logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: gameboard.id});
-        }
-    }, [setGameboardTitle, setQuestionOrder, setSelectedQuestions, setWildcardId, baseGameboardId, concepts, eventLog, user]);
+        logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: gameboard.id});
+    }, [setGameboardTitle, setQuestionOrder, setSelectedQuestions, setWildcardId, eventLog, user]);
 
     const initialise = () => {
         setGameboardURL(undefined);
@@ -253,26 +246,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             setQuestionOrder(newQuestionOrder);
         }
     };
-
-    useEffect(() => {
-        if (concepts && (!baseGameboardId)) {
-            const params: { [key: string]: string } = {};
-            params.concepts = concepts;
-            if (!userContext.contexts.map(c => c.stage).includes(STAGE.ALL)) {
-                params.stages = userContext.contexts[0].stage ?? "";
-            }
-            if (!userContext.contexts.map(c => c.examBoard).includes(EXAM_BOARD.ALL)) {
-                params.examBoards = userContext.contexts[0].examBoard ?? "";
-            }
-            void generateTemporaryGameboard(params).then((gameboardResponse) => {
-                if (mutationSucceeded(gameboardResponse)) {
-                    cloneGameboard(gameboardResponse.data);
-                } else {
-                    console.error(`Failed to create ${siteSpecific("question deck", "quiz")} from concepts.`);
-                }
-            });
-        }
-    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.contexts]);
 
     const blocker = useBlocker(
         useCallback(() => dirty, [dirty]),
