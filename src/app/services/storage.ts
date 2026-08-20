@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {KEY, persistence} from "../../services";
+import {KEY, persistence} from ".";
 
 export function useLocalStorageState<T>(key: KEY, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
     const [state, setState] = useState<T>(() => {

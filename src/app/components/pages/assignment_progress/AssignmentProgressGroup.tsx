@@ -30,7 +30,7 @@ import {StyledDropdown} from '../../elements/inputs/DropdownInput';
 import {Loading} from '../../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
-import { useHistoryState } from '../../../state/actions/history';
+import { useHistoryState } from '../../../services/history';
 import { PageContainer } from '../../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 import { FeatureFlag, useFeatureFlag } from '../../../services/featureFlag';

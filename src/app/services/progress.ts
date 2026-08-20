@@ -8,7 +8,7 @@ import {
 } from "../../IsaacAppTypes";
 import {API_PATH, SortOrder} from "./constants";
 import {AssignmentProgressDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
-import { useLocalStorageState } from "../state/actions/storage";
+import { useLocalStorageState } from "./storage";
 import { KEY } from "./localStorage";
 
 // TODO: move to app types without creating circular deps

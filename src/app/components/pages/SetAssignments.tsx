@@ -52,7 +52,7 @@ import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
-import { useHistoryState } from "../../state/actions/history";
+import { useHistoryState } from "../../services/history";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
