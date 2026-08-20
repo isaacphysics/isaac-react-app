@@ -257,7 +257,7 @@
     width: 100%;
     white-space: nowrap;
 
-    @include respond-above(md) {
+    @include media-breakpoint-up(lg) {
       padding-right: 5rem;
       padding-left: 5rem;
       width: auto;

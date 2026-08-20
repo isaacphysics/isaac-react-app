@@ -7,7 +7,7 @@
   box-shadow: 0 2px 13px 0 $shadow-08;
   width: 100%;
 
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     box-shadow: 0 2px 30px 0 $shadow-08;
   }
   .event-card-image img {
