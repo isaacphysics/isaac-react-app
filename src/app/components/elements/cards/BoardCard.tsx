@@ -300,7 +300,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 <CardBody className="pb-7 pt-4">
                     <Row className={"mb-2"}>
                         <Col xs={8} sm={7} md={8}>
-                            <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
+                            <Link className={"d-inline h4"} to={boardLink}>{board.title}</Link>
                             <span data-testid={"owner"}><b>By</b>: {formatBoardOwner(user, board)}</span><br/>
                             <span data-testid={"created-date"}><b>Created</b>: {formatDate(board.creationDate)}</span><br/>
                             <span data-testid={"last-visited"}><b>Last visited</b>: {formatDate(board.lastVisited)}</span><br/>

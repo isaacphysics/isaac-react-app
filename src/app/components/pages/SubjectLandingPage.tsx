@@ -63,7 +63,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
-            <h4 className="m-0">Try a random question!</h4>
+            <h2 className="m-0 h4">Try a random question!</h2>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
                 Get a different question
                 <i className="icon icon-refresh icon-color-black"/>
@@ -120,7 +120,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             {books?.length
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                        <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
+                        <h2 className="m-0 h4">Interactive online books <span className="text-theme">({books.length})</span></h2>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <Col className={classNames("item-list-container", {"flex-column": !fullWidthBooks})}>
@@ -135,7 +135,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                 : <>
                     <div className="d-flex flex-column">
                         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                            <h4>News & Features</h4>
+                            <h2 className="h4">News & Features</h2>
                             <div className="section-divider-bold flex-grow-1"/>
                         </div>
                         {news && <Row className="h-100">
@@ -149,7 +149,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
         </div>
         {!!relevantEvents?.length && <div className="d-flex flex-column mt-3">
             <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                <h4 className="m-0">Events <span className="text-theme">({relevantEvents.length})</span></h4>
+                <h2 className="m-0 h4">Events <span className="text-theme">({relevantEvents.length})</span></h2>
                 <div className="section-divider-bold flex-grow-1"/>
             </div>
             <Row className="h-100 item-list-container">

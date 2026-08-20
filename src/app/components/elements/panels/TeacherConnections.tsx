@@ -80,17 +80,17 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     <Input type="text" innerRef={searchInputRef} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> :
-                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
+                <div className={classNames("d-flex h4", {"ps-0" : isAda})}>
                     {isAda && <span className="icon-group-white mx-2" />}
                     {title}
-                </h4>
+                </div>
             }</>
             :
             <>
-                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
+                <div className={classNames("d-flex h4", {"ps-0" : isAda})}>
                     {isAda && <span className="icon-group-white mx-2" />}
                     {title}
-                </h4>
+                </div>
                 <Spacer />
                 {enableSearch && <Input type="text" innerRef={searchInputRef} style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>

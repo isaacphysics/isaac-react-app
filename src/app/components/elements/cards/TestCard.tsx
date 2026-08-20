@@ -82,7 +82,7 @@ export const TestCard = (props: TestCardProps) => {
                         <HexIcon icon="icon-tests" subject={subjects[0] as Subject} className="assignment-hex ps-3"/>
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
-                        <h4 className="text-break m-0">
+                        <div className="text-break m-0 h4">
                             {isDefined(quizAssignment) && (
                                 linkLocation === GameboardLinkLocation.Title
                                     ? <Link to={isTeacherOrAbove(user)
@@ -94,7 +94,7 @@ export const TestCard = (props: TestCardProps) => {
                                     </Link>
                                     : quizAssignment.quizSummary?.title || "Untitled Test"
                             )}
-                        </h4>
+                        </div>
                         {above['sm'](deviceSize) && subjects.length > 0 && <div className="d-flex align-items-center mb-2">
                             {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}
                         </div>}

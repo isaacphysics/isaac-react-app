@@ -78,7 +78,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
             <Row className="mt-4 mb-7">
                 <Col>
                     <div className="alert alert-info small overflow-auto">
-                        <h4>Useful information to include in your email</h4>
+                        <div className="h4">Useful information to include in your email</div>
                         <small>
                             {Object.entries(usefulInformation).map(([key, value]) => (
                                 <p key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>

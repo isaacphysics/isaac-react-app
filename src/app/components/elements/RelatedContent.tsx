@@ -77,14 +77,18 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                 <hr/>
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex text-start">
-                    <ListGroup className="w-50">
-                        <h4 className="related-question-header">On your specification:</h4>
-                        {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
-                    </ListGroup>
-                    <ListGroup className="w-50">
-                        <h4 className="related-question-header">Outside your specification:</h4>
-                        {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
-                    </ListGroup>
+                    <div>
+                        <div className="related-question-header h4">On your specification:</div>
+                        <ListGroup className="w-50">
+                            {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
+                        </ListGroup>
+                    </div>
+                    <div>
+                        <div className="related-question-header h4">Outside your specification:</div>
+                        <ListGroup className="w-50">
+                            {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
+                        </ListGroup>
+                    </div>
                 </div>
                 {/* Small devices - single column */}
                 <div className="d-lg-none text-start">
@@ -92,7 +96,7 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
-                <h4 className="d-lg-none related-question-header mt-4">Outside your specification:</h4>
+                <div className="d-lg-none related-question-header mt-4 h4">Outside your specification:</div>
                 <div className="d-lg-none text-start">
                     <ListGroup>
                         {remainingQuestions.map(contentSummary => renderItem(contentSummary))}

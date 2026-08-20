@@ -126,7 +126,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                                 <HexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
-                                <h4>{quiz.title || quiz.id}</h4>
+                                <div className="h4">{quiz.title || quiz.id}</div>
                                 {above['sm'](deviceSize) && isDefined(subject) && <div className="d-flex align-items-center mb-2">
                                     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>
                                 </div>}
@@ -147,7 +147,7 @@ const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
     return <div className="p-2">
         <Card className="card-neat my-quizzes-card">
             <CardBody className="d-flex flex-column">
-                <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id}</h4>
+                <div className="border-bottom pb-3 mb-3 h4">{quiz.title || quiz.id}</div>
                 <QuizInfo quiz={quiz}/>
                 <Spacer/>
                 <div className="text-center mt-4">

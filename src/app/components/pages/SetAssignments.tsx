@@ -223,9 +223,9 @@ const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { className?: string, redirectBackTo?: string }) => {
     const dispatch = useAppDispatch();
     return <>
-        <h4 className="mt-4 mb-3">
+        <div className="mt-4 mb-3 h4">
             Add a {siteSpecific("question deck", "quiz")} from ...
-        </h4>
+        </div>
         <Row className={className}>
             <Col md={6} lg={4} className="pt-1">
                 <Button role={"link"} onClick={() => {

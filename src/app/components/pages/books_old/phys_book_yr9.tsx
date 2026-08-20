@@ -20,7 +20,7 @@ export const PhysBookYrNine = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>Chapters:</h4>
+                    <div className="h4">Chapters:</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'yr9_phys_ch1_boards'} chapterTitle={'Force and Motion'} chapterSubHeading={'(Sections 1-15)'} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>

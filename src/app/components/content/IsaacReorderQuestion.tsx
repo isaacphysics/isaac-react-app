@@ -60,7 +60,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     Press space or enter again to move the item to a new position.
                 </Label>
                 {!useSingleList && <Col md={{size: 6}} className="parsons-available-items">
-                    <h4>Available items</h4>
+                    <div className="h4">Available items</div>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
                             <div ref={provided.innerRef}
@@ -82,7 +82,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                 <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})}>
                     {useSingleList 
                         ? <i className="text-muted d-print-none">Drag these items to put them in the correct order</i>
-                        : <h4 className="mt-sm-4 mt-md-0">Your answer</h4>}
+                        : <div className="mt-sm-4 mt-md-0 h4">Your answer</div>}
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>
                             <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef}

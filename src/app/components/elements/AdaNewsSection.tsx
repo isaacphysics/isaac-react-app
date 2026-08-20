@@ -22,7 +22,7 @@ export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
                     {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
                 </Row>
                 <div className={"mt-4 mt-lg-5 w-100 text-center"}>
-                    <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more</h4></Button>
+                    <Button className="mb-0 h4" href={"/news"} color={"link"}>See more</Button>
                 </div>
             </>}
         {showNewsletterPrompts &&

@@ -156,7 +156,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
-            <h4 className="alert-heading">Error loading test feedback</h4>
+            <div className="alert-heading h4">Error loading test feedback</div>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
         </Alert>
     </>;

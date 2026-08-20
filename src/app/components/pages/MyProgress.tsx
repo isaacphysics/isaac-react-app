@@ -144,7 +144,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </Card>
 
                     <div className="mt-4">
-                        <h4>Question parts correct by type</h4>
+                        <h2 className="h4">Question parts correct by type</h2>
                         <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
                                 const groupedTypes = PROGRESS_QUESTION_TYPE_MAP[qType] || [qType];
@@ -166,7 +166,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </div>
 
                     {isPhy && <div className="mt-4">
-                        <h4>Isaac Books</h4>
+                        <h2 className="h4">Isaac Books</h2>
                         Questions completed correctly, against questions attempted for each of our <a href={"/books"}>books</a>.
                         <Row>
                             {Object.entries(siteSpecificStats.questionCountByBookTag).map(([bookTag, total]) => {
@@ -193,13 +193,13 @@ const MyProgress = ({user}: MyProgressProps) => {
                     {isPhy
                         ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} userIdOfInterest={userIdOfInterest} />
                         : <div className="mt-4">
-                            <h4> Question attempts over time</h4>
+                            <h2 className="h4"> Question attempts over time</h2>
                             <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
                         </div>}
 
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h4>Most recently answered questions</h4>
+                            <h2 className="h4">Most recently answered questions</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.mostRecentQuestions} 
@@ -208,7 +208,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                             />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h4>Oldest unsolved questions</h4>
+                            <h2 className="h4">Oldest unsolved questions</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.oldestIncompleteQuestions}
@@ -226,7 +226,7 @@ const MyProgress = ({user}: MyProgressProps) => {
 const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfInterest}: UserProps) => {
     return <Card className="mt-4 attempts-min-height">
         <CardBody className='h-100 d-flex flex-column'>
-            <h4>Attempts over time</h4>
+            <h2 className="h4">Attempts over time</h2>
             <div className='flex-grow-1 d-flex flex-column'>
                 <Tabs style="tabs" tabContentClass='mt-4' renderHiddenTabs={false}>
                     {{

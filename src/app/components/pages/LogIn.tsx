@@ -277,9 +277,9 @@ export const LogIn = () => {
                                             />
                                         </Col>
                                         <Col className="align-content-center">
-                                            <h4 role="alert" className="text-danger text-end mb-0">
+                                            <div role="alert" className="text-danger text-end mb-0 h4">
                                                 {errorMessage}
-                                            </h4>
+                                            </div>
                                             <PasswordResetButton email={email} isValidEmail={isValidEmail}
                                                 setPasswordResetAttempted={setPasswordResetAttempted}/>
                                         </Col>

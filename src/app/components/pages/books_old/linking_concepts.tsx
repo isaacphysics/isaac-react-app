@@ -20,7 +20,7 @@ export const LinkingConcepts = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>Chapters:</h4>
+                    <div className="h4">Chapters:</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'linking_concepts_ch1_boards'} chapterTitle={'Mechanics I'} chapterSubHeading={'(Sections 1-6)'} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>

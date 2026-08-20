@@ -196,7 +196,7 @@ export const HomepagePhy = () => {
                 <section id="explore-learn">
                     <div className="mt-7">
                         <div className="d-flex">
-                            <h3>Explore and learn!</h3>
+                            <h2 className="h3">Explore and learn!</h2>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
                         <ListViewCards type="item" items={cards.map(transformItemsForCustomListView)} />
@@ -206,7 +206,7 @@ export const HomepagePhy = () => {
                     <Row className="mt-7 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>Upcoming events</h3>
+                                <h2 className="h3">Upcoming events</h2>
                                 <Link to="/events" className="news-events-link">More events</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>
@@ -226,7 +226,7 @@ export const HomepagePhy = () => {
                         </div>
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>News and features</h3>
+                                <h2 className="h3">News and features</h2>
                                 <Link to="/news" className="news-events-link">More news</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>

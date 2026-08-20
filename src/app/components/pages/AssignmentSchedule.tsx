@@ -679,9 +679,9 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Assignment schedule" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
-        {/*<h4 className="mt-4 mb-3">*/}
+        {/*<div className="mt-4 mb-3 h4">*/}
         {/*    Assign a {siteSpecific("question deck", "quiz")} from...*/}
-        {/*</h4>*/}
+        {/*</div>*/}
         {/*<PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>*/}
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or question decks"

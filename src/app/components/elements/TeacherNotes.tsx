@@ -19,7 +19,7 @@ export const TeacherNotes = ({ notes }: TeacherNotesProps) => {
             <i className={classNames("icon icon-chevron-right icon-color-black ms-2 icon-dropdown-90", {"active": active})} />
         </summary>
         <div>
-            <h4>Teacher notes</h4>            
+            <div className="h4">Teacher notes</div>            
             <Markup trusted-markup-encoding="markdown">{notes}</Markup>
         </div>
     </details>;
