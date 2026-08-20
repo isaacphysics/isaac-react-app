@@ -79,8 +79,7 @@ export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, r
 };
 
 export const isUnder13 = (user?: Immutable<PotentialUser> | {emailVerificationStatus?: string} | null) => {
-    if (!user) return false;
-    return user && 'loggedIn' in user && user.loggedIn && user.emailVerificationStatus === "AGE_RESTRICTED";
+    return !!user && 'loggedIn' in user && user.loggedIn && user.emailVerificationStatus === "AGE_RESTRICTED";
 };
 
 export function extractTeacherName(teacher: {readonly givenName?: string; readonly familyName?: string} | null | undefined): string | null {
