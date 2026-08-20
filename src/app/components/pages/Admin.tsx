@@ -145,11 +145,11 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                             </>;
                         }}
                     />
-                    <h3 className={"mt-3"}>Demonstration Mode</h3>
+                    <h3 className="mt-3">Demonstration Mode</h3>
                     <AnonymisationCheckboxes/>
 
                     {isAdmin(user) && <>
-                        <h3 className={"mt-3"}>Misuse statistics</h3>
+                        <h3 className="mt-3">Misuse statistics</h3>
                         <MisuseStats/>
                     </>}
                 </CardBody>

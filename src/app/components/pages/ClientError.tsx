@@ -47,7 +47,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "icon", icon: "icon-error"}}/>
-            <h3 className="my-4">{`We're sorry, but an error has occurred in the ${SITE_TITLE_SHORT} app!`}</h3>
+            <h2 className="my-4 h3">{`We're sorry, but an error has occurred in the ${SITE_TITLE_SHORT} app!`}</h2>
             <p>
                 {"You may want to "}
                 <a

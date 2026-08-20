@@ -94,7 +94,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
     }, []);
 
     return <>
-        <h3 ref={ref} tabIndex={-1}>Two-Factor Authentication</h3>
+        <h2 className="h3" ref={ref} tabIndex={-1}>Two-Factor Authentication</h2>
         <p>Two-factor authentication has been enabled for this account.</p>
         <FormGroup className="form-group">
             <Label htmlFor="verification-code">Verification Code</Label>

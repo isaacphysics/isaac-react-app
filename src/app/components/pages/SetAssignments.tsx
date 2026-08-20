@@ -416,7 +416,7 @@ export const SetAssignments = () => {
                     }}
                 />
             }
-            <h3>Your quizzes</h3>
+            <h2 className="h3">Your quizzes</h2>
             <div
                 className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
                 {boards && boards.totalResults > 0 &&

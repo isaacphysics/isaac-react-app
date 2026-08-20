@@ -212,7 +212,7 @@ export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
         </PageMetadata>
         {boards && boards.totalResults == 0 ?
             <>
-                <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>
+                <div className="text-center mt-4 h3">You have no {siteSpecific("question decks", "quizzes")} to view.</div>
             </>
             :
             <>

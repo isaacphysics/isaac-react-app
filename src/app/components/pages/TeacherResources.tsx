@@ -228,7 +228,7 @@ export const TeacherResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
-                        <h3>Need help?</h3>
+                        <h2 className="h3">Need help?</h2>
                         <p>Our teacher support page has lots of information for common questions and issues.</p>
                         <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
                     </TextBlock>

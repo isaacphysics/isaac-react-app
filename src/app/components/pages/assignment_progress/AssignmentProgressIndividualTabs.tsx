@@ -96,8 +96,8 @@ export const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSe
             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment showLegend
                 headerText={<div>
                     {siteSpecific(
-                        <h4>Overview: {assignment.gameboard.title} <BoardLink id={assignment.gameboard?.id} /></h4>,
-                        <h3>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h3>
+                        <h2 className="h4">Overview: {assignment.gameboard.title} <BoardLink id={assignment.gameboard?.id} /></h2>,
+                        <h2 className="h3">Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h2>
                     )}
                     <span>See who attempted the assignment and which questions they struggled with.</span>
                 </div>}
@@ -195,7 +195,7 @@ export const DetailedMarksTab = ({assignment, progress, settingsVisible, setSett
         <CardBody>
             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment 
                 headerText={<div>
-                    {siteSpecific(<h4>Performance on questions</h4>, <h3>Performance on questions</h3>)}
+                    <h2 className={siteSpecific("h4", "h3")}>Performance on questions</h2>
                     <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
                 </div>}
             />
