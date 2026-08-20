@@ -7,7 +7,7 @@ import { TextBlock } from "../elements/layout/TextBlock";
 import { Link } from "react-router";
 import { IconCard } from "../elements/cards/IconCard";
 
-export const Ada11To14Resources = () => {
+export const AdaCyberExplorersResources = () => {
     return <>
         <MetaDescription description={"Resources for students and teachers for ages 11-14."} />
 
