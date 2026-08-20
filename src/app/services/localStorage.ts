@@ -15,7 +15,7 @@ export enum KEY {
     INITIAL_DAILY_QUESTION_ATTEMPT_TIME = "initialQuestionAttemptedTime",
     SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT = "showTeacherOnboardingModalOnNextOverviewVisit",
     FEATURE_FLAG_OVERRIDES = "featureFlagOverrides",
-    ASSIGNMENT_ORDER = "assignmentOrder",
+    ASSIGNMENT_SORT_ORDER = "assignmentSortOrder",
     GROUP_SORT_ORDER = "groupSortOrder",
 }
 

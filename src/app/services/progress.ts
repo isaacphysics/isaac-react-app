@@ -30,7 +30,7 @@ export function useAssignmentProgressAccessibilitySettings({user}: {user: Regist
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
     const [attemptedOrCorrect, setAttemptedOrCorrect] = useState<"ATTEMPTED" | "CORRECT">("CORRECT");
-    const [assignmentOrder, setAssignmentOrder] = useLocalStorageState<AssignmentOrderSpec>(KEY.ASSIGNMENT_ORDER, AssignmentOrder.startDateDescending);
+    const [assignmentOrder, setAssignmentOrder] = useLocalStorageState<AssignmentOrderSpec>(KEY.ASSIGNMENT_SORT_ORDER, AssignmentOrder.startDateDescending);
     const [groupSortOrder, setGroupSortOrder] = useLocalStorageState<GroupSortOrder>(KEY.GROUP_SORT_ORDER, GroupSortOrder.Alphabetical);
 
     return {
