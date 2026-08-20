@@ -365,16 +365,15 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                     <Button
                                         disabled={group.archived}
                                         className={"d-inline-block text-nowrap w-100 w-sm-auto"}
-                                        color="primary"
+                                        color="solid"
                                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                                     >
-                                            Invite users
+                                        Invite users
                                     </Button>
                                     {canEmailUsers && usersInGroup.length > 0 &&
                                                 <Button
                                                     className={"d-inline-block text-nowrap w-100 w-sm-auto"}
-                                                    color="secondary"
-                                                    outline
+                                                    color="keyline"
                                                     onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
                                                 >
                                                     Email users
@@ -385,14 +384,13 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                             <div>
                                 <StyledCheckbox
                                     id="self-removal"
-                                    color={siteSpecific("primary", "")}
                                     onChange={toggleSelfRemoval}
                                     checked={!!group.selfRemoval}
                                     label={<span>Allow students to remove themselves from this group</span>}
                                 />
                             </div>
                             <div>
-                                        This group has {group.members.length} member{group.members.length != 1 ? 's' : ''}.
+                                This group has {group.members.length} member{group.members.length != 1 ? 's' : ''}.
                                 {bigGroup && !isExpanded &&
                                             <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
                                                 <DropdownToggle caret>Show</DropdownToggle>

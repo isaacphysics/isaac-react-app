@@ -253,28 +253,6 @@
     }
   }
 
-  //Button - Primary Outline
-  &.btn-outline-primary {
-    border-color: $black;
-    border-width: 2px;
-    color: $black;
-
-    &:hover {
-      background-color: transparent;
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: $gray-118;
-      border-color: $gray-118;
-    }
-
-    &.disabled,
-    &:disabled {
-      border-color: $gray-136;
-      color: $gray-136;
-    }
-  }
-
   &.btn-xl {
     width: 100%;
     white-space: nowrap;
@@ -311,27 +289,6 @@ a.btn {
     font-size: initial;
     font-weight: initial;
   }
-
-  &.btn-outline-tertiary {
-    border-color: $gray-118;
-    border-width: 2px;
-    color: $black;
-
-    &:hover {
-      background-color: transparent;
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: $gray-136;
-      border-color: $gray-136;
-    }
-
-    &.disabled,
-    &:disabled {
-      border-color: $gray-107;
-      color: $gray-107;
-    }
-  }
 }
 
 .btn, input.btn {
@@ -344,33 +301,6 @@ a.btn {
   &.btn-positive {
     background-color: $a11y_green;
   }
-
-  &.btn-outline-primary:not(:disabled):not(.disabled):active {
-    color: black;
-  }
-
-  //Button - Secondary Outline
-  &.btn-outline-secondary {
-    background-color: $black;
-    border-color: $black;
-    border-width: 2px;
-    color: $white;
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: $gray-118;
-      border-color: $gray-118;
-    }
-
-    &.disabled,
-    &:disabled {
-      border-color: $gray-160;
-      color: $gray-160;
-    }
-  }
-}
-
-.btn-green {
-  @include button-variant($a11y_green, $a11y_green);
 }
 
 .quick-question-options {
