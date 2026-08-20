@@ -14,9 +14,11 @@ import {
     isDefined,
     isLoggedIn,
     isMobile,
+    isUnder13,
     SITE_TITLE,
     siteSpecific,
     validateCountryCode,
+    validateEmail,
     validateName,
     validateRequiredFields,
 } from "../../../services";
@@ -31,6 +33,7 @@ import {ExigentAlert} from "../ExigentAlert";
 import { DobInput } from "../inputs/DobInput";
 import { GenderInput } from "../inputs/GenderInput";
 import { FamilyNameInput, GivenNameInput } from "../inputs/NameInput";
+import { EmailInput } from "../inputs/EmailInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -122,6 +125,15 @@ const RequiredAccountInfoBody = () => {
                             submissionAttempted={submissionAttempted} required={true}
                         />
                     </div>
+                </Col>}
+                {!validity.email && !isUnder13(userToUpdate) && <Col xs={12} id="rai-missing-email">
+                    <EmailInput
+                        userToUpdate={userToUpdate}
+                        setUserToUpdate={setUserToUpdate}
+                        emailIsValid={!!validateEmail(userToUpdate.email)}
+                        submissionAttempted={submissionAttempted}
+                        required={true}
+                    />
                 </Col>}
                 {!validity.countryCode && <Col xs={12} id="rai-missing-country-code">
                     <CountryInput
