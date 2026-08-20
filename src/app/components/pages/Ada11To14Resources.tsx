@@ -29,10 +29,14 @@ export const Ada11To14Resources = () => {
                 </ColumnSlice>
             </Container>
         </section>
+        <div className="d-flex position-absolute justify-self-center gap-4 py-4 px-5 bg-white rounded-4 translate-middle-y shadow-pink z-1">
+            <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt='Funded by the UK Government' className='img-fluid' />
+            <img src="/assets/common/logos/techfirst-black.svg" alt='The TechFirst logo' className='img-fluid' />
+        </div>
         <section id="cyber-explorers">
             <Container className="homepage-padding mw-1600 d-flex flex-column align-items-center" fluid>
                 <div className="text-center w-lg-75 mb-4 text-white">
-                    <h2 className="font-size-2">Cyber Explorers welcome</h2>
+                    <h2 className="font-size-2 mt-5">Cyber Explorers welcome</h2>
                     <p className="font-size-1-25 mt-3">Explore familiar cyber security resources alongside new computing and technology content for learners.</p>
                 </div>
                 <ColumnSlice breakpoint="lg" reverseUnderBreakpoint className="row-gap-5">
