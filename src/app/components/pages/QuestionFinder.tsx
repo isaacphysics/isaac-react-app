@@ -624,7 +624,7 @@ export const QuestionFinder = () => {
                                                 setPageCount(c => c + 1);
                                             }}
                                             disabled={!moreResultsAvailable || isStale}
-                                            outline={isAda}
+                                            color={"keyline"}
                                         >
                                             Load more
                                         </Button>
