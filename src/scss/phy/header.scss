@@ -178,12 +178,14 @@ header {
           }
         }
 
-        h5 {
+        .nav-list-title {
           font-size: 14px;
           font-family: $primary-font;
           color: var(--color-neutral-500);
           line-height: 1.1;
           margin-left: 23px;
+          margin-bottom: 8px;
+          font-weight: 500;
         }
       }
     }
@@ -230,12 +232,14 @@ header {
         text-decoration: none;
       }
       
-      h5 {
+      .nav-list-title {
         font-size: 14px;
         font-family: $primary-font;
         color: var(--color-neutral-500);
         line-height: 1.1;
         margin-left: 23px;
+        margin-bottom: 8px;
+        font-weight: 500;
       }
     }
   }
