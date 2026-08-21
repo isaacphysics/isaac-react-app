@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isAda, isDefined, isPhy, isStudent, isTutor, SITE_LOWER_AGE_LIMIT, STAGE} from "./";
+import {EXAM_BOARD, isAda, isDefined, isPhy, isStudent, isTutor, isUnder13, SITE_LOWER_AGE_LIMIT, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0;}
@@ -126,10 +126,10 @@ export function validateRequiredFields(user?: Immutable<ValidationUser> | null, 
     const fields: {[field in Field]: boolean} = {
         givenName: validateName(user?.givenName),
         familyName: validateName(user?.familyName),
-        email: validateEmail(user?.email),
+        email: isUnder13(user) || validateEmail(user?.email),
         school: isPhy || isStudent(user) || isTutor(user) || validateUserSchool(user),
         countryCode: validateCountryCode(user?.countryCode),
-        emailPreferences: (userPreferences?.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences?.EMAIL_PREFERENCE)) as boolean,
+        emailPreferences: isUnder13(user) || userPreferences?.EMAIL_PREFERENCE === null || !!validateEmailPreferences(userPreferences?.EMAIL_PREFERENCE),
         dateOfBirth: validateDob(user?.dateOfBirth),
         gender: validateUserGender(user),
         userContexts: validateUserContexts(registeredContexts, isAda)

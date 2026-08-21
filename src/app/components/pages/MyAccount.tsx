@@ -39,6 +39,7 @@ import {
     isPhy,
     isStaff,
     isTeacherOrAbove,
+    isUnder13,
     siteSpecific,
     validateEmail,
     validateEmailPreferences,
@@ -313,7 +314,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         }
 
         if (userToUpdate.loggedIn &&
-            validateEmail(userToUpdate.email) &&
+            (isUnder13(userToUpdate) || validateEmail(userToUpdate.email)) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isPhy && !isDefined(userToUpdate.dateOfBirth))) &&
             (!userToUpdate.password || isNewPasswordValid))
@@ -340,6 +341,8 @@ export const MyAccount = ({user}: AccountPageProps) => {
             return;
         } else if (activeTab !== ACCOUNT_TAB.account) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
+        } else {
+            dispatch(showErrorToast("Account update failed", "Something went wrong. Please make sure all required fields have been filled in and try again."));
         }
         setSaving(false);
     }
@@ -420,7 +423,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
                                 />
                             </TabPane>
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                            {!editingOtherUser && !isUnder13(user) && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                 <UserEmailPreferencesPanel
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
