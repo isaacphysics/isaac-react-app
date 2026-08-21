@@ -83,7 +83,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
             }
         }
     } else {
-        controls = <QuizPagination {...props} page={page} finalLabel="Finish"/>;
+        controls = <QuizPagination {...props} page={page} finalLabel="Review"/>;
     }
 
     return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
