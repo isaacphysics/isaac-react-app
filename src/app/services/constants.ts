@@ -756,7 +756,7 @@ export enum TAG_ID {
     database_project = "projdb_repair_and_reform",
     aqa_nea_project = "aqa_nea_project",
     ocr_nea_project = "ocr_nea_project",
-    data_science_epq = "data_science_epq",
+    dataScienceEpq = "data_science_epq",
 
     // Old tags ------
     // programmingParadigms = "programming_paradigms",

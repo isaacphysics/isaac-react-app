@@ -102,7 +102,7 @@ export class CsTagService extends AbstractBaseTagService {
 
         // Software projects topics
         {id: TAG_ID.projects_link_pseudo_project, title: "Projects", parent: TAG_ID.projects, new: true},
-        {id: TAG_ID.data_science_epq, title: "EPQ in Data Science and AI", parent: TAG_ID.projects, new: true},
+        {id: TAG_ID.dataScienceEpq, title: "EPQ in Data Science and AI", parent: TAG_ID.projects, new: true},
         {id: TAG_ID.aqa_nea_project, title: "AQA NEA (coursework)", parent: TAG_ID.projects},
         {id: TAG_ID.ocr_nea_project, title: "OCR NEA (coursework)", parent: TAG_ID.projects},
 
