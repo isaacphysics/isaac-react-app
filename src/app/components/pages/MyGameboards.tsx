@@ -26,7 +26,7 @@ import {RenderNothing} from "../elements/RenderNothing";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
 import { PageMetadata } from "../elements/PageMetadata";
-import { useHistoryState } from "../../state/actions/history";
+import { useHistoryState } from "../../services/history";
 import { MyGameboardsSidebar } from "../elements/sidebar/MyGameboardsSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 
