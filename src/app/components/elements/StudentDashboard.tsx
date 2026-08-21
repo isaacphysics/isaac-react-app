@@ -26,7 +26,7 @@ const GroupJoinPanel = () => {
     }
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="h4">Join a group</h2>
+        <h2 className="panel-title">Join a group</h2>
         Enter the code given by your teacher to create a teacher connection and join a group.
         <InputGroup className="my-4 separate-input-group">
             <Input
@@ -64,7 +64,7 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
     const inStreakFreezeRange = new Date(1766361600000) <= new Date() && new Date() <= new Date(1767571200000);
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="h4">Build your weekly streak</h2>
+        <h2 className="panel-title">Build your weekly streak</h2>
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
@@ -131,7 +131,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
 
     return <Link to={link} className="w-100">
         <Card className="assignment-card px-3 d-flex flex-column h-100">
-            <div className="d-inline h5">
+            <div className="assignment-card-title">
                 <i className={`${icon} icon-inline me-2`}/>
                 {title}
             </div>
@@ -158,7 +158,7 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
     const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="h4">Complete current work</h2>
+        <h2 className="panel-title">Complete current work</h2>
         {toDo.length === 0 
             ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">
                 <span className="mb-2 row d-flex justify-content-center">You have no active assignments.</span>
@@ -193,7 +193,7 @@ interface MyIsaacPanelProps {
 
 const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
     return <div className='w-100 dashboard-panel'>
-        <h2 className="h4">More in My Isaac</h2>
+        <h2 className="panel-title">More in My Isaac</h2>
         <div className="d-flex flex-column">
             <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
                 My saved decks
