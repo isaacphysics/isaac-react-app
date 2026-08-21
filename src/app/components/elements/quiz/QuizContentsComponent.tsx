@@ -117,7 +117,7 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
                     return <li key={k}>
                         <Link to={pageLink(index + 1)}>{section.title}</Link>
                         {" "}
-                        <small className="text-muted ps-2">({completed ? "Completed" : anyStarted ? `Attempted ${answerCount} / ${questionsInSection.length}` : ""})</small>
+                        <small className="text-muted ps-2">{completed ? "Completed" : anyStarted ? `Attempted ${answerCount} / ${questionsInSection.length}` : ""}</small>
                     </li>;
                 })}
             </ul>
