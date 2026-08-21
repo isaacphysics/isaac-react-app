@@ -196,6 +196,25 @@ export const HomepageCS = () => {
                     <AdaNewsSection isHomepage />
                 </Container>
             </section>
+
+            <section id="cyber-explorers" className="bg-dark-pink-200">
+                <Container className="homepage-padding mw-1600" fluid>
+                    <ColumnSlice breakpoint="lg" reverseUnderBreakpoint>
+                        <ImageBlock>
+                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt="A cartoon sketch of Cyber City"/>
+                        </ImageBlock>
+                        <TextBlock className="text-white mb-5">
+                            <h2 className={"font-size-2"}>Cyber Explorers welcome</h2>
+                            <p>TechFirst&apos;s Cyber Explorers programme has merged into Ada CS!</p>
+                            <p>All the content and much more is now available as topics.</p>
+                            <div className="d-flex column-gap-3 flex-column flex-md-row">
+                                <Button className={"mt-3"} color={"solid"} tag={Link} to={"/cyber-explorers"}>Our page for Cyber Explorers</Button>
+                                <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>Explore the new topics</Button>
+                            </div>
+                        </TextBlock>
+                    </ColumnSlice>
+                </Container>
+            </section>
         </div>
     </>;
 };
