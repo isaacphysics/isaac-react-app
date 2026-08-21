@@ -1,13 +1,14 @@
 import React from "react";
-import {Button} from "reactstrap";
 import {handleProviderLoginRedirect, useAppDispatch} from "../../state";
+import { Spacer } from "./Spacer";
+import { UserRole } from "../../../IsaacApiTypes";
 
-export const RaspberryPiSignInButton = ({isSignup, concise}: {isSignup?: boolean, concise?: boolean}) => {
+export const RaspberryPiSignInButton = ({isSignup, knownRole, concise}: {isSignup?: boolean, knownRole?: UserRole, concise?: boolean}) => {
     const dispatch = useAppDispatch();
 
-    const logInWithRaspberryPi = () => dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup));
+    const logInWithRaspberryPi = () => dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup, knownRole));
 
-    return <Button color="keyline" className="w-100" onClick={logInWithRaspberryPi}>
+    return <button className="d-flex w-100 align-items-center linked-account-button-outer bg-white mb-1 p-3" onClick={logInWithRaspberryPi}>
         <img className="authenticator-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>
         {
             concise ?
@@ -17,5 +18,7 @@ export const RaspberryPiSignInButton = ({isSignup, concise}: {isSignup?: boolean
                     <div className={"d-none d-md-inline"}>Raspberry Pi Foundation</div>
                 </div>
         }
-    </Button>;
+        <Spacer />
+        <i className="icon icon-chevron-right" color="primary" />
+    </button>;
 };
