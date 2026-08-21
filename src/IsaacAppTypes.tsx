@@ -700,7 +700,6 @@ export type LevelAttempts<T> = { [level in Levels]?: T; }
 interface TagInstruction {
     hidden?: boolean; comingSoonDate?: string; new?: boolean;
 }
-
 export interface BaseTag {
     id: TAG_ID;
     title: string;
@@ -715,6 +714,15 @@ export interface BaseTag {
 export interface Tag extends BaseTag {
     type: TAG_LEVEL;
     level: number;
+}
+
+export interface AdaTopicBase {
+    // inherits similar properties to BaseTag, but explicitly used for topic contents which may not be tags. must include URL, unlike tags.
+    title: string;
+    url: string | undefined;
+    comingSoonDate?: string;
+    new?: boolean;
+    hidden?: boolean;
 }
 
 export interface Choice extends ChoiceDTO {
