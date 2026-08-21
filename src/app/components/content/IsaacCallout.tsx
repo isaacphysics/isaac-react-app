@@ -24,6 +24,7 @@ const calloutStyle = siteSpecific({
         testData: "/assets/cs/icons/callout/test-callout.svg",
         sampleRun: "/assets/cs/icons/callout/run-callout.svg",
         scenario: "/assets/cs/icons/callout/scenario-callout.svg",
+        definition: "/assets/cs/icons/callout/definition-callout.svg",
     },
     style: {
         marginTop: -15,
@@ -34,6 +35,7 @@ const calloutStyle = siteSpecific({
         testData: "hi-yellow-25",
         sampleRun: "hi-pink-25",
         scenario: "hi-yellow-50",
+        definition: "hi-cyan-50",
     }
 });
 
@@ -41,10 +43,10 @@ const DEFAULT_CALLOUT_STYLE = "regular" as const;
 export const IsaacCallout = ({doc}: {doc: ContentDTO}) => {
     const colourClass = typeof calloutStyle.colour === "string"
         ? calloutStyle.colour
-        : calloutStyle.colour[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as "regular" | "testData" | "sampleRun" | "scenario"];
+        : calloutStyle.colour[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as keyof typeof calloutStyle.colour];
     const iconSrc = typeof calloutStyle.src === "string"
         ? calloutStyle.src
-        : calloutStyle.src[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as "regular" | "testData" | "sampleRun" | "scenario"];
+        : calloutStyle.src[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as keyof typeof calloutStyle.src];
     return <Row
         className={classNames("isaac-callout", colourClass)}>
         <Col>
