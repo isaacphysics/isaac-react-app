@@ -2,7 +2,6 @@ import React, {lazy, useCallback, useEffect, useRef, useState} from 'react';
 import {
     closeActiveModal,
     logAction,
-    mutationSucceeded,
     openActiveModal,
     saveGameboard,
     useAppDispatch,
@@ -31,7 +30,6 @@ import {DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
-    EXAM_BOARD,
     GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
     handleBuilderRowChange,
@@ -45,10 +43,8 @@ import {
     logEvent, QUESTIONS_PER_GAMEBOARD,
     selectOnChange,
     siteSpecific,
-    STAGE,
     TAG_ID,
     useDeviceSize,
-    useUserViewingContext
 } from "../../services";
 import {useBlocker, useLocation} from "react-router-dom";
 import queryString from "query-string";
@@ -120,7 +116,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
-    const userContext = useUserViewingContext();
     const {data: wildcards} = useGetWildcardsQuery();
     const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
     const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = useCreateGameboardMutation();

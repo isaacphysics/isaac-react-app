@@ -2,7 +2,7 @@ import {isaacApi} from "./baseApi";
 import {AssignmentBoardOrder, Boards, NumberOfBoards} from "../../../../IsaacAppTypes";
 import {GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {isPhy, QUESTION_CATEGORY, siteSpecific} from "../../../services";
+import {siteSpecific} from "../../../services";
 import {logAction} from "../../actions/logging";
 
 export const gameboardApi = isaacApi.injectEndpoints({
