@@ -204,14 +204,14 @@ export const HomepageCS = () => {
                             <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt="A cartoon sketch of Cyber City"/>
                         </ImageBlock>
                         <TextBlock className="text-white">
-                            <h2 className={"font-size-2"}>Cyber Explorers welcome</h2>
-                            <p>TechFirst&apos;s Cyber Explorers programme has merged into Ada CS!</p>
-                            <p>All the content and much more is now available as topics.</p>
-                            <div className="d-flex column-gap-3 flex-column flex-md-row mb-6">
-                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/cyber-explorers"}>Intro to Ada for Cyber Explorers</Button>
+                            <h2 className={"font-size-2"}>Ada CS is the new TechFirst learning platform</h2>
+                            <p>Ada Computer Science has partnered with the Department for Digital, Culture, Media and Sport to expand our content and features.</p>
+                            <p>This includes new content on artificial intelligence, cybersecurity, quantum computing, engineering biology, semiconductors, and advanced connectivity technologies, designed specifically for learners aged 11–14.</p>
+                            <div className="d-flex column-gap-3 flex-column flex-md-row">
+                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/cyber-explorers"}>Read more</Button>
                                 <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>Explore the new topics</Button>
                             </div>
-                            <div className="d-flex gap-4">
+                            <div className="d-flex gap-4 mt-6">
                                 <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
                                 <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
                             </div>
