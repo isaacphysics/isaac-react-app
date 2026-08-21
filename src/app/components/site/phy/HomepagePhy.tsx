@@ -32,7 +32,7 @@ const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) =>
                     </>
                 }
             </div>
-            <CardTitle className="mt-1" tag="h4">{title}</CardTitle>
+            <CardTitle className="mt-1 h4" tag="h2">{title}</CardTitle>
             <CardText>{content}</CardText>
             <Spacer/>
             <Button className="w-max-content" tag={Link} to={isStudent ? "/login" : "/teacher_account_request"}>Create a {isStudent ? "student" : "teacher"} account</Button>
