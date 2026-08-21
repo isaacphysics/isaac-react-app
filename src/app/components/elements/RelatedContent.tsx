@@ -64,7 +64,7 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
     if (audienceQuestions.length + remainingQuestions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
-            <div className="flex-fill simple-card my-3 p-3 text-wrap">
+            <div className="simple-card flex-fill my-3 p-3 text-wrap">
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
                         <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
@@ -77,15 +77,15 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                 <hr/>
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex text-start">
-                    <div>
+                    <div className="w-50">
                         <div className="related-question-header h4">On your specification:</div>
-                        <ListGroup className="w-50">
+                        <ListGroup>
                             {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>
                     </div>
-                    <div>
+                    <div className="w-50">
                         <div className="related-question-header h4">Outside your specification:</div>
-                        <ListGroup className="w-50">
+                        <ListGroup>
                             {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>
                     </div>
