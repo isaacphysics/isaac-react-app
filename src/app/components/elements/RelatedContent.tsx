@@ -7,7 +7,6 @@ import {
     documentTypePathPrefix,
     isAda,
     isIntendedAudience,
-    isTutorOrAbove,
     sortByStringValue,
     useUserViewingContext
 } from "../../services";
@@ -15,7 +14,6 @@ import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state"
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
-    conceptId?: string;
     parentPage: ContentDTO;
 }
 
@@ -58,7 +56,7 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
 }
 
-function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
+function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
 
     if (audienceQuestions.length + remainingQuestions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
@@ -69,8 +67,6 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                         <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
-                    {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ms-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
-                    </Col>}
                 </Row>
                 <hr/>
                 {/* Large devices - multi column */}
@@ -101,13 +97,12 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
     </div>;
 }
 
-export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
+export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
     const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
     const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     const sortedContent = audienceFilteredContent.sort(sortByStringValue("title"));
 
@@ -132,5 +127,5 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         </ListGroupItem>;
     };
 
-    return isAda ? renderQuestions(questions, remainingQuestions, makeListGroupItem, conceptId, showConceptGameboardButton) : null;
+    return isAda ? renderQuestions(questions, remainingQuestions, makeListGroupItem) : null;
 }
