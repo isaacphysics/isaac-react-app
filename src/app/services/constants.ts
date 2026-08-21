@@ -681,6 +681,7 @@ export enum TAG_ID {
     // AI and machine learning topics
     artificialIntelligence = "artificial_intelligence",
     machineLearning = "machine_learning",
+    dataScienceMachineLearning = "data_science_machine_learning",
 
     // Algorithms and data structures topics
     complexity = "complexity",
