@@ -80,17 +80,17 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     <Input type="text" innerRef={searchInputRef} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> :
-                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
+                <h3 className={classNames("d-flex h4", {"ps-0" : isAda})}>
                     {isAda && <span className="icon-group-white mx-2" />}
                     {title}
-                </h4>
+                </h3>
             }</>
             :
             <>
-                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
+                <h3 className={classNames("d-flex h4", {"ps-0" : isAda})}>
                     {isAda && <span className="icon-group-white mx-2" />}
                     {title}
-                </h4>
+                </h3>
                 <Spacer />
                 {enableSearch && <Input type="text" innerRef={searchInputRef} style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
@@ -177,15 +177,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         }
     }
 
-    const SectionHeading = siteSpecific("h4", "h3");
+    const SectionHeading = siteSpecific("h3", "h2");
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Connect to your teacher</h3>
+            <h2 className="h3">Connect to your teacher</h2>
             <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_teacher_connections_teacher" : "help_toptext_teacher_connections_student"} ifNotFound={RenderNothing} />
         </>}
         rightColumn={<>
-            <SectionHeading>
+            <SectionHeading className={siteSpecific("h4", "h3")}>
                 <span>
                     Teacher connection code
                     <i id="teacher-connections-title" className={classNames("icon icon-info icon-inline-sm ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
@@ -256,7 +256,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </div>
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
-                <SectionHeading>
+                <SectionHeading className={siteSpecific("h4", "h3")}>
                     <span>Your student connections
                         <i id="student-connections-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                     </span>
