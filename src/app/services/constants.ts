@@ -977,10 +977,10 @@ type ContextSpecificTags = Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID
 
 export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> = {
     [TAG_ID.cyberSecurity11_14]: [
-        {title: "Social engineering", url: undefined},
-        {title: "Malware", url: undefined},
-        {title: "Defending against malware", url: undefined},
-        {title: "Network security", url: undefined},
+        {title: "Social engineering", url: "/concepts/social_engineering?topic=11_14"},
+        {title: "Malware", url: "/concepts/tf-malware-hackers?topic=11_14"},
+        {title: "Defending against malware", url: "/concepts/defending_against_malware?topic=11_14"},
+        {title: "Network security", url: "/concepts/tf-network-security?topic=11_14"},
     ],
     [TAG_ID.aiAndMachineLearning11_14]: [
         {title: "Data driven vs. rule based", url: undefined},

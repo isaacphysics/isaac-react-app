@@ -47,7 +47,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
-    const {data: currentTopic} = useGetTopicQuery(topic || skipToken);
+    const {data: currentTopic} = useGetTopic(topic);
 
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
@@ -55,6 +55,19 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     return determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
+};
+
+const useGetTopic = (topic: string | undefined) => {
+    const parameter = topic === '11_14' ? skipToken : topic || skipToken;
+    const { data } = useGetTopicQuery(parameter);
+    return topic === '11_14' ? { data: {
+        title: "11-14 Topics",
+        id: "topic_summary_11_14",
+        relatedContent: [
+            { id: 'social_engineering', type: "isaacConceptPage", title: "Social Engineering"},
+            { id: 'tf-malware-hackers', type: "isaacConceptPage", title: "Malware"}
+        ]
+    } as IsaacTopicSummaryPageDTO} : {data};
 };
 
 export const determinePageNavigation = (
@@ -69,7 +82,6 @@ export const determinePageNavigation = (
     search: string,
     pageContext: PageContextState
 ): PageNavigation => {
-
     if (doc !== null && doc !== NOT_FOUND) {
         if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
             const gameboardHistory = (currentGameboard && gameboardId === currentGameboard.id) ?
@@ -118,14 +130,16 @@ export const determinePageNavigation = (
         }
 
         if (topic) {
+            console.log('determining for topic', topic, currentTopic, currentTopic?.id?.slice("topic_summary_".length));
             const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
                 determineTopicHistory(currentTopic, currentDocId) :
                 makeAttemptAtTopicHistory();
+            const nextItem = determineNextTopicContentLink(currentTopic, currentDocId);
             return {
                 collectionType: "Topic",
                 breadcrumbHistory: topicHistory,
                 backToCollection: topicHistory.slice(-1)[0],
-                nextItem: determineNextTopicContentLink(currentTopic, currentDocId),
+                nextItem,
                 search,
                 currentGameboard
             };
