@@ -44,30 +44,45 @@ export interface PageNavigation {
 
 export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
     const {search} = useLocation();
-    const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
+    const {board: gameboardId, topic: initialTopic, questionHistory} = useQueryParams(true);
+    let topic = initialTopic;
+    if (topic === '11_14') {
+        topic = undefined;
+    }
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
-    const {data: currentTopic} = useGetTopic(topic);
+    const {data: currentTopic} = useGetTopicQuery(topic || skipToken);
 
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
+    if (initialTopic === '11_14') {
+        return get1114Navigation(currentDocId);
+    }
+    const result = determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
+    console.log('result is', result);
+    return result;
 };
 
-const useGetTopic = (topic: string | undefined) => {
-    const parameter = topic === '11_14' ? skipToken : topic || skipToken;
-    const { data } = useGetTopicQuery(parameter);
-    return topic === '11_14' ? { data: {
+const get1114Navigation = (currentDocId: string): PageNavigation => {
+    const parent = {
         title: "11-14 Topics",
-        id: "topic_summary_11_14",
-        relatedContent: [
-            { id: 'social_engineering', type: "isaacConceptPage", title: "Social Engineering"},
-            { id: 'tf-malware-hackers', type: "isaacConceptPage", title: "Malware"}
-        ]
-    } as IsaacTopicSummaryPageDTO} : {data};
+        to: "/topics#11-14"
+    };
+    const nextDict: Record<string, LinkInfo> = {
+        social_engineering: {title: "Malware", to: "/concepts/tf-malware-hackers"},
+        'tf-malware-hackers': {title: "Defending against malware", to: "/concepts/defending_against_malware"},
+        defending_against_malware: {title: "Network security", to: "/concepts/tf-network-security"}
+    };
+    return {
+        collectionType: "Topic",
+        backToCollection: parent,
+        breadcrumbHistory: [parent],
+        nextItem: nextDict[currentDocId],
+        search: "topic=11_14"
+    };
 };
 
 export const determinePageNavigation = (
