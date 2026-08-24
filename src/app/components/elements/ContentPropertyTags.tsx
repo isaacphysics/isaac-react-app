@@ -22,7 +22,7 @@ export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...res
             return <React.Fragment key={tag}>
                 <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-access-visual icon-color-black z-2`} id={id} />
                 <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
-                <UncontrolledTooltip target={`#${id}`} placement="top">
+                <UncontrolledTooltip target={id} placement="top">
                     {ACCESSIBILITY_WARNINGS[tag].description}
                 </UncontrolledTooltip>
             </React.Fragment>;
