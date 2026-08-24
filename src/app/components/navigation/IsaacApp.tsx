@@ -86,24 +86,24 @@ const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 const RootLayout = () => {
     const mainContentRef = useRef(null);
 
-    return <FeatureFlagProvider>
-        <SiteSpecific.Header />
-        <Toasts />
-        <ActiveModals />
-        <SiteBanners />
-        <OnPageLoad />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
-            <ErrorBoundary FallbackComponent={ChunkOrClientError}>
-                <FigureNumberingProvider>
+    return <ErrorBoundary FallbackComponent={ChunkOrClientError}>
+        <FeatureFlagProvider>
+            <FigureNumberingProvider>
+                <SiteSpecific.Header />
+                <Toasts />
+                <ActiveModals />
+                <SiteBanners />
+                <OnPageLoad />
+                <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
                     <Suspense fallback={<Loading/>}>
                         <Outlet />
                     </Suspense>
-                </FigureNumberingProvider>
-            </ErrorBoundary>
-        </main>
-        <ScrollToTop mainContent={mainContentRef}/>
-        <SiteSpecific.Footer />
-    </FeatureFlagProvider>;
+                </main>
+                <ScrollToTop mainContent={mainContentRef}/>
+                <SiteSpecific.Footer />
+            </FigureNumberingProvider>
+        </FeatureFlagProvider>
+    </ErrorBoundary>;
 };
 
 // Render
