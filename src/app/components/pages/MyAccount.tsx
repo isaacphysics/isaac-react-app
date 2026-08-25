@@ -347,6 +347,10 @@ export const MyAccount = ({user}: AccountPageProps) => {
         setSaving(false);
     }
 
+    const isTabHidden = useCallback((tab: ACCOUNT_TAB) => {
+        return !!ACCOUNT_TABS.find(t => t.tab === tab)?.isHidden?.(user, editingOtherUser);
+    }, [user, editingOtherUser]);
+
     return <PageContainer id="account-page" className="mb-7"
         pageTitle={
             <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
@@ -366,19 +370,22 @@ export const MyAccount = ({user}: AccountPageProps) => {
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <div className={siteSpecific("w-lg-75", "card")}>
                     {isAda && <Nav tabs className="my-4 flex-wrap mx-4" data-testid="account-nav">
-                        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
-                            <NavItem key={tab} className={classnames({active: activeTab === tab})}>
-                                <NavLink
-                                    className="px-2" tabIndex={0}
-                                    onClick={() => safelyChangeTab(tab)} onKeyDown={ifKeyIsEnter(() => safelyChangeTab(tab))}
-                                >
-                                    {titleShort ? <>
-                                        <span className="d-none d-lg-block">{title}</span>
-                                        <span className="d-block d-lg-none">{titleShort}</span>
-                                    </> : title}
-                                </NavLink>
-                            </NavItem>
-                        )}
+                        {ACCOUNT_TABS
+                            .filter(tab => !tab.isHidden?.(user, editingOtherUser))
+                            .map(({tab, title, titleShort}) =>
+                                <NavItem key={tab} className={classnames({active: activeTab === tab})}>
+                                    <NavLink
+                                        className="px-2" tabIndex={0}
+                                        onClick={() => safelyChangeTab(tab)} onKeyDown={ifKeyIsEnter(() => safelyChangeTab(tab))}
+                                    >
+                                        {titleShort ? <>
+                                            <span className="d-none d-lg-block">{title}</span>
+                                            <span className="d-block d-lg-none">{titleShort}</span>
+                                        </> : title}
+                                    </NavLink>
+                                </NavItem>
+                            )
+                        }
                     </Nav>}
                     <Form id="my-account" name="my-account" onSubmit={updateAccount}>
                         {updateCurrentUserError &&
@@ -390,7 +397,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                         <TabContent activeTab={activeTab} key={clearUnsavedChanges ? activeTab : undefined}>
                             {/* the key above ensures that any state inside tabs is reset to initial values if activeTab is changed while accountInfo is dirty 
                                 (i.e. user has unsaved changes they do *not* want to commit) */}
-                            <TabPane tabId={ACCOUNT_TAB.account}>
+                            {!isTabHidden(ACCOUNT_TAB.account) && <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserProfile
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
@@ -399,8 +406,8 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
-                            </TabPane>
-                            {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
+                            </TabPane>}
+                            {!isTabHidden(ACCOUNT_TAB.customise) && <TabPane tabId={ACCOUNT_TAB.customise}>
                                 <UserContent
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
@@ -411,10 +418,10 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     userAuthSettings={userAuthSettings}
                                 />
                             </TabPane>}
-                            {isPhy && <TabPane tabId={ACCOUNT_TAB.theme}>
+                            {!isTabHidden(ACCOUNT_TAB.theme) && <TabPane tabId={ACCOUNT_TAB.theme}>
                                 <UserTheme setDisplaySettings={setDisplaySettings} />
                             </TabPane>}
-                            <TabPane tabId={ACCOUNT_TAB.passwordreset}>
+                            {!isTabHidden(ACCOUNT_TAB.passwordreset) && <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword
                                     currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
                                     myUser={userToUpdate} setMyUser={setUserToUpdate}
@@ -422,19 +429,19 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
                                     isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
                                 />
-                            </TabPane>
-                            {!editingOtherUser && !isUnder13(user) && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                            </TabPane>}
+                            {!isTabHidden(ACCOUNT_TAB.emailpreferences) && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                 <UserEmailPreferencesPanel
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
                                 />
                             </TabPane>}
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.accessibility}>
+                            {!isTabHidden(ACCOUNT_TAB.accessibility) && <TabPane tabId={ACCOUNT_TAB.accessibility}>
                                 <UserAccessibilitySettings
                                     accessibilitySettings={myUserPreferences?.ACCESSIBILITY ?? {}} setAccessibilitySettings={setAccessibilitySettings}
                                 />
                             </TabPane>}
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                            {!isTabHidden(ACCOUNT_TAB.betafeatures) && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
                                 <UserBetaFeatures
                                     displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
                                     consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
@@ -453,11 +460,11 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                 />
                             </Suspense>
                         </TabPane>}
-                        <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                        {!isTabHidden(ACCOUNT_TAB.teacherconnections) && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
                             <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
                                 userToEdit={userToEdit}
                             />
-                        </TabPane>
+                        </TabPane>}
                     </TabContent>}
                     <div className={classNames({"py-4 card-footer": isAda})}>
                         {isPhy && <div className="section-divider-bold"/>}
