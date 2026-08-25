@@ -6,8 +6,8 @@ export const miscApi = isaacApi.enhanceEndpoints({
     addTagTypes: [],
 }).injectEndpoints({
     endpoints: (build) => ({
-        searchSchools: build.query<School[], string>({
-            query: (query: string) => `/schools/?limit=3&query=${encodeURIComponent(query)}`,
+        searchSchools: build.query<School[], { query: string, countryCode: string }>({
+            query: (args) => `/schools/?limit=3&query=${encodeURIComponent(args.query)}&countryCode=${encodeURIComponent(args.countryCode)}`,
         }),
 
         getSchoolByUrn: build.query<School[], string>({

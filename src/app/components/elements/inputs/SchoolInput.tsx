@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {reactSelectDarkModeStyles, schoolNameWithTownAndPostcode, siteSpecific, validateUserSchool} from "../../../services";
@@ -44,21 +44,20 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     const [searchSchools] = useLazySearchSchoolsQuery();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const searchSchoolsFn = useCallback(throttledSchoolSearch(async (school: string) => {
-        const { data, error } = await searchSchools(school);
-        if (data && data.length > 0) {
+    const searchSchoolsFn = useMemo(() => throttledSchoolSearch(async (school: string) => {
+        const { data, error } = await searchSchools({ query: school, countryCode: userToUpdate.countryCode || "" });
+        if (data) {
             return data;
         }
         throw error;
-    }), [searchSchools]);
+    }), [searchSchools, userToUpdate.countryCode]);
 
     const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
     // Get school associated with urn
     function fetchSchool(urn: string) {
         if (urn !== "") {
             if (selectedSchoolObject?.schoolId !== urn) {
-                getSchoolByUrn(urn).then(({data}) => {
+                void getSchoolByUrn(urn).then(({data}) => {
                     if (data && data.length > 0) {
                         setSelectedSchoolObject(data[0]);
                     }
@@ -113,7 +112,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     return <FormGroup className={`school mb-4 ${className} `}>
         <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
         <p className="d-block input-description">
-            {siteSpecific("This helps us promote events near you.", "This helps us measure our reach and impact.")}
+            {siteSpecific("The country you go to school in. This helps us promote events near you.", "The country you go to school in. This helps us measure our reach and impact.")}
         </p>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
