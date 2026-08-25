@@ -222,7 +222,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 >
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
-                            <div className="response-heading">
+                            <div className={siteSpecific("response-heading", "h1")}>
                                 {correct ? "Correct!" : (
                                     sigFigsError ? "Significant Figures" : (
                                         almost ? "Partly correct..." : "Incorrect"
