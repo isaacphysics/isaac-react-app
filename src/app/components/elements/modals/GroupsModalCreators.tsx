@@ -103,7 +103,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                     <p>Students can scan a QR code on their device to join your group:</p>
                     {showQR
                         ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} groupName={group.groupName} />
-                        : <Button color={siteSpecific("primary", "keyline")} onClick={() => {
+                        : <Button color={"keyline"} onClick={() => {
                             startTransition(() => {
                                 setShowQR(true);
                             });
@@ -130,7 +130,7 @@ const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boole
 
     return <Row key={0} className="w-100">
         <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-            <Button block color="primary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+            <Button block color="solid" className={siteSpecific("", "mb-3")} onClick={() => {
                 store.dispatch(closeActiveModal());
                 void navigate(PATHS.SET_ASSIGNMENTS);
             }}>
@@ -139,7 +139,7 @@ const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boole
         </Col>
         {/* Only teachers are allowed to add additional managers to a group. */}
         {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-            <Button outline block color="secondary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+            <Button block color="keyline" className={siteSpecific("", "mb-3")} onClick={() => {
                 void store.dispatch(closeActiveModal());
                 void store.dispatch(showGroupManagersModal({group, user}));
             }}>
@@ -288,11 +288,11 @@ Are you sure you want to promote this manager to group owner?\n
                     )}
                     <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</span>
                     <Spacer />
-                    {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
+                    {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={"keyline"} onClick={() => promoteManager(manager)}>
                         Make owner
                     </Button>}
                     {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && !(userIsOwner && below["md"](deviceSize)) &&
-                        <Button className="d-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
+                        <Button className="d-inline ms-2" size="sm" color={"solid"}
                             onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
                         >
                             Remove

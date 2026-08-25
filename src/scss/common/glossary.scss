@@ -44,7 +44,7 @@
         }
       }
 
-      @include respond-below(sm) {
+      @include media-breakpoint-down(md) {
         display: none;
       }
     }
@@ -55,7 +55,7 @@
     flex-direction: row;
     justify-content: space-evenly;
 
-    @include respond-below(sm) {
+    @include media-breakpoint-down(md) {
       flex-direction: column;
       position: fixed;
       right: 0vw;

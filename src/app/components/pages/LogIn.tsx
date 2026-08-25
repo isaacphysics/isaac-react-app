@@ -9,7 +9,6 @@ import {
     useAppSelector
 } from "../../state";
 import {
-    Alert,
     Button,
     Card,
     CardBody,
@@ -251,12 +250,6 @@ export const LogIn = () => {
                             <h1 className={classNames("h-title", {"mb-4": isAda})} ref={headingRef} tabIndex={-1}>
                                 Log&nbsp;in or sign&nbsp;up:
                             </h1>
-                            {isPhy &&  // FIXME: post-launch cleanup
-                                <Alert color="info">
-                                    Already use Isaac Physics? <a href="/pages/isaacscience">Your login details and account
-                                    are the same here<span className="visually-hidden"> as on Isaac Physics</span>!</a>
-                                </Alert>
-                            }
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
                                 :
@@ -311,16 +304,16 @@ export const LogIn = () => {
                                                 <RaspberryPiSignInButton/>
                                             </Col>
                                         </Row>}
-                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))} >
+                                    <Row className="mb-2 justify-content-center" >
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
-                                    {isPhy && <Row className="mb-2 justify-content-center">
+                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))}>
                                         <Col sm={9}>
                                             <MicrosoftSignInButton/>
                                         </Col>
-                                    </Row>}
+                                    </Row>
                                     {isPhy && <Row className="mb-2">
                                         <Col>
                                             <SsoHelpLink />

@@ -192,7 +192,7 @@ const routes = createRoutesFromElements(
         <Route path="/terms" element={<Generic pageIdOverride={"terms_of_use"} />} />
         <Route path="/cookies" element={<Generic pageIdOverride={"cookie_policy"} />} />
         <Route path="/accessibility" element={<Generic pageIdOverride={"accessibility_statement"} />} />
-        <Route path="/cyberessentials" />
+        <Route path="/cyberessentials" element={<Generic pageIdOverride={"cyberessentials"} />} />
 
         {/* External redirects */}
         <Route path={"/survey/:qId/:refNo?"} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QualtricsRedirect user={authUser} />} />} />

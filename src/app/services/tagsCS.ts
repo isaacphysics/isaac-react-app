@@ -12,7 +12,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computerScience, title: "Computer Science"},
 
         // Computer science strands
-        {id: TAG_ID.aiAndMachineLearning, title: "AI and machine learning", parent: TAG_ID.computerScience},
+        {id: TAG_ID.aiAndMachineLearning, title: "AI, data science and machine learning", parent: TAG_ID.computerScience},
         {id: TAG_ID.dataStructuresAndAlgorithms, title: "Algorithms and data structures", parent: TAG_ID.computerScience},
         {id: TAG_ID.computerSystems, title: "Computing systems", parent: TAG_ID.computerScience},
         {id: TAG_ID.creatingMedia, title: "Creating media", parent: TAG_ID.computerScience},
@@ -29,7 +29,7 @@ export class CsTagService extends AbstractBaseTagService {
 
         // AI and machine learning topics
         {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.aiAndMachineLearning},
-        {id: TAG_ID.machineLearning, title: "Machine learning", parent: TAG_ID.aiAndMachineLearning},
+        {id: TAG_ID.dataScienceMachineLearning, title: "Data science and machine learning", parent: TAG_ID.aiAndMachineLearning},
 
         // Algorithms and data structures topics
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
@@ -102,6 +102,7 @@ export class CsTagService extends AbstractBaseTagService {
 
         // Software projects topics
         {id: TAG_ID.projects_link_pseudo_project, title: "Projects", parent: TAG_ID.projects, new: true},
+        {id: TAG_ID.dataScienceEpq, title: "EPQ in Data Science and AI", parent: TAG_ID.projects, new: true},
         {id: TAG_ID.aqa_nea_project, title: "AQA NEA (coursework)", parent: TAG_ID.projects},
         {id: TAG_ID.ocr_nea_project, title: "OCR NEA (coursework)", parent: TAG_ID.projects},
 

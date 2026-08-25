@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {openActiveModal, useAppDispatch, useGetGroupMembersQuery} from '../../../state';
-import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../../IsaacAppTypes';
+import {AppGroup, AppQuizAssignment, EnhancedAssignment} from '../../../../IsaacAppTypes';
 import {
     above,
     AssignmentOrder,
@@ -15,6 +15,7 @@ import {
     PATHS,
     siteSpecific,
     SortOrder,
+    useAssignmentProgressAccessibilitySettings,
     useDeviceSize,
     useGroupAssignments
 } from '../../../services';
@@ -30,7 +31,7 @@ import {StyledDropdown} from '../../elements/inputs/DropdownInput';
 import {Loading} from '../../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
-import { useHistoryState } from '../../../state/actions/history';
+import { useHistoryState } from '../../../services/history';
 import { PageContainer } from '../../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 import { FeatureFlag, useFeatureFlag } from '../../../services/featureFlag';
@@ -96,8 +97,8 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
 
     // TODO: if possible, we would rather use the groupId from the URL than require a wrapper on this component, as it would save loading all groups
     // const {assignmentCount, groupBoardAssignments, groupQuizAssignments} = useGroupAssignmentSummary(user, parseInt(groupId));
-    const [assignmentOrder, setAssignmentOrder] = useState<AssignmentOrderSpec>(AssignmentOrder.startDateDescending);
-    const {groupBoardAssignments, groupQuizAssignments, isFetching} = useGroupAssignments(user, group?.id, assignmentOrder);
+    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
+    const {groupBoardAssignments, groupQuizAssignments, isFetching} = useGroupAssignments(user, group?.id, pageSettings.assignmentOrder);
     const {data: groupMembers} = useGetGroupMembersQuery(isDefined(group?.id) ? group.id : skipToken);
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
@@ -190,8 +191,8 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                     <Col xs={12} sm={6} lg={{size: 4, offset: 4}} className="d-flex flex-column">
                         <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">Sort by:</Label>
                         <StyledDropdown
-                            value={Object.values(AssignmentOrder).findIndex(item => item.type === assignmentOrder.type && item.order === assignmentOrder.order)}
-                            onChange={(e) => setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
+                            value={Object.values(AssignmentOrder).findIndex(item => item.type === pageSettings.assignmentOrder.type && item.order === pageSettings.assignmentOrder.order)}
+                            onChange={(e) => pageSettings.setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
                             id="sort-by-dropdown"
                         >
                             {Object.values(AssignmentOrder).map((item, index) =>

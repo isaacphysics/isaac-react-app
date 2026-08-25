@@ -28,7 +28,7 @@ import {
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModalProps, AppGroup, AugmentedEvent} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO, UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
-import {bookingStatusMap, isDefined, isLoggedIn, schoolNameWithPostcode} from "../../../services";
+import {bookingStatusMap, isDefined, isLoggedIn, schoolNameWithTownAndPostcode} from "../../../services";
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
@@ -148,7 +148,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         if (user?.schoolId && user?.schoolId !== "") {
             getSchoolByUrn(user?.schoolId).then(({data}) => {
                 if (data && data.length > 0) {
-                    setSchool(schoolNameWithPostcode(data[0]));
+                    setSchool(schoolNameWithTownAndPostcode(data[0]));
                 }
             });
         } else if (user?.schoolOther) {

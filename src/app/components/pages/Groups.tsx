@@ -365,16 +365,15 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                     <Button
                                         disabled={group.archived}
                                         className={"d-inline-block text-nowrap w-100 w-sm-auto"}
-                                        color="primary"
+                                        color="solid"
                                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                                     >
-                                            Invite users
+                                        Invite users
                                     </Button>
                                     {canEmailUsers && usersInGroup.length > 0 &&
                                                 <Button
                                                     className={"d-inline-block text-nowrap w-100 w-sm-auto"}
-                                                    color="secondary"
-                                                    outline
+                                                    color="keyline"
                                                     onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
                                                 >
                                                     Email users
@@ -385,14 +384,13 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                             <div>
                                 <StyledCheckbox
                                     id="self-removal"
-                                    color={siteSpecific("primary", "")}
                                     onChange={toggleSelfRemoval}
                                     checked={!!group.selfRemoval}
                                     label={<span>Allow students to remove themselves from this group</span>}
                                 />
                             </div>
                             <div>
-                                        This group has {group.members.length} member{group.members.length != 1 ? 's' : ''}.
+                                This group has {group.members.length} member{group.members.length != 1 ? 's' : ''}.
                                 {bigGroup && !isExpanded &&
                                             <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
                                                 <DropdownToggle caret>Show</DropdownToggle>
@@ -529,7 +527,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                     suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: "Delete group"} : undefined}
                                 />
                             </li>
-                            : <div key={g.id} className="group-item p-md-2" data-testid={"group-item"}>
+                            : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
                                     <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                         {g.groupName}

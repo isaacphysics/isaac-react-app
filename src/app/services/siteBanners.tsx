@@ -3,7 +3,6 @@ import { AlertProps } from "reactstrap";
 import { ResearchNotificationBanner } from "../components/elements/banners/ResearchNotificationBanner";
 import { DowntimeWarningBanner } from "../components/elements/banners/DowntimeWarningBanner";
 import { EmailVerificationBanner } from "../components/elements/banners/EmailVerificationBanner";
-import { IsaacScienceLaunchBanner } from "../components/elements/banners/IsaacScienceLaunchBanner";
 
 interface BannerProps extends AlertProps {
     theme: "light" | "info" | "warning" | "danger";
@@ -31,10 +30,6 @@ export interface SiteBanner {
 
 export const useSiteBanners = () : SiteBanner[] => {
     return [
-        {
-            banner: <IsaacScienceLaunchBanner />,
-            endDate: new Date("2026-08-01T00:00:00Z"),
-        },
         {
             banner: <ResearchNotificationBanner />,
         },

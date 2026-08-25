@@ -329,7 +329,7 @@ export const AdminUserManager = () => {
                                                     <td>{user.familyName}, {user.givenName}</td>
                                                     <td>{user.email}</td>
                                                     <td>{user.role}</td>
-                                                    <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].name ?? "")}</td>
+                                                    <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].schoolName ?? "")}</td>
                                                     <td>{user.emailVerificationStatus}</td>
                                                     <td><DateString>{user.registrationDate}</DateString></td>
                                                     <td><DateString>{user.lastSeen}</DateString></td>

@@ -159,7 +159,7 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
         {state === "initial" && <div className={"d-flex"}>
             <div className={classNames("h4", {"text-muted": disabled && isAda})}>{confidenceVariables?.title}</div>
             <div className="ms-2 mt-n1 not-mobile">
-                <Button outline={isPhy} color="solid" className={"confidence-help"} size="sm"
+                <Button color="solid" className={"confidence-help"} size="sm"
                     onClick={() => dispatch(confidenceInformationModal())}
                 >
                     {

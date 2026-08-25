@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Button, Col, Form, Row} from "reactstrap";
-import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
+import { closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {
     EmailPasswordInputs,
@@ -15,6 +15,7 @@ import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../GoogleSignInButton";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MicrosoftSignInButton } from "../MicrosoftSignInButton";
+import { ActiveModalProps } from "../../../../IsaacAppTypes";
 
 const LoginOrSignUpBody = () => {
 
@@ -111,13 +112,11 @@ const LoginOrSignUpBody = () => {
                         </Button>
 
                         {siteSpecific(<div className="section-divider"/>, <hr className="text-center hr-or"/>)}
-                        {isAda && <div className="mb-2">
-                            <RaspberryPiSignInButton concise={true} />
-                        </div>}
-                        <GoogleSignInButton/>
-                        {isPhy && <div className="mt-2 mb-2">
+                        <div className="d-flex flex-column gap-2 mb-2">
+                            {isAda && <RaspberryPiSignInButton concise={true} />}
+                            <GoogleSignInButton/>
                             <MicrosoftSignInButton />
-                        </div>}
+                        </div>
                         {isPhy && <SsoHelpLink />}
                     </>}
             </Form>
@@ -125,8 +124,8 @@ const LoginOrSignUpBody = () => {
     </Row>;
 };
 
-export const loginOrSignUpModal = {
+export const loginOrSignUpModal: ActiveModalProps = {
     centered: true,
-    noPadding: true,
-    body: LoginOrSignUpBody
+    bodyContainerClassName: "py-0",
+    body: LoginOrSignUpBody,
 };

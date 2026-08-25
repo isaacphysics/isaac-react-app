@@ -14,12 +14,12 @@
       font-size: 13px;
       color: #000000;
     }
-    @include respond-above(md) {
+    @include media-breakpoint-up(lg) {
       width: 40%;
     }
   }
   .footer-bottom-logos {
-    @include respond-above(md) {
+    @include media-breakpoint-up(lg) {
       width: 40%;
       margin-left: 17%;
     }
@@ -43,7 +43,7 @@
   }
 
   .logo-col {
-    @include respond-below(sm) {
+    @include media-breakpoint-down(md) {
       padding: 1rem;
     }
     a {
@@ -61,7 +61,7 @@
     background-repeat: no-repeat;
     height: 100%;
 
-    @include respond-above(md) {
+    @include media-breakpoint-up(lg) {
       background-position: left 100% bottom 15%;
     }
   }
@@ -83,12 +83,12 @@
       font-size: 13px;
       color: #000000;
     }
-    @include respond-above(md) {
+    @include media-breakpoint-up(lg) {
       width: 40%;
     }
   }
   .footer-bottom-logos {
-    @include respond-above(md) {
+    @include media-breakpoint-up(lg) {
       width: 40%;
       margin-left: 17%;
     }

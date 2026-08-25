@@ -661,7 +661,7 @@ export interface FigureRegion {
     top: number;
 }
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "post_18" | "all";
+export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "foundation" | "core" | "advanced" | "post_18" | "all";
 
 export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "sqa" | "ada" | "all";
 
@@ -866,6 +866,17 @@ export interface Address {
     county?: string;
     postalCode?: string;
     country?: string;
+}
+
+export interface School {
+    schoolId: string;
+    countryCode: string;
+    schoolName: string;
+    postalCode?: string;
+    town?: string;
+    excluded: boolean;
+    closed: boolean;
+    dataSource: string;
 }
 
 export interface AnsweredQuestionsByDate {

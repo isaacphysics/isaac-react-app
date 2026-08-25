@@ -188,7 +188,7 @@ export function QuizRubricButton({rubric}: {rubric?: ContentDTO}) {
     };
 
     if (rubric) {
-        return <Button color={siteSpecific("keyline", "tertiary")} outline={isAda} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
+        return <Button color={"keyline"} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
             title="Show instructions in a modal" onClick={openQuestionModal}
         >
             Show instructions

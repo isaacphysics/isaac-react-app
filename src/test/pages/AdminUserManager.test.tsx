@@ -195,7 +195,7 @@ describe("AdminUserManager", () => {
 
     it("allows the user to filter the search by role and school urn", async () => {
         const searchHandler = buildSearchHandler(
-            {role: mockUser.role, schoolURN: mockSchool.urn},
+            {role: mockUser.role, schoolURN: mockSchool.schoolId},
             {defaultUsersToReturn: []}
         );
         await renderTestEnvironment({
@@ -206,7 +206,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         await searchWithParams(
-            {role: mockUser.role, schoolURN: mockSchool.urn},
+            {role: mockUser.role, schoolURN: mockSchool.schoolId},
             {
                 expectNumberOfResults: 1,
                 searchHandler,
