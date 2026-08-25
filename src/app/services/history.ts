@@ -1,6 +1,7 @@
 import type {TypeGuard} from "@reduxjs/toolkit/dist/tsHelpers";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
+import isEqual from "lodash/isEqual";
 
 function prepareHash<T>(defaultState: T, typeGuard: TypeGuard<T>, hash: string) {
     const hashText = hash.replace("#", "");
@@ -41,21 +42,24 @@ export function useHistoryState<T>(key: string, initialValue: T, withoutLocation
     }, [location]);
 
     const setStateAndLocation = useCallback((value: React.SetStateAction<T>) => {
+        const existing = locationRef.current.state?.[key as keyof typeof locationRef.current.state] as T;
+        const calculated = typeof value === "function" ? (value as (prevState: T) => T)(existing) : value;
         if (!withoutLocationUpdate) {
             // don't do anything if the value is already set (would create a new state object and not be reference-equal inside useEffect deps)
-            if (value === locationRef.current.state?.[key as keyof typeof locationRef.current.state]) return; 
+            if (isEqual(calculated, existing)) return;
 
             void navigate({
                 ...locationRef.current,
             }, {
                 state: {
                     ...locationRef.current.state as Array<string>,
-                    [key]: value
+                    [key]: calculated
                 },
-                replace: true 
+                replace: true,
+                flushSync: true // ensures history state is updated immediately, so chained useHistoryState calls (with different keys) don't race and overwrite each other
             });
         }
-        setState(value);
+        setState(calculated);
 
         setLoadedFromHistory(false);
     }, [key, withoutLocationUpdate, navigate]);
