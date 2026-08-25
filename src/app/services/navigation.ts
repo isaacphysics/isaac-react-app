@@ -23,6 +23,8 @@ import {
     makeAttemptAtTopicHistory,
     NOT_FOUND, PATHS, siteSpecific,
     useQueryParams,
+    Ada11To14TopicsToConcepts,
+    isAda,
 } from "./";
 import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
@@ -44,11 +46,7 @@ export interface PageNavigation {
 
 export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
     const {search} = useLocation();
-    const {board: gameboardId, topic: initialTopic, questionHistory} = useQueryParams(true);
-    let topic = initialTopic;
-    if (topic === '11_14') {
-        topic = undefined;
-    }
+    const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
     const {data: currentTopic} = useGetTopicQuery(topic || skipToken);
@@ -58,31 +56,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    if (initialTopic === '11_14') {
-        return get1114Navigation(currentDocId);
-    }
-    const result = determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
-    console.log('result is', result);
-    return result;
-};
-
-const get1114Navigation = (currentDocId: string): PageNavigation => {
-    const parent = {
-        title: "11-14 Topics",
-        to: "/topics#11-14"
-    };
-    const nextDict: Record<string, LinkInfo> = {
-        social_engineering: {title: "Malware", to: "/concepts/tf-malware-hackers"},
-        'tf-malware-hackers': {title: "Defending against malware", to: "/concepts/defending_against_malware"},
-        defending_against_malware: {title: "Network security", to: "/concepts/tf-network-security"}
-    };
-    return {
-        collectionType: "Topic",
-        backToCollection: parent,
-        breadcrumbHistory: [parent],
-        nextItem: nextDict[currentDocId],
-        search: "topic=11_14"
-    };
+    return determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
 };
 
 export const determinePageNavigation = (
@@ -145,7 +119,6 @@ export const determinePageNavigation = (
         }
 
         if (topic) {
-            console.log('determining for topic', topic, currentTopic, currentTopic?.id?.slice("topic_summary_".length));
             const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
                 determineTopicHistory(currentTopic, currentDocId) :
                 makeAttemptAtTopicHistory();
@@ -158,6 +131,24 @@ export const determinePageNavigation = (
                 search,
                 currentGameboard
             };
+        }
+
+        // ada 11-14
+        if (isAda && doc.type === DOCUMENT_TYPE.CONCEPT) {
+            for (const concepts of Object.values(Ada11To14TopicsToConcepts)) {
+                if (concepts.some(c => c.url === `/concepts/${doc.id}`)) {
+                    const parent = { title: "11-14 Topics", to: "/topics#11-14" };
+                    const currentConceptIndex = concepts.findIndex(c => c.url === `/concepts/${doc.id}`);
+                    return {
+                        collectionType: "Topic",
+                        breadcrumbHistory: [parent],
+                        backToCollection: parent,
+                        nextItem: currentConceptIndex < concepts.length - 1 
+                            ? { title: concepts[currentConceptIndex + 1].title, to: concepts[currentConceptIndex + 1].url }
+                            : undefined,
+                    };
+                }
+            }
         }
 
         if (doc.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT].includes(doc.type as DOCUMENT_TYPE)) {
