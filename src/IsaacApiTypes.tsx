@@ -291,6 +291,7 @@ export interface QuestionPartConceptDTO {
 export interface QuizAssignmentDTO extends IAssignmentLike, IHasQuizSummary {
     assignerSummary?: UserSummaryDTO;
     quizFeedbackMode?: QuizFeedbackMode;
+    completionNotifications?: boolean;
     attempt?: QuizAttemptDTO;
     userFeedback?: QuizUserFeedbackDTO[];
     quiz?: IsaacQuizDTO;
