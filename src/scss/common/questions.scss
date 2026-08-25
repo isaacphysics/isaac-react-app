@@ -775,8 +775,16 @@ p > .katex, .katex-display {
   @include feedback-panel-classes(#fff, 0.18);
 }
 
-.feedback-panel-dark {
-  @include feedback-panel-classes(#000, 0.08);
+@include color-mode(light) {
+  .feedback-panel-dark {
+    @include feedback-panel-classes(#000, 0.08);
+  }
+}
+
+@include color-mode(dark) {
+  .feedback-panel-dark {
+    @include feedback-panel-classes(#000, 0.28);
+  }
 }
 
 .correct {
