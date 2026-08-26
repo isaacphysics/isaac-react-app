@@ -45,14 +45,14 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     return <ContentSidebar buttonTitle="Search & Filter" {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <div className="h5">Search tests</div>
+            <h3 className="h5">Search tests</h3>
             <SearchInputWithIcon
                 outerClassName="mt-3 mb-4"
                 id="manage-quizzes-title-filter" type="search"
                 value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
                 placeholder="e.g. Practice" aria-label="Search by title"
             />
-            <div className="h5">Search by group</div>
+            <h3 className="h5">Search by group</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 id="manage-quizzes-group-name-filter" type="search"
@@ -60,7 +60,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
                 placeholder="Group name"  aria-label="Search by group"
             />
             <div className="section-divider"/>
-            <div className="h5">Filter by date</div>
+            <h3 className="h5">Filter by date</h3>
             <div className="d-flex align-items-center">
                 <span className="quiz-filter-date-span">Starting</span>
                 {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}

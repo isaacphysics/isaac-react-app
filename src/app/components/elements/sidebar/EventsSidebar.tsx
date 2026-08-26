@@ -18,7 +18,7 @@ export const EventsSidebar = (props: SidebarProps) => {
     return <ContentSidebar buttonTitle="Filter events" {...props}>
         <Form tag={"search"}>
             {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
-            <div className="mb-3 h5">Event type</div>
+            <h3 className="mb-3 h5">Event type</h3>
             <ul>
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
@@ -47,7 +47,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <div className="mb-3 h5">Groups</div>
+            <h3 className="mb-3 h5">Groups</h3>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li key={typeValue}>
@@ -65,7 +65,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <div className="mb-3 h5">Stages</div>
+            <h3 className="mb-3 h5">Stages</h3>
             <ul>
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li key={value}>

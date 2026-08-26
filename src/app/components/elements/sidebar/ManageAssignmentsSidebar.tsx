@@ -32,7 +32,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         <div className="section-divider" />
 
         {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
-            <div className="h5">Date shown</div>
+            <h3 className="h5">Date shown</h3>
             <ButtonGroup className={"w-100"}>
                 <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
                     color={viewBy === "startDate" ? "solid" : "keyline"}
@@ -51,7 +51,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
 
         <div className="section-divider" />
 
-        <div className="h5">Filter by group</div>
+        <h3 className="h5">Filter by group</h3>
         <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
             value={groupsToInclude}
             onChange={selectOnChange(setGroupsToInclude, false)}
@@ -60,7 +60,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         />
 
         {isTeacherOrAbove(user) && <>
-            <div className="mt-3 h5">Filter by work type</div>
+            <h3 className="mt-3 h5">Filter by work type</h3>
             <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
                 value={workTypesToInclude}
                 onChange={selectOnChange(setWorkTypesToInclude, false)}
@@ -69,16 +69,16 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
             />
         </>}
 
-        <div className="mt-3 h5">Filter by title</div>
+        <h3 className="mt-3 h5">Filter by title</h3>
         <Input type="text" placeholder="Search by title" value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
         {/* TODO swap the above title filter with the below filters pair, once subject information is available for assignments */}
         {/* <details>
             <summary className="mt-3">More filters</summary>
 
-            <div className="mt-3 h5">Filter by title</div>
+            <h3 className="mt-3 h5">Filter by title</h3>
             <Input type="text" placeholder="Search by title" value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
 
-            <div className="mt-3 h5">Filter by subject</div>
+            <h3 className="mt-3 h5">Filter by subject</h3>
             <StyledSelect inputId="subjects-filter" isMulti isClearable placeholder="All"
                 value={subjectsToInclude}
                 onChange={selectOnChange(setSubjectsToInclude, false)}

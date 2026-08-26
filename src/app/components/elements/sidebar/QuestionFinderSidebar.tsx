@@ -22,7 +22,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <div className="h5">Search questions</div>
+            <h3 className="h5">Search questions</h3>
             <SearchInputWithIcon
                 outerClassName="my-4"
                 type="search" value={internalSearchText || ""}
