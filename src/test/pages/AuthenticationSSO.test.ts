@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import { dedent, expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
+import { dedent, expectH1, renderTestEnvironment, SearchString, setUrl, waitForLoaded } from "../testUtils";
 import { API_PATH, isPhy, SITE_TITLE_SHORT, siteSpecific } from "../../app/services";
 import { mockUser } from "../../mocks/data";
 import { screen, waitFor, within } from "@testing-library/react";
@@ -10,6 +10,7 @@ describe("Microsoft SSO Authentication", () => {
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
         await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/microsoft/callback', search });
+        await waitForLoaded();
     };
 
     const testContactLinkPresent = (message: RegExp) => {
