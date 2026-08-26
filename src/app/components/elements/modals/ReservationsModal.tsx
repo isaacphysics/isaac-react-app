@@ -10,7 +10,7 @@ import {
     useGetGroupMembersQuery,
     useCancelUsersReservationsOnEventMutation,
     useReserveUsersOnEventMutation,
-    useLazyGetSchoolByUrnQuery,
+    useLazyGetSchoolByIdQuery,
     useSubmitContactFormMutation
 } from "../../../state";
 import {
@@ -143,10 +143,10 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         setCancelReservationCheckboxes(checkboxes);
     };
 
-    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
+    const [getSchoolById] = useLazyGetSchoolByIdQuery();
     useEffect(function fetchUsersSchool() {
         if (user?.schoolId && user?.schoolId !== "") {
-            getSchoolByUrn(user?.schoolId).then(({data}) => {
+            void getSchoolById(user?.schoolId).then(({data}) => {
                 if (data && data.length > 0) {
                     setSchool(schoolNameWithTownAndPostcode(data[0]));
                 }

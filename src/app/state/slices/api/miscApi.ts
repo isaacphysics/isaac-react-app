@@ -10,8 +10,8 @@ export const miscApi = isaacApi.enhanceEndpoints({
             query: (args) => `/schools/?limit=3&query=${encodeURIComponent(args.query)}&countryCode=${encodeURIComponent(args.countryCode)}`,
         }),
 
-        getSchoolByUrn: build.query<School[], string>({
-            query: (urn: string) => `/schools/?schoolId=${encodeURIComponent(urn)}`,
+        getSchoolById: build.query<School[], string>({
+            query: (id: string) => `/schools/?schoolId=${encodeURIComponent(id)}`,
         }),
 
         getCountries: build.query<Record<string, string>, void>({
@@ -45,7 +45,7 @@ export const miscApi = isaacApi.enhanceEndpoints({
 
 export const {
     useLazySearchSchoolsQuery,
-    useLazyGetSchoolByUrnQuery,
+    useLazyGetSchoolByIdQuery,
     useGetCountriesQuery,
     useGetPriorityCountriesQuery,
     useSubmitContactFormMutation,

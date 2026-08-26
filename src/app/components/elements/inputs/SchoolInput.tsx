@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {reactSelectDarkModeStyles, schoolNameWithTownAndPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
+import {useLazyGetSchoolByIdQuery, useLazySearchSchoolsQuery} from "../../../state";
 import {FormFeedback, FormGroup, Label} from "reactstrap";
 import { components, ControlProps, InputProps, SingleValueProps, ValueContainerProps } from "react-select";
 import { StyledCheckbox } from "./StyledCheckbox";
@@ -52,12 +52,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         throw error;
     }), [searchSchools, userToUpdate.countryCode]);
 
-    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
-    // Get school associated with urn
-    function fetchSchool(urn: string) {
-        if (urn !== "") {
-            if (selectedSchoolObject?.schoolId !== urn) {
-                void getSchoolByUrn(urn).then(({data}) => {
+    const [getSchoolById] = useLazyGetSchoolByIdQuery();
+    // Get school associated with id
+    function fetchSchool(id: string) {
+        if (id !== "") {
+            if (selectedSchoolObject?.schoolId !== id) {
+                void getSchoolById(id).then(({data}) => {
                     if (data && data.length > 0) {
                         setSelectedSchoolObject(data[0]);
                     }
