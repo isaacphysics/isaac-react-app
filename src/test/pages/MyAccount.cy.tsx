@@ -5,7 +5,7 @@ import { ACCOUNT_TABS, isAda } from "../../app/services";
 
 describe("My Account", () => {
     for (const tab of ACCOUNT_TABS) {
-        if (!tab.hidden) {
+        if (!tab.isHidden?.(mockUser, false)) {
             it(`should have no visual regressions on ${tab.title} page`, () => {
                 cy.mountWithStoreAndRouter(<MyAccount user={mockUser}/>, ["/account"]);
                 cy.get('[data-testid="loading"]').should('not.exist');

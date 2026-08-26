@@ -1,6 +1,6 @@
 import React from "react";
 import { DisplaySettings, UserConsent } from "../../../../IsaacAppTypes";
-import { SITE_TITLE, isAda, isPhy, isStaff, siteSpecific } from "../../../services";
+import { SITE_TITLE, isAda, isPhy, isStaff, isUnder13, siteSpecific } from "../../../services";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MyAccountTab } from "./MyAccountTab";
 import { Link } from "react-router-dom";
@@ -58,7 +58,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
             </WithLinkableSetting>}
 
             {/* Enabled for staff on Isaac so they can test questions, but not being pursued further for now (these questions should not be published) */}
-            {(isStaff(user) || isAda) && <>
+            {(isStaff(user) || (isAda && !isUnder13(user))) && <>
                 <div className="pt-2"/>
                 <WithLinkableSetting id={"consent-to-openai-marking-feature"}>
                     <StyledCheckbox checked={consentSettings.OPENAI ?? false}

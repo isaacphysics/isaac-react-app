@@ -17,6 +17,7 @@ import {
     isDefined,
     isLoggedIn,
     isPhy,
+    isUnder13,
     SITE_TITLE,
     siteSpecific,
 } from "../../services";
@@ -115,15 +116,18 @@ export const RegistrationSetPreferences = () => {
                             <hr />
                         </>}
 
-                        <Label className={"fw-bold"}>Set your email notification preferences</Label>
-                        <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
-                        <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
-                        <div className="py-2"/>
-                        <UserEmailPreferencesInput 
-                            emailPreferences={emailPreferences} 
-                            setEmailPreferences={setEmailPreferences}
-                            submissionAttempted={submissionAttempted}
-                        />
+                        {!isUnder13(user) && <>
+                            <Label className={"fw-bold"}>Set your email notification preferences</Label>
+                            <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
+                            <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
+                            <div className="py-2"/>
+                            <UserEmailPreferencesInput 
+                                emailPreferences={emailPreferences} 
+                                setEmailPreferences={setEmailPreferences}
+                                submissionAttempted={submissionAttempted}
+                            />
+                        </>}
+
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <Row className="justify-content-end">
                             <Col xs={12} sm={siteSpecific(4,5)} lg={6} className={classNames("d-flex justify-content-end", {"justify-content-lg-end": isAda})}>

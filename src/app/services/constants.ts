@@ -2,7 +2,7 @@
 import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
-import {BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
+import {BooleanNotation, NOT_FOUND_TYPE, PageContextState, PotentialUser, UserEmailPreferences} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
@@ -17,9 +17,10 @@ import {
     QuizFeedbackMode,
     Stage,
 } from "../../IsaacApiTypes";
-import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isAda, isPhy, isUnder13, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 import { CSSObjectWithLabel } from "react-select";
+import {Immutable} from "immer";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -1065,19 +1066,18 @@ export interface AccountTabs {
     tab: ACCOUNT_TAB,
     title: string,
     titleShort?: string,
-    hidden?: boolean,
-    hiddenIfEditingOtherUser?: boolean,
+    isHidden?: (user?: Immutable<PotentialUser> | null, editingOtherUser?: boolean) => boolean,
 }
 
 export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.account, title: "Profile"},
-    {tab: ACCOUNT_TAB.customise, title: "Customise", hidden: isPhy},
-    {tab: ACCOUNT_TAB.theme, title: "Theme", hidden: isAda},
+    {tab: ACCOUNT_TAB.customise, title: "Customise", isHidden: () => isPhy},
+    {tab: ACCOUNT_TAB.theme, title: "Theme", isHidden: () => isAda},
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
-    {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
-    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", hiddenIfEditingOtherUser: true},
-    {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
+    {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", isHidden: (user, editingOtherUser) => !!editingOtherUser || isUnder13(user)},
+    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", isHidden: (_, editingOtherUser) => !!editingOtherUser},
+    {tab: ACCOUNT_TAB.betafeatures, title: "Beta", isHidden: (_, editingOtherUser) => !!editingOtherUser},
 ];
 
 // we can't change the names of tabs as we have historic links to them, so use aliases to use updated names instead

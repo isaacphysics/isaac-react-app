@@ -917,7 +917,7 @@ export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTEND
 export const USER_ROLES = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
-export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
+export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED" | "AGE_RESTRICTED";
 
 export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETAILED_FEEDBACK";
 

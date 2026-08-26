@@ -12,6 +12,7 @@ import {
     isTeacherAuthResponsePendingVerification,
     navigateComponentless,
     siteSpecific,
+    isUnder13,
 } from "../../services";
 import {
     Action,
@@ -341,8 +342,16 @@ export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigat
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: providerResponse.data});
         trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
-        if (providerResponse.data.firstLogin) {
+        const user = providerResponse.data;
+
+        if (user.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
+
+            // if Ada u13 SSO, we can assume student (note user is not tracked as logged in yet, which isUnder13 requires for typing – so add loggedIn: true)
+            if (isUnder13(user)) {
+                persistence.session.save(KEY.SSO_SIGNUP_ROLE, "STUDENT" as UserRole);
+            }
+
             trackEvent("registration", {
                 props: {
                     provider: provider,
