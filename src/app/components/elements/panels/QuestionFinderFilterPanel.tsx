@@ -123,7 +123,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
         }}>
             {siteSpecific(
-                <div className="filter-question-text h6">Filter questions by</div>,
+                <h3 className="filter-question-text h6">Filter questions by</h3>,
                 <>
                     <div>
                         <img src="/assets/common/icons/filter-icon.svg" alt="Filter" style={{width: 18}} className="ms-1 me-2"/>
