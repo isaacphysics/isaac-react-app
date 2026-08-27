@@ -4,7 +4,7 @@ import { ACCESSIBILITY_WARNINGS, useDragAndDropAccessibility } from '../../../se
 import { Spacer } from '../Spacer';
 import { selectors, useAppSelector } from '../../../state';
 import StyledToggle from '../inputs/StyledToggle';
-import { isAda } from '../../../services';
+import { isAda, isLoggedIn } from '../../../services';
 
 export const DragAndDropInputModeToggle = () => {
     const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
@@ -23,6 +23,7 @@ export const DragAndDropInputModeToggle = () => {
 
 export const InaccessibleContentWarningAlert = ({type}: {type: keyof typeof ACCESSIBILITY_WARNINGS}) => {
     const pageContainsClozeOrDragAndDropQuestion = useAppSelector(selectors.questions.includesClozeOrDragAndDropQuestion);
+    const user = useAppSelector(selectors.user.orNull);
 
     return <Alert color="warning" className="no-print d-flex align-items-center my-2">
         <div className="d-flex">
@@ -30,8 +31,11 @@ export const InaccessibleContentWarningAlert = ({type}: {type: keyof typeof ACCE
             {ACCESSIBILITY_WARNINGS[type].description}
         </div>
         <Spacer/>
-        {pageContainsClozeOrDragAndDropQuestion && type === "access:motor" && <div className="d-none d-sm-flex ms-1 mt-1 mt-sm-0">
-            <DragAndDropInputModeToggle/>
-        </div>}
+        {/* Logged-out users cannot enable accessibility settings, so require a per-question page toggle instead */}
+        {!isLoggedIn(user) && pageContainsClozeOrDragAndDropQuestion && type === "access:motor" &&
+            <div className="d-none d-sm-flex ms-1 mt-1 mt-sm-0">
+                <DragAndDropInputModeToggle/>
+            </div>
+        }
     </Alert>;
 };
