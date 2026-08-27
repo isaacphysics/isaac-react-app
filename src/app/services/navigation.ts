@@ -61,9 +61,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     if (initialTopic === '11_14') {
         return get1114Navigation(currentDocId);
     }
-    const result = determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
-    console.log('result is', result);
-    return result;
+    return determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
 };
 
 const get1114Navigation = (currentDocId: string): PageNavigation => {
@@ -145,7 +143,6 @@ export const determinePageNavigation = (
         }
 
         if (topic) {
-            console.log('determining for topic', topic, currentTopic, currentTopic?.id?.slice("topic_summary_".length));
             const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
                 determineTopicHistory(currentTopic, currentDocId) :
                 makeAttemptAtTopicHistory();
