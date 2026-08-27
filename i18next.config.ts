@@ -23,9 +23,15 @@ export default defineConfig({
     "en",
     "cy"
   ],
+  lint: {
+    checkConcatenation: 'error',
+    checkPunctuationConcatenation: 'error',
+  },
   extract: {
     input: "src/**/*.{js,jsx,ts,tsx}",
     output: "src/app/locales/{{language}}/{{namespace}}.json",
+    transKeepBasicHtmlNodesFor: ["br", "strong", "i", "b", "em", "u", "sup", "sub", "code", "pre"],
+    ignoredAttributes: ["class","className","data-*","style","id","key","ref","src","href"],
     instrumentScorer: (content, { file, code, beforeContext, afterContext }) => {
       for (const ignore of IGNORE_STRINGS) {
         if (content.match(ignore)) {
@@ -43,6 +49,7 @@ export default defineConfig({
     ignore: [
       "**/inequality/constants.ts",
       "**/inequality/utils.ts",
-    ]
+    ],
+    defaultNS: "common",
   }
 })
