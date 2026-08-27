@@ -106,6 +106,8 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
             }
         </div>
     </Provider>);
+
+    await waitFor(() => {});
 };
 
 export const renderTestHook = <Result, Props>(
@@ -305,6 +307,8 @@ const expectHeading = (n: number) => (txt?: string) => expect(screen.getByRole('
 export const expectH1 = expectHeading(1);
 
 export const expectH2 = expectHeading(2);
+
+export const expectH3 = expectHeading(3);
 
 export const expectH4 = expectHeading(4);
 
