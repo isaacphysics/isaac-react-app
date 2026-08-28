@@ -30,7 +30,8 @@ export default defineConfig({
   extract: {
     input: "src/**/*.{js,jsx,ts,tsx}",
     output: "src/app/locales/{{language}}/{{namespace}}.json",
-    transKeepBasicHtmlNodesFor: ["br", "strong", "i", "b", "em", "u", "sup", "sub", "code", "pre"],
+    ignoredTags: ["script", "style", "code", "pre", "svg"],
+    transKeepBasicHtmlNodesFor: ["br", "strong", "i", "b", "em", "u", "sup", "sub"],
     ignoredAttributes: ["class","className","data-*","style","id","key","ref","src","href"],
     instrumentScorer: (content, { file, code, beforeContext, afterContext }) => {
       for (const ignore of IGNORE_STRINGS) {
@@ -51,5 +52,7 @@ export default defineConfig({
       "**/inequality/utils.ts",
     ],
     defaultNS: "common",
+    nsSeparator: ":",
+    keySeparator: ".",
   }
 })
