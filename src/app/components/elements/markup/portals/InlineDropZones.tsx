@@ -16,10 +16,11 @@ interface InlineDropRegionProps {
     emptyHeight?: string; // as above for height
     rootElement?: HTMLElement;
     skipPortalling?: boolean;
+    boxAlign?: "left" | "center" | "right";
 }
 
 // Inline droppables rendered for each registered drop region
-function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling}: InlineDropRegionProps) {
+function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling, boxAlign}: InlineDropRegionProps) {
     const dropRegionContext = useContext(DragAndDropRegionContext);
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -61,8 +62,13 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     const width = (item || !emptyWidth) ? "auto" : emptyWidth;
 
     const draggableDropZone = <span
-        style={{minHeight: height, minWidth: width}}
-        className={classNames("d-inline-block cloze-drop-zone align-bottom", !item && `rounded bg-inline-question border ${isOver ? "border-dark" : "border-light"}`)}
+        style={{
+            minHeight: height,
+            minWidth: width,
+            // Only apply justifyContent if boxAlign is defined (figure drop zones), otherwise empty
+            ...(boxAlign ? {justifyContent: boxAlign === "right" ? "flex-end" : boxAlign === "center" ? "center" : "flex-start"} : {})
+        }}
+        className={classNames(boxAlign ? "d-flex" : "d-inline-block", "cloze-drop-zone align-bottom", !item && `rounded bg-inline-question border ${isOver ? "border-dark" : "border-light"}`)}
         ref={setNodeRef}
     >
         {item
