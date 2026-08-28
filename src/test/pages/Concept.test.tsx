@@ -15,7 +15,7 @@ describe("Concept", () => {
     });
 
     if (isAda) {
-        describe("on a known 11-14 concept", () => {
+        describe("given known 11-14 concept", () => {
             const visitConcept = async () => {
                 await renderTestEnvironment({extraEndpoints: [
                     http.get(API_PATH + "/pages/topics/11_14", () => HttpResponse.json(undefined, { status: 403 })),
