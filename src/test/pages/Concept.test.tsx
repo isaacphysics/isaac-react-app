@@ -18,7 +18,7 @@ describe("Concept", () => {
         describe("given the 11-14 topic", () => {
             const visitConcept = async (conceptId: string, extraEndpoints: HttpHandler[] = []) => {
                 await renderTestEnvironment({extraEndpoints: [
-                    http.get(API_PATH + "/pages/topics/11_14", () => HttpResponse.json({ error: 'Not Found' }, { status: 404 })),
+                    http.get(API_PATH + "/pages/topics/11_14", () => HttpResponse.json(undefined, { status: 403 })),
                     ...extraEndpoints
                 ]});
                 await setUrl({ pathname: `/concepts/${conceptId}?topic=11_14`});
@@ -81,10 +81,41 @@ describe("Concept", () => {
                 expect(conceptPage.navigateNext()).toHaveAttribute("href", "/concepts/np?topic=hardware");
             });
 
-            it("shows a link to the 11-14 topics page", async () => {
+            it("shows a link to the specific topic page", async () => {
                 await visitConcept();
                 expect(await conceptPage.navigateHome()).toHaveTextContent("Topic: Hardware");
                 expect(await conceptPage.navigateHome()).toHaveAttribute("href", "/topics/hardware");
+            });
+        });
+
+        describe("given an unknown topic", () => {
+            const visitConcept = async () => {
+                await renderTestEnvironment({extraEndpoints: [
+                    http.get(API_PATH + "/pages/topics/unknown", () => HttpResponse.json(undefined, { status: 403 })),
+                ]});
+                await setUrl({ pathname: `/concepts/_mock_concept_page_?topic=unknown`});
+            };
+
+            it('shows an error', async () => {
+                await visitConcept();
+                expect(conceptPage.toasts()).toHaveLength(1);
+                expect(conceptPage.toasts()[0]).toHaveTextContent("Unable to load topic");
+            });
+
+            it("shows generic breadcrumbs", async () => {
+                await visitConcept();
+                expectAdaBreadCrumbs( [{href: '/', text: "Home"}, {href: "/topics", text: "All topics"}], mockConceptPage.title );
+            });
+
+            it("does not show a link to the next page", async () => {
+                await visitConcept();
+                expect(conceptPage.navigateNext()).toBe(null);
+            });
+
+            it("shows a generic link to the topics page", async () => {
+                await visitConcept();
+                expect(await conceptPage.navigateHome()).toHaveTextContent("Topic: All topics");
+                expect(await conceptPage.navigateHome()).toHaveAttribute("href", "/topics");
             });
         });
     }
