@@ -3,8 +3,8 @@ import { API_PATH, isAda, isPhy, siteSpecific } from "../../app/services";
 import { renderTestEnvironment, setUrl } from "../testUtils";
 import { mockConceptPage } from "../../mocks/data";
 import { expectAdaBreadCrumbs } from "../helpers/quiz";
-import { http, HttpResponse } from "msw";
-import { IsaacConceptPageDTO } from "../../IsaacApiTypes";
+import { http, HttpHandler, HttpResponse } from "msw";
+import { IsaacConceptPageDTO, IsaacTopicSummaryPageDTO } from "../../IsaacApiTypes";
 import { buildFunctionHandler } from "../../mocks/handlers";
 
 describe("Concept", () => {
@@ -15,43 +15,76 @@ describe("Concept", () => {
     });
 
     if (isAda) {
-        describe("with the 11-14 topic", () => {
-            it('does not show an error', async () => {
+        describe("given the 11-14 topic", () => {
+            const visitConcept = async (conceptId: string, extraEndpoints: HttpHandler[] = []) => {
                 await renderTestEnvironment({extraEndpoints: [
-                    http.get(API_PATH + "/pages/topics/11_14", () => HttpResponse.json({ error: 'Not Found' }, { status: 404 }))
+                    http.get(API_PATH + "/pages/topics/11_14", () => HttpResponse.json({ error: 'Not Found' }, { status: 404 })),
+                    ...extraEndpoints
                 ]});
-                await setUrl({ pathname: "/concepts/_mock_concept_page_?topic=11_14"});
+                await setUrl({ pathname: `/concepts/${conceptId}?topic=11_14`});
+            };
+
+            it('does not show an error', async () => {
+                await visitConcept("_mock_concept_page_");
                 expect(conceptPage.toasts()).toHaveLength(0);
             });
 
             it("shows 11-14 Topics among the breadcrumbs", async () => {
-                await renderTestEnvironment();
-                await setUrl({ pathname: "/concepts/_mock_concept_page_?topic=11_14"});
-                expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/topics#11-14", text: "11-14 Topics"}, mockConceptPage.title]);
+                await visitConcept("_mock_concept_page_");
+                expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/topics#11-14", text: "11-14 Topics"}], mockConceptPage.title);
             });
 
             describe('Next button', () => {
                 it("shows on a known page", async () => {
-                    await renderTestEnvironment({ extraEndpoints: [
-                        buildFunctionHandler("/pages/concepts/social_engineering", [], () => socialEngineeringPage)
-                    ]});
-                    await setUrl({ pathname: "/concepts/social_engineering?topic=11_14"});
+                    await visitConcept("social_engineering", 
+                        [buildFunctionHandler("/pages/concepts/social_engineering", [], () => socialEngineeringPage)]);
                     expect(conceptPage.navigateNext()).toHaveTextContent("Malware");
                     expect(conceptPage.navigateNext()).toHaveAttribute("href", "/concepts/tf-malware-hackers?topic=11_14");
                 });
 
                 it("is hidden from an unknown page", async () => {
-                    await renderTestEnvironment();
-                    await setUrl({ pathname: "/concepts/_mock_concept_page_?topic=11_14"});
+                    await visitConcept("_mock_concept_page_");
                     expect(conceptPage.navigateNext()).toBe(null);
                 });
             });
 
             it("shows a link to the 11-14 topics page", async () => {
-                await renderTestEnvironment();
-                await setUrl({ pathname: "/concepts/_mock_concept_page_?topic=11_14"});
-                expect(await conceptPage.navigateHome()).toHaveTextContent("11-14 Topics");
+                await visitConcept("_mock_concept_page_");
+                expect(await conceptPage.navigateHome()).toHaveTextContent("Topic: 11-14 Topics");
                 expect(await conceptPage.navigateHome()).toHaveAttribute("href", "/topics#11-14");
+            });
+        });
+
+        describe("given a known topic", () => {
+            const visitConcept = async () => {
+                await renderTestEnvironment({extraEndpoints: [
+                    buildFunctionHandler("/pages/topics/hardware", [], () => hardwareTopic)
+                ]});
+                await setUrl({ pathname: `/concepts/_mock_concept_page_?topic=hardware`});
+            };
+            it('does not show an error', async () => {
+                await visitConcept();
+                expect(conceptPage.toasts()).toHaveLength(0);
+            });
+
+            it("shows known topic among the breadcrumbs", async () => {
+                await visitConcept();
+                expectAdaBreadCrumbs(
+                    [{href: '/', text: "Home"}, {href: "/topics", text: "All topics"}, {href: "/topics/hardware", text: "Hardware"}],
+                    mockConceptPage.title
+                );
+            });
+
+            it("shows a link to the next page", async () => {
+                await visitConcept();
+                expect(conceptPage.navigateNext()).toHaveTextContent("Successor");
+                expect(conceptPage.navigateNext()).toHaveAttribute("href", "/concepts/np?topic=hardware");
+            });
+
+            it("shows a link to the 11-14 topics page", async () => {
+                await visitConcept();
+                expect(await conceptPage.navigateHome()).toHaveTextContent("Topic: Hardware");
+                expect(await conceptPage.navigateHome()).toHaveAttribute("href", "/topics/hardware");
             });
         });
     }
@@ -77,7 +110,12 @@ const conceptPage = {
 
 const socialEngineeringPage: IsaacConceptPageDTO = {
     type: "IsaacConceptPage",
-    encoding: "markdown",
     title: "Social Engineering",
     id: 'social_engineering'
+};
+
+const hardwareTopic: IsaacTopicSummaryPageDTO = {
+    id: "topic_summary_hardware",
+    title: "Hardware",
+    relatedContent: [{ id: "_mock_concept_page_" }, { id: "np", title: "Successor", type: "isaacConceptPage" }]
 };
