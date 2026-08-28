@@ -106,8 +106,6 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
             }
         </div>
     </Provider>);
-
-    await waitFor(() => {});
 };
 
 export const renderTestHook = <Result, Props>(
