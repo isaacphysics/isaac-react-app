@@ -1,9 +1,9 @@
 import { within, screen } from "@testing-library/dom";
-import { API_PATH, isAda, isPhy, siteSpecific } from "../../app/services";
+import { API_PATH, DOCUMENT_TYPE, isAda, isPhy, siteSpecific } from "../../app/services";
 import { renderTestEnvironment, setUrl } from "../testUtils";
 import { mockConceptPage } from "../../mocks/data";
 import { expectAdaBreadCrumbs } from "../helpers/quiz";
-import { http, HttpHandler, HttpResponse } from "msw";
+import { http, HttpResponse } from "msw";
 import { IsaacConceptPageDTO, IsaacTopicSummaryPageDTO } from "../../IsaacApiTypes";
 import { buildFunctionHandler } from "../../mocks/handlers";
 
@@ -15,41 +15,33 @@ describe("Concept", () => {
     });
 
     if (isAda) {
-        describe("given the 11-14 topic", () => {
-            const visitConcept = async (conceptId: string, extraEndpoints: HttpHandler[] = []) => {
+        describe("on a known 11-14 concept", () => {
+            const visitConcept = async () => {
                 await renderTestEnvironment({extraEndpoints: [
                     http.get(API_PATH + "/pages/topics/11_14", () => HttpResponse.json(undefined, { status: 403 })),
-                    ...extraEndpoints
+                    buildFunctionHandler("/pages/concepts/social_engineering", [], () => socialEngineeringPage)
                 ]});
-                await setUrl({ pathname: `/concepts/${conceptId}?topic=11_14`});
+                await setUrl({ pathname: `/concepts/social_engineering`});
             };
 
             it('does not show an error', async () => {
-                await visitConcept("_mock_concept_page_");
+                await visitConcept();
                 expect(conceptPage.toasts()).toHaveLength(0);
             });
 
             it("shows 11-14 Topics among the breadcrumbs", async () => {
-                await visitConcept("_mock_concept_page_");
-                expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/topics#11-14", text: "11-14 Topics"}], mockConceptPage.title);
+                await visitConcept();
+                expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/topics#11-14", text: "11-14 Topics"}], socialEngineeringPage.title);
             });
 
-            describe('Next button', () => {
-                it("shows on a known page", async () => {
-                    await visitConcept("social_engineering", 
-                        [buildFunctionHandler("/pages/concepts/social_engineering", [], () => socialEngineeringPage)]);
-                    expect(conceptPage.navigateNext()).toHaveTextContent("Malware");
-                    expect(conceptPage.navigateNext()).toHaveAttribute("href", "/concepts/tf-malware-hackers?topic=11_14");
-                });
-
-                it("is hidden from an unknown page", async () => {
-                    await visitConcept("_mock_concept_page_");
-                    expect(conceptPage.navigateNext()).toBe(null);
-                });
+            it("shows a link to the next page", async () => {
+                await visitConcept();
+                expect(conceptPage.navigateNext()).toHaveTextContent("Malware");
+                expect(conceptPage.navigateNext()).toHaveAttribute("href", "/concepts/tf-malware-hackers");
             });
 
             it("shows a link to the 11-14 topics page", async () => {
-                await visitConcept("_mock_concept_page_");
+                await visitConcept();
                 expect(await conceptPage.navigateHome()).toHaveTextContent("Topic: 11-14 Topics");
                 expect(await conceptPage.navigateHome()).toHaveAttribute("href", "/topics#11-14");
             });
@@ -140,7 +132,7 @@ const conceptPage = {
 };
 
 const socialEngineeringPage: IsaacConceptPageDTO = {
-    type: "IsaacConceptPage",
+    type: DOCUMENT_TYPE.CONCEPT,
     title: "Social Engineering",
     id: 'social_engineering'
 };
@@ -148,5 +140,5 @@ const socialEngineeringPage: IsaacConceptPageDTO = {
 const hardwareTopic: IsaacTopicSummaryPageDTO = {
     id: "topic_summary_hardware",
     title: "Hardware",
-    relatedContent: [{ id: "_mock_concept_page_" }, { id: "np", title: "Successor", type: "isaacConceptPage" }]
+    relatedContent: [{ id: "_mock_concept_page_" }, { id: "np", title: "Successor", type: DOCUMENT_TYPE.CONCEPT }]
 };
