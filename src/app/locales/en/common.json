@@ -1,1 +1,11 @@
-{}
+{
+  "AssignmentProgressGroupsListing": {
+    "create-new-group": "Create new group",
+    "download-assignments-csv": "Download assignments CSV",
+    "download-tests-csv": "Download tests CSV",
+    "no-groups-match-your-criteria": "No groups match your criteria.",
+    "search-for-a-group": "Search for a group:",
+    "sort-by": "Sort by:",
+    "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
+  }
+}

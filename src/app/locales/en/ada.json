@@ -2,5 +2,8 @@
   "site": {
     "title": "Ada Computer Science",
     "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions."
+  },
+  "markbook": {
+    "title": "Markbook"
   }
 }

@@ -2,5 +2,8 @@
   "site": {
     "title": "Isaac Physics",
     "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists."
+  },
+  "markbook": {
+    "title": "Assignment progress"
   }
 }
