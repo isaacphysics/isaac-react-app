@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/ada-11-14-navigation-suggestion" ]
   pull_request:
     branches: [ "main" ]
 
