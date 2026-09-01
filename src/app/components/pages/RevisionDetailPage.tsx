@@ -35,9 +35,13 @@ export const RevisionPage = () => {
         <ShowLoadingQuery
             query={revisionPageQuery}
             defaultErrorTitle="Unable to load revision page."
-            maintainOnRefetch // allows keeping sidebar content intact while refetching
+            maintainOnRefetch
             thenRender={(page, isStale) => {
-                return isStale ? <LoadingPlaceholder /> : <RevisionPageInternal page={page} />;
+                // show the loading placeholder only if the page itself is changing (to give instant click feedback).
+                // if the content on a single page is changing (e.g. gameboard save status updates), we don't want a jarring full-page loading placeholder; okay to show stale content.
+                return isStale && (page.id !== pageId) 
+                    ? <LoadingPlaceholder />
+                    : <RevisionPageInternal page={page} />;
             }}
         />
     </PageContainer>;

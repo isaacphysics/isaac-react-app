@@ -24,7 +24,7 @@ const booksApi = isaacApi.injectEndpoints({
             providesTags: (page) => {
                 const mainBoards = page?.gameboards?.map((gb) => ({type: "Gameboard" as const, id: gb.id})) || [];
                 const extensionBoards = page?.extensionGameboards?.map((gb) => ({type: "Gameboard" as const, id: gb.id})) || [];
-                return ["AllGameboards", "AllSetAssignments", ...mainBoards, ...extensionBoards]; // required to refetch decks inside the detail page if saved status is updated 
+                return [...mainBoards, ...extensionBoards]; // required to refetch decks inside the detail page if saved status is updated 
             }
         })
 
