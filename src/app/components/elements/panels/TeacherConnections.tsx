@@ -184,7 +184,11 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3 className={classNames({"h4": isPhy})}>
+                <span>
                     Teacher connection code
+                    <i id="teacher-connections-title" className={classNames("icon icon-info icon-inline-sm ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
+                </span>
+                <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {SITE_TITLE_SHORT} assignment progress.
                 </UncontrolledTooltip>
             </h3>
@@ -228,15 +232,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                         <UncontrolledTooltip
                                             placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
                                         >
-                                        This user ({teacherAuthorisation.email}) has access to your data.
-                                        To remove this access, click &apos;Revoke&apos;.
+                                            This user ({teacherAuthorisation.email}) has access to your data.
+                                            To remove this access, click &apos;Revoke&apos;.
                                         </UncontrolledTooltip>
                                         <Button
                                             color="link" className="revoke-teacher pe-1"
                                             disabled={editingOtherUser}
                                             onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                         >
-                                        Revoke
+                                            Revoke
                                         </Button>
                                     </li>
                                 </React.Fragment>;
@@ -251,7 +255,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
                 <h3 className={classNames({"h4": isPhy})}>
-                    <span>Your student connections
+                    <span>
+                        Your student connections
                         <i id="student-connections-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                     </span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
