@@ -36,9 +36,9 @@
 
   padding: 0 4px;
 
-  @media (max-width: 991px) {
-      padding-left: 0px;
-      padding-right: 0px;
+  @include media-breakpoint-down(lg) {
+    padding-left: 0px;
+    padding-right: 0px;
   }
 }
 

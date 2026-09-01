@@ -50,7 +50,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     const augmentedEventBookings = eventBookings?.map(produce((booking: EventBookingDTO & {schoolName?: string}) => {
         if (booking.userBooked && booking.userBooked.id) {
             const schoolDetails = userIdToSchoolMapping?.[booking.userBooked.id];
-            booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
+            booking.schoolName = schoolDetails ? schoolDetails.schoolName : "UNKNOWN";
         }
         return booking;
     }));
@@ -199,7 +199,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                     </td>
                                     <td className="align-middle">{booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}</td>
                                     <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
-                                    {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}
+                                    {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.schoolId}/user_list`}>{userSchool.name}</Link>*/}
                                     <td className="align-middle">{booking.schoolName}</td>
                                     <td className="align-middle">
                                         {booking.additionalInformation && (booking.additionalInformation.jobTitle ? booking.additionalInformation.jobTitle : booking.additionalInformation.yearGroup)}
@@ -228,7 +228,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
 
             <div className="mt-3 text-end">
                 <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle caret color="primary" outline className="me-3 mt-1">
+                    <DropdownToggle caret color="keyline" className="me-3 mt-1">
                         Email Users
                     </DropdownToggle>
                     <DropdownMenu>

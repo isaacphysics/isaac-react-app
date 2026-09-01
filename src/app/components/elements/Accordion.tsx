@@ -30,7 +30,7 @@ import { Spacer } from "./Spacer";
 import { CompletionState } from "../../../IsaacApiTypes";
 import { StatusDisplay } from "./list-groups/AbstractListViewItem";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
-import { useHistoryState } from "../../state/actions/history";
+import { useHistoryState } from "../../services/history";
 
 interface AccordionsProps {
     id?: string;

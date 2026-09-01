@@ -29,13 +29,15 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
-import {closeActiveModal, openActiveModal, useAppDispatch,} from "../../../state";
+import {closeActiveModal, openActiveModal, useAppDispatch} from "../../../state";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
 import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { QuizSidebar, QuizSidebarProps } from "../sidebar/QuizSidebar";
+import { InaccessibleContentWarningAlert } from "../alerts/InaccessibleContentWarningAlert";
+import { getAccessibilityTags, useAccessibilitySettings } from "../../../services/accessibility";
 
 type QuizContents = {
     questions: QuestionDTO[];
@@ -188,7 +190,7 @@ export function QuizRubricButton({rubric}: {rubric?: ContentDTO}) {
     };
 
     if (rubric) {
-        return <Button color={siteSpecific("keyline", "tertiary")} outline={isAda} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
+        return <Button color={"keyline"} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
             title="Show instructions in a modal" onClick={openQuestionModal}
         >
             Show instructions
@@ -203,20 +205,21 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
     const section = page && sections?.[page - 1];
     const attribution = attempt.quiz?.attribution;
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+    const accessibilitySettings = useAccessibilitySettings();
 
     return section ?
         <Row className="question-content-container">
-            <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
+            <Col className={classNames("py-lg-4 question-panel", {"mw-760": isAda})}>
                 {viewingAsSomeoneElse && <div className="mb-2">
                     You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
                 </div>}
-                <Row>
-                    <Col className="d-flex flex-column align-items-end">
-                        {(isAda || above["lg"](deviceSize)) && <div className="mb-3">
-                            <QuizRubricButton rubric={attempt.quiz?.rubric} />
-                        </div>}
-                    </Col>
-                </Row>
+
+                <div className="mb-lg-3">
+                    <div className="d-flex flex-column align-items-end mb-lg-3">
+                        {(isAda || above["lg"](deviceSize)) && <QuizRubricButton rubric={attempt.quiz?.rubric} />}
+                    </div>
+                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(attempt.quiz?.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
+                </div>
 
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>

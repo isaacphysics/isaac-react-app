@@ -1,14 +1,15 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {reactSelectDarkModeStyles, schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
+import {ValidationUser} from "../../../../IsaacAppTypes";
+import {reactSelectDarkModeStyles, schoolNameWithTownAndPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
+import {useLazyGetSchoolByIdQuery, useLazySearchSchoolsQuery} from "../../../state";
 import {FormFeedback, FormGroup, Label} from "reactstrap";
 import { components, ControlProps, InputProps, SingleValueProps, ValueContainerProps } from "react-select";
 import { StyledCheckbox } from "./StyledCheckbox";
+import { School } from "../../../../IsaacApiTypes";
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -23,7 +24,7 @@ const NOT_APPLICABLE = "N/A";
 
 const schoolSearch = (searchFn: (school : string) => Promise<School[]>) => (schoolSearchText: string, setAsyncSelectOptionsCallback: (options: {value: string | School, label: string | undefined}[]) => void) => {
     searchFn(schoolSearchText).then((schools) => {
-        setAsyncSelectOptionsCallback(schools.map((item) => ({value: item, label: schoolNameWithPostcode(item)})));
+        setAsyncSelectOptionsCallback(schools.map((item) => ({value: item, label: schoolNameWithTownAndPostcode(item)})));
     }).catch((response) => {
         console.error("Error searching for schools. ", response);
     });
@@ -43,21 +44,20 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     const [searchSchools] = useLazySearchSchoolsQuery();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const searchSchoolsFn = useCallback(throttledSchoolSearch(async (school: string) => {
-        const { data, error } = await searchSchools(school);
-        if (data && data.length > 0) {
+    const searchSchoolsFn = useMemo(() => throttledSchoolSearch(async (school: string) => {
+        const { data, error } = await searchSchools({ query: school, countryCode: userToUpdate.countryCode || "" });
+        if (data) {
             return data;
         }
         throw error;
-    }), [searchSchools]);
+    }), [searchSchools, userToUpdate.countryCode]);
 
-    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
-    // Get school associated with urn
-    function fetchSchool(urn: string) {
-        if (urn !== "") {
-            if (selectedSchoolObject?.urn !== urn) {
-                getSchoolByUrn(urn).then(({data}) => {
+    const [getSchoolById] = useLazyGetSchoolByIdQuery();
+    // Get school associated with id
+    function fetchSchool(id: string) {
+        if (id !== "") {
+            if (selectedSchoolObject?.schoolId !== id) {
+                void getSchoolById(id).then(({data}) => {
                     if (data && data.length > 0) {
                         setSelectedSchoolObject(data[0]);
                     }
@@ -76,8 +76,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
         const {schoolId: _schoolId, schoolOther: _schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
-        if (school.urn) {
-            setUserToUpdate?.({...userWithoutSchoolInfo, schoolId: school.urn});
+        if (school.schoolId) {
+            setUserToUpdate?.({...userWithoutSchoolInfo, schoolId: school.schoolId});
             setSelectedSchoolObject(school);
         } else if (school) {
             setUserToUpdate?.({...userWithoutSchoolInfo, schoolOther: school});
@@ -99,8 +99,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }
 
     const schoolValue: {value: string | School, label: string | undefined} | undefined = (
-        (selectedSchoolObject && selectedSchoolObject.urn ?
-            {value: selectedSchoolObject.urn, label: schoolNameWithPostcode(selectedSchoolObject)} :
+        (selectedSchoolObject && selectedSchoolObject.schoolId ?
+            {value: selectedSchoolObject.schoolId, label: schoolNameWithTownAndPostcode(selectedSchoolObject)} :
             (userToUpdate.schoolOther ?
                 {value: "manually entered school", label: userToUpdate.schoolOther} :
                 undefined))
@@ -112,7 +112,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     return <FormGroup className={`school mb-4 ${className} `}>
         <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
         <p className="d-block input-description">
-            {siteSpecific("This helps us promote events near you.", "This helps us measure our reach and impact.")}
+            {siteSpecific("The country you go to school in. This helps us promote events near you.", "The country you go to school in. This helps us measure our reach and impact.")}
         </p>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
@@ -132,7 +132,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             />
         </React.Fragment>}
 
-        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex flex-column mt-2 align-content-center">
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.schoolName)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex flex-column mt-2 align-content-center">
             <StyledCheckbox
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}

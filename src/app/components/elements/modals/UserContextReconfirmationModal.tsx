@@ -19,7 +19,7 @@ import {
 } from "../../../services";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {BooleanNotation, DisplaySettings, PotentialUser, ValidationUser} from "../../../../IsaacAppTypes";
+import {ActiveModalProps, BooleanNotation, DisplaySettings, PotentialUser, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {
     closeActiveModal,
@@ -215,7 +215,7 @@ const UserContextReconfirmationModalBody = () => {
     </Form>;
 };
 
-export const userContextReconfirmationModal = {
+export const userContextReconfirmationModal: ActiveModalProps = {
     title: "Review your details",
     body: <UserContextReconfirmationModalBody />,
 };
