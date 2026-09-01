@@ -184,11 +184,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3 className={classNames({"h4": isPhy})}>
-                <span>
                     Teacher connection code
-                    <i id="teacher-connections-title" className={classNames("icon icon-info icon-inline-sm ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
-                </span>
-                <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {SITE_TITLE_SHORT} assignment progress.
                 </UncontrolledTooltip>
             </h3>
