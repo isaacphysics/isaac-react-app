@@ -21,7 +21,8 @@ const booksApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to fetch book page."
             }),
-            keepUnusedDataFor: 60
+            keepUnusedDataFor: 60,
+            providesTags: ["AllGameboards"], // required to refetch decks inside the detail page if saved status is updated 
         })
 
     })
