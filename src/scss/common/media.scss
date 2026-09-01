@@ -27,20 +27,15 @@
   }
 }
 
-// NOMENSA figures.scss
-.img-thumbnail {
-  border-width: 0;
-}
-
 figure {
   background-color: white;
   color: black;
+  box-shadow: 0 2px 30px 0 $shadow-08;
+
   img {
     // do not add padding here! it will break image region positioning. add it to the figure root element instead.
     max-width: 100%;
   }
-
-  box-shadow: 0 2px 30px 0 $shadow-08;
 
   .figure-caption {
     color: $black;
