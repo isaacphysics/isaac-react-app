@@ -229,10 +229,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                                 </span>
                             }
                             {isItem && typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                            {(isItem || isBuilder) && <ContentPropertyTags 
+                            {(isItem || isBuilder || isQuiz) && <ContentPropertyTags 
                                 className={classNames("justify-self-end", {"ms-2": !wrapTitleTags})}
-                                deprecated={typedProps.deprecated}
-                                supersededByPath={typedProps.supersededByPath}
+                                deprecated={isQuiz ? undefined : typedProps.deprecated}
+                                supersededByPath={isQuiz ? undefined : typedProps.supersededByPath}
                                 tags={tags}
                             />}
                         </>

@@ -182,6 +182,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
         quizButton={useViewQuizLink ? undefined : quizButton}
         className={siteSpecific(undefined, "px-4 py-2")}
+        tags={item.tags}
         {...rest}
     />;
 };

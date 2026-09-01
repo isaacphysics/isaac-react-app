@@ -1,4 +1,4 @@
-import {Action, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {AccessibilitySettingsWithOverride, Action, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {userApi} from "../index";
@@ -38,5 +38,17 @@ export const totpChallengePending = (totpChallengePending: TotpChallengePendingS
             return false;
         default:
             return totpChallengePending;
+    }
+};
+
+type AccessibilityTypeState = AccessibilitySettingsWithOverride | null;
+export const accessibilityType = (accessibilityType: AccessibilityTypeState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
+            return { ...action.userPreferences.ACCESSIBILITY, MANUAL_OVERRIDE: false };
+        case ACTION_TYPE.ACCESSIBILITY_TYPE_SET:
+            return { ...action.accessibilityType, MANUAL_OVERRIDE: true };
+        default:
+            return accessibilityType;
     }
 };
