@@ -34,6 +34,7 @@
 
 figure {
   background-color: white;
+  color: black;
   img {
     // do not add padding here! it will break image region positioning. add it to the figure root element instead.
     max-width: 100%;
