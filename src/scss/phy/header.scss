@@ -177,16 +177,6 @@ header {
             background-color: var(--color-neutral-100);
           }
         }
-
-        .nav-list-title {
-          font-size: 14px;
-          font-family: $primary-font;
-          color: var(--color-neutral-500);
-          line-height: 1.1;
-          margin-left: 23px;
-          margin-bottom: 8px;
-          font-weight: 500;
-        }
       }
     }
   }
@@ -231,16 +221,16 @@ header {
         background: var(--color-neutral-100);
         text-decoration: none;
       }
-      
-      .nav-list-title {
-        font-size: 14px;
-        font-family: $primary-font;
-        color: var(--color-neutral-500);
-        line-height: 1.1;
-        margin-left: 23px;
-        margin-bottom: 8px;
-        font-weight: 500;
-      }
     }
   }
+}
+
+.nav-list-title {
+  font-size: 14px;
+  font-family: $primary-font;
+  color: var(--color-neutral-500);
+  line-height: 1.1;
+  margin-left: 23px;
+  margin-bottom: 8px;
+  font-weight: 500;
 }

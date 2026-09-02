@@ -10,7 +10,7 @@
   }
 
   h1, h2 {
-    &:not(.physics-strapline, .panel-title) {
+    &:not(.physics-strapline, .panel-title, .card-title) {
       font-family: $secondary-font;
       font-weight: bold;
       font-size: 24px;

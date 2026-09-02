@@ -90,9 +90,9 @@ interface MetadataTitleProps {
 }
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
-    return <h2>
-        <div className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
-            {title 
+    return <div>
+        <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
+            {title
                 ? typeof title === "string"
                     ? <Markup encoding="latex">{title}</Markup>
                     : title
@@ -103,9 +103,9 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
             <div className="d-flex flex-wrap gap-2 mt-1">
                 {badges}
             </div>
-        </div>
+        </h2>
         {(subtitle || doc?.subtitle) && <Markup className="h5" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
-    </h2>;
+    </div>;
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
