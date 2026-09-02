@@ -7,8 +7,9 @@ import { PageContextState } from "../../../IsaacAppTypes";
 import { convertToALVIGameboard, CustomListViewItemProps, ListView, ListViewCards, transformItemsForCustomListView } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
-import { GameboardDTO } from "../../../IsaacApiTypes";
 import { PageMetadata } from "../elements/PageMetadata";
+import { useGetGameboardByIdQuery } from "../../state";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     const deviceSize = useDeviceSize();
@@ -76,26 +77,21 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 };
 
 const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {
-    const items: { [key in Subject]: GameboardDTO[] } = {
-        maths: [{
-            title: "Sample Maths Questions",
-            id: "sample_maths_questions",
-        }],
-        physics: [{
-            title: "Sample Physics Questions",
-            id: "sample_phy_questions",
-        }],
-        chemistry: [{
-            title: "Sample Chemistry Questions",
-            id: "sample_chem_questions",
-        }],
-        biology: [{
-            title: "Sample Biology Questions",
-            id: "sample_bio_questions",
-        }],
+    const gameboard_ids: { [key in Subject]: string } = {
+        maths: "sample_maths_questions",
+        physics: "sample_phy_questions",
+        chemistry: "sample_chem_questions",
+        biology: "sample_bio_questions"
     };
 
-    return items[subject].length > 0 ? <ListView className={className} type="gameboard" items={items[subject].map(convertToALVIGameboard)} /> : null;
+    const gameboardByIdQuery = useGetGameboardByIdQuery(gameboard_ids[subject]);
+
+    return gameboard_ids[subject]
+        ? <ShowLoadingQuery
+            query={gameboardByIdQuery}
+            defaultErrorTitle="Unable to load example questions"
+            thenRender={(gameboard) => <ListView className={className} type="gameboard" items={[convertToALVIGameboard(gameboard)]} />}/> 
+        : null;
 };
 
 export const SubjectOverviewPage = () => {
