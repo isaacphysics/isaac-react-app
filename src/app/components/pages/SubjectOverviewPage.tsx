@@ -90,6 +90,7 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
         ? <ShowLoadingQuery
             query={gameboardByIdQuery}
             defaultErrorTitle="Unable to load example questions"
+            maintainOnRefetch
             thenRender={(gameboard) => <ListView className={className} type="gameboard" items={[convertToALVIGameboard(gameboard)]} />}/> 
         : null;
 };
