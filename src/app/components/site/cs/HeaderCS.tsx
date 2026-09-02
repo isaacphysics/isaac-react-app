@@ -89,12 +89,8 @@ export const HeaderCS = () => {
                             <LinkItem to="/support/teacher">Support</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection className={"text-start-nav"} topLevelLink to="/contact" title={"Contact us"}/>
+                        <NavigationSection className={"text-start-nav me-nav-auto navbar-separator"} topLevelLink to="/contact" title={"Contact us"}/>
 
-                        <div className={"navbar-separator d-nav-none d-block"}/>
-
-                        <div className={"ms-nav-auto"}></div>
-                        
                         {(isStaff(user) || isEventLeader(user) || isNonProd) && <NavigationSection title={isStaff(user) || isEventLeader(user) ? "Admin" : "Staging"}>
                             {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
                             {isAdmin(user) && <LinkItem to="/admin/usermanager">User manager</LinkItem>}
@@ -114,8 +110,7 @@ export const HeaderCS = () => {
 
                         {isLoggedIn(user)
                             ? <>
-                                <NavigationSection topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />
-                                <div className={"navbar-separator d-nav-none d-block"}/>
+                                <NavigationSection className={"navbar-separator"} topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>
                             </>
                             : <>
@@ -123,8 +118,6 @@ export const HeaderCS = () => {
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/login" title={"Log in"}/>
                             </>
                         }
-
-                        <div className={"navbar-separator d-nav-none d-block"}/>
                     </Nav>
                 </Collapse>
             </MenuOpenContext.Provider>
