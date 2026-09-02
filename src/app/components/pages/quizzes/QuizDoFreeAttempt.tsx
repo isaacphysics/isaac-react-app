@@ -65,7 +65,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
-                    <div className="alert-heading h4">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</div>
+                    <h2 className="alert-heading h4">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</h2>
                     {!assignedQuizError && <p data-testid="error-message">{error}</p>}
                     {assignedQuizError && <>
                         <p>Your teacher has set this test to you.  You may not practise it in advance.<br/>
