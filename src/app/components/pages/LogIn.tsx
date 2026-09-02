@@ -247,7 +247,7 @@ export const LogIn = () => {
                 <Card>
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
-                            <h1 className={classNames("h-title", {"mb-4": isAda})} ref={headingRef} tabIndex={-1}>
+                            <h1 className={classNames("h-title", {"h2 mb-4": isAda})} ref={headingRef} tabIndex={-1}>
                                 Log&nbsp;in or sign&nbsp;up:
                             </h1>
                             {totpChallengePending ?

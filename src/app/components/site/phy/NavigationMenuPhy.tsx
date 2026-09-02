@@ -266,7 +266,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
             : <ContentNavAccordionWrapper title={title}>
                 {categories?.map((category, i) => {
                     return <div key={i}>
-                        <div className="px-4 m-0 py-2 h5">{category.title}</div>
+                        <div className="px-4 m-0 py-2 nav-list-title">{category.title}</div>
                         <ul className="plain-list">
                             {category.subcategories.map((subcategory, j) => {
                                 return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
