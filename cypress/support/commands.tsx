@@ -63,11 +63,14 @@ import {store} from "../../src/app/state";
 import {createBrowserRouter, createRoutesFromElements, Route, To} from "react-router";
 import { RouterProvider } from 'react-router-dom';
 import { ACTION_TYPE } from '../../src/app/services';
+import {v4 as uuid_v4} from "uuid";
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], user, mountOptions) => {
+    const uuid = uuid_v4();
+
     const router = createBrowserRouter(createRoutesFromElements(<>
         {routes?.length
-            ? routes.map(route => <Route key={route} element={component} path={route} />)
+            ? routes.map(route => <Route key={`${uuid}-${route}`} element={component} path={route} />)
             : <Route path="*" element={component} />
         }
     </>));
@@ -80,7 +83,7 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
     
     mount(
         <Provider store={store}>
-            <RouterProvider router={router} />
+            <RouterProvider key={uuid} router={router} />
         </Provider>,
         mountOptions
     );
