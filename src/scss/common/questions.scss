@@ -569,6 +569,10 @@ figure .inline-container {
 .cloze-dropdown > button {
   min-width: 40px !important; // Bootstrap thinks its important
 
+  &.btn-secondary, &.btn-outline-secondary {
+    background-color: var(--color-neutral-white);
+  }
+
   &.empty.empty {
     &, &:hover, &:active, &:focus { // Apply regardless of hover
       border: grey solid 1px !important;
@@ -746,7 +750,7 @@ p > .katex, .katex-display {
       color: inherit;
       min-width: 176px;
       flex-basis: 100%;
-      @media (max-width: 768px) {
+      @include media-breakpoint-up(md) {
         min-width: 0;
       }
       &:hover {
@@ -775,8 +779,16 @@ p > .katex, .katex-display {
   @include feedback-panel-classes(#fff, 0.18);
 }
 
-.feedback-panel-dark {
-  @include feedback-panel-classes(#000, 0.08);
+@include color-mode(light) {
+  .feedback-panel-dark {
+    @include feedback-panel-classes(#000, 0.08);
+  }
+}
+
+@include color-mode(dark) {
+  .feedback-panel-dark {
+    @include feedback-panel-classes(#000, 0.28);
+  }
 }
 
 .correct {
@@ -791,4 +803,11 @@ p > .katex, .katex-display {
 
 .spaced-tooltip br {
     margin-bottom: 0.5rem;
+}
+
+.input-mode-toggle {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: min-content;
 }

@@ -15,7 +15,7 @@
   }
 
   &.wildcard-list-view i.icon::after {
-    background-color: $color-wildcard-orange;
+    background-color: var(--color-misc-orange-500);
   }
 }
 

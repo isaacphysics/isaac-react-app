@@ -49,6 +49,10 @@
   width: max-content !important;
 }
 
+.mw-auto {
+  min-width: auto !important;
+}
+
 .mw-max-content {
   min-width: max-content !important;
 }
@@ -123,5 +127,47 @@
 @for $i from 0 through 5 {
   .z-10#{$i}0 {
     z-index: calc(1000 + $i * 10) !important;
+  }
+}
+
+@each $name, $size in $element-sizes {
+  .w-#{$name} {
+    width: $size !important;
+  }
+
+  .h-#{$name} {
+    height: $size !important;
+  }
+}
+
+// Fixed sizes
+@for $size from 1 through 20 {
+  .wf-#{$size} {
+    width: #{$size}rem !important;
+  }
+  .hf-#{$size} {
+    height: #{$size}rem !important;
+  }
+}
+
+$viewport-sizes: (
+  25: 25%,
+  50: 50%,
+  75: 75%,
+  100: 100%,
+  auto: auto,
+);
+
+// Size / viewports -- uses Bootstrap's breakpoints
+@each $bp, $bp-width in map-remove($grid-breakpoints, xs) {
+  @media (min-width: $bp-width) {
+    @each $size, $size-value in $viewport-sizes {
+      .w-#{$bp}-#{$size} {
+        width: #{$size-value} !important;
+      }
+      .h-#{$bp}-#{$size} {
+        height: #{$size-value} !important;
+      }
+    }
   }
 }

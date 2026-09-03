@@ -131,6 +131,8 @@ export enum ACTION_TYPE {
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
 
+    ACCESSIBILITY_TYPE_SET = "ACCESSIBILITY_TYPE_SET",
+
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
     USER_PASSWORD_RESET_RESPONSE_FAILURE = "USER_PASSWORD_RESET_RESPONSE_FAILURE",
@@ -268,6 +270,7 @@ export enum STAGE {
     SCOTLAND_NATIONAL_5 = "scotland_national_5",
     SCOTLAND_HIGHER = "scotland_higher",
     SCOTLAND_ADVANCED_HIGHER = "scotland_advanced_higher",
+    FOUNDATION = "foundation",
     CORE = "core",
     ADVANCED = "advanced",
     POST_18 = "post_18",
@@ -275,7 +278,7 @@ export enum STAGE {
 }
 export const STAGE_NULL_OPTIONS = [STAGE.ALL];
 export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY] as const;
-export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18] as const;
+export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.FOUNDATION, STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18] as const;
 export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_PHY, STAGES_CS), STAGE.ALL];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7_and_8: "Year\u00A07&8",
@@ -287,6 +290,7 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     scotland_national_5: "N5",
     scotland_higher: "Higher",
     scotland_advanced_higher: "Adv Higher",
+    foundation: "11-14",
     core: "Core",
     advanced: "Advanced",
     post_18: "Post-18",
@@ -323,6 +327,7 @@ export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: Exam
     scotland_national_5: [EXAM_BOARD.SQA],
     scotland_higher: [EXAM_BOARD.SQA],
     scotland_advanced_higher: [EXAM_BOARD.SQA],
+    foundation: [EXAM_BOARD.ADA],
     core: [EXAM_BOARD.ADA],
     advanced: [EXAM_BOARD.ADA],
     post_18: [EXAM_BOARD.ADA],
@@ -464,6 +469,7 @@ export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefin
     scotland_national_5: "gcse",
     scotland_higher: "a_level",
     scotland_advanced_higher: "a_level",
+    foundation: "11_14",
     core: "gcse",
     advanced: "a_level",
     post_18: "university",
@@ -681,6 +687,7 @@ export enum TAG_ID {
     // AI and machine learning topics
     artificialIntelligence = "artificial_intelligence",
     machineLearning = "machine_learning",
+    dataScienceMachineLearning = "data_science_machine_learning",
 
     // Algorithms and data structures topics
     complexity = "complexity",
@@ -756,6 +763,7 @@ export enum TAG_ID {
     database_project = "projdb_repair_and_reform",
     aqa_nea_project = "aqa_nea_project",
     ocr_nea_project = "ocr_nea_project",
+    dataScienceEpq = "data_science_epq",
 
     // Old tags ------
     // programmingParadigms = "programming_paradigms",

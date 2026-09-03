@@ -141,6 +141,13 @@
   &.border {
     border-style: dashed !important; // necessary because Bootstrap has no border style utilities
   }
+
+  .btn-secondary, .btn-outline-secondary {
+    // Specificity manually raised above generic Ada button styling
+    &:hover:hover {
+      background-color: white;
+    }
+  }
 }
 
 .cloze-dropdown {
@@ -185,6 +192,10 @@
     height: auto;
     width: 2rem;
   }
+}
+
+.alert-warning .input-mode-toggle > .styled-toggle {
+  background-color: #FFEEB7;
 }
 
 .parsons-question {
