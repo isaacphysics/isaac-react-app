@@ -23,6 +23,8 @@ import {
     makeAttemptAtTopicHistory,
     NOT_FOUND, PATHS, siteSpecific,
     useQueryParams,
+    Ada11To14TopicsToConcepts,
+    isAda,
 } from "./";
 import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
@@ -69,7 +71,6 @@ export const determinePageNavigation = (
     search: string,
     pageContext: PageContextState
 ): PageNavigation => {
-
     if (doc !== null && doc !== NOT_FOUND) {
         if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
             const gameboardHistory = (currentGameboard && gameboardId === currentGameboard.id) ?
@@ -121,14 +122,33 @@ export const determinePageNavigation = (
             const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
                 determineTopicHistory(currentTopic, currentDocId) :
                 makeAttemptAtTopicHistory();
+            const nextItem = determineNextTopicContentLink(currentTopic, currentDocId);
             return {
                 collectionType: "Topic",
                 breadcrumbHistory: topicHistory,
                 backToCollection: topicHistory.slice(-1)[0],
-                nextItem: determineNextTopicContentLink(currentTopic, currentDocId),
+                nextItem,
                 search,
                 currentGameboard
             };
+        }
+
+        // ada 11-14
+        if (isAda && doc.type === DOCUMENT_TYPE.CONCEPT) {
+            for (const concepts of Object.values(Ada11To14TopicsToConcepts)) {
+                if (concepts.some(c => c.url === `/concepts/${doc.id}`)) {
+                    const parent = { title: "11-14 Topics", to: "/topics#11-14" };
+                    const currentConceptIndex = concepts.findIndex(c => c.url === `/concepts/${doc.id}`);
+                    return {
+                        collectionType: "Topic",
+                        breadcrumbHistory: [parent],
+                        backToCollection: parent,
+                        nextItem: currentConceptIndex < concepts.length - 1 
+                            ? { title: concepts[currentConceptIndex + 1].title, to: concepts[currentConceptIndex + 1].url }
+                            : undefined,
+                    };
+                }
+            }
         }
 
         if (doc.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT].includes(doc.type as DOCUMENT_TYPE)) {

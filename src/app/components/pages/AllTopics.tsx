@@ -90,11 +90,13 @@ const conceptColumn = (subTags: Tag[]) => {
                 }}
             >
                 <ul className="list-unstyled">
-                    {Ada11To14TopicsToConcepts[subcategory.id]?.map((concept, index) => (
-                        <li key={index} className="pb-1">
-                            {renderLink(concept)}
-                        </li>
-                    ))}
+                    {Ada11To14TopicsToConcepts[subcategory.id]
+                        ?.map(concept => subcategory.comingSoonDate ? { ...concept, url: undefined } : concept)
+                        .map((concept, index) => (
+                            <li key={index} className="pb-1">
+                                {renderLink(concept)}
+                            </li>
+                        ))}
                 </ul>
             </IconCard>;
         })}
