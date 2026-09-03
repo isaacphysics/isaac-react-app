@@ -31,6 +31,8 @@ import {
     ACCOUNT_TAB,
     ACCOUNT_TABS,
     ACCOUNT_TABS_ALIASES,
+    accountPanelId,
+    accountTabId,
     allRequiredInformationIsPresent,
     isAda,
     isDefined,
@@ -245,9 +247,6 @@ export const MyAccount = ({user}: AccountPageProps) => {
         setShouldClearUnsavedChanges(false);
     }, [activeTab]);
 
-    const accountTabSlug = (tab: ACCOUNT_TAB) => ACCOUNT_TABS.find(accountTab => accountTab.tab === tab)!.title.toLowerCase().replaceAll(" ", "-");
-    const accountTabId = (tab: ACCOUNT_TAB) => `account-tab-${accountTabSlug(tab)}`;
-    const accountPanelId = (tab: ACCOUNT_TAB) => `account-panel-${accountTabSlug(tab)}`;
 
     const handleTabKeyDown = (event: React.KeyboardEvent<HTMLElement>, tab: ACCOUNT_TAB) => {
         if(event.key === "Enter" || event.key === " ") {
@@ -432,9 +431,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                 (i.e. user has unsaved changes they do *not* want to commit) */}
                             <TabPane
                                 tabId={ACCOUNT_TAB.account}
-                                role={isAda ? "tabpanel" : undefined}
-                                id={isAda ? accountPanelId(ACCOUNT_TAB.account) : undefined}
-                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.account) : undefined}
+                                role="tabpanel"
+                                id={accountPanelId(ACCOUNT_TAB.account)}
+                                aria-labelledby={accountTabId(ACCOUNT_TAB.account)}
                             >
                                 <UserProfile
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
@@ -461,14 +460,19 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     userAuthSettings={userAuthSettings}
                                 />
                             </TabPane>}
-                            {isPhy && <TabPane tabId={ACCOUNT_TAB.theme}>
+                            {isPhy && <TabPane
+                                tabId={ACCOUNT_TAB.theme}
+                                role="tabpanel"
+                                id={accountPanelId(ACCOUNT_TAB.theme)}
+                                aria-labelledby={accountTabId(ACCOUNT_TAB.theme)}
+                            >
                                 <UserTheme setDisplaySettings={setDisplaySettings} />
                             </TabPane>}
                             <TabPane
                                 tabId={ACCOUNT_TAB.passwordreset}
-                                role={isAda ? "tabpanel" : undefined}
-                                id={isAda ? accountPanelId(ACCOUNT_TAB.passwordreset) : undefined}
-                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.passwordreset) : undefined}
+                                role="tabpanel"
+                                id={accountPanelId(ACCOUNT_TAB.passwordreset)}
+                                aria-labelledby={accountTabId(ACCOUNT_TAB.passwordreset)}
                             >
                                 <UserPassword
                                     currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
@@ -480,9 +484,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             </TabPane>
                             {!editingOtherUser && <TabPane
                                 tabId={ACCOUNT_TAB.emailpreferences}
-                                role={isAda ? "tabpanel" : undefined}
-                                id={isAda ? accountPanelId(ACCOUNT_TAB.emailpreferences) : undefined}
-                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.emailpreferences) : undefined}
+                                role="tabpanel"
+                                id={accountPanelId(ACCOUNT_TAB.emailpreferences)}
+                                aria-labelledby={accountTabId(ACCOUNT_TAB.emailpreferences)}
                             >
                                 <UserEmailPreferencesPanel
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
@@ -491,9 +495,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             </TabPane>}
                             {!editingOtherUser && <TabPane
                                 tabId={ACCOUNT_TAB.accessibility}
-                                role={isAda ? "tabpanel" : undefined}
-                                id={isAda ? accountPanelId(ACCOUNT_TAB.accessibility) : undefined}
-                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.accessibility) : undefined}
+                                role="tabpanel"
+                                id={accountPanelId(ACCOUNT_TAB.accessibility)}
+                                aria-labelledby={accountTabId(ACCOUNT_TAB.accessibility)}
                             >
                                 <UserAccessibilitySettings
                                     accessibilitySettings={myUserPreferences?.ACCESSIBILITY ?? {}} setAccessibilitySettings={setAccessibilitySettings}
@@ -501,9 +505,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             </TabPane>}
                             {!editingOtherUser && <TabPane
                                 tabId={ACCOUNT_TAB.betafeatures}
-                                role={isAda ? "tabpanel" : undefined}
-                                id={isAda ? accountPanelId(ACCOUNT_TAB.betafeatures) : undefined}
-                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.betafeatures) : undefined}
+                                role="tabpanel"
+                                id={accountPanelId(ACCOUNT_TAB.betafeatures)}
+                                aria-labelledby={accountTabId(ACCOUNT_TAB.betafeatures)}
                             >
                                 <UserBetaFeatures
                                     displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
@@ -525,9 +529,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
                         </TabPane>}
                         <TabPane
                             tabId={ACCOUNT_TAB.teacherconnections}
-                            role={isAda ? "tabpanel" : undefined}
-                            id={isAda ? accountPanelId(ACCOUNT_TAB.teacherconnections) : undefined}
-                            aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.teacherconnections) : undefined}
+                            role="tabpanel"
+                            id={accountPanelId(ACCOUNT_TAB.teacherconnections)}
+                            aria-labelledby={accountTabId(ACCOUNT_TAB.teacherconnections)}
                         >
                             <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
                                 userToEdit={userToEdit}

@@ -1,6 +1,6 @@
 import React from "react";
 import { ContentSidebarContext } from "../../../../IsaacAppTypes";
-import { ACCOUNT_TAB, ACCOUNT_TABS, ifKeyIsEnter } from "../../../services";
+import { ACCOUNT_TAB, ACCOUNT_TABS, accountPanelId, accountTabId, ifKeyIsEnter } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
 
@@ -15,14 +15,16 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
-        <ul>
+        <ul role="tablist" aria-label="Account settings">
             {ACCOUNT_TABS
                 .filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser))
                 .map(({tab, title}) => (
-                    <li key={tab}>
+                    <li key={tab} role="presentation">
                         <ContentSidebarContext.Consumer>
                             {(context) =>
-                                <StyledTabPicker id={title} type="radio" tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                                <StyledTabPicker
+                                    id={accountTabId(tab)} role="tab" aria-selected={activeTab === tab} aria-controls={accountPanelId(tab)}
+                                    type="radio" tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
                                     onChange={() => setActiveTab(tab)}
                                     onClick={() => context?.close()}
                                     onKeyDown={ifKeyIsEnter(() => context?.close())}
