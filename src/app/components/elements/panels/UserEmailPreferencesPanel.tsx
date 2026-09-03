@@ -31,7 +31,7 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
         }
         <MyAccountTab
             leftColumn={<>
-                <h3>Set your email notification preferences</h3>
+                <h2 className="h3">Set your email notification preferences</h2>
                 <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
                 <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
             </>}

@@ -367,6 +367,16 @@ export const QuestionFinder = () => {
 
     const [validFiltersSelected, setValidFiltersSelected] = useState(false);
 
+    const resultsHeaderRef = useRef<HTMLDivElement>(null);
+    const [focusResultsOnceLoaded, setFocusResultsOnceLoaded] = useState(false);
+
+    useEffect(() => {
+        if (focusResultsOnceLoaded && !searchQuestionsQuery.isFetching) {
+            resultsHeaderRef.current?.focus();
+            setFocusResultsOnceLoaded(false);
+        }
+    }, [focusResultsOnceLoaded, searchQuestionsQuery.isFetching]);
+
     useEffect(function onFiltersChanged() {
         setSearchDisabled(false);
         setValidFiltersSelected(searchDifficulties.length > 0
@@ -538,6 +548,7 @@ export const QuestionFinder = () => {
                     choices,
                     selections, setSelections,
                     applyFilters: () => {
+                        setFocusResultsOnceLoaded(true);
                         if (isDefined(randomSeed)) {
                             // on Ada, if randomSeed is defined, we need to unset it before running the search.
                             // since it is state, running this first won't necessarily have it updated when searchAndUpdateURL is called.
@@ -571,14 +582,14 @@ export const QuestionFinder = () => {
                         return <>
                             <ResultsListContainer>
                                 <ResultsListHeader className="d-flex">
-                                    <div className="flex-grow-1" data-testid="question-finder-results-header">
+                                    <div className="flex-grow-1" data-testid="question-finder-results-header" ref={resultsHeaderRef} tabIndex={-1}>
                                         {questions && questions.length > 0 
                                             ? <>
                                                 Showing <b>{questions.length}</b>
                                                 {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                                 .
                                             </>
-                                            : isPhy && <>No results.</>
+                                            : <span className={classNames({"visually-hidden": isAda})}>No results.</span>
                                         }
                                     </div>
                                     <button 

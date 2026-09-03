@@ -116,7 +116,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
 
     const HeaderTag = siteSpecific("div", CardHeader);
 
-    return <div className={classNames({"card": isAda})} data-testid="question-finder-filters">
+    return <search className={classNames({"card": isAda})} data-testid="question-finder-filters">
         <HeaderTag className="finder-header" onClick={(e) => {
             // the filters panel can only be collapsed when it is not a sidebar
             // (changing screen size after collapsing does not re-expand it but the options become visible)
@@ -143,6 +143,9 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <button
                     className="d-flex bg-opacity-10 p-0 bg-white"
                     onClick={handleFilterPanelExpansion}
+                    aria-label="Toggle filter panel"
+                    aria-expanded={filtersVisible}
+                    aria-controls="question-finder-filters-options"
                 >
                     <i className={classNames(
                         "icon icon-chevron-right icon-color-black icon-dropdown-90", 
@@ -154,7 +157,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </button>
             </div>}
         </HeaderTag>
-        <div className={classNames("p-0 m-0", {"card-body": isAda, "d-none": isAda && below["md"](deviceSize) && !filtersVisible})}>
+        <div className={classNames("p-0 m-0", {"card-body": isAda, "d-none": isAda && below["md"](deviceSize) && !filtersVisible})} id="question-finder-filters-options">
             <ul>
                 {(isAda || pageStageToSearchStage(pageContext?.stage).length !== 1) && <CollapsibleList
                     title={listTitles.stage} expanded={listState.stage.state}
@@ -443,5 +446,5 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </Button>
             </Col>}
         </div>
-    </div>;
+    </search>;
 }
