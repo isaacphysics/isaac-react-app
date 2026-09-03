@@ -368,14 +368,14 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     function renderProgress(progress: Progress) {
         return <Row className="mt-sm-3 mb-3 mb-sm-4">
             <Col cols={12} lg={3}>
-                <h4 className="mt-lg-1">{gameboard?.title}</h4>
+                <div className="mt-lg-1 h4">{gameboard?.title}</div>
                 <div className="d-none d-lg-block">
                     <br className="d-none d-lg-block"/>
-                    {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1 mt-xl-3">
+                    {currentlyWorkingOn.isConcept && <div className="mt-lg-1 mt-xl-3 h4">
                         <Markup encoding={"latex"}>
                             {`${currentlyWorkingOn.title} Practice`}
                         </Markup>
-                    </h4>}
+                    </div>}
                 </div>
             </Col>
             <Col cols={12} lg={9}>
@@ -399,11 +399,11 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             </Col>
             <Col cols={12} className="d-block d-lg-none">
                 <div>
-                    {currentlyWorkingOn.isConcept && <h4 className="mt-2">
+                    {currentlyWorkingOn.isConcept && <div className="mt-2 h4">
                         <Markup encoding={"latex"}>
                             {`${currentlyWorkingOn.title} Practice`}
                         </Markup>
-                    </h4>}
+                    </div>}
                 </div>
             </Col>
         </Row>;

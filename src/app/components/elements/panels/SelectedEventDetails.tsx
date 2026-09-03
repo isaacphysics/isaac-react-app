@@ -11,7 +11,7 @@ interface SelectedEventDetailsProps {
 export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
     return <Card>
         <CardBody>
-            <h3 className="h-subtitle mb-1">Selected event details</h3>
+            <div className="h-subtitle mb-1 h3">Selected event details</div>
             <p className="m-0">
                 <strong>Event: </strong>
                 <Link to={`/events/${event.id}`} target="_blank">

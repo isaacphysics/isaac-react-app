@@ -15,7 +15,7 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
     const fragmentQuery = useGetPageFragmentQuery(fragmentId);
 
     const notFoundComponent = ifNotFound ?? <div>
-        <h2>Content not found</h2>
+        <div className="h2">Content not found</div>
         <p className="my-4">
             {window.navigator.onLine 
                 ? <>

@@ -8,7 +8,7 @@ export const BooksOverviewSidebar = (props: ContentSidebarProps) => {
     const navigate = useNavigate();
     return <ContentSidebar buttonTitle="View all books" {...props}>
         <div className="section-divider"/>
-        <h5>Our books</h5>
+        <h3 className="h5">Our books</h3>
         <ul>
             {ISAAC_BOOKS.filter(book => book.hidden !== BookHiddenState.HIDDEN).map((book, index) => <li key={index}>
                 <StyledTabPicker checkboxTitle={book.title} checked={false} onChange={() => navigate(book.path)}/>

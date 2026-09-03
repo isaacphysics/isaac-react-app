@@ -14,7 +14,7 @@ export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps)
 
     return <ContentSidebar buttonTitle="Explore programmes" {...rest}>
         <div className="section-divider"/>
-        <h5>Our programmes</h5>
+        <h3 className="h5">Our programmes</h3>
         <ul>
             <li>
                 {programmes?.map((programme) =>

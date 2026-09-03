@@ -50,7 +50,7 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
                     </li>);
                 if (!subcategory.hidden && topicComponents.length > 0) {
                     return <React.Fragment key={subcategory.id}>
-                        <h3>{subcategory.title}</h3>
+                        <h2 className="h3">{subcategory.title}</h2>
                         <ul className="list-unstyled mb-3 link-list">
                             {topicComponents}
                         </ul>

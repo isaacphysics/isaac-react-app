@@ -74,7 +74,7 @@ export const RegistrationTeacherConnect = () => {
         <Card className={"my-7"}>
             <CardBody>
                 <Form onSubmit={submit}>
-                    <h3>Connect your account to your teacher</h3>
+                    <h2 className="h3">Connect your account to your teacher</h2>
                     {siteSpecific(
                         <>
                             <p>If you&apos;ve been given a group code by your teachers, enter it below. This lets your teachers set you work and see your progress. <a href="/support/student/homework#join_group" target="_blank">Learn more</a>.</p>
@@ -111,7 +111,7 @@ export const RegistrationTeacherConnect = () => {
                         </FormGroup>
                         {activeAuthorisations && activeAuthorisations.length > 0 &&
                             <div className="mb-3">
-                                <h5>Connected teachers:</h5>
+                                <div className="h5">Connected teachers:</div>
                                 <ul>
                                     {activeAuthorisations.map((auth) => (
                                         <li key={auth.id}>{extractTeacherName(auth)} - ({auth.email})</li>

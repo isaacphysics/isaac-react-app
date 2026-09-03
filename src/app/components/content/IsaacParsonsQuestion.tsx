@@ -180,7 +180,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
                 </Label>
                 {!useSingleList && <Col md={6} className="parsons-available-items">
-                    <h4>Available items</h4>
+                    <div className="h4">Available items</div>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
@@ -197,7 +197,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     </Droppable>
                 </Col>}
                 <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})}>
-                    <h4 className="mt-4 mt-md-0">Your answer</h4>
+                    <div className="mt-4 mt-md-0 h4">Your answer</div>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
                             return <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && canIndent && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>

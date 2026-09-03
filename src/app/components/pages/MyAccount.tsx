@@ -32,7 +32,6 @@ import {
     ACCOUNT_TABS,
     ACCOUNT_TABS_ALIASES,
     allRequiredInformationIsPresent,
-    ifKeyIsEnter,
     isAda,
     isDefined,
     isDobOldEnoughForSite,
@@ -246,6 +245,45 @@ export const MyAccount = ({user}: AccountPageProps) => {
         setShouldClearUnsavedChanges(false);
     }, [activeTab]);
 
+    const accountTabSlug = (tab: ACCOUNT_TAB) => ACCOUNT_TABS.find(accountTab => accountTab.tab === tab)!.title.toLowerCase().replaceAll(" ", "-");
+    const accountTabId = (tab: ACCOUNT_TAB) => `account-tab-${accountTabSlug(tab)}`;
+    const accountPanelId = (tab: ACCOUNT_TAB) => `account-panel-${accountTabSlug(tab)}`;
+
+    const handleTabKeyDown = (event: React.KeyboardEvent<HTMLElement>, tab: ACCOUNT_TAB) => {
+        if(event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            safelyChangeTab(tab);
+            return;
+        }
+
+        const moves = ["ArrowRight", "ArrowLeft", "Home", "End"];
+        if (!moves.includes(event.key)) return;
+
+        event.preventDefault();
+
+        const tabs = Array.from(event.currentTarget.closest('[role="tablist"]')?.querySelectorAll<HTMLElement>('[role="tab"]') ?? []);
+        const i = tabs.indexOf(event.currentTarget);
+        let nextIndex = i;
+        
+        switch (event.key) {
+            case "ArrowRight":
+                nextIndex = (i + 1) % tabs.length;
+                break;
+            case "ArrowLeft":
+                nextIndex = (i - 1 + tabs.length) % tabs.length;
+                break;
+            case "Home":
+                nextIndex = 0;
+                break;
+            case "End":
+                nextIndex = tabs.length - 1;
+                break;
+        }
+
+        tabs[nextIndex]?.focus();
+
+    };
+    
     // Values derived from inputs (props and state)
     const isNewPasswordValid = validatePassword(newPassword);
 
@@ -362,12 +400,17 @@ export const MyAccount = ({user}: AccountPageProps) => {
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <div className={siteSpecific("w-lg-75", "card")}>
-                    {isAda && <Nav tabs className="my-4 flex-wrap mx-4" data-testid="account-nav">
+                    {isAda && <Nav tabs role="tablist" aria-label="Account settings" className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
-                            <NavItem key={tab} className={classnames({active: activeTab === tab})}>
+                            <NavItem key={tab} role="presentation" className={classnames({active: activeTab === tab})}>
                                 <NavLink
-                                    className="px-2" tabIndex={0}
-                                    onClick={() => safelyChangeTab(tab)} onKeyDown={ifKeyIsEnter(() => safelyChangeTab(tab))}
+                                    className="px-2" 
+                                    role="tab"
+                                    id={accountTabId(tab)}
+                                    aria-controls={accountPanelId(tab)}
+                                    aria-selected={activeTab === tab}
+                                    tabIndex={activeTab === tab ? 0 : -1}
+                                    onClick={() => safelyChangeTab(tab)} onKeyDown={(e) => handleTabKeyDown(e, tab)}
                                 >
                                     {titleShort ? <>
                                         <span className="d-none d-lg-block">{title}</span>
@@ -387,7 +430,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
                         <TabContent activeTab={activeTab} key={clearUnsavedChanges ? activeTab : undefined}>
                             {/* the key above ensures that any state inside tabs is reset to initial values if activeTab is changed while accountInfo is dirty 
                                 (i.e. user has unsaved changes they do *not* want to commit) */}
-                            <TabPane tabId={ACCOUNT_TAB.account}>
+                            <TabPane
+                                tabId={ACCOUNT_TAB.account}
+                                role={isAda ? "tabpanel" : undefined}
+                                id={isAda ? accountPanelId(ACCOUNT_TAB.account) : undefined}
+                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.account) : undefined}
+                            >
                                 <UserProfile
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
@@ -397,7 +445,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     userAuthSettings={userAuthSettings}
                                 />
                             </TabPane>
-                            {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
+                            {isAda && <TabPane
+                                tabId={ACCOUNT_TAB.customise}
+                                role="tabpanel"
+                                id={accountPanelId(ACCOUNT_TAB.customise)}
+                                aria-labelledby={accountTabId(ACCOUNT_TAB.customise)}
+                            >
                                 <UserContent
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
@@ -411,7 +464,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             {isPhy && <TabPane tabId={ACCOUNT_TAB.theme}>
                                 <UserTheme setDisplaySettings={setDisplaySettings} />
                             </TabPane>}
-                            <TabPane tabId={ACCOUNT_TAB.passwordreset}>
+                            <TabPane
+                                tabId={ACCOUNT_TAB.passwordreset}
+                                role={isAda ? "tabpanel" : undefined}
+                                id={isAda ? accountPanelId(ACCOUNT_TAB.passwordreset) : undefined}
+                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.passwordreset) : undefined}
+                            >
                                 <UserPassword
                                     currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
                                     myUser={userToUpdate} setMyUser={setUserToUpdate}
@@ -420,18 +478,33 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
                                 />
                             </TabPane>
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                            {!editingOtherUser && <TabPane
+                                tabId={ACCOUNT_TAB.emailpreferences}
+                                role={isAda ? "tabpanel" : undefined}
+                                id={isAda ? accountPanelId(ACCOUNT_TAB.emailpreferences) : undefined}
+                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.emailpreferences) : undefined}
+                            >
                                 <UserEmailPreferencesPanel
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
                                 />
                             </TabPane>}
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.accessibility}>
+                            {!editingOtherUser && <TabPane
+                                tabId={ACCOUNT_TAB.accessibility}
+                                role={isAda ? "tabpanel" : undefined}
+                                id={isAda ? accountPanelId(ACCOUNT_TAB.accessibility) : undefined}
+                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.accessibility) : undefined}
+                            >
                                 <UserAccessibilitySettings
                                     accessibilitySettings={myUserPreferences?.ACCESSIBILITY ?? {}} setAccessibilitySettings={setAccessibilitySettings}
                                 />
                             </TabPane>}
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                            {!editingOtherUser && <TabPane
+                                tabId={ACCOUNT_TAB.betafeatures}
+                                role={isAda ? "tabpanel" : undefined}
+                                id={isAda ? accountPanelId(ACCOUNT_TAB.betafeatures) : undefined}
+                                aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.betafeatures) : undefined}
+                            >
                                 <UserBetaFeatures
                                     displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
                                     consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
@@ -450,7 +523,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                 />
                             </Suspense>
                         </TabPane>}
-                        <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                        <TabPane
+                            tabId={ACCOUNT_TAB.teacherconnections}
+                            role={isAda ? "tabpanel" : undefined}
+                            id={isAda ? accountPanelId(ACCOUNT_TAB.teacherconnections) : undefined}
+                            aria-labelledby={isAda ? accountTabId(ACCOUNT_TAB.teacherconnections) : undefined}
+                        >
                             <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
                                 userToEdit={userToEdit}
                             />

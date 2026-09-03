@@ -14,6 +14,17 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpe
         return `<a class="a-link" href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
     }
 };
+
+// "#" headings used for styling that do not match the structure of the page should not use <h*> tags.
+// Headings that do follow this structure should instead be written as <h*> tags in the content directly.
+// https://www.w3.org/WAI/tutorials/page-structure/headings
+MARKDOWN_RENDERER.renderer.rules.heading_open = function(tokens: Remarkable.HeadingOpenToken[], idx: number) {
+    return `<div class="h${tokens[idx].hLevel}">`;
+};
+MARKDOWN_RENDERER.renderer.rules.heading_close = function() {
+    return `</div>\n`;
+};
+
 export const renderRemarkableMarkdown = (markdown: string) => MARKDOWN_RENDERER.render(markdown);
 
 // This is used to match and render cloze question drop zones into span elements
@@ -88,9 +99,9 @@ export const renderInlineGlossaryTerms = (markdown: string) => {
     });
 };
 
-// RegEx replacements to match Latex inspired Isaac Physics functionality
 export const regexProcessMarkdown = (pageContext?: PageContextState) => (markdown: string) => {
     const regexRules = {
+        // RegEx replacement to match Latex inspired Isaac Physics functionality
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
     if (isPhy) {

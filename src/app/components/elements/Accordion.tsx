@@ -191,6 +191,7 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
                 }
             }}
             aria-expanded={isOpen ? "true" : "false"}
+            aria-label={trustedTitle ? `Toggle ${trustedTitle} accordion section` : "Toggle accordion section"}
         >
             {isConceptPage && audienceString && isAda && <span className={
                 classNames("stage-label d-flex align-self-stretch align-items-center p-2 justify-content-center ", audienceStyle(audienceString))

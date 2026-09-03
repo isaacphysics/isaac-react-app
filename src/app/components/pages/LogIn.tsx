@@ -93,7 +93,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
     }, []);
 
     return <>
-        <h3 ref={ref} tabIndex={-1}>Two-Factor Authentication</h3>
+        <h2 className="h3" ref={ref} tabIndex={-1}>Two-Factor Authentication</h2>
         <p>Two-factor authentication has been enabled for this account.</p>
         <FormGroup className="form-group">
             <Label htmlFor="verification-code">Verification Code</Label>
@@ -247,9 +247,9 @@ export const LogIn = () => {
                 <Card>
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
-                            <h2 className={classNames("h-title", {"mb-4": isAda})}  ref={headingRef} tabIndex={-1}>
+                            <h1 className={classNames("h-title", {"h2 mb-4": isAda})} ref={headingRef} tabIndex={-1}>
                                 Log&nbsp;in or sign&nbsp;up:
-                            </h2>
+                            </h1>
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
                                 :
@@ -270,9 +270,9 @@ export const LogIn = () => {
                                             />
                                         </Col>
                                         <Col className="align-content-center">
-                                            <h4 role="alert" className="text-danger text-end mb-0">
+                                            <div role="alert" className="text-danger text-end mb-0 h4">
                                                 {errorMessage}
-                                            </h4>
+                                            </div>
                                             <PasswordResetButton email={email} isValidEmail={isValidEmail}
                                                 setPasswordResetAttempted={setPasswordResetAttempted}/>
                                         </Col>

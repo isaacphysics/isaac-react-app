@@ -91,8 +91,8 @@ interface MetadataTitleProps {
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
     return <div>
-        <h3 className="text-theme-dark d-xl-flex align-items-center gap-3">
-            {title 
+        <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
+            {title
                 ? typeof title === "string"
                     ? <Markup encoding="latex">{title}</Markup>
                     : title
@@ -103,8 +103,8 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
             <div className="d-flex flex-wrap gap-2 mt-1">
                 {badges}
             </div>
-        </h3>
-        {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
+        </h2>
+        {(subtitle || doc?.subtitle) && <Markup className="h5" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
     </div>;
 };
 
@@ -119,6 +119,8 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
         <div className="page-metadata">
+            {noTitle && <h2 className="visually-hidden">Main page</h2>}
+
             {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
                 {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="float-end ms-3 mb-2"/>}
                 {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}

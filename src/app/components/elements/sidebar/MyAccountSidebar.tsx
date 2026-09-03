@@ -14,7 +14,7 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
     return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
-        <h5>Account settings</h5>
+        <h3 className="h5">Account settings</h3>
         <ul>
             {ACCOUNT_TABS
                 .filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser))

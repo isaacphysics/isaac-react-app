@@ -40,10 +40,10 @@ const StageInsert = ({stage}: {stage: string}) => {
     const isAdditional = stage.startsWith("additional");
     return <>
         <div className="section-divider mt-4 mb-3"/>
-        <h4>{isAdditional 
+        <div className="h4">{isAdditional 
             ? "Additional learning stages" 
             : stageLabelMap[stage as keyof typeof stageLabelMap]
-        }</h4>
+        }</div>
         {isAdditional && <p className="small text-muted">
             You may also be interested in exploring additional material relevant to other learning stages:
         </p>}

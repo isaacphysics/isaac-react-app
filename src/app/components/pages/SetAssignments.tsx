@@ -223,9 +223,9 @@ const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { className?: string, redirectBackTo?: string }) => {
     const dispatch = useAppDispatch();
     return <>
-        <h4 className="mt-4 mb-3">
+        <div className="mt-4 mb-3 h4">
             Add a {siteSpecific("question deck", "quiz")} from ...
-        </h4>
+        </div>
         <Row className={className}>
             <Col md={6} lg={4} className="pt-1">
                 <Button role={"link"} onClick={() => {
@@ -388,10 +388,10 @@ export const SetAssignments = () => {
                     </Alert>
                     :
                     <>
-                        <h5>
+                        <div className="h5">
                             Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
                             assignments by start date and due date.
-                        </h5>
+                        </div>
                         <div className="section-divider my-4"/>
                     </>
                 }
@@ -416,7 +416,7 @@ export const SetAssignments = () => {
                     }}
                 />
             }
-            <h3>Your quizzes</h3>
+            <h2 className="h3">Your quizzes</h2>
             <div
                 className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
                 {boards && boards.totalResults > 0 &&

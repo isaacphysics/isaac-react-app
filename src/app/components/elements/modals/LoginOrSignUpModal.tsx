@@ -52,7 +52,7 @@ const LoginOrSignUpBody = () => {
                 )}
             </div>
             <div className={"px-3 mb-4"}>
-                <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
+                <h1 className={"h2 mb-lg-3 mt-2"}>
                     Log in or sign up<br/>
                 </h1>
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
@@ -76,9 +76,9 @@ const LoginOrSignUpBody = () => {
                             passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                             errorMessage={errorMessage} displayLabels={false} />
 
-                        <h5 role="alert" className="text-danger text-end mb-0 py-1">
+                        <div role="alert" className="text-danger text-end mb-0 py-1 h5">
                             {errorMessage}
-                        </h5>
+                        </div>
                         <Row className={classNames("mb-4", {"mt-2": isAda})}>
                             <Col className={"col-6 mt-1 d-flex"}>
                                 <StyledCheckbox

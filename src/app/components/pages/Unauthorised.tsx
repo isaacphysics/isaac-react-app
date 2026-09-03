@@ -8,9 +8,9 @@ export const Unauthorised = () => {
     return <Container>
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle="Access denied" icon={{type: "icon", icon: "icon-error"}} />
-            <h3 className="my-4">
+            <div className="my-4 h3">
                 {"You do not have authorisation to access the page: "}
-            </h3>
+            </div>
             <code>
                 {(state && state.overridePathname) || pathname}
             </code>

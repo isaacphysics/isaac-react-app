@@ -30,9 +30,9 @@ const ErrorMessage = ({ state }: { state?: State }) => {
 };
 
 const GenericError = ({ state }: { state?: State }) => <>
-    <h3>
+    <h2 className="h3">
         {state?.errorMessage || ""}
-    </h3>
+    </h2>
     <p>
         An error occurred while attempting to log in.
         <br />
@@ -46,7 +46,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
     const provider = state?.provider === 'google' ? "Google" : "Microsoft";
 
     return <>
-        <h3>You don&apos;t use this {provider} account to log in</h3>
+        <h2 className="h3">You don&apos;t use this {provider} account to log in</h2>
         <p>
             We&apos;ve found an {SITE_TITLE_SHORT} account with the email address from this {provider} account. However,
             the {SITE_TITLE_SHORT} account isn&apos;t configured to allow access to this {provider} account. You&apos;ve either not
@@ -71,7 +71,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
 };
 
 const ConsentMissingMicrosoft = () => <>
-    <h3>We need your consent</h3>
+    <h2 className="h3">We need your consent</h2>
     <p>
         If you&apos;d like to use your Microsoft account for signing in to {SITE_TITLE_SHORT}, you need to let us read your name and 
         email address from your Microsoft account.

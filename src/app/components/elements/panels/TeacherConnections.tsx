@@ -80,17 +80,17 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     <Input type="text" innerRef={searchInputRef} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> :
-                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
+                <div className={classNames("d-flex h4", {"ps-0" : isAda})}>
                     {isAda && <span className="icon-group-white mx-2" />}
                     {title}
-                </h4>
+                </div>
             }</>
             :
             <>
-                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
+                <div className={classNames("d-flex h4", {"ps-0" : isAda})}>
                     {isAda && <span className="icon-group-white mx-2" />}
                     {title}
-                </h4>
+                </div>
                 <Spacer />
                 {enableSearch && <Input type="text" innerRef={searchInputRef} style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
@@ -177,15 +177,13 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         }
     }
 
-    const SectionHeading = siteSpecific("h4", "h3");
-
     return <MyAccountTab
         leftColumn={<>
-            <h3>Connect to your teacher</h3>
+            <h2 className="h3">Connect to your teacher</h2>
             <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_teacher_connections_teacher" : "help_toptext_teacher_connections_student"} ifNotFound={RenderNothing} />
         </>}
         rightColumn={<>
-            <SectionHeading>
+            <h3 className={classNames({"h4": isPhy})}>
                 <span>
                     Teacher connection code
                     <i id="teacher-connections-title" className={classNames("icon icon-info icon-inline-sm ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
@@ -193,7 +191,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {SITE_TITLE_SHORT} assignment progress.
                 </UncontrolledTooltip>
-            </SectionHeading>
+            </h3>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
             <div data-testid="teacher-connect-form">
                 <InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
@@ -234,15 +232,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                         <UncontrolledTooltip
                                             placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
                                         >
-                                        This user ({teacherAuthorisation.email}) has access to your data.
-                                        To remove this access, click &apos;Revoke&apos;.
+                                            This user ({teacherAuthorisation.email}) has access to your data.
+                                            To remove this access, click &apos;Revoke&apos;.
                                         </UncontrolledTooltip>
                                         <Button
                                             color="link" className="revoke-teacher pe-1"
                                             disabled={editingOtherUser}
                                             onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                         >
-                                        Revoke
+                                            Revoke
                                         </Button>
                                     </li>
                                 </React.Fragment>;
@@ -256,15 +254,16 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </div>
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
-                <SectionHeading>
-                    <span>Your student connections
+                <h3 className={classNames({"h4": isPhy})}>
+                    <span>
+                        Your student connections
                         <i id="student-connections-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                     </span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {SITE_TITLE_SHORT} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
                     </UncontrolledTooltip>
-                </SectionHeading>
+                </h3>
                 <p>
                     You can invite students to share their {SITE_TITLE_SHORT} data with you through the {" "}
                     <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
@@ -318,8 +317,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </React.Fragment>}
 
             {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
-            <h3>
-                <span className={classNames({"h4": isPhy})}>
+            <h3 className={classNames({"h4": isPhy})}>
+                <span>
                     Your group memberships
                     <i id="group-memberships-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </span>

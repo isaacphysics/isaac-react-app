@@ -180,7 +180,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     {additionalInformation.yearGroup != 'TEACHER' && additionalInformation.yearGroup != 'OTHER' && <Row>
                         <Col xs={12}>
-                            <h5 className="mt-3">Emergency contact details</h5>
+                            <div className="mt-3 h5">Emergency contact details</div>
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-name" className="form-required">

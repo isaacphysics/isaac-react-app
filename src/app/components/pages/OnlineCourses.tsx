@@ -42,7 +42,7 @@ export const OnlineCourses = () => {
         {allCourses.length === 0 ?
             <ShowLoadingQuery
                 query={onlineCourseQuery}
-                thenRender={() => <div className={"w-100 text-start"}><h4>No courses to display...</h4></div>}
+                thenRender={() => <div className="w-100 text-start h4">No courses to display...</div>}
                 defaultErrorTitle={"Error fetching online courses"}
             /> :
             <>

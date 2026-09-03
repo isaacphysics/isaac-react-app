@@ -27,7 +27,7 @@ export const RegistrationSuccess = () => {
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
-                        <h3>Account created!</h3>
+                        <h1 className="h3">Account created!</h1>
                     </Col>
                 </Row>
                 <Row className="justify-content-center">
