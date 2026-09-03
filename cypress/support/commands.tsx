@@ -68,8 +68,11 @@ import { v4 as uuid_v4 } from 'uuid';
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], user, mountOptions) => {
     cy.window().then(window => {
         // createBrowserRouter errors with `TypeError: Cannot read properties of null (reading 'history')` if the global window is not defined.
-        // this seems to happen randomly with certain test setups (MyGameboards.cy.tsx has faced this a lot), but the exact reason remains unknown.
-        // my best guess is something regarding having two tests that mountWithStoreAndRouter the same component?
+        // this seems to fatally affect test setups where the "same" component is mounted across multiple tests (c.f. MyGameboards.cy.tsx),
+        // presumably because there is some state that is not correctly flushed across the tests' teardown/setup.
+        // 
+        // wrapping the router creation in a `cy.window().then` seems to fix the issue issue with the global window not being defined;
+        // passing a rerender key to the mount function fixes the issue with stale mounted components being used across tests.
         const uuid = uuid_v4();
 
         const router = createBrowserRouter(createRoutesFromElements(<>
