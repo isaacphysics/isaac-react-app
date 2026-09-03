@@ -9,7 +9,8 @@ import {
     PATHS,
     STAGE,
     TAG_ID,
-    tags
+    tags,
+    useHistoryState
 } from "../../services";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
@@ -17,7 +18,6 @@ import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import partition from "lodash/partition";
 import { Tabs } from "../elements/Tabs";
-import { useHistoryState } from "../../state/actions/history";
 import { IconCard } from "../elements/cards/IconCard";
 import { PageContainer } from "../elements/layout/PageContainer";
 
