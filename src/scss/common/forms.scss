@@ -97,7 +97,7 @@ textarea {
   height: 2.6rem;
   padding: initial 40px initial 1rem;
 
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     max-width: 220px;
   }
 
@@ -246,7 +246,7 @@ input[type=date]::-webkit-outer-spin-button {
   margin-top: 0;
 }
 
-@media (min-width: 576px) {
+@include media-breakpoint-up(sm) {
   .form-inline label {
     display: flex;
     align-items: center;

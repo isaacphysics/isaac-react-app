@@ -56,11 +56,11 @@ const FastTrackSubmissionButtons = ({fastTrackPrimaryAction, fastTrackSecondaryA
     return <>
         {fastTrackSecondaryAction && <div
             className={classNames("m-auto pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-lg-3 pb-3": fastTrackPrimaryAction})}>
-            <input {...fastTrackSecondaryAction} className="h-100 btn btn-outline-primary w-100"/>
+            <input {...fastTrackSecondaryAction} className="h-100 btn btn-keyline w-100"/>
         </div>}
         {fastTrackPrimaryAction && <div
             className={classNames("m-auto w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("pb-3", "pb-1"), {"ps-sm-2 ps-lg-3": fastTrackSecondaryAction})}>
-            <input {...fastTrackPrimaryAction} className="h-100 btn btn-secondary w-100"/>
+            <input {...fastTrackPrimaryAction} className="h-100 btn btn-solid w-100"/>
         </div>}
     </>;
 };
@@ -103,13 +103,13 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
         !!locked
     );
 
-    const tooManySigFigsFeedback = <p>
-        Your answer <b>looks right</b>, but it needs <b>fewer</b>&nbsp;
+    const tooManySigFigsFeedback = <p className="fs-5">
+        your answer needs <b>fewer</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
-    const tooFewSigFigsFeedback = <p>
-        Your answer may be <b>right or wrong</b>, but it needs <b>more</b>&nbsp;
+    const tooFewSigFigsFeedback = <p className="fs-5">
+        <b>more</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
@@ -223,11 +223,12 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
                             <h1 className="m-0">
-                                {correct ? "Correct!" : (
-                                    sigFigsError ? "Significant Figures" : (
-                                        almost ? "Partly correct..." : "Incorrect"
-                                    )
-                                )}
+                                {correct ? "Correct!" :
+                                    tooManySigFigsError ? "Looks right, but..." :
+                                        tooFewSigFigsError ? "Your answer needs..." :
+                                            almost ? "Partly correct..." :
+                                                "Incorrect"
+                                }
                             </h1>
                         }
                     </div>
