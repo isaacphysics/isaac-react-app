@@ -71,7 +71,7 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
     const router = createBrowserRouter(createRoutesFromElements(<>
         {routes?.length
             ? routes.map(route => <Route key={`${uuid}-${route}`} element={component} path={route} />)
-            : <Route path="*" element={component} />
+            : <Route key={`${uuid}-*`} element={component} path="*" />
         }
     </>));
 
