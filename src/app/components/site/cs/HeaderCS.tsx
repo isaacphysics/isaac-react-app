@@ -111,11 +111,11 @@ export const HeaderCS = () => {
                         {isLoggedIn(user)
                             ? <>
                                 <NavigationSection className={"navbar-separator"} topLevelLink to="/dashboard" title={<>My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />
-                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>
+                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/logout" title={"Log out"}/>
                             </>
                             : <>
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/register" title={"Sign up"}/>
-                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/login" title={"Log in"}/>
+                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/login" title={"Log in"}/>
                             </>
                         }
                     </Nav>
