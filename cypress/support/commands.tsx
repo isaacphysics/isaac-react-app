@@ -63,12 +63,14 @@ import {store} from "../../src/app/state";
 import {createBrowserRouter, createRoutesFromElements, Route, To} from "react-router";
 import { RouterProvider } from 'react-router-dom';
 import { ACTION_TYPE } from '../../src/app/services';
+import { v4 as uuid_v4 } from 'uuid';
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], user, mountOptions) => {
     cy.window().then(window => {
         // createBrowserRouter errors with `TypeError: Cannot read properties of null (reading 'history')` if the global window is not defined.
         // this seems to happen randomly with certain test setups (MyGameboards.cy.tsx has faced this a lot), but the exact reason remains unknown.
         // my best guess is something regarding having two tests that mountWithStoreAndRouter the same component?
+        const uuid = uuid_v4();
 
         const router = createBrowserRouter(createRoutesFromElements(<>
             {routes?.length
@@ -87,7 +89,8 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
             <Provider store={store}>
                 <RouterProvider router={router} />
             </Provider>,
-            mountOptions
+            mountOptions,
+            uuid
         );
     });
 });
