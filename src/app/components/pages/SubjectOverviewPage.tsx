@@ -10,6 +10,8 @@ import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 import { PageMetadata } from "../elements/PageMetadata";
 import { useGetGameboardByIdQuery } from "../../state";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { RenderNothing } from "../elements/RenderNothing";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     const deviceSize = useDeviceSize();
@@ -84,15 +86,16 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
         biology: "sample_bio_questions"
     };
 
-    const gameboardByIdQuery = useGetGameboardByIdQuery(gameboard_ids[subject]);
+    const gameboardByIdQuery = useGetGameboardByIdQuery(gameboard_ids[subject] ?? skipToken);
 
-    return gameboard_ids[subject]
-        ? <ShowLoadingQuery
-            query={gameboardByIdQuery}
-            defaultErrorTitle="Unable to load example questions"
-            maintainOnRefetch
-            thenRender={(gameboard) => <ListView className={className} type="gameboard" items={[convertToALVIGameboard(gameboard)]} />}/> 
-        : null;
+    return <ShowLoadingQuery
+        query={gameboardByIdQuery}
+        defaultErrorTitle="Unable to load example questions"
+        ifNotFound={RenderNothing}
+        uninitializedPlaceholder={RenderNothing}
+        maintainOnRefetch
+        thenRender={(gameboard) => <ListView className={className} type="gameboard" items={[convertToALVIGameboard(gameboard)]}/>}
+    />;
 };
 
 export const SubjectOverviewPage = () => {
