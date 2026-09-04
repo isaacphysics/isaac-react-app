@@ -62,6 +62,7 @@ export const Book = () => {
                     ? <ShowLoadingQuery
                         query={bookDetailPageQuery}
                         defaultErrorTitle="Unable to load book page"
+                        maintainOnRefetch
                         thenRender={(bookDetailPage) => {
                             return <WithFigureNumbering doc={bookDetailPage}>
                                 <BookPage page={bookDetailPage} />
