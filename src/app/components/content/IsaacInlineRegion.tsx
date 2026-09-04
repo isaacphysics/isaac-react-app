@@ -136,7 +136,17 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
             inlineContext.setSubmitting(false);
             inlineContext.setIsModifiedSinceLastSubmission(false);
             const firstIncorrectPart = inlineQuestions?.findIndex(q => q.validationResponse?.correct !== true);
-            inlineContext.setFeedbackIndex(isDefined(firstIncorrectPart) && firstIncorrectPart >= 0 ? firstIncorrectPart : undefined);
+            const firstCorrectPartWithFeedback = inlineQuestions?.findIndex(q => q.validationResponse?.correct === true && (q.validationResponse?.explanation?.value || q.validationResponse?.explanation?.children?.length));
+            inlineContext.setFeedbackIndex(
+                // jump to the first non-correct part, if it exists; 
+                // if not, jump to the first part with non-generic feedback, if that exists;
+                // otherwise, hide the feedback box (feedbackIndex = undefined)
+                isDefined(firstIncorrectPart) && firstIncorrectPart >= 0
+                    ? firstIncorrectPart
+                    : isDefined(firstCorrectPartWithFeedback) && firstCorrectPartWithFeedback >= 0
+                        ? firstCorrectPartWithFeedback
+                        : undefined
+            );
             inlineContext.canShowWarningToast = true;
         }
     }, [inlineContext?.modifiedQuestionIds]);
