@@ -176,7 +176,7 @@ export const AllTopics = () => {
             renderHiddenTabs={false}
         >
             {{
-                ["11 to 14 years"]: <TopicsListing tagCols={partition(ks4Tags, s => !s.comingSoonDate || s.title.charAt(0) <= "C")} age="11-14" />,
+                ["11 to 14 years"]: <TopicsListing tagCols={partition(ks4Tags, s => !s.comingSoonDate || ks4Tags.indexOf(s) <= 4)} age="11-14" />,
                 ["14 to 19 years"]: <TopicsListing tagCols={partition(coreAdvancedTags, s => s.title.charAt(0) <= "D")} age="14-19" />
             }}
         </Tabs>;
