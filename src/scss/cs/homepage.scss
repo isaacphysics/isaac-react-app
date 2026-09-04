@@ -1,4 +1,12 @@
 #homepage {
+  .homepage-logos {
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+    gap: 1.75rem 1.5rem;
+    justify-items: center;
+    align-items: center;
+  }
+
   section#call-to-action {
     padding-top: 5rem;
     background-color: $cs-black;
@@ -19,6 +27,9 @@
       margin-bottom: -20%;
     }
     @include media-breakpoint-up(md) {
+      margin-bottom: -2%;
+    }
+    @include media-breakpoint-up(xl) {
       margin-bottom: 0;
     }
   }

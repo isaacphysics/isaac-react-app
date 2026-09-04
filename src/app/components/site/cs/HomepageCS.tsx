@@ -25,17 +25,16 @@ export const HomepageCS = () => {
                         <div className={""}>
                             <h1 className={"backslash-left-small text-center font-size-2 font-size-md-2-5 mb-0"}>The free learning platform for computing teachers and students</h1>
                         </div>
-                        <div className="d-flex flex-row w-100 align-items-center justify-content-center">
-                            <div className={"mx-5"}>
-                                <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
-                                </a>
-                            </div>
-                            <div className={"mx-5"}>
-                                <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
-                                </a>
-                            </div>
+
+                        <div className="homepage-logos">
+                            <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                            </a>
+                            <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                            </a>
+                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
+                            <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
                         </div>
                         <div>
                             {isLoggedIn(user) && isTeacherOrAbove(user) &&
