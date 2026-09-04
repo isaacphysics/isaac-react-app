@@ -2,17 +2,19 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, Col, Container, Row} from "reactstrap";
-import {isLoggedIn, isTeacherOrAbove, SITE_TITLE} from "../../../services";
+import {isLoggedIn, isTeacherOrAbove, SITE_TITLE, useDeviceSize} from "../../../services";
 import {MetaDescription} from "../../elements/MetaDescription";
 import { ImageBlock } from "../../elements/layout/ImageBlock";
 import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaNewsSection } from "../../elements/AdaNewsSection";
+import classNames from "classnames";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
 
     return <>
         {/*<WarningBanner/>*/}
@@ -25,17 +27,16 @@ export const HomepageCS = () => {
                         <div className={""}>
                             <h1 className={"backslash-left-small text-center font-size-2 font-size-md-2-5 mb-0"}>The free learning platform for computing teachers and students</h1>
                         </div>
-                        <div className="d-flex flex-row w-100 align-items-center justify-content-center">
-                            <div className={"mx-5"}>
-                                <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
-                                </a>
-                            </div>
-                            <div className={"mx-5"}>
-                                <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
-                                </a>
-                            </div>
+
+                        <div className="homepage-logos">
+                            <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                            </a>
+                            <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                            </a>
+                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
+                            <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
                         </div>
                         <div>
                             {isLoggedIn(user) && isTeacherOrAbove(user) &&
@@ -43,25 +44,25 @@ export const HomepageCS = () => {
                         </div>
                     </div>
                 </Container>
-                <Container className={"mw-1600 homepage-padding-x"} fluid>
-                    <Card id={"cta-features-card"} className={"icon-card p-5"}>
-                        <Row className={"justify-content-center gy-5 fw-bold"}>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Free computer science resources for students aged 14 to 19
-                            </Col>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Instant feedback with self-marking quizzes
-                            </Col>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Track progress in your personal markbook
-                            </Col>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Specific exam alignment for the UK and adaptable to use worldwide
-                            </Col>
-                        </Row>
-                    </Card>
-                </Container>
             </section>
+            <Container className={classNames("mw-1600 homepage-padding-x justify-self-center", {"position-absolute translate-middle-y": deviceSize !== "xs"})} fluid>
+                <Card id={"cta-features-card"} className={"icon-card p-5"}>
+                    <Row className={"justify-content-center gy-5 fw-bold"}>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Free computer science resources for students aged 14 to 19
+                        </Col>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Instant feedback with self-marking quizzes
+                        </Col>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Track progress in your personal markbook
+                        </Col>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Specific exam alignment for the UK and adaptable to use worldwide
+                        </Col>
+                    </Row>
+                </Card>
+            </Container>
 
             <section id="teach-and-learn">
                 <Container className="homepage-padding mw-1600" fluid>
@@ -194,6 +195,29 @@ export const HomepageCS = () => {
             <section id="news" className="bg-white">
                 <Container className="homepage-padding mw-1600" fluid>
                     <AdaNewsSection isHomepage />
+                </Container>
+            </section>
+
+            <section id="tech-first-home" className="bg-dark-pink-300">
+                <Container className="homepage-padding mw-1600" fluid>
+                    <ColumnSlice breakpoint="lg" reverseUnderBreakpoint>
+                        <ImageBlock>
+                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt="A cartoon sketch of Cyber City"/>
+                        </ImageBlock>
+                        <TextBlock className="text-white">
+                            <h2 className={"font-size-2"}>Ada CS is the new TechFirst learning platform</h2>
+                            <p>Ada Computer Science has partnered with the Department for Digital, Culture, Media and Sport to expand our content and features.</p>
+                            <p>This includes new content on artificial intelligence, cybersecurity, quantum computing, engineering biology, semiconductors, and advanced connectivity technologies, designed specifically for learners aged 11–14.</p>
+                            <div className="d-flex column-gap-3 flex-column flex-md-row">
+                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/tech-first"}>Read more</Button>
+                                <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>Explore the new topics</Button>
+                            </div>
+                            <div className="d-flex gap-4 mt-6">
+                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
+                                <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
+                            </div>
+                        </TextBlock>
+                    </ColumnSlice>
                 </Container>
             </section>
         </div>

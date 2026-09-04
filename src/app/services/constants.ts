@@ -2,7 +2,7 @@
 import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
-import {BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
+import {AdaTopicBase, BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
@@ -684,6 +684,19 @@ export enum TAG_ID {
     theoryOfComputation = "theory_of_computation",
     projects = "projects",
 
+    // 11-14
+    computerScience11_14 = "computer_science_11_14",
+    aiAndMachineLearning11_14 = "ai_and_machine_learning_11_14",
+    algorithmsAndDataStructures11_14 = "algorithms_and_data_structures_11_14",
+    computingSystems11_14 = "computing_systems_11_14",
+    cyberSecurity11_14 = "cyber_security_11_14",
+    dataRepresentation11_14 = "data_representation_11_14",
+    designAndDevelopment11_14 = "design_and_development_11_14",
+    digitalLiteracy11_14 = "digital_literacy_11_14",
+    frontierTechnologies11_14 = "frontier_technologies_11_14",
+    networks11_14 = "networks_11_14",
+    programming11_14 = "programming_11_14",
+
     // AI and machine learning topics
     artificialIntelligence = "artificial_intelligence",
     machineLearning = "machine_learning",
@@ -975,6 +988,103 @@ export enum TAG_LEVEL {
 }
 
 type ContextSpecificTags = Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID[]>>>;
+
+export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> = {
+    [TAG_ID.aiAndMachineLearning11_14]: [
+        {title: "Data driven vs. rule based", url: undefined},
+        {title: "Data science", url: undefined},
+        {title: "Building a data-driven model", url: undefined},
+    ],
+    [TAG_ID.algorithmsAndDataStructures11_14]: [
+        {title: "Computational thinking", url: undefined},
+        {title: "Designing algorithms", url: undefined},
+        {title: "Data structures", url: undefined},
+        {title: "Searching", url: undefined},
+        {title: "Sorting", url: undefined},
+    ],
+    [TAG_ID.computingSystems11_14]: [
+        {title: "Types of computing systems", url: undefined},
+        {title: "Computer architecture", url: undefined},
+        {title: "Boolean logic", url: undefined},
+        {title: "Operating systems", url: undefined},
+    ],
+    [TAG_ID.cyberSecurity11_14]: [
+        {title: "Social engineering", url: "/concepts/social_engineering"},
+        {title: "Malware", url: "/concepts/tf-malware-hackers"},
+        {title: "Defending against malware", url: "/concepts/defending_against_malware"},
+        {title: "Network security", url: "/concepts/tf-network-security"},
+    ],
+    [TAG_ID.dataRepresentation11_14]: [
+        {title: "Representation of numbers", url: undefined},
+        {title: "Representation of text", url: undefined},
+        {title: "Representation of images", url: undefined},
+        {title: "Representation of sound", url: undefined},
+        {title: "Compression", url: undefined},
+    ],
+    [TAG_ID.designAndDevelopment11_14]: [
+        {title: "Features of a digital product", url: undefined},
+        {title: "Planning a digital product", url: undefined},
+        {title: "Reviewing a digital product", url: undefined},
+        {title: "Testing", url: undefined},
+    ],
+    [TAG_ID.digitalLiteracy11_14]: [
+        {title: "Safe and responsible use of digital devices", url: undefined},
+        {title: "Collaboration using digital tools", url: undefined},
+        {title: "Finding, searching and using credible sources", url: undefined},
+        {title: "Safe and responsible use of AI", url: undefined},
+        {title: "Impacts of technology", url: undefined},
+    ],
+    [TAG_ID.frontierTechnologies11_14]: [
+        {title: "AI and machine learning", url: undefined},
+        {title: "Quantum computing", url: undefined},
+        {title: "Advanced connectivity", url: undefined},
+        {title: "Engineering biology", url: undefined},
+        {title: "Semiconductors", url: undefined},
+    ],
+    [TAG_ID.networks11_14]: [
+        {title: "Network basics", url: undefined},
+        {title: "Wired and wireless networks", url: undefined},
+        {title: "The internet", url: undefined},
+        {title: "WWW", url: undefined},
+        {title: "Internet of things", url: undefined},
+    ],
+    [TAG_ID.programming11_14]: [
+        {title: "Input and output", url: undefined},
+        {title: "Sequence", url: undefined},
+        {title: "Variables", url: undefined},
+        {title: "Selection", url: undefined},
+        {title: "Operators", url: undefined},
+        {title: "Iteration", url: undefined},
+        {title: "Functions", url: undefined},
+    ],
+};
+
+export const AdaTopicsToIcons: Partial<Record<TAG_ID, string>> = {
+    [TAG_ID.cyberSecurity11_14]: "icon-cyber-security",
+    [TAG_ID.aiAndMachineLearning11_14]: "icon-ai-data-science-and-machine-learning",
+    [TAG_ID.designAndDevelopment11_14]: "icon-design-and-development",
+    [TAG_ID.digitalLiteracy11_14]: "icon-digital-literacy",
+    [TAG_ID.algorithmsAndDataStructures11_14]: "icon-algorithms-and-data-structures",
+    [TAG_ID.computingSystems11_14]: "icon-computing-systems",
+    [TAG_ID.dataRepresentation11_14]: "icon-data-and-information",
+    [TAG_ID.frontierTechnologies11_14]: "icon-impact-of-technology",
+    [TAG_ID.networks11_14]: "icon-networks",
+    [TAG_ID.programming11_14]: "icon-programming",
+
+    [TAG_ID.aiAndMachineLearning]: "icon-ai-and-machine-learning",
+    [TAG_ID.dataStructuresAndAlgorithms]: "icon-algorithms-and-data-structures",
+    [TAG_ID.computerSystems]: "icon-computing-systems",
+    [TAG_ID.creatingMedia]: "icon-creating-media",
+    [TAG_ID.dataAndInformation]: "icon-data-and-information",
+    [TAG_ID.designAndDevelopment]: "icon-design-and-development",
+    [TAG_ID.effectiveUseOfTools]: "icon-effective-use-of-tools",
+    [TAG_ID.impactsOfDigitalTechnology]: "icon-impact-of-technology",
+    [TAG_ID.computerNetworks]: "icon-networks",
+    [TAG_ID.programming]: "icon-programming",
+    [TAG_ID.cyberSecurity]: "icon-safety-and-security",
+    [TAG_ID.theoryOfComputation]: "icon-models-of-computation",
+    [TAG_ID.projects]: "icon-software-projects",
+};
 
 // A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
 export const SUBJECT_SPECIFIC_CHILDREN_MAP: ContextSpecificTags = {

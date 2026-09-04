@@ -32,13 +32,13 @@ export const FooterCS = () => (
                 <div className='footer-rule mb-4' />
                 <div className='footer-links footer-bottom pb-7'>
                     <Row className="justify-content-between">
-                        <Col xs={{size: 12}} md={{size: 7, order: 2}} lg={{size: 8}} xl={{size: 9}} className="text-cs-white text-start text-md-end">
+                        <Col xs={{size: 12}} md={{size: 6, order: 2}} lg={{size: 6}} xl={{size: 6}} className="text-cs-white text-start text-md-end">
                             <p>
                                 All teaching materials on this site are available under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" className="d-inline link-light text-white">CC BY-NC-SA 4.0</a> license, except where otherwise stated.
                             </p>
                         </Col>
-                        <Col xs={{size: 12}} md={{size: 5, order: 1}} lg={{size: 4}} xl={{size: 3}} className="col-xxl-2">
-                            <Row className="align-items-center">
+                        <Col xs={{size: 12}} md={{size: 6, order: 1}} lg={{size: 6}} xl={{size: 6}} className="col-xxl-2">
+                            <Row className="align-items-center row-cols-1 row-cols-sm-4 row-cols-md-2 row-cols-lg-4 g-4">
                                 <Col>
                                     <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
                                         <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
@@ -48,6 +48,12 @@ export const FooterCS = () => (
                                     <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
                                         <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
                                     </a>
+                                </Col>
+                                <Col>
+                                    <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
+                                </Col>
+                                <Col>
+                                    <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
                                 </Col>
                             </Row>
                         </Col>

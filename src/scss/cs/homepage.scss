@@ -1,6 +1,15 @@
 #homepage {
+  .homepage-logos {
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+    gap: 1.75rem 1.5rem;
+    justify-items: center;
+    align-items: center;
+    margin: 0 1rem;
+  }
+
   section#call-to-action {
-    padding-top: 5rem;
+    padding: 5rem 0 8rem 0;
     background-color: $cs-black;
     background-image: url("/assets/cs/decor/hero.svg");
     background-repeat: no-repeat;
@@ -11,22 +20,16 @@
     h1 {
       max-width: 980px;
     }
-  }
 
-  #cta-container {
-    margin-bottom: -40%;
-    @include media-breakpoint-only(sm) {
-      margin-bottom: -20%;
-    }
-    @include media-breakpoint-up(md) {
-      margin-bottom: 0;
+    @include media-breakpoint-only(xs) {
+      padding-bottom: 3rem;
+      margin-bottom: -2rem;
     }
   }
 
   #cta-features-card {
     position: relative;
     font-weight: bold;
-    transform: translateY(75%);
 
     @include media-breakpoint-only(md) {
       // Give every other element a left border
@@ -36,7 +39,6 @@
     }
 
     @include media-breakpoint-up(lg) {
-      transform: translateY(50%);
 
       // Give all but first child a left border
       & .row > * + * {
@@ -46,18 +48,18 @@
   }
 
   section#teach-and-learn{
-    padding-top: 18rem;
+    padding-top: 8rem;
 
-    @include media-breakpoint-up(sm) {
-      padding-top: 15rem;
+    @include media-breakpoint-only(xs) {
+      padding-top: 0;
     }
 
-    @include media-breakpoint-up(md) {
-      padding-top: 10rem;
+    @include media-breakpoint-only(md) {
+      padding-top: 5rem;
     }
 
     @include media-breakpoint-up(lg) {
-      padding-top: 3rem;
+      padding-top: 2rem;
     }
 
     ul {
