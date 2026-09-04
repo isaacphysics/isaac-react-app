@@ -352,7 +352,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
-            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
+            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isPhy && !isDefined(userToUpdate.dateOfBirth))) &&
             (!userToUpdate.password || isNewPasswordValid))
         {
 
