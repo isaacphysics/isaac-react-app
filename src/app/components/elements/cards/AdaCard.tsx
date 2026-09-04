@@ -25,7 +25,9 @@ export const AdaCard = ({card, ...props}: AdaCardProps) => {
     const {title, image, bodyText, clickUrl, buttonText, buttonStyle, buttonAltText, disabled} = card;
     return <div {...props} className={classNames("cs-card-container", props?.className ?? "")}>
         <Card className={classNames("cs-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card}>
-            {image && <CardImg src={image.src} alt={image.altText ?? ""} className={image.className ?? ""}/>}
+            {image && <div className="cs-card-image-container">
+                <CardImg src={image.src} alt={image.altText ?? ""} className={image.className ?? ""}/>
+            </div>}
             <div className={classNames("d-flex flex-column h-100", {"pb-4" : !clickUrl || buttonStyle === "card"})}>
                 <CardTitle className="px-4 mt-4">
                     <h3 className="mt-2 mb-0">{title}</h3>
