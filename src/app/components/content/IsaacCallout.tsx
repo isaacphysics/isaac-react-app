@@ -50,7 +50,7 @@ export const IsaacCallout = ({doc}: {doc: ContentDTO}) => {
     return <Row
         className={classNames("isaac-callout", colourClass)}>
         <Col>
-            <img className={siteSpecific("float-start", "float-end")} style={calloutStyle.style}
+            <img className={siteSpecific("float-start", "float-end ms-2")} style={calloutStyle.style}
                 width={calloutStyle.width} height={calloutStyle.height} src={iconSrc} alt=""
             />
             <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
