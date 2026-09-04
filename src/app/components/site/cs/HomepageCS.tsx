@@ -198,7 +198,7 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
-            <section id="cyber-explorers-home" className="bg-dark-pink-300">
+            <section id="tech-first-home" className="bg-dark-pink-300">
                 <Container className="homepage-padding mw-1600" fluid>
                     <ColumnSlice breakpoint="lg" reverseUnderBreakpoint>
                         <ImageBlock>
@@ -209,7 +209,7 @@ export const HomepageCS = () => {
                             <p>Ada Computer Science has partnered with the Department for Digital, Culture, Media and Sport to expand our content and features.</p>
                             <p>This includes new content on artificial intelligence, cybersecurity, quantum computing, engineering biology, semiconductors, and advanced connectivity technologies, designed specifically for learners aged 11–14.</p>
                             <div className="d-flex column-gap-3 flex-column flex-md-row">
-                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/cyber-explorers"}>Read more</Button>
+                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/tech-first"}>Read more</Button>
                                 <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>Explore the new topics</Button>
                             </div>
                             <div className="d-flex gap-4 mt-6">

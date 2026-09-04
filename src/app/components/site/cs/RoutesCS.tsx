@@ -62,7 +62,7 @@ export const RoutesCS = [
     // Student and teacher resources
     <Route key={key++} path="/students" element={<StudentResources />} />,
     <Route key={key++} path="/teachers" element={<TeacherResources />} />,
-    <Route key={key++} path="/cyber-explorers" element={<AdaCyberExplorersResources />} />,
+    <Route key={key++} path="/tech-first" element={<AdaCyberExplorersResources />} />,
 
     // Assignments
     <Route key={key++} path="/assignment_progress" element={<Navigate to="/my_markbook" replace />} />,
