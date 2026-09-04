@@ -96,7 +96,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, index, correct
                 color={noDisplayUnit ? undefined : "white"}
                 caret={isPhy && noDisplayUnit}
             >
-                {/* this seemingly redundant div structure is necessary – the toggle and first div use a distinct ::after elements, and the latter must independently define the correctness */}
+                {/* this seemingly redundant div structure is necessary – the toggle and first use a distinct ::after elements, and the latter must independently define the correctness */}
                 <div className="feedback-wrapper d-flex">
                     <div className={classNames("d-flex align-items-center align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                         <Markup encoding={"latex"}>
