@@ -2,17 +2,19 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, Col, Container, Row} from "reactstrap";
-import {isLoggedIn, isTeacherOrAbove, SITE_TITLE} from "../../../services";
+import {isLoggedIn, isTeacherOrAbove, SITE_TITLE, useDeviceSize} from "../../../services";
 import {MetaDescription} from "../../elements/MetaDescription";
 import { ImageBlock } from "../../elements/layout/ImageBlock";
 import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaNewsSection } from "../../elements/AdaNewsSection";
+import classNames from "classnames";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
 
     return <>
         {/*<WarningBanner/>*/}
@@ -42,25 +44,25 @@ export const HomepageCS = () => {
                         </div>
                     </div>
                 </Container>
-                <Container className={"mw-1600 homepage-padding-x"} fluid>
-                    <Card id={"cta-features-card"} className={"icon-card p-5"}>
-                        <Row className={"justify-content-center gy-5 fw-bold"}>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Free computer science resources for students aged 14 to 19
-                            </Col>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Instant feedback with self-marking quizzes
-                            </Col>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Track progress in your personal markbook
-                            </Col>
-                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                                Specific exam alignment for the UK and adaptable to use worldwide
-                            </Col>
-                        </Row>
-                    </Card>
-                </Container>
             </section>
+            <Container className={classNames("mw-1600 homepage-padding-x justify-self-center", {"position-absolute translate-middle-y": deviceSize !== "xs"})} fluid>
+                <Card id={"cta-features-card"} className={"icon-card p-5"}>
+                    <Row className={"justify-content-center gy-5 fw-bold"}>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Free computer science resources for students aged 14 to 19
+                        </Col>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Instant feedback with self-marking quizzes
+                        </Col>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Track progress in your personal markbook
+                        </Col>
+                        <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                            Specific exam alignment for the UK and adaptable to use worldwide
+                        </Col>
+                    </Row>
+                </Card>
+            </Container>
 
             <section id="teach-and-learn">
                 <Container className="homepage-padding mw-1600" fluid>
