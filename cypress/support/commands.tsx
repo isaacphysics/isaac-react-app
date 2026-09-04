@@ -63,27 +63,39 @@ import {store} from "../../src/app/state";
 import {createBrowserRouter, createRoutesFromElements, Route, To} from "react-router";
 import { RouterProvider } from 'react-router-dom';
 import { ACTION_TYPE } from '../../src/app/services';
+import { v4 as uuid_v4 } from 'uuid';
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], user, mountOptions) => {
-    const router = createBrowserRouter(createRoutesFromElements(<>
-        {routes?.length
-            ? routes.map(route => <Route key={route} element={component} path={route} />)
-            : <Route path="*" element={component} />
+    cy.window().then(window => {
+        // createBrowserRouter errors with `TypeError: Cannot read properties of null (reading 'history')` if the global window is not defined.
+        // this seems to fatally affect test setups where the "same" component is mounted across multiple tests (c.f. MyGameboards.cy.tsx),
+        // presumably because there is some state that is not correctly flushed across the tests' teardown/setup.
+        // 
+        // wrapping the router creation in a `cy.window().then` seems to fix the issue issue with the global window not being defined;
+        // passing a rerender key to the mount function fixes the issue with stale mounted components being used across tests.
+        const uuid = uuid_v4();
+
+        const router = createBrowserRouter(createRoutesFromElements(<>
+            {routes?.length
+                ? routes.map(route => <Route key={route} element={component} path={route} />)
+                : <Route element={component} path="*" />
+            }
+        </>), { window });
+
+        if (user) {
+            void store.dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user});
         }
-    </>));
 
-    if (user) {
-        void store.dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user});
-    }
-
-    void router.navigate(initialRoute || '/');
-    
-    mount(
-        <Provider store={store}>
-            <RouterProvider router={router} />
-        </Provider>,
-        mountOptions
-    );
+        void router.navigate(initialRoute || '/');
+        
+        mount(
+            <Provider store={store}>
+                <RouterProvider router={router} />
+            </Provider>,
+            mountOptions,
+            uuid
+        );
+    });
 });
 
 import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
