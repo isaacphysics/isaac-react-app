@@ -4,13 +4,18 @@
 
 // stylistically this would work better as a class with a @extend of this class in the @container query, 
 // but the generated CSS seemingly ignores the @container condition when using @extend?
+// --
+// pods have two layouts – a vertical layout with the image on top, and a horizontal layout with the image on the left.
+// the horizontal layout is used for wide pods (>576px) by default.
+// .force-horizontal can be added to force a regular pod into a horizontal layout.
+// .pod-flush does the same, but changes the style too to align with e.g. books (no background, no shadow, just image + text).
 @mixin horizontal-pod-container {
-  .pod.force-horizontal {
+  .pod.force-horizontal, .pod.pod-flush {
     @content;
   }
 
   @container pod-parent (min-width: 576px) {
-    .pod:not(.no-horizontal) {
+    .pod:not(.no-horizontal):not(.pod-flush) {
       @content;
     }
   }
@@ -26,13 +31,15 @@ div:has(> .pod) {
   @include horizontal-pod-container {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: fit-content;
     padding: $card-spacer-y $card-spacer-x;
 
-    &.pod-clickable {
+    &.pod-flush {
       background-color: transparent;
       box-shadow: none;
-      padding-top: 0;
+      padding: 0.25rem;
+      margin: 0.25rem;
+      height: max-content;
 
       a::after {
         content: "";
@@ -53,6 +60,7 @@ div:has(> .pod) {
       width: 35%;
       min-width: 35%;
       height: 100%;
+      min-height: 215px;
     
       > img {
         border-radius: $card-inner-border-radius;

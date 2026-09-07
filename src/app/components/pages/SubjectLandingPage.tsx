@@ -100,9 +100,51 @@ interface FooterRowProps {
     events?: AugmentedEvent[];
 }
 
-const FooterRow = ({context, books, news, events}: FooterRowProps) => {
-    // this should be used under the assumption that the above props have been fetched; they may still be undefined, but they will not change
+const BooksList = ({books, isFullWidth}: {books: BookInfo[], isFullWidth: boolean}) => {
+    return <div className="d-flex flex-column mt-3">
+        <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+            <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
+            <div className="section-divider-bold flex-grow-1"/>
+        </div>
+        <Row className={classNames("item-list-container row-cols-1", {"row-cols-md-2": isFullWidth})}>
+            {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
+        </Row>
+        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">
+            View more books
+        </Button>}
+    </div>;
+};
 
+const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
+    return <div className="d-flex flex-column mt-3">
+        <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+            <h4>News & Features</h4>
+            <div className="section-divider-bold flex-grow-1"/>
+        </div>
+        <Row className="h-100 item-list-container">
+            {news.slice(0, 2).map((newsItem, i) => 
+                <NewsCard key={i} newsItem={newsItem} layout={"flush"} />
+            )}
+        </Row>
+    </div>;
+};
+
+const EventsList = ({events}: {events: AugmentedEvent[]}) => {
+    return <div className="d-flex flex-column mt-3">
+        <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+            <h4 className="m-0">Events <span className="text-theme">({events.length})</span></h4>
+            <div className="section-divider-bold flex-grow-1"/>
+        </div>
+        <Row className="h-100 item-list-container">
+            {events.map((event, i) =>
+                <EventCard key={i} event={event} layout={"flush"} />
+            )}
+        </Row>
+    </div>;
+};
+
+// this should be used under the assumption that the above props have been fetched; they may still be undefined, but they will not change
+const FooterRow = ({context, books, news, events}: FooterRowProps) => {
     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
     const relevantEvents = events?.filter(event =>
         context?.subject
@@ -110,56 +152,17 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
         && (!context?.stage?.length || eventStages(event).includes(context.stage[0]))
     ).slice(0, 2);
 
-    const deviceSize = useDeviceSize();
+    const noEvents = !relevantEvents?.length;
 
-    const fullWidthBooks = !relevantEvents?.length;
-
-    return <Row className={classNames("mt-2 py-4 row-cols-1", {"row-cols-md-2": !fullWidthBooks})}>
-        <div className="d-flex flex-column mt-3">
-            {/* if there are books, display books. otherwise, display news */}
-            {books?.length
-                ? <>
-                    <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                        <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
-                        <div className="section-divider-bold flex-grow-1"/>
-                    </div>
-                    <Col className={classNames("item-list-container", {"flex-column": !fullWidthBooks})}>
-                        <Row className={classNames("mx-0", {"row-cols-1 row-cols-md-2": fullWidthBooks})}>
-                            {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
-                        </Row>
-                        <Row className="px-7 mx-0">
-                            {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">View more books</Button>}
-                        </Row>
-                    </Col>
-                </>
-                : <>
-                    <div className="d-flex flex-column">
-                        <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                            <h4>News & Features</h4>
-                            <div className="section-divider-bold flex-grow-1"/>
-                        </div>
-                        {news && <Row className="h-100">
-                            {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id} className="mb-3">
-                                <NewsCard newsItem={newsItem} className="force-horizontal p-2" />
-                            </Col>)}
-                        </Row>}
-                    </div>
-                </>
-            }
-        </div>
-        {!!relevantEvents?.length && <div className="d-flex flex-column mt-3">
-            <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                <h4 className="m-0">Events <span className="text-theme">({relevantEvents.length})</span></h4>
-                <div className="section-divider-bold flex-grow-1"/>
-            </div>
-            <Row className="h-100 item-list-container">
-                {relevantEvents.map((event, i) =>
-                    <Col xs={12} key={i} className={classNames("mt-1", {"mb-3": ['xs', 'md'].includes(deviceSize)})}>
-                        {event && <EventCard event={event} layout={"landing-page"} className={classNames({"force-horizontal": !['xs', 'md'].includes(deviceSize)})} />}
-                    </Col>
-                )}
-            </Row>
-        </div>}
+    return <Row className={classNames("mt-2 py-4 row-cols-1", {"row-cols-md-2": !noEvents})}>
+        {/* if there are books, display books. otherwise, display news */}
+        {books?.length
+            ? <BooksList books={books} isFullWidth={noEvents} />
+            : news?.length 
+                ? <NewsList news={news} />
+                : <p>No books or news available for this subject. Check back soon!</p>
+        }
+        {!noEvents && <EventsList events={relevantEvents} />}
     </Row>;
 };
 

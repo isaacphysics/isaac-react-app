@@ -6,14 +6,16 @@ import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
+import { PodLayout } from "../../../../IsaacAppTypes";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
     showTitle?: boolean;
     cardClassName?: string;
+    layout?: PodLayout;
 }
 
-const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassName, ...props}: NewsCardProps) => {
+const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassName, layout, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
     const CardImage = (image: ImageDTO) => {
@@ -24,7 +26,7 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
         />;
     };
 
-    return <Card data-testid={"news-pod"} {...props} className={classNames("pod news-card", props.className)}>
+    return <Card data-testid={"news-pod"} {...props} className={classNames("pod news-card", props.className, {"pod-flush": layout === "flush"})}>
         {image && (!url?.startsWith("http") ?
             <Link to={`${url}`} className="focus-target pod-img">
                 <CardImage {...image}/>
@@ -36,10 +38,11 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
         )}
         <CardBody className="d-flex flex-column">
             {showTitle && <h5>{title}</h5>}
+            {layout === "flush" && <div className="section-divider" />}
             {value && <CardText>
                 {value}
             </CardText>}
-            <Spacer/>
+            {layout !== "flush" && <Spacer/>}
             <CardText>
                 {!url?.startsWith("http") ?
                     <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
