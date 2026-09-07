@@ -80,7 +80,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 
 const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {
     const gameboard_ids: { [key in Subject]: string } = {
-        maths: "sample_maths_questions",
+        maths: "sample_maths_questions_r2",
         physics: "sample_phy_questions",
         chemistry: "sample_chem_questions",
         biology: "sample_bio_questions"
