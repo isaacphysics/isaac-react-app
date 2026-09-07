@@ -5,7 +5,7 @@ import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
-import { SsoHelpLink } from "./LogIn";
+import { SsoHelpLink } from "../elements/LogInInputs";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
