@@ -116,8 +116,11 @@ header {
   }
 
   .navbar-separator {
-    width: 100%;
-    border-top: solid $cs-jet 2px;
+    border-bottom: solid $cs-jet 2px;
+
+    @include media-breakpoint-up(nav) {
+      border-bottom: none;
+    }
   }
 }
 

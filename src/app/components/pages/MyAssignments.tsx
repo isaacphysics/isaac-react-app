@@ -181,7 +181,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             {limit < filteredAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered quizzes.
+                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
                                 </p>
                                 <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more

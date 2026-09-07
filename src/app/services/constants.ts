@@ -1082,6 +1082,11 @@ export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
 ];
 
+// Shared id helpers so the tab controls (MyAccount tablist / MyAccountSidebar) and their tabpanels can cross-reference each other consistently across the app
+export const accountTabSlug = (tab: ACCOUNT_TAB) => ACCOUNT_TABS.find(accountTab => accountTab.tab === tab)!.title.toLowerCase().replaceAll(" ", "-");
+export const accountTabId = (tab: ACCOUNT_TAB) => `account-tab-${accountTabSlug(tab)}`;
+export const accountPanelId = (tab: ACCOUNT_TAB) => `account-panel-${accountTabSlug(tab)}`;
+
 // we can't change the names of tabs as we have historic links to them, so use aliases to use updated names instead
 export const ACCOUNT_TABS_ALIASES: {[alias: string]: ACCOUNT_TAB} = {
     "security": ACCOUNT_TAB.passwordreset,

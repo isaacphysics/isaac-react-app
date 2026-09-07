@@ -21,7 +21,11 @@ const booksApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to fetch book page."
             }),
-            keepUnusedDataFor: 60
+            providesTags: (page) => {
+                const mainBoards = page?.gameboards?.map((gb) => ({type: "Gameboard" as const, id: gb.id})) || [];
+                const extensionBoards = page?.extensionGameboards?.map((gb) => ({type: "Gameboard" as const, id: gb.id})) || [];
+                return [...mainBoards, ...extensionBoards]; // required to refetch decks inside the detail page if saved status is updated 
+            }
         })
 
     })
