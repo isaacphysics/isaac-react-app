@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Col, Container, Row } from "reactstrap";
+import { Button, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
