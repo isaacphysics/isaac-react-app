@@ -37,30 +37,30 @@ export const GetStartedWithAda = () => {
                         </div>
 
                         <ul className="list-unstyled d-flex flex-column mt-3 gap-3">
-                            <CompletableTask tag={"li"} complete={tasks.createAccount}>
-                                <strong>Create your account</strong>
+                            <CompletableTask tag={"li"} complete={tasks.createAccount} inputId="create-account">
+                                <label htmlFor="create-account"><strong>Create your account</strong></label>
                             </CompletableTask>
 
-                            <CompletableTask tag={"li"} complete={tasks.personaliseContent} disabled={!tasks.createAccount} action={{
+                            <CompletableTask tag={"li"} complete={tasks.personaliseContent} inputId="personalise-content" disabled={!tasks.createAccount} action={{
                                 title: "Personalise your content",
                                 to: "/account#customise",
                                 onClick: () => setLinkedSetting("account-context")
                             }}>
                                 <div className="d-flex flex-column">
-                                    <h5 className="m-0">Personalise your content</h5>
+                                    <label className="mb-0" htmlFor="personalise-content"><strong>Personalise your content</strong></label>
                                     <span>Pick a teaching level and exam board, or choose to see all content.</span>
                                 </div>
                             </CompletableTask>
 
-                            <CompletableTask tag={"li"} complete={tasks.createGroup} disabled={!tasks.createAccount} action={{
+                            <CompletableTask tag={"li"} complete={tasks.createGroup} inputId="create-group" disabled={!tasks.createAccount} action={{
                                 title: "Manage groups",
                                 to: "/groups",
                             }}>
-                                <strong>Create a student group</strong>
+                                <label htmlFor="create-group"><strong>Create a student group</strong></label>
                             </CompletableTask>
 
-                            <CompletableTask tag={"li"} complete={tasks.assignQuiz} disabled={!tasks.createGroup}>
-                                <strong>Assign a quiz to students</strong>
+                            <CompletableTask tag={"li"} complete={tasks.assignQuiz} inputId="assign-quiz" disabled={!tasks.createGroup}>
+                                <label htmlFor="assign-quiz"><strong>Assign a quiz to students</strong></label>
                             </CompletableTask>
 
                             {/* <CompletableTask tag={"li"} complete={tasks.viewMarkbook} disabled={!tasks.assignQuiz}>
