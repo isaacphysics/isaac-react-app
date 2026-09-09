@@ -1,10 +1,7 @@
-.sidebar {
-    background-color: $cs-white;
-}
+$expanded_width: 220px;
+$collapsed_width: 69px; // 2*20px padding + 24px icon + 5px border
 
 :not(.offcanvas-body) > .sidebar {
-    background-color: $cs-white;
-
     @include not-reduced-motion {
         transition: all 0.3s ease-out;
         
@@ -12,31 +9,68 @@
             transition: opacity 0.3s ease-out;
             white-space: nowrap;
         }
+
+        .background-white {
+            transition: all 0.3s ease-out;
+        }
     }
 
     &:not(.collapsed) {
-        width: 220px;
-        max-width: 220px;
-        min-width: 220px;
+        width: $expanded_width;
+        max-width: $expanded_width;
+        min-width: $expanded_width;
 
         b {
             opacity: 1;
         }
+
+        .background-white {
+            width: $expanded_width;
+        }
     }
 
     &.collapsed {
-        width: 69px; // 2*20px padding + 24px icon + 5px border
-        max-width: 69px;
-        min-width: 69px;
+        width: $collapsed_width;
+        max-width: $collapsed_width;
+        min-width: $collapsed_width;
 
         b {
             opacity: 0;
             max-width: 0;
         }
+
+        .background-white {
+            width: $collapsed_width;
+        }
     }
 
     button i {
         --mask-size: 60%;
+    }
+
+    .background-white {
+        // Fixes https://trello.com/c/VZJoEykw/6210-my-ada-sidebar-background-not-reaching-bottom-of-small-pages.
+        //
+        // The sidebar's parent (the main content area) is sized using flexbox. This means a) it's sized so it fits
+        // the content, and b) it's sized to take up any excess space not taken up by the header or footer. 
+        //
+        // In order for the sidebar to run along the main content, this means we cannot just set it to `height: 100%`,
+        // as the calculation would be recursive. I also didn't have the courage to set `display: flex` or
+        // `position: relative` on the main content, which would have been requirement for anything less hacky.
+        // 
+        // Instead, I used a workaround on the sidebar that's strictly local. The white background overflows a container 
+        // whose height is 0. Elements are painted in DOM-order, which is just right for us: the white
+        // background covers up the grey from main, and the buttons and footer cover up the white background.
+        // The height here is arbitrary, but should be safe. The width of the background is defined explicitly, which
+        // was easy to do since the sidebar's width is also explicitly defined.
+        height: 0;
+
+        &::before {
+            display: block;
+            content: '';
+            background-color: $cs-white;
+            height: 10000vh;
+        }
     }
 }
 
