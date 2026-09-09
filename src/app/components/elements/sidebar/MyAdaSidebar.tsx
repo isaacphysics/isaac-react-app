@@ -105,6 +105,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const toggleSidebar = () => dispatch(sidebarSlice.actions.toggle());
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle="My Ada">
+        <div className="background-white" />
         <div className="sticky-top overflow-x-hidden">
             {fullSidebarLayout && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
 
