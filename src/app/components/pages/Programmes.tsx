@@ -99,12 +99,14 @@ export const Programmes = () => {
         )}
     >
         <ShowLoading until={programmes} thenRender={(programmes) => {
-            <h2 className="visually-hidden">Programmes list</h2>
-            return <ul className="list-unstyled mt-4 d-flex row flex-wrap row-cols-1 row-cols-md-2 g-3">
-                {programmes.map((programme) => <Col key={programme.id}>
-                    <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} className="mb-4" programme={programme} />
-                </Col>)}
-            </ul>;
+            return <>
+                <h2 className="visually-hidden">Programmes list</h2>
+                <ul className="list-unstyled mt-4 d-flex row flex-wrap row-cols-1 row-cols-md-2 g-3">
+                    {programmes.map((programme) => <Col key={programme.id}>
+                        <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} className="mb-4" programme={programme} />
+                    </Col>)}
+                </ul>
+            </>;
         }} />
     </PageContainer>;
 };
