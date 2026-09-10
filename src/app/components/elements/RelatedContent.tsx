@@ -65,7 +65,7 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
                         <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
-                        <div className="d-inline-block mt-2 h3">Related questions</div>
+                        <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
                 </Row>
                 <hr/>
