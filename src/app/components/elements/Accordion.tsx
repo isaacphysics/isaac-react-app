@@ -164,7 +164,7 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
     const isOpen = open && !disabled;
 
     return <div className="isaac-accordion">
-        <h3>
+        <h3 className="mb-0">
             <button
                 className={classNames(
                     "accordion-header d-flex w-100 p-0", 

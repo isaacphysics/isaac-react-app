@@ -103,16 +103,17 @@ type TrustedMarkupProps = {
 //  - `unknown`:   HTML is escaped, and markup is rendered alongside a warning that the encoding is unknown.
 //
 // You can pass in an encoding other than these, and the encoding will be treated the same as as `unknown`.
-export function Markup<T extends string>({encoding, "trusted-markup-encoding": trustedMarkupEncoding, forceMathsAltText, className, children, tag: Tag = "span"}: MarkupProps<T> | TrustedMarkupProps) {
+export function Markup<T extends string>({encoding, "trusted-markup-encoding": trustedMarkupEncoding, forceMathsAltText, className, children, tag}: MarkupProps<T> | TrustedMarkupProps) {
     const renderKaTeX = useRenderKatex(forceMathsAltText);
+    const Tag = tag ?? "span";
 
     if (!isDefined(children)) return null;
 
     switch (encoding ?? trustedMarkupEncoding) {
         case "html":
-            return <TrustedHtml html={renderKaTeX(children)} tag={Tag}/>;
+            return <TrustedHtml html={renderKaTeX(children)} tag={tag}/>;
         case "markdown":
-            return <TrustedMarkdown markdown={children} className={className} tag={Tag}/>;
+            return <TrustedMarkdown markdown={children} className={className} tag={tag}/>;
         case "latex": {
             const escapedMarkup = utils.escapeHtml(children);
             return <Tag dangerouslySetInnerHTML={{__html: renderKaTeX(escapedMarkup)}} className={className} />;
