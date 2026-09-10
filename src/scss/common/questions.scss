@@ -246,13 +246,19 @@ figure .inline-container {
         &:hover::after {
           background-color: white;
         }
+
+        &:has(.is-valid, .is-unanswered, .is-invalid) {
+          .feedback-wrapper::after {
+            right: -4px;
+          }
+        }
       }
 
       &.feedback-shown {
         padding-right: 36px !important;
       }
 
-      > div {
+      > .feedback-wrapper > div {
         // force contents of button to fit in $inline-feedback-size, so we can use it at all sizes
         height: $inline-feedback-size;
       }

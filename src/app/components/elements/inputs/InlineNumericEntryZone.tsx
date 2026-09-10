@@ -90,16 +90,19 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, index, correct
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
                 className={classNames(
-                    "feedback-wrapper px-2 py-0 d-flex", 
+                    "align-items-center px-2 py-0 d-flex", 
                     {"border-dark": !noDisplayUnit}
                 )}
                 color={noDisplayUnit ? undefined : "white"}
                 caret={isPhy && noDisplayUnit}
             >
-                <div className={classNames("align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
-                    <Markup encoding={"latex"}>
-                        {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit"}
-                    </Markup>
+                {/* this seemingly redundant div structure is necessary – the toggle and first use a distinct ::after elements, and the latter must independently define the correctness */}
+                <div className="feedback-wrapper d-flex">
+                    <div className={classNames("d-flex align-items-center align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
+                        <Markup encoding={"latex"}>
+                            {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit"}
+                        </Markup>
+                    </div>
                 </div>
             </DropdownToggle>
             <DropdownMenu container={entryZoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>

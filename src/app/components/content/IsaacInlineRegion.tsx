@@ -1,4 +1,4 @@
-import React, { ContextType, useContext, useEffect, useMemo } from "react";
+import React, { ContextType, useCallback, useContext, useEffect, useMemo } from "react";
 import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
 import { AppQuestionDTO, InlineQuestionDTO, InlineContext, QuestionCorrectness } from "../../../IsaacAppTypes";
 import { ContentDTO, GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
@@ -41,16 +41,6 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
             value: partsTotal && partsTotal > 1 ? feedbackMap[correctness] : "",
         };
     };
-
-    useEffect(() => {
-        const isFeedbackShown = currentAttempts?.some(vr => vr !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
-        const firstIncorrectPart = currentAttempts?.findIndex(vr => vr?.correct !== true);
-        if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined && inlineQuestions && inlineQuestions.length > 0) {
-            if (isDefined(firstIncorrectPart) && firstIncorrectPart >= 0) {
-                inlineContext.setFeedbackIndex(firstIncorrectPart);
-            }
-        }
-    }, [canSubmit, currentAttempts, inlineContext]);
     
     const explanation = {
         ...currentAttempts?.[currentFeedbackPart ?? 0]?.explanation, 
@@ -117,6 +107,22 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const inlineQuestions = useMemo(() => getInlineQuestions(pageQuestions, doc.id), [doc.id, pageQuestions]);
 
+    const jumpToFeedback = useCallback(() => {
+        if (!inlineContext || !inlineQuestions) return;
+        const firstIncorrectPart = inlineQuestions?.findIndex(q => q.validationResponse?.correct !== true);
+        const firstCorrectPartWithFeedback = inlineQuestions?.findIndex(q => q.validationResponse?.correct === true && (q.validationResponse?.explanation?.value || q.validationResponse?.explanation?.children?.length));
+        inlineContext.setFeedbackIndex(
+            // jump to the first non-correct part, if it exists; 
+            // if not, jump to the first part with non-generic feedback, if that exists;
+            // otherwise, hide the feedback box (feedbackIndex = undefined)
+            isDefined(firstIncorrectPart) && firstIncorrectPart >= 0
+                ? firstIncorrectPart
+                : isDefined(firstCorrectPartWithFeedback) && firstCorrectPartWithFeedback >= 0
+                    ? firstCorrectPartWithFeedback
+                    : undefined
+        );
+    }, [inlineContext, inlineQuestions]);
+
     useEffect(() => {
         if (inlineContext) {
             inlineQuestions?.forEach(inlineQuestion => {
@@ -131,12 +137,20 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
     }, [inlineQuestions]);
 
     useEffect(() => {
+        // on page load, check if feedback should be shown
+        const canSubmit = (inlineContext?.modifiedQuestionIds?.length ?? 0) > 0 && !inlineContext?.submitting;
+        const isFeedbackShown = inlineQuestions?.some(q => q.validationResponse !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
+        if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined && inlineQuestions && inlineQuestions.length > 0) {
+            jumpToFeedback();
+        }
+    }, [inlineContext]);
+
+    useEffect(() => {
         // once the final question part to a region has been submitted, show the feedback box
         if (inlineContext?.submitting && inlineContext.modifiedQuestionIds?.length === 0) {
             inlineContext.setSubmitting(false);
             inlineContext.setIsModifiedSinceLastSubmission(false);
-            const firstIncorrectPart = inlineQuestions?.findIndex(q => q.validationResponse?.correct !== true);
-            inlineContext.setFeedbackIndex(isDefined(firstIncorrectPart) && firstIncorrectPart >= 0 ? firstIncorrectPart : undefined);
+            jumpToFeedback();
             inlineContext.canShowWarningToast = true;
         }
     }, [inlineContext?.modifiedQuestionIds]);
