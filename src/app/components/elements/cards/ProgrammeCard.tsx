@@ -30,7 +30,7 @@ export const ProgrammeCard = ({ programme, ...rest}: ProgrammeCardProps) => {
             />
         </a>}
         <CardBody className="d-flex flex-column p-5 pt-4">
-            <h2 className="h4">{title}</h2>
+            <h3 className="h4">{title}</h3>
             {value && <CardText className="mt-2">
                 <Markup trusted-markup-encoding="markdown">
                     {value}
