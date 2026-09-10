@@ -91,7 +91,7 @@ interface MetadataTitleProps {
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
     return <div>
-        {(title || badges) && <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
+        {(title || doc?.title || badges) && <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
             {title
                 ? typeof title === "string"
                     ? <Markup encoding="latex">{title}</Markup>
@@ -119,7 +119,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
         <div className="page-metadata">
-            {(noTitle || !title || isAda) && <h2 className="visually-hidden">Main page</h2>}
+            {(noTitle || !(title || doc?.title) || isAda) && <h2 className="visually-hidden">Main page</h2>}
 
             {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
                 {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="float-end ms-3 mb-2"/>}
