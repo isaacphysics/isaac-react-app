@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import {Link} from "react-router-dom";
-import {AugmentedEvent} from "../../../../IsaacAppTypes";
+import {AugmentedEvent, PodLayout} from "../../../../IsaacAppTypes";
 import {DateString, formatDate, FRIENDLY_DATE_AND_TIME} from "../DateString";
 import {formatEventCardDate, formatEventCardDateSlim, getThemeFromTags, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "reactstrap";
@@ -41,7 +41,7 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
     </>;
 };
 
-export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
+export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: PodLayout} & CardProps) => {
     const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
@@ -50,9 +50,9 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
     const bookingDeadlineSoon = event.bookingDeadline && event.isWithinBookingDeadline && (new Date(event.bookingDeadline).getTime() - Date.now()) < 604800000; // 1 week
     const subject = getThemeFromTags(event.tags) !== "neutral" ? getThemeFromTags(event.tags) : "physics";
 
-    return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
+    return <Card {...rest} className={classNames("pod", rest.className, {"pod-flush": layout === "flush"})} data-bs-theme={subject}>
         {eventThumbnail &&
-            <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
+            <Link className={classNames("pod-img event-pod-img position-relative d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`}/>
                 <span className="event-pod-badges align-self-end">
                     {isVirtualEvent &&
@@ -87,6 +87,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                 {title && <h5 className="mb-0 me-2">{title}</h5>}
                 <ContentPropertyTags tags={event.tags} />
             </CardTitle>
+            {layout === "flush" && <div className="section-divider" />}
             {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
             </CardText>}
@@ -94,7 +95,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
             <CardText tag="div" className="d-flex flex-column gap-2 mt-2 mb-3">
                 <PhysicsCardContents event={event} />
             </CardText>
-            {layout !== "landing-page" && <CardText>
+            {layout !== "flush" && <CardText>
                 <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`/events/${id}`}>
                     Read more
                     <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
