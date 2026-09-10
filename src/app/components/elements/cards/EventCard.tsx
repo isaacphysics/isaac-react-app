@@ -52,7 +52,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
 
     return <Card {...rest} className={classNames("pod", rest.className, {"pod-flush": layout === "flush"})} data-bs-theme={subject}>
         {eventThumbnail &&
-            <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
+            <Link className={classNames("pod-img event-pod-img position-relative d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`}/>
                 <span className="event-pod-badges align-self-end">
                     {isVirtualEvent &&
