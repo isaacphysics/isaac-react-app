@@ -7,8 +7,8 @@ import {
     PasswordResetButton,
     SsoHelpLink,
     TFAInput,
-    useLoginLogic
-} from "../../pages/LogIn";
+} from "../LogInInputs";
+import { useLoginLogic } from "../../../services/login";
 import {isAda, isPhy, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
