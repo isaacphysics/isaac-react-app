@@ -23,7 +23,7 @@
   gap: 1rem 1.5rem;
   justify-items: center;
   align-items: center;
-  width: max-content;
+  width: fit-content;
 
   &:has(> span) {
     grid-template: 1fr 20px 1fr / 1fr 1fr;
