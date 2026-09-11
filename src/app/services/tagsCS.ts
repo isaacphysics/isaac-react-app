@@ -110,7 +110,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.ocr_nea_project, title: "OCR NEA (coursework)", parent: TAG_ID.projects},
 
         // 11-14
-        {id: TAG_ID.computerScience11_14, title: "11-14", parent: TAG_ID.computerScience, stageOverride: CONTENT_11_14},
+        {id: TAG_ID.computerScience11_14, title: "11-14", parent: TAG_ID.computerScience, stageOverride: CONTENT_11_14, hidden: true},
 
         {id: TAG_ID.aiAndMachineLearning11_14, title: "AI, data science, and machine learning", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.algorithmsAndDataStructures11_14, title: "Algorithms and data structures", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
