@@ -299,6 +299,8 @@ iframe.email-html {
 }
 
 .collapsible-body {
+  // this prevents the height of a collapsed container adding to the height of the nearest parent's scroll container 
+  position: relative;
   @include reduced-motion-compliant-animation {
     transition: max-height 0.3s ease-in-out, height 0.3s ease-in-out;
   }
