@@ -112,7 +112,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     return <FormGroup className={`school mb-4 ${className} `}>
         <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
         <p className="d-block input-description">
-            {siteSpecific("The country you go to school in. This helps us promote events near you.", "The country you go to school in. This helps us measure our reach and impact.")}
+            {siteSpecific("This helps us promote events near you.", "This helps us measure our reach and impact.")}
         </p>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect

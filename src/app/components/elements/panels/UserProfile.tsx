@@ -169,7 +169,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                 submissionAttempted={submissionAttempted}
                 required={true}
-                textOverride={siteSpecific("This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
+                textOverride={siteSpecific("The country you go to school in. This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
             />
             <SchoolInput
                 userToUpdate={userToUpdate}
