@@ -1,9 +1,9 @@
+// Fix for Safari printing from a wide window
+$print-container-padding: 30px;
+
 @media print {
 
-  @page {
-    // min-width of 992px, scaled to 1:sqrt(2), plus 1in default padding on each side
-    size: calc(992px + 1in) calc(992px * sqrt(2) + 1in);
-  }
+  // Leave the page size to the print dialog so the layout can adapt to the selected paper.
 
   body {
     min-width: unset !important;
@@ -49,8 +49,13 @@
   }
 
   .isaac-accordion {
-    page-break-inside: avoid;
+
     box-shadow: none;
+    
+    // Keep accordion headings with the following content.
+    > .accordion-header {
+      break-after: avoid;
+    }
   }
 
   .content-body {
@@ -64,6 +69,23 @@
   .container {
     max-width: none;
     min-width: unset !important;
+    // Fixed gutters prevent Safari from collapsing print content in wide windows.
+    padding-left: $print-container-padding;
+    padding-right: $print-container-padding;
+  }
+
+  .container-override {
+    // Match full-width children to the fixed print gutters.
+    margin-left: -$print-container-padding;
+    margin-right: -$print-container-padding;
+    padding-left: $print-container-padding;
+    padding-right: $print-container-padding;
+  }
+
+  #page-content {
+    // Use the full width when the sidebar is hidden for printing.
+    width: 100%;
+    max-width: 100%;
   }
 
   figure {
@@ -89,6 +111,7 @@
     padding: 0 !important;
     margin-bottom: 1rem;
     box-shadow: none;
+    break-inside: avoid;
   }
 
   .expanded-layout {
@@ -109,6 +132,7 @@
     .card {
       padding-left: 1rem;
       padding-right: 1rem;
+      display: block;
     }
   }
 
