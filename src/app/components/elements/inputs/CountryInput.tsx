@@ -25,7 +25,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
     return <FormGroup className={className}>
         <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
         <p className="d-block input-description mb-2">
-            {textOverride || siteSpecific("This helps us to measure our reach and impact.", "This helps us personalise the platform for you.")}
+            {textOverride || siteSpecific("The country you go to school in. This helps us to measure our reach and impact.", "The country you go to school in. This helps us personalise the platform for you.")}
         </p>
         <StyledDropdown
             id={`${idPrefix}-country-select`}
