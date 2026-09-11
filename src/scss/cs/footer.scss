@@ -17,7 +17,16 @@ footer {
 }
 
 .footer-org-logo {
-  max-height: 2rem !important;
+  max-height: 2rem;
+
+  &[data-site="rpf"] {
+    height: 2.75rem;
+    max-height: 2.75rem;
+  }
+}
+
+.footer-org-logos > :nth-child(2) {
+  border-left: 1px solid white;
 }
 
 .footer-links {

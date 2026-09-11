@@ -28,15 +28,16 @@ export const HomepageCS = () => {
                             <h1 className={"backslash-left-small text-center font-size-2 font-size-md-2-5 mb-0"}>The free learning platform for computing teachers and students</h1>
                         </div>
 
-                        <div className="homepage-logos">
+                        <div className="logo-grid mx-3">
                             <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' data-site="uoc" />
                             </a>
                             <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' data-site="rpf" />
                             </a>
-                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
-                            <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
+                            <span>in collaboration with</span>
+                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' data-site="ukgovt" />
+                            <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' data-site="techfirst" />
                         </div>
                         <div>
                             {isLoggedIn(user) && isTeacherOrAbove(user) &&

@@ -15,3 +15,33 @@
     }
   }
 }
+
+.logo-grid {
+  position: relative;
+  display: grid;
+  grid-template: 1fr 1fr / 1fr 1fr;
+  gap: 1rem 1.5rem;
+  justify-items: center;
+  align-items: center;
+  width: max-content;
+
+  &:has(> span) {
+    grid-template: 1fr 20px 1fr / 1fr 1fr;
+  }
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 3.5rem;
+    background-color: white;
+    top: -5px;
+    left: 50%;
+  }
+
+  > span {
+    grid-column: 1 / span 2;
+    margin-top: 4px;
+  }
+}

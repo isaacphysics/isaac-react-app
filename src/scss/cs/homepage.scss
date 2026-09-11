@@ -1,13 +1,4 @@
 #homepage {
-  .homepage-logos {
-    display: grid;
-    grid-template: 1fr 1fr / 1fr 1fr;
-    gap: 1.75rem 1.5rem;
-    justify-items: center;
-    align-items: center;
-    margin: 0 1rem;
-  }
-
   section#call-to-action {
     padding: 5rem 0 8rem 0;
     background-color: $cs-black;
@@ -24,6 +15,10 @@
     @include media-breakpoint-only(xs) {
       padding-bottom: 3rem;
       margin-bottom: -2rem;
+    }
+
+    @include media-breakpoint-only(sm) {
+      padding-bottom: 10rem;
     }
   }
 
