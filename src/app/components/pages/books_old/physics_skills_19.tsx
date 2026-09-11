@@ -19,7 +19,7 @@ export const PhysicsSkills19 = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>AS-Level (or equivalent)</h4>
+                    <div className="h4">AS-Level (or equivalent)</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'phys19_a_boards'} chapterTitle={'General Questions'} chapterIcon={'A'}/>
@@ -41,7 +41,7 @@ export const PhysicsSkills19 = () => {
                             <BookChapter chapterId={'phys19_e_boards'} chapterTitle={'Uncertainties'} chapterIcon={'E'}/>
                         </Col>
                     </Row>
-                    <h4>A2-Level (or equivalent)</h4>
+                    <div className="h4">A2-Level (or equivalent)</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'phys19_f_boards'} chapterTitle={'Mechanics'} chapterIcon={'F'}/>

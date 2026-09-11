@@ -13,7 +13,7 @@ export const ServerError = () => {
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "icon", icon: "icon-error"}} />
 
-            <h3 className="my-4">{`We're sorry, but an error has occurred on the ${SITE_TITLE_SHORT} server!`}</h3>
+            <div className="my-4 h3">{`We're sorry, but an error has occurred on the ${SITE_TITLE_SHORT} server!`}</div>
 
             <p>
                 {"You may want to "}

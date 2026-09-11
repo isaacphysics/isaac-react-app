@@ -1,4 +1,4 @@
-import { expectLink, expectH1, expectH4, expectUrl } from "../testUtils";
+import { expectLink, expectH1, expectUrl, expectH2 } from "../testUtils";
 import {mockAttempts} from "../../mocks/data";
 import { isPhy, siteSpecific } from "../../app/services";
 import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectMobileSidebarToggleToHaveText, expectRubric, renderQuizPage, quizSidebarCommonTests, testSectionsHeaderLocator } from "../helpers/quiz";
@@ -93,7 +93,7 @@ describe("QuizAttempt", () => {
         it('shows error', async () => {
             await studentAttemptsMissingQuiz();
             expectH1('Test');
-            expectH4('Error loading test!');
+            expectH2('Error loading test!');
             expectErrorMessage('This test has become unavailable.');
         });
     });

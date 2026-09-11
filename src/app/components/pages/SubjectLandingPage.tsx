@@ -63,7 +63,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
-            <h4 className="m-0">Try a random question!</h4>
+            <h2 className="m-0 h4">Try a random question!</h2>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
                 Get a different question
                 <i className="icon icon-refresh icon-color-black"/>
@@ -103,7 +103,7 @@ interface FooterRowProps {
 const BooksList = ({books, isFullWidth}: {books: BookInfo[], isFullWidth: boolean}) => {
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
+            <h2 className="h4 m-0">Interactive online books <span className="text-theme">({books.length})</span></h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className={classNames("item-list-container row-cols-1", {"row-cols-md-2": isFullWidth})}>
@@ -118,7 +118,7 @@ const BooksList = ({books, isFullWidth}: {books: BookInfo[], isFullWidth: boolea
 const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h4>News & Features</h4>
+            <h2 className="h4">News & Features</h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className="h-100 item-list-container">
@@ -132,7 +132,7 @@ const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
 const EventsList = ({events}: {events: AugmentedEvent[]}) => {
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h4 className="m-0">Events <span className="text-theme">({events.length})</span></h4>
+            <h2 className="h4 m-0">Events <span className="text-theme">({events.length})</span></h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className="h-100 item-list-container">

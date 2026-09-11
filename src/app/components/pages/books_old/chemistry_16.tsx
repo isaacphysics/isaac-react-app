@@ -20,7 +20,7 @@ export const Chemistry16 = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>Chapters:</h4>
+                    <div className="h4">Chapters:</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'chem_16_a_boards'} chapterTitle={'Formulae & Equations'} chapterIcon={'A'} chapterSubject={SUBJECTS.CHEMISTRY}/>

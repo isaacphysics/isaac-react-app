@@ -94,7 +94,7 @@ export const RegistrationSetPreferences = () => {
                 }
                 <SignupTab
                     leftColumn = {<>
-                        <div className={siteSpecific("h4", "h3")}>Set your preferences</div>
+                        <h2 className={siteSpecific("h4", "h3")}>Set your preferences</h2>
                         <p>
                             Answering these questions will help us personalise the platform for you. You can skip this
                             or change your answers at any time under My Account.

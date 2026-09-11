@@ -17,7 +17,7 @@ export const IsaacCardDeck = ({doc, className, containerClassName}: IsaacCardDec
     return <Container className={classNames("px-0", containerClassName)}>
         {doc.title && <Row className="my-4">
             <Col>
-                <h3 className={classNames("h-title", {"text-center": isPhy})}>{doc.title}</h3>
+                <div className={classNames("h-title h3", {"text-center": isPhy})}>{doc.title}</div>
             </Col>
         </Row>}
         {

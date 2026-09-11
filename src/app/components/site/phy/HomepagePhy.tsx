@@ -32,7 +32,7 @@ const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) =>
                     </>
                 }
             </div>
-            <CardTitle className="mt-1" tag="h4">{title}</CardTitle>
+            <CardTitle className="mt-1 h4" tag="h2">{title}</CardTitle>
             <CardText>{content}</CardText>
             <Spacer/>
             <Button className="w-max-content" tag={Link} to={isStudent ? "/login" : "/teacher_account_request"}>Create a {isStudent ? "student" : "teacher"} account</Button>
@@ -48,9 +48,9 @@ const HomepageHero = () => {
             {above['md'](deviceSize) && <div className="homepage-hero-img"/>}
             <Container className="pt-7">
                 <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
-                    <div className="physics-strapline mb-3">
-                        <h2><span className="text-green">Master science subjects</span> by solving problems</h2>
-                    </div>
+                    <h1 className="physics-strapline mb-3">
+                        <span className="text-green">Master science subjects</span> by solving problems
+                    </h1>
                     From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
                 </div>
                 {!above['md'](deviceSize) && <div className="homepage-hero-img container-override"/>}
@@ -196,7 +196,7 @@ export const HomepagePhy = () => {
                 <section id="explore-learn">
                     <div className="mt-7">
                         <div className="d-flex">
-                            <h3>Explore and learn!</h3>
+                            <h2>Explore and learn!</h2>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
                         <ListViewCards type="item" items={cards.map(transformItemsForCustomListView)} />
@@ -206,7 +206,7 @@ export const HomepagePhy = () => {
                     <Row className="mt-7 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>Upcoming events</h3>
+                                <h2>Upcoming events</h2>
                                 <Link to="/events" className="news-events-link">More events</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>
@@ -226,7 +226,7 @@ export const HomepagePhy = () => {
                         </div>
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>News and features</h3>
+                                <h2>News and features</h2>
                                 <Link to="/news" className="news-events-link">More news</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>

@@ -59,46 +59,6 @@
     margin-bottom: 0;
   }
 }
-.basic-card {
-  background-color: $white;
-  box-shadow: 0 2px 30px 0 $shadow-08;
-  height: 100%;
-
-  h2 {
-    font-size: 1.25rem;
-  }
-  > p {
-    flex: 1 0 auto;
-    margin: auto 0;
-  }
-  .list-group-item & > a {
-    font-family: $primary-font;
-  }
-}
-.action-card {
-  height: 100%;
-  h2 {
-    font-family: $secondary-font;
-    font-size: 1.625rem;
-  }
-  p:first-of-type > span {
-    display: inline-block;
-    font-weight: 700;
-  }
-
-  p {
-    flex: 1 0 3rem;
-  }
-
-  .btn {
-    font-family: $secondary-font;
-    font-weight: bold;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
 
 .card-deck + .card-deck {
   margin-top: 1.5rem;

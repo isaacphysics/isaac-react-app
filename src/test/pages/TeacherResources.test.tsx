@@ -149,6 +149,6 @@ const page = {
 
 const logInPage = {
     get header() {
-        return within(screen.getByTestId('main')).getByRole('heading', { level: 2 });
+        return within(screen.getByTestId('main')).getByRole('heading', { level: 1 });
     }
 };

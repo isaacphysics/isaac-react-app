@@ -12,7 +12,7 @@ export const buildErrorComponent = (title: string, heading: string, breadcrumbs:
     return <>
         <TitleAndBreadcrumb currentPageTitle={title} intermediateCrumbs={breadcrumbs} />
         <Alert color="danger">
-            <h4 className="alert-heading">{heading}</h4>
+            <h2 className="alert-heading h4">{heading}</h2>
             <p data-testid="error-message">{getRTKQueryErrorMessage(error).message}</p>
         </Alert>
     </>;

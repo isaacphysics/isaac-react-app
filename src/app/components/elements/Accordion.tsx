@@ -164,74 +164,78 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
     const isOpen = open && !disabled;
 
     return <div className="isaac-accordion">
-        <button 
-            className={classNames(
-                "accordion-header d-flex w-100 p-0", 
-                {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
-            )}
-            id={anchorId || ""} type="button"
-            tabIndex={disabled ? -1 : 0}
-            onFocus={(e) => {
-                if (disabled) {
-                    e.target.blur();
-                }
-            }}
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                if (disabled) {
-                    return;
-                }
-                pauseAllVideos();
-                const nextState = !isOpen;
-                setOpen(nextState);
-                if (nextState) {
-                    logAccordionOpen();
-                    if (!isReducedMotion) {
-                        scrollVerticallyIntoView(event.target as HTMLElement, -50);
-                    }
-                }
-            }}
-            aria-expanded={isOpen ? "true" : "false"}
-            aria-label={trustedTitle ? `Toggle ${trustedTitle} accordion section` : "Toggle accordion section"}
-        >
-            {isConceptPage && audienceString && isAda && <span className={
-                classNames("stage-label d-flex align-self-stretch align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
-            }>
-                {(above["sm"](deviceSize) 
-                    ? audienceString 
-                    : audienceString.replaceAll(",", "\n")
-                ).split("\n").map(
-                    (line, i, arr) => <>
-                        {line}{i < arr.length && <br/>}
-                    </>
+        <h3 className="mb-0">
+            <button
+                className={classNames(
+                    "accordion-header d-flex w-100 p-0", 
+                    {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
                 )}
-            </span>}
-            <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
-                {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
-                <div className={classNames("accordion-title p-3 ps-1", {"pt-0": isPhy, "d-flex align-items-center": isPhy && includeLLMMarkedQuestionIndicator})}>
-                    {isConceptPage && audienceString && isPhy && <span className="inline-stage-label">{audienceString}<br/></span>}
-                    <Markup encoding={"latex"}>
-                        {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
-                    </Markup>
-                    {includeLLMMarkedQuestionIndicator && <LLMFreeTextQuestionIndicator symbol={deviceSize === "xs"} className="ms-2"/>}
-                    {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
+                id={anchorId || ""} type="button"
+                tabIndex={disabled ? -1 : 0}
+                onFocus={(e) => {
+                    if (disabled) {
+                        e.target.blur();
+                    }
+                }}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                    if (disabled) {
+                        return;
+                    }
+                    pauseAllVideos();
+                    const nextState = !isOpen;
+                    setOpen(nextState);
+                    if (nextState) {
+                        logAccordionOpen();
+                        if (!isReducedMotion) {
+                            scrollVerticallyIntoView(event.target as HTMLElement, -50);
+                        }
+                    }
+                }}
+                aria-expanded={isOpen ? "true" : "false"}
+                // aria-label={trustedTitle ? `Toggle ${trustedTitle} accordion section` : "Toggle accordion section"}
+            >
+                {isConceptPage && audienceString && isAda && <span className={
+                    classNames("stage-label d-flex align-self-stretch align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
+                }>
+                    {(above["sm"](deviceSize) 
+                        ? audienceString 
+                        : audienceString.replaceAll(",", "\n")
+                    ).split("\n").map(
+                        (line, i, arr) => <>
+                            {line}{i < arr.length && <br/>}
+                        </>
+                    )}
+                </span>}
+                <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
+                    {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>
+                        Part {ALPHABET[index % ALPHABET.length]}
+                    </span>}
+                    <div className={classNames("accordion-title p-3 ps-1 mb-0", {"pt-0": isPhy, "d-flex align-items-center": isPhy && includeLLMMarkedQuestionIndicator})}>
+                        {isConceptPage && audienceString && isPhy && <span className="inline-stage-label">{audienceString}<br/></span>}
+                        <Markup encoding={"latex"}>
+                            {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
+                        </Markup>
+                        {includeLLMMarkedQuestionIndicator && <LLMFreeTextQuestionIndicator symbol={deviceSize === "xs"} className="ms-2"/>}
+                        {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black align-self-center mx-2", {"active": isOpen})}/>}
+                    </div>
+                    {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
+                        <span id={`disabled-tooltip-${componentId}`} className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
+                        <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
+                            modifiers={[preventOverflow]}>
+                            {disabled}
+                        </UncontrolledTooltip>
+                    </div>}
                 </div>
-                {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
-                    <span id={`disabled-tooltip-${componentId}`} className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
-                    <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
-                        modifiers={[preventOverflow]}>
-                        {disabled}
-                    </UncontrolledTooltip>
-                </div>}
-            </div>
 
-            {accordionState && isPhy && <span className={"accordion-status d-flex align-items-center gap-2 w-max-content pe-3 align-self-center"}>
-                <StatusDisplay status={accordionState} showText className="flex-row-reverse" aria-label={accordionAltText[accordionState]} />
-            </span>}
-            {isAda && <>
-                <Spacer />
-                {<i className={classNames("icon icon-chevron-right icon-dropdown-90 me-3", {"active": isOpen})}/>}
-            </>}
-        </button>
+                {accordionState && isPhy && <span className={"accordion-status d-flex align-items-center gap-2 w-max-content pe-3 align-self-center"}>
+                    <StatusDisplay status={accordionState} showText className="flex-row-reverse" aria-label={accordionAltText[accordionState]} />
+                </span>}
+                {isAda && <>
+                    <Spacer />
+                    {<i className={classNames("icon icon-chevron-right icon-dropdown-90 me-3", {"active": isOpen})}/>}
+                </>}
+            </button>
+        </h3>
         <Collapse isOpen={isOpen} className={siteSpecific("accordion-body", "mt-1")}>
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>
                 <Card>

@@ -46,8 +46,8 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
     return <NavigationSidebar>
         {hasLinkedBookSection && <BackToBookButton linkedBookSection={linkedBookSection} className="w-100"/>}
         <div className="section-divider"/>
-        <Link to={`${PATHS.GAMEBOARD}${linkedBookUrlParams}#${id}`} style={{textDecoration: "none"}}>
-            <h5 className="mb-3">Question deck: {title}</h5>
+        <Link className="mb-3 text-decoration-none h5" to={`${PATHS.GAMEBOARD}${linkedBookUrlParams}#${id}`}>
+            Question deck: {title}
         </Link>
         <ul>
             {wildCard && wildCard.url && <li className={classNames("board-sidebar-content", {"selected-content": wildCard.url === window.location.pathname})}>

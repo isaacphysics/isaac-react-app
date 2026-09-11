@@ -23,7 +23,7 @@ export const TutorFeatures = () => {
             Isaac Science provides you with a huge range of resources to support your tutoring of science subjects.
         </PageMetadata>
         <Row className="my-4">
-            <h4>Tutor workflow</h4>
+            <h2 className="h4">Tutor workflow</h2>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
@@ -55,7 +55,7 @@ export const TutorFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <h4>Tutor support and resources</h4>
+            <h2 className="h4">Tutor support and resources</h2>
         </Row>
         <Row className="isaac-cards-body mb-7 px-3 row-gap-4">
             <Col sm={6} md={4}>

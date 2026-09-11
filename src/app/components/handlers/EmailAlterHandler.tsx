@@ -43,20 +43,18 @@ export const EmailAlterHandler = () => {
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card className="my-7 text-center">
                     <CardBody className="m-4">
-                        {/* Isaac Physics had a large icon here */}
-
                         {emailVerificationSuccess &&
                             <>
-                                <h3 className="mb-4">{successMessage}</h3>
+                                <div className="mb-4 h3">{successMessage}</div>
                                 <Button tag={Link} to="/" color="secondary" block>
                                     Continue
                                 </Button>
                             </>}
                         {emailVerificationFailed &&
                             <>
-                                <h3 className="mb-4">Couldn&apos;t verify email address</h3>
+                                <div className="mb-4 h3">Couldn&apos;t verify email address</div>
                                 <p className="m-0">
-                                    {(!userid || !token) && "This page received bad parameters."}
+                                    {(!userid || !token) && "This page received bad parameters. "}
                                     {getRTKQueryErrorMessage(emailVerificationError).message}
                                 </p>
                                 {idsMatch

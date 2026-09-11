@@ -50,7 +50,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </MetadataContainer>
 
         {hasQuestions && <>
-            <h4 className="mb-3" id="questions">Questions</h4>
+            <h3 className="mb-3 h4" id="questions">Questions</h3>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
@@ -61,7 +61,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasResources && <>
-            <h4 className="mb-3" id="resources">Resources</h4>
+            <h3 className="mb-3 h4" id="resources">Resources</h3>
             {!!page.relatedContent?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
@@ -77,7 +77,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasExtension && <>
-            <h4 className="mt-4 mb-3" id="extension">Extension work</h4>
+            <h3 className="mt-4 mb-3 h4" id="extension">Extension work</h3>
             <span>Expand your boundaries by having a go at these additional extension questions.</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView

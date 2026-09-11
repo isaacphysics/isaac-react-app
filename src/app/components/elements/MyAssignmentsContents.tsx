@@ -66,9 +66,9 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
     return <Row data-testid={"my-assignment"} className={"pt-3 mb-3 border-top"}>
         <Col xs={8} sm={9} md={7} lg={8}>
-            <h4><Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
+            <div className="h4"><Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                 {isDefined(assignment.gameboard) && assignment.gameboard.title}
-            </Link></h4>
+            </Link></div>
             {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>}
             {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && assignment.gameboard.percentageAttempted !== 100
                 ? <p className="mb-0"><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>

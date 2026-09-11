@@ -232,7 +232,7 @@ export const AdminUserManager = () => {
 
         {/* Result panel */}
         <Card className="my-4">
-            <CardTitle data-testid="user-search-numbers" tag="h4" className="ps-4 pt-3 mb-0">
+            <CardTitle data-testid="user-search-numbers" className="ps-4 pt-3 mb-0 h4">
                 Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </CardTitle>
@@ -349,7 +349,7 @@ export const AdminUserManager = () => {
             <hr/>
             <Card className={"my-4"}>
                 <CardBody>
-                    <h3>Merge user accounts</h3>
+                    <div className="h3">Merge user accounts</div>
                     <FormGroup className="form-group">
                         <InputGroup className={"separate-input-group d-flex align-items-center"}>
                             <Input

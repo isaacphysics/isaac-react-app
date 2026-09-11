@@ -44,7 +44,7 @@ export const PromptBanner = ({card, ...props}: PromptBannerProps) => {
             <div className={"d-flex flex-column h-100 icon-card-main-content"}>
                 <CardTitle className={classNames("px-4 mt-4 d-flex flex-column flex-md-row align-items-start gap-2")}>
                     <i className={classNames(`icon icon-${size ?? "md"}`, {"icon-raw": raw}, name)} color={iconColor ?? "tertiary"}/>
-                    <h3 className="my-0">{title}</h3>
+                    <div className="my-0 h3">{title}</div>
                 </CardTitle>
                 
                 {bodyText && <CardBody className="pt-2 pb-1 px-4">

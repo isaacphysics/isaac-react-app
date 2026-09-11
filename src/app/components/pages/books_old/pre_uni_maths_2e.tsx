@@ -23,7 +23,7 @@ export const PreUniMaths2e = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>Chapters:</h4>
+                    <div className="h4">Chapters:</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'pre_uni_maths_2e_ch1_boards'} chapterTitle={'Algebra & Number'}

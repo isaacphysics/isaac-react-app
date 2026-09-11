@@ -41,8 +41,11 @@ export const NavigationSidebar = (props: SidebarProps) => {
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
-    const { className, ...rest } = props;
-    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)} />;
+    const { className, children, ...rest } = props;
+    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)}>
+        <h2 className="visually-hidden">Sidebar</h2>
+        {children}
+    </Col>;
 };
 
 export interface ContentSidebarProps extends SidebarProps {
@@ -65,12 +68,12 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>;
 
-    const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
+    const { className, buttonTitle, hideButton, optionBar, children, ...rest } = props;
     return fullSidebarLayout
-        ? siteSpecific(
-            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print ps-lg-3 py-lg-4 pe-lg-5 order-0", className)} />,
-            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
-        )
+        ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={siteSpecific(4, undefined)} xl={siteSpecific(3, undefined)} {...rest} className={classNames("flex-column sidebar no-print order-0", {"d-none d-lg-flex ps-lg-3 py-lg-4 pe-lg-5": isPhy}, className)}>
+            <h2 className="visually-hidden">Sidebar</h2>
+            {children}
+        </Col>
         : siteSpecific(
             <>
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
@@ -91,7 +94,10 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                     }/>
                     <OffcanvasBody>
                         <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
-                            <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                            <Col {...rest} className={classNames("sidebar p-4 pt-0", className)}>
+                                <h2 className="visually-hidden">Sidebar</h2>
+                                {children}
+                            </Col>
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
@@ -103,7 +109,10 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                             <span className="fw-bold">{buttonTitle}</span>
                         </AccordionHeader>
                         <AccordionBody accordionId="myAda" className="accordion-flush-body">
-                            <Col {...rest} className={classNames("flex-column", className)} />
+                            <Col {...rest} className={classNames("flex-column", className)}>
+                                <h2 className="visually-hidden">Sidebar</h2>
+                                {children}
+                            </Col>
                         </AccordionBody>
                     </AccordionItem>
                 </Accordion>

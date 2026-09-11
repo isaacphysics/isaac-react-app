@@ -28,7 +28,7 @@ export const AdaCard = ({card, ...props}: AdaCardProps) => {
             {image && <CardImg src={image.src} alt={image.altText ?? ""} className={image.className ?? ""}/>}
             <div className={classNames("d-flex flex-column h-100", {"pb-4" : !clickUrl || buttonStyle === "card"})}>
                 <CardTitle className="px-4 mt-4">
-                    <h3 className="mt-2 mb-0">{title}</h3>
+                    <div className="mt-2 mb-0 h3">{title}</div>
                 </CardTitle>
                 <CardBody className="pt-2 pb-1 px-4">
                     {bodyText 

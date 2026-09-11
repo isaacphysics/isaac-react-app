@@ -35,7 +35,7 @@ export const IconCard = ({card, children, ...props}: IconCardProps) => {
             </div>}
             <div className={classNames("d-flex flex-column h-100 icon-card-main-content", {"pb-4" : !clickUrl || buttonStyle === "card"})}>
                 <CardTitle className="px-4 mt-4">
-                    <h3 className="mb-0">{title}</h3>
+                    <div className="mb-0 h3">{title}</div>
                 </CardTitle>
                 {(children || bodyText) && <CardBody className="pt-2 pb-1 px-4">
                     {children ?? <p className="mb-0">{bodyText}</p>}
