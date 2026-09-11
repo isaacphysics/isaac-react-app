@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Row} from "reactstrap";
-import {isAda, SITE_TITLE, siteSpecific} from "../../services";
+import {isAda, SITE_LOWER_AGE_LIMIT, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
@@ -26,7 +26,7 @@ export const RegistrationAgeCheckFailed = () => {
         <Card className="my-7">
             <CardBody>
                 <h3>Unable to create account</h3>
-                <p>Unfortunately, we aren&apos;t able to offer accounts to students under {siteSpecific("10", "13")} years old.</p>
+                <p>Unfortunately, we aren&apos;t able to offer accounts to students under {SITE_LOWER_AGE_LIMIT} years old.</p>
                 <p>{siteSpecific(
                     <><b>But you can still access the whole site for free!</b> You just won&apos;t be able to track your progress.</>,
                     <><b>However, you can still access the whole site for free!</b> However you will not be able to track your progress.</>
@@ -37,7 +37,7 @@ export const RegistrationAgeCheckFailed = () => {
                         <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>Back</Button>
                     </Col>}
                     <Col sm={6} lg={4}>
-                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{siteSpecific("Take me back", "Back to the site")}</Button>
+                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{siteSpecific("Take me back", "Go home")}</Button>
                     </Col>
                 </Row>
             </CardBody>

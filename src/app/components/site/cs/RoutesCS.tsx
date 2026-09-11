@@ -37,6 +37,7 @@ import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
+import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -49,6 +50,7 @@ export const RoutesCS = [
     <Route key={key++} path="/register" element={<RegistrationStart />} />,
     <Route key={key++} path="/register/role" element={<RegistrationRoleSelect />} />,
     <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
+    <Route key={key++} path="/register/student/sso_only" element={<RegistrationAgeCheckSSOOnly />} />,
     <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
     <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
     <Route key={key++} path="/register/teacher/details" element={<RegistrationSetDetails userRole="TEACHER" />} />,

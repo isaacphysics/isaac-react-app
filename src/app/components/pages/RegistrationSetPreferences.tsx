@@ -5,7 +5,6 @@ import {Immutable} from "immer";
 import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../IsaacAppTypes";
 import {
     AppState,
-    continueToAfterAuthPath,
     getRTKQueryErrorMessage,
     selectors,
     useAppSelector,
@@ -29,11 +28,14 @@ import classNames from "classnames";
 import {SignupTab} from "../elements/panels/SignupTab";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useNavigate } from "react-router-dom";
 
 export const RegistrationSetPreferences = () => {
 
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
+
+    const navigate = useNavigate();
 
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
@@ -67,9 +69,10 @@ export const RegistrationSetPreferences = () => {
                 userPreferences: userPreferencesToUpdate,
                 registeredUserContexts: userContexts,
                 passwordCurrent: null,
-                redirect: true
+                redirect: false
             });
-            if (isPhy) continueToAfterAuthPath(user);
+
+            void navigate("/register/success");
         }
     }
 
@@ -119,12 +122,12 @@ export const RegistrationSetPreferences = () => {
                         <UserEmailPreferencesInput 
                             emailPreferences={emailPreferences} 
                             setEmailPreferences={setEmailPreferences}
-                            submissionAttempted={false}
+                            submissionAttempted={submissionAttempted}
                         />
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <Row className="justify-content-end">
                             <Col xs={12} sm={siteSpecific(4,5)} lg={6} className={classNames("d-flex justify-content-end", {"justify-content-lg-end": isAda})}>
-                                <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color="keyline" onClick={() => {continueToAfterAuthPath(user);}}>I&apos;ll do this later</Button>
+                                <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color="keyline" onClick={() => navigate("/register/success")}>I&apos;ll do this later</Button>
                             </Col>
                             <Col xs={12} sm={5} lg={6} className="d-flex">
                                 <Button type="submit" className={`btn my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`} color="solid" disabled={!canSavePreferences}>Save preferences</Button>

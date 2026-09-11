@@ -15,8 +15,10 @@ const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: 
         if (reducedMotion) return true;
 
         const pageTitle = document.querySelector("#page-title");
-        if (pageTitle) scrollVerticallyIntoView(pageTitle);
-        return true;
+        if (pageTitle) {
+            scrollVerticallyIntoView(pageTitle);
+            return true;
+        }
     }
 
     if (pathnameParts[1] === PATHS.GAMEBOARD.slice(1)) {

@@ -30,8 +30,8 @@ export const TeacherAccountSelfUpgrade = () => {
         }
     };
 
-    const upgrade : React.MouseEventHandler<HTMLButtonElement> = async (event) => {
-        const response = await upgradeToTeacherAccount(event);
+    const upgrade : React.MouseEventHandler<HTMLButtonElement> = async () => {
+        const response = await upgradeToTeacherAccount();
 
         if (mutationSucceeded(response)) {
             await dispatch(requestCurrentUser()); // Refresh user details locally

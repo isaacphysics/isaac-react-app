@@ -4,6 +4,14 @@
   border: 3px $cs-cultured solid;
   border-radius: 10px;
 
+  &:hover {
+    @include not-reduced-motion {
+      transform: scale(1.02);
+    }
+  }
+
+  transition: transform 0.2s ease-out;
+
   > label, > button {
     width: max-content;
   }

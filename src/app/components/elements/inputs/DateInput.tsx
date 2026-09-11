@@ -9,6 +9,7 @@ export interface DateInputProps extends InputProps {
     yearRange?: number[];
     value?: string | string[] | number | Date;
     noClear?: boolean;
+    hideDay?: boolean;
 }
 
 const MONTHS = [
@@ -112,7 +113,7 @@ export const DateInput = (props: DateInputProps) => {
     const defaultDate = defaultValue != undefined ? new Date(defaultValue as unknown as string) : undefined;
 
     const values: {[what: string]: {get: () => number | undefined; set: (to: number | undefined) => void; reset: () => void}} = {
-        day: useWrappedState<number>(extractDay(valueAsDate) || extractDay(defaultDate)),
+        day: useWrappedState<number>(props.hideDay ? 1 : (extractDay(valueAsDate) || extractDay(defaultDate))),
         month: useWrappedState<number>(extractMonth(valueAsDate) || extractMonth(defaultDate)),
         year: useWrappedState<number>(extractYear(valueAsDate) || extractYear(defaultDate))
     };
@@ -163,7 +164,7 @@ export const DateInput = (props: DateInputProps) => {
 
         values[what].set(parseInt(e.target.value, 10));
 
-        const day = values.day.get();
+        const day = props.hideDay ? 1 : values.day.get();
         if (!props.disableDefaults && (what == "day" || what == "month")) {
             let month = values["month"].get() as number;
             if (values["month"].get() == undefined) {
@@ -238,12 +239,12 @@ export const DateInput = (props: DateInputProps) => {
     return <React.Fragment>
         <InputGroup id={props.id} {...controlPropsWithValidationStripped} className={inputGroupClasses}>
             {/* these wrappers exist as ::after pseudo-elements don't work with .select */}
-            <div className="date-input-wrapper date-input-day position-relative me-1">
+            {!props.hideDay && <div className="date-input-wrapper date-input-day position-relative me-1">
                 <Input type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
                     {values.day.get() === undefined && <option />}
                     {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
                 </Input>
-            </div>
+            </div>}
             <div className="date-input-wrapper date-input-month position-relative me-1">
                 <Input type="select" {...controlProps} aria-label={`Month${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("month")} value={values.month.get() || ""}>
                     {values.month.get() === undefined && <option />}

@@ -49,7 +49,7 @@ export const RegistrationTeacherConnect = () => {
 
     const continueToNext = (event: React.MouseEvent) => {
         event.preventDefault();
-        void navigate(siteSpecific("/register/preferences", "/register/success"));
+        void navigate("/register/preferences");
     };
 
     useEffect(() => {
@@ -120,7 +120,7 @@ export const RegistrationTeacherConnect = () => {
                             </div>
                         }
                     </Col>
-                    <hr />
+                    {siteSpecific(<div className="section-divider my-4" />, <hr />)}
                     <Row className="justify-content-end">
                         {siteSpecific(
                             <>
