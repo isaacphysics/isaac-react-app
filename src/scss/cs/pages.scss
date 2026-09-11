@@ -12,7 +12,7 @@
 }
 
 // All topics page
-#topics-bg {
+main:has(> #topics) {
   background-image: url("/assets/cs/decor/dots-circle-bg.svg");
   background-repeat: no-repeat;
   background-position: 50% 30%;

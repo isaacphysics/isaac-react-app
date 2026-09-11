@@ -4,6 +4,10 @@ import {BaseTag} from "../../IsaacAppTypes";
 const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoonDate: "2022"}};
 const GCSE_HIDDEN = {[STAGE.GCSE]: {hidden: true}};
 const GCSE_NEW = {[STAGE.GCSE]: {new: true}};
+const CONTENT_11_14 = {
+    [STAGE.CORE]: {hidden: true},
+    [STAGE.ADVANCED]: {hidden: true},
+};
 
 export class CsTagService extends AbstractBaseTagService {
     private static readonly tagHierarchy = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];
@@ -25,7 +29,6 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.cyberSecurity, title: "Safety and security", parent: TAG_ID.computerScience},
         {id: TAG_ID.theoryOfComputation, title: "Models of computation", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.projects, title: "Software projects", parent: TAG_ID.computerScience},
-
 
         // AI and machine learning topics
         {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.aiAndMachineLearning},
@@ -105,6 +108,20 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.dataScienceEpq, title: "EPQ in Data Science and AI", parent: TAG_ID.projects, new: true},
         {id: TAG_ID.aqa_nea_project, title: "AQA NEA (coursework)", parent: TAG_ID.projects},
         {id: TAG_ID.ocr_nea_project, title: "OCR NEA (coursework)", parent: TAG_ID.projects},
+
+        // 11-14
+        {id: TAG_ID.computerScience11_14, title: "11-14", parent: TAG_ID.computerScience, stageOverride: CONTENT_11_14},
+
+        {id: TAG_ID.aiAndMachineLearning11_14, title: "AI, data science, and machine learning", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
+        {id: TAG_ID.algorithmsAndDataStructures11_14, title: "Algorithms and data structures", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
+        {id: TAG_ID.computingSystems11_14, title: "Computing systems", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
+        {id: TAG_ID.cyberSecurity11_14, title: "Cyber security", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Autumn 2026"},
+        {id: TAG_ID.dataRepresentation11_14, title: "Data representation", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
+        {id: TAG_ID.designAndDevelopment11_14, title: "Design and development", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
+        {id: TAG_ID.digitalLiteracy11_14, title: "Digital literacy", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
+        {id: TAG_ID.frontierTechnologies11_14, title: "Frontier technologies", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Autumn 2026"},
+        {id: TAG_ID.networks11_14, title: "Networks", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
+        {id: TAG_ID.programming11_14, title: "Programming", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
 
     ];
     public getTagHierarchy() {return CsTagService.tagHierarchy;}
