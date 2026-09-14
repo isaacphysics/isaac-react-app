@@ -84,7 +84,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
         className="cloze-dropdown"
     >
         <DropdownToggle className={classNames("py-1 px-3", {"empty": !item, "pe-2": isDefined(isCorrect) || !item})} outline={isAda} style={{minHeight: height, width: width}} innerRef={zoneRef}>
-            <div className={classNames("d-flex cloze-item feedback-zone", {"cloze-bg": !!item && isPhy, "feedback-showing": isDefined(isCorrect)})}>
+            <div className={classNames("d-flex cloze-item feedback-zone bg-cloze", {"feedback-showing": isDefined(isCorrect)})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
                     <Markup trusted-markup-encoding={"html"}>

@@ -233,6 +233,14 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   }
 }
 
-.cloze-item.cloze-bg {
-  background-color: var(--subject-color-400);
+@include color-mode(light) {
+  .bg-cloze {
+    background-color: var(--subject-color-500);
+  }
+}
+
+@include color-mode(dark) {
+  .bg-cloze {
+    background-color: var(--subject-color-300);
+  }
 }
