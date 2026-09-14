@@ -150,17 +150,24 @@ export const AdaCyberExplorersResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
-        {/* <section id="regional-partners" className="bg-white">
+        <section id="regional-partners" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice breakpoint="lg" reverseUnderBreakpoint className="row-gap-5">
                     <TextBlock>
-                        TODO
+                        <h2>Regional delivery partners</h2>
+                        <p>
+                            TechFirst connects schools with in-person activities and events delivered by Regional Delivery Partners across the UK. These partners bring together schools, colleges, employers, local authorities and community organisations to provide inspiring enrichment opportunities and showcase local technology and computing pathways.
+                        </p>
+                        <p>
+                            Schools can also work towards TechFirst School recognition, with Bronze, Silver and Gold awards available. From September 2026, TechFirst will operate in every region and home nation of the UK.
+                        </p>
+                        {/* <Button outline className="bg-white" href="/regional-partners" target="_blank">Find out more</Button> */}
                     </TextBlock>
                     <ImageBlock>
                         <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/regional-partners.png" alt="Stylised map of the UK showing example regional partner locations."/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>
-        </section> */}
+        </section>
     </>;
 };
