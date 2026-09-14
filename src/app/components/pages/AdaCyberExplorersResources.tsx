@@ -71,7 +71,7 @@ export const AdaCyberExplorersResources = () => {
                         </Card>
                     </TextBlock>
                 </ColumnSlice>
-                <Button outline className="bg-white mt-5" href="/">Read more</Button>
+                {/* <Button outline className="bg-white mt-5" href={BLOG_POST_LINK}</Container>}>Read more</Button> */}
             </Container>
         </section>
         <section id="11-14-topics" className="bg-white">
