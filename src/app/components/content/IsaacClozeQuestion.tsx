@@ -505,7 +505,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 {dragAndDropEnabled && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
-                        {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">
+                        {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging">
                             <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
                                 {activeItem.children as ContentDTO[]}
                             </IsaacContentValueOrChildren>
