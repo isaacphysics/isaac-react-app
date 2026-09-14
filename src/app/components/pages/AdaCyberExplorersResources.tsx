@@ -71,7 +71,7 @@ export const AdaCyberExplorersResources = () => {
                         </Card>
                     </TextBlock>
                 </ColumnSlice>
-                {/* <Button outline className="bg-white mt-5" href={BLOG_POST_LINK}</Container>}>Read more</Button> */}
+                <Button outline className="bg-white mt-5" href={"/pages/202609_techfirst"} target="_blank">Read more</Button>
             </Container>
         </section>
         <section id="11-14-topics" className="bg-white">
@@ -161,7 +161,7 @@ export const AdaCyberExplorersResources = () => {
                         <p>
                             Schools can also work towards TechFirst School recognition, with Bronze, Silver and Gold awards available. From September 2026, TechFirst will operate in every region and home nation of the UK.
                         </p>
-                        {/* <Button outline className="bg-white" href="/regional-partners" target="_blank">Find out more</Button> */}
+                        <Button outline className="bg-white" href="/pages/techfirst_rdps" target="_blank">Find out more</Button>
                     </TextBlock>
                     <ImageBlock>
                         <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/regional-partners.png" alt="Stylised map of the UK showing example regional partner locations."/>
