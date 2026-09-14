@@ -17,7 +17,7 @@ export const AdaCyberExplorersResources = () => {
                     <TextBlock>
                         <h1 className="font-size-2-5 font-size-md-2-5 mb-3">
                             <span className="text-pink">/</span><br/>
-                            Build the skills to shape tomorrow: Ages 11 to 14
+                            Your future in tech starts here
                         </h1>
                         <p className="font-size-1-25">Practical activities that help learners understand technology, build confidence, and prepare for what&apos;s next.</p>
                         <p className="font-size-1-25">Always available for free.</p>
@@ -150,5 +150,17 @@ export const AdaCyberExplorersResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
+        {/* <section id="regional-partners" className="bg-white">
+            <Container className="homepage-padding mw-1600" fluid>
+                <ColumnSlice breakpoint="lg" reverseUnderBreakpoint className="row-gap-5">
+                    <TextBlock>
+                        TODO
+                    </TextBlock>
+                    <ImageBlock>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/regional-partners.png" alt="Stylised map of the UK showing example regional partner locations."/>
+                    </ImageBlock>
+                </ColumnSlice>
+            </Container>
+        </section> */}
     </>;
 };
