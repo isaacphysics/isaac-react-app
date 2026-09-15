@@ -11,7 +11,7 @@ import {
     STAGE,
     TAG_ID,
     tags,
-    useHistoryState
+    useLocalStorageState
 } from "../../services";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
@@ -21,7 +21,6 @@ import partition from "lodash/partition";
 import { Tabs } from "../elements/Tabs";
 import { IconCard } from "../elements/cards/IconCard";
 import { PageContainer } from "../elements/layout/PageContainer";
-import { useLocalStorageState } from "../../services/storage";
 
 const TOPICS_STAGES = ["11-14", "14-19"] as const;
 
