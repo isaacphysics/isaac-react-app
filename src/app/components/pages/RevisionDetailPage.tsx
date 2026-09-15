@@ -35,9 +35,13 @@ export const RevisionPage = () => {
         <ShowLoadingQuery
             query={revisionPageQuery}
             defaultErrorTitle="Unable to load revision page."
-            maintainOnRefetch // allows keeping sidebar content intact while refetching
+            maintainOnRefetch
             thenRender={(page, isStale) => {
-                return isStale ? <LoadingPlaceholder /> : <RevisionPageInternal page={page} />;
+                // show the loading placeholder only if the page itself is changing (to give instant click feedback).
+                // if the content on a single page is changing (e.g. gameboard save status updates), we don't want a jarring full-page loading placeholder; okay to show stale content.
+                return isStale && (page.id !== pageId) 
+                    ? <LoadingPlaceholder />
+                    : <RevisionPageInternal page={page} />;
             }}
         />
     </PageContainer>;
@@ -56,7 +60,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
         </MetadataContainer>
 
         {!!page.gameboards?.length && <>
-            <h4 className="mb-3" id="introduction">Introduction</h4>
+            <h3 className="mb-3 h4" id="introduction">Introduction</h3>
             <span>First, have a go at these baseline questions to assess your understanding and identify which aspects of this topic you should focus your revision on:</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
@@ -66,13 +70,13 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
             </div>
         </>}
 
-        <h4 className="mb-3" id="revision">Revision</h4>
+        <h3 className="mb-3 h4" id="revision">Revision</h3>
         <IsaacContentValueOrChildren value={page.value} encoding={page.encoding}>
             {page.children}
         </IsaacContentValueOrChildren>
 
         {!!tests.length && <>
-            <h4 className="mt-4 mb-3" id="tests">Practice tests</h4>
+            <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
             <span>To demonstrate your progress once you&apos;ve revised this section, have a go at a practice test:</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView

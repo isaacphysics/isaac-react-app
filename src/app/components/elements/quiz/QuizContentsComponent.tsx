@@ -77,9 +77,9 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
 function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: FullQuizInfo) {
     if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
-            <h4>No feedback available</h4>
+            <div className="h4">No feedback available</div>
             : attempt.feedbackMode === "OVERALL_MARK" ?
-                <h4>Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</h4>
+                <div className="h4">Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</div>
                 :
                 <table className="quiz-marks-table">
                     <tbody>
@@ -109,7 +109,7 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
         return <div data-testid="quiz-sections">
-            <h4>Test section(s)</h4>
+            <h2 className="h4">Test section(s)</h2>
             <ul>
                 {Object.keys(sections).map((k, index) => {
                     const section = sections[k];

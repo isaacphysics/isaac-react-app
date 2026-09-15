@@ -23,7 +23,7 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h4>{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} You must be logged in to answer this question</h4>
+        <div className="h4">{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} You must be logged in to answer this question</div>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds, along with the mark scheme.
@@ -69,7 +69,7 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h4>Do you consent to sending your answers to OpenAI for marking?</h4>
+        <div className="h4">Do you consent to sending your answers to OpenAI for marking?</div>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.
@@ -98,7 +98,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
     const {setLinkedSetting} = useLinkableSetting();
 
     return <>
-        <h4>Free text questions are marked by a large language model (LLM)</h4>
+        <div className="h4">Free text questions are marked by a large language model (LLM)</div>
         <p>
             In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time.
             This means that the marks you receive will not always be accurate.

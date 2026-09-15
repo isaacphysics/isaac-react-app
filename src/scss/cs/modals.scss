@@ -12,6 +12,11 @@
   .modal-header {
     padding-right: 1.75rem;
     min-height: 4rem;
+
+    .modal-title .h3 {
+      margin-bottom: 0;
+      line-height: var(--bs-modal-title-line-height);
+    }
   }
 }
 

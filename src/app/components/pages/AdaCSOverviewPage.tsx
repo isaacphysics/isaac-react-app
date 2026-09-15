@@ -32,7 +32,7 @@ export const AdaCSOverviewPage = () => {
 
             <ColumnSlice>
                 <TextBlock>
-                    <h2>For students</h2>
+                    <h3 className="h2">For students</h3>
                     <div>
                         Explore interactive resources designed to help you study computer science:
                         <ul>
@@ -53,7 +53,7 @@ export const AdaCSOverviewPage = () => {
                     <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
                 </ImageBlock>
                 <TextBlock>
-                    <h2>For teachers</h2>
+                    <h3 className="h2">For teachers</h3>
                     <div>
                         Access structured resources to help you deliver high-quality computer science education:
                         <ul>

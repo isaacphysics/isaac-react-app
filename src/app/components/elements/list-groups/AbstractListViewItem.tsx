@@ -292,6 +292,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
                             onClick={() => bookmarkItem(contentId)}
                             type="button"
+                            aria-label={isBookmarked(contentId) ? "Remove bookmark" : "Add bookmark"}
                         /> 
                     </div>
                     }

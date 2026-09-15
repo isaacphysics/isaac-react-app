@@ -10,7 +10,7 @@ export const genericApi = isaacApi.injectEndpoints({
                 url: `/pages/${id}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to load question",
+                errorTitle: "Unable to load page",
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                 },

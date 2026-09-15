@@ -816,3 +816,5 @@ export type PageContextState = {
     subject?: Subject;
     previousContext?: Omit<PageContextState, "previousContext">;
 } | null | undefined;
+
+export type PodLayout = "flush" | undefined;
