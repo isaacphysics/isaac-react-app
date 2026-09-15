@@ -30,7 +30,7 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
     return (containsSuperseded || containsDeprecated) && isTutorOrAbove(user) && <Alert {...rest} color="warning" fade={false} className={classNames("mt-2 d-flex", props.className)}>
         <i className="icon icon-warning icon-color-alert icon-sm me-3" />
         <div>
-            <h5>{containsDeprecated ? "Deprecated content" : "Superseded content"}</h5>
+            <div className="h5">{containsDeprecated ? "Deprecated content" : "Superseded content"}</div>
             {!hideFullDetails && <p className="small mb-0">
                 This assignment contains {containsDeprecated ? "content that we no longer maintain" : "content that has a newer version"}.{" "}
                 {isBookBoard

@@ -178,7 +178,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             <CardBody>
                 <Row className="mb-3">
                     <Col xs={12}>
-                        <h3>Assignments and tests</h3>
+                        <h2 className="h3">Assignments and tests</h2>
                         <span>View this group&apos;s progress on assignment and tests.</span>
                     </Col>
                     <Col xs={12} sm={6} lg={4}>

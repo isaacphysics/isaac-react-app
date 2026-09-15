@@ -66,7 +66,7 @@ export const RegistrationAgeCheck = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <div className={siteSpecific("h4", "h3")}>How old are you?</div>
+                <h2 className={siteSpecific("h4", "h3")}>How old are you?</h2>
                 <p>We can only create accounts for users {SITE_LOWER_AGE_LIMIT} years old or over.</p>
                 <Form onSubmit={submit}>
                     <fieldset>
