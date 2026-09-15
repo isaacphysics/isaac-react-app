@@ -131,6 +131,7 @@
 // Cloze questions
 .cloze-item {
   color: $cs-black;
+  border: 1px solid $border-color;
 
   &.bg-cloze {
     background: $yellow-300 !important;
