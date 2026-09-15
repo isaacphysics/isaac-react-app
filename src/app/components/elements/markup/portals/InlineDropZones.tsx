@@ -4,7 +4,7 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {useDroppable} from "@dnd-kit/core";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined, isPhy} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined} from "../../../../services";
 import { Markup } from "..";
 import DropZoneItem from "../../DnDItem";
 import { Spacer } from "../../Spacer";
