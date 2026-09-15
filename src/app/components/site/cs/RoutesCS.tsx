@@ -37,6 +37,7 @@ import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
+import { AdaCyberExplorersResources } from "../../pages/AdaCyberExplorersResources";
 import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
 
 const Equality = lazy(() => import('../../pages/Equality'));
@@ -63,6 +64,7 @@ export const RoutesCS = [
     // Student and teacher resources
     <Route key={key++} path="/students" element={<StudentResources />} />,
     <Route key={key++} path="/teachers" element={<TeacherResources />} />,
+    <Route key={key++} path="/techfirst" element={<AdaCyberExplorersResources />} />,
 
     // Assignments
     <Route key={key++} path="/assignment_progress" element={<Navigate to="/my_markbook" replace />} />,

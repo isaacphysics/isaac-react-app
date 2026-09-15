@@ -306,6 +306,8 @@ export const expectH1 = expectHeading(1);
 
 export const expectH2 = expectHeading(2);
 
+export const expectH3 = expectHeading(3);
+
 export const expectH4 = expectHeading(4);
 
 export const expectTextInElementWithId = (testId: string) => (msg: string) => expect(screen.getByTestId(testId)).toHaveTextContent(msg);

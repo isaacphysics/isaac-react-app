@@ -18,6 +18,7 @@ export enum KEY {
     FEATURE_FLAG_OVERRIDES = "featureFlagOverrides",
     ASSIGNMENT_SORT_ORDER = "assignmentSortOrder",
     GROUP_SORT_ORDER = "groupSortOrder",
+    TOPICS_TAB = "topicsTab",
 }
 
 export const LOADING_FAILURE_VALUE = null;
