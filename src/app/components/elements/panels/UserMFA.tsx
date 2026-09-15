@@ -85,7 +85,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                             <Form onSubmit={setupMFA}>
                                 <Row>
                                     <Col>
-                                        <h4 className="h5">Configure Two-factor Authentication (2FA)</h4>
+                                        <div className="h5">Configure Two-factor Authentication (2FA)</div>
                                         <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                         <div className="qrcode-mfa vertical-center">
                                             {qrCodeStringBase64SVG && <img

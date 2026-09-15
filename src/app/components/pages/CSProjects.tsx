@@ -42,7 +42,7 @@ export const CSProjects = () => {
         {allProjects.length === 0 ?
             <ShowLoadingQuery
                 query={projectsQuery}
-                thenRender={() => <div className={"w-100 text-start"}><h4>No projects to display...</h4></div>}
+                thenRender={() => <div className="w-100 text-start h4">No projects to display...</div>}
                 defaultErrorTitle={"Error fetching projects"}
             /> :
             <>

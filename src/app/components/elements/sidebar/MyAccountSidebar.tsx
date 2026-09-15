@@ -14,8 +14,9 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
     return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
-        <h5>Account settings</h5>
-        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role -- the <li>s carry role="presentation", so the tablist/tab structure is what's exposed to assistive tech while the valid <ul>/<li> markup is preserved */}
+        <h3 className="h5">Account settings</h3>
+        {/* The <li>s carry role="presentation", so the tablist/tab structure is what's exposed to assistive tech while the valid <ul>/<li> markup is preserved */
+        /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
         <ul role="tablist" aria-label="Account settings">
             {ACCOUNT_TABS
                 .filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser))

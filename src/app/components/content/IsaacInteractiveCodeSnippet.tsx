@@ -47,7 +47,7 @@ const InteractiveCodeSnippetTimeoutError = ({doc}: {doc: InteractiveCodeSnippetD
                 If this doesn&apos;t help, <Button tag={Link} to={`/contact?subject=Code%20editor%20issue&message=${encodeURIComponent(plainTextUsefulInformation)}`} color={"link"}>report this to us</Button> and try again later.
             </p>
             <p>
-                <h5>Useful information to include in your email:</h5>
+                <div className="h5">Useful information to include in your email:</div>
                 <small>
                     {Object.entries(usefulInformation).map(([key, value]) => (
                         <p className="mb-1" key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>

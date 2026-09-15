@@ -141,7 +141,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                         {gameboard?.contents && <BoardItemIndicator count={gameboard.contents.length} type="board-card" data-bs-theme={boardSubjects[0] ?? "neutral"} />}
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
-                        <h4 className="text-break m-0">
+                        <div className="text-break m-0 h4">
                             {isDefined(gameboard) && (
                                 linkLocation === GameboardLinkLocation.Title
                                     ? <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`} target="_blank">
@@ -150,7 +150,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                                     </Link>
                                     : gameboard.title
                             )}
-                        </h4>
+                        </div>
                         {above['sm'](deviceSize) && boardSubjects.length > 0 && <div className="d-flex align-items-center mb-2">
                             {boardSubjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}
                         </div>}

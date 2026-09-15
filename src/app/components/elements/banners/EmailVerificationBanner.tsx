@@ -28,9 +28,9 @@ const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBanne
 
     return <Row className="align-items-center" id="email-status-banner">
         <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
-            <span className="h3 d-flex align-items-center justify-content-center gap-2" >
+            <span className="d-flex align-items-center justify-content-center gap-2" >
                 <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
-                <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
+                <span id="email-verification-heading" className="d-inline-block d-sm-none h3">&nbsp;Email Verification</span>
             </span>
         </Col>
         {(status == null || status == "NOT_VERIFIED") && <React.Fragment>

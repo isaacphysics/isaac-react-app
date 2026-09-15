@@ -92,15 +92,11 @@
 }
 
 .validation-response-panel {
-  .question-response {
-    font-family: desyrel, serif;
-    font-size: 36px;
-    font-weight: 600;
-  }
-  h1 {
+  .response-heading {
     font-family: desyrel, serif;
     font-size: 48px;
     font-weight: 700;
+    line-height: 1.14;
   }
   &.correct {
     background: var(--subject-color-500);
