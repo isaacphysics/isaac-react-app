@@ -51,7 +51,7 @@ export const RegistrationStart = () => {
                             )}
                         </div>
                         <div className="my-7">
-                            <h3 className={siteSpecific({"h4 mb-3": isPhy})}>Continue with:</h3>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Continue with:</h3>
                             <div className="d-flex flex-column gap-2 mb-2">
                                 {isAda && <RaspberryPiSignInButton />}
                                 <GoogleSignInButton />
