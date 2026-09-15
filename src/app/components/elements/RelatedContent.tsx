@@ -7,16 +7,13 @@ import {
     documentTypePathPrefix,
     isAda,
     isIntendedAudience,
-    isTutorOrAbove,
     sortByStringValue,
     useUserViewingContext
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {ConceptGameboardButton} from "./ConceptGameboardButton";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
-    conceptId?: string;
     parentPage: ContentDTO;
 }
 
@@ -59,32 +56,33 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
 }
 
-function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
+function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
 
     if (audienceQuestions.length + remainingQuestions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
-            <div className="flex-fill simple-card my-3 p-3 text-wrap">
+            <div className="simple-card flex-fill my-3 p-3 text-wrap">
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
                         <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
-                    {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ms-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
-                        <ConceptGameboardButton conceptId={conceptId}/>
-                    </Col>}
                 </Row>
                 <hr/>
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex text-start">
-                    <ListGroup className="w-50">
-                        <h4 className="related-question-header">On your specification:</h4>
-                        {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
-                    </ListGroup>
-                    <ListGroup className="w-50">
-                        <h4 className="related-question-header">Outside your specification:</h4>
-                        {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
-                    </ListGroup>
+                    <div className="w-50">
+                        <div className="related-question-header h4">On your specification:</div>
+                        <ListGroup>
+                            {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
+                        </ListGroup>
+                    </div>
+                    <div className="w-50">
+                        <div className="related-question-header h4">Outside your specification:</div>
+                        <ListGroup>
+                            {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
+                        </ListGroup>
+                    </div>
                 </div>
                 {/* Small devices - single column */}
                 <div className="d-lg-none text-start">
@@ -92,7 +90,7 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
-                <h4 className="d-lg-none related-question-header mt-4">Outside your specification:</h4>
+                <div className="d-lg-none related-question-header mt-4 h4">Outside your specification:</div>
                 <div className="d-lg-none text-start">
                     <ListGroup>
                         {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
@@ -103,13 +101,12 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
     </div>;
 }
 
-export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
+export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
     const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
     const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     const sortedContent = audienceFilteredContent.sort(sortByStringValue("title"));
 
@@ -134,5 +131,5 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         </ListGroupItem>;
     };
 
-    return isAda ? renderQuestions(questions, remainingQuestions, makeListGroupItem, conceptId, showConceptGameboardButton) : null;
+    return isAda ? renderQuestions(questions, remainingQuestions, makeListGroupItem) : null;
 }

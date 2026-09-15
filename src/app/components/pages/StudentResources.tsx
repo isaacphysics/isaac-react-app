@@ -160,9 +160,9 @@ export const StudentResources = () => {
         <section id="testimonial" className="bg-black">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
-                    <h2>
+                    <div className="h2">
                         &ldquo;I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.&rdquo;
-                    </h2>
+                    </div>
                     <p>– Computer science student</p>
                 </TextBlock>
             </Container>
@@ -209,7 +209,7 @@ export const StudentResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-cyan-200" src="/assets/cs/decor/help-slice-cyan.svg" alt=""/>
                     <TextBlock className="py-3 text-center">
-                        <h3>Need help?</h3>
+                        <div className="h3">Need help?</div>
                         <p>Our student support page has lots of information for common questions and issues.</p>
                         <Button to="/support/student/general" tag={Link}>Student support</Button>
                     </TextBlock>

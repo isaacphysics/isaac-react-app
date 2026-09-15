@@ -26,7 +26,7 @@ const GameboardDetails = ({ gameboard }: { gameboard: GameboardDTO }) => {
 
     return <>
         <div className="section-divider"/>
-        <h5>Question deck</h5>
+        <h3 className="h5">Question deck</h3>
         <div className="mb-2">
             Subject{subjects.length > 1 && "s"}:
             <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s}><Pill title={HUMAN_SUBJECTS[s]} theme={s}/></li>)}</ul>
@@ -54,7 +54,7 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
     const multipleAssignments = assignments && assignments.length > 1;
     return assignments && assignments.length > 0 && <>
         <div className={multipleAssignments ? "section-divider-bold" : "section-divider"}/>
-        <h5>Assignment{multipleAssignments && "s"}</h5>
+        <h3 className="h5">Assignment{multipleAssignments && "s"}</h3>
         {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
         <ul>{assignments.map(a => <li key={a.id}><AssignmentDetails assignment={a} multipleAssignments={multipleAssignments} /></li>)}</ul>
     </>;

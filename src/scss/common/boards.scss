@@ -6,7 +6,7 @@ tr.board-card {
 }
 .board-card {
   min-width: 30%;
-  @media (max-width: map-get($breakpoints, sm)) {
+  @include media-breakpoint-down(md) {
     min-width: 50%;
   }
   margin-top: 25px;
@@ -80,13 +80,6 @@ tr.board-card {
   }
 }
 
-.input-align {
-  @media only screen and (min-resolution: 192dpi) {
-    width: 100%;
-    align-self: center;
-  }
-}
-
 .table-button {
   background: none!important;
   border: none;
@@ -96,14 +89,6 @@ tr.board-card {
 
 .my-gameboard-table {
   min-width: 870px;
-}
-
-.input-options {
-  float: right;
-  @media only screen and (max-width:800px) {
-    float: unset !important;
-    flex-direction: column;
-  }
 }
 
 .table-share-link, .card-share-link {

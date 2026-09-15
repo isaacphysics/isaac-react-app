@@ -10,7 +10,7 @@ import {
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
-import {addDays, assignMultipleQuiz, isDefined, Item, nthUtcHourOf, selectOnChange, siteSpecific, TODAY, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
+import {addDays, assignMultipleQuiz, isDefined, isEventLeaderOrStaff, isPhy, Item, nthUtcHourOf, selectOnChange, siteSpecific, TODAY, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -19,6 +19,7 @@ import {StyledSelect} from "../inputs/StyledSelect";
 import {Button, Form, FormFeedback, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import { ActiveModalProps, AppGroup } from "../../../../IsaacAppTypes";
 import classNames from "classnames";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
@@ -60,8 +61,11 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
     const [userSelectedDueDate, setUserSelectedDueDate] = useState<boolean>(false);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | undefined>(initialScheduledStartDate);
     const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | undefined>(initialFeedbackMode);
+    const [completionNotifications, setCompletionNotifications] = useState<boolean>(false);
     const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
 
+    // Isaac Science only for now
+    const canRequestCompletionNotifications = isPhy && isEventLeaderOrStaff(user);
     const yearRange = range(currentYear, currentYear + 5);
 
     function attemptAssign() {
@@ -79,6 +83,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
             dueDate: dueDate,
             scheduledStartDate: scheduledStartDate,
             quizFeedbackMode: feedbackMode,
+            completionNotifications: canRequestCompletionNotifications && completionNotifications,
             userId: user?.id
         })).then(success => {
             if (success) {
@@ -87,6 +92,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 setUserSelectedDueDate(false);
                 setScheduledStartDate(undefined);
                 setFeedbackMode(undefined);
+                setCompletionNotifications(false);
                 dispatch(closeActiveModal());
             }
         });
@@ -211,6 +217,14 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 </FormFeedback>
             </Label>
         </FormGroup>
+        {canRequestCompletionNotifications && <FormGroup className="mb-4">
+            <StyledCheckbox
+                id="completion-notifications-check"
+                checked={completionNotifications}
+                onChange={e => setCompletionNotifications(e.target.checked)}
+                label={<span>Email me when a student completes this test</span>}
+            />
+        </FormGroup>}
 
         <div className="d-flex justify-content-between gap-4 mb-4 w-100">
             <Button

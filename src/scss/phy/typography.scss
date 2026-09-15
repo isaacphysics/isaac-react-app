@@ -85,10 +85,10 @@ ul {
 @mixin dynamic-font-size($mobile, $tablet, $desktop) {
   font-size: $mobile;
   line-height: 1.14;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     font-size: $tablet;
   }
-  @include respond-above(md) {
+  @include media-breakpoint-up(lg) {
     font-size: $desktop;
   }
 }
@@ -149,7 +149,7 @@ h5 {
   padding-top: 62px;
   position: relative;
   margin-left: 0;
-  @include respond-above(md) {
+  @include media-breakpoint-up(lg) {
     padding-top: 0;
     padding-left: 62px;
     margin-left: -62px;
@@ -170,7 +170,7 @@ h5 {
     text-align: center;
     width: 42px;
 
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       top: 5px;
     }
   }
@@ -206,7 +206,7 @@ h5 {
     right: 0;
     width: 32%;
 
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       max-width: 380px;
     }
   }
@@ -245,7 +245,7 @@ a {
   &.x-lrg-text {
     font-size: 1.25rem;
 
-    @include respond-above(sm) {
+    @include media-breakpoint-up(md) {
       font-size: 1.625rem;
     }
   }

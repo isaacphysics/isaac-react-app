@@ -10,7 +10,7 @@ import {
     useGetGroupMembersQuery,
     useCancelUsersReservationsOnEventMutation,
     useReserveUsersOnEventMutation,
-    useLazyGetSchoolByUrnQuery,
+    useLazyGetSchoolByIdQuery,
     useSubmitContactFormMutation
 } from "../../../state";
 import {
@@ -143,10 +143,10 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         setCancelReservationCheckboxes(checkboxes);
     };
 
-    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
+    const [getSchoolById] = useLazyGetSchoolByIdQuery();
     useEffect(function fetchUsersSchool() {
         if (user?.schoolId && user?.schoolId !== "") {
-            getSchoolByUrn(user?.schoolId).then(({data}) => {
+            void getSchoolById(user?.schoolId).then(({data}) => {
                 if (data && data.length > 0) {
                     setSchool(schoolNameWithTownAndPostcode(data[0]));
                 }
@@ -358,8 +358,8 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </Table>
 
                             {/* Contact details for main supervisor */}
-                            <div className={"mt-2 mb-3"}>
-                                <h4>Contact details for main group supervisor</h4>
+                            <div className="mt-2 mb-3">
+                                <h2 className="h4">Contact details for main group supervisor</h2>
                                 <p>Change these if a teacher other than yourself is going to be supervising the students at this event.</p>
                                 <Row>
                                     <Col md={6}>
@@ -386,8 +386,8 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </div>
 
                             {/* Additional booking information for teachers */}
-                            <div className={"mt-2 mb-3"}>
-                                <h4>Additional booking information</h4>
+                            <div className="mt-2 mb-3">
+                                <h2 className="h4">Additional booking information</h2>
                                 <p>
                                     Add additional information about the group booking, for example contact details of other group supervisors.{" "}
                                     Please be aware that the students will remain the responsibility of the accompanying teachers.{" "}

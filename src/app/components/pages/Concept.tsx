@@ -117,7 +117,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                                 </Markup>
                             </p>}
 
-                            {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                            {isAda && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
 
                             <NavigationLinks navigation={navigation} />
                         </Col>

@@ -176,10 +176,6 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const fastTrackPrimaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) : null;
     const fastTrackSecondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
 
-    const checkAnswerButtonProps = isInlineQuestion 
-        ? {disabled: !canSubmit, onClick: () => submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts)} 
-        : {disabled: !canSubmit || awaitingFeedback};
-
     const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
 
@@ -190,7 +186,11 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            void submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
+            if (isInlineQuestion) {
+                void submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
+            } else {
+                void submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
+            }
             setHasSubmitted(true);
             setSentFeedback(false);
         }}>
@@ -222,14 +222,14 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 >
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
-                            <h1 className="m-0">
+                            <div className={siteSpecific("response-heading", "h1")}>
                                 {correct ? "Correct!" :
                                     tooManySigFigsError ? "Looks right, but..." :
                                         tooFewSigFigsError ? "Your answer needs..." :
                                             almost ? "Partly correct..." :
                                                 "Incorrect"
                                 }
-                            </h1>
+                            </div>
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
@@ -276,7 +276,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         <div className={classNames("submission-buttons d-flex align-items-stretch flex-column-reverse flex-sm-row flex-lg-row")}>
                             {isFastTrack 
                                 ? <FastTrackSubmissionButtons fastTrackPrimaryAction={fastTrackPrimaryAction} fastTrackSecondaryAction={fastTrackSecondaryAction} />
-                                : <Button {...checkAnswerButtonProps} className="mx-auto w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
+                                : <Button disabled={!canSubmit || awaitingFeedback} className="mx-auto w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
                             }
                         </div>
                 }

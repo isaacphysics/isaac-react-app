@@ -31,7 +31,7 @@ const Page = ({ page }: { page: typeof pages[number]}) => {
     return <div key={page.title} className="text-center mx-2" data-testid="modal-page">
         <img src={`/assets/cs/decor/${page.image}`} height="217px" alt='' aria-hidden className="my-3 modal-page-hero-image"/>
         <div className="d-flex flex-column align-items-center justify-content-center modal-page-text">
-            <h3 className="mb-3">{page.title}</h3>
+            <h2 className="mb-3 h3">{page.title}</h2>
             <p className="mb-0">{page.message}</p>
         </div>
     </div>;

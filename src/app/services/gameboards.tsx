@@ -19,7 +19,7 @@ import {
     useAppSelector,
     useLazyGetGameboardsQuery
 } from "../state";
-import { useHistoryState } from "../state/actions/history";
+import { useHistoryState } from "./history";
 
 export enum BoardCompletions {
     "any" = "Any",

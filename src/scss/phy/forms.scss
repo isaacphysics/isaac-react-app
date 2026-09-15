@@ -34,7 +34,7 @@
 .search--main-group {
   &.form-group {
     &:has(#header-search) {
-      @media (min-width: 768px) and (max-width: 1199px) {
+      @include media-breakpoint-between(md, xl) {
         width: 130px;
       }
     }

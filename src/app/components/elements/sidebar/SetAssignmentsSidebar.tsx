@@ -31,7 +31,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h5>Search question decks</h5>
+            <h3 className="h5">Search question decks</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 type="search" value={boardTitleFilter || ""}
@@ -39,16 +39,16 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
-            <h5 className="mb-3">Filter by subject</h5>
+            <h3 className="mb-3 h5">Filter by subject</h3>
             <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
                 {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
             </Input>
-            <h5 className="my-3">Filter by creator</h5>
+            <h3 className="my-3 h5">Filter by creator</h3>
             <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                 {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
             <div className="section-divider"/>
-            <h5 className="mb-3">Display</h5>
+            <h3 className="mb-3 h5">Display</h3>
             <div className="d-flex flex-xl-column flex-xxl-row">
                 <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
@@ -59,7 +59,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>
-            <h5 className="my-3">Sort by</h5>
+            <h3 className="my-3 h5">Sort by</h3>
             <Input type="select" className="mb-3" aria-label="Set sort order" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
                 {Object.values(AssignmentBoardOrder).filter(
                     order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)

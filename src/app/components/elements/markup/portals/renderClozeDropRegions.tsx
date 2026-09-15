@@ -70,7 +70,9 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = () => {
                 />
             ) 
             : [];
-    }, [dropIds]);
+    // Portals must be re-rendered when toggling between drag and drop modes so that they correspond to the correct html element
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dropIds, dropRegionContext?.dragAndDropEnabled]);
 
     return [
         modifyHtml,

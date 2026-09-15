@@ -17,7 +17,7 @@ type RequireAuthProps = {
 
 export const RequireAuth = ({auth, element}: RequireAuthProps) => {
     const user = useAppSelector(selectors.user.orNull);
-    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
+    const {data: segueEnvironment, isLoading: isEnvironmentLoading} = useGetSegueEnvironmentQuery();
     const userNeedsToBeTutorOrTeacher = auth && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(auth.name); // TODO we should try to find a more robust way than this
 
     if (!isDefined(user)) {
@@ -26,6 +26,10 @@ export const RequireAuth = ({auth, element}: RequireAuthProps) => {
 
     if (isTeacherPending(user) && auth.name) {
         return <Navigate to="/verifyemail" />;
+    };
+
+    if (isEnvironmentLoading) {
+        return <ShowLoading until={segueEnvironment} />;
     }
 
     if (user && element && auth(user, segueEnvironment || "")) {

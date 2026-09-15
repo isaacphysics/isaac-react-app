@@ -56,13 +56,14 @@ export interface QuizSpec {
     dueDate?: Date;
     scheduledStartDate?: Date;
     quizFeedbackMode?: QuizFeedbackMode;
+    completionNotifications?: boolean;
     userId?: number;
 }
 
 export const assignMultipleQuiz = createAsyncThunk(
     "quiz/assignQuiz",
     async (
-        {quizId, groups, dueDate, scheduledStartDate, quizFeedbackMode, userId}: QuizSpec,
+        {quizId, groups, dueDate, scheduledStartDate, quizFeedbackMode, completionNotifications, userId}: QuizSpec,
         {dispatch, rejectWithValue}
     ) => {
         const appDispatch = dispatch as AppDispatch;
@@ -73,7 +74,8 @@ export const assignMultipleQuiz = createAsyncThunk(
             groupId: id,
             dueDate: dueDate,
             scheduledStartDate: scheduledStartDate,
-            quizFeedbackMode: quizFeedbackMode
+            quizFeedbackMode: quizFeedbackMode,
+            completionNotifications: completionNotifications
         }));
 
         const response = await dispatch(quizApi.endpoints.assignQuiz.initiate(quizzes));
@@ -88,6 +90,7 @@ export const assignMultipleQuiz = createAsyncThunk(
                 creationDate: (new Date()).valueOf() as unknown as Date,
                 dueDate: dueDate?.valueOf() as unknown as Date | undefined,
                 scheduledStartDate: scheduledStartDate?.valueOf() as unknown as Date | undefined,
+                completionNotifications: completionNotifications,
                 ownerUserId: userId,
             }));
             const successfulIds = newQuizAssignments.map(q => q.groupId);

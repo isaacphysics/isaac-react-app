@@ -22,7 +22,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    background: var(--color-neutral-white);
+    background: var(--color-neutral-white, white);
     z-index: 255;
     display: none;
 
@@ -44,7 +44,7 @@
         }
       }
 
-      @include respond-below(sm) {
+      @include media-breakpoint-down(md) {
         display: none;
       }
     }
@@ -55,7 +55,7 @@
     flex-direction: row;
     justify-content: space-evenly;
 
-    @include respond-below(sm) {
+    @include media-breakpoint-down(md) {
       flex-direction: column;
       position: fixed;
       right: 0vw;
@@ -104,7 +104,7 @@
       cursor: pointer;
 
       &.unavailable {
-        color: var(--color-neutral-300);
+        color: var(--color-neutral-300, $gray-120);
         cursor: default;
       }
     }

@@ -9,6 +9,7 @@ import { SsoHelpLink } from "./LogIn";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import classNames from "classnames";
 
 export const RegistrationStart = () => {
     const navigate = useNavigate();
@@ -50,7 +51,7 @@ export const RegistrationStart = () => {
                             )}
                         </div>
                         <div className="my-7">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>Continue with:</div>
+                            <h3 className={siteSpecific({"h4 mb-3": isPhy})}>Continue with:</h3>
                             <div className="d-flex flex-column gap-2 mb-2">
                                 {isAda && <RaspberryPiSignInButton />}
                                 <GoogleSignInButton />
@@ -59,12 +60,12 @@ export const RegistrationStart = () => {
                             {isPhy && <SsoHelpLink />}                            
                         </div>
                         <div className="my-5">
-                            <h4>Or use an email:</h4>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Or use an email:</h3>
                             <Button block onClick={emailSignUp}>Sign up with email</Button>
                         </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <div className="my-5">
-                            <h4>Already have an account?</h4>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Already have an account?</h3>
                             <Button color={siteSpecific("solid", "keyline")} block onClick={login}>Log in</Button>
                         </div>
                     </Col>

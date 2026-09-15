@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@include respond-below(sm) {
+@include media-breakpoint-down(md) {
   .assignment-progress-gameboard {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -359,7 +359,7 @@ $failed-bg-size: 25%;
 .progress-header {
   text-align: center;
   padding: 0.5rem 0;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     font-size: 1.1rem;
   }
 }
@@ -368,7 +368,7 @@ $failed-bg-size: 25%;
   border-top: 1px solid $gray-118;
   display: flex;
   justify-content: space-between;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     font-size: 1.2rem;
   }
   align-items: center;
@@ -387,16 +387,6 @@ $failed-bg-size: 25%;
     opacity: 0.5;
     border: 1px solid $gray-118;
   }
-}
-
-@mixin after-border() {
-  content: '';
-  position: absolute;
-  margin: -0.5px -0.5px;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
 }
 
 .single-download {
@@ -438,7 +428,7 @@ $failed-bg-size: 25%;
     right: 50px;
   }
 
-  @include respond-between(xs, sm) {
+  @include media-breakpoint-between(sm, md) {
     font-size: 14px;
     tbody td, tbody th {
       min-width: 65px;
@@ -448,7 +438,7 @@ $failed-bg-size: 25%;
     }
   }
 
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     font-size: 17px;
     tbody td, tbody th {
       min-width: 85px;
@@ -466,7 +456,7 @@ $failed-bg-size: 25%;
     box-shadow: inset 0 1px 0 $gray-118;
   }
 
-  @include respond-below(xs) {
+  @include media-breakpoint-down(sm) {
     button.sort {
       display: none;
     }
@@ -497,7 +487,7 @@ $failed-bg-size: 25%;
     --correct-attempted-width: 7rem;
   }
 
-  @include respond-below(md) {
+  @include media-breakpoint-down(lg) {
     --student-name-width: 12rem;
 
     &:has(thead tr th.narrow-header) {
@@ -505,7 +495,7 @@ $failed-bg-size: 25%;
     }
   }
 
-  @include respond-below(sm) {
+  @include media-breakpoint-down(md) {
     --correct-attempted-width: 8rem;
     --student-name-width: 8rem;
   }
@@ -517,16 +507,13 @@ $failed-bg-size: 25%;
   }
 
   .progress-table-header-footer .correct-attempted-header {
-    @include respond-between(sm, sm) {
-      font-size: 0.9rem;
-    }
     width: var(--correct-attempted-width);
     min-width: var(--correct-attempted-width);
     max-width: var(--correct-attempted-width);
   }
 
   .sticky-ca-col {
-    @include respond-above(lg) {
+    @include media-breakpoint-up(xl) {
       position: sticky;
       z-index: 2;
       &:nth-child(2) {

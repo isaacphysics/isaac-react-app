@@ -1,6 +1,6 @@
 @import "../common/finder";
 
-@media (min-width: 992px) {
+@include media-breakpoint-up(lg) {
   .finder-panel::before {
     position: absolute;
     content: "";

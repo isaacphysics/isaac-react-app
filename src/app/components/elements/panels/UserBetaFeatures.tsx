@@ -34,7 +34,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Beta Features</h3>
+            <h2 className="h3">Beta Features</h2>
             <p>Here you can opt-in to beta features of the {SITE_TITLE} platform.</p>
         </>}
         rightColumn={<>

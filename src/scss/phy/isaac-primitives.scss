@@ -68,30 +68,40 @@ $color-neutral-700: #545461;
 $color-neutral-800: #3c3e47;
 $color-neutral-900: #23272c;
 
-$color-misc-orange-50: #f9efe8;
-$color-misc-orange-300: #fea102;
-$color-misc-orange-500: #bd5a00;
-$color-misc-orange-600: #aa5100;
+// Yellow-to-brown hue shift, to correspond with bootstrap alert colour scheme
+$color-misc-orange-50: #fbf9e8;
+$color-misc-orange-100: #f9fdd5;
+$color-misc-orange-200: #ffe088;
+$color-misc-orange-300: #fab350;
+$color-misc-orange-400: #ff9c46;
+$color-misc-orange-500: #ff7800;
+$color-misc-orange-600: #bd5a00;
+$color-misc-orange-700: #904600;
+$color-misc-orange-800: #683300;
+$color-misc-orange-900: #542800;
 
 $color-misc-navy: #001f47;
 $color-misc-red: #bb2828;
-$color-misc-pale-yellow: #f9fdd5;
 $color-misc-correct: #ecf7e9;
 $color-misc-llm: #eeffff;
 
 $light-misc-palette: (
   "orange-50": $color-misc-orange-50,
+  "orange-100": $color-misc-orange-100,
+  "orange-200": $color-misc-orange-200,
   "orange-300": $color-misc-orange-300,
+  "orange-400": $color-misc-orange-400,
   "orange-500": $color-misc-orange-500,
   "orange-600": $color-misc-orange-600,
+  "orange-700": $color-misc-orange-700,
+  "orange-800": $color-misc-orange-800,
+  "orange-900": $color-misc-orange-900,
   "navy": $color-misc-navy,
   "red": $color-misc-red,
-  "pale-yellow": $color-misc-pale-yellow,
   "correct": $color-misc-correct,
   "llm": $color-misc-llm
 );
 
-$color-wildcard-orange: #ff7800;
 $color-bookmark-saved: $color-misc-red;
 $color-bookmark-unsaved: var(--color-neutral-200);
 
@@ -245,18 +255,35 @@ $color-physics-dark-900: #ffc5ff;
 // $color-physics-dark-800: dark-mode-color-invert-oklch($color-physics-800);
 // $color-physics-dark-900: dark-mode-color-invert-oklch($color-physics-900);
 
+// Since this palette uses a hue shift to correspond with bootstrap alert, color-invert-oklch isn't suitable
+// thus these colours are approximated rather than calculated (in a similar manner to neutral e.g. orange-500 is AA on neutral-900)
+$color-misc-orange-dark-50:  #2b2100;
+$color-misc-orange-dark-100: #332701;
+$color-misc-orange-dark-200: #5f3b1b;
+$color-misc-orange-dark-300: #733d0a;
+$color-misc-orange-dark-400: #9b4c01;
+$color-misc-orange-dark-500: #a75a02;
+$color-misc-orange-dark-600: #a7660c;
+$color-misc-orange-dark-700: #d0902a;
+$color-misc-orange-dark-800: #ecc550;
+$color-misc-orange-dark-900: #ffdb71;
+
 $color-misc-dark-red: #ff8080;
-$color-misc-dark-pale-yellow: #534123;
 $color-misc-dark-correct: #344d2d;
 $color-misc-dark-llm: #134040;
 $dark-misc-palette: (
-  "orange-50": $color-misc-orange-50,
-  "orange-300": $color-misc-orange-300,
-  "orange-500": $color-misc-orange-500,
-  "orange-600": $color-misc-orange-600,
+  "orange-50": $color-misc-orange-dark-50,
+  "orange-100": $color-misc-orange-dark-100,
+  "orange-200": $color-misc-orange-dark-200,
+  "orange-300": $color-misc-orange-dark-300,
+  "orange-400": $color-misc-orange-dark-400,
+  "orange-500": $color-misc-orange-dark-500,
+  "orange-600": $color-misc-orange-dark-600,
+  "orange-700": $color-misc-orange-dark-700,
+  "orange-800": $color-misc-orange-dark-800,
+  "orange-900": $color-misc-orange-dark-900,
   "navy": $color-misc-navy,
   "red": $color-misc-dark-red,
-  "pale-yellow": $color-misc-dark-pale-yellow,
   "correct": $color-misc-dark-correct,
   "llm": $color-misc-dark-llm
 );

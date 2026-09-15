@@ -4,10 +4,11 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
 
 jobs:
   cypress-run:
+    if: ${{ !startsWith(github.head_ref, 'vrt/') }}
+
     runs-on: ubuntu-22.04
     container:
       # This must stay in sync with the image used by the test-{site}-visual scripts in package.json.

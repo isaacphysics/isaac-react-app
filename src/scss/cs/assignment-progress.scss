@@ -53,7 +53,7 @@
 }
 
 .progress-table {
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     tbody td, tbody th {
       min-width: 77px; // fits 10 questions on screen at once
     }

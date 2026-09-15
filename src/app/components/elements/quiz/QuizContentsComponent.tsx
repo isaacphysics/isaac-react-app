@@ -29,13 +29,15 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
-import {closeActiveModal, openActiveModal, useAppDispatch,} from "../../../state";
+import {closeActiveModal, openActiveModal, useAppDispatch} from "../../../state";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
 import classNames from "classnames";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { QuizSidebar, QuizSidebarProps } from "../sidebar/QuizSidebar";
+import { InaccessibleContentWarningAlert } from "../alerts/InaccessibleContentWarningAlert";
+import { getAccessibilityTags, useAccessibilitySettings } from "../../../services/accessibility";
 
 type QuizContents = {
     questions: QuestionDTO[];
@@ -75,9 +77,9 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
 function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: FullQuizInfo) {
     if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
-            <h4>No feedback available</h4>
+            <div className="h4">No feedback available</div>
             : attempt.feedbackMode === "OVERALL_MARK" ?
-                <h4>Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</h4>
+                <div className="h4">Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</div>
                 :
                 <table className="quiz-marks-table">
                     <tbody>
@@ -107,7 +109,7 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
         return <div data-testid="quiz-sections">
-            <h4>Test section(s)</h4>
+            <h2 className="h4">Test section(s)</h2>
             <ul>
                 {Object.keys(sections).map((k, index) => {
                     const section = sections[k];
@@ -203,20 +205,21 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
     const section = page && sections?.[page - 1];
     const attribution = attempt.quiz?.attribution;
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+    const accessibilitySettings = useAccessibilitySettings();
 
     return section ?
         <Row className="question-content-container">
-            <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
+            <Col className={classNames("py-lg-4 question-panel", {"mw-760": isAda})}>
                 {viewingAsSomeoneElse && <div className="mb-2">
                     You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
                 </div>}
-                <Row>
-                    <Col className="d-flex flex-column align-items-end">
-                        {(isAda || above["lg"](deviceSize)) && <div className="mb-3">
-                            <QuizRubricButton rubric={attempt.quiz?.rubric} />
-                        </div>}
-                    </Col>
-                </Row>
+
+                <div className="mb-lg-3">
+                    <div className="d-flex flex-column align-items-end mb-lg-3">
+                        {(isAda || above["lg"](deviceSize)) && <QuizRubricButton rubric={attempt.quiz?.rubric} />}
+                    </div>
+                    {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(attempt.quiz?.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
+                </div>
 
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>

@@ -19,7 +19,7 @@ export const RegistrationSuccess = () => {
         <Card className="my-7">
             <CardBody className="text-center">
                 <div className="py-3 d-flex flex-column align-items-start px-5">
-                    <h3>Account created!</h3>
+                    <h1>Account created!</h1>
                     <p>You&apos;re all set up. Welcome!</p>
                     <Spacer />
                     {siteSpecific(

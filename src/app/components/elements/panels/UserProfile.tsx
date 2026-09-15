@@ -57,7 +57,7 @@ export const UserProfile = (props: UserProfileProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Account details</h3>
+            <h2 className="h3">Account details</h2>
             <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
             <p>
                 <AccountTypeMessage role={userToUpdate?.role} />
@@ -169,7 +169,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                 submissionAttempted={submissionAttempted}
                 required={true}
-                textOverride={siteSpecific("This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
+                textOverride={siteSpecific("The country you go to school in. This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
             />
             <SchoolInput
                 userToUpdate={userToUpdate}
