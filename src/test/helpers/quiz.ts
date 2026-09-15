@@ -47,13 +47,15 @@ export const expectPhyBreadCrumbs = ({href, text}: {href: string, text: string})
     ]);
 };
 
-export const expectAdaBreadCrumbs = ([first, second, third]: [{href: string, text: string}, {href: string, text: string}, string | undefined]) => {
+export const expectAdaBreadCrumbs = (expectedHead: {href: string, text: string}[], expectedTail: string | undefined) => {
+    const expectedHtml = [
+        ...expectedHead.map(
+            e => `<a class="breadcrumb-link" href="${e.href}" data-discover="true"><span>${e.text}</span></a>`
+        ),
+        `<span>${expectedTail}</span>`
+    ];
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
-    expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
-        `<a class="breadcrumb-link" href="${first.href}" data-discover="true"><span>${first.text}</span></a>`,
-        `<a class="breadcrumb-link" href="${second.href}" data-discover="true"><span>${second.text}</span></a>`,
-        `<span>${third}</span>`
-    ]);
+    expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual(expectedHtml);
 };
 
 const sidebar = () => screen.getByTestId('sidebar');

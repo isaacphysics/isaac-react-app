@@ -25,7 +25,7 @@ describe("QuizView", () => {
         await studentViewsQuiz();
         siteSpecific(
             () => expectPhyBreadCrumbs({href: "/view_tests", text: "View tests"}),
-            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}, rubric.title])
+            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}], rubric.title)
         )();
     });
 
@@ -77,7 +77,7 @@ describe("QuizView", () => {
             await studentViewsMissingQuiz();
             siteSpecific(
                 () => expectPhyBreadCrumbs({href: '/view_tests', text: "View tests"}),
-                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}, "Unknown Test"])
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}], "Unknown Test")
             )();
         });
 
