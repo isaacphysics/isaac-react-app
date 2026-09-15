@@ -132,7 +132,7 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
         }
     }
 
-    const decimalsOutsideCompound = input.match(/(?<![A-Za-z])\d+\.\d+\s*([A-Z]|$)|[A-Za-z]\d+\.\d+\s*$/);
+    const decimalsOutsideCompound = input.match(/(?:[^A-Za-z])\d+\.\d+\s*([A-Z]|$)|[A-Za-z]\d+\.\d+\s*$/);
     if ((["nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) || (editorMode === "chemistry" && decimalsOutsideCompound)) {
         errors.push('Please convert decimal numbers to fractions.');
     }

@@ -62,7 +62,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
     let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')
-        .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
+        .replace('proton', '\\proton').replace('neutrino', '\\neutrino').replace('anti\\neutrino', '\\antineutrino');
+    // replacing the anti\\neutrino mess with a lookbehind would be smarter, but this isn't supported in Safari versions pre-2022, and we did get a ticket about this (2026-09)
 
     const mayRequireStateSymbols = !hasMetaSymbols || CHEMICAL_STATES?.some(state => symbolList?.includes(state));
 
