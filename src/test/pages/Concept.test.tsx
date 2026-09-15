@@ -11,7 +11,7 @@ describe("Concept", () => {
     it('renders the concept title from the mock concept page', async () => {
         await renderTestEnvironment({extraEndpoints: isPhy ? [ buildFunctionHandler("/bookmarks", [], () => []) ] : []});
         await setUrl({ pathname: "/concepts/_mock_concept_page_" });
-        expect(await conceptPage.header()).toHaveTextContent(mockConceptPage.title);        
+        expect(await conceptPage.header()).toHaveTextContent(mockConceptPage.title);
     });
 
     if (isAda) {
@@ -115,7 +115,7 @@ describe("Concept", () => {
 
 const conceptPage = {
     async header(): Promise<HTMLElement> {
-        return within(await screen.findByTestId('main')).findByRole('heading', { level: siteSpecific(3, 1) });
+        return within(await screen.findByTestId('main')).findAllByRole('heading', { level: siteSpecific(2, 1) }).then(elems => elems.find(e => !e.textContent?.includes("Sidebar")) ?? elems[0]);
     },
 
     navigateNext(): HTMLElement | null {
