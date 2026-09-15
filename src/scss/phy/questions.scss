@@ -228,3 +228,15 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     color: var(--color-neutral-800);
   }
 }
+
+@include color-mode(light) {
+  .bg-cloze {
+    background-color: var(--subject-color-500);
+  }
+}
+
+@include color-mode(dark) {
+  .bg-cloze {
+    background-color: var(--subject-color-300);
+  }
+}
