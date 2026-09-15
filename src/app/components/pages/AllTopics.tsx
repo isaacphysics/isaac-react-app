@@ -109,6 +109,7 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
     }
 
     return <>
+        <h2 className="visually-hidden">{age} topics</h2>
         <Container className={"mb-4"}>
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
