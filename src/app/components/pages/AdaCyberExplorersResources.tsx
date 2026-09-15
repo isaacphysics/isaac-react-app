@@ -6,8 +6,12 @@ import { ImageBlock } from "../elements/layout/ImageBlock";
 import { TextBlock } from "../elements/layout/TextBlock";
 import { Link } from "react-router";
 import { IconCard } from "../elements/cards/IconCard";
+import { isLoggedIn } from "../../services";
+import { selectors, useAppSelector } from "../../state";
 
 export const AdaCyberExplorersResources = () => {
+    const user = useAppSelector(selectors.user.orNull);
+
     return <>
         <MetaDescription description={"Resources for students and teachers for ages 11-14."} />
 
@@ -142,9 +146,9 @@ export const AdaCyberExplorersResources = () => {
                             <li>Classroom tools to group students into classes, assign activities, and track learners&apos; progress</li>
                             <li>Expert content developed by the Raspberry Pi Foundation in collaboration with partners including the University of Cambridge</li>
                         </ul>
-                        <div className="d-flex gap-3">
+                        <div className="d-flex flex-column flex-md-row gap-3">
                             <Button href="/">Discover more of Ada CS</Button>
-                            <Button outline className="bg-white" href="/register">Create an account</Button>
+                            {!isLoggedIn(user) && <Button outline className="bg-white" href="/register">Create an account</Button>}
                         </div>
                     </TextBlock>
                 </ColumnSlice>
