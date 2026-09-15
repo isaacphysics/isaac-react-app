@@ -46,8 +46,8 @@ export const HomepageCS = () => {
                     </div>
                 </Container>
             </section>
-            <Container className={classNames("mw-1600 homepage-padding-x justify-self-center", {"position-absolute translate-middle-y": deviceSize !== "xs"})} fluid>
-                <Card id={"cta-features-card"} className={"icon-card p-5"}>
+            <Container className={classNames({"position-absolute translate-middle-y": deviceSize !== "xs"})} fluid>
+                <Card id={"cta-features-card"} className={"mw-1600 icon-card p-5"}>
                     <Row className={"justify-content-center gy-5 fw-bold"}>
                         <Col xs={12} md={6} lg={3} className={"cta-feature"}>
                             Free computer science resources for students aged 14 to 19
