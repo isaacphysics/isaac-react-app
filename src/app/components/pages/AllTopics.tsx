@@ -6,6 +6,7 @@ import {AdaTopicBase, Tag} from "../../../IsaacAppTypes";
 import {
     Ada11To14TopicsToConcepts,
     AdaTopicsToIcons,
+    KEY,
     PATHS,
     STAGE,
     TAG_ID,
@@ -20,6 +21,7 @@ import partition from "lodash/partition";
 import { Tabs } from "../elements/Tabs";
 import { IconCard } from "../elements/cards/IconCard";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useLocalStorageState } from "../../services/storage";
 
 const TOPICS_STAGES = ["11-14", "14-19"] as const;
 
@@ -149,7 +151,7 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
 export const AllTopics = () => {
     const coreAdvancedTags = tags.allSubcategoryTags.filter(s => !s.stageOverride?.[STAGE.CORE]?.hidden && !s.stageOverride?.[STAGE.ADVANCED]?.hidden);
     const ks4Tags = tags.getChildren(TAG_ID.computerScience11_14);
-    const [stageTab, setStageTab] = useHistoryState<typeof TOPICS_STAGES[number]>("topics-tab", window.location.hash === "#11-14" ? "11-14" : "14-19"); // TODO: replace with local storage solution
+    const [stageTab, setStageTab] = useLocalStorageState<typeof TOPICS_STAGES[number]>(KEY.TOPICS_TAB, window.location.hash === "#11-14" ? "11-14" : "14-19");
 
     const location = useLocation();
 
