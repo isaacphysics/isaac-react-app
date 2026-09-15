@@ -18,6 +18,7 @@ export * from "./constants";
 export * from "./miscUtils";
 export * from "./credentialPadding";
 export * from "./history";
+export * from "./storage";
 
 // Dependencies in /services
 export * from "./katex-a11y";

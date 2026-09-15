@@ -34,20 +34,24 @@ export const RegistrationStart = () => {
             undefined
         )}
     >
-        <Card className="my-7">
+        <Card className="my-5">
             <CardBody>
                 <Row className="align-items-start">
                     <Col xs={12} lg={6}>
-                        <div className="mb-7">
-                            <h2>{siteSpecific("Hello!", "How would you like to sign up?")}</h2>
-                            <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
+                        <div className="mb-5">
+                            {siteSpecific(
+                                <>
+                                    <h3>Hello!</h3>
+                                    <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
+                                </>,
+                                <>
+                                    <h3>How would you like to sign up?</h3>
+                                    <p>You will have access to the same content no matter how you sign up.</p>
+                                </>
+                            )}
                         </div>
                         <div className="my-7">
-                            <h3 className={classNames({"h4 mb-3": isPhy})}>Create a new account with your email:</h3>
-                            <Button block onClick={emailSignUp}>Continue with email</Button>
-                        </div>
-                        <div className="my-7">
-                            <h3 className={classNames({"h4 mb-3": isPhy})}>Or log in with:</h3>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Continue with:</h3>
                             <div className="d-flex flex-column gap-2 mb-2">
                                 {isAda && <RaspberryPiSignInButton />}
                                 <GoogleSignInButton />
@@ -55,8 +59,12 @@ export const RegistrationStart = () => {
                             </div>
                             {isPhy && <SsoHelpLink />}                            
                         </div>
+                        <div className="my-5">
+                            <h4>Or use an email:</h4>
+                            <Button block onClick={emailSignUp}>Sign up with email</Button>
+                        </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
-                        <div className="mt-7">
+                        <div className="my-5">
                             <h3 className={classNames({"h4 mb-3": isPhy})}>Already have an account?</h3>
                             <Button color={siteSpecific("solid", "keyline")} block onClick={login}>Log in</Button>
                         </div>
