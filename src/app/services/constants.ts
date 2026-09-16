@@ -991,9 +991,9 @@ type ContextSpecificTags = Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID
 
 export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> = {
     [TAG_ID.aiAndMachineLearning11_14]: [
-        {title: "Data driven vs. rule based", url: undefined},
-        {title: "Data science", url: undefined},
-        {title: "Building a data-driven model", url: undefined},
+        {title: "AI in everyday life", url: undefined},
+        {title: "Understanding and using data", url: undefined},
+        {title: "How machines learn from data", url: undefined},
     ],
     [TAG_ID.algorithmsAndDataStructures11_14]: [
         {title: "Computational thinking", url: undefined},
