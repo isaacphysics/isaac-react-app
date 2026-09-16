@@ -1,4 +1,4 @@
-import {expectH1, expectH4, expectLink, expectUrl} from "../testUtils";
+import {expectH1, expectH2, expectLink, expectUrl} from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import {
     expectAdaBreadCrumbs,
@@ -25,7 +25,7 @@ describe("QuizView", () => {
         await studentViewsQuiz();
         siteSpecific(
             () => expectPhyBreadCrumbs({href: "/view_tests", text: "View tests"}),
-            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}, rubric.title])
+            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}], rubric.title)
         )();
     });
 
@@ -77,14 +77,14 @@ describe("QuizView", () => {
             await studentViewsMissingQuiz();
             siteSpecific(
                 () => expectPhyBreadCrumbs({href: '/view_tests', text: "View tests"}),
-                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}, "Unknown Test"])
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/view_tests", text: "View tests"}], "Unknown Test")
             )();
         });
 
         it('shows error', async () => {
             await studentViewsMissingQuiz();
             expectH1('Unknown Test');
-            expectH4('There was an error loading that test.');
+            expectH2('There was an error loading that test.');
             expectErrorMessage('This test has become unavailable.');
         });
     });

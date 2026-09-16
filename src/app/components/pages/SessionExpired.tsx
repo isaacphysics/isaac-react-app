@@ -12,7 +12,7 @@ export const SessionExpired = () => {
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session expired" icon={{type: "icon", icon: "icon-error"}}/>
 
-            <h3 className="my-4">{"We're sorry, but your session has expired!"}</h3>
+            <div className="my-4 h3">{"We're sorry, but your session has expired!"}</div>
 
             <p>
                 {"You should "}

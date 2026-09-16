@@ -141,7 +141,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                     </ExigentAlert>
                 }
                 <SignupTab
-                    leftColumn = {<div className={siteSpecific("h4", "h3")}>Create your{siteSpecific("", ` ${userRole.toLowerCase()}`)} account</div>}
+                    leftColumn = {<h2 className={siteSpecific("h4", "h3")}>Create your{siteSpecific("", ` ${userRole.toLowerCase()}`)} account</h2>}
                     rightColumn = {<Form onSubmit={register}>
                         <div className={siteSpecific("row row-cols-2", "")}>
                             <GivenNameInput

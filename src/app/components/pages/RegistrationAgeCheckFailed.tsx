@@ -25,7 +25,7 @@ export const RegistrationAgeCheckFailed = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h3>Unable to create account</h3>
+                <h2 className="h3">Unable to create account</h2>
                 <p>Unfortunately, we aren&apos;t able to offer accounts to students under {siteSpecific("10", "13")} years old.</p>
                 <p>{siteSpecific(
                     <><b>But you can still access the whole site for free!</b> You just won&apos;t be able to track your progress.</>,

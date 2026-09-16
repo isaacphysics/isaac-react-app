@@ -13,7 +13,7 @@ export const ProviderCallbackHandler = () => {
 
     return <React.Fragment>
         <div className="w-100 text-center">
-            <h2 className="pt-7 pb-2">Signing in...</h2>
+            <div className="pt-7 pb-2 h2">Signing in...</div>
             <IsaacSpinner />
         </div>
     </React.Fragment>;

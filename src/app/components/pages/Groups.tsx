@@ -285,9 +285,9 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
 
     return <Card className={classNames({"mb-4": isPhy})} {...rest}>
         <CardBody>
-            <h4 className={"mb-2"}>
+            <h2 className="mb-2 h4">
                 {siteSpecific("Manage group", "Group details")}
-            </h4>
+            </h2>
 
             <div className={"d-flex flex-column gap-2"}>
                 <div>
