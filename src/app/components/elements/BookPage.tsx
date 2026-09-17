@@ -83,7 +83,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             </IsaacContentValueOrChildren>
         </>}
 
-        {!!relevantTests.length && <>
+        {hasRelevantTests && <>
             <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
             <span>Set a test to check students&apos; understanding of this topic:</span>
             <div className="mt-3 mb-7 list-results-container p-2">
