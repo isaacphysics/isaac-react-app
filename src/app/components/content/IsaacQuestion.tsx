@@ -220,15 +220,13 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
-                    <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
-                        <div className={siteSpecific("response-heading", "h1")} id="validation-response-heading">
-                            {correct ? "Correct!" :
-                                tooManySigFigsError ? "Looks right, but..." :
-                                    tooFewSigFigsError ? "Your answer needs..." :
-                                        almost ? "Partly correct..." :
-                                            "Incorrect"
-                            }
-                        </div>
+                    <div className={classNames("pb-1", siteSpecific("response-heading", "h1"))} tabIndex={-1} ref={feedbackRef}>
+                        {correct ? "Correct!" :
+                            tooManySigFigsError ? "Looks right, but..." :
+                                tooFewSigFigsError ? "Your answer needs..." :
+                                    almost ? "Partly correct..." :
+                                        "Incorrect"
+                        }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 && isDefined(inlineContext?.feedbackIndex) ? <>
