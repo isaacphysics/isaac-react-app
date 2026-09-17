@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { convertToALVIGameboards, ListView } from "./list-groups/ListView";
-import { GameboardDTO, IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
+import { GameboardDTO, IsaacBookDetailPageDTO, QuizSummaryDTO } from "../../../IsaacApiTypes";
 import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataContainer";
 import { Markup } from "./markup";
 import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
 import { scrollVerticallyIntoView } from "../../services";
+import { selectors, useAppSelector } from "../../state";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
     
@@ -20,6 +21,10 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
     })();
 
     const { hash } = useLocation();
+
+    const user = useAppSelector(selectors.user.loggedInOrNull);
+    const tests = (page.relatedContent?.filter(c => c.type === "isaacQuiz") || []) as QuizSummaryDTO[];
+    const relevantTests = user?.role ? tests.filter(t => !t.hiddenFromRoles?.includes(user.role!)) : [];
 
     useEffect(() => {
         // scroll to anchor once page has loaded
@@ -74,6 +79,17 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             <IsaacContentValueOrChildren value={page.value} encoding={page.encoding}>
                 {page.children}
             </IsaacContentValueOrChildren>
+        </>}
+
+        {!!relevantTests.length && <>
+            <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
+            <span>Set a test to check students&apos; understanding of this topic:</span>
+            <div className="mt-3 mb-7 list-results-container p-2">
+                <ListView
+                    type="quiz"
+                    items={relevantTests}
+                />
+            </div>
         </>}
 
         {hasExtension && <>

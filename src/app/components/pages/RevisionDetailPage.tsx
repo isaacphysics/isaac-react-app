@@ -12,6 +12,7 @@ import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledS
 import { useParams } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { siteSpecific } from "../../services";
+import { selectors, useAppSelector } from "../../state";
 
 export const RevisionPage = () => {
     const { pageId } = useParams();
@@ -48,7 +49,9 @@ export const RevisionPage = () => {
 };
 
 const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
-    const tests = (page.relatedContent?.filter(c => c.type === "isaacTest") || []) as QuizSummaryDTO[];
+    const user = useAppSelector(selectors.user.loggedInOrNull);
+    const tests = (page.relatedContent?.filter(c => c.type === "isaacQuiz") || []) as QuizSummaryDTO[];
+    const relevantTests = user?.role ? tests.filter(t => !t.hiddenFromRoles?.includes(user.role!)) : [];
 
     return <div>
         <PageMetadata doc={page} />
@@ -56,7 +59,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
         <MetadataContainer className="d-flex flex-column gap-2">
             {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title="Introduction" />}
             <MetadataContainerLink id="revision" title="Revision" />
-            {!!tests.length && <MetadataContainerLink id="tests" title="Practice tests" />}
+            {!!relevantTests.length && <MetadataContainerLink id="tests" title="Practice tests" />}
         </MetadataContainer>
 
         {!!page.gameboards?.length && <>
@@ -75,13 +78,13 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
             {page.children}
         </IsaacContentValueOrChildren>
 
-        {!!tests.length && <>
+        {!!relevantTests.length && <>
             <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
             <span>To demonstrate your progress once you&apos;ve revised this section, have a go at a practice test:</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="quiz"
-                    items={tests}
+                    items={relevantTests}
                 />
             </div>
         </>}
