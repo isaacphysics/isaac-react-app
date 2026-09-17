@@ -10,9 +10,14 @@ import { scrollVerticallyIntoView } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
+
+    const user = useAppSelector(selectors.user.loggedInOrNull);
+    const tests = (page.relatedContent?.filter(c => c.type === "isaacQuiz") || []) as QuizSummaryDTO[];
+    const relevantTests = user?.role ? tests.filter(t => !t.hiddenFromRoles?.includes(user.role!)) : [];
     
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
+    const hasRelevantTests = relevantTests.length > 0;
     const hasExtension = page.extensionGameboards && page.extensionGameboards.length > 0;
 
     const bookPageUrlParam = (() => {
@@ -21,10 +26,6 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
     })();
 
     const { hash } = useLocation();
-
-    const user = useAppSelector(selectors.user.loggedInOrNull);
-    const tests = (page.relatedContent?.filter(c => c.type === "isaacQuiz") || []) as QuizSummaryDTO[];
-    const relevantTests = user?.role ? tests.filter(t => !t.hiddenFromRoles?.includes(user.role!)) : [];
 
     useEffect(() => {
         // scroll to anchor once page has loaded
@@ -50,6 +51,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         <MetadataContainer className="d-flex flex-column gap-2">
             {hasQuestions && <MetadataContainerLink id="questions" title="Questions" />}
             {hasResources && <MetadataContainerLink id="resources" title="Resources" />}
+            {hasRelevantTests && <MetadataContainerLink id="tests" title="Practice tests" />}
             {hasExtension && <MetadataContainerLink id="extension" title="Extension work" />}
             {!hasQuestions && !hasResources && !hasExtension && <span className="ms-2">There are no materials for this page.</span>}
         </MetadataContainer>
