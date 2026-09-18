@@ -1,28 +1,37 @@
 import React from "react";
 import classNames from "classnames";
-import {isAda, simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
+import {isAda, simpleDifficultyLabelMap, siteSpecific, STAGE, STAGE_TO_LEARNING_STAGE, stageLabelMap} from "../../services";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
-import {ViewingContext} from "../../../IsaacAppTypes";
+import {PageContextState, ViewingContext} from "../../../IsaacAppTypes";
 import { Difficulty } from "../../../IsaacApiTypes";
 import { Spacer } from "./Spacer";
 
 interface StageAndDifficultySummaryIconsProps {
-    audienceViews: ViewingContext[],
+    audienceViews: ViewingContext[];
+    pageContext?: PageContextState,
     className?: string,
     iconClassName?: string,
     stack?: boolean,
     spacerWidth?: number,
 }
 
+// audienceViews contains info about the difficulties for each stage;
+// pageContext contains info about which stages are displayed. if not provided, assume all stages are displayed.
 export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryIconsProps) => {
-    const {audienceViews, className, iconClassName, stack, spacerWidth} = props;
+    const {audienceViews, pageContext, className, iconClassName, stack, spacerWidth} = props;
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
+
+    const audienceViewsForPageContext = pageContext?.stage
+        ? audienceViews.filter(v => v.stage && STAGE_TO_LEARNING_STAGE[v.stage] && pageContext.stage!.includes(STAGE_TO_LEARNING_STAGE[v.stage]!))
+        : audienceViews;
+
     // Prefer Core over Advanced if both are present
     const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
         audienceViews.some(v => v.stage === STAGE.ADVANCED) ? STAGE.ADVANCED : undefined);
+
     return siteSpecific(
         <div className={classNames(className, "d-flex flex-column")}>
-            {audienceViews.map((view) =>
+            {audienceViewsForPageContext.map((view) =>
                 <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="d-flex w-100 hierarchy-tags text-center">
                     {view.stage && view.stage !== STAGE.ALL && stageLabelMap[view.stage] + " "}
                     {view.difficulty && <>

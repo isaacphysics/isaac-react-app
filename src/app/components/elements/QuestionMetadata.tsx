@@ -1,7 +1,7 @@
 import React from "react";
 import { Col } from "reactstrap";
 import { IsaacQuestionPageDTO } from "../../../IsaacApiTypes";
-import { ViewingContext } from "../../../IsaacAppTypes";
+import { PageContextState, ViewingContext } from "../../../IsaacAppTypes";
 import { stageLabelMap, difficultyShortLabelMap, isPhy, TAG_ID, tags } from "../../services";
 import { MetadataContainer } from "./panels/MetadataContainer";
 import { StageAndDifficultySummaryIcons } from "./StageAndDifficultySummaryIcons";
@@ -20,13 +20,14 @@ function getTags(docTags?: string[]) {
 interface QuestionMetaDataProps {
     doc: IsaacQuestionPageDTO;
     audienceViews: ViewingContext[];
+    pageContext: PageContextState;
     allQuestionsCorrect: boolean;
     allQuestionsAttempted: boolean;
     anyQuestionAttempted: boolean;
 }
 
 export const QuestionMetaData = (props: QuestionMetaDataProps) => {
-    const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, audienceViews} = props;
+    const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, audienceViews, pageContext} = props;
     const accessibilitySettings = useAccessibilitySettings();
     const accessibilityTags = getAccessibilityTags(doc?.tags);
 
@@ -58,7 +59,7 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
             </Col>
             <Col className="d-flex flex-column mw-max-content" id="metadata-stage-difficulty">
                 <span>Stage & difficulty</span>
-                <StageAndDifficultySummaryIcons audienceViews={audienceViews} iconClassName="ps-2" stack/>
+                <StageAndDifficultySummaryIcons audienceViews={audienceViews} pageContext={pageContext} iconClassName="ps-2" stack/>
             </Col>
             {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && accessibilityTags.length > 0 && <Col className="d-flex flex-column mw-max-content" id="metadata-accessibility">
                 <span>Accessibility warnings</span>

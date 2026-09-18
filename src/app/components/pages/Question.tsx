@@ -115,7 +115,8 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
                     <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
                         {isPhy && <QuestionMetaData 
-                            doc={doc} audienceViews={audienceViews} 
+                            doc={doc} audienceViews={audienceViews}
+                            pageContext={pageContext}
                             allQuestionsCorrect={allQuestionsCorrect} 
                             allQuestionsAttempted={allQuestionsAttempted} 
                             anyQuestionAttempted={anyQuestionAttempted}
