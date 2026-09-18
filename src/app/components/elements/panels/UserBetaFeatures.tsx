@@ -44,7 +44,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                 <p id="revision-helptext">{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
             </WithLinkableSetting>
 
-            {(isPhy || isStaff(user)) && <WithLinkableSetting id={"show-chem-text-entry"}>
+            {isPhy && <WithLinkableSetting id={"show-chem-text-entry"}>
                 <StyledCheckbox checked={displaySettings.CHEM_TEXT_ENTRY ?? false}
                     onChange={e => {
                         setDisplaySettings((oldDs) => ({...oldDs, CHEM_TEXT_ENTRY: e.target.checked}));
