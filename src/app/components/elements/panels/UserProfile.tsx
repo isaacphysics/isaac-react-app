@@ -178,18 +178,16 @@ export const UserProfile = (props: UserProfileProps) => {
                 required={isAda && isTeacherOrAbove(userToUpdate)}
             />
             <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
-            {isPhy &&
-                <DobInput
-                    userToUpdate={userToUpdate}
-                    setUserToUpdate={setUserToUpdate}
-                    submissionAttempted={submissionAttempted}
-                />
-            }
+            <DobInput
+                userToUpdate={userToUpdate}
+                setUserToUpdate={setUserToUpdate}
+                submissionAttempted={submissionAttempted}
+            />
             <GenderInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
-                required={false}
+                required={isAda}
             />
             {isPhy &&
                 <UserContextAccountInput
