@@ -259,24 +259,22 @@ export const LogIn = () => {
                                         validEmail={isValidEmail} logInAttempted={logInAttempted}
                                         passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                                         errorMessage={errorMessage} displayLabels={true} />
-
-                                    <Row className={classNames("mb-4", {"mt-2": isAda})}>
-                                        <Col className={"col-5 mt-1 d-flex"}>
+                                    <h4 role="alert" className="text-danger text-end mb-0">
+                                        {errorMessage}
+                                    </h4>
+                                            
+                                    <div className={classNames("mb-4 d-flex justify-content-between flex-wrap-reverse", {"mt-2": isAda})}>
+                                        <div className='me-4 mt-1'>
                                             <StyledCheckbox
                                                 id="rememberMe"
                                                 checked={rememberMe}
                                                 onChange={e => setRememberMe(e.target.checked)}
                                                 label={<p>Remember me</p>} className='mb-4'
                                             />
-                                        </Col>
-                                        <Col className="align-content-center">
-                                            <h4 role="alert" className="text-danger text-end mb-0">
-                                                {errorMessage}
-                                            </h4>
-                                            <PasswordResetButton email={email} isValidEmail={isValidEmail}
-                                                setPasswordResetAttempted={setPasswordResetAttempted}/>
-                                        </Col>
-                                    </Row>
+                                        </div>
+                                        <PasswordResetButton email={email} isValidEmail={isValidEmail}
+                                            setPasswordResetAttempted={setPasswordResetAttempted}/>
+                                    </div>
 
                                     <Row className="mb-4">
                                         <Col sm={6}>
