@@ -8,11 +8,16 @@ import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state"
 import {Loading} from "../handlers/IsaacSpinner";
 
 export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) => {
-    const isChunkError = error.name === "ChunkLoadError";
+    const isChunkOrStaleImportError = error.name === "ChunkLoadError"
+        || error.message.includes('Failed to fetch dynamically imported module') // chrome
+        || error.message.includes('error loading dynamically imported module')   // firefox
+        || error.message.includes('Importing a module script failed');           // safari
+
     useEffect(() => {
-        if (isChunkError) location.reload();
-    }, [isChunkError]);
-    return isChunkError ? <Loading/> : <ClientError error={error} resetErrorBoundary={resetErrorBoundary}/>;
+        if (isChunkOrStaleImportError) location.reload();
+    }, [isChunkOrStaleImportError]);
+
+    return isChunkOrStaleImportError ? <Loading/> : <ClientError error={error} resetErrorBoundary={resetErrorBoundary}/>;
 };
 
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {

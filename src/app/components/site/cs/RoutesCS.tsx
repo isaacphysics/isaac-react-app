@@ -38,6 +38,7 @@ import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
+import { AdaCyberExplorersResources } from "../../pages/AdaCyberExplorersResources";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -63,6 +64,7 @@ export const RoutesCS = [
     // Student and teacher resources
     <Route key={key++} path="/students" element={<StudentResources />} />,
     <Route key={key++} path="/teachers" element={<TeacherResources />} />,
+    <Route key={key++} path="/techfirst" element={<AdaCyberExplorersResources />} />,
 
     // Assignments
     <Route key={key++} path="/assignment_progress" element={<Navigate to="/my_markbook" replace />} />,

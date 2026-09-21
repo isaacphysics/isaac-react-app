@@ -23,3 +23,20 @@
     }
   }
 }
+
+#cyber-explorers {
+  background: linear-gradient(180deg, $dark-pink-300 0%, #E9418C 100%);
+  overflow: hidden;
+  position: relative;
+  
+  &::after {
+    @include pseudo-element;
+    pointer-events: none;
+    width: 100%;
+    height: 184px;
+    bottom: -74px;
+    background: linear-gradient(0deg, #FFD800 -1.7%, rgba(249, 211, 0, 0.98) 7.81%, rgba(232, 197, 0, 0.91) 20.03%, rgba(205, 174, 0, 0.81) 33.96%, rgba(168, 142, 0, 0.66) 49.07%, rgba(119, 101, 0, 0.47) 65.2%, rgba(61, 52, 0, 0.24) 81.67%, rgba(0, 0, 0, 0.00) 97.29%);
+    background-blend-mode: screen;
+    mix-blend-mode: screen;
+  }
+}
