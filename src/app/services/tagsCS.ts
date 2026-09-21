@@ -115,7 +115,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.aiAndMachineLearning11_14, title: "AI, data science, and machine learning", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.algorithmsAndDataStructures11_14, title: "Algorithms and data structures", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.computingSystems11_14, title: "Computing systems", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
-        {id: TAG_ID.cyberSecurity11_14, title: "Cyber security", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Autumn 2026"},
+        {id: TAG_ID.cyberSecurity11_14, title: "Cyber security", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14},
         {id: TAG_ID.dataRepresentation11_14, title: "Data representation", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.designAndDevelopment11_14, title: "Design and development", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.digitalLiteracy11_14, title: "Digital literacy", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
