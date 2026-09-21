@@ -78,10 +78,10 @@ export const LogIn = () => {
                                                 onChange={e => setRememberMe(e.target.checked)}
                                                 label={<p>Remember me</p>} className='mb-4'
                                             />
-                                        </Col>
+                                        </div>
                                         <PasswordResetButton email={email} isValidEmail={isValidEmail}
                                             setPasswordResetAttempted={setPasswordResetAttempted}/>
-                                    </Row>
+                                    </div>
 
                                     <Row className="mb-4">
                                         <Col sm={6}>
