@@ -37,7 +37,7 @@ export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgr
     const isComplete = completedQuestionsInChallenge >= (displayedChallenge?.target ?? Infinity);
 
     return displayedChallenge && <div key={displayedChallenge?.name} className="mb-3 w-lg-50 mx-auto">
-        <h5 className="mb-0">{displayedChallenge?.name}:</h5>
+        <div className="mb-0 h5">{displayedChallenge?.name}:</div>
         {displayedChallenge?.text}
         {isComplete
             ? <ProgressBar percentage={100} className="mb-5 mt-2">

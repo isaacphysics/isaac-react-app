@@ -172,7 +172,7 @@ const toast = () => screen.getByTestId('toasts');
 const dashboard = {
     get isaacWelcomeText() {
         const element = screen.getByRole('region', { name: 'Dashboard' });
-        return within(element).getByRole('heading', { level: 3 });
+        return within(element).getByRole('heading', { level: 1 });
     },
     get adaTitle() {
         return screen.getByRole('heading', { level: 1 });

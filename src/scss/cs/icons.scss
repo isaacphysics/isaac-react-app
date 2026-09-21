@@ -209,6 +209,98 @@
   @include svg-icon('/assets/cs/icons/settings.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-learning {
+  @include svg-icon('/assets/cs/icons/learning.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-hook {
+  @include svg-icon('/assets/cs/icons/hook.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-bug {
+  @include svg-icon('/assets/cs/icons/bug.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-shield-lock {
+  @include svg-icon('/assets/cs/icons/shield-lock.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-globe-lock {
+  @include svg-icon('/assets/cs/icons/globe-lock.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// -- topics icons -- //
+
+.icon-cyber-security {
+  @include svg-icon('/assets/cs/icons/topics/cyber-security.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-ai-data-science-and-machine-learning {
+  @include svg-icon('/assets/cs/icons/topics/ai-data-science-and-machine-learning.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-design-and-development {
+  @include svg-icon('/assets/cs/icons/topics/design-and-development.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-digital-literacy {
+  @include svg-icon('/assets/cs/icons/topics/digital-literacy.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-ai-and-machine-learning {
+  @include svg-icon('/assets/cs/icons/topics/ai-and-machine-learning.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-algorithms-and-data-structures {
+  @include svg-icon('/assets/cs/icons/topics/algorithms-and-data-structures.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-computing-systems {
+  @include svg-icon('/assets/cs/icons/topics/computing-systems.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-creating-media {
+  @include svg-icon('/assets/cs/icons/topics/creating-media.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-data-and-information {
+  @include svg-icon('/assets/cs/icons/topics/data-and-information.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-design-and-development {
+  @include svg-icon('/assets/cs/icons/topics/design-and-development.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-effective-use-of-tools {
+  @include svg-icon('/assets/cs/icons/topics/effective-use-of-tools.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-impact-of-technology {
+  @include svg-icon('/assets/cs/icons/topics/impact-of-technology.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-networks {
+  @include svg-icon('/assets/cs/icons/topics/networks.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-programming {
+  @include svg-icon('/assets/cs/icons/topics/programming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-safety-and-security {
+  @include svg-icon('/assets/cs/icons/topics/safety-and-security.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-models-of-computation {
+  @include svg-icon('/assets/cs/icons/topics/models-of-computation.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-software-projects {
+  @include svg-icon('/assets/cs/icons/topics/software-projects.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// -- //
+
 // Icon color overrides
 i.icon.icon-color-black {
   @include icon-color-override($cs-jet);

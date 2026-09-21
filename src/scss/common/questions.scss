@@ -551,11 +551,11 @@ figure .inline-container {
   min-height: 64px;
 }
 
-.cloze-item {
+:not(button) > .cloze-item { // non-dropdown cloze items
   touch-action: none;
   position: relative;
   font-size: 1rem !important;
-  border: 1px solid $border-color;
+  border: 1px solid var(--subject-color-700);
 
   &.is-dragging {
     opacity: 0.666;
@@ -574,21 +574,16 @@ figure .inline-container {
 
 .cloze-dropdown > button {
   min-width: 40px !important; // Bootstrap thinks its important
-
-  &.btn-secondary, &.btn-outline-secondary {
-    background-color: var(--color-neutral-white);
-  }
-
-  &.empty.empty {
-    &, &:hover, &:active, &:focus { // Apply regardless of hover
-      border: grey solid 1px !important;
-      background-color: transparent !important;
-    }
-  }
+  background-color: var(--color-neutral-white, white);
+  border: grey solid 1px !important;
 
   &:has(.katex) {
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
+  }
+
+  > .cloze-item {
+    font-size: 0.85rem;
   }
 }
 

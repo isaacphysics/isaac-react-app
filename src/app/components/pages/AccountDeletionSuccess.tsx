@@ -16,7 +16,7 @@ export const AccountDeletionSuccess = () => {
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
-                        <h3>Account deleted!</h3>
+                        <h2 className="h3">Account deleted!</h2>
                     </Col>
                 </Row>
                 <Row className="justify-content-center">

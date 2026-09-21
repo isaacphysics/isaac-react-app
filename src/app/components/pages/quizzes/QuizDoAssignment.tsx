@@ -62,7 +62,7 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <h4 className="alert-heading">Error loading assignment!</h4>
+                    <div className="alert-heading h4">Error loading assignment!</div>
                     <p>{error}</p>
                 </Alert>
             </>}

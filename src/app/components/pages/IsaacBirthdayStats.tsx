@@ -37,9 +37,9 @@ const StatCard = ({ title, icon, counterProps }: StatCardProps) => {
     return <Card className="border-0 px-2 py-4 flex-row rounded-4">
         <i className={`icon ${icon} icon-xl`} />
         <div className="d-flex flex-column px-4">
-            <h2 className="text-brand">
+            <div className="text-brand h2">
                 <AnimatedCounter {...counterProps} />
-            </h2>
+            </div>
             {title}
         </div>
     </Card>;
@@ -77,25 +77,25 @@ export const IsaacStats = () => {
             <div className="d-flex gap-4">
                 <i className="icon icon-school icon-xl" />
                 <div className="text-end text-md-start">
-                    <h2>
+                    <div className="h2">
                         <AnimatedCounter limit={3674} time={5} />
-                    </h2>
+                    </div>
                     schools using Isaac
                 </div>
             </div>
             <div className="d-flex gap-4">
                 <div className="text-center">
-                    <h2>
+                    <div className="h2">
                         <AnimatedCounter limit={8_446} time={6} />
-                    </h2>
+                    </div>
                     teachers setting assignments
                 </div>
             </div>
             <div className="d-flex gap-4">
                 <div className="text-start text-md-end">
-                    <h2>
+                    <div className="h2">
                         <AnimatedCounter limit={494_509} time={7} />
-                    </h2>
+                    </div>
                     total assignments set
                 </div>
                 <i className="icon icon-question-deck icon-xl" />
@@ -165,15 +165,15 @@ export const IsaacStats = () => {
 
         <section className="d-flex flex-column flex-md-row py-9 container-override align-items-center justify-content-around">
             <div className="d-flex gap-3 align-items-center">
-                <h2 className="stats-hex-container text-white m-0 fs-4">
+                <div className="stats-hex-container text-white m-0 fs-4 h2">
                     <AnimatedCounter limit={32_261_424} time={10} />
-                </h2>
-                <h5>total hint views</h5>
+                </div>
+                <div className="h5">total hint views</div>
             </div>
             <div className="d-flex gap-3 align-items-center">
-                <h5>longest student streak</h5>
-                <div className="stats-hex-container text-white m-0 d-flex flex-column align-items-center">
-                    <h2 className="mb-0"><AnimatedCounter limit={201} time={10} /></h2>
+                <div className="h5">longest student streak</div>
+                <div className="stats-hex-container text-white m-0 d-flex flex-column align-items-center h2">
+                    <div className="mb-0"><AnimatedCounter limit={201} time={10} /></div>
                     <span className="fs-5 mt-n2">weeks</span>
                 </div>
             </div>
@@ -211,7 +211,7 @@ export const IsaacStats = () => {
         </section>
 
 
-        <h4 className="text-center my-9">Thank you for being a part of Isaac!</h4>
+        <div className="text-center my-9 h4">Thank you for being a part of Isaac!</div>
         <div className="container-override" id="stats-subjects-background" />
 
         

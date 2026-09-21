@@ -54,7 +54,7 @@ export const IsaacHints = ({hints, questionPartId, style, includePreamble}: Hint
     return hints && !!hints.length && <>
         {includePreamble && <small className="no-print mb-0">{"Don't forget to use the hints if you need help."}</small>}
         {style === "tabbed" && <div className="tabbed-hints no-print">
-            <h5 className="text-theme mb-2">Need some help?</h5>
+            <div className="text-theme mb-2 h5">Need some help?</div>
             <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
                 {Object.assign({}, ...hints.map((hint, index) => ({
                     [titles[index]]: <div className="mt-3 mt-lg-4 pt-2">
@@ -82,7 +82,7 @@ export const IsaacHints = ({hints, questionPartId, style, includePreamble}: Hint
         </Row>}
         {printHints && hints?.map((hint, index) => (
             <div key={index} className={"question-hints ps-0 py-1 only-print"}>
-                <h4>{titles[index]}</h4>
+                <div className="h4">{titles[index]}</div>
                 <IsaacContent doc={hint}/>
             </div>
         ))}
