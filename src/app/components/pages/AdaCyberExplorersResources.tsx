@@ -100,6 +100,7 @@ export const AdaCyberExplorersResources = () => {
                                 bodyText: "Stay safe online and learn how systems are attacked and defended.",
                                 clickUrl: "/concepts/social_engineering_11_14",
                                 buttonText: "Explore",
+                                includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
                             <IconCard className={"without-margin"} card={{
@@ -108,6 +109,7 @@ export const AdaCyberExplorersResources = () => {
                                 bodyText: "Understand who carries out cyberattacks, why and how they use malware to do so.",
                                 clickUrl: "/concepts/cyberattacks_11_14",
                                 buttonText: "Explore",
+                                includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
                             <IconCard className={"without-margin"} card={{
@@ -116,6 +118,7 @@ export const AdaCyberExplorersResources = () => {
                                 bodyText: "Explore the tools and techniques used to detect, stop, and remove malware.",
                                 clickUrl: "/concepts/defend_malware_11_14",
                                 buttonText: "Explore",
+                                includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
                             <IconCard className={"without-margin"} card={{
@@ -124,6 +127,7 @@ export const AdaCyberExplorersResources = () => {
                                 bodyText: "Discover how networks are protected from attacks and kept secure.",
                                 clickUrl: "/concepts/network_security_11_14",
                                 buttonText: "Explore",
+                                includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
                         </div>
