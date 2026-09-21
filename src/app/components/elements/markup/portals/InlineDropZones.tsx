@@ -67,7 +67,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
             // Only apply justifyContent if boxAlign is defined (figure drop zones), otherwise empty
             ...(boxAlign ? {justifyContent: boxAlign === "right" ? "flex-end" : boxAlign === "center" ? "center" : "flex-start"} : {})
         }}
-        className={classNames(boxAlign ? "d-flex" : "d-inline-block", "cloze-drop-zone align-bottom", !item && `rounded bg-inline-question border ${isOver ? "border-dark" : "border-light"}`)}
+        className={classNames(boxAlign ? "d-flex" : "d-inline-block", "cloze-drop-zone align-middle", !item && `rounded bg-inline-question border ${isOver ? "border-dark" : "border-light"}`)}
         ref={setNodeRef}
     >
         {item
