@@ -1,6 +1,6 @@
 import React from "react";
 import { MetaDescription } from "../elements/MetaDescription";
-import { Badge, Button, Card, CardBody, Container } from "reactstrap";
+import { Button, Card, CardBody, Container } from "reactstrap";
 import { ColumnSlice } from "../elements/layout/ColumnSlice";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import { TextBlock } from "../elements/layout/TextBlock";
