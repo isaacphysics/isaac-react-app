@@ -124,13 +124,8 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         setDraggedElement(draggedElement);
         setInitialX(choiceElement && choiceElement.getBoundingClientRect().left);
         setCurrentIndent(draggedElement?.className.match(/indent-([0-3])/g)?.map((match) => parseInt(match.split('-')[1]))?.[0] || 0);
-        if (initial.source.droppableId === 'answerItems' && initial.source.index > 0) {
+        if (canIndent && initial.source.droppableId === 'answerItems') {
             setCurrentDestinationIndex(initial.source.index);
-            const previousItem = attemptItems[initial.source.index - 1] as Immutable<ParsonsItemDTO> | undefined;
-            setCurrentMaxIndent(previousItem ? (previousItem.indentation || 0) + 1 : 0);
-        } else {
-            setCurrentDestinationIndex(null);
-            setCurrentMaxIndent(0);
         }
     };
 
@@ -139,8 +134,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         setDraggedElement(null);
         setInitialX(null);
         setCurrentIndent(null);
-        setCurrentDestinationIndex(null);
-        setCurrentMaxIndent(0);
     };
 
     const onDragUpdate = (initial: DragUpdate) => {
