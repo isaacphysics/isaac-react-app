@@ -98,15 +98,15 @@ export const AdaCyberExplorersResources = () => {
                                 title: "Social engineering",
                                 icon: {name: "icon-hook", color: "secondary"},
                                 bodyText: "Stay safe online and learn how systems are attacked and defended.",
-                                clickUrl: "/concepts/social_engineering",
+                                clickUrl: "/concepts/social_engineering_11_14",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
                             <IconCard className={"without-margin"} card={{
-                                title: "Malware",
+                                title: "Cyberattacks",
                                 icon: {name: "icon-bug", color: "secondary"},
-                                bodyText: "Learn how malware works and how to recognise and defend against it.",
-                                clickUrl: "/concepts/tf-malware-hackers",
+                                bodyText: "Understand who carries out cyberattacks, why and how they use malware to do so.",
+                                clickUrl: "/concepts/cyberattacks_11_14",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
@@ -114,7 +114,7 @@ export const AdaCyberExplorersResources = () => {
                                 title: "Defending against malware",
                                 icon: {name: "icon-shield-lock", color: "secondary"},
                                 bodyText: "Explore the tools and techniques used to detect, stop, and remove malware.",
-                                clickUrl: "/concepts/defending_against_malware",
+                                clickUrl: "/concepts/defend_malware_11_14",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
@@ -122,7 +122,7 @@ export const AdaCyberExplorersResources = () => {
                                 title: "Network security",
                                 icon: {name: "icon-globe-lock", color: "secondary"},
                                 bodyText: "Discover how networks are protected from attacks and kept secure.",
-                                clickUrl: "/concepts/tf-network-security",
+                                clickUrl: "/concepts/network_security_11_14",
                                 buttonText: "Explore",
                                 buttonStyle: "link",
                             }}/>
