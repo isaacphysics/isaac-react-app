@@ -25,10 +25,14 @@ export function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, un
         }
     }
 
+    function cleanUnit(unit: string): string {
+        return unit.replaceAll("{", "").replaceAll("}", "").replaceAll("−", "-").trim();
+    }
+
     const unitsToShow: (string|undefined)[] = [];
     function addUnitToShow(unit: string): void {
         unit = unit.trim();
-        if (unit === "" || unitsToShow.includes(unit)) return;
+        if (unit === "" || unitsToShow.map(u => cleanUnit(u!)).includes(cleanUnit(unit))) return;
         unitsToShow.push(unit);
     }
 
