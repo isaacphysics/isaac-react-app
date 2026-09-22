@@ -8,7 +8,7 @@ import { PageContainer } from "../elements/layout/PageContainer";
 import { RaspberryPiSignInButton } from "../elements/RaspberryPiSignInButton";
 import { GoogleSignInButton } from "../elements/GoogleSignInButton";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
-import { SsoHelpLink } from "./LogIn";
+import { SsoHelpLink } from "../elements/LogInInputs";
 
 export const RegistrationAgeCheckSSOOnly = () => {
     const navigate = useNavigate();
