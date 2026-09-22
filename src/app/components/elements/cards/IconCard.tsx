@@ -15,7 +15,7 @@ export interface IconCardContentProps {
     clickUrl?: string;
     onButtonClick?: () => void;
     buttonText?: string;
-    includeTitleInAriaLabel?: boolean; // if true, will tie the link / button to the title via aria-describedby; use if the provided button text is accessible by itself
+    includeTitleInAriaLabel?: boolean; // if true, will tie the link / button to the title via aria-describedby; use if the provided button text is not accessible by itself
     disabled?: boolean;
     buttonStyle?: "outline" | "link" | "card";
     className?: string;
