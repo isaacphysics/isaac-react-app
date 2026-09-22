@@ -68,12 +68,11 @@ export const UserProfile = (props: UserProfileProps) => {
                     If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
                         store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
                     }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
-                </p>
-                    : <p>
-                        Only student accounts can be deleted automatically. Please{" "}
-                        <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
-                        {" "}to request account deletion.
-                    </p>}
+                </p> : <p>
+                    Only student accounts can be deleted automatically. Please{" "}
+                    <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
+                    {" "}to request account deletion.
+                </p>}
         </>}
         rightColumn={<>
             {siteSpecific(
