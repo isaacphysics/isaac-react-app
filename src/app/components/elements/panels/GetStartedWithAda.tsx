@@ -38,7 +38,7 @@ export const GetStartedWithAda = () => {
 
                         <ul className="list-unstyled d-flex flex-column mt-3 gap-3">
                             <CompletableTask tag={"li"} complete={tasks.createAccount} inputId="create-account">
-                                <label htmlFor="create-account"><strong>Create your account</strong></label>
+                                <label htmlFor="create-account" className="mb-0"><strong>Create your account</strong></label>
                             </CompletableTask>
 
                             <CompletableTask tag={"li"} complete={tasks.personaliseContent} inputId="personalise-content" disabled={!tasks.createAccount} action={{
@@ -56,11 +56,11 @@ export const GetStartedWithAda = () => {
                                 title: "Manage groups",
                                 to: "/groups",
                             }}>
-                                <label htmlFor="create-group"><strong>Create a student group</strong></label>
+                                <label htmlFor="create-group" className="mb-0"><strong>Create a student group</strong></label>
                             </CompletableTask>
 
                             <CompletableTask tag={"li"} complete={tasks.assignQuiz} inputId="assign-quiz" disabled={!tasks.createGroup}>
-                                <label htmlFor="assign-quiz"><strong>Assign a quiz to students</strong></label>
+                                <label htmlFor="assign-quiz" className="mb-0"><strong>Assign a quiz to students</strong></label>
                             </CompletableTask>
 
                             {/* <CompletableTask tag={"li"} complete={tasks.viewMarkbook} disabled={!tasks.assignQuiz}>
