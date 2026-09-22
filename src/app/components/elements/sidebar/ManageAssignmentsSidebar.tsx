@@ -1,6 +1,6 @@
 import { ContentSidebar } from "../layout/SidebarLayout";
 import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, selectOnChange, useDeviceSize } from "../../../services";
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
 import { AssignmentDTO } from "../../../../IsaacApiTypes";
