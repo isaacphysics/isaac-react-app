@@ -6,26 +6,18 @@ import {MyGameboards} from "../../app/components/pages/MyGameboards";
 describe("My Gameboards", () => {
     it('should have no visual regressions in table view', () => {
         cy.mountWithStoreAndRouter(<MyGameboards user={mockUser} />, [PATHS.MY_GAMEBOARDS], PATHS.MY_GAMEBOARDS, mockUser);
-        cy.then(() => {
-            if (isPhy) cy.openSidebar();
-        });
+        cy.then(() => {if (isPhy) cy.openSidebar();});
         cy.get('[data-testid="display-select"]').select("Table View");
-        cy.then(() => {
-            if (isPhy) cy.closeSidebar();
-        });
+        cy.then(() => {if (isPhy) cy.closeSidebar();});
         cy.get('[data-testid="loading"]').should('not.exist');
         cy.matchImage();
     });
     it('should have no visual regressions in card view', () => {
         cy.mountWithStoreAndRouter(<MyGameboards user={mockUser} />, [PATHS.MY_GAMEBOARDS], PATHS.MY_GAMEBOARDS, mockUser);
-        cy.then(() => {
-            if (isPhy) cy.openSidebar();
-        });
+        cy.then(() => {if (isPhy) cy.openSidebar();});
         cy.get('[data-testid="display-select"]').select("Card View");
-        cy.get('[data-testid="limit-select"]').select("6");
-        cy.then(() => {
-            if (isPhy) cy.closeSidebar();
-        });
+        cy.get('[data-testid="limit-select"]').should('be.visible').select("6");
+        cy.then(() => {if (isPhy) cy.closeSidebar();});
         cy.get('[data-testid="loading"]').should('not.exist');
         cy.matchImage();
     });

@@ -991,9 +991,9 @@ type ContextSpecificTags = Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID
 
 export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> = {
     [TAG_ID.aiAndMachineLearning11_14]: [
-        {title: "Data driven vs. rule based", url: undefined},
-        {title: "Data science", url: undefined},
-        {title: "Building a data-driven model", url: undefined},
+        {title: "AI in everyday life", url: undefined},
+        {title: "Understanding and using data", url: undefined},
+        {title: "How machines learn from data", url: undefined},
     ],
     [TAG_ID.algorithmsAndDataStructures11_14]: [
         {title: "Computational thinking", url: undefined},
@@ -1009,10 +1009,10 @@ export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> 
         {title: "Operating systems", url: undefined},
     ],
     [TAG_ID.cyberSecurity11_14]: [
-        {title: "Social engineering", url: "/concepts/social_engineering"},
-        {title: "Malware", url: "/concepts/tf-malware-hackers"},
-        {title: "Defending against malware", url: "/concepts/defending_against_malware"},
-        {title: "Network security", url: "/concepts/tf-network-security"},
+        {title: "Social engineering", url: "/concepts/social_engineering_11_14"},
+        {title: "Cyberattacks", url: "/concepts/cyberattacks_11_14"},
+        {title: "Defending against malware", url: "/concepts/defend_malware_11_14"},
+        {title: "Network security", url: "/concepts/network_security_11_14"},
     ],
     [TAG_ID.dataRepresentation11_14]: [
         {title: "Representation of numbers", url: undefined},

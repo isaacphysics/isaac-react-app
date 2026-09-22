@@ -124,6 +124,9 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         setDraggedElement(draggedElement);
         setInitialX(choiceElement && choiceElement.getBoundingClientRect().left);
         setCurrentIndent(draggedElement?.className.match(/indent-([0-3])/g)?.map((match) => parseInt(match.split('-')[1]))?.[0] || 0);
+        if (canIndent && initial.source.droppableId === 'answerItems') {
+            setCurrentDestinationIndex(initial.source.index);
+        }
     };
 
     const onDragEnd = (result: DropResult) => {
