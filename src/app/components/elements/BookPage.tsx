@@ -6,7 +6,7 @@ import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataConta
 import { Markup } from "./markup";
 import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
-import { scrollVerticallyIntoView } from "../../services";
+import { isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
@@ -85,7 +85,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
         {hasRelevantTests && <>
             <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
-            <span>Set a test to check students&apos; understanding of this topic:</span>
+            <span>Set a test to check your {isTeacherOrAbove(user) ? <>students&apos; </> : <></>}understanding of this topic:</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="quiz"
