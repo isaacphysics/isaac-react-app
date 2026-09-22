@@ -37,8 +37,8 @@ import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
-import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
 import { AdaCyberExplorersResources } from "../../pages/AdaCyberExplorersResources";
+import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
