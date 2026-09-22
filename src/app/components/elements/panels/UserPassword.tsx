@@ -154,13 +154,13 @@ export const UserPassword = (
                                 </p>}
                             </Col>
                         </Row>
-                        <Row className="pb-4">
+                        {myUser.emailVerificationStatus !== "AGE_RESTRICTED" && <Row className="pb-4">
                             <Col className="text-center">
                                 <Button className="btn-keyline" onClick={resetPasswordIfValidEmail}>
                                     Click here to add a password
                                 </Button>
                             </Col>
-                        </Row>
+                        </Row>}
                     </React.Fragment>
                     :
                     <React.Fragment>

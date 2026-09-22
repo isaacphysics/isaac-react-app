@@ -15,8 +15,10 @@ const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: 
         if (reducedMotion) return true;
 
         const pageTitle = document.querySelector("#page-title");
-        if (pageTitle) scrollVerticallyIntoView(pageTitle);
-        return true;
+        if (pageTitle) {
+            scrollVerticallyIntoView(pageTitle);
+            return true;
+        }
     }
 
     // we usually don't scroll if there is a hash, but certain pages use the hash to find what to content to show; scroll to top in these cases
