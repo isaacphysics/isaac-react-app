@@ -147,7 +147,7 @@ export const HomepageCS = () => {
                             title: "In the UK",
                             icon: {name: "icon-location-on", color: "secondary"},
                             clickUrl: "/exam_specifications",
-                            buttonText: "See more",
+                            buttonText: "See UK specifications",
                             buttonStyle: "link",
                         }}>
                             <p>Find resources tailored to the specific learning levels and exam boards in the UK:</p>
@@ -161,7 +161,7 @@ export const HomepageCS = () => {
                             title: "Teaching outside the UK",
                             icon: {name: "icon-globe", color: "secondary"},
                             clickUrl: "/exam_specifications_ada",
-                            buttonText: "See more",
+                            buttonText: "See the Ada CS curriculum",
                             buttonStyle: "link",
                         }}>
                             <p>Learning resources tailored to prior knowledge and learning age groups:</p>
