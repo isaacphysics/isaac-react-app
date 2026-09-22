@@ -1009,10 +1009,10 @@ export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> 
         {title: "Operating systems", url: undefined},
     ],
     [TAG_ID.cyberSecurity11_14]: [
-        {title: "Social engineering", url: "/concepts/social_engineering"},
-        {title: "Malware", url: "/concepts/tf-malware-hackers"},
-        {title: "Defending against malware", url: "/concepts/defending_against_malware"},
-        {title: "Network security", url: "/concepts/tf-network-security"},
+        {title: "Social engineering", url: "/concepts/social_engineering_11_14"},
+        {title: "Cyberattacks", url: "/concepts/cyberattacks_11_14"},
+        {title: "Defending against malware", url: "/concepts/defend_malware_11_14"},
+        {title: "Network security", url: "/concepts/network_security_11_14"},
     ],
     [TAG_ID.dataRepresentation11_14]: [
         {title: "Representation of numbers", url: undefined},
