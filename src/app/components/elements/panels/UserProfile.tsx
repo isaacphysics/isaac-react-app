@@ -60,17 +60,20 @@ export const UserProfile = (props: UserProfileProps) => {
             <h2 className="h3">Account details</h2>
             <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
             <p>
-                <AccountTypeMessage role={userToUpdate?.role} />
+                <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage={userToUpdate.emailVerificationStatus === "AGE_RESTRICTED"} />
             </p>
-            {!isTutorOrAbove(userToUpdate) ? <p>
-                If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
-                    store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
-                }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
-            </p> : <p>
-                Only student accounts can be deleted automatically. Please{" "}
-                <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
-                {" "}to request account deletion.
-            </p>}
+            {userToUpdate.emailVerificationStatus === "AGE_RESTRICTED" ?
+                <p>If you would like to delete your account, please ask your parent or guardian to <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>.</p>
+                : !isTutorOrAbove(userToUpdate) ? <p>
+                    If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
+                        store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
+                    }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
+                </p>
+                    : <p>
+                        Only student accounts can be deleted automatically. Please{" "}
+                        <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
+                        {" "}to request account deletion.
+                    </p>}
         </>}
         rightColumn={<>
             {siteSpecific(
