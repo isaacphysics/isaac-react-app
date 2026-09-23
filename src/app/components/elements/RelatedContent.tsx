@@ -11,6 +11,7 @@ import {
     useUserViewingContext
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import classNames from "classnames";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -69,32 +70,19 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                     </Col>
                 </Row>
                 <hr/>
-                {/* Large devices - multi column */}
-                <div className="d-none d-lg-flex text-start">
-                    <div className="w-50">
-                        <div className="related-question-header h4">On your specification:</div>
+                <div className="d-lg-flex text-start">
+                    {audienceQuestions.length > 0 && <div className={classNames({"w-lg-50": remainingQuestions.length > 0})}>
+                        <div className="ps-3 h4">On your specification:</div>
                         <ListGroup>
                             {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>
-                    </div>
-                    <div className="w-50">
-                        <div className="related-question-header h4">Outside your specification:</div>
+                    </div>}
+                    {remainingQuestions.length > 0 && <div className={classNames("mt-4 mt-lg-0", {"w-lg-50": audienceQuestions.length > 0})}>
+                        <div className="ps-3 h4">Outside your specification:</div>
                         <ListGroup>
                             {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>
-                    </div>
-                </div>
-                {/* Small devices - single column */}
-                <div className="d-lg-none text-start">
-                    <ListGroup>
-                        {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
-                    </ListGroup>
-                </div>
-                <div className="d-lg-none related-question-header mt-4 h4">Outside your specification:</div>
-                <div className="d-lg-none text-start">
-                    <ListGroup>
-                        {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
-                    </ListGroup>
+                    </div>}
                 </div>
             </div>
         </div>
