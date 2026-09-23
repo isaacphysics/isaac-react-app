@@ -26,15 +26,17 @@ export const CompletableTask = (props: CompletableTaskProps) => {
             </div>
             {children}
         </div>
-        <Spacer />
-        {action && !complete && !disabled && <Button
-            className="bg-transparent fs-6 py-1 px-3 my-md-n2 justify-self-end w-100 w-md-auto"
-            tag={action.to ? Link : undefined}
-            to={action.to}
-            onClick={action.onClick}
-            outline
-        >
-            {action.title}
-        </Button>}
+        {action && !complete && !disabled && <>
+            <Spacer />
+            <Button
+                className="bg-transparent fs-6 py-1 px-3 my-md-n2 justify-self-end w-100 w-md-auto"
+                tag={action.to ? Link : undefined}
+                to={action.to}
+                onClick={action.onClick}
+                outline
+            >
+                {action.title}
+            </Button>
+        </>}
     </Tag>;
 };

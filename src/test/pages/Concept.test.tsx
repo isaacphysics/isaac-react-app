@@ -1,11 +1,16 @@
 import { within, screen } from "@testing-library/dom";
-import { API_PATH, DOCUMENT_TYPE, isAda, isPhy, siteSpecific } from "../../app/services";
+import { Ada11To14TopicsToConcepts, API_PATH, DOCUMENT_TYPE, isAda, isPhy, siteSpecific, TAG_ID } from "../../app/services";
 import { renderTestEnvironment, setUrl } from "../testUtils";
 import { mockConceptPage } from "../../mocks/data";
 import { expectAdaBreadCrumbs } from "../helpers/quiz";
 import { http, HttpResponse } from "msw";
 import { IsaacConceptPageDTO, IsaacTopicSummaryPageDTO } from "../../IsaacApiTypes";
 import { buildFunctionHandler } from "../../mocks/handlers";
+
+const extractIdFromUrl = (url?: string) => url?.split("/").pop();
+
+const FIRST_11_14_TOPIC_ID = extractIdFromUrl(Ada11To14TopicsToConcepts[TAG_ID.cyberSecurity11_14]?.[0].url);
+const NEXT_11_14_TOPIC_ID = extractIdFromUrl(Ada11To14TopicsToConcepts[TAG_ID.cyberSecurity11_14]?.[1].url);
 
 describe("Concept", () => {
     it('renders the concept title from the mock concept page', async () => {
@@ -19,9 +24,9 @@ describe("Concept", () => {
             const visitConcept = async () => {
                 await renderTestEnvironment({extraEndpoints: [
                     http.get(API_PATH + "/pages/topics/11_14", () => HttpResponse.json(undefined, { status: 403 })),
-                    buildFunctionHandler("/pages/concepts/social_engineering", [], () => socialEngineeringPage)
+                    buildFunctionHandler(`/pages/concepts/${FIRST_11_14_TOPIC_ID}`, [], () => socialEngineeringPage)
                 ]});
-                await setUrl({ pathname: `/concepts/social_engineering`});
+                await setUrl({ pathname: `/concepts/${FIRST_11_14_TOPIC_ID}`});
             };
 
             it('does not show an error', async () => {
@@ -36,8 +41,8 @@ describe("Concept", () => {
 
             it("shows a link to the next page", async () => {
                 await visitConcept();
-                expect(conceptPage.navigateNext()).toHaveTextContent("Malware");
-                expect(conceptPage.navigateNext()).toHaveAttribute("href", "/concepts/tf-malware-hackers");
+                expect(conceptPage.navigateNext()).toHaveTextContent("Cyberattacks");
+                expect(conceptPage.navigateNext()).toHaveAttribute("href", `/concepts/${NEXT_11_14_TOPIC_ID}`);
             });
 
             it("shows a link to the 11-14 topics page", async () => {
@@ -134,7 +139,7 @@ const conceptPage = {
 const socialEngineeringPage: IsaacConceptPageDTO = {
     type: DOCUMENT_TYPE.CONCEPT,
     title: "Social Engineering",
-    id: 'social_engineering'
+    id: FIRST_11_14_TOPIC_ID
 };
 
 const hardwareTopic: IsaacTopicSummaryPageDTO = {

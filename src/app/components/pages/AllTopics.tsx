@@ -21,6 +21,7 @@ import partition from "lodash/partition";
 import { Tabs } from "../elements/Tabs";
 import { IconCard } from "../elements/cards/IconCard";
 import { PageContainer } from "../elements/layout/PageContainer";
+import sortBy from "lodash/sortBy";
 
 const TOPICS_STAGES = ["11-14", "14-19"] as const;
 
@@ -150,6 +151,7 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
 export const AllTopics = () => {
     const coreAdvancedTags = tags.allSubcategoryTags.filter(s => !s.stageOverride?.[STAGE.CORE]?.hidden && !s.stageOverride?.[STAGE.ADVANCED]?.hidden);
     const ks4Tags = tags.getChildren(TAG_ID.computerScience11_14);
+    const sortedKs4Tags = sortBy(ks4Tags, s => !!s.comingSoonDate); // move published topics to the top
     const [stageTab, setStageTab] = useLocalStorageState<typeof TOPICS_STAGES[number]>(KEY.TOPICS_TAB, window.location.hash === "#11-14" ? "11-14" : "14-19");
 
     const location = useLocation();
@@ -178,7 +180,7 @@ export const AllTopics = () => {
             renderHiddenTabs={false}
         >
             {{
-                ["11 to 14 years"]: <TopicsListing tagCols={partition(ks4Tags, s => !s.comingSoonDate || ks4Tags.indexOf(s) <= 4)} age="11-14" />,
+                ["11 to 14 years"]: <TopicsListing tagCols={partition(sortedKs4Tags, s => !s.comingSoonDate || sortedKs4Tags.indexOf(s) <= 4)} age="11-14" />,
                 ["14 to 19 years"]: <TopicsListing tagCols={partition(coreAdvancedTags, s => s.title.charAt(0) <= "D")} age="14-19" />
             }}
         </Tabs>

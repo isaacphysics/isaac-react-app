@@ -3,7 +3,7 @@ import { ContentSidebarContext } from "../../../../IsaacAppTypes";
 import { ACCOUNT_TAB, ACCOUNT_TABS, accountPanelId, accountTabId, ifKeyIsEnter } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
-
+import { selectors, useAppSelector } from "../../../state";
 interface MyAccountSidebarProps extends SidebarProps {
     editingOtherUser: boolean;
     activeTab: ACCOUNT_TAB;
@@ -12,6 +12,7 @@ interface MyAccountSidebarProps extends SidebarProps {
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
+    const user = useAppSelector(selectors.user.orNull);
     return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
         <h3 className="h5">Account settings</h3>
@@ -19,7 +20,7 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
         /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
         <ul role="tablist" aria-label="Account settings">
             {ACCOUNT_TABS
-                .filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser))
+                .filter(tab => !tab.isHidden?.(user, editingOtherUser))
                 .map(({tab, title}) => (
                     <li key={tab} role="presentation">
                         <ContentSidebarContext.Consumer>

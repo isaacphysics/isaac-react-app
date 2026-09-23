@@ -40,6 +40,7 @@ import {
     isPhy,
     isStaff,
     isTeacherOrAbove,
+    isUnder13,
     siteSpecific,
     validateEmail,
     validateEmailPreferences,
@@ -350,9 +351,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
         }
 
         if (userToUpdate.loggedIn &&
-            validateEmail(userToUpdate.email) &&
+            (isUnder13(userToUpdate) || validateEmail(userToUpdate.email)) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
-            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
+            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isPhy && !isDefined(userToUpdate.dateOfBirth))) &&
             (!userToUpdate.password || isNewPasswordValid))
         {
 
@@ -377,9 +378,15 @@ export const MyAccount = ({user}: AccountPageProps) => {
             return;
         } else if (activeTab !== ACCOUNT_TAB.account) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
+        } else {
+            dispatch(showErrorToast("Account update failed", "Something went wrong. Please make sure all required fields have been filled in and try again."));
         }
         setSaving(false);
     }
+
+    const isTabHidden = useCallback((tab: ACCOUNT_TAB) => {
+        return !!ACCOUNT_TABS.find(t => t.tab === tab)?.isHidden?.(user, editingOtherUser);
+    }, [user, editingOtherUser]);
 
     return <PageContainer id="account-page" className="mb-7"
         pageTitle={
@@ -400,24 +407,28 @@ export const MyAccount = ({user}: AccountPageProps) => {
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <div className={siteSpecific("w-lg-75", "card")}>
                     {isAda && <Nav tabs role="tablist" aria-label="Account settings" className="my-4 flex-wrap mx-4" data-testid="account-nav">
-                        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
-                            <NavItem key={tab} role="presentation" className={classnames({active: activeTab === tab})}>
-                                <NavLink
-                                    className="px-2" 
-                                    role="tab"
-                                    id={accountTabId(tab)}
-                                    aria-controls={accountPanelId(tab)}
-                                    aria-selected={activeTab === tab}
-                                    tabIndex={activeTab === tab ? 0 : -1}
-                                    onClick={() => safelyChangeTab(tab)} onKeyDown={(e) => handleTabKeyDown(e, tab)}
-                                >
-                                    {titleShort ? <>
-                                        <span className="d-none d-lg-block">{title}</span>
-                                        <span className="d-block d-lg-none">{titleShort}</span>
-                                    </> : title}
-                                </NavLink>
-                            </NavItem>
-                        )}
+                        {ACCOUNT_TABS
+                            .filter(tab => !tab.isHidden?.(user, editingOtherUser))
+                            .map(({tab, title, titleShort}) =>
+                                <NavItem key={tab} role="presentation" className={classnames({active: activeTab === tab})}>
+                                    <NavLink
+                                        className="px-2" 
+                                        role="tab"
+                                        id={accountTabId(tab)}
+                                        aria-controls={accountPanelId(tab)}
+                                        aria-selected={activeTab === tab}
+                                        tabIndex={activeTab === tab ? 0 : -1}
+                                        onClick={() => safelyChangeTab(tab)}
+                                        onKeyDown={(e) => handleTabKeyDown(e, tab)}
+                                    >
+                                        {titleShort ? <>
+                                            <span className="d-none d-lg-block">{title}</span>
+                                            <span className="d-block d-lg-none">{titleShort}</span>
+                                        </> : title}
+                                    </NavLink>
+                                </NavItem>
+                            )
+                        }
                     </Nav>}
                     <Form id="my-account" name="my-account" onSubmit={updateAccount}>
                         {updateCurrentUserError &&
@@ -429,7 +440,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                         <TabContent activeTab={activeTab} key={clearUnsavedChanges ? activeTab : undefined}>
                             {/* the key above ensures that any state inside tabs is reset to initial values if activeTab is changed while accountInfo is dirty 
                                 (i.e. user has unsaved changes they do *not* want to commit) */}
-                            <TabPane
+                            {!isTabHidden(ACCOUNT_TAB.account) && <TabPane
                                 tabId={ACCOUNT_TAB.account}
                                 role="tabpanel"
                                 id={accountPanelId(ACCOUNT_TAB.account)}
@@ -443,8 +454,8 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
-                            </TabPane>
-                            {isAda && <TabPane
+                            </TabPane>}
+                            {!isTabHidden(ACCOUNT_TAB.customise) && <TabPane
                                 tabId={ACCOUNT_TAB.customise}
                                 role="tabpanel"
                                 id={accountPanelId(ACCOUNT_TAB.customise)}
@@ -460,7 +471,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     userAuthSettings={userAuthSettings}
                                 />
                             </TabPane>}
-                            {isPhy && <TabPane
+                            {!isTabHidden(ACCOUNT_TAB.theme) && <TabPane
                                 tabId={ACCOUNT_TAB.theme}
                                 role="tabpanel"
                                 id={accountPanelId(ACCOUNT_TAB.theme)}
@@ -468,7 +479,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             >
                                 <UserTheme setDisplaySettings={setDisplaySettings} />
                             </TabPane>}
-                            <TabPane
+                            {!isTabHidden(ACCOUNT_TAB.passwordreset) && <TabPane
                                 tabId={ACCOUNT_TAB.passwordreset}
                                 role="tabpanel"
                                 id={accountPanelId(ACCOUNT_TAB.passwordreset)}
@@ -481,8 +492,8 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
                                     isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
                                 />
-                            </TabPane>
-                            {!editingOtherUser && <TabPane
+                            </TabPane>}
+                            {!isTabHidden(ACCOUNT_TAB.emailpreferences) && <TabPane
                                 tabId={ACCOUNT_TAB.emailpreferences}
                                 role="tabpanel"
                                 id={accountPanelId(ACCOUNT_TAB.emailpreferences)}
@@ -493,7 +504,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     submissionAttempted={attemptedAccountUpdate}
                                 />
                             </TabPane>}
-                            {!editingOtherUser && <TabPane
+                            {!isTabHidden(ACCOUNT_TAB.accessibility) && <TabPane
                                 tabId={ACCOUNT_TAB.accessibility}
                                 role="tabpanel"
                                 id={accountPanelId(ACCOUNT_TAB.accessibility)}
@@ -503,7 +514,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     accessibilitySettings={myUserPreferences?.ACCESSIBILITY ?? {}} setAccessibilitySettings={setAccessibilitySettings}
                                 />
                             </TabPane>}
-                            {!editingOtherUser && <TabPane
+                            {!isTabHidden(ACCOUNT_TAB.betafeatures) && <TabPane
                                 tabId={ACCOUNT_TAB.betafeatures}
                                 role="tabpanel"
                                 id={accountPanelId(ACCOUNT_TAB.betafeatures)}
@@ -527,7 +538,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                 />
                             </Suspense>
                         </TabPane>}
-                        <TabPane
+                        {!isTabHidden(ACCOUNT_TAB.teacherconnections) && <TabPane
                             tabId={ACCOUNT_TAB.teacherconnections}
                             role="tabpanel"
                             id={accountPanelId(ACCOUNT_TAB.teacherconnections)}
@@ -536,7 +547,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
                                 userToEdit={userToEdit}
                             />
-                        </TabPane>
+                        </TabPane>}
                     </TabContent>}
                     <div className={classNames({"py-4 card-footer": isAda})}>
                         {isPhy && <div className="section-divider-bold"/>}

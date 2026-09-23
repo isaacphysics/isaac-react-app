@@ -2,7 +2,7 @@
 import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
-import {AdaTopicBase, BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
+import {AdaTopicBase, BooleanNotation, NOT_FOUND_TYPE, PageContextState, PotentialUser, UserEmailPreferences} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
@@ -17,9 +17,10 @@ import {
     QuizFeedbackMode,
     Stage,
 } from "../../IsaacApiTypes";
-import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isAda, isPhy, isUnder13, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 import { CSSObjectWithLabel } from "react-select";
+import {Immutable} from "immer";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -1009,10 +1010,10 @@ export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> 
         {title: "Operating systems", url: undefined},
     ],
     [TAG_ID.cyberSecurity11_14]: [
-        {title: "Social engineering", url: "/concepts/social_engineering"},
-        {title: "Malware", url: "/concepts/tf-malware-hackers"},
-        {title: "Defending against malware", url: "/concepts/defending_against_malware"},
-        {title: "Network security", url: "/concepts/tf-network-security"},
+        {title: "Social engineering", url: "/concepts/social_engineering_11_14"},
+        {title: "Cyberattacks", url: "/concepts/cyberattacks_11_14"},
+        {title: "Defending against malware", url: "/concepts/defend_malware_11_14"},
+        {title: "Network security", url: "/concepts/network_security_11_14"},
     ],
     [TAG_ID.dataRepresentation11_14]: [
         {title: "Representation of numbers", url: undefined},
@@ -1177,19 +1178,18 @@ export interface AccountTabs {
     tab: ACCOUNT_TAB,
     title: string,
     titleShort?: string,
-    hidden?: boolean,
-    hiddenIfEditingOtherUser?: boolean,
+    isHidden?: (user?: Immutable<PotentialUser> | null, editingOtherUser?: boolean) => boolean,
 }
 
 export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.account, title: "Profile"},
-    {tab: ACCOUNT_TAB.customise, title: "Customise", hidden: isPhy},
-    {tab: ACCOUNT_TAB.theme, title: "Theme", hidden: isAda},
+    {tab: ACCOUNT_TAB.customise, title: "Customise", isHidden: () => isPhy},
+    {tab: ACCOUNT_TAB.theme, title: "Theme", isHidden: () => isAda},
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
-    {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
-    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", hiddenIfEditingOtherUser: true},
-    {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
+    {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", isHidden: (user, editingOtherUser) => !!editingOtherUser || isUnder13(user)},
+    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", isHidden: (_, editingOtherUser) => !!editingOtherUser},
+    {tab: ACCOUNT_TAB.betafeatures, title: "Beta", isHidden: (_, editingOtherUser) => !!editingOtherUser},
 ];
 
 // Shared id helpers so the tab controls (MyAccount tablist / MyAccountSidebar) and their tabpanels can cross-reference each other consistently across the app
@@ -1447,18 +1447,11 @@ export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific([
 
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
 
-export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = siteSpecific(
-    {
-        ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: undefined,
-        EVENTS: undefined
-    },
-    {
-        ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: false,
-        EVENTS: false
-    }
-);
+export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = {
+    ASSIGNMENTS: true,
+    NEWS_AND_UPDATES: undefined,
+    EVENTS: undefined
+};
 
 // this must exist outside of ActiveModals to avoid circular dependencies
 export const MODAL_TYPES = {
@@ -1534,3 +1527,6 @@ export const reactSelectDarkModeStyles = siteSpecific({
         color: "white",
     }),
 });
+
+export const SITE_LOWER_AGE_LIMIT = siteSpecific(10, 11);
+export const SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT = 13;

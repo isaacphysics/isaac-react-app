@@ -60,17 +60,20 @@ export const UserProfile = (props: UserProfileProps) => {
             <h2 className="h3">Account details</h2>
             <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
             <p>
-                <AccountTypeMessage role={userToUpdate?.role} />
+                <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage={userToUpdate.emailVerificationStatus === "AGE_RESTRICTED"} />
             </p>
-            {!isTutorOrAbove(userToUpdate) ? <p>
-                If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
-                    store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
-                }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
-            </p> : <p>
-                Only student accounts can be deleted automatically. Please{" "}
-                <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
-                {" "}to request account deletion.
-            </p>}
+            {userToUpdate.emailVerificationStatus === "AGE_RESTRICTED" ?
+                <p>If you would like to delete your account, please ask your parent or guardian to <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>.</p>
+                : !isTutorOrAbove(userToUpdate) ? <p>
+                    If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
+                        store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
+                    }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
+                </p>
+                    : <p>
+                        Only student accounts can be deleted automatically. Please{" "}
+                        <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
+                        {" "}to request account deletion.
+                    </p>}
         </>}
         rightColumn={<>
             {siteSpecific(
@@ -109,14 +112,14 @@ export const UserProfile = (props: UserProfileProps) => {
                     />
                 </>
             )}
-            <EmailInput
+            {userToUpdate.emailVerificationStatus !== "AGE_RESTRICTED" && <EmailInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 emailIsValid={!!validateEmail(userToUpdate.email)}
                 submissionAttempted={submissionAttempted}
                 required={true}
-            />
-            {userToUpdate.emailVerificationStatus !== "VERIFIED" && <Alert color="warning" className="d-flex mt-2">
+            />}
+            {(userToUpdate.emailVerificationStatus === "NOT_VERIFIED" || userToUpdate.emailVerificationStatus === "DELIVERY_FAILED") && <Alert color="warning" className="d-flex mt-2">
                 <i className="icon icon-warning icon-color-alert icon-sm me-3 mt-1" />
                 <div>
                     Your email address is unverified. This may affect your ability to receive important notifications, and you will not be eligible to enter events and competitions.
@@ -178,18 +181,16 @@ export const UserProfile = (props: UserProfileProps) => {
                 required={isAda && isTeacherOrAbove(userToUpdate)}
             />
             <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
-            {isPhy &&
-                <DobInput
-                    userToUpdate={userToUpdate}
-                    setUserToUpdate={setUserToUpdate}
-                    submissionAttempted={submissionAttempted}
-                />
-            }
+            <DobInput
+                userToUpdate={userToUpdate}
+                setUserToUpdate={setUserToUpdate}
+                submissionAttempted={submissionAttempted}
+            />
             <GenderInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
-                required={false}
+                required={isAda}
             />
             {isPhy &&
                 <UserContextAccountInput
