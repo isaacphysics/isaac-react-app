@@ -50,7 +50,7 @@ export const HomepageCS = () => {
                 <Card id={"cta-features-card"} className={"mw-1600 icon-card p-5"}>
                     <Row className={"justify-content-center gy-5 fw-bold"}>
                         <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                            Free computer science resources for students aged 14 to 19
+                            Free computer science resources for students aged 11 to 19
                         </Col>
                         <Col xs={12} md={6} lg={3} className={"cta-feature"}>
                             Instant feedback with self-marking quizzes
