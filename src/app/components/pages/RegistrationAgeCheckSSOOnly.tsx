@@ -45,7 +45,7 @@ export const RegistrationAgeCheckSSOOnly = () => {
                 <div className="d-flex flex-column gap-2">
                     {isAda && <RaspberryPiSignInButton knownRole="STUDENT" />}
                     <GoogleSignInButton knownRole="STUDENT" />
-                    {isPhy && <MicrosoftSignInButton knownRole="STUDENT" />}
+                    <MicrosoftSignInButton knownRole="STUDENT" />
                     {isPhy && <SsoHelpLink />}
                 </div>
                 <Row className="justify-content-end">
