@@ -106,7 +106,7 @@ const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: any, user: Regis
         }
     } else {
         if (confirm("You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '" + groupToDelete.groupName + "'?")) {
-            dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
+            void dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
         }
     }
 };
@@ -124,12 +124,12 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
 
     function resetPassword() {
         setPasswordRequestSent(true);
-        dispatch(resetMemberPassword(member));
+        void dispatch(resetMemberPassword(member));
     }
 
     function confirmDeleteMember() {
         if (confirm(`Are you sure you want to remove this user from the group '${group.groupName}'?`)) {
-            deleteMember({groupId: group.id as number, userId: member.id as number});
+            void deleteMember({groupId: group.id as number, userId: member.id as number});
         }
     }
 
@@ -222,7 +222,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     useEffect(() => {
         setExpanded(false);
         setNewGroupName(group?.groupName ?? "");
-    }, [group.id]);
+    }, [group?.groupName, group.id]);
 
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
@@ -232,13 +232,13 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
         }
 
         const updatedGroup = {...group, groupName: newGroupName};
-        updateGroup({updatedGroup});
+        void updateGroup({updatedGroup});
     }
 
     function toggleSelfRemoval() {
         if (group) {
             const updatedGroup = {...group, selfRemoval: !group.selfRemoval};
-            updateGroup({
+            void updateGroup({
                 updatedGroup,
                 message: "Group member self-removal " + (updatedGroup.selfRemoval ? "enabled" : "disabled") + "."
             });
@@ -248,7 +248,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     function toggleArchived() {
         if (group) {
             const updatedGroup = {...group, archived: !group.archived};
-            updateGroup({
+            void updateGroup({
                 updatedGroup,
                 message: "Group " + group.groupName + (updatedGroup.archived ? " archived" : " unarchived")
             });
@@ -486,7 +486,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
         <CardBody>
             { showCreateGroup &&
                 <>
-                    <Button className={"d-block w-100"} onClick={() => {dispatch(showCreateGroupModal({user}));}}>Create a new group</Button>
+                    <Button className={"d-block w-100"} onClick={() => {void dispatch(showCreateGroupModal({user}));}}>Create a new group</Button>
                     {siteSpecific(<div className="section-divider"/>, <hr/>)}
                 </>
             }
@@ -580,9 +580,9 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const [getGroupMembers] = useLazyGetGroupMembersQuery();
     useEffect(() => {
         if (selectedGroup?.id) {
-            getGroupMembers(selectedGroup.id);
+            void getGroupMembers(selectedGroup.id);
         }
-    }, [selectedGroup?.id]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
+    }, [getGroupMembers, selectedGroup?.id]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
 
     const groupNameInputRef = useRef<HTMLInputElement>(null);
 
