@@ -6,6 +6,7 @@ import {
     EMAIL_PREFERENCE_DEFAULTS,
     FIRST_LOGIN_STATE,
     isAda,
+    isDobOldEnoughForSite,
     isPhy,
     isTeacherOrAbove,
     KEY,
@@ -20,7 +21,17 @@ import {
     validateUserGender,
     validateUserSchool
 } from "../../services";
-import {getRTKQueryErrorMessage, mutationSucceeded, requestCurrentUser, selectors, useAppDispatch, useAppSelector, useCreateNewMutation, useUpdateCurrentMutation, useUpgradeToTeacherAccountMutation} from "../../state";
+import {
+    getRTKQueryErrorMessage,
+    mutationSucceeded,
+    requestCurrentUser,
+    selectors,
+    useAppDispatch,
+    useAppSelector,
+    useCreateNewMutation,
+    useUpdateCurrentMutation,
+    useUpgradeToTeacherAccountMutation
+} from "../../state";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "../elements/inputs/SchoolInput";
@@ -36,9 +47,9 @@ import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import {DobInput} from "../elements/inputs/DobInput";
 import {SignupTab} from "../elements/panels/SignupTab";
 import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/modals/AdaTeacherOnboardingModal";
-import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
-import { useNavigate } from "react-router";
-import { PageContainer } from "../elements/layout/PageContainer";
+import {SignupSidebar} from "../elements/sidebar/SignupSidebar";
+import {useNavigate} from "react-router";
+import {PageContainer} from "../elements/layout/PageContainer";
 
 interface RegistrationSetDetailsProps {
     userRole: UserRole
@@ -78,6 +89,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const dobValid = validateDob(registrationUser.dateOfBirth);
     const isGenderValid = validateUserGender(registrationUser);
+    const isU13 = user?.loggedIn && user.emailVerificationStatus === "AGE_RESTRICTED";
 
     const register = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -87,6 +99,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             familyNameIsValid && givenNameIsValid && 
             (isSSO || (passwordValid && emailIsValid)) &&
             countryCodeIsValid && dobValid && isGenderValid &&
+            (!isU13 || (isDobOldEnoughForSite(registrationUser.dateOfBirth))) &&
             ((userRole === 'STUDENT') || schoolIsValid) && tosAccepted 
         ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
