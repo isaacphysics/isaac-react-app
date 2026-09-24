@@ -136,7 +136,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     // Focus on the feedback banner after submission
     useEffect(() => {
-        if (hasSubmitted) {
+        if (hasSubmitted && !isInlineQuestion) {
             feedbackRef.current?.focus();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps

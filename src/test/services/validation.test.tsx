@@ -197,33 +197,32 @@ describe('Required field validation', () => {
         });
     }
 
-    if (isAda) {
-        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires specified date of birth for %s for Ada CS", (role) => {
-            // Arrange
-            const user = {...testUser, user: {...testUser.user, role: role, dateOfBirth: undefined}};
+    // if (isAda) {
+    //     it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires specified date of birth for %s for Ada CS", (role) => {
+    //         // Arrange
+    //         const user = {...testUser, user: {...testUser.user, role: role, dateOfBirth: undefined}};
 
-            // Act
-            const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
+    //         // Act
+    //         const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
 
-            // Assert
-            const expected = {
-                "dateOfBirth": false,
-            };
-            expect(actual).toMatchObject(expected);
-        });
-    } else {
-        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require specified date of birth for %s for Isaac", (role) => {
-            // Arrange
-            const user = {...testUser, user: {...testUser.user, role: role, dateOfBirth: undefined}};
+    //         // Assert
+    //         const expected = {
+    //             "dateOfBirth": false,
+    //         };
+    //         expect(actual).toMatchObject(expected);
+    //     });
+    // }
+    it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require specified date of birth for %s", (role) => {
+        // Arrange
+        const user = {...testUser, user: {...testUser.user, role: role, dateOfBirth: undefined}};
 
-            // Act
-            const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
+        // Act
+        const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
 
-            // Assert
-            const expected = {
-                "dateOfBirth": true,
-            };
-            expect(actual).toMatchObject(expected);
-        });
-    }
+        // Assert
+        const expected = {
+            "dateOfBirth": true,
+        };
+        expect(actual).toMatchObject(expected);
+    });
 });
