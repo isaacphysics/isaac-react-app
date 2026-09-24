@@ -223,12 +223,27 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const [isExpanded, setExpanded] = useState(false);
     const [newGroupName, setNewGroupName] = useState<string>(group.groupName ?? "");
     const [existingGroupWithConflictingName, setExistingGroupWithConflictingName] = useState<AppGroup | undefined>(undefined);
+    const [isGroupNameInvalid, setIsGroupNameInvalid] = useState<boolean>(false);
+    const [isGroupNameValid, setIsGroupNameValid] = useState<boolean>(false);
     const isUserGroupOwner = user.id === group.ownerId;
 
     useEffect(() => {
         setExpanded(false);
         setNewGroupName(group.groupName ?? "");
+        setIsGroupNameInvalid(false);
+        setIsGroupNameValid(false);
     }, [group?.groupName, group.id]);
+
+    function editGroupName(event: React.ChangeEvent<HTMLInputElement>) {
+        const newName = event.target.value;
+        const conflictingGroup = allGroups?.find(g => g.groupName == newName && (isDefined(group) ? group.id != g.id : true));
+        setNewGroupName(newName);
+        setExistingGroupWithConflictingName(conflictingGroup);
+
+        const invalid = isDefined(conflictingGroup) || newName.trim().length === 0;
+        setIsGroupNameInvalid(invalid);
+        setIsGroupNameValid(!invalid && newName !== group.groupName);
+    };
 
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
@@ -282,10 +297,6 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const canArchive = (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
-    const groupNameEmpty = newGroupName.trim().length === 0;
-    const isGroupNameInvalid = isDefined(existingGroupWithConflictingName) || groupNameEmpty;
-    const isGroupNameValid = !isGroupNameInvalid && newGroupName !== group.groupName;
-
     const [deleteGroup] = useDeleteGroupMutation();
 
     return <Card className={classNames({"mb-4": isPhy})} {...rest}>
@@ -305,10 +316,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 id="groupName"
                                 length={50}
                                 placeholder="Group name" value={newGroupName}
-                                onChange={e => {
-                                    setNewGroupName(e.target.value);
-                                    setExistingGroupWithConflictingName(allGroups?.find(g => g.groupName == e.target.value && (isDefined(group) ? group.id != g.id : true)));
-                                }} aria-label="Group Name" disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
+                                onChange={editGroupName} aria-label="Group Name" disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
                                 invalid={isGroupNameInvalid}
                                 valid={isGroupNameValid}
                                 className={"w-100 w-md-auto flex-md-fill"}
@@ -323,7 +331,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 Update
                             </Button>}
                             <FormFeedback id={"groupNameFeedback"}>
-                                {groupNameEmpty && "Group name cannot be empty."}
+                                {newGroupName.trim().length === 0 && "Group name cannot be empty."}
                                 {isDefined(existingGroupWithConflictingName) && `A${existingGroupWithConflictingName?.archived ? "n archived" : ""} group with that name already exists.`}
                             </FormFeedback>
                         </InputGroup>
