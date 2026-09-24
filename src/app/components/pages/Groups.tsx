@@ -98,8 +98,7 @@ const passwordResetInformation = function(member: AppGroupMembership, passwordRe
     return message;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: any, user: RegisteredUserDTO, groupToDelete: AppGroup) => {
+const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: (groupId: number) => void, user: RegisteredUserDTO, groupToDelete: AppGroup) => {
     if (user.id === groupToDelete.ownerId) {
         if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
             deleteGroup(groupToDelete.id as number);
@@ -257,12 +256,11 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
 
     function groupUserIds(group: AppGroup) {
         const groupUserIdList: number[] = [];
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        group.members && group.members.map((member: AppGroupMembership) =>
-            member.groupMembershipInformation.userId && member.authorisedFullAccess &&
-            member.groupMembershipInformation.status == "ACTIVE" &&
-            groupUserIdList.push(member.groupMembershipInformation.userId)
-        );
+        group.members?.forEach((member: AppGroupMembership) => {
+            if (isDefined(member.groupMembershipInformation?.userId) && member.authorisedFullAccess && member.groupMembershipInformation?.status === "ACTIVE") {
+                groupUserIdList.push(member.groupMembershipInformation.userId);
+            }
+        });
         return groupUserIdList;
     }
 
