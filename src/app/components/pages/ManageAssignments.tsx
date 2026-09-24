@@ -488,7 +488,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                                 There is no work matching your filters.
                             </div>}
                             {groups && groups.length > 0 && !someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
-                                You have not set any work yet. Use the buttons above to set a new assignment or test.
+                                You have not set any work yet. Use the button{isTeacherOrAbove(user) && "s"} above to set a new assignment{isTeacherOrAbove(user) && " or test"}.
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
