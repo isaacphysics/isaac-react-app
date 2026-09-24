@@ -282,8 +282,9 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const canArchive = (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
-    const isGroupNameInvalid = isDefined(existingGroupWithConflictingName);
-    const isGroupNameValid = !isDefined(existingGroupWithConflictingName) && newGroupName.length > 0 && newGroupName !== group.groupName;
+    const groupNameEmpty = newGroupName.trim().length === 0;
+    const isGroupNameInvalid = isDefined(existingGroupWithConflictingName) || groupNameEmpty;
+    const isGroupNameValid = !isGroupNameInvalid && newGroupName !== group.groupName;
 
     const [deleteGroup] = useDeleteGroupMutation();
 
@@ -316,12 +317,15 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
                                 color={siteSpecific("keyline", "solid")}
-                                className="w-100 w-md-auto" disabled={newGroupName === "" || (newGroupName === group.groupName)}
+                                className="w-100 w-md-auto" disabled={!isGroupNameValid}
                                 onClick={saveUpdatedGroup}
                             >
                                 Update
                             </Button>}
-                            <FormFeedback id={"groupNameFeedback"}>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
+                            <FormFeedback id={"groupNameFeedback"}>
+                                {groupNameEmpty && "Group name cannot be empty."}
+                                {isDefined(existingGroupWithConflictingName) && `A${existingGroupWithConflictingName?.archived ? "n archived" : ""} group with that name already exists.`}
+                            </FormFeedback>
                         </InputGroup>
                     </Form>
                 </div>
