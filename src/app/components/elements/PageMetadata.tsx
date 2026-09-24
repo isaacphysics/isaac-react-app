@@ -110,7 +110,7 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
 
 export const PageMetadata = (props: PageMetadataProps) => {
     const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, additionalActionButtons } = props;
-    const isQuestion = doc?.type === "isaacQuestionPage";
+    const isQuestion = ["isaacQuestionPage", "isaacFastTrackQuestionPage"].includes(doc?.type ?? "");
     const isConcept = doc?.type === "isaacConceptPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
