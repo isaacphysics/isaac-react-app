@@ -221,17 +221,18 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const [updateGroup] = useUpdateGroupMutation();
 
     const [isExpanded, setExpanded] = useState(false);
-    const [newGroupName, setNewGroupName] = useState(group.groupName);
+    const [newGroupName, setNewGroupName] = useState<string>(group.groupName ?? "");
+    const [existingGroupWithConflictingName, setExistingGroupWithConflictingName] = useState<AppGroup | undefined>(undefined);
     const isUserGroupOwner = user.id === group.ownerId;
 
     useEffect(() => {
         setExpanded(false);
-        setNewGroupName(group?.groupName ?? "");
+        setNewGroupName(group.groupName ?? "");
     }, [group?.groupName, group.id]);
 
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
-        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
+        if (newGroupName.trim().length === 0) {
             dispatch(showErrorToast("Cannot rename group", "The group name must be specified."));
             return;
         }
@@ -281,9 +282,8 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const canArchive = (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
-    const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true));
-    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
-    const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
+    const isGroupNameInvalid = isDefined(existingGroupWithConflictingName);
+    const isGroupNameValid = !isDefined(existingGroupWithConflictingName) && newGroupName.length > 0 && newGroupName !== group.groupName;
 
     const [deleteGroup] = useDeleteGroupMutation();
 
@@ -304,7 +304,10 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 id="groupName"
                                 length={50}
                                 placeholder="Group name" value={newGroupName}
-                                onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
+                                onChange={e => {
+                                    setNewGroupName(e.target.value);
+                                    setExistingGroupWithConflictingName(allGroups?.find(g => g.groupName == e.target.value && (isDefined(group) ? group.id != g.id : true)));
+                                }} aria-label="Group Name" disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
                                 invalid={isGroupNameInvalid}
                                 valid={isGroupNameValid}
                                 className={"w-100 w-md-auto flex-md-fill"}
@@ -375,13 +378,13 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                         Invite users
                                     </Button>
                                     {canEmailUsers && usersInGroup.length > 0 &&
-                                                <Button
-                                                    className={"d-inline-block text-nowrap w-100 w-sm-auto"}
-                                                    color="keyline"
-                                                    onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
-                                                >
-                                                    Email users
-                                                </Button>
+                                        <Button
+                                            className={"d-inline-block text-nowrap w-100 w-sm-auto"}
+                                            color="keyline"
+                                            onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
+                                        >
+                                            Email users
+                                        </Button>
                                     }
                                 </div>
                             </div>
@@ -396,9 +399,9 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                             <div>
                                 This group has {group.members.length} member{group.members.length != 1 ? 's' : ''}.
                                 {bigGroup && !isExpanded &&
-                                            <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
-                                                <DropdownToggle caret>Show</DropdownToggle>
-                                            </ButtonDropdown>
+                                    <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
+                                        <DropdownToggle caret>Show</DropdownToggle>
+                                    </ButtonDropdown>
                                 }
                             </div>
                             <div className={"d-flex flex-column gap-1"}>
@@ -488,7 +491,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
 
     return <Card className="group-selector">
         <CardBody>
-            { showCreateGroup &&
+            {showCreateGroup &&
                 <>
                     <Button className={"d-block w-100"} onClick={() => {void dispatch(showCreateGroupModal({user}));}}>Create a new group</Button>
                     {siteSpecific(<div className="section-divider"/>, <hr/>)}
@@ -634,12 +637,8 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                             <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                                 showArchived={showArchived} setShowArchived={setShowArchived} showCreateGroup={true} />
                         </Col>
-
                         <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
-                            {
-                                selectedGroup &&
-                                    <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} />
-                            }
+                            {selectedGroup && <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} />}
                         </Col>
                     </Row>
                 </>
