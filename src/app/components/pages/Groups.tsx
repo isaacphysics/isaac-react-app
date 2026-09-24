@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {ReactNode, useEffect, useMemo, useRef, useState} from "react";
 import {
     Button,
     ButtonDropdown,
@@ -74,7 +74,13 @@ enum SortOrder {
 }
 
 let tooltip = 0;
-const Tooltip = ({children, tipText, ...props}: any) => {
+
+interface TooltipProps extends React.ComponentProps<"span"> {
+    children?: ReactNode;
+    tipText: ReactNode;
+}
+
+const Tooltip = ({children, tipText, ...props}: TooltipProps) => {
     const [tooltipId] = useState("forTooltip-" + tooltip++);
     return <>
         <span id={tooltipId} {...props}>{children}</span>
