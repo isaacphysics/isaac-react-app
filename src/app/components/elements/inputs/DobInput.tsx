@@ -19,6 +19,10 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
 
     return <FormGroup className="form-group">
         <Label className="fw-bold" htmlFor="dob-input">Date of birth</Label>
+        {isAda && <p className="d-block input-description mb-2">
+            {"We ask for your month and year of birth so we can give you the right experience for your age." +
+                " Some features work differently for younger users."}
+        </p>}
         <DateInput
             invalid={isInvalid}
             id="dob-input"
