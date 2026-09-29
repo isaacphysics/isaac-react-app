@@ -251,6 +251,9 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
             dispatch(showErrorToast("Cannot rename group", "The group name must be specified."));
             return;
         }
+        if (!isGroupNameValid) {
+            return;
+        }
 
         const updatedGroup = {...group, groupName: newGroupName};
         void updateGroup({updatedGroup});
