@@ -221,7 +221,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const [updateGroup] = useUpdateGroupMutation();
 
     const [isExpanded, setExpanded] = useState(false);
-    const [newGroupName, setNewGroupName] = useState<string>(group.groupName ?? "");
+    const [newGroupName, setNewGroupName] = useState(group.groupName ?? "");
     const [existingGroupWithConflictingName, setExistingGroupWithConflictingName] = useState<AppGroup | undefined>(undefined);
     const [isGroupNameInvalid, setIsGroupNameInvalid] = useState<boolean>(false);
     const [isGroupNameValid, setIsGroupNameValid] = useState<boolean>(false);
