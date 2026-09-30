@@ -36,10 +36,12 @@ import {
     allRequiredInformationIsPresent,
     isAda,
     isDefined,
+    isDobAdult,
     isDobOldEnoughForSite,
     isPhy,
     isStaff,
     isTeacherOrAbove,
+    isTutorOrAbove,
     isUnder13,
     siteSpecific,
     validateEmail,
@@ -354,7 +356,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
             (isUnder13(userToUpdate) || validateEmail(userToUpdate.email)) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isPhy && !isDefined(userToUpdate.dateOfBirth))) &&
-            (!userToUpdate.password || isNewPasswordValid))
+            (!isTutorOrAbove(userToUpdate) || isDobAdult(userToUpdate.dateOfBirth)) && (!userToUpdate.password || isNewPasswordValid))
         {
 
             if (!editingOtherUser && user.loggedIn && user.email !== userToUpdate.email) {
