@@ -14,7 +14,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
 
     if (!doc?.id || !isLoggedIn(user)) return null;
 
-    const isQuestionBookmarked = doc?.type === "isaacQuestionPage" && doc.id ? isBookmarked(doc.id) : false;
+    const isQuestionBookmarked = ["isaacQuestionPage", "isaacFastTrackQuestionPage"].includes(doc?.type ?? "") && doc.id ? isBookmarked(doc.id) : false;
 
     return <>
         <IconButton 
