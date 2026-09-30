@@ -68,6 +68,12 @@ declare module "bootstrap";
 declare module "math-random-seed";
 declare module "highlightjs-vba";
 
+// Vite alias to this build's own locale file (en/ada.json or en/sci.json); see src/i18n.ts
+declare module "@i18n/en-site" {
+    const strings: Record<string, unknown>;
+    export default strings;
+}
+
 declare let MathJax: any;
 declare let ISAAC_SITE: string;
 declare let REACT_APP_API_VERSION: string;

@@ -36,7 +36,8 @@ module.exports = {
     "moduleNameMapper": {
         "^react-native$": "react-native-web",
         "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
-        "uuid": "uuid"
+        "uuid": "uuid",
+        "^@i18n/en-site$": "<rootDir>src/test/i18nSiteLocale.ts"
     },
     "moduleFileExtensions": [
         "web.js",

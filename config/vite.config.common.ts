@@ -1,6 +1,7 @@
 import type { Plugin, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs/promises';
+import path from 'path';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // Vite requires an index.html file at the project root. Since we have two sites and each needs its own index.html,
@@ -127,6 +128,10 @@ const generateConfigInternal = (site: "sci" | "ada", renderer = false, options: 
         // TODO: this fixes e.g. inequality locally when using yarn link. does this affect anything else?
         resolve: {
             preserveSymlinks: true,
+            alias: {
+                // This site's English strings (bundled); the other site's file is never imported. See src/i18n.ts.
+                "@i18n/en-site": path.resolve(`src/app/locales/en/${site}.json`),
+            },
         },
 
         define: {

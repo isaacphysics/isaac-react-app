@@ -6,6 +6,7 @@ import 'core-js';
 import '@testing-library/jest-dom';
 import {server} from "../mocks/server";
 import "./matchers";
+import "./i18nForTests"; // translations, loaded synchronously, as the app has them after initI18n()
 
 global.window.alert = jest.fn();
 global.window.confirm = jest.fn(() => true);

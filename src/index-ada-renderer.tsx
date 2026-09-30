@@ -1,16 +1,8 @@
 import "regenerator-runtime/runtime";
 import './scss/cs/isaac.scss';
-import React from 'react';
-import {highlightJsService} from "./app/services/highlightJs";
-import {EditorRenderer} from "./app/components/elements/EditorRenderer";
-import { createRoot } from "react-dom/client";
+import { initI18n } from "./i18n";
 
-void highlightJsService.registerLanguages();
-
-const root = createRoot(document.getElementById('root')!);
-
-root.render(
-    <React.StrictMode>
-        <EditorRenderer />
-    </React.StrictMode>
-);
+// Load translations before importing the renderer (see index-ada.tsx)
+void initI18n()
+    .then(() => import("./app/startRenderer"))
+    .then(({ startRenderer }) => startRenderer());
