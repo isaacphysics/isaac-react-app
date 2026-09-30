@@ -231,6 +231,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                             userToUpdate={registrationUser}
                             setUserToUpdate={setRegistrationUser}
                             submissionAttempted={attemptedSignUp}
+                            requireOver13={isAda && !isSSO}
                         />
                         <GenderInput
                             className="mt-4 mb-7"

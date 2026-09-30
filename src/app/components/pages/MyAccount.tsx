@@ -38,6 +38,7 @@ import {
     isDefined,
     isDobAdult,
     isDobOldEnoughForSite,
+    isDobOldEnoughForSiteWithoutParentalConsent,
     isPhy,
     isStaff,
     isTeacherOrAbove,
@@ -356,7 +357,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
             (isUnder13(userToUpdate) || validateEmail(userToUpdate.email)) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isPhy && !isDefined(userToUpdate.dateOfBirth))) &&
-            (!isTutorOrAbove(userToUpdate) || isDobAdult(userToUpdate.dateOfBirth)) && (!userToUpdate.password || isNewPasswordValid))
+            (!isTutorOrAbove(userToUpdate) || isDobAdult(userToUpdate.dateOfBirth)) &&
+            (isPhy || !userAuthSettings?.hasSegueAccount || isDobOldEnoughForSiteWithoutParentalConsent(userToUpdate.dateOfBirth)) &&
+            (!userToUpdate.password || isNewPasswordValid))
         {
 
             if (!editingOtherUser && user.loggedIn && user.email !== userToUpdate.email) {
