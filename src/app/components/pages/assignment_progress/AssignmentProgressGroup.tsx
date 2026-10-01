@@ -35,8 +35,10 @@ import { useHistoryState } from '../../../services/history';
 import { PageContainer } from '../../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 import { FeatureFlag, useFeatureFlag } from '../../../services/featureFlag';
+import { Trans, useTranslation } from "react-i18next";
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const quiz = isQuiz(assignment);
     const isAssignmentsV2Link = useFeatureFlag(FeatureFlag.ASSIGNMENTS_V2);
@@ -57,8 +59,8 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
                 <span className="d-inline-flex flex-wrap">
-                    <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
-                    {isScheduled && <em className="mx-1">(scheduled)</em>}
+                    <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? t("common:groups.progress.fallbackTitle")}</b>
+                    {isScheduled && <em className="mx-1">{t("common:groups.progress.scheduledBadge")}</em>}
                     <a className="new-tab-link" href={quiz 
                         ? `${PATHS.PREVIEW_TEST}/${assignment.quizSummary?.id}` 
                         : isAssignmentsV2Link ? `/assignment/${assignment.id}/view` : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`
@@ -69,11 +71,11 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 <div className="d-flex flex-column flex-sm-row align-items-start gap-2 me-2">
                     {isScheduled && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
-                        {`Starts: ${formatDate(assignment.scheduledStartDate)}`}
+                        {t("common:groups.progress.startDate", { startDate: formatDate(assignment.scheduledStartDate) })}
                     </Badge>}
                     {assignment.dueDate && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
-                        {`Due: ${formatDate(assignment.dueDate)}`}
+                        {t("common:groups.progress.dueDate", { dueDate: formatDate(assignment.dueDate) })}
                     </Badge>}
                     {/* // TODO: restore this badge when group progress data is available at this level */}
                     {/* <Badge className="d-flex align-items-center me-2 text-black fw-bold" color="cultured-grey">
@@ -85,7 +87,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
             <Spacer/>
             {!isScheduled && <strong className="align-content-center mw-max-content">
                 <a href={csvDownloadLink} className="assignment-csv-download-link" target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
-                    Download CSV
+                    {t("common:groups.progress.downloadCsv")}
                 </a>
             </strong>}
             <i className="icon icon-chevron-right ms-3" color="tertiary"/>
@@ -94,6 +96,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
 };
 
 export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO, group?: AppGroup}) => {
+    const { t } = useTranslation();
 
     // TODO: if possible, we would rather use the groupId from the URL than require a wrapper on this component, as it would save loading all groups
     // const {assignmentCount, groupBoardAssignments, groupQuizAssignments} = useGroupAssignmentSummary(user, parseInt(groupId));
@@ -121,8 +124,8 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={group?.groupName ?? "Group progress"}
-                intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
+                currentPageTitle={group?.groupName ?? t("common:groups.progress.title")}
+                intermediateCrumbs={[{title: t("site:groups.progress.breadcrumbTitle"), to: PATHS.ASSIGNMENT_PROGRESS}]}
                 icon={{type: "icon", icon: "icon-group"}}
             />
         }
@@ -133,24 +136,20 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         className="mb-7"
     >
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
-            <i className="icon icon-arrow-left me-2"/>
-            Back to assignment progress
+            <Trans i18nKey="sci:groups.progress.backLink" components={{ backIcon: <i className="icon icon-arrow-left me-2" /> }} />
         </Link>}
 
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
             {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-none align-items-center d-md-flex")}>
-                <i className="icon icon-arrow-left me-2"/>
-                Back to assignment progress
+                <Trans i18nKey="sci:groups.progress.backLink" components={{ backIcon: <i className="icon icon-arrow-left me-2" /> }} />
             </Link>}
             {isDefined(group?.id) && <>
                 {isPhy && above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupAssignmentProgressCSVDownloadLink(group.id as number))))}>
-                    Download assignments CSV
-                    <i className="icon icon-download ms-2" color="white"/>
+                    <Trans i18nKey="common:groups.progress.downloadAssignmentsCsv" components={{ downloadIcon: <i className="icon icon-download ms-2" color="white" /> }} />
                 </Button>
                 {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
-                    Download tests CSV
-                    <i className="icon icon-download ms-2" color="white"/>
+                    <Trans i18nKey="common:groups.progress.downloadTestsCsv" components={{ downloadIcon: <i className="icon icon-download ms-2" color="white" /> }} />
                 </Button>}
             </>}
         </div>
@@ -160,7 +159,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-group icon-sm me-2"} color="secondary"/>
-                    {groupMembers?.length ? `${groupMembers?.length} student${groupMembers?.length !== 1 ? "s" : ""}` : "Unknown"}
+                    {groupMembers?.length ? t("common:groups.progress.studentCount", { count: groupMembers?.length }) : t("common:groups.progress.unknownCount")}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-file icon-sm me-2"} color="secondary"/>
@@ -178,18 +177,18 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             <CardBody>
                 <Row className="mb-3">
                     <Col xs={12}>
-                        <h3>Assignments and tests</h3>
-                        <span>View this group&apos;s progress on assignment and tests.</span>
+                        <h3>{t("common:groups.progress.sectionTitle")}</h3>
+                        <span>{t("common:groups.progress.sectionDescription")}</span>
                     </Col>
                     <Col xs={12} sm={6} lg={4}>
-                        <Label className="m-0 fw-bold mt-2 mt-lg-3">Search:</Label>
+                        <Label className="m-0 fw-bold mt-2 mt-lg-3">{t("common:groups.progress.searchLabel")}</Label>
                         <Input
                             onChange={(e) => setSearchText(e.target.value)}
                             placeholder={`Search for ${activeTab === "assignments" ? "assignments" : "tests"}...`}
                         />
                     </Col>
                     <Col xs={12} sm={6} lg={{size: 4, offset: 4}} className="d-flex flex-column">
-                        <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">Sort by:</Label>
+                        <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">{t("common:groups.progress.sortLabel")}</Label>
                         <StyledDropdown
                             value={Object.values(AssignmentOrder).findIndex(item => item.type === pageSettings.assignmentOrder.type && item.order === pageSettings.assignmentOrder.order)}
                             onChange={(e) => pageSettings.setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
@@ -223,7 +222,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                             : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
                                 <strong><Link to={activeTab === "assignments" ? siteSpecific("/assigned", PATHS.SET_ASSIGNMENTS) : "/view_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
-                                    {activeTab === "assignments" ? siteSpecific("Manage assignments", "Quizzes") : siteSpecific("Manage tests", "Tests")}
+                                    {activeTab === "assignments" ? t("site:groups.progress.manageAssignmentsLink") : t("site:groups.progress.manageTestsLink")}
                                 </Link></strong>
                             </div>
                     }

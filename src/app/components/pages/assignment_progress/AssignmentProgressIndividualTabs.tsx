@@ -9,6 +9,8 @@ import classNames from "classnames";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { Markup } from "../../elements/markup";
 import { ResultsTableHeader } from "../../elements/ResultsTableHeader";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT", studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
     if (attemptedOrCorrect === "CORRECT") {
@@ -56,6 +58,7 @@ interface GroupAssignmentTabProps {
 }
 
 export const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSettingsVisible}: GroupAssignmentTabProps) => {
+    const { t } = useTranslation();
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
     const questions = assignment.gameboard.contents;
 
@@ -96,10 +99,10 @@ export const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSe
             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment showLegend
                 headerText={<div>
                     {siteSpecific(
-                        <h4>Overview: {assignment.gameboard.title} <BoardLink id={assignment.gameboard?.id} /></h4>,
-                        <h3>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h3>
+                        <h4>{t("sci:assignments.progress.groupTab.overview", { boardTitle: assignment.gameboard.title })} <BoardLink id={assignment.gameboard?.id} /></h4>,
+                        <h3>{t("ada:assignments.progress.groupTab.overview")} <BoardLink id={assignment.gameboard?.id} /></h3>
                     )}
-                    <span>See who attempted the assignment and which questions they struggled with.</span>
+                    <span>{t("common:assignments.progress.groupTab.description")}</span>
                 </div>}
             />
 
@@ -111,7 +114,7 @@ export const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSe
     </Card>;
 };
 
-const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()} aria-label="Open question in new tab">
+const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()} aria-label={i18next.t("common:assignments.progress.questionLink.ariaLabel")}>
     <i className="icon icon-new-tab" />
 </a>;
 
@@ -123,6 +126,7 @@ interface DetailedMarksProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...rest}: DetailedMarksProps) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
 
     const difficultParts = useMemo(() => {
@@ -163,7 +167,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
             </div>
             <Spacer/>
             <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
-                {`${numAttemptedThisQuestion} of ${progress.length} attempted`}
+                {t("common:assignments.progress.questionCard.attemptedBadge", { attemptedCount: numAttemptedThisQuestion, totalCount: progress.length })}
             </Badge>
             <i className={classNames("icon icon-chevron-down icon-color-black icon-dropdown-180", {"active": isOpen})}/>
         </button>
@@ -189,13 +193,14 @@ interface DetailedMarksTabProps {
 }
 
 export const DetailedMarksTab = ({assignment, progress, settingsVisible, setSettingsVisible}: DetailedMarksTabProps) => {
+    const { t } = useTranslation();
     const questions = assignment.gameboard.contents;
 
     return <Card>
         <CardBody>
             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment 
                 headerText={<div>
-                    {siteSpecific(<h4>Performance on questions</h4>, <h3>Performance on questions</h3>)}
+                    {siteSpecific(<h4>{t("common:assignments.progress.detailedTab.title")}</h4>, <h3>{t("common:assignments.progress.detailedTab.title")}</h3>)}
                     <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
                 </div>}
             />

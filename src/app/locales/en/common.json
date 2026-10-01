@@ -47,6 +47,24 @@
       "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes.",
       "viewMore": "View more"
     },
+    "progress": {
+      "detailedTab": {
+        "title": "Performance on questions"
+      },
+      "downloadCsv": "Download CSV<downloadIcon/>",
+      "dueDate": "<dueDateIcon/>Due: {{dueDate}}",
+      "errorFetching": "Error fetching assignment progress",
+      "fullMarks": "<fullMarksIcon/>{{completedCount}} of {{totalCount}} got full marks",
+      "groupTab": {
+        "description": "See who attempted the assignment and which questions they struggled with."
+      },
+      "questionCard": {
+        "attemptedBadge": "{{attemptedCount}} of {{totalCount}} attempted"
+      },
+      "questionLink": {
+        "ariaLabel": "Open question in new tab"
+      }
+    },
     "table": {
       "creator": "Creator",
       "deckName": "Deck name",
@@ -115,6 +133,23 @@
       "helpText": "Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.<br/>You can find the code for an existing group by selecting the group and clicking <inviteUsersText>Invite Users</inviteUsersText>.",
       "sidebarButton": "Select or create a group",
       "title": "Manage groups"
+    },
+    "progress": {
+      "downloadAssignmentsCsv": "Download assignments CSV<downloadIcon/>",
+      "downloadCsv": "Download CSV",
+      "downloadTestsCsv": "Download tests CSV<downloadIcon/>",
+      "dueDate": "Due: {{dueDate}}",
+      "fallbackTitle": "Unknown quiz",
+      "scheduledBadge": "(scheduled)",
+      "searchLabel": "Search:",
+      "sectionDescription": "View this group's progress on assignment and tests.",
+      "sectionTitle": "Assignments and tests",
+      "sortLabel": "Sort by:",
+      "startDate": "Starts: {{startDate}}",
+      "studentCount_one": "{{count}} student",
+      "studentCount_other": "{{count}} students",
+      "title": "Group progress",
+      "unknownCount": "Unknown"
     },
     "selector": {
       "createButton": "Create a new group",

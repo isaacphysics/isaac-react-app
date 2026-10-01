@@ -16,12 +16,25 @@
     },
     "pageHelp": "Use this page to set assignments to your groups. You can assign any question deck you have saved to your account.<br/>Students in the group will be emailed when you set a new assignment.",
     "pageTitle": "My assignments",
+    "progress": {
+      "backToGroup": "<arrowIcon/>Back to group assignments and tests",
+      "groupTab": {
+        "overview": "Overview: {{boardTitle}}"
+      },
+      "pageTitle": "Assignment progress"
+    },
     "scheduleInfo": "Use the <scheduleLink>assignment schedule</scheduleLink> page to view assignments by start date and due date.",
     "title": "Set assignments"
   },
   "groups": {
     "editor": {
       "title": "Manage group"
+    },
+    "progress": {
+      "backLink": "<backIcon/>Back to assignment progress",
+      "breadcrumbTitle": "Assignment progress",
+      "manageAssignmentsLink": "Manage assignments",
+      "manageTestsLink": "Manage tests"
     }
   },
   "markbook": {

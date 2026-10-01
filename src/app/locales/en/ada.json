@@ -21,6 +21,12 @@
     },
     "pageHelp": "Use this page to set quizzes to your groups. You can set any quiz you have saved to your account.<br/>Students in the group will be emailed when you set a new quiz.",
     "pageTitle": "Assigned to me",
+    "progress": {
+      "groupTab": {
+        "overview": "Group assignment overview"
+      },
+      "pageTitle": "Markbook"
+    },
     "title": "Quizzes",
     "viewPremadeQuizzes": "View pre-made quizzes",
     "yourQuizzes": "Your quizzes"
@@ -28,6 +34,11 @@
   "groups": {
     "editor": {
       "title": "Group details"
+    },
+    "progress": {
+      "breadcrumbTitle": "Markbook",
+      "manageAssignmentsLink": "Quizzes",
+      "manageTestsLink": "Tests"
     }
   },
   "markbook": {
