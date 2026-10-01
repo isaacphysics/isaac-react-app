@@ -7,5 +7,120 @@
     "search-for-a-group": "Search for a group:",
     "sort-by": "Sort by:",
     "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
+  },
+  "assignments": {
+    "add": {
+      "booksButton": "our books",
+      "createDeckButton": "create a question deck",
+      "topicDecksButton": "our topic question decks"
+    },
+    "display": {
+      "filters": "Filters",
+      "show": "Show",
+      "sort": "Sort by",
+      "view": "Display in"
+    },
+    "emptyGroupsButton": "Create a group",
+    "error": {
+      "fetchError": "Error fetching your assignments"
+    },
+    "filter": {
+      "byCreator": "Filter by Creator",
+      "displayIn": "Display in",
+      "groupLabel": "Group",
+      "nameLabel": "Filter quizzes by name",
+      "searchPlaceholder": "Search",
+      "setterLabel": "Set by",
+      "statusLabel": "Status"
+    },
+    "filters": {
+      "creator": "Filter by Creator",
+      "name": "Filter boards by name",
+      "status": "Filter by Status"
+    },
+    "help": {
+      "overdueExplanation": "Any quizzes you have been set will appear here.<br/>Overdue quizzes which have not been fully attempted will be treated as quizzes <statusTodo>To do</statusTodo> until they are due, after which they are considered <statusOlder>Older</statusOlder> quizzes."
+    },
+    "pagination": {
+      "showMore": "Show more",
+      "showingCount": "Showing <strongShown>{{shownCount}}</strongShown> of <strongTotal>{{totalCount}}</strongTotal>",
+      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes.",
+      "viewMore": "View more"
+    },
+    "table": {
+      "creator": "Creator",
+      "deckName": "Deck name",
+      "difficultiesTooltip": "Practice: {{practiceLevels}}<br/>Challenge: {{challengeLevels}}",
+      "groups": "Groups",
+      "lastViewed": "Last viewed",
+      "manage": "Manage",
+      "quizName": "Quiz name",
+      "share": "Share",
+      "stagesAndDifficulties": "Stages and Difficulties <infoIcon/>",
+      "stagesDifficulties": "Stages and Difficulties<infoIcon/>",
+      "unsave": "Unsave"
+    }
+  },
+  "groups": {
+    "delete": {
+      "nonOwnerConfirm": "You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '{{groupName}}'?",
+      "ownerConfirm": "Are you sure you want to permanently delete the group '{{groupName}}' and remove all associated assignments?\n\nThis action cannot be undone!"
+    },
+    "editor": {
+      "deleteButton": "Delete group",
+      "emailButton": "Email users",
+      "inviteButton": "Invite users",
+      "managersTitle": "Group managers",
+      "memberCount_one": "This group has {{count}} member.",
+      "memberCount_other": "This group has {{count}} members.",
+      "membersTitle": "Group members",
+      "moreInfoButton": "More information",
+      "nameAriaLabel": "Group Name",
+      "nameLabel": "Group name",
+      "namePlaceholder": "Group name",
+      "ownerLabel": "(group owner)",
+      "renameErrorDetail": "The group name must be specified.",
+      "renameErrorTitle": "Cannot rename group",
+      "renameLabel": "Rename group",
+      "selfRemovalLabel": "Allow students to remove themselves from this group",
+      "showButton": "Show",
+      "updateButton": "Update",
+      "youLabel": "(you)"
+    },
+    "member": {
+      "emailDeliveryFailedTooltip": "This user's account email address is invalid or not accepting email.<br/>They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.",
+      "emailUnverifiedTooltip": "This user has not yet verified their email.",
+      "inactiveLabel": "(inactive in group)",
+      "inactiveTooltip": "This user has set their status to inactive for this group. This means they will no longer see new assignments.",
+      "manageButton": "Manage",
+      "nameNotSharing": "<struckOut>{{givenName}} {{familyName}}</struckOut> (Not Sharing)",
+      "passwordReset": {
+        "button": "Reset password",
+        "cannotSend": "Cannot send password reset request email.",
+        "deliveryFailedTooltip": "Password reset request cannot be sent because this user's account email address is either invalid or not accepting email.",
+        "sendTooltip": "Send a password reset request to this user's email address.",
+        "sentLabel": "Reset email sent",
+        "sentTooltip": "Password reset request sent."
+      },
+      "removeAriaLabel": "Remove member",
+      "removeButton": "Remove",
+      "removeConfirm": "Are you sure you want to remove this user from the group '{{groupName}}'?",
+      "removeTooltip": "Remove this user from the group."
+    },
+    "page": {
+      "addTeachersInfo": "You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.",
+      "createButton": "Create a group",
+      "emptyState": "Organise your students into groups and set work appropriate for each group.<br/>You need a student group before you can assign quizzes and tests in {{siteTitle}}.",
+      "errorTitle": "Error fetching groups",
+      "helpText": "Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.<br/>You can find the code for an existing group by selecting the group and clicking <inviteUsersText>Invite Users</inviteUsersText>.",
+      "sidebarButton": "Select or create a group",
+      "title": "Manage groups"
+    },
+    "selector": {
+      "createButton": "Create a new group",
+      "deleteButton": "Delete group",
+      "groupIdTitle": "Group id: {{groupId}}",
+      "label": "Groups:"
+    }
   }
 }

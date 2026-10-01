@@ -56,6 +56,7 @@ import { useHistoryState } from "../../services/history";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
+import { Trans, useTranslation } from "react-i18next";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -73,6 +74,7 @@ interface SetAssignmentsTableProps {
 }
 
 const PhyTable = (props: SetAssignmentsTableProps) => {
+    const { t } = useTranslation();
     const {
         user, boards, boardSubject,
         boardView, boardTitleFilter, boardCreator,
@@ -87,28 +89,26 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
 
     const tableHeader = <tr>
-        <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
+        <th className="text-center align-middle"><span className="ps-2 pe-2">{t("common:assignments.table.groups")}</span></th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
-            Deck name
+            {t("common:assignments.table.deckName")}
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
-                Stages and Difficulties
-                <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative"/>
+                <Trans i18nKey="common:assignments.table.stagesDifficulties" components={{ infoIcon: <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative" /> }} />
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
-                Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
+                <Trans i18nKey="common:assignments.table.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
             </UncontrolledTooltip>
         </th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
             reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder}
             setOrder={setBoardOrder}>
-            Last viewed
+            {t("common:assignments.table.lastViewed")}
         </SortItemHeader>
-        <th className="text-center align-middle">Manage</th>
+        <th className="text-center align-middle">{t("common:assignments.table.manage")}</th>
     </tr>;
 
     return <Card className="mt-2 mb-7">
@@ -135,6 +135,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     </Card>;
 };
 const CSTable = (props: SetAssignmentsTableProps) => {
+    const { t } = useTranslation();
     const {
         user,
         boards, boardView, switchView,
@@ -144,35 +145,34 @@ const CSTable = (props: SetAssignmentsTableProps) => {
     } = props;
 
     const tableHeader = <tr>
-        <th>Groups</th>
+        <th>{t("common:assignments.table.groups")}</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
-            Quiz name
+            {t("common:assignments.table.quizName")}
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            Stages and Difficulties <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" />
+            <Trans i18nKey="common:assignments.table.stagesAndDifficulties" components={{ infoIcon: <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" /> }} />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
-                Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
+                <Trans i18nKey="common:assignments.table.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
             </UncontrolledTooltip>
         </th>
-        <th>Creator</th>
+        <th>{t("common:assignments.table.creator")}</th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
             reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder}
             setOrder={setBoardOrder}>
-            Last viewed
+            {t("common:assignments.table.lastViewed")}
         </SortItemHeader>
-        <th>Manage</th>
-        <th>Share</th>
-        <th>Unsave</th>
+        <th>{t("common:assignments.table.manage")}</th>
+        <th>{t("common:assignments.table.share")}</th>
+        <th>{t("common:assignments.table.unsave")}</th>
     </tr>;
 
     return <div className={"mb-7 mt-4"}>
         <Row>
             <Col xs={6} md={4} lg={3} xl={3}>
                 <Label className="w-100">
-                    Display in <Input type="select" value={boardView} onChange={switchView}>
+                    {t("common:assignments.filter.displayIn")} <Input type="select" value={boardView} onChange={switchView}>
                         {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                     </Input>
                 </Label>
@@ -181,13 +181,13 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                 xl={{size: 4, offset: 3}}>
                 <Label className="w-100">
                     <span
-                        className={"text-nowrap"}>Filter {siteSpecific("question decks", "quizzes")} by name</span><Input
+                        className={"text-nowrap"}>{t("site:assignments.filter.byName")}</span><Input
                         type="text" onChange={(e) => setBoardTitleFilter(e.target.value)}/>
                 </Label>
             </Col>
             <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator}
+                    <span className={"text-nowrap"}>{t("common:assignments.filter.byCreator")}</span><Input type="select" value={boardCreator}
                         onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                         {Object.values(BoardCreators).map(creator => <option key={creator}
                             value={creator}>{creator}</option>)}
@@ -221,10 +221,11 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 
 const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { className?: string, redirectBackTo?: string }) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     return <>
         <h4 className="mt-4 mb-3">
-            Add a {siteSpecific("question deck", "quiz")} from ...
+            {t("site:assignments.add.fromTitle")}
         </h4>
         <Row className={className}>
             <Col md={6} lg={4} className="pt-1">
@@ -232,19 +233,19 @@ const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { cla
                     setAssignBoardPath(redirectBackTo);
                     void dispatch(openIsaacBooksModal());
                 }} color="keyline" block className="px-3">
-                    our books
+                    {t("common:assignments.add.booksButton")}
                 </Button>
             </Col>
             <Col md={6} lg={4} className="pt-1">
                 <Button tag={Link} to={"/physics/a_level/question_decks"}
                     onClick={() => setAssignBoardPath(redirectBackTo)} color="keyline" block>
-                    our topic question decks
+                    {t("common:assignments.add.topicDecksButton")}
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
                 <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)}
                     color="keyline" block>
-                    create a question deck
+                    {t("common:assignments.add.createDeckButton")}
                 </Button>
             </Col>
         </Row>
@@ -267,6 +268,7 @@ export const getAssigneesByBoard = (assignmentsSetByMe: AssignmentDTO[] | undefi
 };
 
 export const SetAssignments = () => {
+    const { t } = useTranslation();
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const {data: groups} = useGetGroupsQuery(false);
@@ -331,9 +333,7 @@ export const SetAssignments = () => {
 
     // Page help
     const pageHelp = <span>
-        Use this page to set {siteSpecific("assignments", "quizzes")} to your groups. You can {siteSpecific("assign", "set")} any {siteSpecific("question deck", "quiz")} you have saved to your account.
-        <br/>
-        Students in the group will be emailed when you set a new {siteSpecific("assignment", "quiz")}.
+        <Trans i18nKey="site:assignments.pageHelp" components={{ br: <br /> }} />
     </span>;
 
     const tableProps: SetAssignmentsTableProps = {
@@ -353,7 +353,7 @@ export const SetAssignments = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Quizzes")}
+            <TitleAndBreadcrumb currentPageTitle={t("site:assignments.title")}
                 icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
             />
         }
@@ -378,19 +378,16 @@ export const SetAssignments = () => {
             <>
                 <PhyAddGameboardButtonsSetAssignments className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
                 {isGroupsEmptyState && <Alert color="warning">
-                    You have not created any groups to assign work to.
-                    Please <Link to="/groups">create a group here first.</Link>
+                    <Trans i18nKey="sci:assignments.emptyGroupsAlert" components={{ createGroupLink: <Link to="/groups" /> }} />
                 </Alert>}
                 {isBoardsEmptyState ?
                     <Alert color="warning">
-                        You have no {siteSpecific("question decks", "quizzes")} to assign. Use one of the
-                        options above to find one.
+                        {t("site:assignments.emptyBoardsAlert")}
                     </Alert>
                     :
                     <>
                         <h5>
-                            Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
-                            assignments by start date and due date.
+                            <Trans i18nKey="sci:assignments.scheduleInfo" components={{ scheduleLink: <Link to={"/assignment_schedule"} /> }} />
                         </h5>
                         <div className="section-divider my-4"/>
                     </>
@@ -402,13 +399,13 @@ export const SetAssignments = () => {
             {isGroupsEmptyState &&
                 <PromptBanner
                     card={{
-                        title: "You need a student group before you can assign a quiz to students.",
+                        title: t("ada:assignments.emptyGroupsTitle"),
                         icon: "icon-group",
                         bodyText: "",
                         color: "yellow",
                         buttons: {
                             primary: {
-                                text: "Create a group",
+                                text: t("common:assignments.emptyGroupsButton"),
                                 clickUrl: "/groups",
                                 style: "outline"
                             }
@@ -416,7 +413,7 @@ export const SetAssignments = () => {
                     }}
                 />
             }
-            <h3>Your quizzes</h3>
+            <h3>{t("ada:assignments.yourQuizzes")}</h3>
             <div
                 className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
                 {boards && boards.totalResults > 0 &&
@@ -427,11 +424,11 @@ export const SetAssignments = () => {
                 <div className={"w-100 w-lg-auto"}>
                     <Button className={"w-100 w-lg-auto"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
                         onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
-                        Create a quiz
+                        {t("ada:assignments.createQuizButton")}
                     </Button>
                     <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
                         to={"/pages/revision_quizzes"} color={"keyline"}>
-                        View pre-made quizzes
+                        {t("ada:assignments.viewPremadeQuizzes")}
                     </Button>
                 </div>
             </div>
@@ -441,7 +438,7 @@ export const SetAssignments = () => {
                 <Row>
                     {boardView === BoardViews.card && <Col sm={6} lg={3}>
                         <Label className="w-100">
-                            Display in <Input type="select" value={boardView} onChange={switchView}>
+                            {t("ada:assignments.filter.displayIn")} <Input type="select" value={boardView} onChange={switchView}>
                                 {Object.values(BoardViews).map(view => <option key={view}
                                     value={view}>{view}</option>)}
                             </Input>
@@ -450,7 +447,7 @@ export const SetAssignments = () => {
                     {boardView === BoardViews.card && <>
                         <Col xs={6} lg={{size: 2, offset: 3}}>
                             <Label className="w-100">
-                                Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
+                                {t("ada:assignments.filter.show")} <Input disabled={forceAllBoards} type="select" value={boardLimit}
                                     onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit}
                                         value={limit}>{limit}</option>)}
@@ -459,7 +456,7 @@ export const SetAssignments = () => {
                         </Col>
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
-                                Sort by 
+                                {t("ada:assignments.filter.sortBy")} 
                                 <div className="d-flex gap-2 align-items-center">
                                     <Input type="select" value={boardOrder} disabled={sortDisabled}
                                         onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}
@@ -471,7 +468,7 @@ export const SetAssignments = () => {
                                     {sortDisabled && <>
                                         <i id="sortHelpTooltip" className="icon icon-info icon-color-grey ms-2"/>
                                         <UncontrolledTooltip placement="auto" autohide target="sortHelpTooltip">
-                                            Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.
+                                            {t("ada:assignments.filter.sortDisabledTooltip")}
                                         </UncontrolledTooltip>
                                     </>}
                                 </div>
@@ -498,11 +495,11 @@ export const SetAssignments = () => {
                                     </Col>)}
                             </Row>
                             <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
-                                <p>Showing <strong>{filteredBoards?.length}</strong> of <strong>{boards.totalResults}</strong>
+                                <p><Trans i18nKey="common:assignments.pagination.showingCount" components={{ strongShown: <strong />, strongTotal: <strong /> }} values={{ shownCount: filteredBoards?.length, totalCount: boards.totalResults }} />
                                 </p>
                                 {boards.boards.length < boards.totalResults &&
                                     <Button onClick={viewMore} disabled={loading}>{loading ?
-                                        <Spinner/> : "View more"}</Button>}
+                                        <Spinner/> : t("common:assignments.pagination.viewMore")}</Button>}
                             </div>
                         </>
                         :

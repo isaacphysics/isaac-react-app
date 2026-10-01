@@ -14,6 +14,7 @@ import classNames from "classnames";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { MyAssignmentsSidebar } from "../elements/sidebar/MyAssignmentsSidebar";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
+import { Trans, useTranslation } from "react-i18next";
 
 const INITIAL_NO_ASSIGNMENTS = 10;
 const NO_ASSIGNMENTS_INCREMENT = 10;
@@ -39,13 +40,14 @@ interface AdaAssignmentProps {
 }
 
 const AdaAssignmentView = (props: AdaAssignmentProps) => {
+    const { t } = useTranslation();
     const {filteredAssignments, assignments, statusFilter, groupFilter, setByFilter, setStatusFilter, setTitleFilter, setGroupFilter, setSetByFilter, limit} = props;
 
     return <>
         <Row className="pt-2">
             <Col md={4} lg={2}>
                 <Label className="w-100">
-                    Status
+                    {t("common:assignments.filter.statusLabel")}
                     <Input type="select" data-testid="assignment-type-filter" value={statusFilter[0]} onChange={e => setStatusFilter([e.target.value as AssignmentState])}>
                         {Object.values(AssignmentState).map(state => <option key={state} value={state}>{state}</option>)}
                     </Input>
@@ -53,13 +55,13 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
             </Col>
             <Col md={8} lg={5}>
                 <Label className="w-100">
-                    Filter quizzes by name 
-                    <Input type="text" onChange={(e) => setTitleFilter(e.target.value)} placeholder="Search"/>
+                    {t("common:assignments.filter.nameLabel")} 
+                    <Input type="text" onChange={(e) => setTitleFilter(e.target.value)} placeholder={t("common:assignments.filter.searchPlaceholder")}/>
                 </Label>
             </Col>
             <Col sm={6} lg={{size: 2, offset: 1}}>
                 <Label className="w-100">
-                    Group
+                    {t("common:assignments.filter.groupLabel")}
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
                     </Input>
@@ -67,7 +69,7 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
             </Col>
             <Col sm={6} lg={2}>
                 <Label className="w-100">
-                    Set by
+                    {t("common:assignments.filter.setterLabel")}
                     <Input type="select" value={setByFilter} onChange={e => setSetByFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                     </Input>
@@ -81,6 +83,7 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
 };
 
 export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}));}, [dispatch]);
 
@@ -98,9 +101,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
 
     const pageHelp = <span>
-        Any quizzes you have been set will appear here.<br />
-        Overdue quizzes which have not been fully attempted will be treated as quizzes <strong>To do</strong> until they are due,
-        after which they are considered <strong>Older</strong> quizzes.
+        <Trans i18nKey="common:assignments.help.overdueExplanation" components={{ br: <br />, statusTodo: <strong />, statusOlder: <strong /> }} />
     </span>;
 
     const myAssignmentOptionProps = {
@@ -110,7 +111,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={siteSpecific("My assignments", "Assigned to me")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}/>
+            <TitleAndBreadcrumb currentPageTitle={t("site:assignments.pageTitle")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}/>
         }
         sidebar={siteSpecific(
             <MyAssignmentsSidebar
@@ -131,7 +132,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
             <div className={classNames({"pt-2 card-body": isAda})}>
                 <ShowLoadingQuery
                     query={assignmentQuery}
-                    defaultErrorTitle={"Error fetching your assignments"}
+                    defaultErrorTitle={t("common:assignments.error.fetchError")}
                     thenRender={(assignments) => 
                     {
                         const myAssignments = filterAssignmentsByStatus(assignments);
@@ -181,10 +182,10 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             {limit < filteredAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered quizzes.
+                                    <Trans i18nKey="common:assignments.pagination.showingInfo" components={{ boldShown: <strong />, boldTotal: <strong /> }} values={{ shownCount: limit, totalCount: filteredAssignments.length }} />
                                 </p>
                                 <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
-                                    Show more
+                                    {t("common:assignments.pagination.showMore")}
                                 </Button>
                             </div>} 
                         </>;

@@ -1,9 +1,34 @@
 {
+  "assignments": {
+    "add": {
+      "fromTitle": "Add a question deck from ..."
+    },
+    "emptyBoardsAlert": "You have no question decks to assign. Use one of the options above to find one.",
+    "emptyGroupsAlert": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
+    "filter": {
+      "byName": "Filter question decks by name"
+    },
+    "page": {
+      "emptyState": "You have no question decks to view.",
+      "help": "A summary of your question decks",
+      "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> question decks, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
+      "title": "My saved decks"
+    },
+    "pageHelp": "Use this page to set assignments to your groups. You can assign any question deck you have saved to your account.<br/>Students in the group will be emailed when you set a new assignment.",
+    "pageTitle": "My assignments",
+    "scheduleInfo": "Use the <scheduleLink>assignment schedule</scheduleLink> page to view assignments by start date and due date.",
+    "title": "Set assignments"
+  },
+  "groups": {
+    "editor": {
+      "title": "Manage group"
+    }
+  },
   "markbook": {
     "title": "Assignment progress"
   },
   "meta": {
-    "title": "Isaac Physics",
-    "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists."
+    "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.",
+    "title": "Isaac Physics"
   }
 }

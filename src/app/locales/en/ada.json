@@ -1,9 +1,40 @@
 {
+  "assignments": {
+    "add": {
+      "fromTitle": "Add a quiz from ..."
+    },
+    "createQuizButton": "Create a quiz",
+    "emptyBoardsAlert": "You have no quizzes to assign. Use one of the options above to find one.",
+    "emptyGroupsTitle": "You need a student group before you can assign a quiz to students.",
+    "filter": {
+      "byName": "Filter quizzes by name",
+      "displayIn": "Display in",
+      "show": "Show",
+      "sortBy": "Sort by",
+      "sortDisabledTooltip": "Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks."
+    },
+    "page": {
+      "emptyState": "You have no quizzes to view.",
+      "help": "A summary of your quizzes",
+      "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> quizzes, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
+      "title": "My quizzes"
+    },
+    "pageHelp": "Use this page to set quizzes to your groups. You can set any quiz you have saved to your account.<br/>Students in the group will be emailed when you set a new quiz.",
+    "pageTitle": "Assigned to me",
+    "title": "Quizzes",
+    "viewPremadeQuizzes": "View pre-made quizzes",
+    "yourQuizzes": "Your quizzes"
+  },
+  "groups": {
+    "editor": {
+      "title": "Group details"
+    }
+  },
   "markbook": {
     "title": "Markbook"
   },
   "meta": {
-    "title": "Ada Computer Science",
-    "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions."
+    "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.",
+    "title": "Ada Computer Science"
   }
 }
