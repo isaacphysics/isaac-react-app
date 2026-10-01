@@ -123,8 +123,10 @@ describe("Set / Manage work", () => {
             await renderSetManageWork({useSecond: true});
 
             const timeline = await screen.findByTestId("timeline");
-            // await userEvent.click(within(timeline).getByTestId("month-label"));
-            // this month is open by default (?), so don't need above
+            const monthLabel = within(timeline).getByTestId("month-label");
+            if (monthLabel.getAttribute("aria-label")?.startsWith("Expand")) {
+                await userEvent.click(monthLabel);
+            }
             await userEvent.click(within(timeline).getByTestId("day-label"));
             const boardCards = await screen.findAllByTestId("gameboard-card");
             expect(boardCards).toHaveLength(1);
