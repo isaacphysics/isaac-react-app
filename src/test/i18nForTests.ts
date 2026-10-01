@@ -3,7 +3,10 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import common from "../app/locales/en/common.json";
-import site from "./i18nSiteLocale";
+import ada from "../app/locales/en/ada.json";
+import sci from "../app/locales/en/sci.json";
+
+const site = ISAAC_SITE === "ada" ? ada : sci;
 
 void i18next.use(initReactI18next).init({
     lng: "en",
