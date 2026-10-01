@@ -15,6 +15,7 @@ import {above, isDefined, PARSONS_INDENT_STEP, PARSONS_MAX_INDENT, useCurrentQue
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
+import {v4 as uuid_v4} from "uuid";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const enforceValidIndentation = (items: Immutable<ParsonsItemDTO>[]) => {
@@ -165,6 +166,8 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         }
     }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems, useSingleList]);
 
+    const itemSectionInfoId = `item-section-info-${uuid_v4()}`;
+
     return <div className="parsons-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
@@ -173,7 +176,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
-                <Label className="visually-hidden" id="item-section-info">
+                <Label className="visually-hidden" id={itemSectionInfoId}>
                     To pick up an item, press space or enter.
                     Use the up and down arrow keys to move the item within the current list.
                     {!useSingleList && (above['md'](deviceSize) ? 
@@ -182,7 +185,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     Press space or enter again to move the item to a new position.
                     Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
                 </Label>
-                {!useSingleList && <Col md={6} className="parsons-available-items">
+                {!useSingleList && <Col md={6} className="parsons-available-items" aria-describedby={itemSectionInfoId}>
                     <div className="h4">Available items</div>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
@@ -199,7 +202,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                         }}
                     </Droppable>
                 </Col>}
-                <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})}>
+                <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})} aria-describedby={itemSectionInfoId}>
                     <div className="mt-4 mt-md-0 h4">Your answer</div>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {

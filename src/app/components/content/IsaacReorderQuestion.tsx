@@ -8,6 +8,7 @@ import {above, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
+import {v4 as uuid_v4} from "uuid";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
@@ -43,6 +44,8 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         }
     }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems, useSingleList]);
 
+    const itemSectionInfoId = `item-section-info-${uuid_v4()}`;
+
     return <div className="parsons-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
@@ -51,7 +54,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd}>
-                <Label className="visually-hidden" id="item-section-info">
+                <Label className="visually-hidden" id={itemSectionInfoId}>
                     To pick up an item, press space or enter.
                     Use the up and down arrow keys to move the item within the current list.
                     {!useSingleList && (above['md'](deviceSize) ? 
@@ -59,7 +62,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                         "Use the contained list swap button to move the item between the available items and your answer.")}
                     Press space or enter again to move the item to a new position.
                 </Label>
-                {!useSingleList && <Col md={{size: 6}} className="parsons-available-items">
+                {!useSingleList && <Col md={{size: 6}} className="parsons-available-items" aria-describedby={itemSectionInfoId}>
                     <div className="h4">Available items</div>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
@@ -79,7 +82,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                         }
                     </Droppable>
                 </Col>}
-                <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})}>
+                <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})} aria-describedby={itemSectionInfoId}>
                     {useSingleList 
                         ? <i className="text-muted d-print-none">Drag these items to put them in the correct order</i>
                         : <div className="mt-sm-4 mt-md-0 h4">Your answer</div>}
