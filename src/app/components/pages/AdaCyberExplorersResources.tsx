@@ -33,7 +33,7 @@ export const AdaCyberExplorersResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
-        <div className="d-flex position-absolute justify-self-center gap-4 py-4 px-5 bg-white rounded-4 translate-middle-y shadow-pink z-1">
+        <div className="d-flex position-absolute mx-auto start-0 end-0 w-fit-content gap-4 py-4 px-5 bg-white rounded-4 translate-middle-y shadow-pink z-1">
             <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt='Funded by the UK Government' className='img-fluid' />
             <img src="/assets/common/logos/techfirst-black.svg" alt='The TechFirst logo' className='img-fluid' />
         </div>
