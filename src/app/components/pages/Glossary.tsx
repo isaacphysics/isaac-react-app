@@ -39,6 +39,8 @@ import { PageFragment } from "../elements/PageFragment";
 import { GlossarySidebar } from "../elements/sidebar/GlossarySidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { SearchInputWithIcon } from "../elements/SearchInputs";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -122,6 +124,7 @@ interface GlossarySearchProps {
 }
 
 export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps) => {
+    const { t } = useTranslation();
     // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
     const [internalSearchText, setInternalSearchText] = useState(searchText);
 
@@ -139,7 +142,7 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
     <Input
         id="terms-search" name="query"
         type="search" value={internalSearchText || ""}
-        placeholder="Search by term" aria-label="Search by term"
+        placeholder={t("common:glossary.search.label")} aria-label={t("common:glossary.search.label")}
         onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
             setSearchText(e.target.value);
             setInternalSearchText(e.target.value);
@@ -339,9 +342,7 @@ export const Glossary = () => {
         }
     });
 
-    const metaDescription = siteSpecific(
-        "A glossary of important words and phrases used in maths, physics, chemistry and biology.",
-        "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!");
+    const metaDescription = i18next.t("site:glossary.metaDescription");
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
@@ -353,7 +354,7 @@ export const Glossary = () => {
         <PageContainer data-bs-theme={pageContext?.subject}
             pageTitle={<>
                 <TitleAndBreadcrumb 
-                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
+                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? i18next.t("common:glossary.title.contextual", { context: getHumanContext(pageContext) }) : i18next.t("common:glossary.title")}
                     icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
                     intermediateCrumbs={crumb ? [crumb] : []}
                 />
@@ -368,7 +369,7 @@ export const Glossary = () => {
                 undefined
             )}
         >
-            <PageMetadata noTitle showSidebarButton sidebarButtonText="Search glossary">
+            <PageMetadata noTitle showSidebarButton sidebarButtonText={i18next.t("common:glossary.sidebar.button")}>
                 <PageFragment fragmentId="help_toptext_glossary" />
             </PageMetadata>
             <Row>
@@ -376,15 +377,15 @@ export const Glossary = () => {
                     <Row className="no-print">
                         {isAda && <>
                             <Col md={{size: 4}}>
-                                <Label for='terms-search' className='visually-hidden'>Search by term</Label>
+                                <Label for='terms-search' className='visually-hidden'>{i18next.t("common:glossary.search.label")}</Label>
                                 <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
                             </Col>
                             <Col className="mt-3 mt-md-0">
-                                <Label for='topic-select' className='visually-hidden'>Topic</Label>
+                                <Label for='topic-select' className='visually-hidden'>{i18next.t("common:glossary.filters.topicLabel")}</Label>
                                 <StyledSelect inputId="topic-select"
                                     options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                     name="topic-select"
-                                    placeholder="All topics"
+                                    placeholder={i18next.t("common:glossary.filters.topicPlaceholder")}
                                     onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                     isClearable
                                 />
@@ -393,8 +394,8 @@ export const Glossary = () => {
                     </Row>
                     <Row className="only-print">
                         <Col>
-                            {searchText !== "" && <span className="pe-4">Search: <strong>{searchText}</strong></span>}
-                            {isDefined(filterTopic) && <span className="pe-4">Topic: <strong>{filterTopic.title}</strong></span>}
+                            {searchText !== "" && <span className="pe-4"><Trans i18nKey="common:glossary.print.searchTerm" components={{ strong: <strong /> }} values={{ searchText }} /></span>}
+                            {isDefined(filterTopic) && <span className="pe-4"><Trans i18nKey="common:glossary.print.topicName" components={{ strong: <strong /> }} values={{ topicTitle: filterTopic.title }} /></span>}
                         </Col>
                     </Row>
                 </Col>
@@ -402,9 +403,9 @@ export const Glossary = () => {
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
                 <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
                     {/* Let users know that they need to select a subject */}
-                    {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
-                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
-                    {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>We could not find glossary terms to match your search criteria.</p>}
+                    {isPhy && !isDefined(filterSubject) && <p>{i18next.t("common:glossary.empty.selectSubject")}</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>{i18next.t("common:glossary.empty.noTerms")}</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>{i18next.t("common:glossary.empty.noResults")}</p>}
                 </div>
             </Row>}
             {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-4", {"pt-0": isAda, "pe-2 pt-md-2 mb-4 border-radius-2 list-results-container": isPhy})}>

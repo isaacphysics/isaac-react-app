@@ -10,9 +10,12 @@ import { isLoggedIn, isTeacherOrAbove, SITE_TITLE } from "../../services";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import classNames from "classnames";
 import { ExternalLink } from "../elements/ExternalLink";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export const TeacherResources = () => {
-    useEffect( () => {document.title = "Teachers – " + SITE_TITLE;}, []);
+    const { t } = useTranslation();
+    useEffect( () => {document.title = i18next.t("common:teacherResources.meta.title", { siteTitle: SITE_TITLE });}, []);
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredStudentChallengePod = studentChallengesPods?.[0];
 
@@ -23,19 +26,17 @@ export const TeacherResources = () => {
                 <ColumnSlice>
                     <TextBlock className="text-white">
                         <h1 id="resources-header-heading" className="font-size-1-75 font-size-md-2-5">
-                            <span className="text-pink">/</span><br/>
-                            Ada CS for teachers
+                            <Trans i18nKey="common:teacherResources.header.title" components={{ decorativeSlash: <span className="text-pink" />, br: <br /> }} />
                         </h1>
                         <p>
-                            Self-marking assignments, student progress tracking and exam prep support. Ada&nbsp;CS is
-                            full of free tools and resources to support classwork, homework and exam prep.
+                            {t("common:teacherResources.header.description")}
                         </p>
                         {(!isLoggedIn(user) && <>
-                            <Button color="keyline" className="bg-white" to="/register" tag={Link}>Sign up to Ada&nbsp;CS</Button>    
+                            <Button color="keyline" className="bg-white" to="/register" tag={Link}>{t("common:teacherResources.header.signupButton")}</Button>    
                         </>) || isTeacherOrAbove(user) && <>
-                            <Button color="keyline" className="bg-white" to="/dashboard" tag={Link}>Go to My&nbsp;Ada Overview</Button>
+                            <Button color="keyline" className="bg-white" to="/dashboard" tag={Link}>{t("common:teacherResources.header.dashboardButton")}</Button>
                         </> || <>
-                            <Button color="keyline" className="bg-white" to="/teacher_account_request" tag={Link}>Upgrade to a teacher account</Button>    
+                            <Button color="keyline" className="bg-white" to="/teacher_account_request" tag={Link}>{t("common:teacherResources.header.upgradeButton")}</Button>    
                         </>}
                     </TextBlock>
                     <ImageBlock>
@@ -51,10 +52,10 @@ export const TeacherResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>A full curriculum of topics</h2>
-                        <p>We have over 50 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
-                        <p>They&apos;re created by expert educators and are regularly updated. You can even filter content for different age groups and exams.</p>
-                        <Button tag={Link} to={"/topics"}>Explore all topics</Button>
+                        <h2>{t("common:teacherResources.curriculum.title")}</h2>
+                        <p>{t("common:teacherResources.curriculum.description")}</p>
+                        <p>{t("common:teacherResources.curriculum.descriptionTwo")}</p>
+                        <Button tag={Link} to={"/topics"}>{t("common:teacherResources.curriculum.exploreButton")}</Button>
                     </TextBlock>
                 </ColumnSlice>
             </Container>
@@ -63,50 +64,50 @@ export const TeacherResources = () => {
             <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <TextBlock md={8} className={classNames({"mb-3": !isLoggedIn(user)})}>
-                    <h2 id="tools-header">Tools to help you teach</h2>
-                    <p>An Ada CS account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
+                    <h2 id="tools-header">{t("common:teacherResources.tools.title")}</h2>
+                    <p>{t("common:teacherResources.tools.description")}</p>
                     <div className="pb-2 mb-3">
                         {(!isLoggedIn(user) && <> 
-                            <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                            <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
+                            <Button className="me-3" to={"/register"} tag={Link}>{t("common:teacherResources.tools.createAccountButton")}</Button>
+                            <Button color="keyline" to={"/login"} tag={Link}>{t("common:teacherResources.tools.loginButton")}</Button>
                         </>) || (isTeacherOrAbove(user) && <>
-                            <Button to={"/dashboard"} tag={Link}>Go to My&nbsp;Ada</Button>
+                            <Button to={"/dashboard"} tag={Link}>{t("common:teacherResources.tools.dashboardButton")}</Button>
                         </>) || <>
-                            <Button to={"/teacher_account_request"} tag={Link}>Upgrade to a teacher account</Button>
+                            <Button to={"/teacher_account_request"} tag={Link}>{t("common:teacherResources.tools.upgradeButton")}</Button>
                         </>}
                     </div>
                 </TextBlock>
                 <ColumnSlice>
                     <IconCard card={{
-                        title: "See content specific to you",
+                        title: t("common:teacherResources.tools.preferencesCard.title"),
                         icon: {name: "icon-tune", color: "secondary"},
-                        bodyText: "Set your location, level, and exam board, and we'll show you the content most relevant to you.",
+                        bodyText: t("common:teacherResources.tools.preferencesCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/account" : undefined,
-                        buttonText: "Set your preferences",
+                        buttonText: t("common:teacherResources.tools.preferencesCard.button"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
-                        title: "Create student groups",
+                        title: t("common:teacherResources.tools.groupsCard.title"),
                         icon: {name: "icon-group", color: "secondary"},
-                        bodyText: "Organise your students into groups and set work appropriate for each group.",
+                        bodyText: t("common:teacherResources.tools.groupsCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/groups" : undefined,
-                        buttonText: "Create a group",
+                        buttonText: t("common:teacherResources.tools.groupsCard.button"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
-                        title: "Set assignments",
+                        title: t("common:teacherResources.tools.assignmentsCard.title"),
                         icon: {name: "icon-file", color: "secondary"},
-                        bodyText: "Create self-marking assignments for your students. There are over 1000 questions for you to choose from.",
+                        bodyText: t("common:teacherResources.tools.assignmentsCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/quizzes/set" : undefined,
-                        buttonText: "Set an assignment",
+                        buttonText: t("common:teacherResources.tools.assignmentsCard.button"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
-                        title: "Review your markbook",
+                        title: t("common:teacherResources.tools.markbookCard.title"),
                         icon: {name: "icon-search", color: "secondary"},
-                        bodyText: "Track student progress with a personal markbook to help pinpoint areas to work on.",
+                        bodyText: t("common:teacherResources.tools.markbookCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/my_markbook" : undefined,
-                        buttonText: "View markbook",
+                        buttonText: t("common:teacherResources.tools.markbookCard.button"),
                         buttonStyle: "link",
                     }}/>
                 </ColumnSlice>
@@ -116,33 +117,33 @@ export const TeacherResources = () => {
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
-                        &ldquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
+                        {t("common:teacherResources.testimonial.quote")}
                     </h2>
-                    <p>– Matt Arnmor, computer science teacher</p>
+                    <p>{t("common:teacherResources.testimonial.attribution")}</p>
                 </TextBlock>
             </Container>
         </section>
         <section id="cpd" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={8}>
-                    <h2>Professional development</h2>
-                    <p>Learn new skills and build confidence with our free courses for continuing professional development (CPD). They&apos;re designed to support you, whatever your level of experience.</p>
+                    <h2>{t("common:teacherResources.cpd.title")}</h2>
+                    <p>{t("common:teacherResources.cpd.description")}</p>
                 </TextBlock>
                 <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
-                        title: "Free online courses",
+                        title: t("common:teacherResources.cpd.coursesCard.title"),
                         image: {src: "/assets/cs/decor/teacher-2.png"},
-                        bodyText: "Join one of our self-guided courses for teachers covering a wide range of computing topics.",
+                        bodyText: t("common:teacherResources.cpd.coursesCard.description"),
                         clickUrl: "/pages/online_courses",
-                        buttonText: "Learn more",
+                        buttonText: t("common:teacherResources.cpd.coursesCard.button"),
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Teacher mentoring",
+                        title: t("common:teacherResources.cpd.mentoringCard.title"),
                         image: {src: "/assets/cs/decor/teacher-3.png"},
-                        bodyText: "Get support through our online programme for newly qualified and non-specialist computer science teachers.",
+                        bodyText: t("common:teacherResources.cpd.mentoringCard.description"),
                         clickUrl: "/teacher_mentoring",
-                        buttonText: "Learn more",
+                        buttonText: t("common:teacherResources.cpd.mentoringCard.button"),
                         className: "bg-cultured-grey",
                     }}/>
                 </ColumnSlice>
@@ -153,9 +154,9 @@ export const TeacherResources = () => {
                 <img className="full-background-img" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
-                        <h2>Student challenges</h2>
-                        <p>Encourage and reward student success with our student challenge programme, designed to inspire achievement at every stage of their studies.</p>
-                        <Button tag={Link} to={"/pages/student_challenges"}>Find out more</Button>
+                        <h2>{t("common:teacherResources.challenges.title")}</h2>
+                        <p>{t("common:teacherResources.challenges.description")}</p>
+                        <Button tag={Link} to={"/pages/student_challenges"}>{t("common:teacherResources.challenges.exploreButton")}</Button>
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
                         title: featuredStudentChallengePod.title ?? "",
@@ -163,12 +164,12 @@ export const TeacherResources = () => {
                         bodyText: featuredStudentChallengePod.value ?? "",
                         tag: featuredStudentChallengePod.subtitle ?? "",
                         clickUrl: featuredStudentChallengePod.url ?? "",
-                        buttonText: "Read more",
+                        buttonText: t("common:teacherResources.challenges.readMoreButton"),
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
-                        title: "There are no active challenges at the moment.",
+                        title: t("common:teacherResources.challenges.emptyState.title"),
                         icon: {name: "icon-lightbulb-empty", color: "secondary"},
-                        bodyText: "Check back soon!",
+                        bodyText: t("common:teacherResources.challenges.emptyState.description"),
                     }}/>}
                 </ColumnSlice>
             </Container>
@@ -176,31 +177,31 @@ export const TeacherResources = () => {
         <section id="more-resources" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={8}>
-                    <h2>More teaching resources</h2>
-                    <p>Support, lesson plans, ideas, and tools from the Raspberry Pi Foundation&apos;s world-class range of computer science resources.</p>
+                    <h2>{t("common:teacherResources.moreResources.title")}</h2>
+                    <p>{t("common:teacherResources.moreResources.description")}</p>
                 </TextBlock>
                 <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
-                        title: "Research projects",
+                        title: t("common:teacherResources.moreResources.researchCard.title"),
                         image: {src: "/assets/cs/decor/teacher-4.png"},
-                        bodyText: "Discover groundbreaking research that advances the understanding of how people learn about computing. These projects are a collaboration between the Raspberry Pi Foundation and the University of Cambridge.",
-                        buttonText: "Learn more",
+                        bodyText: t("common:teacherResources.moreResources.researchCard.description"),
+                        buttonText: t("common:teacherResources.moreResources.researchCard.button"),
                         clickUrl: "https://www.raspberrypi.org/research/projects",
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Hello World magazine",
+                        title: t("common:teacherResources.moreResources.helloWorldCard.title"),
                         image: {src: "/assets/cs/decor/hello-world.png"},
-                        bodyText: "Get a global perspective on computing education with Hello World – our magazine and podcast for educators. Share your expertise and write for us!",
-                        buttonText: "Learn more",
+                        bodyText: t("common:teacherResources.moreResources.helloWorldCard.description"),
+                        buttonText: t("common:teacherResources.moreResources.helloWorldCard.button"),
                         clickUrl: "https://www.raspberrypi.org/hello-world",
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Code Classroom",
+                        title: t("common:teacherResources.moreResources.codeClassroomCard.title"),
                         image: {src: "/assets/cs/decor/code-editor.png"},
-                        bodyText: "Code Classroom is a free, safe platform for teaching and learning computing in schools. It includes a simple-to-use code editor with different programming languages, and lots of other features to support your teaching.",
-                        buttonText: "Learn more",
+                        bodyText: t("common:teacherResources.moreResources.codeClassroomCard.description"),
+                        buttonText: t("common:teacherResources.moreResources.codeClassroomCard.button"),
                         clickUrl: "https://editor.raspberrypi.org/en/education",
                         className: "bg-cultured-grey",
                     }}/>
@@ -214,10 +215,10 @@ export const TeacherResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>Teaching science or maths?</h2>
-                        <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you teach physics, chemistry, biology and maths.</p>
+                        <h2>{t("common:teacherResources.tryIsaac.title")}</h2>
+                        <p>{t("common:teacherResources.tryIsaac.description")}</p>
                         <ExternalLink asButton href='https://isaacscience.org'>
-                            Go to Isaac Science
+                            {t("common:teacherResources.tryIsaac.visitButton")}
                         </ExternalLink>
                     </TextBlock>
                 </ColumnSlice>
@@ -228,9 +229,9 @@ export const TeacherResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
-                        <h3>Need help?</h3>
-                        <p>Our teacher support page has lots of information for common questions and issues.</p>
-                        <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
+                        <h3>{t("common:teacherResources.help.title")}</h3>
+                        <p>{t("common:teacherResources.help.description")}</p>
+                        <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>{t("common:teacherResources.help.supportButton")}</Button>
                     </TextBlock>
                 </div>
             </Container>

@@ -19,6 +19,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { Row, Button, Form, Input, Label, Col } from "reactstrap";
 import { EventsSidebar } from "../elements/sidebar/EventsSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from "react-i18next";
 
 export interface EventsPageQueryParams {
     show_booked_only?: boolean;
@@ -31,6 +32,7 @@ export interface EventsPageQueryParams {
 const EVENTS_PER_PAGE = 6;
 
 export const Events = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
@@ -57,10 +59,11 @@ export const Events = () => {
     }, [typeFilter, statusFilter, stageFilter, getEventsList]);
 
     const pageHelp = <span>
-        Follow the links below to find out more about our FREE events.
+        {t("common:events.page.help")}
     </span>;
 
     const AdaEventFilters = () => {
+        const { t } = useTranslation();
         // Dropdown filters for Ada - these are radio buttons in the sidebar for phy
         const navigate = useNavigate();
         const reverseEventsMap = Object.entries(EventStageMap).reduce((acc, [key, value]) => {
@@ -69,7 +72,7 @@ export const Events = () => {
 
         return <div className="my-4">
             <Form className="form-inline d-flex justify-content-end">
-                <Label>Filter by
+                <Label>{t("common:events.filters.label")}
                     <Input id="event-status-filter" className="ms-3" type="select" value={statusFilter} onChange={e => {
                         const selectedFilter = e.target.value as EventStatusFilter;
                         query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
@@ -115,7 +118,7 @@ export const Events = () => {
         <PageContainer
             pageTitle={
                 <TitleAndBreadcrumb
-                    currentPageTitle={"Events"}
+                    currentPageTitle={t("common:events.page.title")}
                     help={pageHelp}
                     icon={{type: "icon", icon: "icon-events"}}
                 />
@@ -128,13 +131,13 @@ export const Events = () => {
             {isAda && <AdaEventFilters/>}
             <ShowLoadingQuery
                 query={eventsQuery}
-                defaultErrorTitle={"Error loading events list"}
+                defaultErrorTitle={t("common:events.page.errorLoading")}
                 thenRender={({events, total}) => {
                     const numberOfLoadedEvents = events.length;
 
                     return <div className="my-4">
                         <div className="d-flex flex-col justify-content-end mb-2">
-                            Showing {numberOfLoadedEvents} of {total}
+                            {t("common:events.page.showingCount", { loadedCount: numberOfLoadedEvents, total })}
                         </div>
 
                         <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
@@ -149,13 +152,13 @@ export const Events = () => {
                                 onClick={() => {
                                     void getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
                                 }}>
-                                Load more events
+                                {t("common:events.page.loadMore")}
                             </Button>
                         </div>}
 
                         {/* No Results */}
                         {total === 0 && <div className="text-center">
-                            <p>Sorry, we cannot find any events that match your filter settings.</p>
+                            <p>{t("common:events.page.noResults")}</p>
                         </div>}
                     </div>;
                 }}

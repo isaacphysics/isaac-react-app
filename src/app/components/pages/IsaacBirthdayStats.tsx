@@ -7,6 +7,7 @@ import { DOCUMENT_TYPE, STAGE } from "../../services";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
 import { PageFragment } from "../elements/PageFragment";
+import { Trans, useTranslation } from "react-i18next";
 
 interface AnimatedCounterProps extends React.HTMLAttributes<HTMLSpanElement> {
     limit: number;
@@ -46,26 +47,27 @@ const StatCard = ({ title, icon, counterProps }: StatCardProps) => {
 };
 
 export const IsaacStats = () => {
+    const { t } = useTranslation();
     return <Container>
         <TitleAndBreadcrumb
-            currentPageTitle="Isaac 11th birthday stats"
+            currentPageTitle={t("common:stats.page.title")}
             icon={{"type": "icon", "icon": "icon-progress"}}
         />
-        <PageMetadata title={<>Happy <span className="text-brand">11th</span> birthday to Isaac Science!</>} />
+        <PageMetadata title={<><Trans i18nKey="common:stats.page.metaTitle" components={{ emphasis: <span className="text-brand" /> }} /></>} />
         
         <span>
-            The 1st September 2025 marked the 11th anniversary of the first question attempts on the Isaac Physics platform. To celebrate, we&apos;re taking a look back at Isaac&apos;s statistics over this time.
+            {t("common:stats.page.intro")}
         </span>
 
         <Row className="d-flex align-items-center g-5 row-cols-1 row-cols-md-2 row-cols-xl-3 mb-4 mt-0">
             <Col>
-                <StatCard title="Accounts" icon="icon-account" counterProps={{ limit: 750_777, time: 3, increasingRate: 0.002 }} />
+                <StatCard title={t("common:stats.overview.accounts")} icon="icon-account" counterProps={{ limit: 750_777, time: 3, increasingRate: 0.002 }} />
             </Col>
             <Col>
-                <StatCard title="Question attempts" icon="icon-question" counterProps={{ limit: 186_125_271, time: 4, increasingRate: 0.73654 }} />
+                <StatCard title={t("common:stats.overview.questionAttempts")} icon="icon-question" counterProps={{ limit: 186_125_271, time: 4, increasingRate: 0.73654 }} />
             </Col>
             <Col className="mx-auto">
-                <StatCard title="Concepts viewed" icon="icon-concept" counterProps={{ limit: 6_456_752, time: 5, increasingRate: 0.0186 }} />
+                <StatCard title={t("common:stats.overview.conceptsViewed")} icon="icon-concept" counterProps={{ limit: 6_456_752, time: 5, increasingRate: 0.0186 }} />
             </Col>
         </Row>
 
@@ -80,7 +82,7 @@ export const IsaacStats = () => {
                     <h2>
                         <AnimatedCounter limit={3674} time={5} />
                     </h2>
-                    schools using Isaac
+                    {t("common:stats.community.schools")}
                 </div>
             </div>
             <div className="d-flex gap-4">
@@ -88,7 +90,7 @@ export const IsaacStats = () => {
                     <h2>
                         <AnimatedCounter limit={8_446} time={6} />
                     </h2>
-                    teachers setting assignments
+                    {t("common:stats.community.teachers")}
                 </div>
             </div>
             <div className="d-flex gap-4">
@@ -96,7 +98,7 @@ export const IsaacStats = () => {
                     <h2>
                         <AnimatedCounter limit={494_509} time={7} />
                     </h2>
-                    total assignments set
+                    {t("common:stats.community.assignments")}
                 </div>
                 <i className="icon icon-question-deck icon-xl" />
             </div>
@@ -105,7 +107,7 @@ export const IsaacStats = () => {
         <section className="container-override bg-white py-9">
             <Row className="row-gap-5">
                 <Col xl={6} className="d-flex flex-column">
-                    <h3>Most popular question</h3>
+                    <h3>{t("common:stats.popular.questionHeading")}</h3>
                     <ListView type={"item"} items={[{
                         "id": "gcse_ch2_13_q1",
                         "title": "Resultant Force and Acceleration 1",
@@ -145,7 +147,7 @@ export const IsaacStats = () => {
                     </span>
                 </Col>
                 <Col xl={6} className="d-flex flex-column" id="concept-column">
-                    <h3>Most popular concept</h3>
+                    <h3>{t("common:stats.popular.conceptHeading")}</h3>
                     <ListView type={"item"} className="flex-grow-1" items={[{
                         type: DOCUMENT_TYPE.CONCEPT,
                         title: "Kirchhoff's Laws",
@@ -168,19 +170,19 @@ export const IsaacStats = () => {
                 <h2 className="stats-hex-container text-white m-0 fs-4">
                     <AnimatedCounter limit={32_261_424} time={10} />
                 </h2>
-                <h5>total hint views</h5>
+                <h5>{t("common:stats.highlights.hintViews")}</h5>
             </div>
             <div className="d-flex gap-3 align-items-center">
-                <h5>longest student streak</h5>
+                <h5>{t("common:stats.highlights.longestStreak")}</h5>
                 <div className="stats-hex-container text-white m-0 d-flex flex-column align-items-center">
                     <h2 className="mb-0"><AnimatedCounter limit={201} time={10} /></h2>
-                    <span className="fs-5 mt-n2">weeks</span>
+                    <span className="fs-5 mt-n2">{t("common:stats.highlights.streakUnit")}</span>
                 </div>
             </div>
         </section>
 
         <section className="d-flex flex-column py-9 container-override position-relative bg-white">
-            <h3>Most <span className="text-danger">difficult</span> question</h3>
+            <h3><Trans i18nKey="common:stats.hard.heading" components={{ emphasis: <span className="text-danger" /> }} /></h3>
             <ListView type={"item"} items={[{
                 "id": "cooling_excalibur",
                 "title": "Cooling Excalibur",
@@ -211,7 +213,7 @@ export const IsaacStats = () => {
         </section>
 
 
-        <h4 className="text-center my-9">Thank you for being a part of Isaac!</h4>
+        <h4 className="text-center my-9">{t("common:stats.page.closing")}</h4>
         <div className="container-override" id="stats-subjects-background" />
 
         

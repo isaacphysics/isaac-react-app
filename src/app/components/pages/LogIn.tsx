@@ -31,6 +31,8 @@ import {extractErrorMessage} from '../../services/errors';
 import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
 import { MicrosoftSignInButton } from '../elements/MicrosoftSignInButton';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -80,6 +82,7 @@ export const useLoginLogic = () => {
 
 // Handles display and logic of the two-factor authentication form (usually shown after the first login step)
 export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
@@ -93,12 +96,12 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
     }, []);
 
     return <>
-        <h3 ref={ref} tabIndex={-1}>Two-Factor Authentication</h3>
-        <p>Two-factor authentication has been enabled for this account.</p>
+        <h3 ref={ref} tabIndex={-1}>{t("common:auth.tfa.title")}</h3>
+        <p>{t("common:auth.tfa.enabled")}</p>
         <FormGroup className="form-group">
-            <Label htmlFor="verification-code">Verification Code</Label>
+            <Label htmlFor="verification-code">{t("common:auth.tfa.codeLabel")}</Label>
             <Input
-                id="verification-code" type="text" name="verification-code" placeholder="Verification code"
+                id="verification-code" type="text" name="verification-code" placeholder={t("common:auth.tfa.codePlaceholder")}
                 innerRef={inputRef}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setMfaVerificationCode(e.target.value)
@@ -109,7 +112,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 autoFocus
             />
             <FormFeedback id="verification-code-validation-message">
-                {isNaN(Number(mfaVerificationCode)) && "Please enter a valid verification code"}
+                {isNaN(Number(mfaVerificationCode)) && t("common:auth.tfa.codeValidationError")}
             </FormFeedback>
         </FormGroup>
         <FormGroup className="form-group">
@@ -130,6 +133,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
 
 // Component handling the display of "Forgotten your password?" and its relevant interactions
 export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttempted, small}: {email: string, isValidEmail: boolean, setPasswordResetAttempted: (b: boolean) => void, small?: boolean}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
 
@@ -144,7 +148,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
     return !passwordResetRequest ?
         <div className={"d-flex justify-content-end " + (small ? "mt-1 w-100 text-end" : "")}>
             <Button className="text-end" color="link" onClick={attemptPasswordReset}>
-                {small ? <small>Forgotten your password?</small> : "Forgotten your password?"}
+                {small ? <small>{t("common:auth.passwordReset.forgottenLink")}</small> : t("common:auth.passwordReset.forgottenLink")}
             </Button>
         </div>
         :
@@ -153,14 +157,14 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
                 Your password reset request is being processed.{small && " Please check your inbox."}
             </strong>
             {!small && <strong>
-                Please check your inbox.
+                {t("common:auth.passwordReset.checkInbox")}
             </strong>}
         </p>;
 };
 
 export const SsoHelpLink = () => 
     <Link className="justify-content-end d-flex" to="/pages/single_sign_on" target='_blank'>
-        Learn more about Single Sign-On
+        {i18next.t("common:auth.sso.learnMore")}
     </Link>;
 
 interface EmailPasswordInputsProps {
@@ -174,32 +178,33 @@ interface EmailPasswordInputsProps {
     displayLabels?: boolean;
 }
 export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPassword, logInAttempted, passwordResetAttempted, errorMessage, displayLabels = true}: EmailPasswordInputsProps) => {
+    const { t } = useTranslation();
     return <>
         <div className="form-group">
-            {displayLabels && <Label htmlFor="email-input">Email address</Label>}
+            {displayLabels && <Label htmlFor="email-input">{t("common:auth.credentials.emailLabel")}</Label>}
             <Input
-                id="email-input" type="email" name="email" placeholder="Email address"
+                id="email-input" type="email" name="email" placeholder={t("common:auth.credentials.emailPlaceholder")}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
                 invalid={!!errorMessage || (!validEmail && (logInAttempted || passwordResetAttempted))}
                 aria-describedby="emailValidationMessage"
                 required
             />
             <FormFeedback id="emailValidationMessage">
-                {!validEmail && "Please enter a valid email address"}
+                {!validEmail && t("common:auth.credentials.emailValidationError")}
             </FormFeedback>
         </div>
 
         <div className="form-group mb-0">
-            {displayLabels && <Label htmlFor="password-input">Password</Label>}
+            {displayLabels && <Label htmlFor="password-input">{t("common:auth.credentials.passwordLabel")}</Label>}
             <Input
-                id="password-input" type="password" name="password" placeholder="Password"
+                id="password-input" type="password" name="password" placeholder={t("common:auth.credentials.passwordPlaceholder")}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
                 invalid={!!errorMessage || (!validPassword && (logInAttempted))}
                 aria-describedby="passwordValidationMessage"
                 required
             />
             <FormFeedback id="passwordValidationMessage">
-                {!validPassword && `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long`}
+                {!validPassword && t("common:auth.credentials.passwordLengthError", { minLength: MINIMUM_PASSWORD_LENGTH })}
             </FormFeedback>
         </div>
     </>;
@@ -207,6 +212,7 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
 
 // Main login page component, utilises all of the components defined above
 export const LogIn = () => {
+    const { t } = useTranslation();
 
     const user = useAppSelector(selectors.user.orNull);
 
@@ -219,7 +225,7 @@ export const LogIn = () => {
     const subHeadingRef = useRef<HTMLHeadingElement>(null);
 
     useEffect( () => {
-        document.title = "Login – " + SITE_TITLE;
+        document.title = i18next.t("common:auth.pageTitle", { siteName: SITE_TITLE });
         if (!(window as any).followedAtLeastOneSoftLink) {
             return;
         }
@@ -236,9 +242,7 @@ export const LogIn = () => {
         return logInAttempted ? <Loading/> : <Navigate to="/"/>;
     }
 
-    const metaDescription = siteSpecific(
-        "Log in to Isaac to learn and track your progress.",
-        "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.");
+    const metaDescription = t("site:auth.metaDescription");
 
     return <Container id="login-page" className="my-4 mb-7">
         <MetaDescription description={metaDescription} />
@@ -248,7 +252,7 @@ export const LogIn = () => {
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
                             <h2 className={classNames("h-title", {"mb-4": isAda})}  ref={headingRef} tabIndex={-1}>
-                                Log&nbsp;in or sign&nbsp;up:
+                                {t("common:auth.login.heading")}
                             </h2>
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
@@ -266,7 +270,7 @@ export const LogIn = () => {
                                                 id="rememberMe"
                                                 checked={rememberMe}
                                                 onChange={e => setRememberMe(e.target.checked)}
-                                                label={<p>Remember me</p>} className='mb-4'
+                                                label={<p>{t("common:auth.page.rememberMe")}</p>} className='mb-4'
                                             />
                                         </Col>
                                         <Col className="align-content-center">
@@ -291,13 +295,13 @@ export const LogIn = () => {
                                         </Col>
                                         <Col sm={6}>
                                             <Button id="sign-up" color="keyline" className="mb-2" onClick={signUp} block>
-                                                Sign up
+                                                {t("common:auth.page.signUpButton")}
                                             </Button>
                                         </Col>
                                     </Row>
 
                                     {siteSpecific(<div className="section-divider"/>, <hr className="text-center mb-4"/>)}
-                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>Log in with:</div>
+                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>{t("common:auth.page.ssoHeading")}</div>
                                     {isAda &&
                                         <Row className="mb-2 justify-content-center">
                                             <Col sm={9}>

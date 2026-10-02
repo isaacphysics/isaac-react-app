@@ -3,8 +3,10 @@ import {Button, Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE_TITLE, trackEvent} from "../../services";
 import {useSessionExpired} from "../../services";
+import { useTranslation } from "react-i18next";
 
 export const SessionCookieExpired = () => {
+    const { t } = useTranslation();
 
     const [target, clearRenewPath] = useSessionExpired();
 
@@ -13,8 +15,8 @@ export const SessionCookieExpired = () => {
     }, []);
 
     return <Container>
-        <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired" currentPageTitle="Your session has expired" icon={{type: "icon", icon: "icon-error"}} className="mb-4" />
-        <p className="pb-2">{`Your ${SITE_TITLE} session has expired, so we've logged you out. Use the button below to continue where you left off.`}</p>
-        <Button color="solid" onClick={clearRenewPath} href={target}>Continue</Button>
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired" currentPageTitle={t("common:auth.sessionExpired.title")} icon={{type: "icon", icon: "icon-error"}} className="mb-4" />
+        <p className="pb-2">{t("common:auth.sessionExpired.message", { siteTitle: SITE_TITLE })}</p>
+        <Button color="solid" onClick={clearRenewPath} href={target}>{t("common:auth.sessionExpired.continueButton")}</Button>
     </Container>;
 };

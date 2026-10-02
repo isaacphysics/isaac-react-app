@@ -29,8 +29,10 @@ import classNames from "classnames";
 import {SignupTab} from "../elements/panels/SignupTab";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { Trans, useTranslation } from "react-i18next";
 
 export const RegistrationSetPreferences = () => {
+    const { t } = useTranslation();
 
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
@@ -77,7 +79,7 @@ export const RegistrationSetPreferences = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:account.preferences.title")} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={3}/>,
@@ -88,16 +90,15 @@ export const RegistrationSetPreferences = () => {
             <CardBody>
                 {updateCurrentUserError &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading fw-bold">Unable to update your account</p>
+                        <p className="alert-heading fw-bold">{t("common:account.preferences.updateError")}</p>
                         <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                     </ExigentAlert>
                 }
                 <SignupTab
                     leftColumn = {<>
-                        <div className={siteSpecific("h4", "h3")}>Set your preferences</div>
+                        <div className={siteSpecific("h4", "h3")}>{t("common:account.preferences.sectionTitle")}</div>
                         <p>
-                            Answering these questions will help us personalise the platform for you. You can skip this
-                            or change your answers at any time under My Account.
+                            {t("common:account.preferences.description")}
                         </p></>}
                     rightColumn = {<Form onSubmit={submit}>
                         <UserContextAccountInput user={userToUpdate} userContexts={userContexts}
@@ -112,9 +113,9 @@ export const RegistrationSetPreferences = () => {
                             <hr />
                         </>}
 
-                        <Label className={"fw-bold"}>Set your email notification preferences</Label>
-                        <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
-                        <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
+                        <Label className={"fw-bold"}>{t("common:account.preferences.emailLabel")}</Label>
+                        <p>{t("common:account.preferences.emailDescription", { siteTitle: SITE_TITLE })}</p>
+                        <Trans i18nKey="site:account.preferences.emailFrequency" components={{ b: <b /> }} />
                         <div className="py-2"/>
                         <UserEmailPreferencesInput 
                             emailPreferences={emailPreferences} 
@@ -124,10 +125,10 @@ export const RegistrationSetPreferences = () => {
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <Row className="justify-content-end">
                             <Col xs={12} sm={siteSpecific(4,5)} lg={6} className={classNames("d-flex justify-content-end", {"justify-content-lg-end": isAda})}>
-                                <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color="keyline" onClick={() => {continueToAfterAuthPath(user);}}>I&apos;ll do this later</Button>
+                                <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color="keyline" onClick={() => {continueToAfterAuthPath(user);}}>{t("common:account.preferences.skipButton")}</Button>
                             </Col>
                             <Col xs={12} sm={5} lg={6} className="d-flex">
-                                <Button type="submit" className={`btn my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`} color="solid" disabled={!canSavePreferences}>Save preferences</Button>
+                                <Button type="submit" className={`btn my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`} color="solid" disabled={!canSavePreferences}>{t("common:account.preferences.saveButton")}</Button>
                             </Col>
                         </Row>
                     </Form>}

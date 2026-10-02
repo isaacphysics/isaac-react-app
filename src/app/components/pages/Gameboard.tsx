@@ -41,8 +41,10 @@ import { SupersededDeprecatedBoardContentWarning } from "../navigation/Supersede
 import { PageContainer } from "../elements/layout/PageContainer";
 import { SaveBoardButton } from "../elements/SaveBoardButton";
 import { useSetAssignment } from "../../services/setAssignment";
+import { useTranslation } from "react-i18next";
 
 export const Gameboard = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const gameboardId = location.hash ? location.hash.slice(1) : null;
     const gameboardQuery = useGetGameboardByIdQuery(gameboardId || skipToken);
@@ -63,7 +65,7 @@ export const Gameboard = () => {
     const notFoundComponent = <>
         <TitleAndBreadcrumb
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
-            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
+            currentPageTitle={t("site:gameboard.notFound.title")}
             icon={{type: "icon", icon: "icon-error"}}
         />
         <h3 className="my-4">
@@ -75,7 +77,7 @@ export const Gameboard = () => {
         ? <Navigate to={PATHS.QUESTION_FINDER} />
         : <ShowLoadingQuery
             query={gameboardQuery}
-            defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
+            defaultErrorTitle={t("site:gameboard.error.fetchError", { boardId: gameboardId })}
             ifNotFound={notFoundComponent}
             maintainOnRefetch
             placeholder={<Container><LoadingPlaceholder /></Container>}
@@ -83,8 +85,8 @@ export const Gameboard = () => {
                 return <PageContainer className="mb-7" data-bs-theme={singleSubject}
                     pageTitle={
                         <TitleAndBreadcrumb
-                            currentPageTitle={gameboard && gameboard.title || siteSpecific("Question deck", "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
-                            intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
+                            currentPageTitle={gameboard && gameboard.title || t("site:gameboard.title.fallback")} icon={{type: "icon", icon: "icon-question-deck"}}
+                            intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: t("common:gameboard.breadcrumb.assignments"), to: "/assignments"}] : []}
                         />
                     }
                     sidebar={siteSpecific(
@@ -92,7 +94,7 @@ export const Gameboard = () => {
                         undefined
                     )}
                 >
-                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"
+                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText={t("common:gameboard.sidebar.details")}
                         additionalActionButtons={
                             // hide for Ada students, who have no *accessible* page to see saved quizzes
                             !(isAda && isStudent(user)) && <SaveBoardButton 
@@ -116,6 +118,7 @@ interface GameboardContentsProps {
 }
 
 export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: GameboardContentsProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const {openAssignModal} = useSetAssignment(gameboard);
     const user = useAppSelector(selectors.user.orNull);
@@ -145,12 +148,12 @@ export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: Gameb
             ? <Row>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
                     <Button onClick={openAssignModal} color="keyline" block>
-                        {"Set as assignment"}
+                        {t("common:gameboard.actions.setAssignment")}
                     </Button>
                 </Col>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
                     <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboard.id}`}} color="keyline" block>
-                        {"Duplicate and edit"}
+                        {t("common:gameboard.actions.duplicateEdit")}
                     </Button>
                 </Col>
             </Row>
@@ -163,12 +166,12 @@ export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: Gameb
                                 user,
                             }));
                         }}>
-                            {siteSpecific("Save this deck", "Save to My quizzes")}
+                            {t("site:gameboard.actions.save")}
                         </Button>
                         : <Button color="keyline" block tag={Link} to={"/login"} onClick={() => {
                             persistence.save(KEY.AFTER_AUTH_PATH, location.pathname + location.search + location.hash);
                         }}>
-                            {siteSpecific("Log in to save this deck", "Log in to save to My quizzes")}
+                            {t("site:gameboard.actions.saveLogin")}
                         </Button>
                     }
                 </Col>

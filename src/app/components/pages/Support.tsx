@@ -13,6 +13,7 @@ import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
 import { FAQSidebar } from "../elements/sidebar/FAQSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from "react-i18next";
 
 type SupportType = "student" | "teacher" | "tutor";
 
@@ -96,6 +97,7 @@ function supportPath(type?: string, category?: string) {
 }
 
 export const Support = () => {
+    const { t } = useTranslation();
 
     const { type, category } = useParams() as Params;
     const navigate = useNavigate();
@@ -127,12 +129,12 @@ export const Support = () => {
 
     const metaDescriptionMap = siteSpecific(
         {
-            "student": "Find answers to your questions about Isaac Science in our FAQ for students.",
-            "teacher": "Find answers to your questions about Isaac Science in our FAQ for teachers.",
+            "student": t("sci:support.student.metaDescription"),
+            "teacher": t("sci:support.teacher.metaDescription"),
         },
         {
-            "student": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!",
-            "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!",
+            "student": t("ada:support.student.metaDescription"),
+            "teacher": t("ada:support.teacher.metaDescription"),
         });
 
     return <PageContainer
@@ -158,7 +160,7 @@ export const Support = () => {
         {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
         {siteSpecific(
             <>
-                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText="Select a topic"/>
+                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText={t("common:support.selectTopicButton")}/>
                 <TabContent activeTab={categoryIndex}>
                     {Object.values(section.categories).map((category, index) => 
                         <TabPane key={index} tabId={index}>

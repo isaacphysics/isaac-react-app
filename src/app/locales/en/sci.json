@@ -1,5 +1,21 @@
 {
+  "account": {
+    "preferences": {
+      "emailFrequency": "<b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
+    },
+    "title": "My account",
+    "tutorRequest": {
+      "tutorFeaturesLink": "Go to the <tutorFeaturesLink>Tutor features page</tutorFeaturesLink> to start using your new account features."
+    }
+  },
   "assignment": {
+    "fallbackTitle": "Question deck",
+    "fetchError": {
+      "title": "Error fetching question deck with id: {{gameboardId}}"
+    },
+    "notFound": {
+      "title": "Question deck not found"
+    },
     "title": "Set / manage tests"
   },
   "assignments": {
@@ -10,6 +26,9 @@
     "emptyGroupsAlert": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
     "filter": {
       "byName": "Filter question decks by name"
+    },
+    "modal": {
+      "unknownDeck": "Unknown question deck"
     },
     "page": {
       "emptyState": "You have no question decks to view.",
@@ -26,8 +45,182 @@
       },
       "pageTitle": "Assignment progress"
     },
+    "schedule": {
+      "preview": {
+        "hideButton": "Hide question deck preview"
+      },
+      "unknownDeck": "Unknown question deck (may belong to another user)"
+    },
     "scheduleInfo": "Use the <scheduleLink>assignment schedule</scheduleLink> page to view assignments by start date and due date.",
     "title": "Set assignments"
+  },
+  "auth": {
+    "ageCheckFailed": {
+      "ageRestriction": "Unfortunately, we aren't able to offer accounts to students under 10 years old.",
+      "freeAccessNote": "<b>But you can still access the whole site for free!</b> You just won't be able to track your progress.",
+      "returnButton": "Take me back"
+    },
+    "metaDescription": "Log in to Isaac to learn and track your progress.",
+    "notLinked": {
+      "enableSignIn": "If you've not yet enabled sign-in with {{provider}}, first log in with another method (e.g. email and password). Then, on <accountLink>My Account</accountLink>, on \"Security\", next to \"{{providerSetting}}\", click \"Link\"."
+    },
+    "register": {
+      "heading": "Hello!"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageRequirement": "We can only create accounts for users 10 years old or over.",
+        "middleLabel": "10 - 12 years old",
+        "underLabel": "Under 10 years old"
+      }
+    },
+    "registrationSuccess": {
+      "nextButton": "Preferences"
+    },
+    "sso": {
+      "ariaLabel": "Link to Single Sign-On documentation"
+    },
+    "teacherConnect": {
+      "groupInfo": "If you've been given a group code by your teachers, enter it below. This lets your teachers set you work and see your progress. <learnMoreLink>Learn more</learnMoreLink>.",
+      "skipNote": "You can skip this. You don't need to join a group to use Isaac, and you can always do this later from the My Account page."
+    },
+    "teacherRequest": {
+      "emailVerificationLine": "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: {{verificationDetails}}",
+      "verificationUrl": "URL of a page on your school website which shows your name and email address, or your school phone number"
+    }
+  },
+  "books": {
+    "chemistry16": {
+      "chapterA": "Formulae & Equations",
+      "chapterB": "Amount of Substance",
+      "chapterC": "Gas Laws",
+      "chapterD": "Atomic Structure",
+      "chapterE": "Electronic Spectroscopy",
+      "chapterF": "Enthalpy Changes",
+      "chapterG": "Entropy",
+      "chapterH": "Free Energy",
+      "chapterI": "Equilibrium",
+      "chapterJ": "Acids & Bases",
+      "chapterK": "Redox",
+      "chapterL": "Electrochemistry",
+      "chapterM": "Rate Laws, Graphs & Half-life",
+      "helpText": "The Isaac Physics Mastering Essential Pre-University Chemistry book",
+      "title": "Mastering Essential Pre-University Chemistry"
+    },
+    "gcse": {
+      "ch1Subtitle": "(Sections 1-7)",
+      "ch1Title": "Skills",
+      "ch2Subtitle": "(Sections 8-21)",
+      "ch2Title": "Mechanics",
+      "ch3Subtitle": "(Sections 22-29)",
+      "ch3Title": "Electricity",
+      "ch4Subtitle": "(Sections 30-37)",
+      "ch4Title": "Energy",
+      "ch5Subtitle": "(Sections 38-50)",
+      "ch5Title": "Waves and Optics",
+      "ch6Subtitle": "(Sections 51-58)",
+      "ch6Title": "Nuclear",
+      "ch7Subtitle": "(Sections 59-62)",
+      "ch7Title": "Gas",
+      "coverAlt": "Cover of the book.",
+      "title": "Mastering Essential GCSE Physics",
+      "titleHelp": "The Isaac Physics Mastering Essential GCSE Physics book"
+    },
+    "gcseMaths": {
+      "chapter1Subheading": "(Section 1)",
+      "chapter1Title": "Solving Maths Problems",
+      "chapter2Subheading": "(Sections 2-11)",
+      "chapter2Title": "Skills",
+      "chapter3Subheading": "(Sections 12-22)",
+      "chapter3Title": "Algebra",
+      "chapter4Subheading": "(Sections 23-25)",
+      "chapter4Title": "Linear Functions",
+      "chapter5Subheading": "(Sections 26-30)",
+      "chapter5Title": "Quadratic Functions",
+      "chapter6Subheading": "(Sections 31-32)",
+      "chapter6Title": "Inequalities",
+      "chapter7Subheading": "(Sections 33-37)",
+      "chapter7Title": "Graphs",
+      "chapter8Subheading": "(Sections 38-50)",
+      "chapter8Title": "Geometry",
+      "chapter9Subheading": "(Sections 51-57)",
+      "chapter9Title": "Probability and Statistics",
+      "coverAlt": "Cover of the book.",
+      "pageHelp": "The Isaac Physics GCSE Mathematics book",
+      "title": "Using Essential GCSE Mathematics"
+    },
+    "linkingConcepts": {
+      "chapter1": {
+        "subtitle": "(Sections 1-6)",
+        "title": "Mechanics I"
+      },
+      "chapter2": {
+        "subtitle": "(Sections 7-16)",
+        "title": "Electricity and Waves"
+      },
+      "chapter3": {
+        "subtitle": "(Sections 17-20)",
+        "title": "Mechanics II"
+      },
+      "chapter4": {
+        "subtitle": "(Sections 21-25)",
+        "title": "Energy and Fields"
+      },
+      "chapter5": {
+        "subtitle": "(Sections 26-30)",
+        "title": "Vectors, Forces and Fields"
+      },
+      "chapter6": {
+        "subtitle": "(Sections 31-35)",
+        "title": "Gases and Exponentials"
+      },
+      "coverAltText": "Cover of the book.",
+      "helpText": "The Isaac Physics Linking Concepts book",
+      "title": "Linking Concepts in Pre-University Physics"
+    }
+  },
+  "contact": {
+    "events": {
+      "heading": "Upcoming events",
+      "text": "If you'd like to find out more about our upcoming events, visit our <eventsLink>Events Page</eventsLink>"
+    },
+    "metaDescription": "Contact the Isaac team with questions, comments or feedback about our resources."
+  },
+  "events": {
+    "details": {
+      "availability": "Availability:",
+      "bookingDeadline": "Booking deadline:",
+      "location": "Location:",
+      "pageTitle": "Events",
+      "when": "When:"
+    }
+  },
+  "gameboard": {
+    "actions": {
+      "save": "Save this deck",
+      "saveLogin": "Log in to save this deck"
+    },
+    "builder": {
+      "createError": "Unable to create question deck",
+      "helpText": "You can create custom question sets to assign to your groups. Search by question title or topic and add up to ten questions to a question deck.<br/>You cannot modify a question deck after it has been created. You'll find a link underneath any existing question deck to duplicate and edit it.",
+      "idLabel": "Question deck ID",
+      "pageTitle": "Question deck builder",
+      "saveButton": "Save question deck",
+      "tagCreatedIsaac": "Created by Isaac",
+      "titlePlaceholder": "e.g. Year 12 Dynamics"
+    },
+    "error": {
+      "fetchError": "Error fetching question deck with id: {{boardId}}"
+    },
+    "notFound": {
+      "title": "Question deck not found"
+    },
+    "title": {
+      "fallback": "Question deck"
+    }
+  },
+  "glossary": {
+    "metaDescription": "A glossary of important words and phrases used in maths, physics, chemistry and biology."
   },
   "groups": {
     "editor": {
@@ -46,6 +239,37 @@
   "meta": {
     "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.",
     "title": "Isaac Physics"
+  },
+  "news": {
+    "loadMoreButton": "Load older news",
+    "metaDescription": "Get all the latest news about Isaac Science.",
+    "title": "News"
+  },
+  "progress": {
+    "bookAttemptedOutOf": "{{attempted}} attempted out of {{total}}",
+    "bookCorrectOfTotal": "{{correct}} of {{total}}",
+    "bookCorrectOutOf": "{{correct}} correct out of {{total}}",
+    "bookQuestionLabel": "{{bookTitle}} questions",
+    "isaacBooksDescription": "Questions completed correctly, against questions attempted for each of our <booksLink>books</booksLink>.",
+    "isaacBooksTitle": "Isaac Books",
+    "pageTitle": "My progress",
+    "questionAttemptsCaption": "Question attempts"
+  },
+  "questionFinder": {
+    "filteredIntro": "The questions shown on this page have been filtered to only show those that are relevant to {{contextLabel}}. You can browse all questions <allQuestionsLink>here</allQuestionsLink>.",
+    "intro": "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
+    "metaDescription": "Find physics, maths, chemistry and biology questions by topic and difficulty.",
+    "noResults": "No results.",
+    "pageHelp": "You can find a question by selecting the areas of interest, stage and difficulties.<br/>You can select more than one entry in each area.",
+    "title": "Question finder"
+  },
+  "support": {
+    "student": {
+      "metaDescription": "Find answers to your questions about Isaac Science in our FAQ for students."
+    },
+    "teacher": {
+      "metaDescription": "Find answers to your questions about Isaac Science in our FAQ for teachers."
+    }
   },
   "tests": {
     "feedback": {

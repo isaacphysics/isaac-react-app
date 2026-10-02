@@ -6,6 +6,7 @@ import {isLoggedIn, isTeacherOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 import { PageMetadata } from "../elements/PageMetadata";
+import { useTranslation } from "react-i18next";
 
 interface TeacherFeatureCardProps {
     url: string;
@@ -29,27 +30,28 @@ export const TeacherFeatureCard = (props: TeacherFeatureCardProps) => {
 };
 
 export const TeacherFeatures = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const isDisabled = !isLoggedIn(user) || !isTeacherOrAbove(user);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Teacher features"} icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("common:teacherFeatures.pageTitle")} icon={{type: "icon", icon: "icon-account"}}/>
         <PageMetadata noTitle>
             {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"} className="float-end">
-                {isLoggedIn(user) ? "Upgrade my account" : "Get a teacher account"}
+                {isLoggedIn(user) ? t("common:teacherFeatures.cta.upgradeAccount") : t("common:teacherFeatures.cta.getTeacherAccount")}
             </Button>}
             Isaac provides you with a huge range of resources to support your teaching of science subjects – all for free.
         </PageMetadata>
         <Row className="my-4">
-            <h4>Teacher workflow</h4>
+            <h4>{t("common:teacherFeatures.workflow.title")}</h4>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
                 <TeacherFeatureCard
                     url = "/groups"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#groups"
-                    title = "1. Create a group"
-                    subtitle = "Create and manage class groups, and share them with colleagues."
+                    title = {t("common:teacherFeatures.workflow.createGroupTitle")}
+                    subtitle = {t("common:teacherFeatures.workflow.createGroupSubtitle")}
                     disabled = {isDisabled}
                 />
             </Col>
@@ -73,22 +75,22 @@ export const TeacherFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <h4>Teacher support</h4>
+            <h4>{t("common:teacherFeatures.support.title")}</h4>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
                 <TeacherFeatureCard               
                     url = "/support/teacher/general"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"
-                    title = "Teacher FAQ"
-                    subtitle = "Answers to your questions and how-to guides."
+                    title = {t("common:teacherFeatures.support.faqTitle")}
+                    subtitle = {t("common:teacherFeatures.support.faqSubtitle")}
                 />
             </Col>
             <Col md={6} lg={4}>
                 <TeacherFeatureCard
                     url = "/events?types=teacher"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#use-with-class"
-                    title = "Teacher CPD"
+                    title = {t("common:teacherFeatures.support.cpdTitle")}
                     subtitle = "Free short courses to help you use Isaac: by topic or by level of experience with Isaac."
                 />
             </Col>
@@ -96,14 +98,14 @@ export const TeacherFeatures = () => {
                 <TeacherFeatureCard
                     url = "/teacher_emails"
                     imgSrc = "/assets/phy/icons/computer.svg"
-                    title = "Teacher emails"
-                    subtitle = "Recent start-of-term emails sent to teachers."
+                    title = {t("common:teacherFeatures.support.emailsTitle")}
+                    subtitle = {t("common:teacherFeatures.support.emailsSubtitle")}
                     disabled = {isDisabled}
                 />
             </Col>
         </Row>
         <Row className="my-4">
-            <h4>Teacher resources</h4>
+            <h4>{t("common:teacherFeatures.resources.title")}</h4>
         </Row>
         <Row className="isaac-cards-body mb-7 px-3 row-gap-4">
             <Col md={6} lg={4}>
@@ -111,7 +113,7 @@ export const TeacherFeatures = () => {
                     url = "/pages/order_books"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
                     title = "Isaac books"
-                    subtitle = "Buy one of our Skills Mastery books at cost."
+                    subtitle = {t("common:teacherFeatures.resources.booksSubtitle")}
                 />
             </Col>
             <Col md={6} lg={4}>
@@ -119,14 +121,14 @@ export const TeacherFeatures = () => {
                     url = "/physics/a_level/question_decks"
                     imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
                     title = "Decks by topic"
-                    subtitle = "A selection of our questions organised by topic."
+                    subtitle = {t("common:teacherFeatures.resources.decksSubtitle")}
                 />
             </Col>
             <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
                 <TeacherFeatureCard
                     url = "/events?types=student"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#calendar"
-                    title = "Events"
+                    title = {t("common:teacherFeatures.resources.eventsTitle")}
                     subtitle = "Browse free events for your KS4 and KS5 students."
                 />
             </Col>
@@ -134,7 +136,7 @@ export const TeacherFeatures = () => {
 
         {isDisabled && <div className="d-flex w-100 justify-content-center my-5">
             <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
-                {isLoggedIn(user) ? "Upgrade my account" : "Get a teacher account"}
+                {isLoggedIn(user) ? t("common:teacherFeatures.cta.upgradeAccount") : t("common:teacherFeatures.cta.getTeacherAccount")}
             </Button>
         </div>}
     </Container>;

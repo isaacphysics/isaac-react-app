@@ -7,6 +7,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { HorizontalScroller } from "../elements/inputs/HorizontalScroller";
+import { useTranslation } from "react-i18next";
 
 const sortBySourcePath = (error1: ContentErrorItem, error2: ContentErrorItem) => {
     const path1 = error1.partialContent?.canonicalSourceFile;
@@ -27,9 +28,10 @@ const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number
 };
 
 const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
+    const { t } = useTranslation();
     return <tr key={index}>
         <td className="text-break">
-            <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} title={`Content ID: ${errorRecord.partialContent.id}`} target="_blank" rel="noopener">
+            <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} title={t("common:admin.contentErrors.row.tooltipContentId", { contentId: errorRecord.partialContent.id })} target="_blank" rel="noopener">
                 {errorRecord.partialContent.canonicalSourceFile || errorRecord.partialContent.id}
             </a>
         </td>
@@ -54,6 +56,7 @@ enum CRITICAL_FILTER {
 }
 
 export const AdminContentErrors = () => {
+    const { t } = useTranslation();
     const errorsQuery = useGetContentErrorsQuery();
 
     const params = useQueryParams(true);
@@ -84,47 +87,47 @@ export const AdminContentErrors = () => {
         <Row>
             <Col>
                 <TitleAndBreadcrumb
-                    currentPageTitle="Content errors"
+                    currentPageTitle={t("common:admin.contentErrors.title")}
                     icon={{type: "icon", icon: "icon-tests"}}
                 />
             </Col>
         </Row>
         <ShowLoadingQuery
-            defaultErrorTitle={"Error loading content errors"}
+            defaultErrorTitle={t("common:admin.contentErrors.loadingError")}
             query={errorsQuery}
             thenRender={errors => {
                 return <div>
                     <Row>
                         <Col>
                             <p className="mt-2">
-                                <strong>Content Version:</strong> {errors.currentLiveVersion}
+                                <strong>{t("common:admin.contentErrors.stats.contentVersionLabel")}</strong> {errors.currentLiveVersion}
                             </p>
                             <p>
-                                <strong>Critical errors:</strong> {errors.failedFiles},&nbsp;
-                                <strong>Files with errors:</strong> {errors.brokenFiles},&nbsp;
-                                <strong>Total errors:</strong> {errors.totalErrors}
+                                <strong>{t("common:admin.contentErrors.stats.criticalErrorsLabel")}</strong> {errors.failedFiles},&nbsp;
+                                <strong>{t("common:admin.contentErrors.stats.filesWithErrorsLabel")}</strong> {errors.brokenFiles},&nbsp;
+                                <strong>{t("common:admin.contentErrors.stats.totalErrorsLabel")}</strong> {errors.totalErrors}
                             </p>
                         </Col>
                     </Row>
                     <Row>
                         <Col lg={4} className="mb-2">
                             <Label htmlFor="file-path-filter" className="w-100">
-                                Filter by file path
+                                {t("common:admin.contentErrors.filters.filePathLabel")}
                             </Label>
-                            <Input id="file-path-filter" type="text" defaultValue={pathFilter} onChange={(e) => setPathFilter(e.target.value)} placeholder="Filter errors by file path"/>
+                            <Input id="file-path-filter" type="text" defaultValue={pathFilter} onChange={(e) => setPathFilter(e.target.value)} placeholder={t("common:admin.contentErrors.filters.filePathPlaceholder")}/>
                         </Col>
                         <Col lg={8} className="mb-2">
                             <Label htmlFor="error-message-filter" className="w-100">
-                                Filter by error message
+                                {t("common:admin.contentErrors.filters.errorMessageLabel")}
                             </Label>
-                            <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
+                            <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder={t("common:admin.contentErrors.filters.errorMessagePlaceholder")}/>
                         </Col>
                         <Col lg={6} className="mb-2">
-                            <Label htmlFor="critical-filter-select">Filter by severity</Label>
+                            <Label htmlFor="critical-filter-select">{t("common:admin.contentErrors.filters.severityLabel")}</Label>
                             <StyledSelect
                                 inputId="critical-filter-select"
                                 isMulti
-                                placeholder="None"
+                                placeholder={t("common:admin.contentErrors.filters.nonePlaceholder")}
                                 value={criticalFilter.map(x => ({value: x, label: x}))}
                                 options={[
                                     {value: CRITICAL_FILTER.CRITICAL, label: CRITICAL_FILTER.CRITICAL},
@@ -134,11 +137,11 @@ export const AdminContentErrors = () => {
                             />
                         </Col>
                         <Col lg={6} className="mb-2">
-                            <Label htmlFor="published-filter-select">Filter by published status</Label>
+                            <Label htmlFor="published-filter-select">{t("common:admin.contentErrors.filters.publishedStatusLabel")}</Label>
                             <StyledSelect
                                 inputId="published-filter-select"
                                 isMulti
-                                placeholder="None"
+                                placeholder={t("common:admin.contentErrors.filters.nonePlaceholder")}
                                 value={publishedFilter.map(x => ({value: x, label: x}))}
                                 options={[
                                     {value: PUBLISHED_FILTER.PUBLISHED, label: PUBLISHED_FILTER.PUBLISHED},
@@ -157,10 +160,10 @@ export const AdminContentErrors = () => {
                                     </colgroup>
                                     <tbody>
                                         <tr>
-                                            <th>File</th>
-                                            <th title="Is this file published?">Published</th>
-                                            <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
-                                            <th>List of Error Messages</th>
+                                            <th>{t("common:admin.contentErrors.table.fileHeader")}</th>
+                                            <th title={t("common:admin.contentErrors.table.publishedTooltip")}>{t("common:admin.contentErrors.table.publishedHeader")}</th>
+                                            <th title="Files with critical errors will not be available on Isaac!">{t("common:admin.contentErrors.table.criticalErrorHeader")}</th>
+                                            <th>{t("common:admin.contentErrors.table.errorMessagesHeader")}</th>
                                         </tr>
                                         {errors.errorsList
                                             .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))

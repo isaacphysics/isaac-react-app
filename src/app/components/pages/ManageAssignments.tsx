@@ -49,13 +49,16 @@ import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { ManageAssignmentCard, ManageTestCard } from "../elements/ManageAssignedCards";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const FindDeckButtons = () => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     return <>
         <PageFragment fragmentId={"manage_assignments_set_new_modal_text"} ifNotFound={RenderNothing} />
         <h4 className="mb-3">
-            Find a deck from...
+            {t("common:assignments.manage.findDeckFrom")}
         </h4>
         <Row className="d-flex row-cols-1 row-cols-md-2 row-gap-3 mb-5">
             <Col>
@@ -63,22 +66,22 @@ const FindDeckButtons = () => {
                     void dispatch(closeActiveModal());
                     void dispatch(openIsaacBooksModal());
                 }} block color="keyline" className="px-3">
-                    our books
+                    {t("common:assignments.manage.findOurBooks")}
                 </Button>
             </Col>
             <Col>
                 <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/physics/a_level/question_decks"} block color="keyline" className="px-3">
-                    our topic questions decks
+                    {t("common:assignments.manage.findTopicDecks")}
                 </Button>
             </Col>
             <Col>
                 <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/my_question_decks"} block color="keyline" className="px-3">
-                    your saved decks
+                    {t("common:assignments.manage.findSavedDecks")}
                 </Button>
             </Col>
             <Col>
                 <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={PATHS.GAMEBOARD_BUILDER} block color="keyline" className="px-3">
-                    a new question deck
+                    {t("common:assignments.manage.findNewDeck")}
                 </Button>
             </Col>
         </Row>
@@ -90,9 +93,10 @@ const isValidWork = (a: IAssignmentLike) => {
 };
 
 const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: number; work: ValidWorkWithListingDate[]; initialOpen?: boolean; parentOpen?: boolean}) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState<boolean>(!!initialOpen);
     const {collapsed, setCollapsed, groupsById} = useContext(ManageAssignmentsContext);
-    const groupName = groupsById[groupId]?.groupName ?? "Unknown group";
+    const groupName = groupsById[groupId]?.groupName ?? t("common:assignments.manage.timeline.unknownGroup");
 
     useEffect(() => {
         if (collapsed) setOpen(!!initialOpen);
@@ -106,7 +110,7 @@ const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: numbe
         <div 
             tabIndex={0} 
             role={"button"} 
-            aria-label={(open ? "Collapse" : "Expand") + ` list for group ${groupName}`} 
+            aria-label={(open ? t("common:assignments.manage.timeline.collapse") : t("common:assignments.manage.timeline.expand")) + t("common:assignments.manage.timeline.listForGroup", { groupName })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -145,6 +149,7 @@ const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: numbe
 const dateHexagon = calculateHexagonProportions(20, 1);
 
 const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDate[]}) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState<boolean>(false);
     const {collapsed, setCollapsed, viewBy} = useContext(ManageAssignmentsContext);
     const assignmentCount = useMemo(() => work.filter(isAssignment).length, [work]);
@@ -170,7 +175,7 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
 
     return <>
         <div 
-            tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} 
+            tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.manage.timeline.collapse") : t("common:assignments.manage.timeline.expand")) + t("common:assignments.manage.timeline.listForDay", { date })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -197,9 +202,9 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
                     {" "}⋅{" "}
                     {numGroups} group{numGroups > 1 ? "s" : ""}
                     {" "}⋅{" "}
-                    {assignmentCount > 0 && <>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}</>}
+                    {assignmentCount > 0 && <>{t("common:assignments.manage.timeline.assignmentCount", { count: assignmentCount })}</>}
                     {assignmentCount > 0 && testCount > 0 && " and "}
-                    {testCount > 0 && <>{testCount} test{testCount > 1 ? "s" : ""}</>}
+                    {testCount > 0 && <>{t("common:assignments.manage.timeline.testCount", { count: testCount })}</>}
                     {viewBy === "startDate" ? " set" : " due"}
                 </span>
                 <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": open})} />
@@ -222,6 +227,7 @@ const shouldOpenMonth = (year: number, month: number) => {
     return (new Date()).getMonth() === month && (new Date()).getFullYear() === year;
 };
 const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number, datesAndWork: [number, ValidWorkWithListingDate[]][]}) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState<boolean>(shouldOpenMonth(year, month));
     const assignmentCount = useMemo(() => datesAndWork.reduce((n, [_, as]) => n + as.filter(isAssignment).length, 0), [datesAndWork]);
     const testCount = useMemo(() => datesAndWork.reduce((n, [_, as]) => n + as.filter(isQuiz).length, 0), [datesAndWork]);
@@ -230,7 +236,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.manage.timeline.collapse") : t("common:assignments.manage.timeline.expand")) + t("common:assignments.manage.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
             className={"month-label w-100 text-end d-flex"} data-testid="month-label" onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -254,9 +260,9 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
             <h4>{`${MONTH_NAMES[month]}`}</h4>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
             <span className={"pt-1 month-assignment-count"}>
-                {assignmentCount > 0 && <>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}</>}
+                {assignmentCount > 0 && <>{t("common:assignments.manage.timeline.assignmentCount", { count: assignmentCount })}</>}
                 {assignmentCount > 0 && testCount > 0 && " and "}
-                {testCount > 0 && <>{testCount} test{testCount > 1 ? "s" : ""}</>}
+                {testCount > 0 && <>{t("common:assignments.manage.timeline.testCount", { count: testCount })}</>}
                 {viewBy === "startDate" ? " set" : " due"}
             </span>
         </div>
@@ -422,19 +428,19 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
     const pageHelp = <span>
-        Use this page to set and manage assigned work for your groups, and view set work as a timeline. You can unassign work, and assign existing work to other groups.
+        {i18next.t("common:assignments.manage.pageHelp")}
     </span>;
 
     const dispatch = useAppDispatch();
 
     const setNewAssignmentModal = () : ActiveModalProps => ({
-        title: "Set a new assignment",
+        title: i18next.t("common:assignments.manage.modalTitle"),
         body: <FindDeckButtons />
     });
 
     return <PageContainer className="mb-7"
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle="Set / manage work" icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
+            <TitleAndBreadcrumb currentPageTitle={i18next.t("common:assignments.manage.pageTitle")} icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
         }
         sidebar={
             <ManageAssignmentsSidebar
@@ -458,7 +464,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
             <PageFragment fragmentId={"help_toptext_manage_assignments"} ifNotFound={RenderNothing} />
         </PageMetadata>
         <ShowLoadingQuery
-            defaultErrorTitle="Error loading assignments and/or question decks"
+            defaultErrorTitle={i18next.t("common:assignments.manage.errorLoading")}
             query={isTeacherOrAbove(user) 
                 ? combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, () => []) 
                 : assignmentsSetByMeQuery
@@ -471,28 +477,27 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                         <CardBody>
                             <Row className={classNames("row-cols-1", { "row-cols-md-2": isTeacherOrAbove(user) })}>
                                 <Col>
-                                    <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><h5 className="mb-0">Set a new assignment</h5></Button>
+                                    <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><h5 className="mb-0">{i18next.t("common:assignments.manage.setNewButton")}</h5></Button>
                                 </Col>
                                 {isTeacherOrAbove(user) && <Col>
-                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><h5 className="mb-0">Set a new test</h5></Button>
+                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><h5 className="mb-0">{i18next.t("common:assignments.manage.setNewTestButton")}</h5></Button>
                                 </Col>}
                             </Row>
                             <div className="section-divider-bold" />
 
                             {/* Groups-related alerts */}
                             {groups && groups.length === 0 && <div className="mt-1">
-                                You have not created any groups to assign work to.
-                                Please <Link to="/groups">create a group here first.</Link>
+                                <Trans i18nKey="common:assignments.manage.noGroups" components={{ createGroupLink: <Link to="/groups" /> }} />
                             </div>}
                             {groups && groups.length > 0 && someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
-                                There is no work matching your filters.
+                                {i18next.t("common:assignments.manage.noMatchingWork")}
                             </div>}
                             {groups && groups.length > 0 && !someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
-                                You have not set any work yet. Use the buttons above to set a new assignment or test.
+                                {i18next.t("common:assignments.manage.noWorkSet")}
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
-                                    Show work before {formatDate(earliestShowDate)}
+                                    {i18next.t("common:assignments.manage.showEarlierWork", { date: formatDate(earliestShowDate) })}
                                 </Button>
                             </div>}
                             {workGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastWorkIsListed})} data-testid="timeline">

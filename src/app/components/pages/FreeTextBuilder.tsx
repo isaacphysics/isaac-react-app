@@ -8,6 +8,7 @@ import {atLeastOne, siteSpecific} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
 import { Container, Form, Card, CardBody, Table, Label, Input, UncontrolledTooltip, Row, Col, Button } from "reactstrap";
 import classNames from "classnames";
+import { Trans, useTranslation } from "react-i18next";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -116,6 +117,7 @@ function isEditableExplanation(explanation?: any) {
 }
 
 export const FreeTextBuilder = () => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const testCaseResponses = useAppSelector((state: AppState) => state && state.testQuestions || []);
 
@@ -144,7 +146,7 @@ export const FreeTextBuilder = () => {
     const atLeastOneQuestionChoiceAndTestCase = atLeastOne(cleanQuestionChoices.length) && atLeastOne(cleanTestCases.length);
 
     return <Container>
-        <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" icon={{type: "icon", icon: "icon-concept"}} />
+        <TitleAndBreadcrumb className="mb-4" currentPageTitle={t("common:freeTextBuilder.title")} icon={{type: "icon", icon: "icon-concept"}} />
         <Form onSubmit={(event: React.FormEvent) => {
             if (event) {event.preventDefault();}
             if (atLeastOneQuestionChoiceAndTestCase) {
@@ -154,16 +156,16 @@ export const FreeTextBuilder = () => {
         }}>
             <Card className="mb-4">
                 <CardBody>
-                    <h2 className="h3">Matching rules</h2>
+                    <h2 className="h3">{t("common:freeTextBuilder.matchingRules.title")}</h2>
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
                             'GUI': <Table className="mb-3">
-                                <thead><tr><th>Rule</th><th colSpan={3}>Response</th></tr></thead>
+                                <thead><tr><th>{t("common:freeTextBuilder.matchingRules.table.ruleColumn")}</th><th colSpan={3}>{t("common:freeTextBuilder.matchingRules.table.responseColumn")}</th></tr></thead>
                                 <tbody>
                                     {questionChoices.map(choice => <tr key={choice.choiceNumber}>
                                         <td>
                                             <Label className="mb-3 w-100">
-                                                Value
+                                                {t("common:freeTextBuilder.matchingRules.table.valueLabel")}
                                                 <div className="d-flex align-items-center">
                                                     <Input
                                                         className="w-100" type="text" value={choice.value}
@@ -176,19 +178,19 @@ export const FreeTextBuilder = () => {
                                                 <div className="text-start">
                                                     <Table>
                                                         <thead>
-                                                            <tr><th className="text-light" colSpan={2}>In-word wildcards:</th></tr>
+                                                            <tr><th className="text-light" colSpan={2}>{t("common:freeTextBuilder.matchingRules.tooltip.wildcardsTitle")}</th></tr>
                                                         </thead>
                                                         <tr>
                                                             <td><strong><code className="text-dark">|</code></strong></td>
-                                                            <td className="text-light">Separate an OR list of word choices.</td>
+                                                            <td className="text-light">{t("common:freeTextBuilder.matchingRules.tooltip.orList")}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong><code className="text-dark">.</code></strong></td>
-                                                            <td className="text-light">Match only one character.</td>
+                                                            <td className="text-light">{t("common:freeTextBuilder.matchingRules.tooltip.singleChar")}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong><code className="text-dark">*</code></strong></td>
-                                                            <td className="text-light">Match zero or more characters.</td>
+                                                            <td className="text-light">{t("common:freeTextBuilder.matchingRules.tooltip.multiChar")}</td>
                                                         </tr>
                                                     </Table>
                                                 </div>
@@ -196,22 +198,22 @@ export const FreeTextBuilder = () => {
                                             <Row>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
-                                                        <Label>Ignore case {checkMark(choice.caseInsensitive)}</Label>
+                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.ignoreCase", { checkmark: checkMark(choice.caseInsensitive) })}</Label>
                                                     </Button>
                                                 </Col>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
-                                                        <Label>Any order {checkMark(choice.allowsAnyOrder)}</Label>
+                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.anyOrder", { checkmark: checkMark(choice.allowsAnyOrder) })}</Label>
                                                     </Button>
                                                 </Col>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
-                                                        <Label>Extra words {checkMark(choice.allowsExtraWords)}</Label>
+                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.extraWords", { checkmark: checkMark(choice.allowsExtraWords) })}</Label>
                                                     </Button>
                                                 </Col>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
-                                                        <Label>Misspelling {checkMark(choice.allowsMisspelling)}</Label>
+                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.misspelling", { checkmark: checkMark(choice.allowsMisspelling) })}</Label>
                                                     </Button>
                                                 </Col>
                                             </Row>
@@ -223,7 +225,7 @@ export const FreeTextBuilder = () => {
                                         </td>
                                         <td>
                                             <Label>
-                                                Feedback:
+                                                {t("common:freeTextBuilder.matchingRules.table.feedbackLabel")}
                                                 {isEditableExplanation(choice.explanation) ?
                                                     <Input
                                                         type="textarea" value={(choice.explanation as any).children[0].value}
@@ -240,7 +242,7 @@ export const FreeTextBuilder = () => {
                                         </td>
                                         <td>
                                             <button
-                                                type="button" className="close" aria-label="Delete matching rule"
+                                                type="button" className="close" aria-label={t("common:freeTextBuilder.matchingRules.table.deleteButton")}
                                                 onClick={() => setQuestionChoices(questionChoices.filter(choiceInState => choice !== choiceInState))}
                                             >×</button>
                                         </td>
@@ -250,14 +252,14 @@ export const FreeTextBuilder = () => {
                                     <tr>
                                         <td colSpan={4} className="text-center pb-3">
                                             <Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
-                                                <img src="/assets/common/icons/add_circle_outline.svg" alt="Add matching rule" />
+                                                <img src="/assets/common/icons/add_circle_outline.svg" alt={t("common:freeTextBuilder.matchingRules.table.addButton")} />
                                             </Button>
                                         </td>
                                     </tr>
                                 </tfoot>
                             </Table>,
                             "JSON": <div className="mb-3">
-                                <p>JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion</p>
+                                <p><Trans i18nKey="common:freeTextBuilder.matchingRules.json.description" components={{ strong: <strong /> }} /></p>
                                 <Input
                                     type="textarea" rows={25} className={jsonParseError ? "alert-danger" : ""}
                                     value={questionChoicesJson}
@@ -276,7 +278,7 @@ export const FreeTextBuilder = () => {
                                             }
                                         }}
                                     >
-                                        Submit
+                                        {t("common:freeTextBuilder.matchingRules.json.submitButton")}
                                     </Button>
                                 </div>
                             </div>
@@ -287,17 +289,17 @@ export const FreeTextBuilder = () => {
 
             <Card className="mb-4">
                 <CardBody>
-                    <h2 className="h3">Test answers ({numberOfResponseMatches}/{testCases.length})</h2>
+                    <h2 className="h3">{t("common:freeTextBuilder.testCases.title", { matchCount: numberOfResponseMatches, totalCount: testCases.length })}</h2>
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
                             'GUI': <Table className="mb-2">
                                 <thead>
                                     <tr>
-                                        <th className="w-10 text-center">Expected</th>
-                                        <th>Value</th>
-                                        <th className="bg-light w-10 text-center">Actual</th>
-                                        <th className="bg-light w-20">Feedback</th>
-                                        <th className="bg-light w-10 text-center">Match</th>
+                                        <th className="w-10 text-center">{t("common:freeTextBuilder.testCases.table.expectedColumn")}</th>
+                                        <th>{t("common:freeTextBuilder.testCases.table.valueColumn")}</th>
+                                        <th className="bg-light w-10 text-center">{t("common:freeTextBuilder.testCases.table.actualColumn")}</th>
+                                        <th className="bg-light w-20">{t("common:freeTextBuilder.testCases.table.feedbackColumn")}</th>
+                                        <th className="bg-light w-10 text-center">{t("common:freeTextBuilder.testCases.table.matchColumn")}</th>
                                         <th className="bg-light"/>
                                     </tr>
                                 </thead>
@@ -333,7 +335,7 @@ export const FreeTextBuilder = () => {
                                             </td>
                                             <td className={`${matchFailure ? "alert-danger" : "bg-light"}`}>
                                                 <button
-                                                    type="button" className="close" aria-label="Delete matching rule"
+                                                    type="button" className="close" aria-label={t("common:freeTextBuilder.testCases.table.deleteButton")}
                                                     onClick={() => setTestCases(testCases.filter(testCaseInState => testCase !== testCaseInState))}
                                                 >×</button>
                                             </td>
@@ -344,14 +346,14 @@ export const FreeTextBuilder = () => {
                                     <tr>
                                         <td colSpan={6} className="text-center pb-3">
                                             <Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
-                                                <img src="/assets/common/icons/add_circle_outline.svg" alt="Add matching rule" />
+                                                <img src="/assets/common/icons/add_circle_outline.svg" alt={t("common:freeTextBuilder.testCases.table.addButton")} />
                                             </Button>
                                         </td>
                                     </tr>
                                 </tfoot>
                             </Table>,
                             'CSV': <div className="mb-3">
-                                <p>Enter test cases as CSV with the headers: expected(true/false), value</p>
+                                <p>{t("common:freeTextBuilder.testCases.csv.description")}</p>
                                 <Input type="textarea" rows={10} value={testCasesCsv} onChange={event => {
                                     setCsvParseError(false);
                                     setTestCasesCsv(event.target.value);
@@ -367,7 +369,7 @@ export const FreeTextBuilder = () => {
                                             }
                                         }}
                                     >
-                                        Submit
+                                        {t("common:freeTextBuilder.testCases.csv.submitButton")}
                                     </Button>
                                 </div>
                             </div>
@@ -377,7 +379,7 @@ export const FreeTextBuilder = () => {
             </Card>
 
             <div className="mb-7 text-center">
-                <Button type="submit" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}>Test question</Button>
+                <Button type="submit" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}>{t("common:freeTextBuilder.submitButton")}</Button>
             </div>
         </Form>
     </Container>;

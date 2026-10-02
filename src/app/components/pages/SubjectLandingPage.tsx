@@ -17,6 +17,7 @@ import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
 import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { Trans, useTranslation } from "react-i18next";
 
 const loadingPlaceholder = <ul className="w-100 list-group ">
     <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
@@ -25,6 +26,7 @@ const loadingPlaceholder = <ul className="w-100 list-group ">
 </ul>;
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
+    const { t } = useTranslation();
     const [randomSeed, setRandomSeed] = useState(nextSeed);
 
     const handleGetDifferentQuestion = () => setRandomSeed(nextSeed);
@@ -63,15 +65,15 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
-            <h4 className="m-0">Try a random question!</h4>
+            <h4 className="m-0">{t("common:homepage.randomQuestion.title")}</h4>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
-                Get a different question
+                {t("common:homepage.randomQuestion.differentButton")}
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
         <ShowLoadingQuery
             query={searchQuestionsQuery}
-            defaultErrorTitle="Unable to load question"
+            defaultErrorTitle={t("common:homepage.randomQuestion.errorTitle")}
             placeholder={loadingPlaceholder}
             thenRender={({ results: questions }) => {
                 const question = questions?.[0];
@@ -85,7 +87,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     } as ContentSummaryDTO]}/>
                     : <ul className="w-100 list-group ">
                         <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
-                            <span>No questions found.</span>
+                            <span>{t("common:homepage.randomQuestion.emptyState")}</span>
                         </li>
                     </ul>;
             }}
@@ -101,6 +103,7 @@ interface FooterRowProps {
 }
 
 const FooterRow = ({context, books, news, events}: FooterRowProps) => {
+    const { t } = useTranslation();
     // this should be used under the assumption that the above props have been fetched; they may still be undefined, but they will not change
 
     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
@@ -120,7 +123,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             {books?.length
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                        <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
+                        <h4 className="m-0"><Trans i18nKey="common:homepage.books.title" components={{ emphasis: <span className="text-theme" /> }} values={{ bookCount: books.length }} /></h4>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <Col className={classNames("item-list-container", {"flex-column": !fullWidthBooks})}>
@@ -128,14 +131,14 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                             {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
                         </Row>
                         <Row className="px-7 mx-0">
-                            {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">View more books</Button>}
+                            {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">{t("common:homepage.books.viewMore")}</Button>}
                         </Row>
                     </Col>
                 </>
                 : <>
                     <div className="d-flex flex-column">
                         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                            <h4>News & Features</h4>
+                            <h4>{t("common:homepage.news.title")}</h4>
                             <div className="section-divider-bold flex-grow-1"/>
                         </div>
                         {news && <Row className="h-100">
@@ -149,7 +152,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
         </div>
         {!!relevantEvents?.length && <div className="d-flex flex-column mt-3">
             <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                <h4 className="m-0">Events <span className="text-theme">({relevantEvents.length})</span></h4>
+                <h4 className="m-0"><Trans i18nKey="common:homepage.events.title" components={{ emphasis: <span className="text-theme" /> }} values={{ eventCount: relevantEvents.length }} /></h4>
                 <div className="section-divider-bold flex-grow-1"/>
             </div>
             <Row className="h-100 item-list-container">
@@ -188,10 +191,11 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
 };
 
 export const SubjectLandingPage = () => {
+    const { t } = useTranslation();
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
     const title = (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.includes(STAGE.A_LEVEL))
-        ? "A Level Maths and Further Maths" : getHumanContext(pageContext);
+        ? t("common:homepage.title.aLevelMaths") : getHumanContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb

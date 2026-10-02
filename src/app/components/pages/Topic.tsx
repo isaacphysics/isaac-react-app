@@ -16,8 +16,10 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import { IntendedAudienceWarningAlert } from "../elements/alerts/IntendedAudienceWarningAlert";
+import { Trans, useTranslation } from "react-i18next";
 
 export const Topic = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const {topicName=null} = useParams();
     
@@ -55,12 +57,12 @@ export const Topic = () => {
                 <Col className={"py-0 mw-760"}>
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
-                            <CardTitle>Gameboards</CardTitle>
-                            <p>You can work through individual questions or try a group of questions by clicking on the topic gameboards below.</p>
+                            <CardTitle>{t("common:topics.gameboards.title")}</CardTitle>
+                            <p>{t("common:topics.gameboards.description")}</p>
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
-                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>Preview</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>Assign</Link>
+                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>{t("common:topics.gameboards.previewLink")}</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>{t("common:topics.gameboards.assignLink")}</Link>
                                     </li>
                                 }
                                 {(!user?.loggedIn || user?.role === "STUDENT") &&
@@ -77,7 +79,7 @@ export const Topic = () => {
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="keyline" size="lg" block>
-                                <span className="d-none d-md-inline">Back to</span> {" "} All topics
+                                <Trans i18nKey="common:topics.page.backButton" components={{ responsivePrefix: <span className="d-none d-md-inline" /> }} />
                             </Button>
                         </Col>
                     </Row>

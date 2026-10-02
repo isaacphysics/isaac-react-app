@@ -167,11 +167,11 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-file icon-sm me-2"} color="secondary"/>
-                    {groupBoardAssignments?.length} assignment{groupBoardAssignments?.length !== 1 ? "s" : ""}
+                    {t("common:groups.progress.assignmentCount", { count: groupBoardAssignments?.length })}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-school icon-sm me-2"} color="secondary"/>
-                    {groupQuizAssignments?.length} test{groupQuizAssignments?.length !== 1 ? "s" : ""}
+                    {t("common:groups.progress.testCount", { count: groupQuizAssignments?.length })}
                 </div>
             </CardBody>
         </Card>

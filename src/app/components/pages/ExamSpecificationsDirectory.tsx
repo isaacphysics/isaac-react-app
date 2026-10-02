@@ -3,12 +3,14 @@ import {Button, Card, CardBody, CardFooter, CardText, CardTitle, Col, Container,
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Link} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 
 export const ExamSpecificationsDirectory = () => {
+    const { t } = useTranslation();
     return <Container className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={"Exam specifications"}/>
-        <MetaDescription description="Discover our free A level computer science topics and questions."/>
+        <TitleAndBreadcrumb currentPageTitle={t("common:examSpecifications.directory.title")}/>
+        <MetaDescription description={t("common:examSpecifications.directory.metaDescription")}/>
         <Row className={"justify-content-center d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-xl-4 my-3"}>
             <Col className={"my-3"}>
                 <Card className={"cs-card-plain w-100"}>
@@ -18,14 +20,14 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>Core</li>
-                                <li>Advanced</li>
+                                <li>{t("common:examSpecifications.directory.ada.core")}</li>
+                                <li>{t("common:examSpecifications.directory.ada.advanced")}</li>
                             </ul>
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
                         <Button className="justify-content-end" color="keyline" tag={Link} to="/exam_specifications_ada">
-                            Show me
+                            {t("common:examSpecifications.directory.showButton")}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -38,15 +40,15 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>GCSE</li>
-                                <li>A Level</li>
+                                <li>{t("common:examSpecifications.directory.england.gcses")}</li>
+                                <li>{t("common:examSpecifications.directory.england.aLevel")}</li>
                             </ul>
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
                         <Button className="justify-content-end" color="keyline" tag={Link}
                             to="/exam_specifications_england">
-                            Show me
+                            {t("common:examSpecifications.directory.showButton")}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -59,15 +61,15 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>National 5</li>
-                                <li>Higher</li>
-                                <li>Advanced Higher</li>
+                                <li>{t("common:examSpecifications.directory.scotland.national5")}</li>
+                                <li>{t("common:examSpecifications.directory.scotland.higher")}</li>
+                                <li>{t("common:examSpecifications.directory.scotland.advancedHigher")}</li>
                             </ul>
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
                         <Button color="keyline" tag={Link} to="/exam_specifications_scotland">
-                            Show me
+                            {t("common:examSpecifications.directory.showButton")}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -80,13 +82,13 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>GCSE</li>
-                                <li>A Level</li>
+                                <li>{t("common:examSpecifications.directory.wales.gcses")}</li>
+                                <li>{t("common:examSpecifications.directory.wales.aLevel")}</li>
                             </ul>
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button color="keyline" tag={Link} to="/exam_specifications_wales">Show me</Button>
+                        <Button color="keyline" tag={Link} to="/exam_specifications_wales">{t("common:examSpecifications.directory.showButton")}</Button>
                     </CardFooter>
                 </Card>
             </Col>

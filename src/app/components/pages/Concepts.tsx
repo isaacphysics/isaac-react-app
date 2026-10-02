@@ -16,6 +16,8 @@ import { ResultsListContainer, ResultsListHeader } from "../elements/ListResults
 import { FilterSummary } from "./QuestionFinder";
 import { GenericConceptsListingSidebar, SubjectSpecificConceptsListingSidebar } from "../elements/sidebar/ConceptsListingSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { Trans } from "react-i18next";
+import i18next from "i18next";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -144,7 +146,7 @@ export const Concepts = () => {
     return (
         <PageContainer id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
             pageTitle={<TitleAndBreadcrumb 
-                currentPageTitle="Concepts" 
+                currentPageTitle={i18next.t("common:concepts.title")} 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
                 icon={{type: "icon", icon: "icon-concept"}}
             />}
@@ -159,11 +161,10 @@ export const Concepts = () => {
                 {pageContext?.subject 
                     ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
                         <p className="me-0 me-lg-3">
-                            The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
-                            You can browse all concepts <Link to="/concepts">here</Link>.
+                            <Trans i18nKey="common:concepts.filteredIntro" components={{ allConceptsLink: <Link to="/concepts" /> }} values={{ contextDescription: getHumanContext(pageContext) }} />
                         </p>
                     </div> 
-                    : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
+                    : <p>{i18next.t("common:concepts.genericIntro")}</p>
                 }
             </PageMetadata>
             {isPhy && !pageContext?.subject && (!pageContext?.stage || pageContext.stage.length === 0) && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
@@ -177,16 +178,16 @@ export const Concepts = () => {
 
                         return <>
                             {!!shortcutAndFilteredSearchResults.length && <ResultsListHeader>
-                                Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
+                                <Trans i18nKey="common:concepts.resultsCount" components={{ b: <b /> }} values={{ count: shortcutAndFilteredSearchResults.length }} />
                             </ResultsListHeader>}
 
                             {shortcutAndFilteredSearchResults.length
                                 ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
-                                : <em>No results found</em>
+                                : <em>{i18next.t("common:concepts.noResults")}</em>
                             }
                         </>;
                     }}
-                    defaultErrorTitle="Error fetching concepts"
+                    defaultErrorTitle={i18next.t("common:concepts.errorFetching")}
                 />
             </ResultsListContainer>
         </PageContainer>

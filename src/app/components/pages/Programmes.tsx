@@ -7,6 +7,7 @@ import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { siteSpecific } from "../../services";
 import { Col } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
     new Promise((resolve) =>
@@ -72,6 +73,7 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
 
 
 export const Programmes = () => {
+    const { t } = useTranslation();
     const [programmes, setProgrammes] = useState<IsaacProgrammeDTO[]>([]);
 
     useEffect(() => {
@@ -91,7 +93,7 @@ export const Programmes = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:programmes.page.title")} icon={{type: "icon", icon: "icon-events"}} />
         }
         sidebar={siteSpecific(
             <ProgrammesSidebar programmes={programmes} />,

@@ -11,6 +11,7 @@ import { isTutorOrAbove, siteSpecific, UserNotification, useUserNotifications } 
 import { selectors, useAppSelector } from "../../state";
 import { AdaNotification } from "../elements/Notification";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
+import { useTranslation } from "react-i18next";
 
 export const Overview = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -19,6 +20,7 @@ export const Overview = () => {
 };
 
 const Notifications = ({notifications}: {notifications: UserNotification[]}) => {
+    const { t } = useTranslation();
     const [expandNotifications, setExpandNotifications] = useState(false);
 
     return <>
@@ -28,19 +30,20 @@ const Notifications = ({notifications}: {notifications: UserNotification[]}) => 
         </CollapsibleContainer>
         <div className="text-center">
             {notifications.length > 3 && <button className="btn btn-link" onClick={() => setExpandNotifications(e => !e)}>
-                {expandNotifications ? "Show fewer notifications" : `Show all ${notifications.length} notifications`}
+                {expandNotifications ? t("common:notifications.toggle.collapseButton") : t("common:notifications.toggle.expandButton", { count: notifications.length })}
             </button>}
         </div>
     </>;
 };
 
 export const TeacherOverview = () => {
+    const { t } = useTranslation();
     useTeacherOnboardingModal();
     const {notifications, workCounts} = useUserNotifications();
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={"Overview"} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:overview.page.title")} />
         }
         sidebar={siteSpecific(
             undefined,
@@ -55,71 +58,71 @@ export const TeacherOverview = () => {
             <GetStartedWithAda />
         </section>
         <section id="browse" className="py-3">
-            <h2>Browse Ada CS</h2>
+            <h2>{t("common:overview.browse.sectionTitle")}</h2>
             <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                 <IconCard className={"without-margin"} card={{
-                    title: "Student groups",
+                    title: t("common:overview.teacher.groups.title"),
                     icon: {name: "icon-group", color: "secondary"},
-                    bodyText: "Organise your students into groups so you can set appropriate work.",
+                    bodyText: t("common:overview.teacher.groups.description"),
                     clickUrl: "/groups",
-                    buttonText: "Manage groups",
+                    buttonText: t("common:overview.teacher.groups.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Quizzes",
+                    title: t("common:overview.teacher.quizzes.title"),
                     icon: {name: "icon-file", color: "secondary"},
-                    bodyText: "Create self-marking quizzes and assign them to your students.",
+                    bodyText: t("common:overview.teacher.quizzes.description"),
                     clickUrl: "/quizzes/set",
-                    buttonText: "Assign a quiz",
+                    buttonText: t("common:overview.teacher.quizzes.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Tests",
+                    title: t("common:overview.teacher.tests.title"),
                     icon: {name: "icon-school", color:"secondary"},
-                    bodyText: "Set a test curated by the Ada Computer Science team.",
+                    bodyText: t("common:overview.teacher.tests.description"),
                     clickUrl: "/set_tests",
-                    buttonText: "Set a test",
+                    buttonText: t("common:overview.teacher.tests.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Review your markbook",
+                    title: t("common:overview.teacher.markbook.title"),
                     icon: {name: "icon-done-all", color: "secondary"},
-                    bodyText: "Track student progress and pinpoint areas to work on.",
+                    bodyText: t("common:overview.teacher.markbook.description"),
                     clickUrl: "/my_markbook",
-                    buttonText: "View markbook",
+                    buttonText: t("common:overview.teacher.markbook.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Assigned to me",
+                    title: t("common:overview.teacher.assigned.title"),
                     icon: {name: "icon-person-check", color: "secondary"},
                     tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
-                    bodyText: "If you join a group for your development, this is where you’ll find quizzes assigned to you.",
+                    bodyText: t("common:overview.teacher.assigned.description"),
                     clickUrl: "/assignments",
-                    buttonText: "Work for you",
+                    buttonText: t("common:overview.teacher.assigned.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Account",
+                    title: t("common:overview.teacher.account.title"),
                     icon: {name: "icon-settings", color: "secondary"},
-                    bodyText: "Manage all aspects of your account, from content settings to notification preferences.",
+                    bodyText: t("common:overview.teacher.account.description"),
                     clickUrl: "/account",
-                    buttonText: "Account settings",
+                    buttonText: t("common:overview.teacher.account.buttonLabel"),
                     buttonStyle: "link"
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Teacher mentoring",
+                    title: t("common:overview.teacher.mentoring.title"),
                     icon: {name: "icon-group", color: "secondary"},
-                    bodyText: "Participate in live sessions with an experienced Ada CS mentor to get advice on teaching core topics.",
+                    bodyText: t("common:overview.teacher.mentoring.description"),
                     clickUrl: "/teacher_mentoring",
-                    buttonText: "Learn more",
+                    buttonText: t("common:overview.teacher.mentoring.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Need help?",
+                    title: t("common:overview.teacher.support.title"),
                     icon: {name: "icon-help", color: "secondary"},
-                    bodyText: "Our teacher support page has useful information for common questions and issues.",
+                    bodyText: t("common:overview.teacher.support.description"),
                     clickUrl: "/support/teacher/general",
-                    buttonText: "Teacher support",
+                    buttonText: t("common:overview.teacher.support.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
             </ColumnSlice>
@@ -132,11 +135,12 @@ export const TeacherOverview = () => {
 };
 
 export const StudentOverview = () => {
+    const { t } = useTranslation();
     const {notifications, workCounts} = useUserNotifications();
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={"Overview"} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:overview.page.title")} />
         }
         sidebar={siteSpecific(
             undefined,
@@ -148,73 +152,73 @@ export const StudentOverview = () => {
             <Notifications notifications={notifications} />
         </section>
         <section id="browse" className="py-3">
-            <h2>Browse Ada CS</h2>
+            <h2>{t("common:overview.browse.sectionTitle")}</h2>
             <ColumnSlice className={"row-cols-lg-4 row-cols-md-2 mt-3"}>
                 <IconCard className={"without-margin"} card={{
-                    title: "Assigned to me",
+                    title: t("common:overview.student.assigned.title"),
                     icon: {name: "icon-person-check", color: "secondary"},
                     tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
-                    bodyText: "This is where you’ll find assignments that have been assigned to you.",
+                    bodyText: t("common:overview.student.assigned.description"),
                     clickUrl: "/assignments",
-                    buttonText: "Work for you",
+                    buttonText: t("common:overview.student.assigned.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Tests",
+                    title: t("common:overview.student.tests.title"),
                     icon: {name: "icon-school", color:"secondary"},
                     tag: workCounts.tests > 0 ? `${workCounts.tests} to do` : undefined,
-                    bodyText: "This is where you’ll find tests that have been set for you.",
+                    bodyText: t("common:overview.student.tests.description"),
                     clickUrl: "/tests",
-                    buttonText: "View tests",
+                    buttonText: t("common:overview.student.tests.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "My progress",
+                    title: t("common:overview.student.progress.title"),
                     icon: {name: "icon-done-all", color: "secondary"},
-                    bodyText: "Track your progress over time and pinpoint areas to work on.",
+                    bodyText: t("common:overview.student.progress.description"),
                     clickUrl: "/progress",
-                    buttonText: "View progress",
+                    buttonText: t("common:overview.student.progress.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Account",
+                    title: t("common:overview.teacher.account.title"),
                     icon: {name: "icon-settings", color: "secondary"},
-                    bodyText: "Manage all aspects of your account, from content settings to notification preferences.",
+                    bodyText: t("common:overview.teacher.account.description"),
                     clickUrl: "/account",
-                    buttonText: "Account settings",
+                    buttonText: t("common:overview.teacher.account.buttonLabel"),
                     buttonStyle: "link"
                 }}/>
                 {/* --- end of sidebar options --- */}
                 <IconCard className={"without-margin"} card={{
-                    title: "Topics",
+                    title: t("common:overview.student.topics.title"),
                     icon: {name: "icon-lightbulb-empty", color: "secondary"},
-                    bodyText: "Browse all the topics in Ada CS.",
+                    bodyText: t("common:overview.student.topics.description"),
                     clickUrl: "/topics",
-                    buttonText: "Browse topics",
+                    buttonText: t("common:overview.student.topics.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Questions",
+                    title: t("common:overview.student.questions.title"),
                     icon: {name: "icon-search", color: "secondary"},
-                    bodyText: "Explore our question bank to find questions to practice on any topic.",
+                    bodyText: t("common:overview.student.questions.description"),
                     clickUrl: "/questions",
-                    buttonText: "Find questions",
+                    buttonText: t("common:overview.student.questions.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Projects",
+                    title: t("common:overview.student.projects.title"),
                     icon: {name: "icon-globe", color: "secondary"},
-                    bodyText: "Take on larger-scale projects to develop your skills in a practical context.",
+                    bodyText: t("common:overview.student.projects.description"),
                     clickUrl: "/projects",
-                    buttonText: "Browse projects",
+                    buttonText: t("common:overview.student.projects.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: "Need help?",
+                    title: t("common:overview.student.support.title"),
                     icon: {name: "icon-help", color: "secondary"},
-                    bodyText: "Our student support page has useful information for common questions and issues.",
+                    bodyText: t("common:overview.student.support.description"),
                     clickUrl: "/support/student/general",
-                    buttonText: "Student support",
+                    buttonText: t("common:overview.student.support.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
             </ColumnSlice>

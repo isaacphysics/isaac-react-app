@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { PageMetadata } from "../elements/PageMetadata";
 import { BooksOverviewSidebar } from "../elements/sidebar/BooksOverviewSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from "react-i18next";
 
 export const BookCard = (book: BookInfo) => {
     return <div className="book-card">
@@ -25,10 +26,11 @@ export const BookCard = (book: BookInfo) => {
 };
 
 export const BooksOverview = () => {
+    const { t } = useTranslation();
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb 
-                currentPageTitle="Our books"
+                currentPageTitle={t("common:books.overview.title")}
                 icon={{type: "icon", icon: "icon-book"}}
             />
         }
@@ -37,11 +39,11 @@ export const BooksOverview = () => {
             undefined
         )}
     >
-        <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText="View all books"/>
+        <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText={t("common:books.overview.sidebarButton")}/>
         <PageFragment fragmentId="books_overview_fragment" />
 
-        <h3>Explore our books online</h3>
-        <span>Click on a book image below to go to the homepage of each book and explore further.</span>
+        <h3>{t("common:books.overview.exploreTitle")}</h3>
+        <span>{t("common:books.overview.exploreDescription")}</span>
         <div className="row mt-3 mb-7 row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xxl-2">
             {ISAAC_BOOKS.filter(b => b.hidden !== BookHiddenState.HIDDEN).map((book, index) => {
                 return <BookCard key={index} {...book} />;

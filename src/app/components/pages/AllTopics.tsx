@@ -13,6 +13,8 @@ import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const renderTopic = (topic: Tag) => {
     if (!topic.hidden) {
@@ -28,8 +30,8 @@ const renderTopic = (topic: Tag) => {
             }
             {" "}
             {topic.comingSoonDate && !topic.new &&
-            <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}
-            {topic.new && !topic.comingSoonDate && <Badge color="secondary">New</Badge>}
+            <Badge color="light" className="border bg-white">{i18next.t("common:topics.badge.comingSoon", { date: topic.comingSoonDate })}</Badge>}
+            {topic.new && !topic.comingSoonDate && <Badge color="secondary">{i18next.t("common:topics.badge.new")}</Badge>}
         </>;
     }
 };
@@ -62,17 +64,18 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
 };
 
 export const AllTopics = () => {
+    const { t } = useTranslation();
     const subcategoryTags = tags.allSubcategoryTags;
 
     const charToCutAt = "D";
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt;});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt;});
 
-    const metaDescription = "Discover our free computer science topics and questions. Learn or revise for your exams with us today.";
+    const metaDescription = t("common:topics.metaDescription");
 
     return <div id={"topics-bg"}>
         <Container className={"mb-4"}>
-            <TitleAndBreadcrumb currentPageTitle={"Topics"} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:topics.title")} />
             <MetaDescription description={metaDescription} />
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">
@@ -90,17 +93,14 @@ export const AllTopics = () => {
             <Container className={"mb-7 p-7 mx-auto"}>
                 <Row className={"align-items-center justify-content-center"}>
                     <Col xs={12} lg={6}>
-                        <h2 className={"font-size-1-75 mb-4"}>Check your understanding</h2>
+                        <h2 className={"font-size-1-75 mb-4"}>{t("common:topics.questionFinder.heading")}</h2>
                         <p>
-                            Using the question finder you can select topics and concepts and we’ll generate a random
-                            selection of questions for you to use. You can also specify your level and exam board.
+                            {t("common:topics.questionFinder.description")}
                         </p>
-                        <p><b>Students</b> might want to try our question finder to revise and get feedback on any
-                            mistakes.</p>
-                        <p><b>Teachers</b> might want to try our question finder to create quizzes and assign them to
-                            students.</p>
+                        <p><Trans i18nKey="common:topics.questionFinder.studentsInfo" components={{ b: <b /> }} /></p>
+                        <p><Trans i18nKey="common:topics.questionFinder.teachersInfo" components={{ b: <b /> }} /></p>
                         <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='dark-primary'>
-                            Try our question finder
+                            {t("common:topics.questionFinder.tryButton")}
                         </Button>
                     </Col>
                     <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>

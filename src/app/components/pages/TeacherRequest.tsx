@@ -35,11 +35,13 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
 import { extractErrorMessage } from '../../services/errors';
+import { Trans, useTranslation } from "react-i18next";
 
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
 export const TeacherRequest = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const error = useAppSelector((state: AppState) => state?.error);
     const errorMessage = extractErrorMessage(error);
@@ -64,18 +66,13 @@ export const TeacherRequest = () => {
     const allowedDomain = isAda || !nonSchoolDomains.some(domain => emailAddress.toLowerCase().includes(domain));
 
     const urn = user?.loggedIn && user.schoolId || "";
-    const subject = "Teacher Account Request";
+    const subject = t("common:auth.teacherRequest.emailSubject");
     const teacherVerificationMethodMessage = siteSpecific(
-        "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails,
+        t("sci:auth.teacherRequest.emailVerificationLine", { verificationDetails }),
         ""
     );
 
-    const message = "Hello,\n\n" +
-        `Please could you convert my ${SITE_TITLE_SHORT} account into a teacher account.` + "\n\n" +
-        "My school is: " + school + "\n" +
-        teacherVerificationMethodMessage + "\n\n\n" +
-        "Any other information: " + otherInformation + "\n\n" +
-        "Thanks, \n\n" + firstName + " " + lastName;
+    const message = t("common:auth.teacherRequest.emailBody", { requestLine: `Please could you convert my ${SITE_TITLE_SHORT} account into a teacher account.`, school, verificationMessage: teacherVerificationMethodMessage, otherInformation, firstName, lastName });
     const isValidEmail = validateEmail(emailAddress);
 
     const [getSchoolById] = useLazyGetSchoolByIdQuery();
@@ -103,12 +100,7 @@ export const TeacherRequest = () => {
 
     // Direct private tutors and parents towards the tutor account request page
     const noSchool = <p>
-        If you don&apos;t have an associated school please fill out our
-        {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
-        form. If you are a private tutor or parent, you can
-        {" "}<Link to="/tutor_account_request">
-            request an {SITE_TITLE} Tutor account
-        </Link>.
+        <Trans i18nKey="common:auth.teacherRequest.noSchool" components={{ contactFormLink: <Link to="/contact?preset=teacherRequest" />, tutorAccountLink: <Link to="/tutor_account_request" /> }} values={{ siteTitle: SITE_TITLE }} />
     </p>;
 
     const invalidDetails = siteSpecific(
@@ -117,7 +109,7 @@ export const TeacherRequest = () => {
     );
 
     return <Container id="contact-page" className="pb-7">
-        <TitleAndBreadcrumb currentPageTitle="Teacher Account request" icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("common:auth.teacherRequest.title")} icon={{type: "icon", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>
@@ -129,11 +121,10 @@ export const TeacherRequest = () => {
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3">
-                                        You already have a teacher account
+                                        {t("common:auth.teacherRequest.alreadyTeacher")}
                                     </span>
                                     <p className="mt-3">
-                                        Go to the <Link to="/support/teacher/general">Teacher FAQ page</Link> to learn about your
-                                        new account features.
+                                        <Trans i18nKey="common:auth.teacherRequest.teacherFaq" components={{ faqLink: <Link to="/support/teacher/general" /> }} />
                                     </p>
                                 </Col>
                             </Row>
@@ -142,11 +133,10 @@ export const TeacherRequest = () => {
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
-                                        Thank you for submitting a teacher account request.
+                                        {t("common:auth.teacherRequest.submitted")}
                                     </p>
                                     <p>
-                                        We will be in touch shortly. Please note that account verification is a manual
-                                        process and may take a few days.
+                                        {t("common:auth.teacherRequest.pending")}
                                     </p>
                                 </Col>
                             </Row>
@@ -171,7 +161,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">First name</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:auth.teacherRequest.firstName")}</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user?.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -179,7 +169,7 @@ export const TeacherRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">Last name</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:auth.teacherRequest.lastName")}</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user?.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -189,7 +179,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">Email address</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:auth.teacherRequest.emailLabel")}</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified || !allowedDomain} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user?.loggedIn ? user.email : ""}
@@ -199,7 +189,7 @@ export const TeacherRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="school-input" className={siteSpecific("form-required", "")}>School</Label>
+                                                <Label htmlFor="school-input" className={siteSpecific("form-required", "")}>{t("common:auth.teacherRequest.school")}</Label>
                                                 <Input disabled id="school-input" type="text" name="school"
                                                     defaultValue={school} invalid={isPhy && typeof school == "undefined"}
                                                     onChange={e => setSchool(e.target.value)} required/>
@@ -209,14 +199,14 @@ export const TeacherRequest = () => {
                                     <Row>
                                         {isPhy && <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="user-verification-input" className="form-required">URL of a page on your school website which shows your name and email address, or your school phone number</Label>
+                                                <Label htmlFor="user-verification-input" className="form-required">{t("sci:auth.teacherRequest.verificationUrl")}</Label>
                                                 <Input id="user-verification-input" type="text" name="user-verification"
                                                     onChange={e => setVerificationDetails(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>}
                                         <Col size={12} md={siteSpecific(6, 12)}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="other-info-input">Any other information</Label>
+                                                <Label htmlFor="other-info-input">{t("common:auth.teacherRequest.otherInfo")}</Label>
                                                 <Input id="other-info-input" type="textarea" name="other-info"
                                                     onChange={e => setOtherInformation(e.target.value)}/>
                                             </FormGroup>
@@ -237,10 +227,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col>
                                             <small className="text-danger text-start">
-                                                You have not provided your school – please add your school on your{" "}
-                                                <Link to="/account">My Account</Link> page.
-                                                If you are a private tutor or parent, you can{" "}
-                                                <Link to="/tutor_account_request">request an {SITE_TITLE} Tutor account</Link>.
+                                                <Trans i18nKey="common:auth.teacherRequest.noSchoolError" components={{ accountLink: <Link to="/account" />, tutorAccountLink: <Link to="/tutor_account_request" /> }} values={{ siteTitle: SITE_TITLE }} />
                                             </small>
                                         </Col>
                                     </Row>
@@ -248,8 +235,7 @@ export const TeacherRequest = () => {
                                     {!allowedDomain &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-start">You have not used your school
-                                            email address – please change your email address on your <Link to="/account">My Account</Link> page.
+                                            <small className="text-danger text-start"><Trans i18nKey="common:auth.teacherRequest.wrongEmailError" components={{ accountLink: <Link to="/account" /> }} />
                                             </small>
                                         </Col>
                                     </Row>
@@ -257,16 +243,16 @@ export const TeacherRequest = () => {
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}><>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}><>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:auth.teacherRequest.submitError" components={{ webmasterContact: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ errorMessage, webmasterEmail: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
-                                                Required field
+                                                {t("common:auth.teacherRequest.requiredField")}
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Button type="submit" color="keyline" disabled={invalidDetails} className='w-100'>Submit</Button>
+                                            <Button type="submit" color="keyline" disabled={invalidDetails} className='w-100'>{t("common:auth.teacherRequest.submit")}</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

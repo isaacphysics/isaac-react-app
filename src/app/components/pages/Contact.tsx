@@ -16,22 +16,15 @@ import {
     Row
 } from "reactstrap";
 import {PotentialUser} from "../../../IsaacAppTypes";
-import {
-    CONTACT_FORM_CHAR_LENGTH_LIMIT,
-    isPhy,
-    isTeacherOrAbove,
-    SITE_TITLE,
-    siteSpecific,
-    SOCIAL_LINKS,
-    validateEmail,
-    WEBMASTER_EMAIL
-} from "../../services";
+import { CONTACT_FORM_CHAR_LENGTH_LIMIT, isPhy, isTeacherOrAbove, SITE_TITLE, SOCIAL_LINKS, validateEmail, WEBMASTER_EMAIL } from "../../services";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Immutable} from "immer";
 import {extractErrorMessage} from '../../services/errors';
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     const urlQuery = queryString.parse(location.search);
@@ -40,25 +33,25 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     let presetPlaceholder = "";
 
     if (urlQuery?.preset === "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
-        presetSubject = "Teacher Account Request";
-        presetMessage = `Hello,\n\nPlease could you convert my ${SITE_TITLE} account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n` + user.givenName + " " + user.familyName;
+        presetSubject = i18next.t("common:contact.preset.teacherAccountSubject");
+        presetMessage = i18next.t("common:contact.preset.teacherAccountMessage", { siteTitle: SITE_TITLE }) + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset === 'accountDeletion' && user?.loggedIn) {
-        presetSubject = "Account Deletion Request";
-        presetMessage = `Hello,\n\nPlease could you delete my ${SITE_TITLE} account.\n\nThanks, \n\n` + user.givenName + " " + user.familyName;
+        presetSubject = i18next.t("common:contact.preset.accountDeletionSubject");
+        presetMessage = i18next.t("common:contact.preset.accountDeletionMessage", { siteTitle: SITE_TITLE }) + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset === 'contentProblem') {
-        presetSubject = "Content problem";
-        presetPlaceholder = "Please describe the problem here.";
+        presetSubject = i18next.t("common:contact.preset.contentProblemSubject");
+        presetPlaceholder = i18next.t("common:contact.preset.contentProblemPlaceholder");
         if (urlQuery?.accordion) {
             presetSubject += ` in "${urlQuery.accordion}"`;
         } else if (urlQuery?.page) {
             presetSubject += ` in "${urlQuery.page}"`;
         }
         if (urlQuery?.section != null) {
-            presetSubject += `, section "${urlQuery.section}"`;
+            presetSubject += i18next.t("common:contact.preset.contentProblemSection", { sectionName: urlQuery.section });
         }
     } else if (urlQuery?.preset === 'notFound') {
-        presetSubject = "Page not found";
-        presetMessage = `Page: "${urlQuery?.page}"\n\n[Add any details about how you found this missing page here.]`;
+        presetSubject = i18next.t("common:contact.preset.pageNotFoundSubject");
+        presetMessage = i18next.t("common:contact.preset.pageNotFoundMessage", { pageName: urlQuery?.page });
     }
     return [
         urlQuery.subject as string || presetSubject,
@@ -68,6 +61,7 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
 };
 
 export const Contact = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const error = useAppSelector((state: AppState) => state?.error);
     const errorMessage = extractErrorMessage(error);
@@ -102,13 +96,11 @@ export const Contact = () => {
     const isValidEmail = validateEmail(email);
     const reachedMaxLength = message.length >= CONTACT_FORM_CHAR_LENGTH_LIMIT; 
 
-    const metaDescription = siteSpecific(
-        "Contact the Isaac team with questions, comments or feedback about our resources.",
-        "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!");
+    const metaDescription = t("site:contact.metaDescription");
 
     return <Container id="contact-page" className="pb-7">
         <TitleAndBreadcrumb 
-            currentPageTitle="Contact us" 
+            currentPageTitle={t("common:contact.title")} 
             icon={{type: "icon", "icon": "icon-contact"}}
         />
         <MetaDescription description={metaDescription}/>
@@ -116,17 +108,17 @@ export const Contact = () => {
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
                     <div>
-                        <h3>Frequently Asked Question?</h3>
-                        <p> You might like to check our FAQs pages to see if they can help you: <a href="/support/student">student FAQs</a> | <a href="/support/teacher">teacher FAQs</a></p>
+                        <h3>{t("common:contact.faq.heading")}</h3>
+                        <p> {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:contact.faq.text" components={{ studentFaqLink: <a href="/support/student" />, teacherFaqLink: <a href="/support/teacher" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
                     </div>
                     {isPhy && <>
-                        <h3>Upcoming events</h3>
-                        <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a></p>
+                        <h3>{t("sci:contact.events.heading")}</h3>
+                        <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="sci:contact.events.text" components={{ eventsLink: <a href="/events" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
                     </>}
-                    <h3>Problems with the site?</h3>
-                    <p>We always want to improve so please report any issues to <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
-                    <h3>Follow us</h3>
-                    <p>Follow us on:</p>
+                    <h3>{t("common:contact.problems.heading")}</h3>
+                    <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:contact.problems.text" components={{ webmasterEmailLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ webmasterEmail: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
+                    <h3>{t("common:contact.social.heading")}</h3>
+                    <p>{t("common:contact.social.text")}</p>
                     {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
                 </Col>
                 <Col size={12} md={{size: 9, order: 2}} xs={{order: 1}}>
@@ -135,7 +127,7 @@ export const Contact = () => {
                             <Row>
                                 <Col className="text-center">
                                     <h3 ref={successRef} tabIndex={-1}>
-                                        Thank you for your message.
+                                        {t("common:contact.form.successMessage")}
                                     </h3>
                                 </Col>
                             </Row>:
@@ -146,12 +138,12 @@ export const Contact = () => {
                                 setMessageSent(true);
                             }}>
                                 <CardBody>
-                                    <h3>Send us a message</h3>
+                                    <h3>{t("common:contact.form.heading")}</h3>
                                     <PageFragment fragmentId="contact_intro"/>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">First name</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:contact.form.firstNameLabel")}</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user && user.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -159,7 +151,7 @@ export const Contact = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">Last name</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:contact.form.lastNameLabel")}</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user && user.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -169,20 +161,20 @@ export const Contact = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">Email address</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:contact.form.emailLabel")}</Label>
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user && user.loggedIn ? user.email : ""}
                                                     onChange={e => setEmail(e.target.value)}
                                                     aria-describedby="emailValidationMessage" required/>
                                                 <FormFeedback id="emailValidationMessage">
-                                                    {!isValidEmail && "Please enter a valid email address"}
+                                                    {!isValidEmail && t("common:contact.form.emailValidationError")}
                                                 </FormFeedback>
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="subject-input" className="form-required">Message subject</Label>
+                                                <Label htmlFor="subject-input" className="form-required">{t("common:contact.form.subjectLabel")}</Label>
                                                 <Input id="subject-input" type="text" name="subject" defaultValue={subject}
                                                     onChange={e => setSubject(e.target.value)} required/>
                                             </FormGroup>
@@ -191,27 +183,27 @@ export const Contact = () => {
                                     <Row>
                                         <Col>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="message-input" className="form-required">Message</Label>
+                                                <Label htmlFor="message-input" className="form-required">{t("common:contact.form.messageLabel")}</Label>
                                                 <Input id="message-input" type="textarea" name="message" rows={7} value={message}
                                                     placeholder={presetPlaceholder} maxLength={CONTACT_FORM_CHAR_LENGTH_LIMIT}
                                                     onChange={e => setMessage(e.target.value)} required/>
                                             </FormGroup>
-                                            {reachedMaxLength && <Alert color="warning">Your message has reached the maximum length.</Alert>}
+                                            {reachedMaxLength && <Alert color="warning">{t("common:contact.form.maxLengthWarning")}</Alert>}
                                         </Col>
                                     </Row>
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}><>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}><>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:contact.form.errorMessage" components={{ webmasterEmailLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ errorMessage, webmasterEmail: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
                                             {isPhy && <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
-                                                Required field
+                                                {t("common:contact.form.requiredField")}
                                             </span>}                                  
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Button type="submit" color="secondary" className="w-100">Submit</Button>
+                                            <Button type="submit" color="secondary" className="w-100">{t("common:contact.form.submitButton")}</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

@@ -35,10 +35,12 @@ import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {extractErrorMessage} from '../../services/errors';
+import { Trans, useTranslation } from "react-i18next";
 
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
 export const TutorRequest = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const error = useAppSelector((state: AppState) => state?.error);
     const errorMessage = extractErrorMessage(error);
@@ -76,7 +78,7 @@ export const TutorRequest = () => {
     }, [user]);
 
     return <Container id="contact-page" className="pb-7">
-        <TitleAndBreadcrumb currentPageTitle="Tutor Account request" icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("common:account.tutorRequest.title")} icon={{type: "icon", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>
@@ -88,11 +90,10 @@ export const TutorRequest = () => {
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3 mb-3 d-inline-block">
-                                        You already have a tutor or teacher account
+                                        {t("common:account.tutorRequest.alreadyTutor")}
                                     </span>
                                     {isPhy && <p className="mb-2">
-                                        Go to the <Link to="/tutor_features">Tutor features page</Link> to start using your
-                                        new account features.
+                                        <Trans i18nKey="sci:account.tutorRequest.tutorFeaturesLink" components={{ tutorFeaturesLink: <Link to="/tutor_features" /> }} />
                                     </p>}
                                 </Col>
                             </Row>
@@ -101,11 +102,10 @@ export const TutorRequest = () => {
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
-                                        Thank you for submitting a tutor account request.
+                                        {t("common:account.tutorRequest.submittedThanks")}
                                     </p>
                                     <p>
-                                        We will be in touch shortly. Please note that account verification is a manual
-                                        process and may take a few days.
+                                        {t("common:account.tutorRequest.submittedNote")}
                                     </p>
                                 </Col>
                             </Row>
@@ -117,15 +117,12 @@ export const TutorRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a tutor account on ${SITE_TITLE}, please fill in this form. `}
-                                        {"You must have verified your account email address. If any of the "}
-                                        {"information is incorrect or missing, you can amend it on your "}
-                                        <Link to="/account">My account</Link>{" page."}
+                                        <Trans i18nKey="common:account.tutorRequest.formIntro" components={{ accountLink: <Link to="/account" /> }} values={{ siteTitle: `To request a tutor account on ${SITE_TITLE}, please fill in this form. ` }} />
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">First name</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:account.tutorRequest.firstNameLabel")}</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user?.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -133,7 +130,7 @@ export const TutorRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">Last name</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:account.tutorRequest.lastNameLabel")}</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user?.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -143,7 +140,7 @@ export const TutorRequest = () => {
                                     <Row>
                                         <Col size={12} md={isPhy ? 6 : undefined}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">Email address</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:account.tutorRequest.emailLabel")}</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user?.loggedIn ? user.email : ""}
@@ -153,10 +150,10 @@ export const TutorRequest = () => {
                                         </Col>
                                         {isPhy && <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="subject-input">Subjects</Label>
+                                                <Label htmlFor="subject-input">{t("common:account.tutorRequest.subjectsLabel")}</Label>
                                                 <StyledSelect
                                                     inputId="subject-input"
-                                                    placeholder="All"
+                                                    placeholder={t("common:account.tutorRequest.subjectsPlaceholder")}
                                                     isClearable
                                                     isMulti
                                                     onChange={selectOnChange(setSubjects, true)}
@@ -169,7 +166,7 @@ export const TutorRequest = () => {
                                         <Col size={12}>
                                             <FormGroup className="form-group">
                                                 <Label htmlFor="other-info-input" className="form-required">
-                                                    Please tell us why you would like to apply for a tutor account
+                                                    {t("common:account.tutorRequest.reasonLabel")}
                                                 </Label>
                                                 <Input id="other-info-input" type="textarea" name="other-info" required
                                                     onChange={e => setReason(e.target.value)}/>
@@ -190,16 +187,16 @@ export const TutorRequest = () => {
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}><>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}><>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.tutorRequest.errorContact" components={{ emailLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ errorMessage, emailAddress: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
-                                                Required field
+                                                {t("common:account.tutorRequest.requiredField")}
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Button type="submit" color="keyline" disabled={!emailVerified} className='w-100'>Submit</Button>
+                                            <Button type="submit" color="keyline" disabled={!emailVerified} className='w-100'>{t("common:account.tutorRequest.submitButton")}</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

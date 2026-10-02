@@ -10,10 +10,12 @@ import debounce from 'lodash/debounce';
 import {isEventManager, siteSpecific} from "../../services";
 import { Container, Card, CardTitle, CardBody, Label, Input, Row, Col, Button } from 'reactstrap';
 import { useLocation } from 'react-router';
+import { Trans, useTranslation } from "react-i18next";
 
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 export const AdminEmails = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const [csvIDs, setCSVIDs] = useState(location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
@@ -34,14 +36,14 @@ export const AdminEmails = () => {
 
     return <Container id="admin-emails-page">
         <TitleAndBreadcrumb 
-            currentPageTitle="Admin emails" 
+            currentPageTitle={t("common:admin.emails.title")} 
             icon={{type: "icon", icon: "icon-contact"}}
         />
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">User selection</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.emails.userSelection.title")}</CardTitle>
             <CardBody>
-                <Label>Comma separated list of user IDs to email.</Label>
+                <Label>{t("common:admin.emails.userSelection.label")}</Label>
                 <Input
                     id="email-user-ids-input"
                     type = "textarea"
@@ -54,11 +56,10 @@ export const AdminEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">Email type</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.emails.emailType.title")}</CardTitle>
             <CardBody>
-                <Label>The type of email you are sending.</Label>
-                <p>Users who have opted out of this type of email will
-                    not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
+                <Label>{t("common:admin.emails.emailType.label")}</Label>
+                <p>{t("common:admin.emails.emailType.optOutInfo")}</p>
                 <Input
                     id="email-type-input" type="select" value={emailType}
                     disabled={isEventManager(user)}
@@ -66,22 +67,22 @@ export const AdminEmails = () => {
                         setEmailType(e.target.value);
                     }}
                 >
-                    <option value="null">--- Make a selection ---</option>
-                    <option value="ASSIGNMENTS">Assignments</option>
-                    <option value="NEWS_AND_UPDATES">News and updates</option>
-                    <option value="EVENTS">Events</option>
-                    <option value="ADMIN">Urgent administrative email</option>
+                    <option value="null">{t("common:admin.emails.emailType.placeholder")}</option>
+                    <option value="ASSIGNMENTS">{t("common:admin.emails.emailType.optionAssignments")}</option>
+                    <option value="NEWS_AND_UPDATES">{t("common:admin.emails.emailType.optionNews")}</option>
+                    <option value="EVENTS">{t("common:admin.emails.emailType.optionEvents")}</option>
+                    <option value="ADMIN">{t("common:admin.emails.emailType.optionAdmin")}</option>
                 </Input>
             </CardBody>
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">Content object</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.emails.contentObject.title")}</CardTitle>
             <CardBody>
                 <Row>
                     <Col>
                         <Input
-                            id="content-object-id-input" type="text" placeholder="Enter email content object ID"
+                            id="content-object-id-input" type="text" placeholder={t("common:admin.emails.contentObject.placeholder")}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setContentObjectID(e.target.value);
                             }}
@@ -91,7 +92,7 @@ export const AdminEmails = () => {
                     <Col>
                         <Button type="submit" color="secondary" disabled={contentObjectID.length == 0}
                             onClick={() => getEmailTemplate(contentObjectID)} className={siteSpecific("w-100", "form-control border-0")}>
-                            Load template
+                            {t("common:admin.emails.contentObject.loadButton")}
                         </Button>
                     </Col>
                 </Row>
@@ -100,32 +101,32 @@ export const AdminEmails = () => {
 
         {emailTemplate && <>
             <Card className="p-3 my-3">
-                <CardTitle tag="h2">Details</CardTitle>
+                <CardTitle tag="h2">{t("common:admin.emails.details.title")}</CardTitle>
                 <CardBody>
                     <ul>
-                        <li><b>Subject:</b> {emailTemplate.subject || "no subject"}</li>
-                        {emailTemplate.from && <li><b>From:</b> {emailTemplate.fromName || ""} &lt;{emailTemplate.from}&gt;</li>}
-                        {emailTemplate.replyTo && <li><b>Reply-To:</b> {emailTemplate.replyToName || ""} &lt;{emailTemplate.replyTo}&gt;</li>}
-                        <li><b>Sent via:</b>&nbsp;
-                            {emailTemplate.sender?.includes("@mail.isaac") ? "MailGun" : "University"}
+                        <li><b>{t("common:admin.emails.details.subjectLabel")}</b> {emailTemplate.subject || t("common:admin.emails.details.noSubject")}</li>
+                        {emailTemplate.from && <li><b>{t("common:admin.emails.details.fromLabel")}</b> {emailTemplate.fromName || ""} &lt;{emailTemplate.from}&gt;</li>}
+                        {emailTemplate.replyTo && <li><b>{t("common:admin.emails.details.replyToLabel")}</b> {emailTemplate.replyToName || ""} &lt;{emailTemplate.replyTo}&gt;</li>}
+                        <li><b>{t("common:admin.emails.details.sentViaLabel")}</b>&nbsp;
+                            {emailTemplate.sender?.includes("@mail.isaac") ? "MailGun" : t("common:admin.emails.details.senderUniversity")}
                         </li>
                     </ul>
                 </CardBody>
             </Card>
 
             <Card className="p-3 my-3">
-                <CardTitle tag="h2">HTML preview</CardTitle>
-                <Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</Label>
+                <CardTitle tag="h2">{t("common:admin.emails.htmlPreview.title")}</CardTitle>
+                <Label>{t("common:admin.emails.htmlPreview.label")}</Label>
                 <CardBody>
                     {emailTemplate.html &&
-                        <iframe title="Email content preview" className="email-preview-frame" srcDoc={emailTemplate.html}/>
+                        <iframe title={t("common:admin.emails.htmlPreview.frameTitle")} className="email-preview-frame" srcDoc={emailTemplate.html}/>
                     }
                 </CardBody>
             </Card>
 
             <Card className="p-3 my-3">
-                <CardTitle tag="h2">Plain text preview</CardTitle>
-                <Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</Label>
+                <CardTitle tag="h2">{t("common:admin.emails.plainTextPreview.title")}</CardTitle>
+                <Label>{t("common:admin.emails.plainTextPreview.label")}</Label>
                 <CardBody>
                     <pre>{emailTemplate.plainText}</pre>
                 </CardBody>
@@ -138,7 +139,7 @@ export const AdminEmails = () => {
                     {!emailSent ?
                         <React.Fragment>
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
-                                <strong>Warning:</strong> There are currently <strong>{numberOfUsers}</strong> selected recipients.
+                                <Trans i18nKey="common:admin.emails.send.recipientsWarning" components={{ warning: <strong />, count: <strong /> }} values={{ recipientCount: numberOfUsers }} />
                             </div>}
                             <Button type='button' color="secondary" disabled={!canSubmit} className={siteSpecific("btn-xl", "form-control border-0")}
                                 onClick={() => {
@@ -147,11 +148,11 @@ export const AdminEmails = () => {
                                         sendAdminEmailWithIds({contentId: contentObjectID, emailType, ids: csvIDs});
                                     }
                                 }}>
-                                Send emails
+                                {t("common:admin.emails.send.sendButton")}
                             </Button>
                         </React.Fragment>
                         :
-                        <React.Fragment>Request made, to send another refresh.</React.Fragment>
+                        <React.Fragment>{t("common:admin.emails.send.requestMade")}</React.Fragment>
                     }
                 </div>
             </CardBody>

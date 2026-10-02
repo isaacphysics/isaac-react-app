@@ -62,6 +62,8 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { QuestionFinderSidebar } from "../elements/sidebar/QuestionFinderSidebar";
 import {Immutable} from "immer";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { Trans } from "react-i18next";
+import i18next from "i18next";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -159,10 +161,10 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
     return <div className="d-flex flex-wrap mt-2">
         {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
             {t.label}
-            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
+            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label={i18next.t("common:questionFinder.filter.closeButton")}/>
         </div>)}
         {filterTags.length > 0 && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
-            Clear all filters
+            {i18next.t("common:questionFinder.filter.clearAll")}
         </button>}
     </div>;
 };
@@ -420,15 +422,10 @@ export const QuestionFinder = () => {
     []);
 
     const pageHelp = siteSpecific(<span>
-        You can find a question by selecting the areas of interest, stage and difficulties.
-        <br/>
-        You can select more than one entry in each area.
+        <Trans i18nKey="sci:questionFinder.pageHelp" components={{ br: <br /> }} />
     </span>, undefined);
 
-    const metaDescription = siteSpecific(
-        "Find physics, maths, chemistry and biology questions by topic and difficulty.",
-        "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
-    );
+    const metaDescription = i18next.t("site:questionFinder.metaDescription");
 
     function removeFilterTag(filter: string) {
         if (searchStages.includes(filter as STAGE)) {
@@ -456,7 +453,7 @@ export const QuestionFinder = () => {
         searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
         statusList.map(s => {return {value: s, label: statusLabelMap[s]};}),
-        excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
+        excludeBooks ? [{value: "excludeBooks", label: i18next.t("common:questionFinder.filter.excludeBooks")}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
         selectionList,
     ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
 
@@ -465,7 +462,7 @@ export const QuestionFinder = () => {
     return <PageContainer id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
         pageTitle={
             <TitleAndBreadcrumb 
-                currentPageTitle={siteSpecific("Question finder", "Questions")} 
+                currentPageTitle={i18next.t("site:questionFinder.title")} 
                 help={pageHelp}
                 intermediateCrumbs={crumb ? [crumb] : []}
                 icon={{type: "icon", icon: "icon-finder"}}
@@ -499,12 +496,10 @@ export const QuestionFinder = () => {
                     {(pageContext?.subject && pageContext.stage)
                         ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
                             <p className="me-0 me-lg-3">
-                                The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
-                                You can browse all questions <Link to="/questions">here</Link>.
+                                <Trans i18nKey="sci:questionFinder.filteredIntro" components={{ allQuestionsLink: <Link to="/questions" /> }} values={{ contextLabel: getHumanContext(pageContext) }} />
                             </p>
                         </div>
-                        : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
-                            Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
+                        : <>{i18next.t("sci:questionFinder.intro")}</>}
                 </div>,
                 <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
             )}
@@ -513,10 +508,10 @@ export const QuestionFinder = () => {
 
         {isAda && <Row>
             <Col lg={6} md={12} xs={12} className="finder-search">
-                <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
+                <Label htmlFor="question-search-title" className="mt-2"><b>{i18next.t("ada:questionFinder.searchLabel")}</b></Label>
                 <SearchInputWithIcon
                     defaultValue={searchQuery}
-                    placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
+                    placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, i18next.t("ada:questionFinder.searchPlaceholder"))}
                     onChange={(e) => debouncedSearchHandler(e.target.value)}
                     onSearch={searchAndUpdateURL}
                 />
@@ -555,13 +550,13 @@ export const QuestionFinder = () => {
                 <ShowLoadingQuery 
                     query={searchQuestionsQuery} 
                     placeholder={loadingPlaceholder}
-                    defaultErrorTitle="Error loading questions"
+                    defaultErrorTitle={i18next.t("common:questionFinder.errorTitle")}
                     uninitializedPlaceholder={
                         <ResultsListContainer>
                             <ResultsListHeader className="d-flex">
                                 {siteSpecific(
                                     <>Select {filteringByStatus ? "more" : "some"} filters to start searching.</>,
-                                    <span>Please select and apply filters.</span>
+                                    <span>{i18next.t("ada:questionFinder.emptyState")}</span>
                                 )}
                             </ResultsListHeader>
                         </ResultsListContainer>
@@ -574,11 +569,11 @@ export const QuestionFinder = () => {
                                     <div className="flex-grow-1" data-testid="question-finder-results-header">
                                         {questions && questions.length > 0 
                                             ? <>
-                                                Showing <b>{questions.length}</b>
-                                                {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                                <Trans i18nKey="common:questionFinder.resultsCount" components={{ b: <b /> }} values={{ count: questions.length }} />
+                                                {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> <Trans i18nKey="common:questionFinder.totalCount" components={{ b: <b /> }} values={{ total: totalQuestions }} /></>}
                                                 .
                                             </>
-                                            : isPhy && <>No results.</>
+                                            : isPhy && <>{i18next.t("sci:questionFinder.noResults")}</>
                                         }
                                     </div>
                                     <button 
@@ -589,7 +584,7 @@ export const QuestionFinder = () => {
                                         onClick={() => setRandomSeed(nextSeed())}
                                         disabled={questions?.length === 0}
                                     >
-                                        <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                        <span><Trans i18nKey="common:questionFinder.shuffleButton" components={{ responsiveWord: <span className="d-none d-sm-inline" /> }} /></span>
                                         {isPhy && <i className={classNames("icon icon-refresh", questions?.length === 0 ? "icon-color-grey" : "icon-color-black")}></i>}
                                     </button>
                                 </ResultsListHeader>
@@ -597,8 +592,8 @@ export const QuestionFinder = () => {
                                     {questions?.length
                                         ? <ListView type="item" items={questions} allowBookmarking hideIconLabel/>
                                         : isAda && (filteringByStatus 
-                                            ? <span>Could not load any results matching the requested filters.</span>
-                                            : <span>No results match the requested filters.</span>
+                                            ? <span>{i18next.t("ada:questionFinder.filterNoResults")}</span>
+                                            : <span>{i18next.t("ada:questionFinder.noMatchingResults")}</span>
                                         )
                                     }
                                 </CardBody>
@@ -626,7 +621,7 @@ export const QuestionFinder = () => {
                                             disabled={!moreResultsAvailable || isStale}
                                             color={"keyline"}
                                         >
-                                            Load more
+                                            {i18next.t("common:questionFinder.loadMore")}
                                         </Button>
                                     </Col>
                                 </Row>

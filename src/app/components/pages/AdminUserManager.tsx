@@ -21,8 +21,10 @@ import {Link} from "react-router-dom";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {produce} from "immer";
 import {skipToken} from "@reduxjs/toolkit/query";
+import { Trans, useTranslation } from "react-i18next";
 
 export const AdminUserManager = () => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const [searchUsers, {isUninitialized: searchNotRequested, isLoading: searchLoading}] = useAdminSearchUsersMutation();
@@ -114,7 +116,7 @@ export const AdminUserManager = () => {
             }
         }
         if (!hasFilterSet) {
-            alert("At least one search filter must be set.");
+            alert(t("common:admin.userManager.search.validation"));
         }
         else {
             adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
@@ -124,7 +126,7 @@ export const AdminUserManager = () => {
 
     const confirmDeleteUser = (userid?: number) => {
         if (!isDefined(userid)) return;
-        const confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        const confirmDeletion = window.confirm(t("common:admin.userManager.delete.confirm"));
         if (confirmDeletion) {
             deleteUser(userid);
         }
@@ -139,14 +141,14 @@ export const AdminUserManager = () => {
     const confirmMergeUsers = () => {
         const sourceId = Number(mergeSourceId);
         const targetId = Number(mergeTargetId);
-        const confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+        const confirmMerge = window.confirm(t("common:admin.userManager.merge.confirm", { sourceId, targetId, deletedId: sourceId }));
         if (confirmMerge) {
             mergeUsers({sourceId, targetId});
         }
     };
 
     return <Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager" icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle={t("common:admin.userManager.title")} icon={{type: "icon", icon: "icon-account"}}/>
 
         {/* Search */}
         <Card className="mt-7">
@@ -155,38 +157,38 @@ export const AdminUserManager = () => {
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="family-name-search">Find a user by family name:</Label>
+                                <Label htmlFor="family-name-search">{t("common:admin.userManager.search.familyNameLabel")}</Label>
                                 <Input
-                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="e.g. Wilkes"
+                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder={t("common:admin.userManager.search.familyNamePlaceholder")}
                                     onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="email-search">Find a user by email:</Label>
+                                <Label htmlFor="email-search">{t("common:admin.userManager.search.emailLabel")}</Label>
                                 <Input
-                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="e.g. teacher@school.org"
+                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder={t("common:admin.userManager.search.emailPlaceholder")}
                                     onChange={e => setParamIfNotDefault("email", e.target.value, "")}
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="verification-status-search">Find by email verification status:</Label>
+                                <Label htmlFor="verification-status-search">{t("common:admin.userManager.search.verificationStatusLabel")}</Label>
                                 <Input
                                     id="verification-status-search" type="select" defaultValue={String(searchQuery.emailVerificationStatus)}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setParamIfNotDefault("emailVerificationStatus", e.target.value === "null" ? "" : e.target.value, "");
                                     }}
                                 >
-                                    <option value="null">Any verification status</option>
-                                    <option value="VERIFIED">Verified</option>
-                                    <option value="NOT_VERIFIED">Not verified</option>
-                                    <option value="DELIVERY_FAILED">Delivery failed</option>
+                                    <option value="null">{t("common:admin.userManager.search.verificationStatusAny")}</option>
+                                    <option value="VERIFIED">{t("common:admin.userManager.search.verificationStatusVerified")}</option>
+                                    <option value="NOT_VERIFIED">{t("common:admin.userManager.search.verificationStatusNotVerified")}</option>
+                                    <option value="DELIVERY_FAILED">{t("common:admin.userManager.search.verificationStatusDeliveryFailed")}</option>
                                 </Input>
                             </FormGroup>
                         </Col>
 
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="role-search">Find by user role:</Label>
+                                <Label htmlFor="role-search">{t("common:admin.userManager.search.roleLabel")}</Label>
                                 <Input
                                     id="role-search" type="select" defaultValue={String(searchQuery.role)}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -194,24 +196,24 @@ export const AdminUserManager = () => {
                                         setParamIfNotDefault("role", role === "null" ? "" : role, "");
                                     }}
                                 >
-                                    <option value="null">Any role</option>
-                                    <option value="STUDENT">Student</option>
-                                    <option value="TEACHER">Teacher</option>
-                                    <option value="CONTENT_EDITOR">Content editor</option>
-                                    <option value="EVENT_LEADER">Event leader</option>
-                                    <option value="EVENT_MANAGER">Event manager</option>
-                                    <option value="ADMIN">Admin</option>
+                                    <option value="null">{t("common:admin.userManager.search.roleAny")}</option>
+                                    <option value="STUDENT">{t("common:admin.userManager.search.roleStudent")}</option>
+                                    <option value="TEACHER">{t("common:admin.userManager.search.roleTeacher")}</option>
+                                    <option value="CONTENT_EDITOR">{t("common:admin.userManager.search.roleContentEditor")}</option>
+                                    <option value="EVENT_LEADER">{t("common:admin.userManager.search.roleEventLeader")}</option>
+                                    <option value="EVENT_MANAGER">{t("common:admin.userManager.search.roleEventManager")}</option>
+                                    <option value="ADMIN">{t("common:admin.userManager.search.roleAdmin")}</option>
                                 </Input>
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="school-urn-search">Find a user with school URN:</Label>
+                                <Label htmlFor="school-urn-search">{t("common:admin.userManager.search.schoolUrnLabel")}</Label>
                                 <Input
                                     id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
                                     onChange={e => setParamIfNotDefault("schoolURN", e.target.value, "")}
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="school-other-search">Find by manually entered school:</Label>
+                                <Label htmlFor="school-other-search">{t("common:admin.userManager.search.schoolOtherLabel")}</Label>
                                 <Input
                                     id="school-other-search" type="text" defaultValue={searchQuery.schoolOther || undefined}
                                     onChange={e => setParamIfNotDefault("schoolOther", e.target.value, "")}
@@ -223,7 +225,7 @@ export const AdminUserManager = () => {
                 <CardFooter>
                     <Row>
                         <Col md={{size: 4, offset: 4}} >
-                            <Button type="submit" color="secondary" className="w-100">Search</Button>
+                            <Button type="submit" color="secondary" className="w-100">{t("common:admin.userManager.search.button")}</Button>
                         </Col>
                     </Row>
                 </CardFooter>
@@ -233,8 +235,7 @@ export const AdminUserManager = () => {
         {/* Result panel */}
         <Card className="my-4">
             <CardTitle data-testid="user-search-numbers" tag="h4" className="ps-4 pt-3 mb-0">
-                Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
-                Selected ({selectedUserIds.length})
+                <Trans i18nKey="common:admin.userManager.results.title" components={{ br: <br /> }} values={{ resultCount: isDefined(searchResults) && searchResults.length || 0, selectedCount: selectedUserIds.length }} />
             </CardTitle>
 
             <CardBody innerRef={adminSearchResultsRef}>
@@ -242,9 +243,9 @@ export const AdminUserManager = () => {
                 <Row className="pb-4">
                     <Col>
                         <UncontrolledButtonDropdown>
-                            <DropdownToggle caret disabled={userBeingModified} color="keyline">Modify Role</DropdownToggle>
+                            <DropdownToggle caret disabled={userBeingModified} color="keyline">{t("common:admin.userManager.actions.modifyRole")}</DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem header>Promote or demote selected users to:</DropdownItem>
+                                <DropdownItem header>{t("common:admin.userManager.actions.promoteDemoteHeader")}</DropdownItem>
                                 {(promotableRoles).map(role =>
                                     <DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
@@ -256,9 +257,9 @@ export const AdminUserManager = () => {
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                         {isDefined(currentUser) && isAdminOrEventManager(currentUser) && <UncontrolledButtonDropdown>
-                            <DropdownToggle caret disabled={userBeingModified} color="keyline" className="ms-3">Email Status</DropdownToggle>
+                            <DropdownToggle caret disabled={userBeingModified} color="keyline" className="ms-3">{t("common:admin.userManager.actions.emailStatus")}</DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem header>Change email verification status for users to:</DropdownItem>
+                                <DropdownItem header>{t("common:admin.userManager.actions.emailStatusHeader")}</DropdownItem>
                                 {(verificationStatuses).map(status =>
                                     <DropdownItem
                                         key={status} disabled={selectedUserIds.length === 0}
@@ -272,7 +273,7 @@ export const AdminUserManager = () => {
                     </Col>
                     <Col>
                         <Link className="btn btn-secondary float-end" to="/admin/emails" state={{csvIDs: selectedUserIds}}>
-                            Email
+                            {t("common:admin.userManager.actions.email")}
                         </Link>
                     </Col>
                 </Row>
@@ -288,16 +289,16 @@ export const AdminUserManager = () => {
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    <Button onClick={selectAllToggle} color="link">Select</Button>
+                                                    <Button onClick={selectAllToggle} color="link">{t("common:admin.userManager.results.table.select")}</Button>
                                                 </th>
-                                                <th>Actions</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>User role</th>
-                                                <th>School</th>
-                                                <th>Verification status</th>
-                                                <th>Member since</th>
-                                                <th>Last seen</th>
+                                                <th>{t("common:admin.userManager.results.table.actions")}</th>
+                                                <th>{t("common:admin.userManager.results.table.name")}</th>
+                                                <th>{t("common:admin.userManager.results.table.email")}</th>
+                                                <th>{t("common:admin.userManager.results.table.role")}</th>
+                                                <th>{t("common:admin.userManager.results.table.school")}</th>
+                                                <th>{t("common:admin.userManager.results.table.verificationStatus")}</th>
+                                                <th>{t("common:admin.userManager.results.table.memberSince")}</th>
+                                                <th>{t("common:admin.userManager.results.table.lastSeen")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -314,16 +315,16 @@ export const AdminUserManager = () => {
                                                     </td>
                                                     <td className="text-center">
                                                         <Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
-                                                            View
+                                                            {t("common:admin.userManager.results.table.view")}
                                                         </Button>
                                                         <Button color="secondary btn-sm m-1" tag={Link} to={`/account?userId=${user.id}`} target="_blank">
-                                                            Edit
+                                                            {t("common:admin.userManager.results.table.edit")}
                                                         </Button>
                                                         <Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
-                                                            Delete
+                                                            {t("common:admin.userManager.results.table.delete")}
                                                         </Button>
                                                         <Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
-                                                            Reset password
+                                                            {t("common:admin.userManager.results.table.resetPassword")}
                                                         </Button>
                                                     </td>
                                                     <td>{user.familyName}, {user.givenName}</td>
@@ -339,7 +340,7 @@ export const AdminUserManager = () => {
                                     </Table>
                                 </div>
                                 :
-                                <div data-testid="user-search-results-table" className="text-center"><em>No results found</em></div>;
+                                <div data-testid="user-search-results-table" className="text-center"><em>{t("common:admin.userManager.results.emptyState")}</em></div>;
                         }
                         }/>
                 }
@@ -349,18 +350,18 @@ export const AdminUserManager = () => {
             <hr/>
             <Card className={"my-4"}>
                 <CardBody>
-                    <h3>Merge user accounts</h3>
+                    <h3>{t("common:admin.userManager.merge.title")}</h3>
                     <FormGroup className="form-group">
                         <InputGroup className={"separate-input-group d-flex align-items-center"}>
                             <Input
                                 type="text"
-                                placeholder="User ID to keep"
+                                placeholder={t("common:admin.userManager.merge.keepPlaceholder")}
                                 value={mergeTargetId}
                                 onChange={(e => setMergeTargetId(e.target.value))}
                             />
                             <Input
                                 type="text"
-                                placeholder="User ID to delete"
+                                placeholder={t("common:admin.userManager.merge.deletePlaceholder")}
                                 value={mergeSourceId}
                                 onChange={(e => setMergeSourceId(e.target.value))}
                             />
@@ -369,7 +370,7 @@ export const AdminUserManager = () => {
                                 disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
                                 onClick={confirmMergeUsers}
                             >
-                                Merge
+                                {t("common:admin.userManager.merge.button")}
                             </Button>
                         </InputGroup>
                     </FormGroup>

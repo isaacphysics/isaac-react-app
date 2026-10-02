@@ -14,9 +14,11 @@ import {useQueryParams} from "../../services";
 import {Link, useNavigate} from "react-router-dom";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {useCheckCurrentUserOnActivity} from "../../services/useCheckCurrentUserOnActivity";
+import { Trans, useTranslation } from "react-i18next";
 
 
 export const RegistrationVerifyEmail = () => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const navigate = useNavigate();
@@ -42,8 +44,8 @@ export const RegistrationVerifyEmail = () => {
         if (user?.loggedIn) {
             if (!user?.email) {
                 dispatch(showErrorToast(
-                    "Email verification request failed.",
-                    "You are not logged in or don't have an e-mail address to verify."
+                    t("common:auth.verifyEmail.requestFailed"),
+                    t("common:auth.verifyEmail.requestFailedMessage")
                 ));
             } else {
                 void sendVerificationEmail({email: user?.email});
@@ -62,7 +64,7 @@ export const RegistrationVerifyEmail = () => {
                 <CardBody>
                     {!emailVerified && userFromParamVerificationFailed &&
                         <ExigentAlert color="warning">
-                            <p className="alert-heading fw-bold">Unable to verify your email address</p>
+                            <p className="alert-heading fw-bold">{t("common:auth.verifyEmail.failedTitle")}</p>
                             <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
                         </ExigentAlert>
                     }
@@ -70,14 +72,14 @@ export const RegistrationVerifyEmail = () => {
                         {emailVerified ?
                             <h2>Welcome to Ada Computer Science!</h2>
                             :
-                            <h2>Verify your email address</h2>
+                            <h2>{t("common:auth.verifyEmail.title")}</h2>
                         }
                     </Row>
                     <Row className="justify-content-center">    
                         {emailVerified ?
-                            <p>You&apos;ve verified your email address and finished creating your account.</p>
+                            <p>{t("common:auth.verifyEmail.verifiedMessage")}</p>
                             :
-                            <p>Click the link in the email we&apos;ve sent to finish setting up your account.</p>
+                            <p>{t("common:auth.verifyEmail.unverifiedMessage")}</p>
                         }
                     </Row>
                     <Row className="justify-content-center">
@@ -91,14 +93,14 @@ export const RegistrationVerifyEmail = () => {
                         <Row className="justify-content-center">
                             {verifyingCurrentUser ?
                                 <>
-                                    <h4 className="mb-3">Didn&apos;t get the email?</h4>
+                                    <h4 className="mb-3">{t("common:auth.verifyEmail.resendPrompt")}</h4>
                                     <p>
                                         {verificationNotResent ?
                                             <Button onClick={requestNewVerificationEmail}>
-                                                Resend verification email
+                                                {t("common:auth.verifyEmail.resendButton")}
                                             </Button>
                                             :
-                                            "Verification email sent to " + (user && user.loggedIn && user.email)
+                                            t("common:auth.verifyEmail.sentMessage", { emailAddress: (user && user.loggedIn && user.email) })
                                         }
                                     </p>
                                     {/*<p>    TODO: Allow email address to be changed from this page
@@ -108,7 +110,7 @@ export const RegistrationVerifyEmail = () => {
                                     </p>*/}
                                 </>
                                 :
-                                <p>If you need a new verification email, please <Link to="/login">log in</Link> first.</p>
+                                <p><Trans i18nKey="common:auth.verifyEmail.loginFirstMessage" components={{ loginLink: <Link to="/login" /> }} /></p>
                             }
                         </Row>
                     }
@@ -125,7 +127,7 @@ export const RegistrationVerifyEmail = () => {
                         emailVerified &&
                             <Row className="justify-content-center">
                                 <Col xs={3}>
-                                    <p>Please <Link to="/login">log in</Link> to continue.</p>
+                                    <p><Trans i18nKey="common:auth.verifyEmail.continueLoginMessage" components={{ loginLink: <Link to="/login" /> }} /></p>
                                 </Col>
                             </Row>
                     }

@@ -7,10 +7,12 @@ import {siteSpecific} from "../../services";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";
 import { Container, Card, CardTitle, CardBody, Label, Input, Button } from 'reactstrap';
 import { useLocation } from 'react-router';
+import { Trans, useTranslation } from "react-i18next";
 
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 const ContentEmails = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const [csvIDs, setCSVIDs] = useState(location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
@@ -43,12 +45,12 @@ const ContentEmails = () => {
     const [sendProvidedEmailWithUserIds] = useSendProvidedEmailWithUserIdsMutation();
 
     return <Container id="admin-emails-page">
-        <TitleAndBreadcrumb currentPageTitle="Content email sending" icon={{type: "icon", icon: "icon-mail"}} />
+        <TitleAndBreadcrumb currentPageTitle={t("common:admin.contentEmails.title")} icon={{type: "icon", icon: "icon-mail"}} />
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">User selection</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.contentEmails.userSelection.title")}</CardTitle>
             <CardBody>
-                <Label>Comma separated list of user IDs to email.</Label>
+                <Label>{t("common:admin.contentEmails.userSelection.label")}</Label>
                 <Input
                     id="email-user-ids-input"
                     type = "textarea"
@@ -61,9 +63,9 @@ const ContentEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">Email subject</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.contentEmails.subject.title")}</CardTitle>
             <CardBody>
-                <Label>Email subject</Label>
+                <Label>{t("common:admin.contentEmails.subject.label")}</Label>
                 <Input
                     id="email-subject-input" type="text" value={emailSubject}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,9 +77,9 @@ const ContentEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">Email Template</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.contentEmails.template.title")}</CardTitle>
             <CardBody>
-                <Label>Email HTML</Label>
+                <Label>{t("common:admin.contentEmails.template.htmlLabel")}</Label>
                 <Input
                     id="email-html-input"
                     type = "textarea"
@@ -89,11 +91,11 @@ const ContentEmails = () => {
                 />
             </CardBody>
             <CardBody>
-                <Label>HTML Preview (unformatted)</Label>
-                <iframe title={"html preview"} srcDoc={htmlTemplate} className="email-html"/>
+                <Label>{t("common:admin.contentEmails.template.previewLabel")}</Label>
+                <iframe title={t("common:admin.contentEmails.template.iframeTitle")} srcDoc={htmlTemplate} className="email-html"/>
             </CardBody>
             <CardBody>
-                <Label>Email Plaintext</Label>
+                <Label>{t("common:admin.contentEmails.template.plaintextLabel")}</Label>
                 <Input
                     id="email-plaintext-input"
                     type = "textarea"
@@ -105,38 +107,37 @@ const ContentEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">Email type</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.contentEmails.type.title")}</CardTitle>
             <CardBody>
-                <Label>The type of email you are sending.</Label>
-                <p>Users who have opted out of this type of email will
-                    not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
+                <Label>{t("common:admin.contentEmails.type.label")}</Label>
+                <p>{t("common:admin.contentEmails.type.optOutNote")}</p>
                 <Input
                     id="email-type-input" type="select" value={emailType}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEmailType(e.target.value);
                     }}
                 >
-                    <option value="null">--- Make a selection ---</option>
-                    <option value="ASSIGNMENTS">Assignments</option>
-                    <option value="NEWS_AND_UPDATES">News and updates</option>
-                    <option value="EVENTS">Events</option>
-                    <option value="ADMIN">Urgent administrative email</option>
+                    <option value="null">{t("common:admin.contentEmails.type.selectPlaceholder")}</option>
+                    <option value="ASSIGNMENTS">{t("common:admin.contentEmails.type.assignments")}</option>
+                    <option value="NEWS_AND_UPDATES">{t("common:admin.contentEmails.type.newsUpdates")}</option>
+                    <option value="EVENTS">{t("common:admin.contentEmails.type.events")}</option>
+                    <option value="ADMIN">{t("common:admin.contentEmails.type.adminUrgent")}</option>
                 </Input>
             </CardBody>
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">Send via</CardTitle>
+            <CardTitle tag="h2">{t("common:admin.contentEmails.sendVia.title")}</CardTitle>
             <CardBody>
-                <Label>The method of sending the email</Label>
+                <Label>{t("common:admin.contentEmails.sendVia.label")}</Label>
                 <Input
                     id="email-type-input" type="select" value={overrideEnvelopeFrom}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setOverrideEnvelopeFrom(e.target.value);
                     }}
                 >
-                    <option value={undefined}>Isaac</option>
-                    <option value={mailgunAddress}>Mailgun</option>
+                    <option value={undefined}>{t("common:admin.contentEmails.sendVia.isaac")}</option>
+                    <option value={mailgunAddress}>{t("common:admin.contentEmails.sendVia.mailgun")}</option>
                 </Input>
             </CardBody>
         </Card>
@@ -147,7 +148,7 @@ const ContentEmails = () => {
                     {!emailSent ?
                         <React.Fragment>
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
-                                <strong>Warning:</strong> There are currently <strong>{numberOfUsers}</strong> selected recipients.
+                                <Trans i18nKey="common:admin.contentEmails.recipientWarning" components={{ warningLabel: <strong />, countEmphasis: <strong /> }} values={{ recipientCount: numberOfUsers }} />
                             </div>}
                             <Button
                                 type="button" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}
@@ -158,10 +159,10 @@ const ContentEmails = () => {
                                         void sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
                                     }
                                 }}
-                            >Send emails</Button>
+                            >{t("common:admin.contentEmails.sendButton")}</Button>
                         </React.Fragment>
                         :
-                        <React.Fragment>Request made, to send another refresh.</React.Fragment>
+                        <React.Fragment>{t("common:admin.contentEmails.sentMessage")}</React.Fragment>
                     }
                 </div>
             </CardBody>

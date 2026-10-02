@@ -26,6 +26,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
 import { ConceptSidebar } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from "react-i18next";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -33,6 +34,7 @@ interface ConceptPageProps {
 }
 
 export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
+    const { t } = useTranslation();
     const params = useParams();
     const location = useLocation();
     const conceptId = conceptIdOverride || params.conceptId || "";
@@ -69,7 +71,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
 
     return <ShowLoadingQuery
         query={conceptQuery}
-        defaultErrorTitle="Unable to load concept"
+        defaultErrorTitle={t("common:concepts.loadErrorTitle")}
         ifNotFound={<NotFound />}
         thenRender={doc => {
             return <GameboardContext.Provider value={navigation.currentGameboard}>

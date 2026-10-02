@@ -12,15 +12,17 @@ import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledS
 import { useParams } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { siteSpecific } from "../../services";
+import { useTranslation } from "react-i18next";
 
 export const RevisionPage = () => {
+    const { t } = useTranslation();
     const { pageId } = useParams();
     const revisionPageQuery = useGetRevisionPageQuery({id: pageId ?? ""});
 
     return <PageContainer data-bs-theme={getThemeFromTags(revisionPageQuery.data?.tags)}
         pageTitle={
             <TitleAndBreadcrumb 
-                currentPageTitle="Revision"
+                currentPageTitle={t("common:revision.page.title")}
                 icon={{
                     type: "icon", 
                     icon: "icon-revision"
@@ -34,7 +36,7 @@ export const RevisionPage = () => {
     >
         <ShowLoadingQuery
             query={revisionPageQuery}
-            defaultErrorTitle="Unable to load revision page."
+            defaultErrorTitle={t("common:revision.page.loadError")}
             maintainOnRefetch // allows keeping sidebar content intact while refetching
             thenRender={(page, isStale) => {
                 return isStale ? <LoadingPlaceholder /> : <RevisionPageInternal page={page} />;
@@ -44,20 +46,21 @@ export const RevisionPage = () => {
 };
 
 const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
+    const { t } = useTranslation();
     const tests = (page.relatedContent?.filter(c => c.type === "isaacTest") || []) as QuizSummaryDTO[];
 
     return <div>
         <PageMetadata doc={page} />
 
         <MetadataContainer className="d-flex flex-column gap-2">
-            {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title="Introduction" />}
-            <MetadataContainerLink id="revision" title="Revision" />
-            {!!tests.length && <MetadataContainerLink id="tests" title="Practice tests" />}
+            {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title={t("common:revision.sections.introTitle")} />}
+            <MetadataContainerLink id="revision" title={t("common:revision.sections.contentTitle")} />
+            {!!tests.length && <MetadataContainerLink id="tests" title={t("common:revision.sections.testsTitle")} />}
         </MetadataContainer>
 
         {!!page.gameboards?.length && <>
-            <h4 className="mb-3" id="introduction">Introduction</h4>
-            <span>First, have a go at these baseline questions to assess your understanding and identify which aspects of this topic you should focus your revision on:</span>
+            <h4 className="mb-3" id="introduction">{t("common:revision.sections.introHeading")}</h4>
+            <span>{t("common:revision.sections.introDescription")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
@@ -66,14 +69,14 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
             </div>
         </>}
 
-        <h4 className="mb-3" id="revision">Revision</h4>
+        <h4 className="mb-3" id="revision">{t("common:revision.sections.contentHeading")}</h4>
         <IsaacContentValueOrChildren value={page.value} encoding={page.encoding}>
             {page.children}
         </IsaacContentValueOrChildren>
 
         {!!tests.length && <>
-            <h4 className="mt-4 mb-3" id="tests">Practice tests</h4>
-            <span>To demonstrate your progress once you&apos;ve revised this section, have a go at a practice test:</span>
+            <h4 className="mt-4 mb-3" id="tests">{t("common:revision.sections.testsHeading")}</h4>
+            <span>{t("common:revision.sections.testsDescription")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="quiz"

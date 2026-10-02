@@ -2,17 +2,19 @@ import React, { useEffect } from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {trackEvent, WEBMASTER_EMAIL} from "../../services";
+import { Trans, useTranslation } from "react-i18next";
 
 export const SessionExpired = () => {
+    const { t } = useTranslation();
     useEffect(() => {
         trackEvent("exception", { props: { description: `session_expired`, fatal: true } });
     }, []);
 
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session expired" icon={{type: "icon", icon: "icon-error"}}/>
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle={t("common:clientError.sessionExpired.title")} icon={{type: "icon", icon: "icon-error"}}/>
 
-            <h3 className="my-4">{"We're sorry, but your session has expired!"}</h3>
+            <h3 className="my-4">{t("common:clientError.sessionExpired.heading")}</h3>
 
             <p>
                 {"You should "}
@@ -32,9 +34,7 @@ export const SessionExpired = () => {
                 {", which may have saved an outdated version of Isaac."}
             </p>
             <p>
-                {"Please email "}
-                <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a>
-                {" if this keeps happening."}
+                {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:clientError.sessionExpired.contactSupport" components={{ mailtoLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ webmasterEmail: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
             </p>
         </div>
     </Container>;

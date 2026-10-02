@@ -2,9 +2,10 @@ import React from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
+import i18next from "i18next";
 
 export const ComingSoon = () => <Container>
-    <TitleAndBreadcrumb currentPageTitle="Coming soon" />
+    <TitleAndBreadcrumb currentPageTitle={i18next.t("common:comingSoon.pageTitle")} />
     <div className="mt-4"/>
     <PageFragment fragmentId="coming_soon"/>
 </Container>;

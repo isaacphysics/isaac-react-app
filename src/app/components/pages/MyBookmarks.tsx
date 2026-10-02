@@ -8,8 +8,10 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { MyBookmarksSidebar } from "../elements/sidebar/MyBookmarksSidebar";
 import { BookmarksOrder } from "../../../IsaacAppTypes";
 import { PageFragment } from "../elements/PageFragment";
+import { useTranslation } from "react-i18next";
 
 export const MyBookmarks = () => {
+    const { t } = useTranslation();
     const bookmarksQuery = useGetBookmarksQuery();
 
     const [searchText, setSearchText] = useState("");
@@ -18,7 +20,7 @@ export const MyBookmarks = () => {
     const [sortOrder, setSortOrder] = useState<BookmarksOrder>(BookmarksOrder.date);
 
     return <PageContainer
-        pageTitle={<TitleAndBreadcrumb currentPageTitle="My bookmarks" icon={{type: "icon", icon: "icon-my-bookmarks"}} />}
+        pageTitle={<TitleAndBreadcrumb currentPageTitle={t("common:bookmarks.page.title")} icon={{type: "icon", icon: "icon-my-bookmarks"}} />}
         sidebar={<MyBookmarksSidebar 
             searchText={searchText} 
             setSearchText={setSearchText}
@@ -38,10 +40,10 @@ export const MyBookmarks = () => {
 
         <ShowLoadingQuery
             query={bookmarksQuery} 
-            defaultErrorTitle="Could not load your bookmarks. Please try again later."
+            defaultErrorTitle={t("common:bookmarks.loadError.message")}
             thenRender={(bookmarks) => {
                 if (bookmarks.length === 0) {
-                    return <span>You have no bookmarks yet.</span>;
+                    return <span>{t("common:bookmarks.emptyState.message")}</span>;
                 }
 
                 const filteredBookmarks = bookmarks.filter(bookmark => {

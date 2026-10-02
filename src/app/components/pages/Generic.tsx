@@ -26,6 +26,7 @@ import { GenericSidebarWithRelatedContent } from "../elements/sidebar/RelatedCon
 import { PageContainer } from "../elements/layout/PageContainer";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 import { InaccessibleContentWarningAlert } from "../elements/alerts/InaccessibleContentWarningAlert";
+import { useTranslation } from "react-i18next";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -51,6 +52,7 @@ const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: 
 };
 
 export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
+    const { t } = useTranslation();
     const params = useParams();
     const accessibilitySettings = useAccessibilitySettings();
     const pageId = pageIdOverride || params.pageId || "";
@@ -76,7 +78,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
 
     return <ShowLoadingQuery 
         query={pageQuery}
-        defaultErrorTitle="Unable to load page"
+        defaultErrorTitle={t("common:generic.error.title")}
         ifNotFound={<NotFound />}
         thenRender={doc => {
             const isNews = doc.tags?.includes("news") || false;

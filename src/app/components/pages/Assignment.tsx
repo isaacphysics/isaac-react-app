@@ -25,11 +25,13 @@ import { SupersededDeprecatedBoardContentWarning } from "../navigation/Supersede
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GameboardContents } from "./Gameboard";
 import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
+import { useTranslation } from "react-i18next";
 
 // this is fairly similar to <Gameboard />, but coming directly from an assignment URL requires that we load the assignment before
 // we can request the gameboard by ID, so the order of operations is a bit different.
 
 export const Assignment = () => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const location = useLocation();
     // pathname: /assignment/:assignmentId/view
@@ -60,7 +62,7 @@ export const Assignment = () => {
     const notFoundComponent = <>
         <TitleAndBreadcrumb
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
-            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
+            currentPageTitle={t("site:assignment.notFound.title")}
             icon={{type: "icon", icon: "icon-error"}}
         />
         <h3 className="my-4">
@@ -70,15 +72,15 @@ export const Assignment = () => {
 
     return <ShowLoadingQuery
         query={gameboardQuery}
-        defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboard?.id}`}
+        defaultErrorTitle={t("site:assignment.fetchError.title", { gameboardId: gameboard?.id })}
         ifNotFound={notFoundComponent}
         placeholder={<Container><LoadingPlaceholder /></Container>}
         thenRender={(gameboard) => {
             return <PageContainer className="mb-7" data-bs-theme={singleSubject}
                 pageTitle={
                     <TitleAndBreadcrumb
-                        currentPageTitle={gameboard && gameboard.title || siteSpecific("Question deck", "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
-                        intermediateCrumbs={isPhy ? [{title: "Assignments", to: "/assignments"}] : []}
+                        currentPageTitle={gameboard && gameboard.title || t("site:assignment.fallbackTitle")} icon={{type: "icon", icon: "icon-question-deck"}}
+                        intermediateCrumbs={isPhy ? [{title: t("common:assignments.breadcrumb.label"), to: "/assignments"}] : []}
                     />
                 }
                 sidebar={siteSpecific(
@@ -86,7 +88,7 @@ export const Assignment = () => {
                     undefined
                 )}
             >
-                <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
+                <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText={t("common:assignment.sidebar.button")}/>
                 <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                 
                 <GameboardContents gameboard={gameboard} />
