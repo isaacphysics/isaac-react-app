@@ -41,6 +41,69 @@
       "manageTestsLink": "Tests"
     }
   },
+  "homepage": {
+    "account": {
+      "benefits": "An Ada CS account gets you access to lots of useful tools. Organise students into groups, set self-marking assignments, and track progress to identify learning opportunities.",
+      "createButton": "Create an account",
+      "free": "It’s totally free to use Ada CS, with or without an account.",
+      "noAccount": "You can use any of our learning resources wherever you are, without an Ada CS account.",
+      "title": "Manage workload and track progress with an Ada CS account"
+    },
+    "examBoards": {
+      "description": "We've organised our learning resources so they can be easily used, wherever you are.",
+      "internationalAdvanced": "<b>Advanced:</b> Aimed at students aged 16 to 19, expands on concepts learned in the Core curriculum.",
+      "internationalCore": "<b>Core:</b> Aimed at students aged 14 to 16, with no previous knowledge needed.",
+      "internationalDescription": "Learning resources tailored to prior knowledge and learning age groups:",
+      "internationalTitle": "Teaching outside the UK",
+      "seeMore": "See more",
+      "title": "Exam board alignment",
+      "ukDescription": "Find resources tailored to the specific learning levels and exam boards in the UK:",
+      "ukEngland": "<b>England:</b> GCSE and A Level",
+      "ukScotland": "<b>Scotland:</b> National 5, Higher, and Advanced Higher",
+      "ukTitle": "In the UK",
+      "ukWales": "<b>Wales:</b> GCSE and A Level"
+    },
+    "explore": {
+      "studentsButton": "Explore Ada CS for students",
+      "teachersButton": "Explore Ada CS for teachers"
+    },
+    "features": {
+      "examAlignment": "Specific exam alignment for the UK and adaptable to use worldwide",
+      "freeResources": "Free computer science resources for students aged 14 to 19",
+      "instantFeedback": "Instant feedback with self-marking quizzes",
+      "markbook": "Track progress in your personal markbook"
+    },
+    "hero": {
+      "cambridgeAlt": "University of Cambridge website",
+      "dashboardButton": "Go to My Ada Overview",
+      "raspberryPiAlt": "Raspberry Pi website",
+      "title": "The free learning platform for computing teachers and students"
+    },
+    "metaDescription": "Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!",
+    "resources": {
+      "challenges": "Termly student challenges to test skills and win prizes",
+      "collaboration": "Created in collaboration with the University of Cambridge",
+      "conceptPages": "Clear concept pages for every key topic",
+      "title": "Resources you can trust",
+      "topics": "More than 50 curriculum-aligned topics covering the breadth of computer science"
+    },
+    "teachLearn": {
+      "title": "Teach and learn about computer science with confidence"
+    },
+    "testimonials": {
+      "studentAttribution": "– Computer science student",
+      "studentQuote": "“ I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding. ”",
+      "teacherAttribution": "– Computer science teacher",
+      "teacherQuote": "”Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it’s free!”"
+    },
+    "tools": {
+      "insights": "Identify knowledge gaps and tailor teaching with class and student progress insights",
+      "questions": "Over 1000 questions that provide instant feedback to students",
+      "selfMarking": "Self-marking assessments that save time and support independent learning and revision",
+      "studentProgress": "Students see their own progress over time and discover where to improve",
+      "title": "Tools to aid learning"
+    }
+  },
   "markbook": {
     "title": "Markbook"
   },
