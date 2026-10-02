@@ -8,6 +8,7 @@ import {
     isAda,
     isPhy,
     isTeacherOrAbove,
+    isTutorOrAbove,
     KEY,
     persistence,
     SITE_TITLE,
@@ -76,7 +77,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const familyNameIsValid = validateName(registrationUser.familyName);
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
-    const dobValid = validateDob(registrationUser.dateOfBirth);
+    const dobValid = validateDob(registrationUser.dateOfBirth, isAda && !isSSO, isTutorOrAbove({ role: userRole }));
     const isGenderValid = validateUserGender(registrationUser);
 
     const register = async (event: React.FormEvent<HTMLFormElement>) => {

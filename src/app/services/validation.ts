@@ -44,7 +44,8 @@ export const isDobOldEnoughForSite = (dateOfBirth?: Date | number) => isDobOverN
 export const isDobOldEnoughForSiteWithoutParentalConsent = (dateOfBirth?: Date | number) => isDobOverN(SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT, dateOfBirth);
 export const isDobAdult = (dateOfBirth?: Date | number) => isDobOverN(ADULT_AGE_LIMIT, dateOfBirth);
 
-export const validateDob = (dateOfBirth?: Date | number) => isDobOldEnoughForSite(dateOfBirth) || (isPhy && !isDefined(dateOfBirth));
+export const validateDob = (dateOfBirth?: Date | number, requireOver13?: boolean, requireAdult?: boolean) => (isPhy && !isDefined(dateOfBirth)) ||
+    isDobOldEnoughForSite(dateOfBirth) && (!requireOver13 || isDobOldEnoughForSiteWithoutParentalConsent(dateOfBirth)) && (!requireAdult || isDobAdult(dateOfBirth));
 
 export const MINIMUM_PASSWORD_LENGTH = 8;
 export const validatePassword = (password: string) => {
