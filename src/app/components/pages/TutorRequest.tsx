@@ -117,7 +117,7 @@ export const TutorRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        <Trans i18nKey="common:account.tutorRequest.formIntro" components={{ accountLink: <Link to="/account" /> }} values={{ siteTitle: `To request a tutor account on ${SITE_TITLE}, please fill in this form. ` }} />
+                                        <Trans i18nKey="common:account.tutorRequest.formIntro" components={{ accountLink: <Link to="/account" /> }} values={{ siteTitle: t("common:account.tutorRequest.formInstruction", { siteTitle: SITE_TITLE }) }} />
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>

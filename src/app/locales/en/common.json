@@ -53,6 +53,7 @@
       "emailLabel": "Email address",
       "errorContact": "{{errorMessage}} You can contact us at <emailLink>{{emailAddress}}</emailLink>",
       "firstNameLabel": "First name",
+      "formInstruction": "To request a tutor account on {{siteTitle}}, please fill in this form. ",
       "formIntro": "{{siteTitle}}You must have verified your account email address. If any of the information is incorrect or missing, you can amend it on your <accountLink>My account</accountLink> page.",
       "lastNameLabel": "Last name",
       "reasonLabel": "Please tell us why you would like to apply for a tutor account",
@@ -537,6 +538,9 @@
     "title": "Test"
   },
   "auth": {
+    "accountLink": {
+      "ariaLabel": "My Account link"
+    },
     "ageCheckFailed": {
       "backButton": "Back",
       "heading": "Unable to create account",
@@ -711,6 +715,10 @@
       "verifiedMessage": "You've verified your email address and finished creating your account."
     }
   },
+  "biologyExtension": {
+    "cardSubtitle": "Stretch your understanding of biology with our extension questions that make you think outside the box.",
+    "cardTitle": "Biology extension"
+  },
   "bookmarks": {
     "emptyState": {
       "message": "You have no bookmarks yet."
@@ -727,6 +735,7 @@
       "heading": "Chapters:"
     },
     "chaptersHeading": "Chapters:",
+    "chaptersLabel": "Chapters:",
     "chaptersTitle": "Chapters:",
     "coverAltText": "Cover of the book.",
     "overview": {
@@ -734,6 +743,17 @@
       "exploreTitle": "Explore our books online",
       "sidebarButton": "View all books",
       "title": "Our books"
+    },
+    "preUniMaths": {
+      "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book",
+      "level1Title": "Level 1",
+      "level2Title": "Level 2",
+      "level3Title": "Level 3",
+      "level4Title": "Level 4",
+      "level5Title": "Level 5",
+      "level6Title": "Level 6",
+      "level7Title": "Level 7",
+      "title": "Pre-University Mathematics for Sciences"
     },
     "solvingPhysProblems": {
       "title": "How To Solve Physics Problems"
@@ -795,6 +815,8 @@
     "pageTitle": "Coming soon"
   },
   "concepts": {
+    "cardSubtitle": "Review the key concepts for {{subjectContext}}.",
+    "cardTitle": "Concepts",
     "errorFetching": "Error fetching concepts",
     "filteredIntro": "The concepts shown on this page have been filtered to only show those that are relevant to {{contextDescription}}. You can browse all concepts <allConceptsLink>here</allConceptsLink>.",
     "genericIntro": "Use our concept finder to explore all concepts on the Isaac platform.",
@@ -842,6 +864,9 @@
       "text": "Follow us on:"
     },
     "title": "Contact us"
+  },
+  "context": {
+    "mathsAndFurtherMaths": "Maths and Further Maths"
   },
   "events": {
     "admin": {
@@ -911,6 +936,9 @@
       }
     },
     "pageTitle": "Exam specification"
+  },
+  "experiments": {
+    "cardSubtitle": "Develop experimental skills with interesting experiments."
   },
   "freeTextBuilder": {
     "matchingRules": {
@@ -997,6 +1025,8 @@
     }
   },
   "glossary": {
+    "cardSubtitle": "Use the glossary to understand the vocabulary you need for {{subjectContext}}.",
+    "cardTitle": "Glossary",
     "empty": {
       "noResults": "We could not find glossary terms to match your search criteria.",
       "noTerms": "There are no glossary terms in the glossary yet! Please try again later.",
@@ -1146,6 +1176,10 @@
     "renderedLabel": "Rendered markdown",
     "title": "Markdown builder"
   },
+  "mathsUni": {
+    "cardSubtitle": "Refresh your maths skills in preparation for {{subject}} at university.",
+    "cardTitle": "Maths revision for {{subject}}"
+  },
   "navigation": {
     "homeButton": "Home"
   },
@@ -1285,6 +1319,7 @@
     }
   },
   "programmes": {
+    "cardSubtitle": "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level.",
     "page": {
       "title": "Programmes"
     }
@@ -1314,7 +1349,19 @@
   "quantumMechanicsPrimer": {
     "title": "Quantum Mechanics Primer"
   },
+  "questionDecks": {
+    "cardSubtitle": "Practise specific topics by using our ready-made question decks.",
+    "cardTitle": "Question decks by topic",
+    "chemUni": {
+      "subtitle": "Consolidate your chemistry understanding with these questions by topic."
+    },
+    "mathsALevel": {
+      "subtitle": "Practise specific topics from Maths and Further Maths by using our ready-made question decks."
+    }
+  },
   "questionFinder": {
+    "cardSubtitle": "Find {{subjectContext}} questions to try by topic and difficulty level.",
+    "cardTitle": "Question finder",
     "errorTitle": "Error loading questions",
     "filter": {
       "clearAll": "Clear all filters",
@@ -1333,6 +1380,11 @@
     "title": "Quick quizzes"
   },
   "revision": {
+    "cardSubtitle": "Revise with our summary videos, topic tests and question decks.",
+    "cardTitle": "Revision",
+    "mathsALevel": {
+      "subtitle": "Revise with our tailored revision decks on core pure, further pure, and mechanics."
+    },
     "page": {
       "loadError": "Unable to load revision page.",
       "title": "Revision"
@@ -1367,6 +1419,37 @@
     "heading": "We're sorry, but an error has occurred on the {{siteTitle}} server!",
     "suggestions": "You may want to <refresh>refresh this page and try again</refresh>, <homepage>return to our homepage</homepage>, or <contact>contact</contact> or <email>email</email> us if this keeps happening.",
     "title": "Error"
+  },
+  "skillsPractice": {
+    "bioGcse": {
+      "subtitle": "Practise core maths skills that are used in GCSE Biology."
+    },
+    "cardTitle": "Core skills practice",
+    "chemALevel": {
+      "subtitle": "Practise core skills required in A Level Chemistry."
+    },
+    "chemGcse": {
+      "subtitle": "Practise core skills required in GCSE Chemistry."
+    },
+    "chemUni": {
+      "subtitle": "Consolidate your chemistry skills with these tools",
+      "title": "Skills practice"
+    },
+    "fallback": {
+      "subtitle": "Consolidate your {{subject}} skills with these tools."
+    },
+    "mathsALevel": {
+      "subtitle": "Practise those core skills, such as rearranging equations, vital for maths."
+    },
+    "mathsGcse": {
+      "subtitle": "Practise those core skills, such as rearranging equations, vital for GCSE Maths."
+    },
+    "physics1114": {
+      "subtitle": "Keep training those maths skills with our algebra tools."
+    },
+    "physicsGcse": {
+      "subtitle": "Practise the important equations in GCSE Physics with these tools."
+    }
   },
   "stats": {
     "community": {
@@ -1654,6 +1737,9 @@
     "pageTitle": "Suggested teaching order"
   },
   "tests": {
+    "admissions": {
+      "title": "Practice admissions tests"
+    },
     "assignedEmpty": {
       "none": "You have no tests in progress."
     },
@@ -1691,6 +1777,7 @@
       "start": "Start test",
       "viewFeedback": "View feedback"
     },
+    "cardTitle": "Tests",
     "displayMode": {
       "cards": "Cards",
       "label": "Display in",

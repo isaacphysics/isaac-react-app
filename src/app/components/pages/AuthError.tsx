@@ -56,11 +56,11 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
         </p>
         <ul>
             <li>
-                <Trans i18nKey="site:auth.notLinked.enableSignIn" components={{ accountLink: <Link to="/account#security" aria-label="My Account link" /> }} values={{ provider, providerSetting: provider }} />
+                <Trans i18nKey="site:auth.notLinked.enableSignIn" components={{ accountLink: <Link to="/account#security" aria-label={t("common:auth.accountLink.ariaLabel")} /> }} values={{ provider, providerSetting: provider }} />
                 <SSOLink> {t("common:auth.notLinked.readMore", { provider })}</SSOLink>
             </li>
             <li>
-                <Trans i18nKey="common:auth.notLinked.switchAccount" components={{ accountLink: <Link to="/account#security" aria-label="My Account link" /> }} values={{ provider, linkedProvider: provider }} />
+                <Trans i18nKey="common:auth.notLinked.switchAccount" components={{ accountLink: <Link to="/account#security" aria-label={t("common:auth.accountLink.ariaLabel")} /> }} values={{ provider, linkedProvider: provider }} />
             </li>
         </ul>
         <p>If you need more help signing in, <ContactUs/>.</p>
