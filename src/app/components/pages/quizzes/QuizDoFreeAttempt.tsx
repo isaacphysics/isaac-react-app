@@ -9,12 +9,14 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
 import {Alert, Container} from "reactstrap";
+import { Trans, useTranslation } from "react-i18next";
 
 const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete to see your feedback.
 </span>;
 
 export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation();
     const {page, quizId} = useParams();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
@@ -63,13 +65,12 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
                 </QuizContentsComponent>
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle={t("common:attempt.title")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
-                    <h4 className="alert-heading">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</h4>
+                    <h4 className="alert-heading">{assignedQuizError ? t("common:tests.attempt.assignedErrorTitle") : t("common:tests.attempt.loadErrorTitle")}</h4>
                     {!assignedQuizError && <p data-testid="error-message">{error}</p>}
                     {assignedQuizError && <>
-                        <p>Your teacher has set this test to you.  You may not practise it in advance.<br/>
-                            If you are ready to take the test, click on it in your <a href={"/tests"} target="_self" rel="noopener noreferrer">assigned tests</a> page.
+                        <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:tests.attempt.assignedErrorBody" components={{ br: <br />, assignedTestsLink: <a href={"/tests"} target="_self" rel="noopener noreferrer" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
                         </p>
                     </>}
                 </Alert>

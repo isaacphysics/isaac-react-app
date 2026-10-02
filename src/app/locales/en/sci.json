@@ -1,4 +1,7 @@
 {
+  "assignment": {
+    "title": "Set / manage tests"
+  },
   "assignments": {
     "add": {
       "fromTitle": "Add a question deck from ..."
@@ -43,5 +46,12 @@
   "meta": {
     "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.",
     "title": "Isaac Physics"
+  },
+  "tests": {
+    "feedback": {
+      "backToGroup": "Back to group assignments and tests",
+      "overviewTitle": "Overview: {{quizTitle}}"
+    },
+    "pageTitle": "My tests"
   }
 }

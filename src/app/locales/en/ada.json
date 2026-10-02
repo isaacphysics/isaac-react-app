@@ -1,4 +1,7 @@
 {
+  "assignment": {
+    "title": "Tests"
+  },
   "assignments": {
     "add": {
       "fromTitle": "Add a quiz from ..."
@@ -110,5 +113,14 @@
   "meta": {
     "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.",
     "title": "Ada Computer Science"
+  },
+  "tests": {
+    "feedback": {
+      "groupResultsTitle": "Group results"
+    },
+    "pageTitle": "Tests",
+    "view": {
+      "filterPlaceholder": "Filter tests by name..."
+    }
   }
 }

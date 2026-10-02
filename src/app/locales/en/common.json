@@ -8,6 +8,16 @@
     "sort-by": "Sort by:",
     "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
   },
+  "assignment": {
+    "available": {
+      "empty": "There are no tests you can set which match your search term.",
+      "intro": "The following tests are available to set to your groups."
+    },
+    "emptyState": "You have not set any tests to your groups yet.",
+    "help": "Use this page to manage and set tests to your groups. You can assign any test the {{siteName}} team have built.<br/>Students in the group will be emailed when you set a new test.",
+    "loadError": "Tests you have assigned have failed to load, please try refreshing the page.",
+    "search": "Search tests"
+  },
   "assignments": {
     "add": {
       "booksButton": "our books",
@@ -78,6 +88,10 @@
       "stagesDifficulties": "Stages and Difficulties",
       "unsave": "Unsave"
     }
+  },
+  "attempt": {
+    "assignmentError": "Error loading assignment!",
+    "title": "Test"
   },
   "groups": {
     "delete": {
@@ -156,6 +170,125 @@
       "deleteButton": "Delete group",
       "groupIdTitle": "Group id: {{groupId}}",
       "label": "Groups:"
+    }
+  },
+  "tests": {
+    "assignedEmpty": {
+      "none": "You have no tests in progress."
+    },
+    "assignedLoadError": "Your test assignments failed to load, please try refreshing the page.",
+    "assignedTable": {
+      "dueDate": "Due Date",
+      "setBy": "Set by",
+      "setDate": "Set Date",
+      "title": "Title"
+    },
+    "assignment": {
+      "assignedTooltip": "Test assigned to: {{groupNames}}",
+      "cancelTest": "Cancel test",
+      "cancelling": "Cancelling...",
+      "extendDueDate": "Extend Due Date",
+      "header": {
+        "actions": "Actions",
+        "creationDate": "Creation date",
+        "dueDate": "Due date",
+        "groupName": "Group name",
+        "startDate": "Start date"
+      },
+      "more": "More",
+      "noGroups": "No groups have been assigned.",
+      "setTest": "Set test"
+    },
+    "attempt": {
+      "assignedErrorBody": "Your teacher has set this test to you.  You may not practise it in advance.<br/>If you are ready to take the test, click on it in your <assignedTestsLink>assigned tests</assignedTestsLink> page.",
+      "assignedErrorTitle": "You have been set this test",
+      "loadErrorTitle": "Error loading test!"
+    },
+    "button": {
+      "continue": "Continue test",
+      "noFeedback": "No feedback",
+      "start": "Start test",
+      "viewFeedback": "View feedback"
+    },
+    "displayMode": {
+      "cards": "Cards",
+      "label": "Display in",
+      "table": "Table"
+    },
+    "feedback": {
+      "downloadCsv": "Download CSV",
+      "error": {
+        "heading": "Error loading your feedback!"
+      },
+      "errorTitle": "Error loading test feedback",
+      "footer": {
+        "finalLabel": "Back to Overview",
+        "nextButton": "Next"
+      },
+      "helpText": "See the feedback for your students for this test assignment.",
+      "modeLabel": "Student feedback mode:",
+      "notStartedHeading": "This test has not yet started.",
+      "releaseDate": "It will be released to your group on {{startDate}}.",
+      "title": "Test Feedback"
+    },
+    "filters": {
+      "after": "after",
+      "assigner": "Filter by assigner",
+      "before": "before",
+      "dueDatePlaceholder": "Filter by due date",
+      "dueLabel": "Due",
+      "groupPlaceholder": "Filter by group",
+      "hide": "Hide filters",
+      "on": "on",
+      "setDatePlaceholder": "Filter by set date",
+      "show": "Show filters",
+      "startingLabel": "Starting",
+      "status": "Filter by status",
+      "title": "Filter by quiz title",
+      "titlePlaceholder": "Filter by title",
+      "toggle": "Filters"
+    },
+    "info": {
+      "assigner": "by {{teacherName}}",
+      "completed": "Completed: {{completedDate}}",
+      "dueDate": "Due date: {{dueDate}}",
+      "set": "Set: {{setDate}}",
+      "started": "Started: {{startDate}}"
+    },
+    "pageHelp": "Use this page to see tests you need to take and your test results.<br/>You can also take some tests freely whenever you want to test your knowledge.",
+    "pastTests": {
+      "hidden": "Hidden",
+      "label": "Past tests",
+      "shown": "Shown"
+    },
+    "practiceEmpty": {
+      "noMatch": "No practice tests match your filters.",
+      "none": "You have no practice tests. Take some new tests <viewTestsLink>here</viewTestsLink>!"
+    },
+    "practiceLoadError": "Your practice test attempts failed to load, please try refreshing the page.",
+    "practiceTable": {
+      "completed": "Completed",
+      "startDate": "Start Date",
+      "title": "Title"
+    },
+    "preview": {
+      "backToContents": "Back to Contents",
+      "previewQuestions": "Preview questions",
+      "setTest": "Set test"
+    },
+    "status": {
+      "completed": "Completed ·",
+      "feedbackAvailable": "Feedback available",
+      "noFeedback": "No feedback available",
+      "notStarted": "Not started",
+      "overdue": "Overdue",
+      "started": "Started"
+    },
+    "view": {
+      "emptyState": "There are no practice tests currently available.",
+      "loginRequired": "You must be logged in to view practice tests.",
+      "takeTest": "Take Test",
+      "title": "View tests"
     }
   }
 }

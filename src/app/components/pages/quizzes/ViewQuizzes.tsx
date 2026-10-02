@@ -14,6 +14,7 @@ import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { ViewQuizzesSidebar } from "../../elements/sidebar/ViewQuizzesSidebar";
 import { PageContainer } from "../../elements/layout/PageContainer";
+import i18next from "i18next";
 
 export const ViewQuizzes = () => {
     const pageContext = useUrlPageTheme();
@@ -80,7 +81,7 @@ export const ViewQuizzes = () => {
     return <PageContainer { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={"View tests"}
+                currentPageTitle={i18next.t("common:tests.view.title")}
                 icon={{"type": "icon", "icon": "icon-tests"}}
                 intermediateCrumbs={crumb ? [crumb] : []}
             />
@@ -94,12 +95,12 @@ export const ViewQuizzes = () => {
             <PageFragment fragmentId="help_toptext_practice_tests"/>
         </PageMetadata>
         {!user
-            ? <b>You must be logged in to view practice tests.</b>
+            ? <b>{i18next.t("common:tests.view.loginRequired")}</b>
             : <ShowLoading until={quizzes}>
                 {quizzes && <>
-                    {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
+                    {quizzes.length === 0 && <p><em>{i18next.t("common:tests.view.emptyState")}</em></p>}
                     <Col xs={12} className="mb-4">
-                        {isAda && <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
+                        {isAda && <Input type="text" placeholder={i18next.t("ada:tests.view.filterPlaceholder")} value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
                         <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
                             if (filterText.trim()) {
                                 void navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);

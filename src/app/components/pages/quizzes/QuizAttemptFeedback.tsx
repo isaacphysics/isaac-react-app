@@ -13,8 +13,10 @@ import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../Isaac
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Container} from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
+    const { t } = useTranslation();
     const {page, studentUser, quizContents: {pageLink}} = props;
     let controls;
     let prequel = null;
@@ -22,10 +24,10 @@ function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
         prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>
-            <Button tag={Link} to={pageLink(1)}>Next</Button>
+            <Button tag={Link} to={pageLink(1)}>{t("common:tests.feedback.footer.nextButton")}</Button>
         </>;
     } else {
-        controls = <QuizPagination {...props} page={page} finalLabel="Back to Overview" />;
+        controls = <QuizPagination {...props} page={page} finalLabel={t("common:tests.feedback.footer.finalLabel")} />;
     }
 
     return <>
@@ -42,6 +44,7 @@ const pageHelp = <span>
 </span>;
 
 export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation();
     const {quizAttemptId, page, studentId, quizAssignmentId} = useParams<{quizAttemptId?: string; page?: string; studentId?: string; quizAssignmentId?: string;}>();
     const numericStudentId = studentId ? parseInt(studentId, 10) : undefined;
     const numericQuizAssignmentId = quizAssignmentId ? parseInt(quizAssignmentId, 10) : undefined;
@@ -80,9 +83,9 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
             </QuizContentsComponent>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle={t("common:tests.feedback.title")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <h4 className="alert-heading">Error loading your feedback!</h4>
+                    <h4 className="alert-heading">{t("common:tests.feedback.error.heading")}</h4>
                     <p>{error}</p>
                 </Alert>
             </>}

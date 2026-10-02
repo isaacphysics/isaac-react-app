@@ -10,17 +10,19 @@ import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
+import { useTranslation } from "react-i18next";
 
 const QuizFooter = (props: QuizProps & FullQuizInfo) => {
+    const { t } = useTranslation();
     const {user, page, quiz, quizContents: {pageLink}} = props;
     const dispatch = useAppDispatch();
     return isDefined(page)
-        ? <QuizPagination {...props} finalLabel="Back to Contents" />
+        ? <QuizPagination {...props} finalLabel={t("common:tests.preview.backToContents")} />
         : <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
-            {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
+            {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>{t("common:tests.preview.setTest")}</Button>}
             <Spacer/>
             <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{"Attempt quiz yourself"}</Button>
-            <Button color="solid" tag={Link} to={pageLink(1)}>{"Preview questions"}</Button>
+            <Button color="solid" tag={Link} to={pageLink(1)}>{t("common:tests.preview.previewQuestions")}</Button>
         </div>;
 };
 
