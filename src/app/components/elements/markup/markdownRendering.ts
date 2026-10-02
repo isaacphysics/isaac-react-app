@@ -40,9 +40,10 @@ export const renderClozeDropZones = (markdown: string) => {
     }
 
     let nonReservedIndex = 0;
-    return markdown.replace(dropZoneRegex, (_match, _params, indexMatch, widthMatch, heightMatch) => {
+    return markdown.replace(dropZoneRegex, (_match, _params, indexMatch, widthMatch, heightMatch, altTextMatch) => {
         const width = widthMatch ? widthMatch.slice("w-".length) : "100";
         const height = heightMatch ? heightMatch.slice("h-".length) : "27";
+        const altText = altTextMatch || undefined;
         const manualIndex: number | undefined = indexMatch ? parseInt(indexMatch.slice("i-".length)) : undefined;
         let usingManualIndex = isDefined(manualIndex) && !isNaN(manualIndex) && (manualIndex < dropZoneMatches.length);
         if (usingManualIndex && reservedIndices.get(manualIndex as number) as number > 1) {
@@ -52,16 +53,17 @@ export const renderClozeDropZones = (markdown: string) => {
         const index = usingManualIndex ? manualIndex : nonReservedIndex++;
         while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
         const dropId = `drop-region-${index}`;
-        return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
+        return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block" ${altText ? `alt="${altText}"` : undefined}></span>`;
     });
 };
 
 export const renderDndDropZones = (markdown: string) => {
-    return markdown.replace(dndDropZoneRegex, (_match, id, _params, widthMatch, heightMatch) => {
+    return markdown.replace(dndDropZoneRegex, (_match, id, _params, widthMatch, heightMatch, altTextMatch) => {
         const width = widthMatch ? widthMatch.slice("w-".length) : "100";
         const height = heightMatch ? heightMatch.slice("h-".length) : "27";
+        const altText = altTextMatch || undefined;
         const dropId = `drop-region-${id}`;
-        return `<span data-index="${id}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
+        return `<span data-index="${id}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block" ${altText ? `alt="${altText}"` : undefined}></span>`;
     });
 };
 
