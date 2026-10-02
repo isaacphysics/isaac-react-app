@@ -48,7 +48,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
         <FormFeedback id="age-validation-message">
             {isDefined(userToUpdate.dateOfBirth)
                 ? `${editingOtherUser ? "The user" : "You"} must be over ${lowerAgeLimit} years old to have
-                ${userToUpdate.role ? UserFacingRoleWithArticle[userToUpdate.role] : "an"} account${requireOver13 && !requireAdultDob ? " with an email address and password" : ""}.`
+                ${userToUpdate.role ? UserFacingRoleWithArticle[userToUpdate.role] : "an"} account${isAda && requireOver13 && !requireAdultDob ? " with an email address and password" : ""}.`
                 : "Please enter a valid date of birth."
             }
         </FormFeedback>
