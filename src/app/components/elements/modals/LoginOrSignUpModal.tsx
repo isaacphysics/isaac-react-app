@@ -16,8 +16,10 @@ import {GoogleSignInButton} from "../GoogleSignInButton";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MicrosoftSignInButton } from "../MicrosoftSignInButton";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
+import { Trans, useTranslation } from "react-i18next";
 
 const LoginOrSignUpBody = () => {
+    const { t } = useTranslation();
 
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
@@ -42,29 +44,29 @@ const LoginOrSignUpBody = () => {
 
     return <Row id={"login-page"}>
         <div className="position-absolute w-fit-content end-0">
-            <button className="close mt-3 me-1 btn-link" onClick={closeModal}>{siteSpecific("CLOSE", "Close")}</button>
+            <button className="close mt-3 me-1 btn-link" onClick={closeModal}>{t("site:auth.closeButton")}</button>
         </div>
         <Col lg={6} className={classNames("content-body", {"pattern-ada-dots": isAda})}>
             <div className={classNames({"ps-3 pt-3": isPhy})}>
                 {siteSpecific(
-                    <img src={"/assets/phy/logo.svg"} alt={"Isaac Science Logo"} />,
-                    <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-7 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
+                    <img src={"/assets/phy/logo.svg"} alt={t("sci:auth.logoAlt")} />,
+                    <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-7 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={t("ada:auth.logoAlt")} />
                 )}
             </div>
             <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
-                    Log in or sign up<br/>
+                    {t("common:auth.modalTitle")}<br/>
                 </h1>
-                <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
+                <p><Trans i18nKey="common:auth.modalBody" components={{ saveProgress: <b />, signUpFree: <b /> }} /></p>
                 <br/>
-                <p>Alternatively, you can</p>
+                <p>{t("common:auth.orSection")}</p>
                 <Button size={"sm"} color="keyline" onClick={closeModal} block>
-                    Continue without an account
+                    {t("common:auth.continueGuest")}
                 </Button>
             </div>
         </Col>
         <Col lg={6} id={"login-modal-form"}>
-            {!totpChallengePending && <span className={"d-block d-lg-none pb-3"}>To <b>continue with an account</b>, please do so below</span>}
+            {!totpChallengePending && <span className={"d-block d-lg-none pb-3"}><Trans i18nKey="common:auth.formIntro" components={{ emphasis: <b /> }} /></span>}
             <Form name="login" onSubmit={validateAndLogIn} noValidate>
                 {totpChallengePending ?
                     <TFAInput rememberMe={rememberMe} />
@@ -85,7 +87,7 @@ const LoginOrSignUpBody = () => {
                                     id="rememberMe" 
                                     checked={rememberMe} 
                                     onChange={e => setRememberMe(e.target.checked)}
-                                    label={<p>Remember me</p>} className='mb-4'
+                                    label={<p>{t("common:auth.rememberMe")}</p>} className='mb-4'
                                 />
                             </Col>
                             <Col className="align-content-center">
@@ -108,7 +110,7 @@ const LoginOrSignUpBody = () => {
                         <Button id="sign-up" color="keyline" onClick={(e) => {
                             closeModal(); signUp(e);
                         }} block>
-                            Sign up
+                            {t("common:auth.signUpButton")}
                         </Button>
 
                         {siteSpecific(<div className="section-divider"/>, <hr className="text-center hr-or"/>)}

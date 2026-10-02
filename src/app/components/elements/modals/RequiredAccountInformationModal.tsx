@@ -27,8 +27,10 @@ import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/User
 import {Button, CardBody, Col, Form, Row} from "reactstrap";
 import {CountryInput} from "../inputs/CountryInput";
 import {ExigentAlert} from "../ExigentAlert";
+import { Trans, useTranslation } from "react-i18next";
 
 const RequiredAccountInfoBody = () => {
+    const { t } = useTranslation();
     // Redux state
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
@@ -95,13 +97,13 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) &&
                 <ExigentAlert color="warning">
-                    <p className="alert-heading fw-bold">Unable to update your account</p>
-                    <p>Please fill in all required fields.</p>
+                    <p className="alert-heading fw-bold">{t("common:account.update.errorTitle")}</p>
+                    <p>{t("common:account.update.fillAllFields")}</p>
                 </ExigentAlert>
             }
             {updateCurrentUserError &&
                 <ExigentAlert color="warning">
-                    <p className="alert-heading fw-bold">Unable to update your account</p>
+                    <p className="alert-heading fw-bold">{t("common:account.update.errorTitle")}</p>
                     <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                 </ExigentAlert>
             }
@@ -133,8 +135,7 @@ const RequiredAccountInfoBody = () => {
                 </Col>
             </Row>
             <div className="text-muted small pb-2">
-                Providing a few extra pieces of information helps us understand the usage of {SITE_TITLE} across the UK and beyond.
-                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
+                {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.requiredInfo.privacyNote" components={{ privacyPolicyLink: <a target="_blank" href="/privacy" /> }} values={{ siteTitle: SITE_TITLE }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
             </div>
         </CardBody>
 
@@ -144,14 +145,14 @@ const RequiredAccountInfoBody = () => {
                     <hr className="text-center" />
                 </CardBody>
                 <div>
-                    <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
+                    <p>{t("common:account.requiredInfo.emailPreferencesIntro", { siteTitle: SITE_TITLE })}</p>
                     <UserEmailPreferencesInput
                         emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                         submissionAttempted={submissionAttempted} idPrefix="modal-"
                     />
                     <div>
                         <small>
-                            <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
+                            <Trans i18nKey="site:account.requiredInfo.emailFrequencyNote" components={{ strong: <b /> }} />
                         </small>
                     </div>
                 </div>
@@ -161,7 +162,7 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             <Row className="text-center pb-3">
                 <Col md={{size: 6, offset: 3}}>
-                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? "Update" : "Update account"}</Button>
+                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? t("common:account.requiredInfo.updateButtonMobile") : t("common:account.requiredInfo.updateButtonDesktop")}</Button>
                 </Col>
             </Row>
         </CardBody>

@@ -2,25 +2,27 @@ import React from "react";
 import {ActiveModalProps} from "../../../../IsaacAppTypes";
 import {closeActiveModal, store} from "../../../state";
 import {Button, Col, Row} from "reactstrap";
+import { Trans } from "react-i18next";
+import i18next from "i18next";
 
 export const teacherEventConfirmationModal = (submitBooking: () => void, stopBooking: () => void): ActiveModalProps => ({
     closeAction: () => {store.dispatch(closeActiveModal());},
     body: <div className={"mb-4"}>
-        <p>This is an event for <b>teachers only</b>. Please confirm that you are a teacher (or a teacher trainee), and not a student, private tutor or parent.</p>
+        <p><Trans i18nKey="common:events.confirmation.body" components={{ emphasis: <b /> }} /></p>
         <Row className={"d-flex justify-content-around mt-2"}>
             <Col className={"text-center"}>
                 <Button onClick={() => {
                     submitBooking();
                     store.dispatch(closeActiveModal());
-                }}>I am a teacher</Button>
+                }}>{i18next.t("common:events.confirmation.confirmButton")}</Button>
             </Col>
             <Col className={"text-center"}>
                 <Button onClick={() => {
                     stopBooking();
                     store.dispatch(closeActiveModal());
-                }}>I am not a teacher</Button>
+                }}>{i18next.t("common:events.confirmation.declineButton")}</Button>
             </Col>
         </Row>
     </div>,
-    title: "Please confirm teacher status"
+    title: i18next.t("common:events.confirmation.title")
 });

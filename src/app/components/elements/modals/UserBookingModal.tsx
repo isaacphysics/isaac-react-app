@@ -16,16 +16,19 @@ import {
 } from "../../../services";
 import {EventBookingForm} from "../EventBookingForm";
 import { Form, Label, Input } from "reactstrap";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, selectedEvent: AugmentedEvent, eventBookingIds: number[]) {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
 
         title: eventBookingIds.includes(selectedUser.id as number) && zeroOrLess(selectedEvent.placesAvailable) ?
-            `Add ${selectedUser.givenName} ${selectedUser.familyName} to waiting list` :
-            `Create a booking for ${selectedUser.givenName} ${selectedUser.familyName}`,
+            i18next.t("common:events.userBooking.waitingListTitle", { givenName: selectedUser.givenName, familyName: selectedUser.familyName }) :
+            i18next.t("common:events.userBooking.bookingTitle", { givenName: selectedUser.givenName, familyName: selectedUser.familyName }),
 
         body: function UserBookingModalBody() {
+            const { t } = useTranslation();
             const dispatch = useAppDispatch();
 
             const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
@@ -42,7 +45,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
             function makeUserBooking(formEvent: React.FormEvent) {
                 if (formEvent) {formEvent.preventDefault();}
                 if (additionalInformation.authorisation === undefined || (additionalInformation.authorisation === "OTHER" && additionalInformation.authorisationOther === undefined)) {
-                    dispatch(showErrorToast("Event booking failed", "You must provide an authorisation reason to complete this request."));
+                    dispatch(showErrorToast(t("common:events.userBooking.errorTitle"), t("common:events.userBooking.errorMessage")));
                     return;
                 }
                 bookUserOnEvent({eventId: selectedEvent.id as string, userId: selectedUser.id as number, additionalInformation})
@@ -57,23 +60,21 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                 <span>
                     <p>
                         <small>
-                            Warning, by booking a user on this event, it may eventually lead to their personal {" "}
-                            information being shared with a third party. You must therefore confirm how this booking {" "}
-                            has been authorised. The data owner is always the {SITE_TITLE_SHORT} user being booked on to the event.
+                            {t("common:events.userBooking.dataWarning", { siteTitle: SITE_TITLE_SHORT })}
                         </small>
                     </p>
 
                     <Label htmlFor="form-authorisation" className="form-required">
-                        Booking/personal data sharing authorised by
+                        {t("common:events.userBooking.authorisationLabel")}
                     </Label>
                     <Input
                         type="select" id="form-authorisation" name="form-authorisation" value={additionalInformation.authorisation || ""}
                         onChange={event => updateAdditionalInformation({authorisation: event.target.value})}
                     >
                         <option value="" />
-                        <option value="Telephone-Owner">Telephone - Data Owner</option>
-                        <option value="Email-Owner">Verified email - Data Owner</option>
-                        <option value="OTHER">Other - Please specify</option>
+                        <option value="Telephone-Owner">{t("common:events.userBooking.optionTelephoneOwner")}</option>
+                        <option value="Email-Owner">{t("common:events.userBooking.optionEmailOwner")}</option>
+                        <option value="OTHER">{t("common:events.userBooking.optionOther")}</option>
                     </Input>
                     {additionalInformation.authorisation === "OTHER" && <Input
                         type="text" className="mt-2" value={additionalInformation.authorisationOther || ""}

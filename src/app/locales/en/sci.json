@@ -1,7 +1,19 @@
 {
   "account": {
+    "deletion": {
+      "title": "Delete Account"
+    },
     "preferences": {
       "emailFrequency": "<b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
+    },
+    "requiredInfo": {
+      "emailFrequencyNote": "<strong>Frequency</strong>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
+    },
+    "review": {
+      "requiredLabel": "Required",
+      "studentIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.",
+      "teacherIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.",
+      "tutorIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year."
     },
     "title": "My account",
     "tutorRequest": {
@@ -21,6 +33,11 @@
   "assignments": {
     "add": {
       "fromTitle": "Add a question deck from ..."
+    },
+    "display": {
+      "currentlyAssigned": "Question deck currently assigned to:",
+      "pendingDescription": "These assignments are scheduled to begin at a future date. On the morning of the scheduled date, students will be able to see the assignment, and will receive a notification email.",
+      "pendingTitle": "Pending assignments:"
     },
     "emptyBoardsAlert": "You have no question decks to assign. Use one of the options above to find one.",
     "emptyGroupsAlert": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
@@ -60,6 +77,8 @@
       "freeAccessNote": "<b>But you can still access the whole site for free!</b> You just won't be able to track your progress.",
       "returnButton": "Take me back"
     },
+    "closeButton": "CLOSE",
+    "logoAlt": "Isaac Science Logo",
     "metaDescription": "Log in to Isaac to learn and track your progress.",
     "notLinked": {
       "enableSignIn": "If you've not yet enabled sign-in with {{provider}}, first log in with another method (e.g. email and password). Then, on <accountLink>My Account</accountLink>, on \"Security\", next to \"{{providerSetting}}\", click \"Link\"."
@@ -178,6 +197,9 @@
       "helpText": "The Isaac Physics Linking Concepts book",
       "title": "Linking Concepts in Pre-University Physics"
     },
+    "modal": {
+      "title": "Isaac Skills Books"
+    },
     "physicsSkills19": {
       "a2LevelHeading": "A2-Level (or equivalent)",
       "asLevelHeading": "AS-Level (or equivalent)",
@@ -261,6 +283,12 @@
       "tagCreatedIsaac": "Created by Isaac",
       "titlePlaceholder": "e.g. Year 12 Dynamics"
     },
+    "created": {
+      "createAnother": "Create another question deck",
+      "failed": "Your question deck was not successfully created.<br/>{{errorMessage}}",
+      "success": "Your question deck has been created. You can now set it as an assignment, create another question deck or view all of your question decks.",
+      "viewAll": "View all of your question decks"
+    },
     "error": {
       "fetchError": "Error fetching question deck with id: {{boardId}}"
     },
@@ -277,6 +305,14 @@
   "groups": {
     "editor": {
       "title": "Manage group"
+    },
+    "managers": {
+      "permissions": {
+        "note": "Additional managers will not automatically see detailed mark data unless students give them access."
+      },
+      "remove": {
+        "confirm": "Are you sure you want to remove this teacher from the group?\n\nThey may still have access to student data until students revoke the connection from their \"My Account\" page."
+      }
     },
     "progress": {
       "backLink": "Back to assignment progress",
@@ -308,11 +344,28 @@
     "questionAttemptsCaption": "Question attempts"
   },
   "questionFinder": {
+    "difficulty": {
+      "challengeC1": "C1 can be attempted near the beginning of your course",
+      "challengeC3": "C3 require more creativity and could be attempted later in a course.",
+      "challengeIntro": "Challenge questions are solved by combining multiple concepts and creativity.",
+      "practiceIntro": "Practice questions let you directly apply one idea.",
+      "practiceP1": "P1 covers revision of a previous stage or topics near the beginning of a course",
+      "practiceP3": "P3 covers later topics.",
+      "title": "Difficulty Levels"
+    },
     "filteredIntro": "The questions shown on this page have been filtered to only show those that are relevant to {{contextLabel}}. You can browse all questions <allQuestionsLink>here</allQuestionsLink>.",
     "intro": "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
     "metaDescription": "Find physics, maths, chemistry and biology questions by topic and difficulty.",
     "noResults": "No results.",
     "pageHelp": "You can find a question by selecting the areas of interest, stage and difficulties.<br/>You can select more than one entry in each area.",
+    "search": {
+      "bookLabel": "Book",
+      "bookPlaceholder": "None",
+      "placeholder": "e.g. Man vs. Horse",
+      "showBookmarked": "Show bookmarked only",
+      "showFastTrack": "Show FastTrack only",
+      "topicLabel": "Topic"
+    },
     "title": "Question finder"
   },
   "support": {

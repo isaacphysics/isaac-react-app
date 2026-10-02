@@ -30,6 +30,7 @@ import {
 } from "./utils";
 import { InequalityState } from "../../inputs/SymbolicTextInput";
 import { parsePseudoSymbolicAvailableSymbols, prepareInequality, sanitiseInequalityState } from "../../../../services/inequalityUtils";
+import { useTranslation } from "react-i18next";
 
 // This file contains the React components associated with the Inequality modal
 
@@ -163,6 +164,7 @@ interface InequalityMenuProps {
     availableSymbols: string[] | undefined;
 }
 const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({open, setOpen, editorMode, logicSyntax, defaultMenu, disableLetters, menuItems, availableSymbols} : InequalityMenuProps, menuRef) => {
+    const { t } = useTranslation();
     // Logic for what menu tab is currently open
     const [[activeMenu, activeSubMenu], setActiveMenu] = useState<[InequalityMenuTabType, InequalityMenuSubMenuTabType]>([null, editorMode === "logic" ? "upperCaseLetters" : "lowerCaseLetters"]);
     const openNewMenuTab: (newMenu: [InequalityMenuTabType, InequalityMenuSubMenuTabType]) => void = ([newMenu, newSubMenu]) => {
@@ -262,8 +264,8 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                         </div>
                         : <div className="top-menu chemistry elements text-entry">
                             <div className="input-box">
-                                <Input id="chem-text-entry-box" type="text" placeholder="Type chemical elements here" onMouseDown={e => e.currentTarget.focus()} value={unparsedChemicalElements || ""} onChange={onUnparsedChemicalElementsChange} />
-                                {upperCaseWarning && <p className="uppercase-warning">Careful: chemical element names start with an upper-case letter.</p>}
+                                <Input id="chem-text-entry-box" type="text" placeholder={t("common:inequality.chemistry.placeholder")} onMouseDown={e => e.currentTarget.focus()} value={unparsedChemicalElements || ""} onChange={onUnparsedChemicalElementsChange} />
+                                {upperCaseWarning && <p className="uppercase-warning">{t("common:inequality.chemistry.uppercaseWarning")}</p>}
                             </div>
                             <div className="items-box">
                                 <ul className="sub-menu elements">
@@ -316,6 +318,7 @@ interface InequalityModalProps {
     questionDoc?: ContentDTO;
 }
 const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEditorStateChange, questionDoc, initialEditorSymbols, editorSeed}: InequalityModalProps) => {
+    const { t } = useTranslation();
     const parsedAvailableSymbols = useMemo(() => Array.from(new Set(parsePseudoSymbolicAvailableSymbols(availableSymbols))).filter(s => s.trim() !== ""), [availableSymbols]);
 
     const inequalityModalRef = useRef<HTMLDivElement>(null);
@@ -369,7 +372,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const showHelpModal = () => dispatch(openActiveModal({
         closeAction: () => { store.dispatch(closeActiveModal()); },
         size: "xl",
-        title: "Quick Help",
+        title: t("common:modal.help.title"),
         body: <PageFragment fragmentId={`eqn_editor_help_modal_${editorMode}`}/>
     }));
 
@@ -502,7 +505,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onClick={close}
             onKeyUp={close}
         >
-            OK
+            {t("common:inequality.confirmButton")}
         </div>
         <Markup encoding={"latex"} className={classNames("d-block inequality-ui katex-preview", previewTexString === "" ? "empty" : "")}>
             {previewTexString ? "$" + previewTexString + "$" : undefined}
@@ -513,7 +516,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onClick={() => setShowQuestionReminder(true)}
             onKeyUp={() => setShowQuestionReminder(true)}
         >
-            Show Question
+            {t("common:modal.questionReminder.showButton")}
         </div>}
         <div
             className="inequality-ui centre button"
@@ -521,7 +524,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onClick={() => sketch.current?.centre()}
             onKeyUp={() => sketch.current?.centre()}
         >
-            Centre
+            {t("common:inequality.centreButton")}
         </div>
         <div
             className="inequality-ui help button"
@@ -529,15 +532,15 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onClick={showHelpModal}
             onKeyUp={showHelpModal}
         >
-            Help
+            {t("common:inequality.helpButton")}
         </div>
 
         <div id="inequality-reset" className="inequality-ui reset button"
             role="button" tabIndex={-1} onClick={resetToInitialState} onKeyUp={resetToInitialState}
         >
-            Reset
+            {t("common:inequality.resetButton")}
         </div>
-        <div id="inequality-trash" className={"inequality-ui trash button trash-with-reset"}>Trash</div>
+        <div id="inequality-trash" className={"inequality-ui trash button trash-with-reset"}>{t("common:inequality.trashButton")}</div>
 
         {showQuestionReminder && (questionDoc?.value || (questionDoc?.children && questionDoc?.children?.length > 0)) && <div className="question-reminder">
             <IsaacContentValueOrChildren value={questionDoc.value} encoding={questionDoc.encoding}>
@@ -548,10 +551,10 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
                 role="button" tabIndex={-1}
                 onClick={onQuestionReminderClick}
                 onKeyUp={onQuestionReminderClick}
-            >Hide Question</div>
+            >{t("common:modal.questionReminder.hideButton")}</div>
         </div>}
 
-        <div className="orientation-warning">Our equation editor works best in landscape mode.</div>
+        <div className="orientation-warning">{t("common:inequality.orientationWarning")}</div>
 
         <InequalityMenu
             menuItems={menuItems}

@@ -16,6 +16,8 @@ import {
     Button
 } from "reactstrap";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type ExtendDueDateModalProps = {
     currDueDate: Date | number;
@@ -23,6 +25,7 @@ type ExtendDueDateModalProps = {
 }
 
 const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDueDateModalProps) => {
+    const { t } = useTranslation();
     const yearRange = range(currentYear, currentYear + 5);
     const [dueDate, setDueDate] = useState<Date>(new Date(currDueDate));
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
@@ -38,7 +41,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
                 .then((result) => {
                     if (mutationSucceeded(result)) {
                         dispatch(showSuccessToast(
-                            "Due date extended successfully", `This test is now due by ${dueDate.toLocaleDateString()}.`
+                            t("common:assignments.extendDueDate.successToastTitle"), t("common:assignments.extendDueDate.successToastMessage", { dueDate: dueDate.toLocaleDateString() })
                         ));
                         dispatch(closeActiveModal());
                     }
@@ -47,10 +50,10 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
     };
 
     return <>
-        <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.`}</p>
+        <p className="px-1">{t("common:assignments.extendDueDate.confirmationText")}</p>
         <hr className="text-center"/>
         <div className="p-2">
-            <Label for="dueDate" className="pe-1">Extend the due date:
+            <Label for="dueDate" className="pe-1">{t("common:assignments.extendDueDate.inputLabel")}
                 <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
                     yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
                     onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}
@@ -58,7 +61,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
             </Label>
             {dueDate && (dueDate < currDueDate || dueDate <= TODAY()) && 
             <p className={"text-danger"}>
-                You cannot set the due date to be earlier than the current due date or today.
+                {t("common:assignments.extendDueDate.validationError")}
             </p>}
             <Button
                 className="mt-2 mb-2"
@@ -66,7 +69,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
                 onClick={setValidDueDate}
                 role={"button"}
                 disabled={isUpdatingQuiz && dueDate && (dueDate < currDueDate)}>
-                {`Extend due date`}
+                {t("common:assignments.extendDueDate.submitButton")}
             </Button>
         </div>
     </>;
@@ -74,7 +77,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
 
 export const extendDueDateModal = (props: ExtendDueDateModalProps) : ActiveModalProps => {
     return {
-        title: "Extend due date",
+        title: i18next.t("common:assignments.extendDueDate.modalTitle"),
         body: <ExtendDueDateModalBody {...props} />
     };
 };

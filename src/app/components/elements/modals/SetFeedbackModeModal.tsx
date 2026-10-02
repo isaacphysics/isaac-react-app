@@ -13,12 +13,15 @@ import {
 import { ActiveModalProps, QuizFeedbackModes } from "../../../../IsaacAppTypes";
 import { QuizAssignmentDTO, QuizFeedbackMode } from "../../../../IsaacApiTypes";
 import { closeActiveModal, showSuccessToast, useAppDispatch, useUpdateQuizAssignmentMutation } from "../../../state";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface SetFeedbackModeModalProps {
     quiz: QuizAssignmentDTO;
 }
 
 const SetFeedbackModeModalBody = ({quiz}: SetFeedbackModeModalProps) => {
+    const { t } = useTranslation();
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
     const dispatch = useAppDispatch();
 
@@ -26,16 +29,16 @@ const SetFeedbackModeModalBody = ({quiz}: SetFeedbackModeModalProps) => {
         if (isDefined(quiz.id) && mode !== quiz?.quizFeedbackMode) {
             await updateQuiz({quizAssignmentId: quiz.id, update: {quizFeedbackMode: mode}});
             dispatch(closeActiveModal());
-            dispatch(showSuccessToast("Success!", "Feedback mode updated successfully."));
+            dispatch(showSuccessToast("Success!", t("common:assignments.feedbackMode.updateSuccess")));
         }
     };
 
     return <>
         <p className="mb-5">
-            You can adjust the type of feedback given to students after they complete this test. Changes to this setting are applied immediately and will affect all students, regardless of completion status.
+            {t("common:assignments.feedbackMode.description")}
         </p>
         <Label for="feedbackMode" className="me-2">
-            Student feedback mode:
+            {t("common:assignments.feedbackMode.label")}
         </Label>
         <UncontrolledButtonDropdown size="sm">
             <DropdownToggle color={"tint"} caret size={"sm"} disabled={isUpdatingQuiz}>
@@ -57,7 +60,7 @@ const SetFeedbackModeModalBody = ({quiz}: SetFeedbackModeModalProps) => {
 
 export const setFeedbackModeModal = (props: SetFeedbackModeModalProps) : ActiveModalProps => {
     return {
-        title: "Set feedback mode",
+        title: i18next.t("common:assignments.feedbackMode.title"),
         body: <SetFeedbackModeModalBody {...props} />
     };
 };

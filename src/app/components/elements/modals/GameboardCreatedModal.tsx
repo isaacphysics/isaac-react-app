@@ -5,20 +5,21 @@ import {Button, Col, Label, Row} from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {PATHS, siteSpecific} from "../../../services";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Label className="mx-3 mb-2">
-        Your {siteSpecific("question deck", "quiz")} was not successfully created.
-        <br/>
-        {errorMessage}
+        <Trans i18nKey="site:gameboard.created.failed" components={{ br: <br /> }} values={{ errorMessage }} />
     </Label>;
 
 const GameboardSuccessfullyCreated = () =>
     <Label className="mx-3 mb-2">
-        Your {siteSpecific("question deck", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("question deck", "quiz")} or view all of your {siteSpecific("question decks", "quizzes")}.
+        {i18next.t("site:gameboard.created.success")}
     </Label>;
 
 const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
     return <Row className={"my-3 d-flex justify-content-center"}>
@@ -27,7 +28,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100" tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
             >
-                Set as assignment
+                {t("common:gameboard.created.setAsAssignment")}
             </Button>
         </Col>
         <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
@@ -35,7 +36,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100" color="keyline"
                 onClick={() => {resetBuilder(); closeModal();}}
             >
-                Create another {siteSpecific("question deck", "quiz")}
+                {t("site:gameboard.created.createAnother")}
             </Button>
         </Col>
         <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
@@ -43,7 +44,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100" tag={Link} to={siteSpecific(PATHS.MY_GAMEBOARDS, PATHS.SET_ASSIGNMENTS)} color="keyline"
                 onClick={closeModal}
             >
-                View all of your {siteSpecific("question decks", "quizzes")}
+                {t("site:gameboard.created.viewAll")}
             </Button>
         </Col>
     </Row>;

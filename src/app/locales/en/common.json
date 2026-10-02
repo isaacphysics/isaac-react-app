@@ -18,6 +18,8 @@
       "title": "Changing schools?"
     },
     "deletion": {
+      "cancelButton": "Cancel",
+      "confirmButton": "Confirm via email",
       "confirmWarning": "I understand that deleting my account is permanent and cannot be undone.",
       "deleteButton": "Delete Account",
       "noToken": "You must have a valid token to delete your account. Visit your <accountLink>account page</accountLink> to generate a new email with a token.",
@@ -37,6 +39,18 @@
     "editUser": {
       "title": "Edit user"
     },
+    "emailChange": {
+      "cancelButton": "Cancel",
+      "confirmQuestion": "Would you like to continue?",
+      "explanation": "You have changed your account email address. This new email address won't be used until you click the verification link sent to it. Until then, we will use the old email address and you will still need to use that when logging in by email and password.",
+      "okButton": "OK",
+      "title": "Editing your email address"
+    },
+    "leaveGroup": {
+      "cancelButton": "Cancel",
+      "confirmButton": "Leave group",
+      "title": "Leave group"
+    },
     "mobileLogOut": "Log out",
     "preferences": {
       "description": "Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time under My Account.",
@@ -47,6 +61,38 @@
       "skipButton": "I'll do this later",
       "title": "Customise your account",
       "updateError": "Unable to update your account"
+    },
+    "releaseAccess": {
+      "cancelButton": "Cancel",
+      "confirmBody": "Are you sure you want to end your access to <strong>{{firstName}} {{lastName}}</strong>'s data?<br/>You will need to ask them to grant access again in the future if you change your mind.",
+      "confirmButton": "Confirm",
+      "title": "Remove access to students' data"
+    },
+    "releaseAll": {
+      "cancelButton": "Cancel",
+      "confirmBody": "Are you sure you want to end your access to all students' data?<br/>You will need to ask them to grant access again in the future if you change your mind.",
+      "confirmButton": "Confirm",
+      "title": "Remove access to all students' data"
+    },
+    "requiredInfo": {
+      "emailPreferencesIntro": "Get important information about the {{siteTitle}} programme delivered to your inbox. These settings can be changed at any time.",
+      "privacyNote": "Providing a few extra pieces of information helps us understand the usage of {{siteTitle}} across the UK and beyond. Full details on how we use your personal information can be found in our <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
+      "updateButtonDesktop": "Update account",
+      "updateButtonMobile": "Update"
+    },
+    "revokeAccess": {
+      "cancelButton": "Cancel",
+      "confirmBody": "The user <strong>{{teacherName}}</strong> will no longer be able to access your data.<br/>Are you sure you want to revoke access for this user?",
+      "confirmButton": "Confirm",
+      "title": "Revoke access to your data"
+    },
+    "sharingData": {
+      "cancelButton": "Cancel",
+      "confirmBody": "Are you sure you would like to give the following {{siteName}} users access to your data?",
+      "confirmButton": "Confirm",
+      "privacyNote": "For more details about what information is shared, see our  <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
+      "rememberNote": "<strong>Remember</strong>: you can always revoke access to your data from the Teacher Connections tab of My Account.",
+      "title": "Sharing your data"
     },
     "tutorRequest": {
       "alreadyTutor": "You already have a tutor or teacher account",
@@ -68,6 +114,12 @@
     "unsavedChanges": {
       "leaveConfirm": "If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?",
       "tabSwitchConfirm": "You have unsaved changes on this page. Are you sure you want to leave without saving?"
+    },
+    "update": {
+      "errorTitle": "Unable to update your account",
+      "fillAllFields": "Please fill in all required fields.",
+      "incompleteFields": "Not all required fields have been correctly filled.",
+      "submitButton": "Update details"
     },
     "updateError": {
       "alertTitle": "Unable to update your account",
@@ -397,9 +449,26 @@
       "sort": "Sort by",
       "view": "Display in"
     },
+    "downloadCsvButton": "Download CSV",
+    "downloadPrivacyTitle": "Privacy Notice",
     "emptyGroupsButton": "Create a group",
     "error": {
       "fetchError": "Error fetching your assignments"
+    },
+    "extendDueDate": {
+      "confirmationText": "Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.",
+      "inputLabel": "Extend the due date:",
+      "modalTitle": "Extend due date",
+      "submitButton": "Extend due date",
+      "successToastMessage": "This test is now due by {{dueDate}}.",
+      "successToastTitle": "Due date extended successfully",
+      "validationError": "You cannot set the due date to be earlier than the current due date or today."
+    },
+    "feedbackMode": {
+      "description": "You can adjust the type of feedback given to students after they complete this test. Changes to this setting are applied immediately and will affect all students, regardless of completion status.",
+      "label": "Student feedback mode:",
+      "title": "Set feedback mode",
+      "updateSuccess": "Feedback mode updated successfully."
     },
     "filter": {
       "byCreator": "Filter by Creator",
@@ -519,6 +588,28 @@
       "unassignButton": "Unassign",
       "unassignConfirm": "Are you sure you want to unassign {{deckName}} from {{groupLabel}}?"
     },
+    "setModal": {
+      "closeAriaLabel": "Close modal",
+      "closeButton": "Close",
+      "dueDateAfterStart": "Due date must be on or after start date and in the future.",
+      "dueDateLabel": "Due date:",
+      "dueDatePlaceholder": "Select your due date...",
+      "dueDateRequired": "Due dates are required for assignments.",
+      "groupsLabel": "Groups:",
+      "groupsPlaceholder": "None",
+      "groupsRequired": "Please select a group",
+      "noGroups": "No groups.",
+      "notesCharacterCount": "{{characterCount}}/500 characters",
+      "notesLabel": "Notes:",
+      "notesMaxLength": "You have exceeded the maximum length.",
+      "schedulingInfo": "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. Assignments are due by the end of the day indicated.",
+      "startDateFuture": "Start date must be in the future.",
+      "startDateLabel": "Start date:",
+      "startDatePlaceholder": "Select your scheduled start date...",
+      "title": "Assign \"{{boardTitle}}\"",
+      "unassignButton": "Unassign",
+      "unassignGroup": "Unassign group"
+    },
     "table": {
       "creator": "Creator",
       "deckName": "Deck name",
@@ -556,6 +647,7 @@
       "ariaLabel": "Link to contact form",
       "link": "contact us"
     },
+    "continueGuest": "Continue without an account",
     "credentials": {
       "emailLabel": "Email address",
       "emailPlaceholder": "Email address",
@@ -564,15 +656,19 @@
       "passwordLengthError": "Passwords must be at least {{minLength}} characters long",
       "passwordPlaceholder": "Password"
     },
+    "formIntro": "To <emphasis>continue with an account</emphasis>, please do so below",
     "login": {
       "heading": "Log in or sign up:"
     },
+    "modalBody": "You need to be logged in to your account to <saveProgress>save your answers and progress</saveProgress>. If you don't have an account, you can <signUpFree>sign up today for free</signUpFree>.",
+    "modalTitle": "Log in or sign up",
     "notLinked": {
       "explanation": "We've found an {{siteName}} account with the email address from this {{provider}} account. However, the {{siteAccountName}} account isn't configured to allow access to this {{providerAccount}} account. You've either not enabled sign-in with {{signInProvider}} on your {{siteAccount}} account, or you used a different {{alternateProvider}} account to log in.",
       "readMore": "Read more about signing in with {{provider}}.",
       "switchAccount": "If you'd like to switch which {{provider}} account you log in with, follow the same instructions, but on the <accountLink>My Account</accountLink> page, click \"Unlink\" on any old {{linkedProvider}} account first.",
       "title": "You don't use this {{provider}} account to log in"
     },
+    "orSection": "Alternatively, you can",
     "page": {
       "ariaLabel": "Authentication Error",
       "rememberMe": "Remember me",
@@ -625,6 +721,7 @@
       "homeButton": "Home",
       "title": "Account created!"
     },
+    "rememberMe": "Remember me",
     "roleSelect": {
       "description": "Knowing if you are a student or a teacher means we can make sure you have access to the right features.",
       "heading": "Are you a student or a teacher?",
@@ -657,6 +754,7 @@
       "message": "Your {{siteTitle}} session has expired, so we've logged you out. Use the button below to continue where you left off.",
       "title": "Your session has expired"
     },
+    "signUpButton": "Sign up",
     "sso": {
       "learnMore": "Learn more about Single Sign-On"
     },
@@ -882,6 +980,12 @@
       "teacherReservationWarning": "Places on this event can only be reserved by teachers. Please ask your teacher to reserve a place for you. You will need to be accompanied by a teacher to the event.",
       "terms": "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your <teacherConnectionsLink>account settings</teacherConnectionsLink>.<br1/>Your data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your <emailPreferencesLink>account settings</emailPreferencesLink>."
     },
+    "confirmation": {
+      "body": "This is an event for <emphasis>teachers only</emphasis>. Please confirm that you are a teacher (or a teacher trainee), and not a student, private tutor or parent.",
+      "confirmButton": "I am a teacher",
+      "declineButton": "I am not a teacher",
+      "title": "Please confirm teacher status"
+    },
     "details": {
       "bookedConfirmation": "You are booked on this event!",
       "completeRegistration": "Complete your registration below",
@@ -909,6 +1013,45 @@
       "noResults": "Sorry, we cannot find any events that match your filter settings.",
       "showingCount": "Showing {{loadedCount}} of {{total}}",
       "title": "Events"
+    },
+    "reservations": {
+      "additionalInfoDescription": "Add additional information about the group booking, for example contact details of other group supervisors. Please be aware that the students will remain the responsibility of the accompanying teachers. Please make sure that you have enough staff for the number of students you are bringing. We recommend at least 2 members of staff per group.",
+      "additionalInfoTitle": "Additional booking information",
+      "bookingStatus": "Booking status",
+      "cancelButton": "Cancel reservations",
+      "contactEmail": "Contact email",
+      "contactName": "Contact name",
+      "createGroupsPrompt": "Create a groups from the <groupsPageLink>Manage groups</groupsPageLink> page to book your students onto an event",
+      "currentReservations": "All current reservations",
+      "emailNotVerified": "E-mail not verified",
+      "limitWarning": "You can only reserve a maximum of {{maxReservations}} group members onto this event.",
+      "loadingMembers": "Loading group members...",
+      "noBookings": "None of the members of this group are booked in for this event.",
+      "noGroupReservations": "This event does not allow group reservations.",
+      "noMembers": "This group has no members. Please select another group.",
+      "otherStudents": "Other students in this group",
+      "reserveButton": "Reserve places",
+      "reservedBy": "Reserved by",
+      "reservedByOther": "Someone else",
+      "reservedByYou": "You",
+      "selectAll": "All",
+      "selectGroup": "Select group",
+      "selectGroupHint": "Select one of your groups from the dropdown menu to see its members.",
+      "studentColumn": "Student",
+      "supervisorContactDescription": "Change these if a teacher other than yourself is going to be supervising the students at this event.",
+      "supervisorContactTitle": "Contact details for main group supervisor",
+      "title": "Group reservations"
+    },
+    "userBooking": {
+      "authorisationLabel": "Booking/personal data sharing authorised by",
+      "bookingTitle": "Create a booking for {{givenName}} {{familyName}}",
+      "dataWarning": "Warning, by booking a user on this event, it may eventually lead to their personal  information being shared with a third party. You must therefore confirm how this booking  has been authorised. The data owner is always the {{siteTitle}} user being booked on to the event.",
+      "errorMessage": "You must provide an authorisation reason to complete this request.",
+      "errorTitle": "Event booking failed",
+      "optionEmailOwner": "Verified email - Data Owner",
+      "optionOther": "Other - Please specify",
+      "optionTelephoneOwner": "Telephone - Data Owner",
+      "waitingListTitle": "Add {{givenName}} {{familyName}} to waiting list"
     }
   },
   "examSpecifications": {
@@ -1015,6 +1158,9 @@
     "clone": {
       "copiedTitle": "{{gameboardTitle}} (Copy)"
     },
+    "created": {
+      "setAsAssignment": "Set as assignment"
+    },
     "sidebar": {
       "details": "Details"
     }
@@ -1048,7 +1194,38 @@
     },
     "title": "Glossary"
   },
+  "graphSketcher": {
+    "controls": {
+      "bezierButton": "Polynomial curve",
+      "bezierTooltip": "Draw polynomial curve",
+      "colorLabel": "Line colour",
+      "deleteAllButton": "Delete all curves",
+      "deleteAllTooltip": "Delete all curves",
+      "deleteSelectedButton": "Delete selected curve",
+      "deleteSelectedTooltip": "Delete selected curve",
+      "helpButton": "Help",
+      "linearButton": "Straight line",
+      "linearTooltip": "Draw straight line",
+      "redoButton": "Redo",
+      "redoTooltip": "Redo last change",
+      "submitButton": "Submit",
+      "undoButton": "Undo",
+      "undoTooltip": "Undo last change"
+    }
+  },
   "groups": {
+    "archive": {
+      "cancelButton": "Cancel",
+      "confirmButton": "Archive",
+      "title": "Archive group",
+      "unarchiveHint": "A group can be unarchived at any time by navigating to the group in the \"Archived\" section of this page and clicking \"Unarchive group\"."
+    },
+    "create": {
+      "nameError": "Please enter a valid name.",
+      "nameLabel": "Enter your group name",
+      "submitButton": "Create group",
+      "title": "Create a group"
+    },
     "delete": {
       "nonOwnerConfirm": "You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '{{groupName}}'?",
       "ownerConfirm": "Are you sure you want to permanently delete the group '{{groupName}}' and remove all associated assignments?\n\nThis action cannot be undone!"
@@ -1072,6 +1249,66 @@
       "selfRemovalLabel": "Allow students to remove themselves from this group",
       "showButton": "Show",
       "updateButton": "Update",
+      "youLabel": "(you)"
+    },
+    "email": {
+      "infoText": "An admin user can use the user IDs below to email these users:",
+      "title": "Email Users"
+    },
+    "invite": {
+      "addManagers": "Add group managers",
+      "codeDescription": "Students can enter this code in their {{siteTitle}} account. They’ll need to go to <accountPage>My account</accountPage>, then <teacherConnections>Teacher Connections</teacherConnections>.",
+      "codeHeading": "Or use this code",
+      "createdTitle": "Group created",
+      "errorTitle": "Error fetching group joining token",
+      "inviteTitle": "Invite users",
+      "linkDescription": "Share this link with students so they can join your group:",
+      "linkHeading": "Share this link",
+      "membersHeading": "Invite members to join",
+      "nextSteps": "What to do next",
+      "qrButton": "Generate QR Code",
+      "qrDescription": "Students can scan a QR code on their device to join your group:",
+      "qrHeading": "Generate a QR Code",
+      "shareIntro": "Share the link or code to invite people to your group.",
+      "studentInfo": "Students will see the name and email address on your account when they join."
+    },
+    "managers": {
+      "actionsDropdown": "Actions",
+      "addButton": "Add group manager",
+      "addInstructions": "Enter the email of another {{siteTitle}} teacher account below to add them as a group manager. Note that this will share their email address with the students.",
+      "addSectionTitle": "Add additional managers",
+      "cautionHeader": "<strong>Caution</strong>: All other group managers are allowed to:",
+      "currentHeading": "Current group managers",
+      "emailPlaceholder": "Enter email address here",
+      "emptyState": "There are no additional group managers for this group.",
+      "enableIntro": "Enabling this option allows additional managers to:",
+      "extraPrivilegesLabel": "Give additional managers extra privileges",
+      "listIntro": "The users below have permission to manage this group.",
+      "makeOwner": "Make owner",
+      "onlySelf": "You are the only additional manager for this group.",
+      "ownerHeading": "Group owner:",
+      "permissions": {
+        "heading": "Sharing permissions",
+        "intro": "When you share this group, other teachers can:",
+        "progress": "View student progress",
+        "students": "Add and remove students"
+      },
+      "privilegeArchiveRename": "Archive and rename the group",
+      "privilegeManageManagers": "Add or remove other managers",
+      "privilegeModifyAssignments": "Modify or delete <b>all assignments</b>, including those set by the owner",
+      "privilegeRemoveMembers": "Remove group members",
+      "promote": {
+        "confirmWithPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager.\n\n• You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.\n            ",
+        "confirmWithoutPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.\n\n• If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.\n            "
+      },
+      "remove": "Remove",
+      "removeSelf": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "title": "Remove yourself as a group manager"
+      },
+      "selectedGroup": "Selected group: {{groupName}}",
+      "uncheckInstruction": "Un-tick the above box if you would like to remove these additional privileges.",
       "youLabel": "(you)"
     },
     "member": {
@@ -1124,11 +1361,20 @@
       "title": "Group progress",
       "unknownCount": "Unknown"
     },
+    "qr": {
+      "loadError": "Failed to load QR code panel."
+    },
     "selector": {
       "createButton": "Create a new group",
       "deleteButton": "Delete group",
       "groupIdTitle": "Group id: {{groupId}}",
       "label": "Groups:"
+    },
+    "share": {
+      "title": "Share your group"
+    },
+    "shared": {
+      "title": "Shared group"
     }
   },
   "homepage": {
@@ -1170,6 +1416,18 @@
     },
     "visitButton": "Go to Ada CS"
   },
+  "inequality": {
+    "centreButton": "Centre",
+    "chemistry": {
+      "placeholder": "Type chemical elements here",
+      "uppercaseWarning": "Careful: chemical element names start with an upper-case letter."
+    },
+    "confirmButton": "OK",
+    "helpButton": "Help",
+    "orientationWarning": "Our equation editor works best in landscape mode.",
+    "resetButton": "Reset",
+    "trashButton": "Trash"
+  },
   "markdownBuilder": {
     "guideLinkText": "Markdown guide",
     "rawInputLabel": "Raw input",
@@ -1180,6 +1438,20 @@
     "cardSubtitle": "Refresh your maths skills in preparation for {{subject}} at university.",
     "cardTitle": "Maths revision for {{subject}}"
   },
+  "modal": {
+    "closeAriaLabel": "Close modal",
+    "closeButton": "Close",
+    "help": {
+      "title": "Quick Help"
+    },
+    "nextPageAriaLabel": "Go to next page on modal",
+    "nextPageButton": "Next",
+    "pageIndicatorAriaLabel": "Modal page indicator",
+    "questionReminder": {
+      "hideButton": "Hide Question",
+      "showButton": "Show Question"
+    }
+  },
   "navigation": {
     "homeButton": "Home"
   },
@@ -1188,6 +1460,12 @@
     "errorTitle": "Error fetching news stories"
   },
   "notifications": {
+    "survey": {
+      "acceptButton": "Yes, view questionnaire",
+      "declineButton": "No thanks",
+      "postponeButton": "Ask me later",
+      "prompt": "Would you like to complete a survey?"
+    },
     "toggle": {
       "collapseButton": "Show fewer notifications",
       "expandButton": "Show all {{count}} notifications"
@@ -1364,12 +1642,31 @@
     "cardTitle": "Question finder",
     "errorTitle": "Error loading questions",
     "filter": {
+      "bookmarked": "Bookmarked",
       "clearAll": "Clear all filters",
       "closeButton": "Close",
       "excludeBooks": "Exclude skills books questions"
     },
     "loadMore": "Load more",
+    "results": {
+      "difficultyColumn": "Difficulty",
+      "loadError": "Failed to load questions.",
+      "stageColumn": "Stage",
+      "titleColumn": "Question title",
+      "topicColumn": "Topic"
+    },
     "resultsCount": "Showing <b>{{count}}</b>",
+    "search": {
+      "difficultyLabel": "Difficulty",
+      "difficultyPlaceholder": "Any",
+      "label": "Search",
+      "stageLabel": "Stage",
+      "stagePlaceholder": "Any"
+    },
+    "selection": {
+      "selectedCount_one": "{{count}} question selected",
+      "selectedCount_other": "{{count}} questions selected"
+    },
     "shuffleButton": "Shuffle <responsiveWord>questions</responsiveWord>",
     "totalCount": "of <b>{{total}}</b>"
   },
@@ -1843,6 +2140,23 @@
       "backToContents": "Back to Contents",
       "previewQuestions": "Preview questions",
       "setTest": "Set test"
+    },
+    "setQuiz": {
+      "completionEmail": "Email me when a student completes this test",
+      "dueDateAfterStart": "Due date must be on or after the start date.",
+      "dueDateAfterToday": "Due date must be after today.",
+      "dueDateLabel": "Due date:",
+      "dueDateSelect": "Select a due date for the assignment.",
+      "feedbackLabel": "What level of feedback should students get:",
+      "feedbackRequired": "Please select a feedback mode",
+      "groupPlaceholder": "Select groups",
+      "groupRequired": "Please select a group",
+      "groupsError": "Error fetching groups",
+      "startDateError": "Start date must be today or in the future.",
+      "startDateHelp": "You can schedule a test to appear in the future by setting a start date. The test will be visible to students from this date onwards.<br/>If you do not set a start date, the test will be visible immediately.",
+      "startDateLabel": "Start date:",
+      "submitButton": "Set test",
+      "title": "Setting test '{{testTitle}}'"
     },
     "status": {
       "completed": "Completed ·",

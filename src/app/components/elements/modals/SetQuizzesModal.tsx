@@ -20,6 +20,7 @@ import {Button, Form, FormFeedback, FormGroup, Label, UncontrolledTooltip} from 
 import { ActiveModalProps, AppGroup } from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { Trans, useTranslation } from "react-i18next";
 
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
@@ -49,6 +50,7 @@ interface SetQuizzesModalProps {
 }
 
 function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: SetQuizzesModalProps) {
+    const { t } = useTranslation();
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -131,14 +133,14 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 <span className="form-required">Set test to the following group(s):</span>
                 <ShowLoadingQuery
                     query={groupsQuery}
-                    defaultErrorTitle={"Error fetching groups"}
+                    defaultErrorTitle={t("common:tests.setQuiz.groupsError")}
                     thenRender={groups => {
                         const groupOptions = groups
                             .map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; })
                             .sort((a, b) => a.label.localeCompare(b.label));
 
                         return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
-                            <StyledSelect isMulti placeholder="Select groups"
+                            <StyledSelect isMulti placeholder={t("common:tests.setQuiz.groupPlaceholder")}
                                 value={selectedGroups}
                                 closeMenuOnSelect={false}
                                 onChange={selectOnChange(setSelectedGroups, false)}
@@ -148,7 +150,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                     }}
                 />
                 {(selectedGroups.length === 0 
-                    ? <FormFeedback>Please select a group</FormFeedback> 
+                    ? <FormFeedback>{t("common:tests.setQuiz.groupRequired")}</FormFeedback> 
                     : <FormFeedback>
                         {`${siteSpecific(
                             `You cannot reassign a test to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
@@ -161,7 +163,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">What level of feedback should students get:</span>
+                <span className="form-required">{t("common:tests.setQuiz.feedbackLabel")}</span>
                 <div className={classNames({"is-invalid": validationAttempted && feedbackModeInvalid})}>
                     <StyledSelect
                         value={feedbackMode && feedbackOptionsMap[feedbackMode]}
@@ -174,14 +176,14 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                         options={feedbackOptionsList}
                     />
                 </div>
-                <FormFeedback>Please select a feedback mode</FormFeedback>
+                <FormFeedback>{t("common:tests.setQuiz.feedbackRequired")}</FormFeedback>
             </Label>
         </FormGroup>
 
         <FormGroup>
             <Label className="w-100">
                 <div className={siteSpecific("d-flex align-items-center", "")}>
-                    <span className="form-optional">Start date:</span>
+                    <span className="form-optional">{t("common:tests.setQuiz.startDateLabel")}</span>
                     <i id={scheduledQuizHelpTooltipId} className={classNames("icon icon-info icon-inline ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </div>
                 <DateInput 
@@ -191,17 +193,15 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                     onChange={setScheduledStartDateAtSevenAM}
                 />
                 <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
-                    You can schedule a test to appear in the future by setting a start date.
-                    The test will be visible to students from this date onwards.<br/>
-                    If you do not set a start date, the test will be visible immediately.
+                    <Trans i18nKey="common:tests.setQuiz.startDateHelp" components={{ br: <br /> }} />
                 </UncontrolledTooltip>
-                <FormFeedback>Start date must be today or in the future.</FormFeedback>
+                <FormFeedback>{t("common:tests.setQuiz.startDateError")}</FormFeedback>
             </Label>
         </FormGroup>
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">Due date:</span>
+                <span className="form-required">{t("common:tests.setQuiz.dueDateLabel")}</span>
                 <DateInput 
                     invalid={validationAttempted && dueDateInvalid} 
                     value={dueDate} 
@@ -210,10 +210,10 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 />
                 <FormFeedback>
                     {!isDefined(dueDate) 
-                        ? "Select a due date for the assignment."
+                        ? t("common:tests.setQuiz.dueDateSelect")
                         : dueDate.valueOf() > TODAY().valueOf() 
-                            ? "Due date must be on or after the start date." 
-                            : "Due date must be after today."}
+                            ? t("common:tests.setQuiz.dueDateAfterStart") 
+                            : t("common:tests.setQuiz.dueDateAfterToday")}
                 </FormFeedback>
             </Label>
         </FormGroup>
@@ -222,7 +222,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 id="completion-notifications-check"
                 checked={completionNotifications}
                 onChange={e => setCompletionNotifications(e.target.checked)}
-                label={<span>Email me when a student completes this test</span>}
+                label={<span>{t("common:tests.setQuiz.completionEmail")}</span>}
             />
         </FormGroup>}
 
@@ -233,24 +233,25 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 disabled={isAssigning}
                 onClick={() => dispatch(closeActiveModal())}
             >
-                Close
+                {t("common:modal.closeButton")}
             </Button>
             <Button
                 className={"float-end w-100 w-sm-auto"}
                 color="solid"
                 disabled={isAssigning}
             >
-                {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}
+                {isAssigning ? <IsaacSpinner size={"sm"} /> : t("common:tests.setQuiz.submitButton")}
             </Button>
         </div>
     </Form>;
 }
 
 export const SetQuizzesModal = (props: SetQuizzesModalProps): ActiveModalProps => {
+    const { t } = useTranslation();
     const {quiz} = props;
 
     return {
-        title: `Setting test '${quiz.title ?? quiz.id}'`,
+        title: t("common:tests.setQuiz.title", { testTitle: quiz.title ?? quiz.id }),
         body: <SetQuizzesModalContent {...props}/>
     };
 };

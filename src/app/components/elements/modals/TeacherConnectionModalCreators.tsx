@@ -7,13 +7,15 @@ import {
 } from "../../../state";
 import {extractTeacherName, SITE_TITLE_SHORT} from "../../../services";
 import { Table, Button } from "reactstrap";
+import { Trans } from "react-i18next";
+import i18next from "i18next";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: "Sharing your data",
+        title: i18next.t("common:account.sharingData.title"),
         body: <React.Fragment>
-            <p>Are you sure you would like to give the following {SITE_TITLE_SHORT} users access to your data?</p>
+            <p>{i18next.t("common:account.sharingData.confirmBody", { siteName: SITE_TITLE_SHORT })}</p>
             <Table bordered>
                 <tbody>
                     {usersToGrantAccess.map((member) => (<tr key={member.id}>
@@ -36,24 +38,23 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
 
             <p>
                 <small>
-                    <strong>Remember</strong>: you can always revoke access to your data from the Teacher Connections tab of My Account.
+                    <Trans i18nKey="common:account.sharingData.rememberNote" components={{ strong: <strong /> }} />
                 </small>
                 <br />
                 <small>
-                    For more details about what information is shared, see our {" "}
-                    <a href="/privacy" target="_blank">Privacy Policy</a>.
+                    {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.sharingData.privacyNote" components={{ privacyPolicyLink: <a href="/privacy" target="_blank" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
                 </small>
             </p>
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                Cancel
+                {i18next.t("common:account.sharingData.cancelButton")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authToken))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                Confirm
+                {i18next.t("common:account.sharingData.confirmButton")}
             </Button>,
         ]
     };
@@ -62,25 +63,21 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
 export const revocationConfirmationModal = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: "Revoke access to your data",
+        title: i18next.t("common:account.revokeAccess.title"),
         body: <React.Fragment>
             <p>
-                The user <strong>{extractTeacherName(userToRevoke)}</strong>
-                {" "}
-                will no longer be able to access your data.
-                <br />
-                Are you sure you want to revoke access for this user?
+                <Trans i18nKey="common:account.revokeAccess.confirmBody" components={{ strong: <strong />, br: <br /> }} values={{ teacherName: extractTeacherName(userToRevoke) }} />
             </p>
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                Cancel
+                {i18next.t("common:account.revokeAccess.cancelButton")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userToRevoke.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                Confirm
+                {i18next.t("common:account.revokeAccess.confirmButton")}
             </Button>,
         ]
     };
@@ -89,24 +86,21 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
 export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryDTO) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: "Remove access to students' data",
+        title: i18next.t("common:account.releaseAccess.title"),
         body: <React.Fragment>
             <p>
-                Are you sure you want to end your access to <strong>{otherUser.givenName} {otherUser.familyName}</strong>
-                &apos;s data?
-                <br />
-                You will need to ask them to grant access again in the future if you change your mind.
+                <Trans i18nKey="common:account.releaseAccess.confirmBody" components={{ strong: <strong />, br: <br /> }} values={{ firstName: otherUser.givenName, lastName: otherUser.familyName }} />
             </p>
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                Cancel
+                {i18next.t("common:account.releaseAccess.cancelButton")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(otherUser.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                Confirm
+                {i18next.t("common:account.releaseAccess.confirmButton")}
             </Button>,
         ]
     };
@@ -115,23 +109,21 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
 export const releaseAllConfirmationModal = () => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: "Remove access to all students' data",
+        title: i18next.t("common:account.releaseAll.title"),
         body: <React.Fragment>
             <p>
-                Are you sure you want to end your access to all students&apos; data?
-                <br />
-                You will need to ask them to grant access again in the future if you change your mind.
+                <Trans i18nKey="common:account.releaseAll.confirmBody" components={{ br: <br /> }} />
             </p>
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                Cancel
+                {i18next.t("common:account.releaseAll.cancelButton")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAllAuthorisations.initiate())
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                Confirm
+                {i18next.t("common:account.releaseAll.confirmButton")}
             </Button>,
         ]
     };
@@ -140,7 +132,7 @@ export const releaseAllConfirmationModal = () => {
 export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
-        title: "Leave group",
+        title: i18next.t("common:account.leaveGroup.title"),
         body: <>
             <p>
                 This group has enabled student self-removal. This means you can remove yourself from the group at any time, without requiring permission from 
@@ -154,14 +146,14 @@ export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
         </>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => store.dispatch(closeActiveModal())}>
-                Cancel
+                {i18next.t("common:account.leaveGroup.cancelButton")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.deleteGroupMember.initiate({groupId, userId})).then(() => {
                     store.dispatch(closeActiveModal());
                 });
             }}>
-                Leave group
+                {i18next.t("common:account.leaveGroup.confirmButton")}
             </Button>,
         ]
     };

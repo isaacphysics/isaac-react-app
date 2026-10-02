@@ -22,6 +22,7 @@ import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {fillScreenWithModal} from "./inequality/utils";
+import { useTranslation } from "react-i18next";
 
 interface GraphSketcherModalProps {
     user: Immutable<PotentialUser> | null;
@@ -32,6 +33,7 @@ interface GraphSketcherModalProps {
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
+    const { t } = useTranslation();
     const { onGraphSketcherStateChange, close, initialState, user, question } = props;
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
@@ -49,7 +51,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const showHelpModal = () => dispatch(openActiveModal({
         closeAction: () => { store.dispatch(closeActiveModal()); },
         size: "xl",
-        title: "Quick Help",
+        title: t("common:modal.help.title"),
         body: <PageFragment fragmentId={`graph_sketcher_help_modal`}/>
     }));
 
@@ -150,14 +152,14 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     return <div id='graph-sketcher-modal' ref={graphSketcherContainer} style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
             {/* do not use default <button>s -- these submit top-level forms (i.e. submit the question attempt) and can cause attempt spam timeout warnings */}
-            <div title="Redo last change" role="button" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">Redo</div>
-            <div title="Undo last change" role="button" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">Undo</div>
-            <div title="Draw polynomial curve" role="button" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">Polynomial curve</div>
-            <div title="Draw straight line" role="button" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">Straight line</div>
-            <div title="Delete selected curve" role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">Delete selected curve</div>
-            <div title="Delete all curves" role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">Delete all curves</div>
-            <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">Submit</div>
-            <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">Help</div>
+            <div title={t("common:graphSketcher.controls.redoTooltip")} role="button" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">{t("common:graphSketcher.controls.redoButton")}</div>
+            <div title={t("common:graphSketcher.controls.undoTooltip")} role="button" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">{t("common:graphSketcher.controls.undoButton")}</div>
+            <div title={t("common:graphSketcher.controls.bezierTooltip")} role="button" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">{t("common:graphSketcher.controls.bezierButton")}</div>
+            <div title={t("common:graphSketcher.controls.linearTooltip")} role="button" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">{t("common:graphSketcher.controls.linearButton")}</div>
+            <div title={t("common:graphSketcher.controls.deleteSelectedTooltip")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">{t("common:graphSketcher.controls.deleteSelectedButton")}</div>
+            <div title={t("common:graphSketcher.controls.deleteAllTooltip")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">{t("common:graphSketcher.controls.deleteAllButton")}</div>
+            <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">{t("common:graphSketcher.controls.submitButton")}</div>
+            <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">{t("common:graphSketcher.controls.helpButton")}</div>
             {isStaff(user) && <div className="button" role="button" onClick={toggleDebugMode} onKeyUp={toggleDebugMode} tabIndex={0} id="graph-sketcher-ui-debug-button">Debug</div>}
 
             {!showQuestionReminder && <div
@@ -167,7 +169,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 onClick={() => setShowQuestionReminder(true)}
                 onKeyUp={() => setShowQuestionReminder(true)}
             >
-                Show Question
+                {t("common:modal.questionReminder.showButton")}
             </div>}
 
             {debugModeEnabled && <code id="graph-sketcher-ui-debug-window">
@@ -208,7 +210,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                         onClick={() => setDrawingColorName("Green")}
                     />
                 </svg>
-                <p className={"hover-text"}>Line colour</p>
+                <p className={"hover-text"}>{t("common:graphSketcher.controls.colorLabel")}</p>
             </div>
             {showQuestionReminder && (questionDoc?.value || (questionDoc?.children && questionDoc?.children?.length > 0)) && <div className="question-reminder">
                 <IsaacContentValueOrChildren value={questionDoc.value} encoding={questionDoc.encoding}>
@@ -219,7 +221,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                     role="button" tabIndex={-1}
                     onClick={onQuestionReminderClick}
                     onKeyUp={onQuestionReminderClick}
-                >Hide Question</div>
+                >{t("common:modal.questionReminder.hideButton")}</div>
             </div>}
         </div>
     </div>;

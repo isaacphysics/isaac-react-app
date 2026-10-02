@@ -36,8 +36,11 @@ import sortBy from "lodash/sortBy";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import { HorizontalScroller } from "../inputs/HorizontalScroller";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
 
@@ -215,7 +218,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
     return <>
         <div id="reservation-modal">
-            {!event.allowGroupReservations && <p>This event does not allow group reservations.</p>}
+            {!event.allowGroupReservations && <p>{t("common:events.reservations.noGroupReservations")}</p>}
             {event.allowGroupReservations && <Col>
                 <Row className="mb-7">
                     <Col md={3}>
@@ -223,7 +226,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             <React.Fragment>
                                 {sortedActiveGroups && sortedActiveGroups.length > 0 && <UncontrolledButtonDropdown>
                                     <DropdownToggle caret color="primary mb-4">
-                                        {selectedGroup ? selectedGroup?.groupName : "Select group"}
+                                        {selectedGroup ? selectedGroup?.groupName : t("common:events.reservations.selectGroup")}
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         {sortedActiveGroups.map(group =>
@@ -240,14 +243,14 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                         </ShowLoading>
                     </Col>
                     {sortedActiveGroups && sortedActiveGroups.length === 0 && <p>
-                        Create a groups from the <Link to="/groups" onClick={() => dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event
+                        <Trans i18nKey="common:events.reservations.createGroupsPrompt" components={{ groupsPageLink: <Link to="/groups" onClick={() => dispatch(closeActiveModal())} /> }} />
                     </p>}
                     <Col cols={12} lg={{size: 8, offset: 1}} xl={{size: 9, offset: 0}}>
                         {fetchingGroupMembers
-                            ? <div className={"w-100 text-center"}>Loading group members... <IsaacSpinner size={"sm"} inline/></div>
+                            ? <div className={"w-100 text-center"}>{t("common:events.reservations.loadingMembers")} <IsaacSpinner size={"sm"} inline/></div>
                             : <>
-                                {!groupMembers && <p>Select one of your groups from the dropdown menu to see its members.</p>}
-                                {groupMembers && groupMembers.length === 0 && <p>This group has no members. Please select another group.</p>}
+                                {!groupMembers && <p>{t("common:events.reservations.selectGroupHint")}</p>}
+                                {groupMembers && groupMembers.length === 0 && <p>{t("common:events.reservations.noMembers")}</p>}
                             </>
                         }
                         <>
@@ -255,7 +258,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                 <Table bordered className="bg-white reserved mb-0">
                                     <thead>
                                         <tr>
-                                            <th colSpan={4}>All current reservations</th>
+                                            <th colSpan={4}>{t("common:events.reservations.currentReservations")}</th>
                                         </tr>
                                         <tr>
                                             <th className="align-middle checkbox">
@@ -265,16 +268,16 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                     checked={checkAllCancelReservationsCheckbox || false}
                                                     onChange={() => toggleAllCancelReservationCheckboxes()}
                                                 />
-                                                <Label for="check_all_reserved" className="ms-2">All</Label>
+                                                <Label for="check_all_reserved" className="ms-2">{t("common:events.reservations.selectAll")}</Label>
                                             </th>
                                             <th className="align-middle student-name">
-                                                Student
+                                                {t("common:events.reservations.studentColumn")}
                                             </th>
                                             <th className="align-middle booking-status">
-                                                Booking status
+                                                {t("common:events.reservations.bookingStatus")}
                                             </th>
                                             <th className="align-middle reserved-by">
-                                                Reserved by
+                                                {t("common:events.reservations.reservedBy")}
                                             </th>
                                         </tr>
                                     </thead>
@@ -295,20 +298,20 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 </td>
                                                 <td className="align-middle">
                                                     {booking.userBooked.givenName + " " + booking.userBooked.familyName}
-                                                    {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
+                                                    {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">{t("common:events.reservations.emailNotVerified")}</div>}
                                                 </td>
                                                 <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                                <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? 'You' : 'Someone else')}</td>
+                                                <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? t("common:events.reservations.reservedByYou") : t("common:events.reservations.reservedByOther"))}</td>
                                             </tr>);
                                         })}
-                                        {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
+                                        {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>{t("common:events.reservations.noBookings")}</td></tr>}
                                     </tbody>
                                 </Table>
                             </HorizontalScroller>
 
                             <div className="text-center mb-3">
                                 <Button color="keyline" disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
-                                    Cancel reservations
+                                    {t("common:events.reservations.cancelButton")}
                                 </Button>
                             </div>
                         </>
@@ -316,7 +319,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             <Table bordered className="mt-3 bg-white unreserved">
                                 <thead>
                                     <tr>
-                                        <th colSpan={2}>Other students in this group</th>
+                                        <th colSpan={2}>{t("common:events.reservations.otherStudents")}</th>
                                     </tr>
                                     <tr>
                                         <th className="w-auto text-nowrap align-middle">
@@ -327,10 +330,10 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 onChange={() => toggleAllUnbooked()}
                                                 disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                             />
-                                            <Label for="check_all_unbooked" className="ms-2">All</Label>
+                                            <Label for="check_all_unbooked" className="ms-2">{t("common:events.reservations.selectAll")}</Label>
                                         </th>
                                         <th className="w-100 align-middle student-name">
-                                            Student
+                                            {t("common:events.reservations.studentColumn")}
                                         </th>
                                     </tr>
                                 </thead>
@@ -350,7 +353,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                             </td>
                                             <td className="w-100 align-middle">
                                                 {user.givenName + " " + user.familyName}
-                                                {user.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
+                                                {user.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">{t("common:events.reservations.emailNotVerified")}</div>}
                                             </td>
                                         </tr>);
                                     })}
@@ -359,12 +362,12 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
                             {/* Contact details for main supervisor */}
                             <div className={"mt-2 mb-3"}>
-                                <h4>Contact details for main group supervisor</h4>
-                                <p>Change these if a teacher other than yourself is going to be supervising the students at this event.</p>
+                                <h4>{t("common:events.reservations.supervisorContactTitle")}</h4>
+                                <p>{t("common:events.reservations.supervisorContactDescription")}</p>
                                 <Row>
                                     <Col md={6}>
                                         <Label htmlFor="contact-name" className="form-required">
-                                            Contact name
+                                            {t("common:events.reservations.contactName")}
                                         </Label>
                                         <Input
                                             id="contact-name" name="contact-name" type="text" value={groupSupervisorContactName}
@@ -374,7 +377,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                     </Col>
                                     <Col md={6}>
                                         <Label htmlFor="contact-email" className="form-required">
-                                            Contact email
+                                            {t("common:events.reservations.contactEmail")}
                                         </Label>
                                         <Input
                                             id="contact-email" name="contact-email" type="text" value={groupSupervisorContactEmail}
@@ -387,12 +390,9 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
                             {/* Additional booking information for teachers */}
                             <div className={"mt-2 mb-3"}>
-                                <h4>Additional booking information</h4>
+                                <h4>{t("common:events.reservations.additionalInfoTitle")}</h4>
                                 <p>
-                                    Add additional information about the group booking, for example contact details of other group supervisors.{" "}
-                                    Please be aware that the students will remain the responsibility of the accompanying teachers.{" "}
-                                    Please make sure that you have enough staff for the number of students you are bringing.{" "}
-                                    We recommend at least 2 members of staff per group.
+                                    {t("common:events.reservations.additionalInfoDescription")}
                                 </p>
                                 <Input type={"textarea"} value={additionalBookingNotes} onChange={e => setAdditionalBookingNotes(e.target.value)} />
                             </div>
@@ -400,11 +400,11 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             <Row className="toolbar">
                                 <Col>
                                     {isReservationLimitReached() && <p className="text-danger">
-                                        You can only reserve a maximum of {event.groupReservationLimit} group members onto this event.
+                                        {t("common:events.reservations.limitWarning", { maxReservations: event.groupReservationLimit })}
                                     </p>}
                                     <div className="text-center">
                                         <Button color="solid" disabled={!allowedToReserve} onClick={requestReservations}>
-                                            Reserve places
+                                            {t("common:events.reservations.reserveButton")}
                                         </Button>
                                     </div>
                                 </Col>
@@ -421,7 +421,7 @@ export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
         size: 'xl',
-        title: "Group reservations",
+        title: i18next.t("common:events.reservations.title"),
         body: <ReservationsModal event={event} />,
         bodyContainerClassName: "overflow-visible",
     };

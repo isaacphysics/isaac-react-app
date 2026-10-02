@@ -1,6 +1,8 @@
 import {AppDispatch, closeActiveModal, openActiveModal} from "../../../state";
 import {Button} from "reactstrap";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type EmailChangeModalProps = {
     proceed: () => void;
@@ -19,35 +21,35 @@ export function showEmailChangeModal(dispatch: AppDispatch): Promise<boolean> {
         };
 
         dispatch(openActiveModal({
-            title: `Editing your email address`,
+            title: i18next.t("common:account.emailChange.title"),
             body: <EmailChangeModal proceed={proceed} cancel={cancel} />
         }));
     });
 }
 
 export const EmailChangeModal = (props: EmailChangeModalProps) => {
+    const { t } = useTranslation();
     const {proceed, cancel} = props;
 
     return <div>
         <p>
-            You have changed your account email address. This new email address won&#39;t be used until you click the verification link sent to it.
-            Until then, we will use the old email address and you will still need to use that when logging in by email and password.
+            {t("common:account.emailChange.explanation")}
         </p>
-        <p> Would you like to continue? </p>
+        <p> {t("common:account.emailChange.confirmQuestion")} </p>
         <div className="w-100">
             <Button
                 className={"float-start mb-4"}
                 color={"keyline"}
                 onClick={cancel}
             >
-                Cancel
+                {t("common:account.emailChange.cancelButton")}
             </Button>
             <Button
                 className={"float-end mb-4"}
                 color={"solid"}
                 onClick={proceed}
             >
-                OK
+                {t("common:account.emailChange.okButton")}
             </Button>
         </div>
     </div>;
