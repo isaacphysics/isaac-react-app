@@ -35,7 +35,7 @@ import { useHistoryState } from '../../../services/history';
 import { PageContainer } from '../../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 import { FeatureFlag, useFeatureFlag } from '../../../services/featureFlag';
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const { t } = useTranslation();
@@ -136,20 +136,24 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         className="mb-7"
     >
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
-            <Trans i18nKey="sci:groups.progress.backLink" components={{ backIcon: <i className="icon icon-arrow-left me-2" /> }} />
+            <i className="icon icon-arrow-left me-2"/>
+            {t("sci:groups.progress.backLink")}
         </Link>}
 
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
             {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-none align-items-center d-md-flex")}>
-                <Trans i18nKey="sci:groups.progress.backLink" components={{ backIcon: <i className="icon icon-arrow-left me-2" /> }} />
+                <i className="icon icon-arrow-left me-2"/>
+                {t("sci:groups.progress.backLink")}
             </Link>}
             {isDefined(group?.id) && <>
                 {isPhy && above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupAssignmentProgressCSVDownloadLink(group.id as number))))}>
-                    <Trans i18nKey="common:groups.progress.downloadAssignmentsCsv" components={{ downloadIcon: <i className="icon icon-download ms-2" color="white" /> }} />
+                    {t("common:groups.progress.downloadAssignmentsCsv")}
+                    <i className="icon icon-download ms-2" color="white"/>
                 </Button>
                 {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
-                    <Trans i18nKey="common:groups.progress.downloadTestsCsv" components={{ downloadIcon: <i className="icon icon-download ms-2" color="white" /> }} />
+                    {t("common:groups.progress.downloadTestsCsv")}
+                    <i className="icon icon-download ms-2" color="white"/>
                 </Button>}
             </>}
         </div>

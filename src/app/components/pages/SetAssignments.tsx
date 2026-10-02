@@ -97,7 +97,8 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
-                <Trans i18nKey="common:assignments.table.stagesDifficulties" components={{ infoIcon: <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative" /> }} />
+                {t("common:assignments.table.stagesDifficulties")}
+                <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 <Trans i18nKey="common:assignments.table.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
@@ -152,7 +153,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             {t("common:assignments.table.quizName")}
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            <Trans i18nKey="common:assignments.table.stagesAndDifficulties" components={{ infoIcon: <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" /> }} />
+            {t("common:assignments.table.stagesAndDifficulties")} <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 <Trans i18nKey="common:assignments.table.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
             </UncontrolledTooltip>

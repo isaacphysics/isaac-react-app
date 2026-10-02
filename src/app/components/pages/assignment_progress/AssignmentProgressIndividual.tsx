@@ -33,7 +33,7 @@ import { downloadLinkModal } from "../../elements/modals/AssignmentProgressModal
 import { DetailedMarksTab, GroupAssignmentTab, isQuestionFullyAttempted } from "./AssignmentProgressIndividualTabs";
 import { formatDate } from "../../elements/DateString";
 import { Tabs } from "../../elements/Tabs";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface AssignmentSummaryCardProps {
     studentsAttempted?: number;
@@ -44,23 +44,27 @@ interface AssignmentSummaryCardProps {
 }
 
 export const AssignmentSummaryCard = ({studentsAttempted, studentsCompleted, totalStudents, dueDate, isQuiz}: AssignmentSummaryCardProps) => {
+    const { t } = useTranslation();
     return <Card className="my-4">
         <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
             <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                <Trans i18nKey="common:assignments.progress.dueDate" components={{ dueDateIcon: <i className={classNames("icon me-2", dueDate && dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary" /> }} values={{ dueDate: formatDate(dueDate) }} />
+                <i className={classNames("icon me-2", dueDate && dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                {t("common:assignments.progress.dueDate", { dueDate: formatDate(dueDate) })}
             </div>
             <div className="d-flex align-items-center flex-grow-1 fw-bold">
                 <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
                 {studentsAttempted} of {totalStudents} {isQuiz ? "submitted their test" : "attempted all questions"}
             </div>
             <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                <Trans i18nKey="common:assignments.progress.fullMarks" components={{ fullMarksIcon: <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary" /> }} values={{ completedCount: studentsCompleted, totalCount: totalStudents }} />
+                <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                {t("common:assignments.progress.fullMarks", { completedCount: studentsCompleted, totalCount: totalStudents })}
             </div>
         </CardBody>
     </Card>;
 };
 
 const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const questions = assignment.gameboard.contents;
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
@@ -102,11 +106,13 @@ const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgr
     return <div className={"assignment-progress-details single-assignment" + (pageSettings?.colourBlind ? " colour-blind" : "")}>
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
             {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
-                <Trans i18nKey="sci:assignments.progress.backToGroup" components={{ arrowIcon: <i className="icon icon-arrow-left me-2" /> }} />
+                <i className="icon icon-arrow-left me-2"/>
+                {t("sci:assignments.progress.backToGroup")}
             </Link>}
             {isPhy && <Spacer/>}
             <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentProgressCSVDownloadLink(assignment.id))))}>
-                <Trans i18nKey="common:assignments.progress.downloadCsv" components={{ downloadIcon: <i className="icon icon-download ms-2" color="white" /> }} />
+                {t("common:assignments.progress.downloadCsv")}
+                <i className="icon icon-download ms-2" color="white"/>
             </Button>
         </div>
 

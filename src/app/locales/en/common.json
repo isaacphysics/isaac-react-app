@@ -51,10 +51,10 @@
       "detailedTab": {
         "title": "Performance on questions"
       },
-      "downloadCsv": "Download CSV<downloadIcon/>",
-      "dueDate": "<dueDateIcon/>Due: {{dueDate}}",
+      "downloadCsv": "Download CSV",
+      "dueDate": "Due: {{dueDate}}",
       "errorFetching": "Error fetching assignment progress",
-      "fullMarks": "<fullMarksIcon/>{{completedCount}} of {{totalCount}} got full marks",
+      "fullMarks": "{{completedCount}} of {{totalCount}} got full marks",
       "groupTab": {
         "description": "See who attempted the assignment and which questions they struggled with."
       },
@@ -74,8 +74,8 @@
       "manage": "Manage",
       "quizName": "Quiz name",
       "share": "Share",
-      "stagesAndDifficulties": "Stages and Difficulties <infoIcon/>",
-      "stagesDifficulties": "Stages and Difficulties<infoIcon/>",
+      "stagesAndDifficulties": "Stages and Difficulties",
+      "stagesDifficulties": "Stages and Difficulties",
       "unsave": "Unsave"
     }
   },
@@ -135,9 +135,9 @@
       "title": "Manage groups"
     },
     "progress": {
-      "downloadAssignmentsCsv": "Download assignments CSV<downloadIcon/>",
+      "downloadAssignmentsCsv": "Download assignments CSV",
       "downloadCsv": "Download CSV",
-      "downloadTestsCsv": "Download tests CSV<downloadIcon/>",
+      "downloadTestsCsv": "Download tests CSV",
       "dueDate": "Due: {{dueDate}}",
       "fallbackTitle": "Unknown quiz",
       "scheduledBadge": "(scheduled)",
