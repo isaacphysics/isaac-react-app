@@ -37,6 +37,7 @@ import {BoardAssignee, ActiveModalProps} from "../../../../IsaacAppTypes";
 import {StyledSelect} from "../../elements/inputs/StyledSelect";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 
 interface AssignGroupProps {
@@ -259,14 +260,13 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
 };
 
 export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModalProps => {
-    const { t } = useTranslation();
     const {board, toggle} = props;
 
     return {
         closeAction: toggle,
         size: "md",
-        title: t("common:assignments.setModal.title", { boardTitle: board?.title }),
+        title: i18next.t("common:assignments.setModal.title", { boardTitle: board?.title }),
         body: <SetAssignmentsModalContent {...props} />,
-        buttons: [<Button key={0} aria-label={t("common:assignments.setModal.closeAriaLabel")} color="keyline" className="w-100" onClick={toggle}>{t("common:assignments.setModal.closeButton")}</Button>]
+        buttons: [<Button key={0} aria-label={i18next.t("common:assignments.setModal.closeAriaLabel")} color="keyline" className="w-100" onClick={toggle}>{i18next.t("common:assignments.setModal.closeButton")}</Button>]
     };
 };

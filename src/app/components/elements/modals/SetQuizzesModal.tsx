@@ -21,6 +21,7 @@ import { ActiveModalProps, AppGroup } from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
@@ -247,11 +248,10 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
 }
 
 export const SetQuizzesModal = (props: SetQuizzesModalProps): ActiveModalProps => {
-    const { t } = useTranslation();
     const {quiz} = props;
 
     return {
-        title: t("common:tests.setQuiz.title", { testTitle: quiz.title ?? quiz.id }),
+        title: i18next.t("common:tests.setQuiz.title", { testTitle: quiz.title ?? quiz.id }),
         body: <SetQuizzesModalContent {...props}/>
     };
 };
