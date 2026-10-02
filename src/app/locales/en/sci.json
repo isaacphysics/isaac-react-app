@@ -1,7 +1,20 @@
 {
   "account": {
+    "context": {
+      "interestedLabel": "I am interested in...",
+      "teachingLabel": "I am teaching...",
+      "tooltipContent": "Choose a stage here to pre-select the material that is most relevant to your interests.<br1/>You will be able to change this preference on relevant pages.<br2/>If you prefer to see all content by default, select \"All stages\"."
+    },
+    "country": {
+      "description": "This helps us to measure our reach and impact."
+    },
     "deletion": {
       "title": "Delete Account"
+    },
+    "emailPreferences": {
+      "assignmentsDescription": "Get notified when your teacher gives your group a new assignment.",
+      "eventsDescription": "Information about new online or in-person events.",
+      "newsDescription": "New content and website feature updates, as well as interesting news about Isaac."
     },
     "preferences": {
       "emailFrequency": "<b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
@@ -14,6 +27,10 @@
       "studentIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.",
       "teacherIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.",
       "tutorIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year."
+    },
+    "school": {
+      "description": "The country you go to school in. This helps us promote events near you.",
+      "notAssociated": "Not associated with a school"
     },
     "title": "My account",
     "tutorRequest": {
@@ -82,6 +99,10 @@
     "metaDescription": "Log in to Isaac to learn and track your progress.",
     "notLinked": {
       "enableSignIn": "If you've not yet enabled sign-in with {{provider}}, first log in with another method (e.g. email and password). Then, on <accountLink>My Account</accountLink>, on \"Security\", next to \"{{providerSetting}}\", click \"Link\"."
+    },
+    "password": {
+      "confirmLabel": "Re-enter password",
+      "matchError": "Please ensure your passwords match."
     },
     "register": {
       "heading": "Hello!"

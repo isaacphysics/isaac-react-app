@@ -17,6 +17,15 @@
       "intro": "If you are changing schools, we recommend you take the following steps:",
       "title": "Changing schools?"
     },
+    "context": {
+      "addContentButton": "Add more content",
+      "addStageLabel": "Add stage",
+      "removeRow": "clear stage row",
+      "stageLabel": "Stage"
+    },
+    "country": {
+      "label": "Country"
+    },
     "deletion": {
       "cancelButton": "Cancel",
       "confirmButton": "Confirm via email",
@@ -46,16 +55,41 @@
       "okButton": "OK",
       "title": "Editing your email address"
     },
+    "emailPreferences": {
+      "assignmentsLabel": "Assignments",
+      "descriptionHeader": "Description",
+      "eventsLabel": "Events",
+      "newsLabel": "News",
+      "preferenceHeader": "Preference",
+      "tipsLabel": "Tips and updates",
+      "typeHeader": "Email type"
+    },
+    "gender": {
+      "label": "Gender",
+      "options": {
+        "female": "Female",
+        "male": "Male",
+        "other": "Other gender identity",
+        "preferNotToSay": "Prefer not to say"
+      }
+    },
     "leaveGroup": {
       "cancelButton": "Cancel",
       "confirmButton": "Leave group",
       "title": "Leave group"
     },
     "mobileLogOut": "Log out",
+    "nameInput": {
+      "familyNameLabel": "Last name",
+      "givenNameLabel": "First name",
+      "invalidNameMessage": "Please enter a valid name."
+    },
     "preferences": {
+      "booleanNotationLabel": "Preferred logic notation",
       "description": "Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time under My Account.",
       "emailDescription": "Get important information about the {{siteTitle}} programme delivered to your inbox. These settings can be changed at any time.",
       "emailLabel": "Set your email notification preferences",
+      "preferredLanguageLabel": "Preferred programming language",
       "saveButton": "Save preferences",
       "sectionTitle": "Set your preferences",
       "skipButton": "I'll do this later",
@@ -85,6 +119,12 @@
       "confirmBody": "The user <strong>{{teacherName}}</strong> will no longer be able to access your data.<br/>Are you sure you want to revoke access for this user?",
       "confirmButton": "Confirm",
       "title": "Revoke access to your data"
+    },
+    "school": {
+      "label": "School",
+      "placeholder": "Type your school name",
+      "useAsName": "Use \"{{schoolName}}\" as your school name",
+      "validationError": "Please specify your school association."
     },
     "sharingData": {
       "cancelButton": "Cancel",
@@ -656,6 +696,13 @@
       "passwordLengthError": "Passwords must be at least {{minLength}} characters long",
       "passwordPlaceholder": "Password"
     },
+    "dob": {
+      "label": "Date of birth"
+    },
+    "emailInput": {
+      "label": "Email address",
+      "validationError": "Please enter a valid email address."
+    },
     "formIntro": "To <emphasis>continue with an account</emphasis>, please do so below",
     "login": {
       "heading": "Log in or sign up:"
@@ -684,6 +731,17 @@
       "permissionIntro": "Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.",
       "privacyNote": "Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service <privacyLink>here</privacyLink>.",
       "title": "Additional information"
+    },
+    "password": {
+      "label": "Password",
+      "minLengthError": "Passwords must be at least {{minLength}} characters long.",
+      "minLengthHint": "Your password must be at least {{minLength}} characters long.",
+      "strengthLabel": "Password strength:"
+    },
+    "passwordInput": {
+      "hideButton": "Hide",
+      "invalidFeedback": "Please enter a valid password.",
+      "showButton": "Show"
     },
     "passwordReset": {
       "checkInbox": "Please check your inbox.",
@@ -909,6 +967,11 @@
       "userId": "User ID"
     }
   },
+  "clipboard": {
+    "copiedTooltip": "Copied to clipboard!",
+    "copyAriaLabel": "Copy to clipboard",
+    "copyButton": "Copy"
+  },
   "comingSoon": {
     "pageTitle": "Coming soon"
   },
@@ -922,6 +985,12 @@
     "noResults": "No results found",
     "resultsCount": "Showing <b>{{count}}</b> results",
     "title": "Concepts"
+  },
+  "confidence": {
+    "infoModal": {
+      "body": "We regularly review and update the {{siteName}} platform’s content and would like your input in order to prioritise content and assess the impact of updates. Data captured with these buttons will help us identify priority areas.",
+      "title": "Information"
+    }
   },
   "contact": {
     "faq": {
@@ -965,6 +1034,16 @@
   },
   "context": {
     "mathsAndFurtherMaths": "Maths and Further Maths"
+  },
+  "contextPicker": {
+    "resetButton": "Reset viewing context",
+    "stageLabel": "Stage"
+  },
+  "dateInput": {
+    "clearButtonLabel": "Clear date{{labelSuffix}}",
+    "dayLabel": "Day{{labelSuffix}}",
+    "monthLabel": "Month{{labelSuffix}}",
+    "yearLabel": "Year{{labelSuffix}}"
   },
   "events": {
     "admin": {
@@ -1082,6 +1161,12 @@
   },
   "experiments": {
     "cardSubtitle": "Develop experimental skills with interesting experiments."
+  },
+  "form": {
+    "elements": {
+      "requiredError": "required",
+      "trueFalseAccessibilityLabel": "for {{fieldName}}"
+    }
   },
   "freeTextBuilder": {
     "matchingRules": {
@@ -1424,9 +1509,30 @@
     },
     "confirmButton": "OK",
     "helpButton": "Help",
+    "helpTooltip": {
+      "examples": "Here are some examples of expressions you can type:<br1/><br2/>{{example}}<br3/>As you type, the box below will preview the result."
+    },
+    "input": {
+      "placeholder": "Type your formula here",
+      "placeholderOrType": "or type your formula here",
+      "resetButton": "Reset to initial value",
+      "symbolsHeading": "The following symbols may be useful:"
+    },
     "orientationWarning": "Our equation editor works best in landscape mode.",
     "resetButton": "Reset",
-    "trashButton": "Trash"
+    "trashButton": "Trash",
+    "validation": {
+      "badCharacters": "Some of the characters you are using are not allowed: {{badCharacters}}",
+      "decimalsToFractions": "Please convert decimal numbers to fractions.",
+      "doubleInequality": "We are not able to accept double inequalities, and answers will never require them.",
+      "functionSpacing": "Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!",
+      "inverseTrig": "To create the inverse {{trigFunction}} function, use 'arc{{functionName}}'.",
+      "inverseTrigHyperbolic": "To create the inverse {{trigFunction}} function, use 'ar{{functionName}}'.",
+      "latexNotSupported": "LaTeX syntax is not supported.",
+      "missingBrackets": "You are missing some brackets.",
+      "stateSymbolsNotRequired": "This question does not require state symbols.",
+      "syntaxError": "Syntax error: unexpected token \"{{tokenValue}}\""
+    }
   },
   "markdownBuilder": {
     "guideLinkText": "Markdown guide",
@@ -1671,7 +1777,16 @@
     "totalCount": "of <b>{{total}}</b>"
   },
   "questions": {
-    "loadError": "Unable to load question"
+    "inputValidation": {
+      "warningLabel": "Careful!"
+    },
+    "loadError": "Unable to load question",
+    "multiChoice": {
+      "clearOption": "(clear)"
+    },
+    "numeric": {
+      "unitPlaceholder": "Unit"
+    }
   },
   "quickQuizzes": {
     "title": "Quick quizzes"
@@ -1851,6 +1966,19 @@
       "attribution": "– Computer science student",
       "quote": "“I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.”"
     }
+  },
+  "subjectInterests": {
+    "aLevelHeader": "A Level<br/><small>16-18 yrs</small>",
+    "chemistry": "Chemistry",
+    "chemistryShort": "Chem",
+    "engineering": "Engineering",
+    "engineeringShort": "Eng",
+    "gcseHeader": "GCSE<br/><small>14-16 yrs</small>",
+    "maths": "Maths",
+    "physics": "Physics",
+    "physicsShort": "Phys",
+    "title": "Subject Interests",
+    "universityHeader": "University<br/><small>18+ yrs</small>"
   },
   "support": {
     "selectTopicButton": "Select a topic"

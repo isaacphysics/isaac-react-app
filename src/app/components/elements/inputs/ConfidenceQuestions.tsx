@@ -6,6 +6,7 @@ import classNames from "classnames";
 import {isAda, isPhy, SITE_TITLE_SHORT} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
+import i18next from "i18next";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -84,11 +85,9 @@ interface ConfidenceQuestionsProps {
 
 const confidenceInformationModal = () => openActiveModal({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: "Information",
+    title: i18next.t("common:confidence.infoModal.title"),
     body: <div className="mb-4">
-        We regularly review and update the {SITE_TITLE_SHORT} platform’s content and would like your input in order to
-        prioritise content and assess the impact of updates. Data captured with these buttons will help us
-        identify priority areas.
+        {i18next.t("common:confidence.infoModal.body", { siteName: SITE_TITLE_SHORT })}
     </div>
 });
 

@@ -21,6 +21,7 @@ import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
 import isUndefined from "lodash/isUndefined";
 import { WithLinkableSetting } from "../WithLinkableSetting";
+import { Trans, useTranslation } from "react-i18next";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -41,6 +42,7 @@ function UserContextRow({
     userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
     tutorOrAbove, userContexts, setUserContexts, index, required: _required
 }: UserContextRowProps) {
+    const { t } = useTranslation();
     const onlyUCWithThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
     const onStageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +86,7 @@ function UserContextRow({
         <div className="d-flex flex-row justify-content-between">
             <StyledDropdown
                 className={classNames("account-dropdown", {"me-1" : isAda})}
-                aria-label="Stage"
+                aria-label={t("common:account.context.stageLabel")}
                 invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
                 onChange={onStageUpdate}
                 value={userContext.stage}
@@ -101,7 +103,7 @@ function UserContextRow({
             {/* Exam Board Selector */}
             {isAda && <StyledDropdown
                 className="account-dropdown ms-1"
-                aria-label="Exam Board"
+                aria-label={t("ada:account.context.examBoardLabel")}
                 invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
                 value={userContext.examBoard}
@@ -117,7 +119,7 @@ function UserContextRow({
 
             <div className="remove-stage-container">
                 {tutorOrAbove && userContexts.length > 1 && <Button close
-                    className="close float-none bg-white p-2" aria-label="clear stage row"
+                    className="close float-none bg-white p-2" aria-label={t("common:account.context.removeRow")}
                     disabled={userContexts.length <= 1}
                     onClick={() => setUserContexts(userContexts.filter((_uc, i) => i !== index))}
                 />}
@@ -140,6 +142,7 @@ interface UserContextAccountInputProps {
 export function UserContextAccountInput({
     user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted, required=true, className=""
 }: UserContextAccountInputProps) {
+    const { t } = useTranslation();
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const noMoreValidStages = !getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length;
@@ -149,22 +152,20 @@ export function UserContextAccountInput({
         <div className="mb-2">
             <Label htmlFor="user-context-selector" className={classNames("fw-bold mb-0", (required ? "form-required" : "form-optional"))}>
                 {siteSpecific(
-                    <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
-                    <span>Show me content for...</span>
+                    <span>{tutorOrAbove ? t("sci:account.context.teachingLabel") : t("sci:account.context.interestedLabel")}</span>,
+                    <span>{t("ada:account.context.showContentLabel")}</span>
                 )}
             </Label>
             <i id={`show-me-content-${componentId}`} className={classNames("icon icon-inline icon-info mx-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
             <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                 {siteSpecific(<>
-                    {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
-                    {"You will be able to change this preference on relevant pages."}<br />
-                    {'If you prefer to see all content by default, select "All stages".'}
+                    <Trans i18nKey="sci:account.context.tooltipContent" components={{ br1: <br />, br2: <br /> }} />
                 </>, 
                 <>
                     {/* This tooltip is very hard to reach */}
                     {tutorOrAbove ?
-                        <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
-                        <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
+                        <><Trans i18nKey="ada:account.context.tooltipTutor" components={{ br: <br /> }} /></> :
+                        <>{t("ada:account.context.tooltipStudent")}</>
                     }
                 </>)}
             </UncontrolledTooltip>
@@ -201,12 +202,12 @@ export function UserContextAccountInput({
                             setUserContexts([...userContexts, {stage: newStage, examBoard: newExamBoard}]);
                         }}
                         disabled={!validateUserContexts(userContexts)}>
-                        Add more content
+                        {t("common:account.context.addContentButton")}
                     </Button>
                 </Col>}
             {isPhy && tutorOrAbove && validateUserContexts(userContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
-                    aria-label="Add stage"
+                    aria-label={t("common:account.context.addStageLabel")}
                     className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-transparent`}
                     onClick={() => setUserContexts([...userContexts, {}])}
                 />

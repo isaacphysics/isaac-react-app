@@ -8,8 +8,10 @@ import { isDefined, isLoggedIn, isPhy, useCurrentQuestionAttempt } from "../../.
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
+import { useTranslation } from "react-i18next";
 
 export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, focusRef, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
+    const { t } = useTranslation();
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
@@ -96,7 +98,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
             >
                 <div className={classNames("align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                     <Markup encoding={"latex"}>
-                        {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit"}
+                        {isDefined(unit) ? wrapUnitForSelect(unit) : t("common:questions.numeric.unitPlaceholder")}
                     </Markup>
                 </div>
             </DropdownToggle>

@@ -2,11 +2,12 @@ import {StyledCheckbox} from "./StyledCheckbox";
 import {FormGroup, Table} from "reactstrap";
 import React, {SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
-import {EMAIL_PREFERENCE_DEFAULTS, isPhy, siteSpecific} from "../../../services";
+import {EMAIL_PREFERENCE_DEFAULTS, isPhy} from "../../../services";
 import {Dispatch} from "react";
 import { TrueFalseRadioInput } from "./TrueFalseRadioInput";
 import classNames from "classnames";
 import {WithLinkableSetting} from "../WithLinkableSetting";
+import { useTranslation } from "react-i18next";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;
@@ -16,19 +17,11 @@ interface UserEmailPreferencesProps {
 }
 
 export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
+    const { t } = useTranslation();
     const isaacEmailPreferenceDescriptions = {
-        assignments: siteSpecific(
-            "Get notified when your teacher gives your group a new assignment.",
-            "Receive notifications when your teacher sets you work. These are sent as needed by your teacher."
-        ),
-        news: siteSpecific(
-            "New content and website feature updates, as well as interesting news about Isaac.",
-            "Be the first to hear about new features, challenges, topics, and improvements on the platform. Plus, get helpful tips on making the most of new tools."
-        ),
-        events: siteSpecific(
-            "Information about new online or in-person events.",
-            "Find out about upcoming events designed to support your learning and professional development."
-        )
+        assignments: t("site:account.emailPreferences.assignmentsDescription"),
+        news: t("site:account.emailPreferences.newsDescription"),
+        events: t("site:account.emailPreferences.eventsDescription")
     };
 
     return <FormGroup className={classNames("form-group", {"pt-4": isPhy})}>
@@ -36,14 +29,14 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             <Table className="mb-0">
                 <thead>
                     <tr>
-                        <th>Email type</th>
-                        <th className="d-none d-sm-table-cell">Description</th>
-                        <th className="text-center">Preference</th>
+                        <th>{t("common:account.emailPreferences.typeHeader")}</th>
+                        <th className="d-none d-sm-table-cell">{t("common:account.emailPreferences.descriptionHeader")}</th>
+                        <th className="text-center">{t("common:account.emailPreferences.preferenceHeader")}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="form-required">Assignments</td>
+                        <td className="form-required">{t("common:account.emailPreferences.assignmentsLabel")}</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.assignments}
                         </td>
@@ -56,7 +49,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         </td>
                     </tr>
                     <tr>
-                        <td className="form-required">News</td>
+                        <td className="form-required">{t("common:account.emailPreferences.newsLabel")}</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.news}
                         </td>
@@ -69,7 +62,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         </td>
                     </tr>
                     {<tr>
-                        <td className="form-required">Events</td>
+                        <td className="form-required">{t("common:account.emailPreferences.eventsLabel")}</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.events}
                         </td>
@@ -87,7 +80,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             <WithLinkableSetting className={"email-preference"} id={"assignments-preference"}>
                 <StyledCheckbox checked={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
                     onChange={(e) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: e.target.checked})}
-                    label={<span><b>Assignments</b></span>}
+                    label={<span><b>{t("common:account.emailPreferences.assignmentsLabel")}</b></span>}
                 />
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
             </WithLinkableSetting>
@@ -98,7 +91,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         ...emailPreferences,
                         NEWS_AND_UPDATES: e.target.checked
                     })}
-                    label={<span><b>Tips and updates</b></span>}
+                    label={<span><b>{t("common:account.emailPreferences.tipsLabel")}</b></span>}
                 />
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
             </WithLinkableSetting>
@@ -106,7 +99,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             <WithLinkableSetting className={"email-preference"} id={"events-preference"}>
                 <StyledCheckbox checked={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
                     onChange={(e) => setEmailPreferences({...emailPreferences, EVENTS: e.target.checked})}
-                    label={<span><b>Events</b></span>}
+                    label={<span><b>{t("common:account.emailPreferences.eventsLabel")}</b></span>}
                 />
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
             </WithLinkableSetting>

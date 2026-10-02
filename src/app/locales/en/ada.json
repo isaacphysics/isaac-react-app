@@ -1,7 +1,21 @@
 {
   "account": {
+    "context": {
+      "examBoardLabel": "Exam Board",
+      "showContentLabel": "Show me content for...",
+      "tooltipStudent": "Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.",
+      "tooltipTutor": "Add a stage and examination board for each qualification you are teaching.<br/>On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching."
+    },
+    "country": {
+      "description": "This helps us personalise the platform for you."
+    },
     "deletion": {
       "title": "Delete account"
+    },
+    "emailPreferences": {
+      "assignmentsDescription": "Receive notifications when your teacher sets you work. These are sent as needed by your teacher.",
+      "eventsDescription": "Find out about upcoming events designed to support your learning and professional development.",
+      "newsDescription": "Be the first to hear about new features, challenges, topics, and improvements on the platform. Plus, get helpful tips on making the most of new tools."
     },
     "mobileHint": "Update your Ada Computer Science account, or",
     "preferences": {
@@ -13,6 +27,10 @@
     "review": {
       "intro": "We use this information to show you relevant content. We recommend checking your details occasionally and updating them if anything has changed.",
       "privacyPolicy": "Updating this information helps us continue to show you relevant content. Full details on how we use your personal information can be found in our <privacyPolicyLink>privacy policy</privacyPolicyLink>."
+    },
+    "school": {
+      "description": "The country you go to school in. This helps us measure our reach and impact.",
+      "notAssociated": "Not associated with a UK school"
     },
     "title": "Account"
   },
@@ -79,6 +97,10 @@
       "returnButton": "Back to the site"
     },
     "closeButton": "Close",
+    "emailInput": {
+      "studentHint": "This will be the email address you use to log in.",
+      "teacherHint": "This will be visible to your students. We recommend using your school email address."
+    },
     "logoAlt": "Ada Computer Science Logo",
     "metaDescription": "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.",
     "notLinked": {
@@ -104,6 +126,11 @@
   },
   "contact": {
     "metaDescription": "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!"
+  },
+  "contextPicker": {
+    "differentSourceExplanation": "The stage was specified by {{stageSource}} and the exam board by \n            {{examBoardSource}}.",
+    "examBoardLabel": "Exam Board",
+    "sameSourceExplanation": "The stage and exam board were specified by {{stageSource}}."
   },
   "events": {
     "details": {

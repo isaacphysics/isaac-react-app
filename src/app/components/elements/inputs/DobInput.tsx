@@ -5,6 +5,7 @@ import {currentYear, DateInput} from "./DateInput";
 import {Immutable} from "immer";
 import range from "lodash/range";
 import { FormGroup, Label, FormFeedback } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 interface DobInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -13,8 +14,9 @@ interface DobInputProps {
     editingOtherUser?: boolean;
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
+    const { t } = useTranslation();
     return <FormGroup className="form-group">
-        <Label className="fw-bold" htmlFor="dob-input">Date of birth</Label>
+        <Label className="fw-bold" htmlFor="dob-input">{t("common:auth.dob.label")}</Label>
         <DateInput
             invalid={isDefined(userToUpdate.dateOfBirth) && !isDobOldEnoughForSite(userToUpdate.dateOfBirth)}
             id="dob-input"

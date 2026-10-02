@@ -9,6 +9,8 @@ import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
 import QuestionInputValidation from "./QuestionInputValidation";
 import classNames from "classnames";
 import { sanitiseInequalityState } from "../../../services/inequalityUtils";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface ModeConstantTypes {
     badInputCharacters: RegExp;
@@ -92,12 +94,12 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
         const parsedExpression = modeConstants[editorMode].parseExpressionFunc(input);
 
         if (isError(parsedExpression) && parsedExpression.error) {
-            errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
+            errors.push(i18next.t("common:inequality.validation.syntaxError", { tokenValue: parsedExpression.error.token.value || '' }));
         }
     }
 
     if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
-        errors.push('LaTeX syntax is not supported.');
+        errors.push(i18next.t("common:inequality.validation.latexNotSupported"));
     }
 
     const badCharacters = modeConstants[editorMode].badInputCharacters;
@@ -112,7 +114,7 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
                 }
             }
         }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+        errors.push(i18next.t("common:inequality.validation.badCharacters", { badCharacters: usedBadChars.join(" ") }));
     }
 
     const openRoundBracketsCount = input.split("(").length - 1;
@@ -126,7 +128,7 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
         || openCurlyBracketsCount !== closeCurlyBracketsCount) {
         if (["nuclear", "chemistry"].includes(editorMode)) {
             // Rather than a long message about which brackets need closing
-            errors.push('You are missing some brackets.');
+            errors.push(i18next.t("common:inequality.validation.missingBrackets"));
         } else {
             errors.push('You are missing some ' + (closeRoundBracketsCount > openRoundBracketsCount ? 'opening' : 'closing') + ' brackets.');
         }
@@ -134,28 +136,28 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
 
     const decimalsOutsideCompound = input.match(/(?<![A-Za-z])\d+\.\d+\s*([A-Z]|$)|[A-Za-z]\d+\.\d+\s*$/);
     if ((["nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) || (editorMode === "chemistry" && decimalsOutsideCompound)) {
-        errors.push('Please convert decimal numbers to fractions.');
+        errors.push(i18next.t("common:inequality.validation.decimalsToFractions"));
     }
     if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
-        errors.push('This question does not require state symbols.');
+        errors.push(i18next.t("common:inequality.validation.stateSymbolsNotRequired"));
     }
     if (editorMode === "maths") {
         if (/[<>=].+[<>=]/.test(input)) {
-            errors.push('We are not able to accept double inequalities, and answers will never require them.');
+            errors.push(i18next.t("common:inequality.validation.doubleInequality"));
         }
         const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
         if (invTrig != null) {
             const trigFunction = invTrig[2];
             if (invTrig[4] === 'h') {
-                errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction + "'.");
+                errors.push(i18next.t("common:inequality.validation.inverseTrigHyperbolic", { trigFunction, functionName: trigFunction }));
             }
             else {
-                errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction + "'.");
+                errors.push(i18next.t("common:inequality.validation.inverseTrig", { trigFunction, functionName: trigFunction }));
             }
         }
         if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
             // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-            return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
+            return [i18next.t("common:inequality.validation.functionSpacing")];
         }
     }
     return errors;
@@ -168,11 +170,7 @@ const SymbolicHelpTooltip = ({editorMode, helpTooltipId}: {editorMode: EditorMod
             <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
         )}
         <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false} className="symbolic-help-tooltip">
-            Here are some examples of expressions you can type:<br />
-            <br />
-            {modeConstants[editorMode].tooltipExample}
-            <br />
-            As you type, the box below will preview the result.
+            <Trans i18nKey="common:inequality.helpTooltip.examples" components={{ br1: <br />, br2: <br />, br3: <br /> }} values={{ example: modeConstants[editorMode].tooltipExample }} />
         </UncontrolledTooltip>
     </>;
 };
@@ -211,6 +209,7 @@ type EditorModeDependentProps = {
 type SymbolicTextInputProps = DemoPageDependentProps & EditorModeDependentProps & RequiredSymbolicTextInputProps;
 
 export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, setHasStartedEditing, helpTooltipId, initialEditorSymbols, sketchRef, emptySubmission, ...typedProps}: SymbolicTextInputProps) => {
+    const { t } = useTranslation();
     const { demoPage, editorMode, dispatchSetCurrentAttempt, mayRequireStateSymbols } = typedProps;
 
     const constructCurrentAttemptValue = (value: string): GeneralFormulaDTO => ({
@@ -261,8 +260,8 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
         <InputGroup className="my-2 separate-input-group">
             <div className="d-flex flex-nowrap w-100">
                 <div className="position-relative flex-grow-1">      
-                    <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={(editorMode === "logic" && !demoPage) ? "or type your formula here" : "Type your formula here"} className={classNames({"h-100": isPhy}, {"text-body-tertiary": !demoPage && emptySubmission && textInput === typedProps.initialSeedText})}/>
-                    {!demoPage && typedProps.initialSeedText && <button type="button" className="eqn-editor-reset-text-input d-print-none" aria-label={"Reset to initial value"} onClick={() => {
+                    <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={(editorMode === "logic" && !demoPage) ? t("common:inequality.input.placeholderOrType") : t("common:inequality.input.placeholder")} className={classNames({"h-100": isPhy}, {"text-body-tertiary": !demoPage && emptySubmission && textInput === typedProps.initialSeedText})}/>
+                    {!demoPage && typedProps.initialSeedText && <button type="button" className="eqn-editor-reset-text-input d-print-none" aria-label={t("common:inequality.input.resetButton")} onClick={() => {
                         updateEquation('');
                         if (sketchRef.current) sketchRef.current.loadTestCase(typedProps.editorSeed ?? []);
                         setHasStartedEditing(false);
@@ -278,7 +277,7 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
             <QuestionInputValidation userInput={textInput} validator={(input) => symbolicTextInputValidator(input, editorMode, mayRequireStateSymbols, demoPage)}/>
         </InputGroup>
         {!demoPage && typedProps.symbolList && <div className="eqn-editor-symbols">
-            The following symbols may be useful: <pre>{typedProps.symbolList}</pre>
+            {t("common:inequality.input.symbolsHeading")} <pre>{typedProps.symbolList}</pre>
         </div>}
     </div>;
 };

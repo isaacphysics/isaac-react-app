@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import {reactSelectDarkModeStyles, schoolNameWithTownAndPostcode, siteSpecific, validateUserSchool} from "../../../services";
+import {reactSelectDarkModeStyles, schoolNameWithTownAndPostcode, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -10,6 +10,7 @@ import {FormFeedback, FormGroup, Label} from "reactstrap";
 import { components, ControlProps, InputProps, SingleValueProps, ValueContainerProps } from "react-select";
 import { StyledCheckbox } from "./StyledCheckbox";
 import { School } from "../../../../IsaacApiTypes";
+import { useTranslation } from "react-i18next";
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -41,6 +42,7 @@ const customComponents = {
     Input: ((props: InputProps) => <components.Input {...props} className="ms-1" />) as () => React.JSX.Element };
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
+    const { t } = useTranslation();
     const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     const [searchSchools] = useLazySearchSchoolsQuery();
@@ -110,16 +112,16 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <FormGroup className={`school mb-4 ${className} `}>
-        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
+        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t("common:account.school.label")}</Label>
         <p className="d-block input-description">
-            {siteSpecific("The country you go to school in. This helps us promote events near you.", "The country you go to school in. This helps us measure our reach and impact.")}
+            {t("site:account.school.description")}
         </p>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable
                 isDisabled={disableInput}
                 inputId={`school-input-${randomNumber}`}
-                placeholder={"Type your school name"}
+                placeholder={t("common:account.school.placeholder")}
                 value={schoolValue}
                 components={customComponents}
                 className={classNames("basic-multi-select", {"react-select-error": isInvalid})}
@@ -127,7 +129,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 onChange={handleSetSchool}
                 loadOptions={searchSchoolsFn}
                 filterOption={() => true}
-                formatCreateLabel={(input) => `Use "${input}" as your school name`}
+                formatCreateLabel={(input) => t("common:account.school.useAsName", { schoolName: input })}
                 styles={reactSelectDarkModeStyles}
             />
         </React.Fragment>}
@@ -147,11 +149,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                         setUserToUpdate?.(userWithoutSchoolInfo);
                     }
                 })}
-                label={<span>Not associated with a {siteSpecific("","UK ")}school</span>} 
+                label={<span>{t("site:account.school.notAssociated")}</span>} 
             >
             </StyledCheckbox>
             <FormFeedback>
-                Please specify your school association.
+                {t("common:account.school.validationError")}
             </FormFeedback>
         </div>}
     </FormGroup>;

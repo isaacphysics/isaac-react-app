@@ -4,6 +4,7 @@ import {Immutable} from "immer";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isAda} from "../../../services";
+import { useTranslation } from "react-i18next";
 
 interface EmailInputProps {
     className?: string;
@@ -15,16 +16,17 @@ interface EmailInputProps {
 }
 
 export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsValid, submissionAttempted, required}: EmailInputProps) => {
+    const { t } = useTranslation();
     return <FormGroup className={`form-group ${className}`}>
         <Label className={classNames("fw-bold", (required ? "form-required" : "form-optional"))} htmlFor="email-input">
-            Email address
+            {t("common:auth.emailInput.label")}
         </Label>
         {isAda &&
                 <p className="d-block input-description">
                     {(userToUpdate.role !== "STUDENT") && (userToUpdate.role !== "TUTOR") ?
-                        "This will be visible to your students. We recommend using your school email address."
+                        t("ada:auth.emailInput.teacherHint")
                         :
-                        "This will be the email address you use to log in."
+                        t("ada:auth.emailInput.studentHint")
                     }
                 </p>
         }
@@ -40,7 +42,7 @@ export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsVal
             aria-describedby="emailValidationMessage"
         />
         <FormFeedback id="emailValidationMessage">
-            Please enter a valid email address.
+            {t("common:auth.emailInput.validationError")}
         </FormFeedback>
     </FormGroup>;
 };
