@@ -432,6 +432,11 @@
     "searchPlaceholder": "e.g. Creating an AST",
     "title": "Questions"
   },
+  "questions": {
+    "quickQuestion": {
+      "title": "Try it yourself!"
+    }
+  },
   "revision": {
     "challenge": {
       "complete": "Challenge complete!",

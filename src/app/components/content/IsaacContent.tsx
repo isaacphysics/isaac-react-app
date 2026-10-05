@@ -25,6 +25,7 @@ import { useLocation } from "react-router";
 import { DesmosEmbedding } from "./DesmosEmbedding";
 import { GeogebraEmbedding } from "./GeogebraEmbedding";
 import { SkillsApp } from "./SkillsApp";
+import { useTranslation } from "react-i18next";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
@@ -46,6 +47,7 @@ export interface IsaacContentProps {
 }
 
 export const IsaacContent = (props: IsaacContentProps) => {
+    const { t } = useTranslation();
     const {doc: {type, layout, encoding, value, children}} = props;
     const location = useLocation();
     {/*
@@ -80,7 +82,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
             case "image": selectedComponent = <IsaacImage {...props} key={props.doc.id} />; break;
             case "video": selectedComponent = <IsaacVideo {...props} key={props.doc.id} />; break;
             // IsaacCodeSnippet is lazy loaded, so wrap it in Suspense to prevent reload errors
-            case "codeSnippet": selectedComponent = <Suspense fallback={<div>Loading...</div>}> <IsaacCodeSnippet {...props} key={props.doc.id} /> </Suspense>; break;
+            case "codeSnippet": selectedComponent = <Suspense fallback={<div>{t("common:content.loadingIndicator")}</div>}> <IsaacCodeSnippet {...props} key={props.doc.id} /> </Suspense>; break;
             case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...props} key={props.doc.id} />; break;
             case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} key={props.doc.id} />; break;
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} key={props.doc.id} />; break;

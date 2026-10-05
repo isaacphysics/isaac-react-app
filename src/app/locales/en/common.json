@@ -9,6 +9,8 @@
     "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
   },
   "accordion": {
+    "additionalStagesDescription": "You may also be interested in exploring additional material relevant to other learning stages:",
+    "additionalStagesTitle": "Additional learning stages",
     "completion": {
       "allCorrect": "All questions in this part are answered correctly.",
       "allIncorrect": "All questions in this part are answered incorrectly.",
@@ -1205,6 +1207,29 @@
     "copyAriaLabel": "Copy to clipboard",
     "copyButton": "Copy"
   },
+  "clozeQuestion": {
+    "accessibility": {
+      "dragEndDropZone": "Draggable item {{itemText}} was dropped into drop zone number {{dropZoneIndex}}",
+      "dragEndSwapped": "Draggable item {{activeItemText}} was swapped with {{hoveredItemText}}.",
+      "dragOverDropZone": "Draggable item is over drop zone number {{dropZoneIndex}}",
+      "dragOverSwap": "Swap draggable item {{activeItemText}} with item {{hoveredItemText}}."
+    }
+  },
+  "codeEditor": {
+    "feedback": {
+      "correct": "Your code is correct!",
+      "incorrect": "Your code is incorrect!",
+      "ranCorrectly": "Your code ran correctly!"
+    },
+    "iframeTitle": "Code Sandbox",
+    "timeout": {
+      "infoHeading": "Useful information to include in your email:",
+      "locationLabel": "Location",
+      "notLoggedIn": "Not currently logged in",
+      "userAgentLabel": "User Agent",
+      "userIdLabel": "User ID"
+    }
+  },
   "comingSoon": {
     "pageTitle": "Coming soon"
   },
@@ -1305,6 +1330,14 @@
       "text": "Follow us on:"
     },
     "title": "Contact us"
+  },
+  "content": {
+    "codeSnippet": {
+      "viewOnGithub": "View on GitHub"
+    },
+    "expandImageLabel": "Expand image",
+    "imagePreviewTitle": "Image preview",
+    "loadingIndicator": "Loading..."
   },
   "contentPropertyTags": {
     "deprecatedLabel": "DEPRECATED",
@@ -1431,9 +1464,25 @@
     "daysAgo": "{{days}} days ago",
     "inDays": "in {{days}} days"
   },
+  "desmos": {
+    "embedTitle": "Desmos Calculator"
+  },
   "dnd": {
     "clozeFallbackText": "cloze item without a description",
     "draggableRoleDescription": "draggable item"
+  },
+  "dragAndDrop": {
+    "cancelled": "Dragging was cancelled. Draggable item {{itemText}} was returned to it's previous position.",
+    "dropped": "Draggable item {{itemText}} was dropped.",
+    "droppedIntoItemsSection": "Draggable item was dropped into the items section",
+    "itemSectionLabel": "Items:",
+    "keyboardInstructions": "To pick up an item, press space or enter. Use the up and down arrow keys to navigate between drop zones and items in the question. Press space or enter again to drop the item into a new position, or to swap it with another item being hovered over.",
+    "offTarget": "Draggable item {{itemText}} is no longer over a droppable area.",
+    "overItemsSection": "Draggable item is over the items section",
+    "overPreviousPosition": "Draggable item {{itemText}} is over it's previous position.",
+    "pickup": "Picked up draggable item {{itemText}}.",
+    "returnedPreviousPosition": "Draggable item {{itemText}} was returned to it's previous position.",
+    "unselectedItems": "Non-selected items"
   },
   "editorRenderer": {
     "waitingContent": "Waiting for {{siteTitle}} content..."
@@ -1716,6 +1765,10 @@
   "experiments": {
     "cardSubtitle": "Develop experimental skills with interesting experiments."
   },
+  "figure": {
+    "expandButton": "Expand figure",
+    "label": "Figure {{figureNumber}}"
+  },
   "form": {
     "elements": {
       "requiredError": "required",
@@ -1931,6 +1984,9 @@
       "title": "Unable to load page"
     }
   },
+  "geogebra": {
+    "openContent": "Click to open GeoGebra content"
+  },
   "getStarted": {
     "intro": "Follow these steps to get started with your teacher account:",
     "tasks": {
@@ -1990,7 +2046,9 @@
       "submitButton": "Submit",
       "undoButton": "Undo",
       "undoTooltip": "Undo last change"
-    }
+    },
+    "editInstruction": "Click on the grid to edit your sketch.",
+    "startInstruction": "Click on the grid to start your sketch."
   },
   "groups": {
     "archive": {
@@ -2481,6 +2539,11 @@
       "title": "Print without hints"
     }
   },
+  "profiles": {
+    "featured": {
+      "emailLinkLabel": "Email {{name}}"
+    }
+  },
   "programmes": {
     "cardSubtitle": "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level.",
     "page": {
@@ -2654,19 +2717,81 @@
     }
   },
   "questions": {
+    "answerPlaceholder": "Type your answer here.",
+    "chemistry": {
+      "editPromptSingleBox": "Click in the box below to edit your answer.",
+      "editPromptTextEntry": "Click in either box below to edit your answer."
+    },
+    "coordinate": {
+      "addButton": "Add coordinate",
+      "deleteButton": "Delete",
+      "invalidCharsError": "Some of the characters you are using are not allowed: {{invalidChars}}",
+      "noCommaError": "Your answer should not contain commas. Enter each part of your answer in a separate box.",
+      "simplifyError": "Simplify each part of your answer into a single decimal number."
+    },
     "crossTopicIndicator": "Cross-topic question",
+    "dragAndDrop": {
+      "announceDroppedIntoDropZone": "Draggable item {{itemText}} was dropped into drop zone number {{dropZoneNumber}}",
+      "announceOverDropZone": "Draggable item is over drop zone number {{dropZoneNumber}}",
+      "announceSwapWithItem": "Swap draggable item {{activeItemText}} with item {{overItemText}}.",
+      "announceSwappedWithItem": "Draggable item {{activeItemText}} was swapped with {{overItemText}}."
+    },
+    "feedback": {
+      "correct": "Correct!",
+      "incorrect": "Incorrect",
+      "partlyCorrect": "Partly correct...",
+      "tooFewSigFigs": "Your answer needs...",
+      "tooManySigFigs": "Looks right, but..."
+    },
+    "freeText": {
+      "validationWarningLabel": "Warning:"
+    },
+    "hints": {
+      "defaultTitle": "Hint {{index}}",
+      "heading": "Need some help?",
+      "preamble": "Don't forget to use the hints if you need help."
+    },
+    "inlineFeedback": {
+      "boxCounter": "Box {{boxIndex}} of {{boxCount}}",
+      "selectBox": "View feedback for a specific box by selecting it above or using the arrows below."
+    },
+    "inlineRegion": {
+      "feedback": {
+        "incorrect": "Check your answer.",
+        "missingUnit": "This answer is missing a unit.",
+        "notAnswered": "You did not provide an answer."
+      }
+    },
     "inputValidation": {
       "warningLabel": "Careful!"
+    },
+    "itemsArea": {
+      "available": "Available items",
+      "dragHint": "Drag items across to build your answer",
+      "empty": "No answer entered",
+      "yourAnswer": "Your answer"
     },
     "llmIndicator": {
       "label": "LLM marked question"
     },
     "loadError": "Unable to load question",
+    "maxMarks_one": "[{{count}} mark]",
+    "maxMarks_other": "[{{count}} marks]",
     "multiChoice": {
       "clearOption": "(clear)"
     },
     "numeric": {
-      "unitPlaceholder": "Unit"
+      "decimalSeparator": "Use points instead of commas as decimal separators.",
+      "exponentSymbol": "Use a correct exponent symbol, e.g. 10^-3 or 10**-3.",
+      "helpPrompt": "What can I type in this box?",
+      "inputHelp": "Here are some examples of numbers you can write:<br1/><br2/>3.7<br3/>-3x10^14<br4/>2.8e-12<br5/><br6/>Do not use commas or spaces.",
+      "invalidCharacters": "Some of the characters you are using are not allowed: {{badCharacters}}",
+      "noSpaces": "Do not use spaces when entering your answer.",
+      "noThousandSeparators": "Do not use commas or spaces as thousand separators when entering your answer.",
+      "simplifyToDecimal": "Simplify your answer into a single decimal number.",
+      "unitLabel": "Unit",
+      "unitPlaceholder": "Unit",
+      "valueLabel": "Value"
     },
     "parsons": {
       "moveBackToItems": "Move {{itemName}} back to the items list",
@@ -2677,6 +2802,28 @@
     "preview": {
       "ariaLabel": "Preview question",
       "title": "Question preview"
+    },
+    "quickQuestion": {
+      "hideAnswerButton": "Hide answer",
+      "showAnswerButton": "Show answer"
+    },
+    "reorder": {
+      "dragInstruction": "Drag these items to put them in the correct order"
+    },
+    "submit": {
+      "check": "Check my answer",
+      "marking": "Marking your answer…"
+    },
+    "title": "Question {{questionNumber}}",
+    "validation": {
+      "charLimitExceeded": "Character limit exceeded ({{currentCount}}/{{limit}})",
+      "invalidFormat": "Your answer is not in a format we recognise, please enter your answer as a decimal number.",
+      "notAnswered": "Not answered",
+      "piiDetected": "<strong>Possible PII detected:</strong><br/>It looks like your answer contains personal information, like a name, email or street address. Sending this data to OpenAI is against their Usage policy.",
+      "sigFigs": "Significant Figures",
+      "stdFormSyntax": "When writing standard form, you must include <caretCode>^</caretCode> or <doubleAsteriskCode>**</doubleAsteriskCode> between the 10 and the exponent.",
+      "tooManySigFigs": "your answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "wordLimitExceeded": "Word limit exceeded ({{currentCount}}/{{limit}})"
     }
   },
   "quickQuizzes": {
@@ -2933,6 +3080,9 @@
     "count": "{{count}} filters selected",
     "practice": "Practice",
     "title": "Difficulties filter selector"
+  },
+  "tabs": {
+    "fallbackTitle": "Tab {{tabNumber}}"
   },
   "teacherFeatures": {
     "cta": {
@@ -3385,5 +3535,10 @@
       "tryButton": "Try our question finder"
     },
     "title": "Topics"
+  },
+  "video": {
+    "embed": {
+      "accessibilityLabel": "Embedded YouTube video: {{videoDescription}}."
+    }
   }
 }

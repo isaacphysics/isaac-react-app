@@ -5,6 +5,8 @@ import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {IsaacContent} from "./IsaacContent";
 import {AppState, useAppDispatch, useAppSelector, logAction, openActiveModal, closeActiveModal} from "../../state";
 import {Tabs} from "../elements/Tabs";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface HintsProps {
     hints?: ContentDTO[];
@@ -14,6 +16,7 @@ interface HintsProps {
 }
 
 export const IsaacHints = ({hints, questionPartId, style, includePreamble}: HintsProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const {recordConfidence} = useContext(ConfidenceContext);
     const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
@@ -43,7 +46,7 @@ export const IsaacHints = ({hints, questionPartId, style, includePreamble}: Hint
             let currHintIndex = 1;
             let index = 0;
             for (const hint of hints) {
-                newTitles[index] = hint.title || `Hint\u00A0${currHintIndex}`;
+                newTitles[index] = hint.title || i18next.t("common:questions.hints.defaultTitle", { index: currHintIndex });
                 currHintIndex += hint.title ? 0 : 1;
                 index += 1;
             }
@@ -52,9 +55,9 @@ export const IsaacHints = ({hints, questionPartId, style, includePreamble}: Hint
     }, [hints]);
 
     return hints && !!hints.length && <>
-        {includePreamble && <small className="no-print mb-0">{"Don't forget to use the hints if you need help."}</small>}
+        {includePreamble && <small className="no-print mb-0">{t("common:questions.hints.preamble")}</small>}
         {style === "tabbed" && <div className="tabbed-hints no-print">
-            <h5 className="text-theme mb-2">Need some help?</h5>
+            <h5 className="text-theme mb-2">{t("common:questions.hints.heading")}</h5>
             <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
                 {Object.assign({}, ...hints.map((hint, index) => ({
                     [titles[index]]: <div className="mt-3 mt-lg-4 pt-2">

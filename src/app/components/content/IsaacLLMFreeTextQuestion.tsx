@@ -6,6 +6,7 @@ import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
 import {useCanAttemptQuestionTypeQuery} from "../../state";
 import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
+import { Trans, useTranslation } from "react-i18next";
 
 interface Limit {
     exceeded: boolean;
@@ -56,21 +57,22 @@ function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>)
 }
 
 const FreeTextEntryValidation = ({validValue, wordLimit, charLimit, piiDetected}: Validation) => {
+    const { t } = useTranslation();
     return validValue ? null
         : <div className="no-print text-failed">
-            {charLimit.exceeded && <div><span className="icon-error" /> Character limit exceeded ({charLimit.current}/{charLimit.limit})</div>}
-            {wordLimit.exceeded && <div><span className="icon-error" /> Word limit exceeded ({wordLimit.current}/{wordLimit.limit})</div>}
+            {charLimit.exceeded && <div><span className="icon-error" /> {t("common:questions.validation.charLimitExceeded", { currentCount: charLimit.current, limit: charLimit.limit })}</div>}
+            {wordLimit.exceeded && <div><span className="icon-error" /> {t("common:questions.validation.wordLimitExceeded", { currentCount: wordLimit.current, limit: wordLimit.limit })}</div>}
             {piiDetected && <div className="d-flex">
                 <span className="icon-error" />
                 <span className="ms-1">
-                    <strong>Possible PII detected:</strong><br />
-                    It looks like your answer contains personal information, like a name, email or street address. Sending this data to OpenAI is against their Usage policy.
+                    <Trans i18nKey="common:questions.validation.piiDetected" components={{ strong: <strong />, br: <br /> }} />
                 </span>
             </div>}
         </div>;
 };
 
 const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacLLMFreeTextQuestionDTO>) => {
+    const { t } = useTranslation();
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     const canAttemptQuestionType = useCanAttemptQuestionTypeQuery(doc.type as string);
@@ -84,7 +86,7 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-                {doc.maxMarks && <p><strong>{`[${doc.maxMarks} mark${doc.maxMarks > 1 ? "s" : ""}]`}</strong></p>}
+                {doc.maxMarks && <p><strong>{t("common:questions.maxMarks", { count: doc.maxMarks })}</strong></p>}
             </div>
             <FormGroup className="form-group">
                 <Input type="textarea"

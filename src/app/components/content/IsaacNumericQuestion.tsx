@@ -20,6 +20,8 @@ import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import {selectUnits, wrapUnitForSelect} from "../../services/numericUnits";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export const numericInputValidator = (input: string) => {
     const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]";
@@ -31,27 +33,28 @@ export const numericInputValidator = (input: string) => {
     const usedBadChars = [...input.matchAll(badCharacters)];
     const uniqueBadChars = [...new Set(usedBadChars.map(match => match[0] === ' ' ? 'space' : match[0]))].join(" ");
     if (usedBadChars.length > 0) {
-        errors.push('Some of the characters you are using are not allowed: ' + uniqueBadChars);
+        errors.push(i18next.t("common:questions.numeric.invalidCharacters", { badCharacters: uniqueBadChars }));
     }
     if (missingExponentSymbol.test(input)) {
-        errors.push('Use a correct exponent symbol, e.g. 10^-3 or 10**-3.');
+        errors.push(i18next.t("common:questions.numeric.exponentSymbol"));
     } else if (operatorExpression.test(input)) {
-        errors.push('Simplify your answer into a single decimal number.');
+        errors.push(i18next.t("common:questions.numeric.simplifyToDecimal"));
     }
     if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
-        errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
+        errors.push(i18next.t("common:questions.numeric.noThousandSeparators"));
     } else {
         if (/ /.test(input.trim())) {
-            errors.push('Do not use spaces when entering your answer.');
+            errors.push(i18next.t("common:questions.numeric.noSpaces"));
         }
         if (/\d,\d|^,\d/.test(input.trim())) {
-            errors.push('Use points instead of commas as decimal separators.');
+            errors.push(i18next.t("common:questions.numeric.decimalSeparator"));
         }
     }
     return errors;
 };
 
 const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
+    const { t } = useTranslation();
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
 
@@ -90,11 +93,17 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     const helpTooltip = useRef(null);
 
     const tooltip = <UncontrolledTooltip placement="auto" autohide target={helpTooltip}>
-        Here are some examples of numbers you can write:<br /><br />
-        3.7<br />
-        -3x10^14<br />
-        2.8e-12<br /><br />
-        Do not use commas or spaces.
+        <Trans
+            i18nKey="common:questions.numeric.inputHelp"
+            components={{
+                br1: <br />,
+                br2: <br />,
+                br3: <br />,
+                br4: <br />,
+                br5: <br />,
+                br6: <br />,
+            }}
+        />
     </UncontrolledTooltip>;
 
     const noDisplayUnit = doc.displayUnit == null || doc.displayUnit === "";
@@ -109,7 +118,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
             <Row className="no-print">
                 <Col xs={12} className="d-flex flex-column flex-md-row">
                     <div className="d-flex flex-column numeric-value w-100 w-md-50 mb-2">
-                        Value
+                        {t("common:questions.numeric.valueLabel")}
                         <InputGroup className={"feedback-zone nq-feedback separate-input-group flex-grow-1 align-items-center"}>
                             <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                 onChange={e => {
@@ -125,7 +134,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         </InputGroup>
                     </div>
                     {(doc.requireUnits || doc.displayUnit) && <div className="d-flex flex-column unit-selection ps-md-7 w-100 w-md-50 mb-2">
-                        Unit
+                        {t("common:questions.numeric.unitLabel")}
                         <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                             <DropdownToggle
                                 disabled={readonly || !noDisplayUnit}
@@ -160,7 +169,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 {!readonly && isPhy && above['md'](deviceSize) && <Col xs={12}>
                     <Button className="numeric-help d-flex align-items-center m-0 p-0 pe-2 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
                         <i className="icon icon-info icon-color-grey"/>
-                        What can I type in this box?
+                        {t("common:questions.numeric.helpPrompt")}
                     </Button>
                     {tooltip}
                 </Col>}

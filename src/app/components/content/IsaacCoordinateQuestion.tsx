@@ -7,6 +7,8 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Immutable} from "immer";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import { Markup } from "../elements/markup";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 // Custom input component for coordinates
 interface CoordinateInputProps {
@@ -42,14 +44,14 @@ export const coordinateInputValidator = (input: (readonly string[])[]) => {
         });
     });
     if (containsComma) {
-        errors.push('Your answer should not contain commas. Enter each part of your answer in a separate box.');
+        errors.push(i18next.t("common:questions.coordinate.noCommaError"));
     }
     if (containsOperator) {
-        errors.push('Simplify each part of your answer into a single decimal number.');
+        errors.push(i18next.t("common:questions.coordinate.simplifyError"));
     }
     if (allBadChars.length > 0) {
         const uniqueBadChars = [...new Set(allBadChars.toString())].filter(e => e !== ",").join(" ");
-        errors.push('Some of the characters you are using are not allowed: ' + uniqueBadChars);
+        errors.push(i18next.t("common:questions.coordinate.invalidCharsError", { invalidChars: uniqueBadChars }));
     }
     return errors;
 };
@@ -90,6 +92,7 @@ const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
 };
 
 const CoordinateInput = (props: CoordinateInputProps) => {
+    const { t } = useTranslation();
     const {value, placeholderValues, useBrackets, separator, prefixes, suffixes, numberOfDimensions, onChange, readonly, remove} = props;
     return <div className="coordinate-input">
         {useBrackets ? "(" : ""}
@@ -108,7 +111,7 @@ const CoordinateInput = (props: CoordinateInputProps) => {
                 {(i < numberOfDimensions - 1) && <Markup encoding="latex" className="coordinate-input-separator">{separator}</Markup>}
             </span>)}
         {useBrackets ? ")" : ""}
-        {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
+        {remove && <Button className="ms-3" size="sm" onClick={remove}>{t("common:questions.coordinate.deleteButton")}</Button>}
     </div>;
 };
 
@@ -127,6 +130,7 @@ const generateEmptyCoord = (numberOfCoordinates: number, numberOfDimensions: num
 };
 
 const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacCoordinateQuestionDTO>) => {
+    const { t } = useTranslation();
 
     const numberOfDimensions = useRef(doc.numberOfDimensions ?? 2);
     const numberOfCoordinates = useRef(doc.numberOfCoordinates);
@@ -201,7 +205,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
         ))}
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
-            {doc.buttonText ? <Markup encoding="latex">{doc.buttonText}</Markup> : "Add coordinate"}
+            {doc.buttonText ? <Markup encoding="latex">{doc.buttonText}</Markup> : t("common:questions.coordinate.addButton")}
         </Button>}
     </div>;
 };

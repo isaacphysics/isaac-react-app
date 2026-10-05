@@ -2,12 +2,14 @@ import React from "react";
 import { DesmosEmbeddingDTO } from "../../../IsaacApiTypes";
 import { DesmosCookieHandler } from "../handlers/InterstitialCookieHandler";
 import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
+import { useTranslation } from "react-i18next";
 
 interface DesmosEmbeddingProps {
     doc: DesmosEmbeddingDTO;
 }
 
 export const DesmosEmbedding = ({doc}: DesmosEmbeddingProps) => {
+    const { t } = useTranslation();
     const { calculatorId, calculatorType="calculator", altText } = doc;
     // calculatorType currently supports an undefined value (becomes "calculator" here, which represents standard 2d), and "3d".
     const baseURL = calculatorId ? `https://www.desmos.com/${calculatorType}/${calculatorId}?embed&noexpressions` : `https://www.desmos.com/${calculatorType}?embed&noexpressions`;
@@ -16,7 +18,7 @@ export const DesmosEmbedding = ({doc}: DesmosEmbeddingProps) => {
         <DesmosCookieHandler afterAcceptedElement={
             <figure>
                 <iframe
-                    title={altText || "Desmos Calculator"}
+                    title={altText || t("common:desmos.embedTitle")}
                     src={baseURL}
                     width="100%"
                     height="500px"

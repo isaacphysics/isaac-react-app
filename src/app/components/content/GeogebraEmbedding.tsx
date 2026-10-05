@@ -4,6 +4,7 @@ import { GeogebraCookieHandler } from "../handlers/InterstitialCookieHandler";
 import {v4 as uuid_v4} from "uuid";
 import { siteSpecific } from "../../services";
 import { Button } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 const deployggbSrc = siteSpecific(
     'https://cdn.isaacscience.org',
@@ -32,6 +33,7 @@ interface GeogebraPlainElementProps extends GeogebraEmbeddingDTO {
 }
 
 const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
+    const { t } = useTranslation();
     const { materialId, appType, allowNewInputs, parentRef } = props;
     const [size, setSize] = useState<{width: number | undefined, height: number | undefined}>({width: undefined, height: undefined});
     const [isInert, setIsInert] = useState(props.startInert ?? true);
@@ -74,7 +76,7 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
     return <>
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ /* the button maintains accessibility */}
         {isInert && <div className="geogebra-embedding-wrapper" onClick={() => setIsInert(false)}>
-            <Button color="primary" onClick={() => setIsInert(false)}>Click to open GeoGebra content</Button>
+            <Button color="primary" onClick={() => setIsInert(false)}>{t("common:geogebra.openContent")}</Button>
         </div>}
         <div id={"ggb-element-" + uuid} {...{ inert: isInert ? '' : undefined }} />
     </>;

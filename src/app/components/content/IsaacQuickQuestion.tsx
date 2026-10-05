@@ -7,6 +7,7 @@ import {determineFastTrackSecondaryAction, FastTrackPageProperties, isAda, isPhy
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const elemID = (doc: IsaacQuickQuestionDTO) => { return doc.id?.split("|")[doc.id?.split("|").length - 1]; };
 
@@ -21,16 +22,18 @@ interface OptionsProps {
 }
 
 function DefaultOptions({isVisible, toggle, doc}: OptionsProps) {
+    const { t } = useTranslation();
     return <Row>
         <Col sm={12} md={siteSpecific({size: 10, offset: 1}, {size: 12})}>
             <Button color="secondary" block className={classNames({"active": isVisible})} onClick={toggle} id={`toggle-${elemID(doc)}`}>
-                {isVisible ? "Hide answer" : "Show answer"}
+                {isVisible ? t("common:questions.quickQuestion.hideAnswerButton") : t("common:questions.quickQuestion.showAnswerButton")}
             </Button>
         </Col>
     </Row>;
 }
 
 function FastTrackOptions({isVisible, toggle, doc, fastTrackInfo}: OptionsProps) {
+    const { t } = useTranslation();
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
 
     return <div
@@ -41,13 +44,14 @@ function FastTrackOptions({isVisible, toggle, doc, fastTrackInfo}: OptionsProps)
         </div>}
         <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ps-sm-2 ps-md-0 ps-lg-3"}>
             <Button color="solid" block className={classNames({"active": isVisible})} onClick={toggle} id={`toggle-${elemID(doc)}`}>
-                {isVisible ? "Hide answer" : "Show answer"}
+                {isVisible ? t("common:questions.quickQuestion.hideAnswerButton") : t("common:questions.quickQuestion.showAnswerButton")}
             </Button>
         </div>
     </div>;
 }
 
 function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsProps) {
+    const { t } = useTranslation();
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled} = useConfidenceQuestionsValues(
         doc.showConfidence,
         "quick_question",
@@ -69,7 +73,7 @@ function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsP
         {isVisible && <Row className="mt-3 no-print">
             <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
                 <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer} id={`toggle-${elemID(doc)}`}>
-                    Hide answer
+                    {t("common:questions.quickQuestion.hideAnswerButton")}
                 </Button>
             </Col>
         </Row>}
@@ -77,6 +81,7 @@ function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsP
 }
 
 export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const location = useLocation();
     const fastTrackInfo = useFastTrackInformation(doc, location);
@@ -110,7 +115,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
             <div className="quick-question">
                 {isAda &&
                     <div className="quick-question-title">
-                        <h3>Try it yourself!</h3>
+                        <h3>{t("ada:questions.quickQuestion.title")}</h3>
                     </div>
                 }
                 <div className="question-content clearfix">

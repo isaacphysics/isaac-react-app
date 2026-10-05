@@ -42,6 +42,8 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -55,6 +57,7 @@ const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<Replacea
 const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
 
 const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>[]}) => {
+    const { t } = useTranslation();
     const itemIds = items.map(i => i.replacementId as string);
     const { over, isOver, setNodeRef } = useDroppable({
         id,
@@ -63,15 +66,12 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>
     const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
 
     return <div className={"mb-3"}>
-        <Label className="mt-3">Items: </Label>
+        <Label className="mt-3">{t("common:dragAndDrop.itemSectionLabel")} </Label>
         <Label className={"visually-hidden"} id={"item-section-info"}>
-            To pick up an item, press space or enter.
-            Use the up and down arrow keys to navigate between drop zones and items in the question.
-            Press space or enter again to drop the item into a new position, or to swap it with another
-            item being hovered over.
+            {t("common:dragAndDrop.keyboardInstructions")}
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={t("common:dragAndDrop.unselectedItems")} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <DropZoneItem key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
@@ -461,38 +461,38 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
         restoreFocus: false,
         announcements: {
             onDragStart({active}) {
-                return `Picked up draggable item ${active.data.current?.text}.`;
+                return i18next.t("common:dragAndDrop.pickup", { itemText: active.data.current?.text });
             },
             onDragOver({active, over}) {
-                if (!over) return usingKeyboard ? undefined : `Draggable item ${active.data.current?.text} is no longer over a droppable area.`;
+                if (!over) return usingKeyboard ? undefined : i18next.t("common:dragAndDrop.offTarget", { itemText: active.data.current?.text });
 
-                if (active.id === over.id) return `Draggable item ${active.data.current?.text} is over it's previous position.`;
+                if (active.id === over.id) return i18next.t("common:dragAndDrop.overPreviousPosition", { itemText: active.data.current?.text });
 
                 if (!isDropZone(over)) {
-                    return `Swap draggable item ${active.data.current?.text} with item ${over.data.current?.text}.`;
+                    return i18next.t("common:questions.dragAndDrop.announceSwapWithItem", { activeItemText: active.data.current?.text, overItemText: over.data.current?.text });
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
-                    return `Draggable item is over the items section`;
+                    return i18next.t("common:dragAndDrop.overItemsSection");
                 } else {
                     const dropZoneIndex = (over.id as string).replace(CLOZE_DROP_ZONE_ID_PREFIX, "");
-                    return `Draggable item is over drop zone number ${dropZoneIndex}`;
+                    return i18next.t("common:questions.dragAndDrop.announceOverDropZone", { dropZoneNumber: dropZoneIndex });
                 }
             },
             onDragEnd({active, over}) {
-                if (!over) return `Draggable item ${active.data.current?.text} was dropped.`;
+                if (!over) return i18next.t("common:dragAndDrop.dropped", { itemText: active.data.current?.text });
 
-                if (active.id === over.id) return `Draggable item ${active.data.current?.text} was returned to it's previous position.`;
+                if (active.id === over.id) return i18next.t("common:dragAndDrop.returnedPreviousPosition", { itemText: active.data.current?.text });
 
                 if (!isDropZone(over)) {
-                    return `Draggable item ${active.data.current?.text} was swapped with ${over.data.current?.text}.`;
+                    return i18next.t("common:questions.dragAndDrop.announceSwappedWithItem", { activeItemText: active.data.current?.text, overItemText: over.data.current?.text });
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
-                    return `Draggable item was dropped into the items section`;
+                    return i18next.t("common:dragAndDrop.droppedIntoItemsSection");
                 } else {
                     const dropZoneIndex = (over.id as string).replace(CLOZE_DROP_ZONE_ID_PREFIX, "");
-                    return `Draggable item ${active.data.current?.text} was dropped into drop zone number ${dropZoneIndex}`;
+                    return i18next.t("common:questions.dragAndDrop.announceDroppedIntoDropZone", { itemText: active.data.current?.text, dropZoneNumber: dropZoneIndex });
                 }
             },
             onDragCancel({active}) {
-                return `Dragging was cancelled. Draggable item ${active.data.current?.text} was returned to it's previous position.`;
+                return i18next.t("common:dragAndDrop.cancelled", { itemText: active.data.current?.text });
             }
         },
         screenReaderInstructions: { draggable: "" }
