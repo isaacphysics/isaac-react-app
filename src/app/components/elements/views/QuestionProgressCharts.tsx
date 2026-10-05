@@ -22,6 +22,7 @@ import {Difficulty} from "../../../../IsaacApiTypes";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { Row, Col } from 'reactstrap';
 import { MyProgressState } from '../../../state';
+import i18next from "i18next";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -87,7 +88,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     type: donut(),
                 },
                 donut: {
-                    title: "By " + topTagLevel,
+                    title: i18next.t("common:progress.charts.bySubjectTitle", { subject: topTagLevel }),
                     label: {format: (value) => `${value}`}
                 },
                 bindto: `#${subId}-categoryChart`,
@@ -103,7 +104,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 type: donut()
             },
             donut: {
-                title: isAllZero(topicColumns) ? "No data" : "By topic",
+                title: isAllZero(topicColumns) ? i18next.t("common:progress.charts.noData") : i18next.t("common:progress.charts.byTopicTitle"),
                 label: {format: (value) => `${value}`}
             },
             bindto: `#${subId}-topicChart`,
@@ -119,7 +120,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     order: null
                 },
                 donut: {
-                    title: isAllZero(difficultyColumns) ? "No data" : "By difficulty",
+                    title: isAllZero(difficultyColumns) ? i18next.t("sci:progress.charts.noData") : i18next.t("sci:progress.charts.byDifficultyTitle"),
                     label: {format: (value) => `${value}`}
                 },
                 bindto: `#${subId}-stageChart`,
@@ -150,20 +151,20 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     return <Row>
         {isPhy && <Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
-                Questions by {topTagLevel}
+                {i18next.t("sci:progress.charts.subjectHeader", { subject: topTagLevel })}
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-categoryChart`} className="text-center-width doughnut-binding align-self-center">
-                    <strong>{isAllZero(categoryColumns) ? "No data" : ""}</strong>
+                    <strong>{isAllZero(categoryColumns) ? i18next.t("sci:progress.charts.noData") : ""}</strong>
                 </div>
                 {isAllZero(categoryColumns) ?
                     <span className={"visually-hidden"}>
-                        No data
+                        {i18next.t("sci:progress.charts.noData")}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>Subject</th>
+                                <th>{i18next.t("sci:progress.charts.subjectColumnHeader")}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>
@@ -192,20 +193,20 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                     />
                 </div>
-                <span className={siteSpecific("ms-2", "d-inline-block ms-2")}>questions</span>
+                <span className={siteSpecific("ms-2", "d-inline-block ms-2")}>{i18next.t("common:progress.charts.topicFilterLabel")}</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(topicColumns) ? "No data" : ""}</strong>
+                    <strong>{isAllZero(topicColumns) ? i18next.t("common:progress.charts.noData") : ""}</strong>
                 </div>
                 {isAllZero(topicColumns) ?
                     <span className={"visually-hidden"}>
-                        No data
+                        {i18next.t("common:progress.charts.noData")}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>Topic</th>
+                                <th>{i18next.t("common:progress.charts.topicColumnHeader")}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>
@@ -234,20 +235,20 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         onChange={selectOnChange(setStageChoices, false)}
                     />  
                 </div>
-                <span className="ms-2">questions</span>
+                <span className="ms-2">{i18next.t("sci:progress.charts.stageFilterLabel")}</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(difficultyColumns) ? "No data" : ""}</strong>
+                    <strong>{isAllZero(difficultyColumns) ? i18next.t("sci:progress.charts.noData") : ""}</strong>
                 </div>
                 {isAllZero(difficultyColumns) ?
                     <span className={"visually-hidden"}>
-                        No data
+                        {i18next.t("sci:progress.charts.noData")}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>Stage</th>
+                                <th>{i18next.t("sci:progress.charts.stageColumnHeader")}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>

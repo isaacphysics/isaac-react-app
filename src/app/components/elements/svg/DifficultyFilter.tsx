@@ -3,6 +3,7 @@ import {ifKeyIsEnter, Item, siteSpecific} from "../../../services";
 import React from "react";
 import {generateSquareProportions, Rectangle} from "./Rectangle";
 import {Container} from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 export interface DifficultyFilterProps {
     difficultyOptions: Item<string>[];
@@ -11,6 +12,7 @@ export interface DifficultyFilterProps {
 }
 
 export function DifficultyFilter({difficultyOptions, difficulties, setDifficulties}: DifficultyFilterProps) {
+    const { t } = useTranslation();
     const sideLength = 72;
     const shapePadding = 3;
 
@@ -29,9 +31,9 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
     const challengeOptionsRow = difficultyOptions.slice(3, 6);
 
     return <Container className="ms-0 ps-0 text-center" style={{width: 2 * focusPadding + 6 * (hexagon.halfWidth + 2 * hexagon.padding)}}>
-        <span>Practice</span>
+        <span>{t("common:svgFilter.practice")}</span>
         <svg width={`${2 * focusPadding + 6 * (hexagon.halfWidth + hexagon.padding)}`} height={`${2 * focusPadding + 4 * hexagon.quarterHeight + 2 * hexagon.padding}px`}>
-            <title>Difficulties filter selector</title>
+            <title>{t("common:svgFilter.title")}</title>
             <g transform={`translate(${focusPadding + hexagon.padding},${focusPadding})`}>
                 <g>
                     {practiceOptionsRow.map((difficultyOption, j) => {
@@ -66,7 +68,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                 </g>
             </g>
         </svg>
-        <span>Challenge</span>
+        <span>{t("common:svgFilter.challenge")}</span>
         <svg width={`${2 * focusPadding + 3 * (square.width + 2 * square.padding)}`} height={`${2 * focusPadding + square.height + 2 * square.padding}px`}>
             <g transform={`translate(${focusPadding + square.padding},${focusPadding})`}>
                 {challengeOptionsRow.map((difficultyOption, j) => {

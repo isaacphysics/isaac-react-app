@@ -5,6 +5,7 @@ import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
 import { pruneTreeNode } from "../../../services/questionHierarchy";
 import { selectors, useAppSelector } from "../../../state";
+import { useTranslation } from "react-i18next";
 
 export type TierID = "subjects" | "fields" | "topics";
 export interface Tier {id: TierID; name: string; for: string}
@@ -30,6 +31,7 @@ interface HierarchyFilterProps {
 }
 
 export const HierarchyFilterTreeContents = ({tier, index, choices, selections, questionFinderFilter, root, setSelections}: Omit<HierarchyFilterProps, 'className'>) => {
+    const { t } = useTranslation();
     const pageContext = useAppSelector(selectors.pageContext.context);
     const getIsDisabled = (choice: Item<TAG_ID>) => (pageContext?.subject && pageContext?.stage?.[0] && disabledSubjectStageTopics[pageContext?.subject]?.[pageContext?.stage?.[0]]?.includes(choice.value)) || false;
 
@@ -77,7 +79,7 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
                             {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
                                 <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, choices, selections, questionFinderFilter, setSelections}}/>
                             }
-                            {isComingSoon && <span className="badge bg-theme ms-2 h-min-content align-self-center">Coming soon!</span>}
+                            {isComingSoon && <span className="badge bg-theme ms-2 h-min-content align-self-center">{t("common:svgFilter.comingSoon")}</span>}
                         </CheckboxWrapper>
                     </li>
                 </React.Fragment>;

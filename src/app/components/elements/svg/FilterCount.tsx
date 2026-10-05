@@ -1,5 +1,6 @@
 import React from "react";
 import {Circle} from "./Circle";
+import { useTranslation } from "react-i18next";
 
 export interface FilterCountProps extends React.SVGProps<SVGSVGElement> {
     count: number;
@@ -7,6 +8,7 @@ export interface FilterCountProps extends React.SVGProps<SVGSVGElement> {
 }
 
 export const FilterCount = (props: FilterCountProps) => {
+    const { t } = useTranslation();
     const {count, widthPx, ...rest} = props;
     const filterIconWidth = widthPx || 25;
 
@@ -15,7 +17,7 @@ export const FilterCount = (props: FilterCountProps) => {
         width={`${filterIconWidth}px`}
         height={`${filterIconWidth}px`}
     >
-        <title>{`${count} filters selected`}</title>
+        <title>{t("common:svgFilter.count", { count })}</title>
         <g>
             <Circle radius={filterIconWidth / 2} className={"circle filter-count"} />
             <foreignObject width={filterIconWidth} height={filterIconWidth}>

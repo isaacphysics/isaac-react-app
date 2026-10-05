@@ -386,6 +386,14 @@
     "bookCorrectOfTotal": "{{correct}} of {{total}}",
     "bookCorrectOutOf": "{{correct}} correct out of {{total}}",
     "bookQuestionLabel": "{{bookTitle}} questions",
+    "charts": {
+      "byDifficultyTitle": "By difficulty",
+      "noData": "No data",
+      "stageColumnHeader": "Stage",
+      "stageFilterLabel": "questions",
+      "subjectColumnHeader": "Subject",
+      "subjectHeader": "Questions by {{subject}}"
+    },
     "isaacBooksDescription": "Questions completed correctly, against questions attempted for each of our <booksLink>books</booksLink>.",
     "isaacBooksTitle": "Isaac Books",
     "pageTitle": "My progress",

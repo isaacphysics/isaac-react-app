@@ -2153,6 +2153,13 @@
   },
   "progress": {
     "attemptsOverTime": "Attempts over time",
+    "charts": {
+      "bySubjectTitle": "By {{subject}}",
+      "byTopicTitle": "By topic",
+      "noData": "No data",
+      "topicColumnHeader": "Topic",
+      "topicFilterLabel": "questions"
+    },
     "correctOfAttempts": "{{correct}} of {{attempts}}",
     "legendMaths": "Maths",
     "legendMentalMaths": "Overall Mental Maths",
@@ -2504,6 +2511,13 @@
       "selectTopicButton": "Select a topic",
       "selectTopicTitle": "Select a topic"
     }
+  },
+  "svgFilter": {
+    "challenge": "Challenge",
+    "comingSoon": "Coming soon!",
+    "count": "{{count}} filters selected",
+    "practice": "Practice",
+    "title": "Difficulties filter selector"
   },
   "teacherFeatures": {
     "cta": {
