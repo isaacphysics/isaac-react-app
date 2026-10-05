@@ -129,6 +129,11 @@
       "verificationUrl": "URL of a page on your school website which shows your name and email address, or your school phone number"
     }
   },
+  "banners": {
+    "research": {
+      "body": "We record your use of this site and the information you enter to support research into online learning at the University of Cambridge. Full details are in the <privacyLink>privacy policy</privacyLink>."
+    }
+  },
   "books": {
     "chemistry16": {
       "chapterA": "Formulae & Equations",

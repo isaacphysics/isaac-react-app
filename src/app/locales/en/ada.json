@@ -125,6 +125,11 @@
       "skipNote": "You can always skip this now and connect to your teacher later."
     }
   },
+  "banners": {
+    "research": {
+      "body": "We record your use of this site and the information you enter to support research into online learning at the University of Cambridge and the Raspberry Pi Foundation. Full details are in the <privacyLink>privacy policy</privacyLink>."
+    }
+  },
   "connections": {
     "groups": {
       "activeInfo": "Active group memberships mean you can receive assignments from the teachers in that group.",

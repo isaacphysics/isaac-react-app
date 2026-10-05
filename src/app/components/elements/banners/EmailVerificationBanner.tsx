@@ -9,6 +9,7 @@ import {Button, Col, Row} from 'reactstrap';
 import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../../services";
 import { EmailVerificationStatus } from '../../../../IsaacApiTypes';
 import { DismissibleBanner } from './DismissibleBanner';
+import { useTranslation } from "react-i18next";
 
 interface EmailVerificationBannerProps {
     setHidden: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +17,7 @@ interface EmailVerificationBannerProps {
 }
 
 const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBannerProps) => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
 
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
@@ -30,7 +32,7 @@ const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBanne
         <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
             <h3 className="d-flex align-items-center justify-content-center gap-2">
                 <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
-                <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
+                <span id="email-verification-heading" className="d-inline-block d-sm-none">{t("common:banners.emailVerification.heading")}</span>
             </h3>
         </Col>
         {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
@@ -57,6 +59,7 @@ const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBanne
 };
 
 export const EmailVerificationBanner = () => {
+    const { t } = useTranslation();
     const [hidden, setHidden] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const {cookieConsent} = useUserConsent();
@@ -65,7 +68,7 @@ export const EmailVerificationBanner = () => {
     const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
     return <DismissibleBanner
-        dismissText={"Snooze"}
+        dismissText={t("common:banners.emailVerification.dismissButton")}
         theme={"light"}
         show={!!show}
     >

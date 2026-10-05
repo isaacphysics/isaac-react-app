@@ -929,6 +929,21 @@
       "verifiedMessage": "You've verified your email address and finished creating your account."
     }
   },
+  "banners": {
+    "downtime": {
+      "dismissButton": "Dismiss<screenReaderText> downtime notification</screenReaderText>",
+      "heading": "Research",
+      "message": "{{siteTitle}} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance."
+    },
+    "emailVerification": {
+      "dismissButton": "Snooze",
+      "heading": "Email Verification"
+    },
+    "research": {
+      "dismissButton": "Got it",
+      "heading": "Research"
+    }
+  },
   "biologyExtension": {
     "cardSubtitle": "Stretch your understanding of biology with our extension questions that make you think outside the box.",
     "cardTitle": "Biology extension"
