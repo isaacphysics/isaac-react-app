@@ -384,9 +384,20 @@
     "isaacBooksDescription": "Questions completed correctly, against questions attempted for each of our <booksLink>books</booksLink>.",
     "isaacBooksTitle": "Isaac Books",
     "pageTitle": "My progress",
+    "partBreakdown": {
+      "partsWord": "Parts",
+      "totalAttemptedLabel": "Total attempted",
+      "totalCorrectLabel": "Total correct",
+      "totalSubtitle": "(total)"
+    },
     "questionAttemptsCaption": "Question attempts",
     "streak": {
       "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/>Answer at least <strong>ten question parts</strong> correctly per week to fill up your daily progress bar and increase your streak!"
+    },
+    "table": {
+      "partsWord": "Parts",
+      "questionsWord": "Questions",
+      "totalSubtitle": "(total)"
     }
   },
   "questionFinder": {

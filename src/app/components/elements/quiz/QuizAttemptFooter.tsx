@@ -11,6 +11,7 @@ import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
 import {confirmThen, isDefined, siteSpecific} from "../../../services";
+import { useTranslation } from "react-i18next";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -18,6 +19,7 @@ function extractSectionIdFromQuizQuestionId(questionId: string) {
 }
 
 export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLink: string}) {
+    const { t } = useTranslation();
     const {attempt, page, quizContents: {sections, questions, pageLink}} = props;
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -28,7 +30,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
         void markQuizAttemptAsComplete(attempt.id as number)
             .then((result) => {
                 if (mutationSucceeded(result)) {
-                    dispatch(showSuccessToast("Test submitted successfully", "Your answers have been submitted successfully."));
+                    dispatch(showSuccessToast(t("common:tests.attempt.submitToastTitle"), t("common:tests.attempt.submitToastBody")));
                     void navigate(props.feedbackLink);
                 }
             });
@@ -54,13 +56,13 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
         const totalCompleted = Object.values(completedSections).reduce((sum, complete) => sum + (complete ? 1 : 0), 0);
         const firstIncomplete = Object.values(completedSections).indexOf(false);
         const allCompleted = totalCompleted === sectionCount;
-        const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : "Submit anyway";
+        const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : t("common:tests.attempt.submitAnyway");
 
         if (allCompleted) {
             controls = <>
-                <Button color="keyline" tag={Link} to={pageLink(1)}>Review answers</Button>
+                <Button color="keyline" tag={Link} to={pageLink(1)}>{t("common:tests.attempt.reviewAnswers")}</Button>
                 <Spacer/>
-                All sections complete
+                {t("common:tests.attempt.allComplete")}
                 <Spacer/>
                 <Button color={siteSpecific("keyline", "solid")} onClick={submitQuiz}>{submitButton}</Button>
             </>;
@@ -71,19 +73,19 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
                         <Button onClick={() => confirmThen("Are you sure? You haven't answered all of the questions", submitQuiz)}>{submitButton}</Button>
                     </div>
                     <Spacer/>
-                    {totalCompleted} / {sectionCount} sections complete<br/>
+                    {t("common:tests.attempt.sectionsComplete", { completedCount: totalCompleted, totalCount: sectionCount })}<br/>
                     <Spacer/>
-                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>{t("common:tests.attempt.continue")}</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>{t("common:tests.attempt.continue")}</Button>
                 </>;
             }
         }
     } else {
-        controls = <QuizPagination {...props} page={page} finalLabel="Finish"/>;
+        controls = <QuizPagination {...props} page={page} finalLabel={t("common:tests.attempt.finish")}/>;
     }
 
     return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">

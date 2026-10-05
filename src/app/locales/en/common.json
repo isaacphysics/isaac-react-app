@@ -1801,6 +1801,11 @@
       "syntaxError": "Syntax error: unexpected token \"{{tokenValue}}\""
     }
   },
+  "latex": {
+    "dropZone": "clickable drop zone",
+    "figureReference": "Figure&nbsp;{{number}}",
+    "unknownReference": "unknown reference {{refKey}}"
+  },
   "listViews": {
     "action": {
       "assign": "Assign",
@@ -1832,6 +1837,19 @@
     "rawInputLabel": "Raw input",
     "renderedLabel": "Rendered markdown",
     "title": "Markdown builder"
+  },
+  "markup": {
+    "inlineDropZone": {
+      "ariaLabel": "drop zone",
+      "clearButton": "Clear"
+    },
+    "tables": {
+      "expandButton": {
+        "ariaLabel": "Expand content",
+        "closeText": "Close",
+        "expandText": "Expand"
+      }
+    }
   },
   "mathsUni": {
     "cardSubtitle": "Refresh your maths skills in preparation for {{subject}} at university.",
@@ -2034,11 +2052,34 @@
     "noneAttempted": "None attempted",
     "oldestUnsolvedTitle": "Oldest unsolved questions",
     "otherUserTitle": "Progress for {{userName}}",
+    "partBreakdown": {
+      "nameColumn": "Name",
+      "partColumn": "Part {{partNumber}}"
+    },
     "questionPartsTitle": "Question parts correct by type",
     "questionTypeLabel": "{{questionType}} questions",
+    "returnAttempt": {
+      "action": "Allow another attempt",
+      "body": "This will allow the student to attempt the test again.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "title": "Allow another attempt?"
+    },
     "skillsAttemptsError": "Failed to load skills attempts.",
     "streak": {
       "title": "Weekly Streak"
+    },
+    "table": {
+      "emptyState": "This group is empty, so has no progress data available. You can invite users through the <manageGroupsLink>Manage groups</manageGroupsLink> page.",
+      "menuAlt": "Menu",
+      "nameColumn": "Name",
+      "notSharing": "Not Sharing",
+      "questionColumn": "Question {{questionNumber}}",
+      "totalAttemptedPartsLabel": "Total attempted parts",
+      "totalAttemptedQuestionsLabel": "Total attempted questions",
+      "totalCorrectPartsLabel": "Total correct parts",
+      "totalCorrectQuestionsLabel": "Total correct questions",
+      "viewAnswers": "View answers"
     }
   },
   "projects": {
@@ -2546,9 +2587,17 @@
       "setTest": "Set test"
     },
     "attempt": {
+      "allComplete": "All sections complete",
       "assignedErrorBody": "Your teacher has set this test to you.  You may not practise it in advance.<br/>If you are ready to take the test, click on it in your <assignedTestsLink>assigned tests</assignedTestsLink> page.",
       "assignedErrorTitle": "You have been set this test",
-      "loadErrorTitle": "Error loading test!"
+      "continue": "Continue",
+      "finish": "Finish",
+      "loadErrorTitle": "Error loading test!",
+      "reviewAnswers": "Review answers",
+      "sectionsComplete": "{{completedCount}} / {{totalCount}} sections complete",
+      "submitAnyway": "Submit anyway",
+      "submitToastBody": "Your answers have been submitted successfully.",
+      "submitToastTitle": "Test submitted successfully"
     },
     "button": {
       "continue": "Continue test",
@@ -2557,6 +2606,13 @@
       "viewFeedback": "View feedback"
     },
     "cardTitle": "Tests",
+    "details": {
+      "completed": "Completed",
+      "noFeedback": "No feedback available",
+      "overallMark": "Your mark is {{correct}} / {{total}}",
+      "overallMarkLabel": "Overall mark",
+      "sectionBreakdown": "Section mark breakdown"
+    },
     "displayMode": {
       "cards": "Cards",
       "label": "Display in",
@@ -2606,6 +2662,14 @@
       "titlePlaceholder": "Filter by title",
       "toggle": "Filters"
     },
+    "header": {
+      "completedDate": "Completed: {{date}}",
+      "due": "Due:",
+      "freeAttempt": "You are freely attempting this test.",
+      "preview": "You are previewing this test.",
+      "setBy": "Set by: {{teacherName}}",
+      "wasDue": "Was due:"
+    },
     "info": {
       "assigner": "by {{teacherName}}",
       "completed": "Completed: {{completedDate}}",
@@ -2614,6 +2678,11 @@
       "started": "Started: {{startDate}}"
     },
     "pageHelp": "Use this page to see tests you need to take and your test results.<br/>You can also take some tests freely whenever you want to test your knowledge.",
+    "pagination": {
+      "back": "Back",
+      "next": "Next",
+      "position": "Section {{page}} / {{sectionCount}}"
+    },
     "pastTests": {
       "hidden": "Hidden",
       "label": "Past tests",
@@ -2634,9 +2703,18 @@
       "previewQuestions": "Preview questions",
       "setTest": "Set test"
     },
+    "rubric": {
+      "buttonTooltip": "Show instructions in a modal",
+      "modalTitle": "Test Instructions",
+      "showButton": "Show instructions"
+    },
     "search": {
       "placeholder": "e.g. Practice",
       "title": "Search tests"
+    },
+    "section": {
+      "fallbackTitle": "Section {{page}}",
+      "notFound": "Test section {{page}} not found"
     },
     "set": {
       "available": {
@@ -2669,6 +2747,7 @@
       "detailsButton": "Details",
       "displayCardOption": "Card View",
       "displayTableOption": "Table View",
+      "fallbackTitle": "Section {{id}}",
       "legendTitle": "Key",
       "overviewTab": "Overview",
       "searchAriaLabel": "Search by title",
@@ -2689,6 +2768,9 @@
       "overdue": "Overdue",
       "started": "Started"
     },
+    "title": {
+      "studentSuffix": " for {{givenName}} {{familyName}}"
+    },
     "view": {
       "emptyState": "There are no practice tests currently available.",
       "filterStageTitle": "Filter by stage",
@@ -2700,6 +2782,10 @@
       "searchTitle": "Search practice tests",
       "takeTest": "Take Test",
       "title": "View tests"
+    },
+    "viewingAs": {
+      "notification": "You are viewing this test as <strong>{{givenName}} {{familyName}}</strong>.",
+      "returnLink": "<feedbackLink>Click here</feedbackLink> to return to the teacher test feedback page."
     }
   },
   "tools": {

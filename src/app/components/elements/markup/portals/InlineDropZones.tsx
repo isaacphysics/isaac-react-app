@@ -8,6 +8,7 @@ import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isP
 import { Markup } from "..";
 import DropZoneItem from "../../DnDItem";
 import { Spacer } from "../../Spacer";
+import { useTranslation } from "react-i18next";
 
 interface InlineDropRegionProps {
     divId: string;
@@ -20,6 +21,7 @@ interface InlineDropRegionProps {
 
 // Inline droppables rendered for each registered drop region
 function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling}: InlineDropRegionProps) {
+    const { t } = useTranslation();
     const dropRegionContext = useContext(DragAndDropRegionContext);
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -67,7 +69,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     >
         {item
             ? <DropZoneItem item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
-            : <>&nbsp;<span className={"visually-hidden"}>drop zone</span></>
+            : <>&nbsp;<span className={"visually-hidden"}>{t("common:markup.inlineDropZone.ariaLabel")}</span></>
         }
     </span>;
 
@@ -99,7 +101,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
                 data-unit={'None'}
                 onClick={() => {dropRegionContext?.onSelect(NULL_CLOZE_ITEM, droppableId, true);}}
             >
-                <span className="fst-italic">Clear</span>
+                <span className="fst-italic">{t("common:markup.inlineDropZone.clearButton")}</span>
             </DropdownItem>
             {dropdownItems.map((item, i) => {
                 return <DropdownItem key={i}

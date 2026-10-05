@@ -7,6 +7,7 @@ import {ExpandableParentContext} from "../../../../../IsaacAppTypes";
 import {PortalInHtmlHook, useStatefulElementRef, useTableCompatiblePortalsInHtml} from "./utils";
 import { HorizontalScroller } from "../../inputs/HorizontalScroller";
 import isEqual from "lodash/isEqual";
+import { useTranslation } from "react-i18next";
 
 // A portal component to manage table elements from inside the React DOM
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
@@ -42,6 +43,7 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
 };
 
 export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpandedInnerClasses = "") => {
+    const { t } = useTranslation();
     const [ expanded, setExpanded ] = useState(false);
 
     const toggleExpanded: MouseEventHandler = (event) => {
@@ -61,8 +63,8 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
     const show = isAda && expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
 
     const expandButton = (show && <div className={"expand-button position-relative"}>
-        <button type={"button"} aria-label={"Expand content"} onClick={toggleExpanded}>
-            <div><span><img aria-hidden alt="" src={"/assets/common/icons/expand-arrow.svg"}/> {expanded ? "Close" : "Expand"}</span></div>
+        <button type={"button"} aria-label={t("common:markup.tables.expandButton.ariaLabel")} onClick={toggleExpanded}>
+            <div><span><img aria-hidden alt="" src={"/assets/common/icons/expand-arrow.svg"}/> {expanded ? t("common:markup.tables.expandButton.closeText") : t("common:markup.tables.expandButton.expandText")}</span></div>
         </button>
     </div>) || null;
 

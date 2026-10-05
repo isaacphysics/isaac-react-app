@@ -10,6 +10,7 @@ import { SortItemHeader } from "../SortableItemHeader";
 import { AssignmentProgressDTO, CompletionState, QuestionPartState } from "../../../../IsaacApiTypes";
 import classNames from "classnames";
 import { Markup } from "../markup";
+import { Trans, useTranslation } from "react-i18next";
 
 export const ICON = {
     correct: <i className={classNames("icon-md", siteSpecific("icon-correct", "icon-correctness-correct"))}/>,
@@ -158,6 +159,7 @@ export function ResultsTable<Q extends QuestionType>({
     isAssignment,
     boardId,
 } : ResultsTableProps<Q>) {
+    const { t } = useTranslation();
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const deviceSize = useDeviceSize();
@@ -179,14 +181,14 @@ export function ResultsTable<Q extends QuestionType>({
         };
         dispatch(openActiveModal({
             closeAction: () => dispatch(closeActiveModal()),
-            title: "Allow another attempt?",
-            body: "This will allow the student to attempt the test again.",
+            title: t("common:progress.returnAttempt.title"),
+            body: t("common:progress.returnAttempt.body"),
             buttons: [
                 <Button key={1} color="keyline" target="_blank" onClick={() => dispatch(closeActiveModal())}>
-                    Cancel
+                    {t("common:progress.returnAttempt.cancel")}
                 </Button>,
                 <Button key={0} color="solid" target="_blank" onClick={confirm}>
-                    Confirm
+                    {t("common:progress.returnAttempt.confirm")}
                 </Button>,
             ]
         }));
@@ -256,10 +258,10 @@ export function ResultsTable<Q extends QuestionType>({
             reverseOrder={"name"}
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
             onClick={() => setSelectedQuestionIndex(undefined)}
-            label={"Name"}
+            label={t("common:progress.table.nameColumn")}
             alignment={"start"}
         >
-            Name
+            {t("common:progress.table.nameColumn")}
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
@@ -268,12 +270,12 @@ export function ResultsTable<Q extends QuestionType>({
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={"Total correct questions"}
+                label={t("common:progress.table.totalCorrectQuestionsLabel")}
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
-                        <span>Questions</span>
-                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                        <span>{t("sci:progress.table.questionsWord")}</span>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
                     </div>,
                     "Correct"
                 )}
@@ -284,12 +286,12 @@ export function ResultsTable<Q extends QuestionType>({
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={"Total attempted questions"}
+                label={t("common:progress.table.totalAttemptedQuestionsLabel")}
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
-                        <span>Questions</span>
-                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                        <span>{t("sci:progress.table.questionsWord")}</span>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
                     </div>,
                     "Attempted"
                 )}
@@ -303,12 +305,12 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total correct parts"}
+                    label={t("common:progress.table.totalCorrectPartsLabel")}
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                            <span>{t("sci:progress.table.partsWord")}</span>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
                         </div>,
                         "Correct"
                     )}
@@ -319,12 +321,12 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalAttemptedPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total attempted parts"}
+                    label={t("common:progress.table.totalAttemptedPartsLabel")}
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                            <span>{t("sci:progress.table.partsWord")}</span>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
                         </div>,
                         "Attempted"
                     )}
@@ -339,7 +341,7 @@ export function ResultsTable<Q extends QuestionType>({
                 reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(index)}
                 className={classNames({"selected": index === selectedQuestionIndex})}
-                label={`Question ${index + 1}`}
+                label={t("common:progress.table.questionColumn", { questionNumber: index + 1 })}
                 key={index}
             >
                 <span>{index + 1}</span>
@@ -422,17 +424,17 @@ export function ResultsTable<Q extends QuestionType>({
                                                             <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
                                                         </div>
                                                         <div className="quiz-student-menu-icon">
-                                                            {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt="Menu" />}
+                                                            {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt={t("common:progress.table.menuAlt")} />}
                                                         </div>
                                                     </Button>
                                                     {!returningQuizToStudent && dropdownOpen?.[index] && <>
                                                         {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
                                                         studentProgress.completed &&
                                                         <div className="py-2 px-3">
-                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>Allow another attempt</Button>
+                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>{t("common:progress.returnAttempt.action")}</Button>
                                                         </div>}
                                                         <div className="py-2 px-3">
-                                                            <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>View answers</Button>
+                                                            <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>{t("common:progress.table.viewAnswers")}</Button>
                                                         </div>
                                                     </>}
                                                 </>
@@ -441,7 +443,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total questions */}
-                                <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
+                                <th title={fullAccess ? undefined : t("common:progress.table.notSharing")} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             isAssignment
@@ -458,7 +460,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total parts */}
-                                {isPhy && isAssignment && <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
+                                {isPhy && isAssignment && <th title={fullAccess ? undefined : t("common:progress.table.notSharing")} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             pageSettings?.attemptedOrCorrect === "CORRECT"
@@ -515,7 +517,7 @@ export function ResultsTable<Q extends QuestionType>({
                 </table>
             </div>
         </> : <div className="w-100 text-center p-3">
-            This group is empty, so has no progress data available. You can invite users through the <Link to="/groups">Manage groups</Link> page.
+            <Trans i18nKey="common:progress.table.emptyState" components={{ manageGroupsLink: <Link to="/groups" /> }} />
         </div>}
     </div>;
 }
@@ -530,6 +532,7 @@ export function ResultsTablePartBreakdown({
     questionIndex,
     ...rest
 }: ResultsTablePartBreakdownProps) {
+    const { t } = useTranslation();
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const deviceSize = useDeviceSize();
@@ -591,7 +594,7 @@ export function ResultsTablePartBreakdown({
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                             alignment={"start"}
                         >
-                            Name
+                            {t("common:progress.partBreakdown.nameColumn")}
                         </SortItemHeader>
                         {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                             ? <SortItemHeader<ProgressSortOrder>
@@ -599,12 +602,12 @@ export function ResultsTablePartBreakdown({
                                 defaultOrder={"totalPartPercentage"}
                                 reverseOrder={"totalPartPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                                label={"Total correct"}
+                                label={t("sci:progress.partBreakdown.totalCorrectLabel")}
                             >
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
-                                        <span>Parts</span>
-                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                                        <span>{t("sci:progress.partBreakdown.partsWord")}</span>
+                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                                     </div>,
                                     "Correct"
                                 )}
@@ -614,12 +617,12 @@ export function ResultsTablePartBreakdown({
                                 defaultOrder={"totalAttemptedPartPercentage"}
                                 reverseOrder={"totalAttemptedPartPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                                label={"Total attempted"}
+                                label={t("sci:progress.partBreakdown.totalAttemptedLabel")}
                             >
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
-                                        <span>Parts</span>
-                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>(total)</span>
+                                        <span>{t("sci:progress.partBreakdown.partsWord")}</span>
+                                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                                     </div>,
                                     "Attempted"
                                 )}
@@ -635,7 +638,7 @@ export function ResultsTablePartBreakdown({
                                 reversed={reverseOrder}
                                 key={i}
                             >
-                                Part {i + 1}
+                                {t("common:progress.partBreakdown.partColumn", { partNumber: i + 1 })}
                             </SortItemHeader>
                             // </th>
                         )}
@@ -698,6 +701,6 @@ export function ResultsTablePartBreakdown({
             </table>
         </div>
         : <div className="w-100 text-center p-3">
-            This group is empty, so has no progress data available. You can invite users through the <Link to="/groups">Manage groups</Link> page.
+            <Trans i18nKey="common:progress.table.emptyState" components={{ manageGroupsLink: <Link to="/groups" /> }} />
         </div>;
 }
