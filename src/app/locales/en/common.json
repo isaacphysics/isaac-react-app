@@ -401,6 +401,11 @@
       }
     },
     "greeting": "Hi, {{givenName}}!",
+    "groups": {
+      "resetPassword": {
+        "failureMessage": "Failed to send password reset"
+      }
+    },
     "misuse": {
       "emptyState": "No misuse statistics for this event type! 🎉",
       "noEvent": "None",
@@ -601,7 +606,10 @@
     "downloadPrivacyTitle": "Privacy Notice",
     "emptyGroupsButton": "Create a group",
     "error": {
-      "fetchError": "Error fetching your assignments"
+      "fetchError": "Error fetching your assignments",
+      "loadAttemptFailed": "Loading assigned quiz attempt failed",
+      "loadQuizFailed": "Loading quiz failed",
+      "saveFailed": "Failed to save"
     },
     "extendDueDate": {
       "confirmationText": "Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.",
@@ -846,11 +854,27 @@
     "google": {
       "logoAlt": "Google logo"
     },
+    "linkAccount": {
+      "failureMessage": "Failed to link account"
+    },
     "login": {
       "heading": "Log in or sign up:"
     },
+    "loginFailure": {
+      "toastMessage": "Login Failed"
+    },
+    "loginRedirect": {
+      "failureMessage": "Login redirect failed"
+    },
     "logout": {
+      "failureMessage": "Logout failed",
       "loggingOut": "Logging out..."
+    },
+    "logoutEverywhere": {
+      "failureMessage": "Logout everywhere failed"
+    },
+    "mfa": {
+      "errorWithVerificationCode": "Error with verification code."
     },
     "microsoft": {
       "buttonLabel": "Microsoft",
@@ -892,11 +916,14 @@
     "passwordReset": {
       "checkInbox": "Please check your inbox.",
       "errorTitle": "Unable to reset your password",
+      "failureMessage": "Password reset failed",
       "forgottenLink": "Forgotten your password?",
       "newPasswordLabel": "New password",
       "noTokenMessage": "Please ensure you have clicked the link provided in your password reset email.",
       "noTokenTitle": "No reset token provided",
       "submitButton": "Change password",
+      "successBody": "If an account exists with the email address {{email}}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.",
+      "successTitle": "Password reset email sent",
       "title": "Reset your password",
       "verifyingToken": "Verifying reset token..."
     },
@@ -1011,6 +1038,11 @@
     "unauthorised": {
       "message": "You do not have authorisation to access the page:",
       "title": "Access denied"
+    },
+    "unlinkAccount": {
+      "failureMessage": "Failed to unlink account",
+      "successBody": "Your account settings were updated successfully.",
+      "successTitle": "Account unlinked"
     },
     "verifyEmail": {
       "continueLoginMessage": "Please <loginLink>log in</loginLink> to continue.",
@@ -2817,6 +2849,15 @@
   },
   "questions": {
     "answerPlaceholder": "Type your answer here.",
+    "attemptFailure": {
+      "body": "Your answer could not be checked. Please try again.",
+      "title": "Question attempt failed"
+    },
+    "attempts": {
+      "throttledTitle": "Too many attempts",
+      "warningBody": "You have entered several guesses for this question; soon it will be temporarily locked.",
+      "warningTitle": "Approaching attempts limit"
+    },
     "chemistry": {
       "editPromptSingleBox": "Click in the box below to edit your answer.",
       "editPromptTextEntry": "Click in either box below to edit your answer."
@@ -3369,6 +3410,10 @@
     "admissions": {
       "title": "Practice admissions tests"
     },
+    "alreadySubmitted": {
+      "body": "A submission has already been recorded for this test by your account.",
+      "title": "Test already submitted"
+    },
     "assignedEmpty": {
       "none": "You have no tests in progress."
     },
@@ -3593,6 +3638,11 @@
       "notStarted": "Not started",
       "overdue": "Overdue",
       "started": "Started"
+    },
+    "submission": {
+      "failureMessage": "Error submitting test",
+      "successBody": "Test submitted successfully",
+      "successTitle": "Test submitted"
     },
     "title": {
       "studentSuffix": " for {{givenName}} {{familyName}}"

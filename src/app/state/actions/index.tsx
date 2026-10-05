@@ -48,6 +48,7 @@ import {
 } from "../index";
 import {Immutable} from "immer";
 import { NavigateFunction } from "react-router";
+import i18next from "i18next";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
@@ -125,7 +126,7 @@ export const linkAccount = (provider: AuthenticationProvider) => async (dispatch
         window.location.href = redirectUrl;
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to link account", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.linkAccount.failureMessage"), e));
     }
 };
 
@@ -138,15 +139,15 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
             dispatch(getUserAuthSettings() as any)
         ]);
         dispatch(showToast({
-            title: "Account unlinked",
-            body: "Your account settings were updated successfully.",
+            title: i18next.t("common:auth.unlinkAccount.successTitle"),
+            body: i18next.t("common:auth.unlinkAccount.successBody"),
             color: "success",
             timeout: 5000,
             closable: false,
         }) as any);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to unlink account", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.unlinkAccount.failureMessage"), e));
     }
 };
 
@@ -161,7 +162,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         continueToAfterAuthPath(result.data);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.mfa.errorWithVerificationCode"), e));
     }
 };
 
@@ -237,7 +238,7 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
         await api.authentication.logout();
         dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Logout failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.logout.failureMessage"), e));
     }
 };
 
@@ -247,7 +248,7 @@ export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => 
         await api.authentication.logoutEverywhere();
         dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Logout everywhere failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.logoutEverywhere.failureMessage"), e));
     }
 };
 
@@ -257,7 +258,7 @@ export const logOutDeletedUser = () => async (dispatch: Dispatch<Action>) => {
         await api.authentication.logout();
         dispatch({type: ACTION_TYPE.USER_DELETION_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Logout failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.logout.failureMessage"), e));
     }
 };
 
@@ -303,12 +304,12 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
         dispatch(showToast({
             color: "success",
-            title: "Password reset email sent",
-            body: `If an account exists with the email address ${params.email}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.`,
+            title: i18next.t("common:auth.passwordReset.successTitle"),
+            body: i18next.t("common:auth.passwordReset.successBody", { email: params.email }),
             timeout: 10000
         }) as any);
     } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Password reset failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.passwordReset.failureMessage"), e));
     }
 };
 
@@ -321,7 +322,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
         trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: false } });
         window.location.href = redirectUrl;
     } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.loginRedirect.failureMessage"), e));
     }
     // TODO MT handle case when user is already logged in
 };
@@ -365,7 +366,7 @@ export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigat
         await navigate("/auth_error", { state: { errorMessage: extractMessage(error), provider, providerErrors } });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         if (!extractMessage(error).startsWith("You do not use") && !providerErrors.errorDescription?.startsWith("AADSTS65004")) {
-            dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
+            dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:auth.loginFailure.toastMessage"), error));
         }
     }
 };
@@ -438,8 +439,8 @@ export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO
         const softLimit = isAnonymous ? 3 : 10;
         if (lastAttempt.attempts >= softLimit && !response.data.correct && (!inlineContext || inlineContext.canShowWarningToast)) {
             dispatch(showToast({
-                color: "warning", title: "Approaching attempts limit", timeout: 10000,
-                body: "You have entered several guesses for this question; soon it will be temporarily locked."
+                color: "warning", title: i18next.t("common:questions.attempts.warningTitle"), timeout: 10000,
+                body: i18next.t("common:questions.attempts.warningBody")
             }) as any);
             if (inlineContext) inlineContext.canShowWarningToast = false;
         }
@@ -451,7 +452,7 @@ export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
-                color: "danger", title: "Too many attempts", timeout: 10000,
+                color: "danger", title: i18next.t("common:questions.attempts.throttledTitle"), timeout: 10000,
                 body: errorMessage
             }) as any);
             setTimeout( () => {
@@ -460,8 +461,8 @@ export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO
         } else {
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId});
             dispatch(showToast({
-                color: "danger", title: "Question attempt failed", timeout: 5000,
-                body: "Your answer could not be checked. Please try again."
+                color: "danger", title: i18next.t("common:questions.attemptFailure.title"), timeout: 5000,
+                body: i18next.t("common:questions.attemptFailure.body")
             }) as any);
         }
         if (inlineContext) inlineContext.canShowWarningToast = false;
@@ -523,21 +524,21 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
                 }
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
-            dispatch(showToast({color: "success", title: "Test submitted", body: "Test submitted successfully", timeout: 3000}) as any);
+            dispatch(showToast({color: "success", title: i18next.t("common:tests.submission.successTitle"), body: i18next.t("common:tests.submission.successBody"), timeout: 3000}) as any);
             void navigateComponentless(generatePostQuizUrl(quizId));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Error submitting test", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:tests.submission.failureMessage"), e));
     }
 };
 
 export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal({
         closeAction: () => {dispatch(closeActiveModal() as any);},
-        title: "Test already submitted",
+        title: i18next.t("common:tests.alreadySubmitted.title"),
         body: <div className="text-center my-7 pb-4">
-            <strong>A submission has already been recorded for this test by your account.</strong>
+            <strong>{i18next.t("common:tests.alreadySubmitted.body")}</strong>
         </div>
     }) as any);
     void navigateComponentless(generatePostQuizUrl(quizId));
@@ -564,7 +565,7 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS, member});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE, member});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to send password reset", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:admin.groups.resetPassword.failureMessage"), e));
     }
 };
 
