@@ -149,6 +149,9 @@
     "sameSourceExplanation": "The stage and exam board were specified by {{stageSource}}."
   },
   "events": {
+    "book": {
+      "bookPlace": "Book a place"
+    },
     "booking": {
       "examBoard": "Exam board"
     },

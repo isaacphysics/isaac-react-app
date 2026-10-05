@@ -41,6 +41,7 @@ import {
 import {DisplaySettings, GameboardContext, PageContextState, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {useContext, useEffect, useState} from "react";
 import {Immutable} from "immer";
+import i18next from "i18next";
 
 export interface UseUserContextReturnType {
     contexts: UserContext[];
@@ -452,9 +453,9 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
         }
     }
     else {
-        message.push("your account settings");
+        message.push(i18next.t("common:progress.marking.accountSettings"));
     }
-    return `not been marked for ${message.join(" ")}`;
+    return i18next.t("common:progress.marking.notMarkedFor", { context: message.join(" ") });
 }
 
 export function audienceStyle(audienceString: string): string {

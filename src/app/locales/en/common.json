@@ -564,8 +564,18 @@
       "createDeckButton": "create a question deck",
       "topicDecksButton": "our topic question decks"
     },
+    "assign": {
+      "errorTitle": "Test assignment to {{groupName}} failed",
+      "savedTitle_one": "Test saved",
+      "savedTitle_other": "Tests saved",
+      "successTitle_one": "Test assigned",
+      "successTitle_other": "Tests assigned"
+    },
     "breadcrumb": {
       "label": "Assignments"
+    },
+    "cancel": {
+      "confirmMessage": "Are you sure you want to cancel \"{{quizTitle}}\"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all student attempts at this test will be lost."
     },
     "card": {
       "assigned": "Assigned <strong>{{startDate}}</strong>",
@@ -889,6 +899,9 @@
       "submitButton": "Change password",
       "title": "Reset your password",
       "verifyingToken": "Verifying reset token..."
+    },
+    "passwordStrength": {
+      "breachedFeedback": "Useless"
     },
     "raspberryPi": {
       "conciseLabel": "Raspberry Pi",
@@ -1526,6 +1539,15 @@
       },
       "title": "Record event attendance"
     },
+    "availability": {
+      "requestAvailable": "Bookings available by request!",
+      "waitingListAvailable": "Waiting list booking is available!"
+    },
+    "book": {
+      "confirmReservation": "Confirm your reservation",
+      "joinWaitingList": "Join waiting list",
+      "requestPlace": "Request a place"
+    },
     "booking": {
       "accessibility": "Accessibility requirements",
       "accessibilityHelp": "For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.",
@@ -1566,6 +1588,16 @@
       "year9": "Year 9",
       "yearGroup": "School year group"
     },
+    "bookingValidation": {
+      "emergencyContactRequiredBody": "You must enter a emergency contact details in order to book on to this event.",
+      "emergencyContactRequiredTitle": "Emergency contact details required",
+      "jobTitleRequiredBody": "You must enter a job title to proceed.",
+      "jobTitleRequiredTitle": "Job title required",
+      "schoolRequiredBody": "You must enter a school in order to book on to this event.",
+      "schoolRequiredTitle": "School information required",
+      "yearGroupRequiredBody": "You must enter a year group to proceed.",
+      "yearGroupRequiredTitle": "Year group required"
+    },
     "bookingsTable": {
       "accessibility": "Accessibility requirements",
       "accountType": "Account type",
@@ -1578,6 +1610,12 @@
       "jobYearGroup": "Job / year group",
       "name": "Name",
       "school": "School"
+    },
+    "cancel": {
+      "booking": "Cancel your booking",
+      "request": "Cancel booking request",
+      "reservation": "Cancel your reservation",
+      "waitingList": "Leave waiting list"
     },
     "card": {
       "availableToBook": "Available to book",
@@ -1612,6 +1650,11 @@
       "declineButton": "I am not a teacher",
       "title": "Please confirm teacher status"
     },
+    "date": {
+      "from": "From",
+      "seriesStarts": "Series starts",
+      "to": "to"
+    },
     "details": {
       "bookedConfirmation": "You are booked on this event!",
       "completeRegistration": "Complete your registration below",
@@ -1635,6 +1678,12 @@
     "leaderRestriction": "As an event leader, you are only able to see the details of events which you manage.",
     "loadErrorTitle": "Error loading event overviews",
     "loadMoreButton": "Load more events",
+    "manage": {
+      "addToWaitingList": "Add to waiting list",
+      "bookPlace": "Book a place",
+      "bookingRequest": "Make booking request",
+      "confirmReservation": "Confirm reservation"
+    },
     "manageBookings": {
       "actions": {
         "cancel": "Cancel",
@@ -1659,6 +1708,10 @@
       "title": "Manage current bookings"
     },
     "manageButton": "Manage",
+    "modal": {
+      "applyPastDeadline": "Apply - deadline past",
+      "bookNow": "Book now"
+    },
     "notFound": "Event not found",
     "overview": {
       "title": "Events overview"
@@ -1715,6 +1768,13 @@
       "groupsLabel": "Groups",
       "stagesLabel": "Stages"
     },
+    "status": {
+      "onWaitingList": "You are on the waiting list for this event.",
+      "requestedPlace": "You have requested a place on this event."
+    },
+    "studentOnly": {
+      "contact": "This event is aimed at students. If you are not a student but still wish to attend, please <contactLink>contact us</contactLink>."
+    },
     "tableActionsHeader": "Actions",
     "tableAttendedHeader": "Number attended",
     "tableConfirmedHeader": "Number confirmed",
@@ -1764,6 +1824,19 @@
   },
   "experiments": {
     "cardSubtitle": "Develop experimental skills with interesting experiments."
+  },
+  "featureFlags": {
+    "modal": {
+      "applyButton": "Apply and reload",
+      "description": "Feature flags are staff-only runtime switches that enable or disable features that are under development. They will only appear on staging and dev (not test).",
+      "emptyState": "No feature flags found.",
+      "howItWorks": "Relevant flags will typically be enabled by default on a given branch. However, if you wish to see how multiple settings interact, you can override which flags are enabled below.",
+      "overrideNote": "Note that overrides will be maintained between site visits and should probably be left as automatic when not in use.",
+      "overridesLabel": "Manual overrides:",
+      "toggleAuto": "Automatic",
+      "toggleOff": "Off",
+      "toggleOn": "On"
+    }
   },
   "figure": {
     "expandButton": "Expand figure",
@@ -1934,6 +2007,9 @@
       "conceptTitleSuffix": "{{conceptTitle}} Practice",
       "connectionTopTenToUpperMessage": "Practise the concept before returning to complete the board",
       "connectionUpperToLowerMessage": "Practise the concept with easier questions before returning to complete the board"
+    },
+    "owner": {
+      "other": "Someone else"
     },
     "save": {
       "unsaveConfirm": "Are you sure you want to unsave '{{boardTitle}}' from your account?"
@@ -2265,6 +2341,20 @@
       "reportTaggingIssue": "If you think that the page is incorrectly tagged, please <strong><contactLink>contact us</contactLink></strong>."
     }
   },
+  "katexA11y": {
+    "a11y": {
+      "clickableDropZone": "clickable drop zone",
+      "cubeRootEnd": "end cube root",
+      "cubeRootStart": "cube root of",
+      "endColor": "end color {{color}}",
+      "endFormattedText": "end {{modifier}} text",
+      "squareRootEnd": "end square root",
+      "squareRootStart": "square root of",
+      "startColor": "start color {{color}}",
+      "startFormattedText": "start {{modifier}} text",
+      "toThePower": "to the power {{power}} "
+    }
+  },
   "latex": {
     "dropZone": "clickable drop zone",
     "figureReference": "Figure&nbsp;{{number}}",
@@ -2378,12 +2468,17 @@
     "viewAllButton": "See more"
   },
   "notifications": {
+    "assignmentTitle": "Assignment to do: {{gameboardTitle}}",
+    "dueDateMessage": "Due on {{dueDate}}",
+    "goToAssignmentButton": "Go to assignment",
+    "goToTestButton": "Go to test",
     "survey": {
       "acceptButton": "Yes, view questionnaire",
       "declineButton": "No thanks",
       "postponeButton": "Ask me later",
       "prompt": "Would you like to complete a survey?"
     },
+    "testTitle": "Test to do: {{quizTitle}}",
     "toggle": {
       "collapseButton": "Show fewer notifications",
       "expandButton": "Show all {{count}} notifications"
@@ -2587,6 +2682,10 @@
     "legendMaths": "Maths",
     "legendMentalMaths": "Overall Mental Maths",
     "legendSubjects": "Subjects",
+    "marking": {
+      "accountSettings": "your account settings",
+      "notMarkedFor": "not been marked for {{context}}"
+    },
     "mentalMathsCaption": "Overall Mental Maths",
     "mentalMathsEmptyState": "<mentalMathsLink>Click here</mentalMathsLink> to try our mental maths skills practice.",
     "mostRecentTitle": "Most recently answered questions",
@@ -2736,6 +2835,9 @@
       "announceSwapWithItem": "Swap draggable item {{activeItemText}} with item {{overItemText}}.",
       "announceSwappedWithItem": "Draggable item {{activeItemText}} was swapped with {{overItemText}}."
     },
+    "fastTrack": {
+      "relatedConceptTitle": "Read suggested related concept page"
+    },
     "feedback": {
       "correct": "Correct!",
       "incorrect": "Incorrect",
@@ -2878,6 +2980,12 @@
     "results": {
       "empty": "No results found",
       "heading": "Search Results"
+    },
+    "shortcuts": {
+      "teacherConnect": {
+        "summary": "Click here to connect to a teacher using the code you entered.",
+        "title": "Teacher Connections"
+      }
     }
   },
   "serverError": {

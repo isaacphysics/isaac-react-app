@@ -1,6 +1,7 @@
 import {HUMAN_STAGES, HUMAN_SUBJECTS, isPhy, isValidStageSubjectPair, LearningStage, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, Subjects, validQuestionDeckStageSubjectPairs} from "./";
 import {SearchShortcut} from "../../IsaacAppTypes";
 import {Stage} from "../../IsaacApiTypes";
+import i18next from "i18next";
 
 const searchList: SearchShortcut[] = [
     {
@@ -347,9 +348,9 @@ export function shortcuts(term: string) {
     if (group.test(term)) {
         response.push({
             id: "teacher_connections",
-            title: "Teacher Connections",
+            title: i18next.t("common:search.shortcuts.teacherConnect.title"),
             terms: ["connect", "teacher connection"],
-            summary: "Click here to connect to a teacher using the code you entered.",
+            summary: i18next.t("common:search.shortcuts.teacherConnect.summary"),
             url: ("/account?authToken=" + term),
             type: SEARCH_RESULT_TYPE.SHORTCUT
         });
@@ -372,8 +373,8 @@ export function shortcuts(term: string) {
         if (isValidDecksContext) {
             response.push({
                 id: `${subject}_${stage}_decks`,
-                title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} question decks by topic`,
-                summary: "Prepared question decks for use in classroom or homework.",
+                title: i18next.t("sci:search.shortcuts.decksByTopic.title", { stage: HUMAN_STAGES[learningStage], subject: HUMAN_SUBJECTS[subject] }),
+                summary: i18next.t("sci:search.shortcuts.decksByTopic.summary"),
                 url: `/${subject}/${stage}/question_decks`,
                 tags: [subject],
                 type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -384,8 +385,8 @@ export function shortcuts(term: string) {
         if (subject) {
             response.push({
                 id: `${subject}_decks`,
-                title: `${HUMAN_SUBJECTS[subject]} question decks by topic`,
-                summary: "Prepared question decks for use in classroom or homework.",
+                title: i18next.t("sci:search.shortcuts.subjectDecks.title", { subject: HUMAN_SUBJECTS[subject] }),
+                summary: i18next.t("sci:search.shortcuts.decksByTopic.summary"),
                 url: `/${subject}/a_level/question_decks`,
                 tags: [subject],
                 type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -395,8 +396,8 @@ export function shortcuts(term: string) {
         for (const subject of Subjects) {
             response.push({
                 id: `${subject}_decks`,
-                title: `${HUMAN_SUBJECTS[subject]} question decks by topic`,
-                summary: "Prepared question decks for use in classroom or homework.",
+                title: i18next.t("sci:search.shortcuts.subjectDecks.title", { subject: HUMAN_SUBJECTS[subject] }),
+                summary: i18next.t("sci:search.shortcuts.decksByTopic.summary"),
                 url: `/${subject}/a_level/question_decks`,
                 tags: [subject],
                 type: SEARCH_RESULT_TYPE.SHORTCUT

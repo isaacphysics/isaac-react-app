@@ -10,15 +10,21 @@ import {DateString, FRIENDLY_DATE, SHORT_FRIENDLY_DATE, TIME_ONLY} from "../comp
 import React from "react";
 import {Link} from "react-router-dom";
 import {Immutable} from "immer";
+import { Trans } from "react-i18next";
+import i18next from "i18next";
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
-    {"This event is aimed at students. If you are not a student but still wish to attend, please "}
-    <Link to={`/contact?subject=${encodeURI("Non-student attendance at " + eventId)}`}>contact us</Link>.
+    <Trans
+        i18nKey="common:events.studentOnly.contact"
+        components={{
+            contactLink: <Link to={`/contact?subject=${encodeURI("Non-student attendance at " + eventId)}`} />,
+        }}
+    />
 </React.Fragment>;
 
 export const formatEventDetailsDate = (event: AugmentedEvent) => {
     if (event.isRecurring) {
-        return <span>Series starts <DateString>{event.date}</DateString></span>;
+        return <span>{i18next.t("common:events.date.seriesStarts")} <DateString>{event.date}</DateString></span>;
     } else if (event.isMultiDay) {
         return <><DateString>{event.date}</DateString>{" – "}<DateString>{event.endDate}</DateString></>;
     } else {
@@ -28,13 +34,13 @@ export const formatEventDetailsDate = (event: AugmentedEvent) => {
 
 export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) => {
     if (event.isRecurring) {
-        return <span>Series starts <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString><br />
+        return <span>{i18next.t("common:events.date.seriesStarts")} <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString><br />
             <DateString formatter={TIME_ONLY}>{event.date}</DateString> – <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
         </span>;
     } else if (event.isMultiDay) {
         return <>
-            From <DateString>{event.date}</DateString><br/>
-            to <DateString>{event.endDate}</DateString>
+            {i18next.t("common:events.date.from")} <DateString>{event.date}</DateString><br/>
+            {i18next.t("common:events.date.to")} <DateString>{event.endDate}</DateString>
         </>;
     } else {
         return <>
@@ -59,66 +65,66 @@ export const formatEventCardDateSlim = (event: AugmentedEvent) => {
 export const formatAvailabilityMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {
         //  in this case, the waiting list is for booking requests that must be approved
-        return "Bookings available by request!";
+        return i18next.t("common:events.availability.requestAvailable");
     }
     // this is an event which can be freely joined, however it happens to be full
-    return "Waiting list booking is available!";
+    return i18next.t("common:events.availability.waitingListAvailable");
 };
 
 export const formatWaitingListBookingStatusMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {
-        return "You have requested a place on this event.";
+        return i18next.t("common:events.status.requestedPlace");
     }
-    return "You are on the waiting list for this event.";
+    return i18next.t("common:events.status.onWaitingList");
 };
 
 export const formatMakeBookingButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus === "RESERVED") {
-        return "Confirm your reservation";
+        return i18next.t("common:events.book.confirmReservation");
     }
     if (event.isWaitingListOnly) {
-        return "Request a place";
+        return i18next.t("common:events.book.requestPlace");
     }
     if (zeroOrLess(event.placesAvailable)) {
-        return "Join waiting list";
+        return i18next.t("common:events.book.joinWaitingList");
     }
     if (isAda) {
-        return "Book a place";
+        return i18next.t("ada:events.book.bookPlace");
     }
-    return "Book event";
+    return i18next.t("sci:events.book.bookEvent");
 };
 
 export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus == "CONFIRMED") {
-        return "Cancel your booking";
+        return i18next.t("common:events.cancel.booking");
     }
     else if (event.userBookingStatus == "RESERVED") {
-        return "Cancel your reservation";
+        return i18next.t("common:events.cancel.reservation");
     }
     else if (event.userBookingStatus == "WAITING_LIST") {
-        return event.isWaitingListOnly ? "Cancel booking request" : "Leave waiting list";
+        return event.isWaitingListOnly ? i18next.t("common:events.cancel.request") : i18next.t("common:events.cancel.waitingList");
     }
 };
 
 export const formatManageBookingActionButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus === "RESERVED") {
-        return "Confirm reservation";
+        return i18next.t("common:events.manage.confirmReservation");
     }
     if (event.isWaitingListOnly) {
-        return "Make booking request";
+        return i18next.t("common:events.manage.bookingRequest");
     }
     if (zeroOrLess(event.placesAvailable)) {
-        return "Add to waiting list";
+        return i18next.t("common:events.manage.addToWaitingList");
     }
-    return "Book a place";
+    return i18next.t("common:events.manage.bookPlace");
 };
 
 export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanMakeEventBooking?: boolean) => {
     if (userCanMakeEventBooking) {
-        return "Book now";
+        return i18next.t("common:events.modal.bookNow");
     }
     else {
-        return event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
+        return event.isWithinBookingDeadline ? "Apply" : i18next.t("common:events.modal.applyPastDeadline");
     }
 };
 

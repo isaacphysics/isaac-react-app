@@ -303,6 +303,9 @@
     "metaDescription": "Contact the Isaac team with questions, comments or feedback about our resources."
   },
   "events": {
+    "book": {
+      "bookEvent": "Book event"
+    },
     "details": {
       "availability": "Availability:",
       "bookingDeadline": "Booking deadline:",
@@ -585,6 +588,17 @@
   "questions": {
     "validation": {
       "numericGuide": "For help, see our <numericGuideLink>guide to answering numeric questions</numericGuideLink>."
+    }
+  },
+  "search": {
+    "shortcuts": {
+      "decksByTopic": {
+        "summary": "Prepared question decks for use in classroom or homework.",
+        "title": "{{stage}} {{subject}} question decks by topic"
+      },
+      "subjectDecks": {
+        "title": "{{subject}} question decks by topic"
+      }
     }
   },
   "support": {

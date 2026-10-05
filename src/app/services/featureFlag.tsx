@@ -5,6 +5,7 @@ import { Button, Col } from "reactstrap";
 import { KEY, persistence } from "./localStorage";
 import { Spacer } from "../components/elements/Spacer";
 import { StyledTripleToggle } from "../components/elements/inputs/StyledMultiToggle";
+import { useTranslation } from "react-i18next";
 
 export enum FeatureFlag {
     _TEST_FEATURE = "_TEST_FEATURE", // used for testing; do not remove
@@ -87,15 +88,16 @@ export const FeatureFlagWrapper = ({ flag, children, onSet, onUnset }: FeatureFl
 
 
 const FeatureFlagModalBody = () => {
+    const { t } = useTranslation();
     const [overrides, setOverrides] = useState(loadOverridesFromStorage());
     const allFlags = Object.values(FeatureFlag).filter(f => f !== FeatureFlag._TEST_FEATURE) as FeatureFlag[]; 
 
     return <Col>
-        <p>Feature flags are staff-only runtime switches that enable or disable features that are under development. They will only appear on staging and dev (not test).</p>
-        <p>Relevant flags will typically be enabled by default on a given branch. However, if you wish to see how multiple settings interact, you can override which flags are enabled below.</p>
-        <p>Note that overrides will be maintained between site visits and should probably be left as automatic when not in use.</p>
+        <p>{t("common:featureFlags.modal.description")}</p>
+        <p>{t("common:featureFlags.modal.howItWorks")}</p>
+        <p>{t("common:featureFlags.modal.overrideNote")}</p>
 
-        <p className="mt-5">Manual overrides:</p>
+        <p className="mt-5">{t("common:featureFlags.modal.overridesLabel")}</p>
         {allFlags.length
             ? <ul className="list-unstyled ps-3">
                 {allFlags.map(flag => 
@@ -106,21 +108,21 @@ const FeatureFlagModalBody = () => {
                     </div>
                 )}
             </ul>
-            : <p><em>No feature flags found.</em></p>
+            : <p><em>{t("common:featureFlags.modal.emptyState")}</em></p>
         }
 
         <div className="d-flex w-100 justify-content-around mt-5">
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-cross" />
-                Off
+                {t("common:featureFlags.modal.toggleOff")}
             </div>
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-dash" />
-                Automatic
+                {t("common:featureFlags.modal.toggleAuto")}
             </div>
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-tick" />
-                On
+                {t("common:featureFlags.modal.toggleOn")}
             </div>
         </div>
 
@@ -128,7 +130,7 @@ const FeatureFlagModalBody = () => {
             saveOverridesToStorage(overrides);
             window.location.reload();
         }}>
-            Apply and reload
+            {t("common:featureFlags.modal.applyButton")}
         </Button>
     </Col>;
 };

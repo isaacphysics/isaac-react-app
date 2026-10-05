@@ -20,6 +20,7 @@ import {
     useLazyGetGameboardsQuery
 } from "../state";
 import { useHistoryState } from "./history";
+import i18next from "i18next";
 
 export enum BoardCompletions {
     "any" = "Any",
@@ -36,7 +37,7 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (user && (user.id == board.ownerUserId)) {
         return "Me";
     }
-    return "Someone else";
+    return i18next.t("common:gameboard.owner.other");
 }
 
 export function boardCompletionSelection(board: GameboardDTO, boardCompletion: BoardCompletions) {
