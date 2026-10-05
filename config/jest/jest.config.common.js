@@ -29,7 +29,7 @@ module.exports = {
 
     },
     "transformIgnorePatterns": [
-        "/node_modules/(?!@popperjs|katex|leaflet)",
+        "/node_modules/(?!@popperjs|leaflet)",
         "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
