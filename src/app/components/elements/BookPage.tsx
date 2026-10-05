@@ -7,8 +7,10 @@ import { Markup } from "./markup";
 import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
 import { scrollVerticallyIntoView } from "../../services";
+import { useTranslation } from "react-i18next";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
+    const { t } = useTranslation();
     
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
@@ -43,14 +45,14 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         />
 
         <MetadataContainer className="d-flex flex-column gap-2">
-            {hasQuestions && <MetadataContainerLink id="questions" title="Questions" />}
-            {hasResources && <MetadataContainerLink id="resources" title="Resources" />}
-            {hasExtension && <MetadataContainerLink id="extension" title="Extension work" />}
-            {!hasQuestions && !hasResources && !hasExtension && <span className="ms-2">There are no materials for this page.</span>}
+            {hasQuestions && <MetadataContainerLink id="questions" title={t("common:books.page.questionsTitle")} />}
+            {hasResources && <MetadataContainerLink id="resources" title={t("common:books.page.resourcesTitle")} />}
+            {hasExtension && <MetadataContainerLink id="extension" title={t("common:books.page.extensionTitle")} />}
+            {!hasQuestions && !hasResources && !hasExtension && <span className="ms-2">{t("common:books.page.emptyState")}</span>}
         </MetadataContainer>
 
         {hasQuestions && <>
-            <h4 className="mb-3" id="questions">Questions</h4>
+            <h4 className="mb-3" id="questions">{t("common:books.page.questionsTitle")}</h4>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
@@ -61,7 +63,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasResources && <>
-            <h4 className="mb-3" id="resources">Resources</h4>
+            <h4 className="mb-3" id="resources">{t("common:books.page.resourcesTitle")}</h4>
             {!!page.relatedContent?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
@@ -77,8 +79,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasExtension && <>
-            <h4 className="mt-4 mb-3" id="extension">Extension work</h4>
-            <span>Expand your boundaries by having a go at these additional extension questions.</span>
+            <h4 className="mt-4 mb-3" id="extension">{t("common:books.page.extensionTitle")}</h4>
+            <span>{t("common:books.page.extensionIntroText")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"

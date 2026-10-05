@@ -14,8 +14,10 @@ import { WithFigureNumbering } from "./WithFigureNumbering";
 import { ContentControlledSidebar } from "./sidebar/ContentControlledSidebar";
 import { PageContainer } from "./layout/PageContainer";
 import { IsaacContent } from "../content/IsaacContent";
+import { useTranslation } from "react-i18next";
 
 export const Book = () => {
+    const { t } = useTranslation();
 
     const { bookId } = useParams();
     const [pageId, setPageId] = useState<string | undefined>(undefined);
@@ -44,7 +46,7 @@ export const Book = () => {
     return <PageContainer data-bs-theme={pageContext?.subject ?? "neutral"}
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={pageId === undefined ? "Book" : book?.title ?? "Book"}
+                currentPageTitle={pageId === undefined ? t("common:books.title") : book?.title ?? t("common:books.title")}
                 icon={{type: "icon", icon: "icon-book"}}
                 intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
             />
@@ -56,12 +58,12 @@ export const Book = () => {
     >
         <ShowLoadingQuery
             query={bookIndexPageQuery}
-            defaultErrorTitle="Unable to load book contents"
+            defaultErrorTitle={t("common:books.index.loadError")}
             thenRender={(definedBookIndexPage) => {
                 return pageId
                     ? <ShowLoadingQuery
                         query={bookDetailPageQuery}
-                        defaultErrorTitle="Unable to load book page"
+                        defaultErrorTitle={t("common:books.detail.loadError")}
                         thenRender={(bookDetailPage) => {
                             return <WithFigureNumbering doc={bookDetailPage}>
                                 <BookPage page={bookDetailPage} />

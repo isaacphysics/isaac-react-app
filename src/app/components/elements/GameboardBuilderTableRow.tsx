@@ -25,10 +25,12 @@ import { ContentPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 import { PreviewQuestionButton } from "./PreviewButton";
+import { useTranslation } from "react-i18next";
 
 const GameboardBuilderTableRow = (
     {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
+    const { t } = useTranslation();
     const tagIcon = (tag: string) => {
         return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>;
     };
@@ -46,11 +48,11 @@ const GameboardBuilderTableRow = (
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
                     {isAda && isDnd
-                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}/>
+                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label={t("ada:gameboard.builder.delete")} title={t("ada:gameboard.builder.delete")} onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}/>
                         : <StyledCheckbox
                             id={`${isDnd ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
-                            aria-label={!isSelected ? "Select question" : "Deselect question"}
-                            title={!isSelected ? "Select question" : "Deselect question"}
+                            aria-label={!isSelected ? t("common:gameboard.builder.select") : t("common:gameboard.builder.deselect")}
+                            title={!isSelected ? t("common:gameboard.builder.select") : t("common:gameboard.builder.deselect")}
                             color="primary"
                             checked={isSelected}
                             onChange={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}
@@ -59,10 +61,10 @@ const GameboardBuilderTableRow = (
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
                 <div className="d-flex">
-                    {isDnd && <i aria-label="Drag to reorder" className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
+                    {isDnd && <i aria-label={t("common:gameboard.builder.dragLabel")} className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
                     <div>
                         <div className="d-flex">
-                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={`Preview question '${question.id}' in new tab`}>
+                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={t("common:gameboard.builder.previewTooltip", { questionId: question.id })}>
                                 <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
                             <PreviewQuestionButton id={question.id} className="ms-2" />

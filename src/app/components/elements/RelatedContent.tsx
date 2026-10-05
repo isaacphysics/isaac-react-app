@@ -11,6 +11,7 @@ import {
     useUserViewingContext
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import i18next from "i18next";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -65,18 +66,18 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
                         <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
-                        <h3 className="d-inline-block mt-2">Related questions</h3>
+                        <h3 className="d-inline-block mt-2">{i18next.t("common:relatedContent.questions.title")}</h3>
                     </Col>
                 </Row>
                 <hr/>
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex text-start">
                     <ListGroup className="w-50">
-                        <h4 className="related-question-header">On your specification:</h4>
+                        <h4 className="related-question-header">{i18next.t("common:relatedContent.questions.specificationHeader")}</h4>
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                     <ListGroup className="w-50">
-                        <h4 className="related-question-header">Outside your specification:</h4>
+                        <h4 className="related-question-header">{i18next.t("common:relatedContent.questions.outsideSpecificationHeader")}</h4>
                         {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
@@ -86,7 +87,7 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
-                <h4 className="d-lg-none related-question-header mt-4">Outside your specification:</h4>
+                <h4 className="d-lg-none related-question-header mt-4">{i18next.t("common:relatedContent.questions.outsideSpecificationHeader")}</h4>
                 <div className="d-lg-none text-start">
                     <ListGroup>
                         {remainingQuestions.map(contentSummary => renderItem(contentSummary))}

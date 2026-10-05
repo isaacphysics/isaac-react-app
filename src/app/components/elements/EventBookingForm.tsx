@@ -7,6 +7,8 @@ import {examBoardLabelMap, isAda, isTutor, siteSpecific, stageLabelMap, studentO
 import {Immutable} from "immer";
 import { Card, CardBody, Row, Col, Label, Input, FormFeedback, Button, UncontrolledTooltip } from "reactstrap";
 import classNames from "classnames";
+import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "./TransAnchor";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -16,6 +18,7 @@ interface EventBookingFormProps {
 }
 
 export const EventBookingForm = ({event, targetUser, additionalInformation, updateAdditionalInformation}: EventBookingFormProps) => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const editingSelf = user && user.loggedIn && targetUser.id === user.id;
 
@@ -30,19 +33,24 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
         {/* Account Information */}
         <Card className="mb-3 bg-neutral-light">
             <CardBody>
-                <legend>Your account information (<a href="/account" target="_blank" className="text-theme">update</a>)</legend>
+                <legend><Trans
+                    i18nKey="common:events.booking.accountSection"
+                    components={{
+                        accountLink: <TransAnchor href="/account" target="_blank" className="text-theme" />,
+                    }}
+                /></legend>
                 <Row>
                     <Col md={6}>
                         {/* Should be impossible to not have a first name */}
                         <Label htmlFor="account-firstname" className="form-required">
-                            First name
+                            {t("common:events.booking.firstName")}
                         </Label>
                         <Input id="account-firstname" name="firstname" type="text" disabled value={targetUser.givenName  || ""} />
                     </Col>
                     <Col md={6}>
                         {/* Should be impossible to not have a last name */}
                         <Label htmlFor="account-lastname" className="form-required">
-                            Last name
+                            {t("common:events.booking.lastName")}
                         </Label>
                         <Input id="account-lastname" name="secondname" type="text" disabled value={targetUser.familyName || ""} />
                     </Col>
@@ -52,20 +60,20 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <Row>
                         <Col md={6}>
                             <Label htmlFor="account-email" className="form-required">
-                                Email address
+                                {t("common:events.booking.email")}
                             </Label>
                             <Input id="account-email" name="email" type="email" disabled value={targetUser.email || ""} invalid={targetUser.emailVerificationStatus != 'VERIFIED'} />
                             <FormFeedback>
                                 {editingSelf ?
-                                    "You must verify your email address to book on events. This is so we can send you details about the event." :
-                                    "WARNING: This email is not verified. The details about the event might not reach the user."
+                                    t("common:events.booking.emailVerifySelf") :
+                                    t("common:events.booking.emailVerifyOther")
                                 }
                             </FormFeedback>
                         </Col>
                         {isAda && <Col md={6} className="d-none d-md-block" />}
                         <Col md={6}>
                             <Label htmlFor="account-stages" className="form-required">
-                                Stage
+                                {t("common:events.booking.stage")}
                             </Label>
                             <Input id="account-stages" type="text" disabled value={
                                 Array.from(new Set(targetUser.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ") || ""
@@ -73,7 +81,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </Col>
                         {isAda && <Col md={6}>
                             <Label htmlFor="account-examboard" className="form-required">
-                                Exam board
+                                {t("ada:events.booking.examBoard")}
                             </Label>
                             <Input id="account-examboard" type="text" disabled value={
                                 Array.from(new Set(targetUser.registeredContexts?.map(rc => examBoardLabelMap[rc.examBoard!]))).join(", ") || ""
@@ -85,10 +93,10 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             {targetUser.emailVerificationStatus !== "VERIFIED" && verificationNotResent && <Button
                                 color="link" className="btn-underline" onClick={requestVerificationEmail}
                             >
-                                Verify your email before booking
+                                {t("common:events.booking.verifyEmailBtn")}
                             </Button>}
                             {targetUser.emailVerificationStatus !== "VERIFIED" && verifyEmailRequestSucceeded && <span>
-                                We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
+                                {t("common:events.booking.emailSent", { email: targetUser.email })}
                             </span>}
                         </Col>
                     </Row>}
@@ -97,7 +105,12 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <SchoolInput userToUpdate={{...targetUser, password: null}} disableInput submissionAttempted required={!isTutor(targetUser)} />
                 </div>}
                 {editingSelf && <div className="text-center alert-warning p-1">
-                    If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.
+                    <Trans
+                        i18nKey="common:events.booking.updateInfo"
+                        components={{
+                            accountLink: <TransAnchor href="/account" target="_blank" />,
+                        }}
+                    />
                 </div>}
             </CardBody>
         </Card>
@@ -105,16 +118,16 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
         {/* Event Booking Details */}
         <Card className="mb-3">
             <CardBody>
-                <legend>Event booking details</legend>
+                <legend>{t("common:events.booking.detailsTitle")}</legend>
 
                 <div>
                     {targetUser.role != 'STUDENT' && <React.Fragment>
-                        <Label htmlFor="job-title" className="form-required">Job title</Label>
+                        <Label htmlFor="job-title" className="form-required">{t("common:events.booking.jobTitle")}</Label>
                         <Input
                             id="job-title" name="job-title" type="text" value={additionalInformation.jobTitle  || ""}
                             onChange={event => updateAdditionalInformation({jobTitle: event.target.value})}
                         />
-                        <Label htmlFor="experience-level">Level of teaching experience</Label>
+                        <Label htmlFor="experience-level">{t("common:events.booking.experience")}</Label>
                         <Input
                             id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
                             onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
@@ -123,24 +136,29 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     {targetUser.role == 'STUDENT' && <React.Fragment>
                         <Label htmlFor="year-group" className="form-required">
                             {/* Based on the options, if only teacher roles are avalable use "Role" */}
-                            { !event.isStudentOnly && !event.isAStudentEvent ? "Role" : "School year group" }
+                            { !event.isStudentOnly && !event.isAStudentEvent ? t("common:events.booking.role") : t("common:events.booking.yearGroup") }
                         </Label>
                         <Input
                             type="select" id="year-group" name="year-group" value={additionalInformation.yearGroup || ""}
                             onChange={event => updateAdditionalInformation({yearGroup: event.target.value})}
                         >
                             <option value="" />
-                            {event.isAStudentEvent && <option value="9">Year 9</option>}
-                            {event.isAStudentEvent && <option value="10">Year 10</option>}
-                            {event.isAStudentEvent && <option value="11">Year 11</option>}
-                            {event.isAStudentEvent && <option value="12">Year 12</option>}
-                            {event.isAStudentEvent && <option value="13">Year 13</option>}
-                            {!event.isStudentOnly && <option value="TEACHER">N/A - Teacher</option>}
-                            {!event.isStudentOnly && <option value="OTHER">N/A - Other</option>}
+                            {event.isAStudentEvent && <option value="9">{t("common:events.booking.year9")}</option>}
+                            {event.isAStudentEvent && <option value="10">{t("common:events.booking.year10")}</option>}
+                            {event.isAStudentEvent && <option value="11">{t("common:events.booking.year11")}</option>}
+                            {event.isAStudentEvent && <option value="12">{t("common:events.booking.year12")}</option>}
+                            {event.isAStudentEvent && <option value="13">{t("common:events.booking.year13")}</option>}
+                            {!event.isStudentOnly && <option value="TEACHER">{t("common:events.booking.naTeacher")}</option>}
+                            {!event.isStudentOnly && <option value="OTHER">{t("common:events.booking.naOther")}</option>}
                         </Input>
                         {event.isStudentOnly && <div className="text-muted">{studentOnlyEventMessage(event.id)}</div>}
                         {isAda && (event.isATeacherEvent || additionalInformation.yearGroup == 'TEACHER') && <div className="mt-2 text-end">
-                            <a href="/pages/teacher_accounts" target="_blank">Click to upgrade to a teacher account</a> for free!
+                            <Trans
+                                i18nKey="common:events.booking.upgradeLink"
+                                components={{
+                                    teacherAccountLink: <TransAnchor href="/pages/teacher_accounts" target="_blank" />,
+                                }}
+                            />
                         </div>}
                     </React.Fragment>}
                 </div>
@@ -149,11 +167,11 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <div>
                         <Label htmlFor="medical-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
-                                Dietary requirements or relevant medical conditions
+                                {t("common:events.booking.dietary")}
                                 <i id="dietary-reqs-help" aria-haspopup="true" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
                             </span>
                             <UncontrolledTooltip placement="bottom" target="dietary-reqs-help">
-                                For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...
+                                {t("common:events.booking.dietaryHelp")}
                             </UncontrolledTooltip>
                         </Label>
                         <Input
@@ -165,11 +183,11 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <div>
                         <Label htmlFor="access-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
-                                Accessibility requirements
+                                {t("common:events.booking.accessibility")}
                                 <i id="access-reqs-help" aria-haspopup="true" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
                             </span>
                             <UncontrolledTooltip placement="bottom" target="access-reqs-help">
-                                For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.
+                                {t("common:events.booking.accessibilityHelp")}
                             </UncontrolledTooltip>
                         </Label>
                         <Input
@@ -180,11 +198,11 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     {additionalInformation.yearGroup != 'TEACHER' && additionalInformation.yearGroup != 'OTHER' && <Row>
                         <Col xs={12}>
-                            <h5 className="mt-3">Emergency contact details</h5>
+                            <h5 className="mt-3">{t("common:events.booking.emergency")}</h5>
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-name" className="form-required">
-                                Contact name
+                                {t("common:events.booking.emergencyName")}
                             </Label>
                             <Input
                                 id="emergency-name" name="emergency-name" type="text" value={additionalInformation.emergencyName || ""}
@@ -193,7 +211,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-number" className="form-required">
-                                Contact telephone number
+                                {t("common:events.booking.emergencyPhone")}
                             </Label>
                             <Input
                                 id="emergency-number" name="emergency-number" type="text" value={additionalInformation.emergencyNumber || ""}

@@ -8,33 +8,35 @@ import { Spacer } from "./Spacer";
 import classNames from "classnames";
 import { CollapsibleContainer } from "./CollapsibleContainer";
 import StyledToggle from "./inputs/StyledToggle";
+import { useTranslation } from "react-i18next";
 
 const AssignmentProgressSettings = () => {
+    const { t } = useTranslation();
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     return <div className="d-flex w-100 flex-column flex-md-row content-metadata-container my-0 align-items-stretch align-items-md-center px-4 px-sm-5 px-md-0 pb-3">
         <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
-            <span>Table display mode</span>
+            <span>{t("common:progress.settings.displayModeLabel")}</span>
             <Spacer />
-            <StyledToggle falseLabel="Fractions" trueLabel="Percentages"
+            <StyledToggle falseLabel={t("common:progress.settings.fractionsOption")} trueLabel={t("common:progress.settings.percentagesOption")}
                 checked={assignmentProgressContext?.formatAsPercentage}
                 onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
             />
         </div>
 
         {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
-            <span>Colour-blind mode</span>
+            <span>{t("sci:progress.settings.colourBlindLabel")}</span>
             <Spacer />
-            <StyledToggle falseLabel="Off" trueLabel="On"
+            <StyledToggle falseLabel={t("common:progress.settings.offOption")} trueLabel={t("common:progress.settings.onOption")}
                 checked={assignmentProgressContext?.colourBlind}
                 onChange={(e) => assignmentProgressContext?.setColourBlind?.(e.currentTarget.checked)}
             />
         </div>}
 
         {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
-            <span>Completion display mode</span>
+            <span>{t("sci:progress.settings.completionModeLabel")}</span>
             <Spacer />
-            <StyledToggle trueLabel="Correct" falseLabel="Attempted"
+            <StyledToggle trueLabel={t("common:progress.legend.correct")} falseLabel={t("common:progress.settings.attemptedOption")}
                 checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"}
                 onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
             />
@@ -50,25 +52,26 @@ const LegendKey = ({cellClass, description}: {cellClass: string, description?: s
 };
 
 const AssignmentProgressLegend = () => {
+    const { t } = useTranslation();
     const context = useContext(AssignmentProgressPageSettingsContext);
     const key = "key-progress-legend";
 
     return <div className="mb-2">
-        <Label htmlFor={key} className="mt-2">Section key:</Label>
+        <Label htmlFor={key} className="mt-2">{t("common:progress.legend.title")}</Label>
         <div className="d-flex flex-row flex-sm-column justify-content-between">
             {context?.attemptedOrCorrect === "CORRECT" 
                 ? <ul id={key} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
-                    <LegendKey cellClass="completed" description={`100% correct`}/>
-                    <LegendKey cellClass="passed" description={`≥${passMark * 100}% correct`}/>
-                    <LegendKey cellClass="in-progress" description={`≥${100 - passMark * 100}% correct`}/>
-                    <LegendKey cellClass="failed" description={`<${100 - passMark * 100}% correct`}/>
-                    <LegendKey cellClass="" description={`Not attempted`}/>
+                    <LegendKey cellClass="completed" description={t("common:progress.legend.fullCorrect")}/>
+                    <LegendKey cellClass="passed" description={t("common:progress.legend.passedCorrect", { passPercentage: passMark * 100 })}/>
+                    <LegendKey cellClass="in-progress" description={t("common:progress.legend.inProgressCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
+                    <LegendKey cellClass="failed" description={t("common:progress.legend.failedCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
+                    <LegendKey cellClass="" description={t("common:progress.legend.notAttempted")}/>
                 </ul>
                 : <ul id={key} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-4 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
-                    <LegendKey cellClass="fully-attempted" description={`100% attempted`}/>
-                    <LegendKey cellClass="passed" description={`≥${passMark * 100}% attempted`}/>
-                    <LegendKey cellClass="in-progress" description={`≥${100 - passMark * 100}% attempted`}/>
-                    <LegendKey cellClass="" description={`<${100 - passMark * 100}% attempted`}/>
+                    <LegendKey cellClass="fully-attempted" description={t("common:progress.legend.fullAttempted")}/>
+                    <LegendKey cellClass="passed" description={t("common:progress.legend.passedAttempted", { passPercentage: passMark * 100 })}/>
+                    <LegendKey cellClass="in-progress" description={t("common:progress.legend.inProgressAttempted", { failThresholdPercentage: 100 - passMark * 100 })}/>
+                    <LegendKey cellClass="" description={t("common:progress.legend.failedAttempted", { failThresholdPercentage: 100 - passMark * 100 })}/>
                 </ul>
             }
         </div>
@@ -77,6 +80,7 @@ const AssignmentProgressLegend = () => {
 
 
 const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment?: boolean}) => {
+    const { t } = useTranslation();
     const context = useContext(AssignmentProgressPageSettingsContext);
 
     const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
@@ -86,23 +90,23 @@ const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment?: boolean}) => {
     );
 
     return <div className={classNames("d-flex flex-column column-gap-4 row-gap-2", isAssignment ? "flex-md-row align-items-md-center" : "flex-sm-row align-items-sm-center")}>
-        <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">Key</span>
+        <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">{t("common:progress.key.label")}</span>
         {context?.attemptedOrCorrect === "CORRECT"
             ? <>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
-                    <KeyItem icon={ICON.correct} label="Correct" />
-                    {isAssignment && <KeyItem icon={ICON.partial} label="Partially correct" />}
+                    <KeyItem icon={ICON.correct} label={t("common:progress.legend.correct")} />
+                    {isAssignment && <KeyItem icon={ICON.partial} label={t("common:progress.legend.partiallyCorrect")} />}
                 </div>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
-                    <KeyItem icon={ICON.incorrect} label="Incorrect" />
-                    <KeyItem icon={ICON.notAttempted} label="Not attempted" />
+                    <KeyItem icon={ICON.incorrect} label={t("common:progress.legend.incorrect")} />
+                    <KeyItem icon={ICON.notAttempted} label={t("common:progress.legend.notAttempted")} />
                 </div>
             </>
             : <>
                 <div className="d-flex flex-column flex-md-row column-gap-4 row-gap-2">
-                    <KeyItem icon={ICON.correct} label="Fully attempted" />
-                    {isAssignment && <KeyItem icon={ICON.partial} label="Partially attempted" />}
-                    <KeyItem icon={ICON.notAttempted} label="Not attempted" />
+                    <KeyItem icon={ICON.correct} label={t("common:progress.legend.fullyAttempted")} />
+                    {isAssignment && <KeyItem icon={ICON.partial} label={t("common:progress.legend.partiallyAttempted")} />}
+                    <KeyItem icon={ICON.notAttempted} label={t("common:progress.legend.notAttempted")} />
                 </div>
             </>
         }
@@ -118,6 +122,7 @@ interface ResultsTableHeaderProps {
 };
 
 export const ResultsTableHeader = ({headerText, settingsVisible, setSettingsVisible, isAssignment, showLegend}: ResultsTableHeaderProps) => {
+    const { t } = useTranslation();
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     return <>
@@ -125,7 +130,7 @@ export const ResultsTableHeader = ({headerText, settingsVisible, setSettingsVisi
             {headerText}
             <Spacer />
             {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
-                {settingsVisible ? "Hide settings" : "Show settings"}
+                {settingsVisible ? t("common:progress.settings.hideButton") : t("common:progress.settings.showButton")}
                 <i className={classNames("icon icon-cog anim-rotate-45", {"active": settingsVisible})}/>
             </button>}
         </div>
@@ -138,7 +143,7 @@ export const ResultsTableHeader = ({headerText, settingsVisible, setSettingsVisi
             {isAda && <>
                 <StyledCheckbox checked={assignmentProgressContext?.formatAsPercentage}
                     onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
-                    label={<span className="text-muted">Show mark as percentages</span>}
+                    label={<span className="text-muted">{t("ada:progress.settings.showPercentagesLabel")}</span>}
                 />
                 <Spacer />
                 {showLegend && <AdaAssignmentProgressKey isAssignment={isAssignment} />}

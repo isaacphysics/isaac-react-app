@@ -4,6 +4,7 @@ import {Button} from "reactstrap";
 import { IconButton } from "./AffixButton";
 import { isAda, siteSpecific } from "../../services";
 import classNames from "classnames";
+import { Trans, useTranslation } from "react-i18next";
 
 interface PrintProps {
     questionPage?: boolean;
@@ -34,6 +35,7 @@ async function printWithHintsAndLoadedFonts(dispatch: AppDispatch, withHints: bo
 }
 
 export const PrintButton = ({questionPage}: PrintProps ) => {
+    const { t } = useTranslation();
 
     const [questionPrintOpen, setQuestionPrintOpen] = useState(false);
     const dispatch = useAppDispatch();
@@ -45,26 +47,36 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                     <Button
                         size={"sm"}
                         color={"link"}
-                        title={"Print with hints"}
+                        title={t("common:printButton.withHints.title")}
                         className="a-alt"
                         onClick={() => printWithHintsAndLoadedFonts(dispatch, true)}
-                    ><span className="visually-hidden">Print{" "}</span>With hints
+                    ><Trans
+                        i18nKey="common:printButton.withHints.label"
+                        components={{
+                            visuallyHidden: <span className="visually-hidden" />,
+                        }}
+                    />
                     </Button>
                     |
                     <Button
                         size={"sm"}
                         color={"link"}
-                        title={"Print without hints"}
+                        title={t("common:printButton.withoutHints.title")}
                         className="a-alt"
                         onClick={() => printWithHintsAndLoadedFonts(dispatch, false)}
-                    ><span className="visually-hidden">Print{" "}</span>Without hints</Button>
+                    ><Trans
+                        i18nKey="common:printButton.withoutHints.label"
+                        components={{
+                            visuallyHidden: <span className="visually-hidden" />,
+                        }}
+                    /></Button>
                 </div>
             </div>}
             <IconButton
                 icon={{name: "icon-print icon-color-black-hoverable", color: "white"}}
                 className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
-                aria-label="Print page"
-                title="Print page"
+                aria-label={t("common:printButton.ariaLabel")}
+                title={t("common:printButton.title")}
                 color={siteSpecific("tint", "primary")}
                 data-bs-theme="neutral"
                 onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
@@ -74,8 +86,8 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
         <IconButton
             icon={{name: "icon-print icon-color-black-hoverable", color: "white"}}
             className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
-            aria-label="Print page"
-            title="Print page"
+            aria-label={t("common:printButton.ariaLabel")}
+            title={t("common:printButton.title")}
             color={siteSpecific("tint", "primary")}
             data-bs-theme="neutral"
             onClick={() => printWithHintsAndLoadedFonts(dispatch, false)}

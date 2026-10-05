@@ -63,6 +63,7 @@
     },
     "emptyBoardsAlert": "You have no quizzes to assign. Use one of the options above to find one.",
     "emptyGroupsTitle": "You need a student group before you can assign a quiz to students.",
+    "emptyState": "There are no quizzes to display for the selected filters.",
     "filter": {
       "byName": "Filter quizzes by name",
       "displayIn": "Display in",
@@ -148,6 +149,9 @@
     "sameSourceExplanation": "The stage and exam board were specified by {{stageSource}}."
   },
   "events": {
+    "booking": {
+      "examBoard": "Exam board"
+    },
     "details": {
       "availability": "Availability",
       "bookingDeadline": "Booking deadline",
@@ -161,10 +165,16 @@
     }
   },
   "freeTextBuilder": {
+    "attempts": {
+      "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.\n            To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool.\n            This is in line with our mission to make computer science accessible to all."
+    },
     "infoAlert": {
       "consentFaq": "See our <faqLink>FAQs</faqLink> for more information.",
       "generalFaq": "For more information, read our <faqLink>FAQs</faqLink>.",
       "loggedOutFaq": "You can read more in our <faqLink>FAQs</faqLink>."
+    },
+    "llmFeedback": {
+      "faqInfo": "Find out more in our <faqLink>FAQs</faqLink>."
     }
   },
   "gameboard": {
@@ -177,6 +187,7 @@
     },
     "builder": {
       "createError": "Unable to create quiz",
+      "delete": "Delete quiz",
       "helpText": "You can create custom question sets to assign to your groups. Search by question title or topic and add up to ten questions to a quiz.<br/>You cannot modify a quiz after it has been created. You'll find a link underneath any existing quiz to duplicate and edit it.",
       "idLabel": "Quiz ID",
       "pageTitle": "Quiz builder",
@@ -196,6 +207,14 @@
     },
     "notFound": {
       "title": "Quiz not found"
+    },
+    "save": {
+      "saveLabel": "Save quiz",
+      "unsaveLabel": "Unsave quiz",
+      "unsaveOwnerConfirm": "Are you sure you want to unsave your quiz '{{boardTitle}}' from your account? You'll only be able to find it again if you've set it as an assignment."
+    },
+    "table": {
+      "nameHeader": "Quiz name"
     },
     "title": {
       "fallback": "Filter Generated Quiz"
@@ -319,7 +338,10 @@
   "progress": {
     "pageTitle": "Progress",
     "questionAttemptsCaption": "activity",
-    "questionAttemptsOverTime": "Question attempts over time"
+    "questionAttemptsOverTime": "Question attempts over time",
+    "settings": {
+      "showPercentagesLabel": "Show mark as percentages"
+    }
   },
   "questionFinder": {
     "difficulty": {

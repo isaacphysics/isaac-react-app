@@ -7,6 +7,7 @@ import { BoardCard } from "./cards/BoardCard";
 import { RegisteredUserDTO, GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
 import { HorizontalScroller } from "./inputs/HorizontalScroller";
+import { Trans, useTranslation } from "react-i18next";
 
 export interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -48,6 +49,7 @@ const PhyTable = (props: GameboardsTableProps) => {
 };
 
 const CSTable = (props: GameboardsTableProps) => {
+    const { t } = useTranslation();
     const {
         user,
         boards, selectedBoards, setSelectedBoards, confirmDeleteMultipleBoards,
@@ -57,37 +59,42 @@ const CSTable = (props: GameboardsTableProps) => {
 
     const tableHeader = <tr>
         <SortItemHeader<AssignmentBoardOrder> colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
-            {siteSpecific("Question deck name", "Quiz name")}
+            {t("site:gameboard.table.nameHeader")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
-            Stages and Difficulties <i id={`difficulties-help`} className={classNames("icon icon-info icon-inline mx-1", siteSpecific("icon-color-grey position-relative", "icon-color-black"))} />
+            {t("common:gameboard.table.stagesHeader")} <i id={`difficulties-help`} className={classNames("icon icon-info icon-inline mx-1", siteSpecific("icon-color-grey position-relative", "icon-color-black"))} />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
+                <Trans
+                    i18nKey="common:gameboard.table.difficultiesTooltip"
+                    components={{
+                        br: <br />,
+                    }}
+                    values={{ practiceLevels: difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ") }}
+                />
             </UncontrolledTooltip>
         </th>
-        {isAda && <th>Creator</th>}
+        {isAda && <th>{t("common:gameboard.table.creatorHeader")}</th>}
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.created} reverseOrder={AssignmentBoardOrder["-created"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            Created
+            {t("common:gameboard.table.createdHeader")}
         </SortItemHeader>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.attempted} reverseOrder={AssignmentBoardOrder["-attempted"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            Attempted
+            {t("common:gameboard.table.attemptedHeader")}
         </SortItemHeader>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.correct} reverseOrder={AssignmentBoardOrder["-correct"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            Correct
+            {t("common:gameboard.table.correctHeader")}
         </SortItemHeader>
         {siteSpecific(
             <>
                 <th className="text-center align-middle">
-                    {boardView === BoardViews.card ? "Unsave" : "Manage"}
+                    {boardView === BoardViews.card ? t("common:gameboard.table.unsaveButton") : t("common:gameboard.table.manageButton")}
                 </th>
             </>,
             <>
-                <th>Share</th>
+                <th>{t("common:gameboard.table.shareHeader")}</th>
                 <th>
                     {selectedBoards.length
                         ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                            Unsave ({selectedBoards.length})
+                            {t("common:gameboard.table.unsaveCountButton", { selectedCount: selectedBoards.length })}
                         </Button>
                         : "Unsave"
                     }
@@ -127,6 +134,7 @@ const CSTable = (props: GameboardsTableProps) => {
 };
 
 const Cards = (props: GameboardsCardsProps) => {
+    const { t } = useTranslation();
     const {
         user, boards, selectedBoards, setSelectedBoards, boardView, 
         boardTitleFilter, boardCreator, boardCompletion, loading, viewMore
@@ -153,12 +161,26 @@ const Cards = (props: GameboardsCardsProps) => {
         </Row>}
         <div className="text-center mt-3 mb-7" style={{clear: "both"}}>
             {boards.boards.length === filteredBoards.length
-                ? <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong> results.</p>
-                : <p>Showing <strong>{filteredBoards.length}</strong> match from <strong>{boards.boards.length}</strong> results.</p>}
+                ? <p><Trans
+                    i18nKey="common:gameboard.cards.showingAll"
+                    components={{
+                        loadedCountEmphasis: <strong />,
+                        totalCountEmphasis: <strong />,
+                    }}
+                    values={{ loadedCount: boards.boards.length, totalCount: boards.totalResults }}
+                /></p>
+                : <p><Trans
+                    i18nKey="common:gameboard.cards.showingFiltered"
+                    components={{
+                        matchedCountEmphasis: <strong />,
+                        loadedCountEmphasis: <strong />,
+                    }}
+                    values={{ matchedCount: filteredBoards.length, loadedCount: boards.boards.length }}
+                /></p>}
             {boards.boards.length < boards.totalResults && <Button 
                 onClick={viewMore} disabled={loading}
             >
-                {loading ? <Spinner /> : boards.boards.length === filteredBoards.length ? "View more" : "Load more"}
+                {loading ? <Spinner /> : boards.boards.length === filteredBoards.length ? t("common:gameboard.cards.viewMoreButton") : t("common:gameboard.cards.loadMoreButton")}
             </Button>}
         </div>
     </>;

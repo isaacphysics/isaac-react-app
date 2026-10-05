@@ -6,12 +6,14 @@ import { useManageAssignment } from "../../services/setAssignment";
 import { GameboardCard, GameboardLinkLocation } from "./cards/GameboardCard";
 import { getFriendlyDaysUntil } from "./DateString";
 import { TestCard } from "./cards/TestCard";
+import { Trans, useTranslation } from "react-i18next";
 
 // this is similar to MyAssignmentsContents/AssignmentCard, but:
 // - GameboardCard.usageDisplay is undefined, so no completion / group statistics are shown in the top right.
 // - inside the card's children, does not highlight past deadlines.
 // - GameboardCard.allowManaging is set
 export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
+    const { t } = useTranslation();
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
 
     const { openAssignModal, unassign } = useManageAssignment(assignment);
@@ -30,26 +32,45 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
             <Col>
                 {isDefined(assignment.groupName) &&
                     <p className="mb-0" data-testid={"gameboard-assigned-group"}>
-                        Set to <strong>{assignment.groupName}</strong>
+                        <Trans
+                            i18nKey="common:assignments.manage.setGroup"
+                            components={{
+                                strong: <strong />,
+                            }}
+                            values={{ groupName: assignment.groupName }}
+                        />
                     </p>
                 }
                 {isDefined(assignmentStartDate) && 
                     <p className="mb-0" data-testid={"gameboard-assigned-date"}>
-                        Assigned <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
+                        <Trans
+                            i18nKey="common:assignments.manage.assignedDate"
+                            components={{
+                                strong: <strong />,
+                            }}
+                            values={{ assignedDate: getFriendlyDaysUntil(assignmentStartDate) }}
+                        />
                     </p>
                 }
                 {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && <p className="mb-0">
-                    Due <strong>{getFriendlyDaysUntil(assignment.dueDate)}</strong>
-                    {isOverdue(assignment) && <span className="overdue ms-1">(passed)</span>}
+                    <Trans
+                        i18nKey="common:assignments.manage.dueDate"
+                        components={{
+                            strong: <strong />,
+                        }}
+                        values={{ dueDate: getFriendlyDaysUntil(assignment.dueDate) }}
+                    />
+                    {isOverdue(assignment) && <span className="overdue ms-1">{t("common:assignments.manage.overdueLabel")}</span>}
                 </p>}
             </Col>
         </Row>
         
-        {assignment.notes && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
+        {assignment.notes && <p className="mb-0"><strong>{t("common:assignments.manage.notesLabel")}</strong> {assignment.notes}</p>}
     </GameboardCard>;
 };
 
 export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignmentDTO}) => {
+    const { t } = useTranslation();
 
     const { cancel, openExtendDueDateModal, openAssignModal, openSetFeedbackModeModal } = useManageQuizAssignments();
 
@@ -72,12 +93,24 @@ export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignment
                 } */}
                 {isDefined(quizAssignment?.scheduledStartDate) || isDefined(quizAssignment?.creationDate) &&
                     <p className="mb-0" data-testid={"gameboard-assigned"}>
-                        Assigned <strong>{getFriendlyDaysUntil(quizAssignment.scheduledStartDate || quizAssignment.creationDate)}</strong>
+                        <Trans
+                            i18nKey="common:tests.manage.assignedDate"
+                            components={{
+                                strong: <strong />,
+                            }}
+                            values={{ assignedDate: getFriendlyDaysUntil(quizAssignment.scheduledStartDate || quizAssignment.creationDate) }}
+                        />
                     </p>
                 }
                 {isDefined(quizAssignment?.dueDate) && <p className="mb-0">
-                    Due <strong>{getFriendlyDaysUntil(quizAssignment.dueDate)}</strong>
-                    {isOverdue(quizAssignment) && <span className="overdue ms-1">(passed)</span>}
+                    <Trans
+                        i18nKey="common:tests.manage.dueDate"
+                        components={{
+                            strong: <strong />,
+                        }}
+                        values={{ dueDate: getFriendlyDaysUntil(quizAssignment.dueDate) }}
+                    />
+                    {isOverdue(quizAssignment) && <span className="overdue ms-1">{t("common:tests.manage.overdueLabel")}</span>}
                 </p>}
             </Col>
         </Row>

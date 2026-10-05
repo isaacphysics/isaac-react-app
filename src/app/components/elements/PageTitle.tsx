@@ -16,6 +16,7 @@ import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
+import { useTranslation } from "react-i18next";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const difficulty = audienceViews.map(v => v.difficulty).filter(d => d !== undefined)[0];
@@ -94,10 +95,11 @@ export interface TitleMetadataProps {
 }
 
 export const TitleMetadata = ({audienceViews, help}: TitleMetadataProps) => {
+    const { t } = useTranslation();
     return <>
         {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
         {isAda && help && <>
-            <div id="title-help" className="title-help">Help</div>
+            <div id="title-help" className="title-help">{t("common:pageTitle.helpLabel")}</div>
             <UncontrolledTooltip target="title-help" placement="bottom">{help}</UncontrolledTooltip>
         </>}
     </>;

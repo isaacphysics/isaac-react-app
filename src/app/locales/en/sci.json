@@ -1,4 +1,7 @@
 {
+  "accordion": {
+    "untitledFallback": "Untitled"
+  },
   "account": {
     "betaFeatures": {
       "hideAttemptsHelp": "This feature lets you answer questions that you have answered before, without seeing your old answer. It's useful if you are reviewing a topic before a test or exam."
@@ -64,6 +67,7 @@
     },
     "emptyBoardsAlert": "You have no question decks to assign. Use one of the options above to find one.",
     "emptyGroupsAlert": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
+    "emptyState": "There are no assignments to display for the selected filters.",
     "filter": {
       "byName": "Filter question decks by name"
     },
@@ -303,6 +307,11 @@
       "when": "When:"
     }
   },
+  "freeTextBuilder": {
+    "attempts": {
+      "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.\n            To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool.\n            This is in line with our mission to make science accessible to all."
+    }
+  },
   "gameboard": {
     "actions": {
       "save": "Save this deck",
@@ -328,6 +337,14 @@
     },
     "notFound": {
       "title": "Question deck not found"
+    },
+    "save": {
+      "saveLabel": "Save deck",
+      "unsaveLabel": "Unsave deck",
+      "unsaveOwnerConfirm": "Are you sure you want to unsave your deck '{{boardTitle}}' from your account? You'll only be able to find it again if you've set it as an assignment."
+    },
+    "table": {
+      "nameHeader": "Question deck name"
     },
     "title": {
       "fallback": "Question deck"
@@ -404,6 +421,10 @@
       "totalSubtitle": "(total)"
     },
     "questionAttemptsCaption": "Question attempts",
+    "settings": {
+      "colourBlindLabel": "Colour-blind mode",
+      "completionModeLabel": "Completion display mode"
+    },
     "streak": {
       "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/>Answer at least <strong>ten question parts</strong> correctly per week to fill up your daily progress bar and increase your streak!"
     },

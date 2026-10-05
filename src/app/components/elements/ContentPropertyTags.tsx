@@ -5,6 +5,7 @@ import classNames from "classnames";
 import {v4 as uuid_v4} from "uuid";
 import { UncontrolledTooltip } from "reactstrap";
 import { ACCESSIBILITY_WARNINGS, getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
+import { useTranslation } from "react-i18next";
 
 interface ContentPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> {
     deprecated?: boolean;
@@ -13,6 +14,7 @@ interface ContentPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...rest }: ContentPropertyTagsProps) => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const accessibilitySettings = useAccessibilitySettings();
 
@@ -33,14 +35,14 @@ export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...res
             href={supersededByPath}
             onClick={(e) => e.stopPropagation()}
             target="_blank"
-        >SUPERSEDED</a>}
+        >{t("common:contentPropertyTags.supersededLabel")}</a>}
 
         {deprecated && isTeacherOrAbove(user) && <span
             className="pill-tag-outline mw-max-content" 
-        >DEPRECATED</span>}
+        >{t("common:contentPropertyTags.deprecatedLabel")}</span>}
 
         {tags?.includes("nofilter") && isStaff(user) && <span
             className="pill-tag-outline mw-max-content" 
-        >NO-FILTER</span>}
+        >{t("common:contentPropertyTags.noFilterLabel")}</span>}
     </div>;
 };

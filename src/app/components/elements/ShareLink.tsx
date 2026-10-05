@@ -3,6 +3,7 @@ import {isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback
 import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
 import { IconButton, IconButtonProps } from "./AffixButton";
+import { useTranslation } from "react-i18next";
 
 interface ShareLinkProps {
     linkUrl: string;
@@ -18,6 +19,7 @@ interface ShareLinkProps {
 }
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, innerClassName, size, buttonProps, inputInfo}: ShareLinkProps) => {
+    const { t } = useTranslation();
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
@@ -52,24 +54,24 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const shareLinkDivRef = useRef(null);
     useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink]);
 
-    const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
+    const buttonAriaLabel = showShareLink ? t("common:shareLink.hideButtonLabel") : t("common:shareLink.showButtonLabel");
     const linkWidth = isMobile() || reducedWidthLink ? siteSpecific(256, 192) : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
     return <div ref={shareLinkDivRef} className={classNames(className, "position-relative", {"w-max-content d-inline-flex": isPhy})}>
         <div className={`action-buttons-popup-container ${showShareLink ? "" : "d-none"} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
-            <input type="text" readOnly ref={shareLink} value={shareUrl} onClick={(e) => e.preventDefault()} aria-label="Share URL" />
+            <input type="text" readOnly ref={shareLink} value={shareUrl} onClick={(e) => e.preventDefault()} aria-label={t("common:shareLink.inputAriaLabel")} />
             {inputInfo && <span className="small text-muted">{inputInfo}</span>}
         </div>
         {showShareLink && showDuplicateAndEdit && <div className="duplicate-and-edit" style={{width: linkWidth}}>
             <a href={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
-                Duplicate and edit
+                {t("common:gameboard.share.duplicateEditLink")}
             </a>
         </div>}
         <IconButton
             icon={{name: classNames("icon-share", buttonProps?.disabled ? "icon-color-grey" : "icon-color-black-hoverable"), color: outline ? "" : "white"}}
             className={classNames(innerClassName, "w-max-content h-max-content action-button", {"icon-button-sm": size == "sm"})}
             aria-label={buttonAriaLabel}
-            title="Share page"
+            title={t("common:shareLink.buttonTitle")}
             color={siteSpecific("tint", "primary")}
             data-bs-theme="neutral"
             onClick={(e) => { e.preventDefault(); toggleShareLink(); }}

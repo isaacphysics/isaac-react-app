@@ -6,8 +6,10 @@ import { ContentDTO } from "../../../IsaacApiTypes";
 import { Tooltip } from "reactstrap";
 import { selectors, useAppSelector } from "../../state";
 import { isLoggedIn } from "../../services";
+import { useTranslation } from "react-i18next";
 
 export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
+    const { t } = useTranslation();
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const [showBookmarkTooltip, setShowBookmarkTooltip] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
@@ -38,7 +40,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
             toggle={() => setShowBookmarkTooltip(!showBookmarkTooltip)}
             trigger="manual"
         >
-            <div className="popover-header">Saved!</div>
+            <div className="popover-header">{t("common:bookmarks.saveConfirmation")}</div>
         </Tooltip>
     </>;
 };

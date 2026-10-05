@@ -1,12 +1,14 @@
 import React from "react";
 import {KEY, persistence, siteSpecific} from "../../services";
 import { Input, Label } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 interface AnonymisationCheckboxesProps {
     className?: string
 }
 
 export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProps) => {
+    const { t } = useTranslation();
     return <div className={className}>
         <div>
             <Input
@@ -21,7 +23,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                 }}
                 className={siteSpecific("mb-1", "mt-1")}
             />
-            <Label for="anonymise-users-checkbox" className="ms-2 mb-0">Disguise only user names and emails in teacher tools</Label>
+            <Label for="anonymise-users-checkbox" className="ms-2 mb-0">{t("common:admin.anonymisation.usersOnlyLabel")}</Label>
         </div>
         <div>
             <Input
@@ -36,7 +38,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                 }}
                 className={siteSpecific("", "mt-1")}
             />
-            <Label for="anonymise-groups-checkbox" className="ms-2 mb-0">Disguise both user and group details in teacher tools</Label>
+            <Label for="anonymise-groups-checkbox" className="ms-2 mb-0">{t("common:admin.anonymisation.groupsLabel")}</Label>
         </div>
     </div>;
 };

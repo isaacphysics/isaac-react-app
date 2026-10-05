@@ -8,6 +8,15 @@
     "sort-by": "Sort by:",
     "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
   },
+  "accordion": {
+    "completion": {
+      "allCorrect": "All questions in this part are answered correctly.",
+      "allIncorrect": "All questions in this part are answered incorrectly.",
+      "notAttempted": "No questions in this part have been answered.",
+      "someIncorrect": "Some questions in this part are answered incorrectly."
+    },
+    "partLabel": "Part {{partLetter}}"
+  },
   "account": {
     "accessibility": {
       "description": "Here you can manage various accessibility features across the site.",
@@ -185,6 +194,7 @@
       "confirmButton": "Confirm",
       "title": "Revoke access to your data"
     },
+    "roleMessage": "You have {{article}} <strong>{{role}}</strong> account.",
     "school": {
       "label": "School",
       "placeholder": "Type your school name",
@@ -253,6 +263,10 @@
     }
   },
   "admin": {
+    "anonymisation": {
+      "groupsLabel": "Disguise both user and group details in teacher tools",
+      "usersOnlyLabel": "Disguise only user names and emails in teacher tools"
+    },
     "console": {
       "apiVersionLabel": "API Version:",
       "title": "Admin Console"
@@ -386,6 +400,18 @@
     },
     "greeting": "Hi, {{givenName}}!",
     "misuse": {
+      "emptyState": "No misuse statistics for this event type! 🎉",
+      "noEvent": "None",
+      "resetButton": "Reset",
+      "selectEventLabel": "Select a misuse event type:",
+      "statusAlmost": "Almost",
+      "statusYes": "Yes",
+      "tableHeader": {
+        "agentIdentifier": "Agent identifier",
+        "currentCounter": "Current event counter",
+        "lastEvent": "Last recorded event",
+        "status": "Misused?"
+      },
       "title": "Misuse statistics"
     },
     "stats": {
@@ -539,6 +565,20 @@
     "breadcrumb": {
       "label": "Assignments"
     },
+    "card": {
+      "assigned": "Assigned <strong>{{startDate}}</strong>",
+      "assignedLabel": "Assigned:",
+      "assignerLabel": "By:",
+      "attempted": "Attempted",
+      "correct": "Correct",
+      "due": "Due <strong>{{dueDate}}</strong>",
+      "dueDate": "(due {{dueDate}})",
+      "dueLabel": "Due:",
+      "groupLabel": "Group:",
+      "notesLabel": "Notes:",
+      "overdue": "Overdue",
+      "overdueLabel": "Overdue:"
+    },
     "counts": {
       "assignments_one": "{{count}} assignment",
       "assignments_other": "{{count}} assignments",
@@ -579,6 +619,8 @@
       "overdueExplanation": "Any quizzes you have been set will appear here.<br/>Overdue quizzes which have not been fully attempted will be treated as quizzes <statusTodo>To do</statusTodo> until they are due, after which they are considered <statusOlder>Older</statusOlder> quizzes."
     },
     "manage": {
+      "assignedDate": "Assigned <strong>{{assignedDate}}</strong>",
+      "dueDate": "Due <strong>{{dueDate}}</strong>",
       "errorLoading": "Error loading assignments and/or question decks",
       "findDeckFrom": "Find a deck from...",
       "findNewDeck": "a new question deck",
@@ -589,8 +631,11 @@
       "noGroups": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
       "noMatchingWork": "There is no work matching your filters.",
       "noWorkSet": "You have not set any work yet. Use the buttons above to set a new assignment or test.",
+      "notesLabel": "Notes:",
+      "overdueLabel": "(passed)",
       "pageHelp": "Use this page to set and manage assigned work for your groups, and view set work as a timeline. You can unassign work, and assign existing work to other groups.",
       "pageTitle": "Set / manage work",
+      "setGroup": "Set to <strong>{{groupName}}</strong>",
       "setNewButton": "Set a new assignment",
       "setNewTestButton": "Set a new test",
       "showEarlierWork": "Show work before {{date}}",
@@ -772,8 +817,15 @@
       "validationError": "Please enter a valid email address."
     },
     "formIntro": "To <emphasis>continue with an account</emphasis>, please do so below",
+    "google": {
+      "logoAlt": "Google logo"
+    },
     "login": {
       "heading": "Log in or sign up:"
+    },
+    "microsoft": {
+      "buttonLabel": "Microsoft",
+      "logoAlt": "Microsoft logo"
     },
     "modalBody": "You need to be logged in to your account to <saveProgress>save your answers and progress</saveProgress>. If you don't have an account, you can <signUpFree>sign up today for free</signUpFree>.",
     "modalTitle": "Log in or sign up",
@@ -811,6 +863,12 @@
     "passwordReset": {
       "checkInbox": "Please check your inbox.",
       "forgottenLink": "Forgotten your password?"
+    },
+    "raspberryPi": {
+      "conciseLabel": "Raspberry Pi",
+      "fullLabelDesktop": "Raspberry Pi Foundation",
+      "fullLabelMobile": "Raspberry Pi",
+      "logoAlt": "Raspberry Pi logo"
     },
     "register": {
       "continueWithEmail": "Continue with email",
@@ -988,6 +1046,7 @@
     "page": {
       "title": "My bookmarks"
     },
+    "saveConfirmation": "Saved!",
     "sidebar": {
       "filterTitle": "Filter bookmarks by...",
       "searchTitle": "Search bookmarks",
@@ -999,12 +1058,25 @@
   "books": {
     "chaptersHeading": "Chapters:",
     "coverAltText": "Cover of the book.",
+    "detail": {
+      "loadError": "Unable to load book page"
+    },
+    "index": {
+      "loadError": "Unable to load book contents"
+    },
     "overview": {
       "exploreDescription": "Click on a book image below to go to the homepage of each book and explore further.",
       "exploreTitle": "Explore our books online",
       "sidebarButton": "View all books",
       "title": "Our books",
       "viewAll": "View all books"
+    },
+    "page": {
+      "emptyState": "There are no materials for this page.",
+      "extensionIntroText": "Expand your boundaries by having a go at these additional extension questions.",
+      "extensionTitle": "Extension work",
+      "questionsTitle": "Questions",
+      "resourcesTitle": "Resources"
     },
     "preUniMaths": {
       "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book",
@@ -1020,6 +1092,7 @@
     "solvingPhysProblems": {
       "title": "How To Solve Physics Problems"
     },
+    "title": "Book",
     "yr9": {
       "chapter1Subheading": "(Sections 1-15)",
       "chapter1Title": "Force and Motion",
@@ -1059,6 +1132,10 @@
     "setAgain": "Set again",
     "unassign": "Unassign"
   },
+  "carousel": {
+    "next": "Next",
+    "previous": "Previous"
+  },
   "challenges": {
     "emptyState": {
       "notifyButton": "Notify me",
@@ -1070,6 +1147,8 @@
     "pageTitle": "Student challenges"
   },
   "clientError": {
+    "contentNotFound": "Content not found",
+    "fragmentNotFound": "We're sorry, page fragment not found:<code>{{fragmentId}}</code>",
     "heading": "We're sorry, but an error has occurred in the {{siteName}} app!",
     "notFound": {
       "message": "We're sorry, page not found: <code>{{pathname}}</code>",
@@ -1078,6 +1157,7 @@
       "reportPrompt": "Expecting to find something here?<contactAction>Let us know<srOnly> about this missing page</srOnly></contactAction>.",
       "title": "Page not found"
     },
+    "offlineMessage": "It looks like you're offline. You may want to check your internet connection, and then refresh this page to try again.<br/>If you are still having issues, please <contactLink>let us know</contactLink>.",
     "recoveryOptions": "You may want to <refreshLink>refresh this page and try again</refreshLink>, <homeLink>return to our homepage</homeLink>, or <contactLink>contact</contactLink> or <emailLink>email</emailLink> us if this keeps happening.",
     "sessionExpired": {
       "contactSupport": "Please email <mailtoLink>{{webmasterEmail}}</mailtoLink> if this keeps happening.",
@@ -1199,6 +1279,11 @@
     },
     "title": "Contact us"
   },
+  "contentPropertyTags": {
+    "deprecatedLabel": "DEPRECATED",
+    "noFilterLabel": "NO-FILTER",
+    "supersededLabel": "SUPERSEDED"
+  },
   "context": {
     "mathsAndFurtherMaths": "Maths and Further Maths"
   },
@@ -1227,11 +1312,89 @@
     },
     "visitButton": "Go to Ada CS"
   },
+  "dashboard": {
+    "assignments": {
+      "emptyState": "You have no assignments with upcoming due dates.",
+      "title": "View scheduled work",
+      "viewAllLink": "See all set work"
+    },
+    "books": {
+      "filterAll": "All",
+      "filterChemistry": "Chemistry",
+      "filterMaths": "Maths",
+      "filterPhysics": "Physics",
+      "title": "Explore our books",
+      "viewAllLink": "See all books"
+    },
+    "currentWork": {
+      "activeIntro": "You have assignments that are active or due soon:",
+      "allAssignmentsLink": "See all assignments",
+      "allTestsLink": "See all tests",
+      "dueDate": "Due {{dueLabel}}",
+      "emptyState": "You have no active assignments.",
+      "overdue": "Overdue",
+      "title": "Complete current work",
+      "viewOlderLink": "View older assignments."
+    },
+    "greeting": "Welcome back, {{studentName}}!",
+    "groupJoin": {
+      "connectButton": "Connect",
+      "description": "Enter the code given by your teacher to create a teacher connection and join a group.",
+      "existingGroupsLink": "See my existing groups",
+      "placeholder": "Enter code",
+      "title": "Join a group"
+    },
+    "groups": {
+      "createButton": "Create new group",
+      "emptyState": "You have no active groups.",
+      "title": "View group progress",
+      "viewAllLink": "See all groups' progress"
+    },
+    "myIsaac": {
+      "account": "My account",
+      "assignmentProgressLink": "Assignment progress",
+      "assignments": "My assignments",
+      "createQuestionDeckLink": "Create a question deck",
+      "manageGroupsLink": "Manage groups",
+      "myAccountLink": "My account",
+      "progress": "My progress",
+      "savedDecks": "My saved decks",
+      "setManageWorkLink": "Set / manage work",
+      "teacherFeaturesLink": "Teacher features",
+      "tests": "My tests",
+      "title": "More in My Isaac",
+      "tutorFeaturesLink": "Tutor features"
+    },
+    "streak": {
+      "festiveFreeze": "Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!",
+      "infoLink": "What is this?",
+      "maintained": "You've maintained your streak for this week!",
+      "remaining": "Only {{remainingParts}} more question parts to answer correctly this week!",
+      "title": "Build your weekly streak",
+      "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br1/><br2/>Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!"
+    },
+    "viewToggleLabel": "Dashboard view",
+    "viewToggleStudentOption": "Student",
+    "viewToggleTeacherOption": "Teacher",
+    "viewToggleTutorOption": "Tutor",
+    "welcomeHeader": "Welcome back, {{teacherName}}!"
+  },
   "dateInput": {
     "clearButtonLabel": "Clear date{{labelSuffix}}",
     "dayLabel": "Day{{labelSuffix}}",
     "monthLabel": "Month{{labelSuffix}}",
     "yearLabel": "Year{{labelSuffix}}"
+  },
+  "dateString": {
+    "daysAgo": "{{days}} days ago",
+    "inDays": "in {{days}} days"
+  },
+  "dnd": {
+    "clozeFallbackText": "cloze item without a description",
+    "draggableRoleDescription": "draggable item"
+  },
+  "editorRenderer": {
+    "waitingContent": "Waiting for {{siteTitle}} content..."
   },
   "events": {
     "addUsers": {
@@ -1273,14 +1436,44 @@
       "title": "Record event attendance"
     },
     "booking": {
+      "accessibility": "Accessibility requirements",
+      "accessibilityHelp": "For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.",
+      "accountSection": "Your account information (<accountLink>update</accountLink>)",
       "cancelledMessage": "You cannot sign up to a teacher event as a student.",
       "cancelledTitle": "Event booking cancelled",
+      "detailsTitle": "Event booking details",
+      "dietary": "Dietary requirements or relevant medical conditions",
+      "dietaryHelp": "For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...",
+      "email": "Email address",
+      "emailSent": "We have sent an email to {{email}}. Please follow the instructions in the email prior to booking.",
+      "emailVerifyOther": "WARNING: This email is not verified. The details about the event might not reach the user.",
+      "emailVerifySelf": "You must verify your email address to book on events. This is so we can send you details about the event.",
+      "emergency": "Emergency contact details",
+      "emergencyName": "Contact name",
+      "emergencyPhone": "Contact telephone number",
+      "experience": "Level of teaching experience",
+      "firstName": "First name",
       "formTitle": "Event booking form",
+      "jobTitle": "Job title",
+      "lastName": "Last name",
       "loginToApply": "Login to apply",
       "loginToBook": "Login to book",
       "manageReservations": "Manage reservations",
+      "naOther": "N/A - Other",
+      "naTeacher": "N/A - Teacher",
+      "role": "Role",
+      "stage": "Stage",
       "teacherReservationWarning": "Places on this event can only be reserved by teachers. Please ask your teacher to reserve a place for you. You will need to be accompanied by a teacher to the event.",
-      "terms": "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your <teacherConnectionsLink>account settings</teacherConnectionsLink>.<br1/>Your data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your <emailPreferencesLink>account settings</emailPreferencesLink>."
+      "terms": "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your <teacherConnectionsLink>account settings</teacherConnectionsLink>.<br1/>Your data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your <emailPreferencesLink>account settings</emailPreferencesLink>.",
+      "updateInfo": "If this information is incorrect, please update it from your <accountLink>account page</accountLink>.",
+      "upgradeLink": "<teacherAccountLink>Click to upgrade to a teacher account</teacherAccountLink> for free!",
+      "verifyEmailBtn": "Verify your email before booking",
+      "year10": "Year 10",
+      "year11": "Year 11",
+      "year12": "Year 12",
+      "year13": "Year 13",
+      "year9": "Year 9",
+      "yearGroup": "School year group"
     },
     "bookingsTable": {
       "accessibility": "Accessibility requirements",
@@ -1494,6 +1687,9 @@
     "requiredField": "Required field"
   },
   "freeTextBuilder": {
+    "attempts": {
+      "remaining": "{{count}} attempts remaining today"
+    },
     "infoAlert": {
       "consentButton": "Consent",
       "consentDescription": "We use a large language model (LLM) to mark free-text questions like this one. The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.",
@@ -1509,6 +1705,20 @@
       "loginButton": "Log in",
       "signupButton": "Sign up",
       "skipQuestion": "Skip question"
+    },
+    "llmFeedback": {
+      "accuracyNote": "1 in 3 times the predicted mark will be wrong.",
+      "agree": "Agree",
+      "disagree": "Disagree",
+      "feedbackPrompt": "Before submitting another response, please say whether you agree with the predicted mark.",
+      "markScheme": "Mark scheme",
+      "partlyAgree": "Partly agree",
+      "predictedAwarded": "Predicted as awarded",
+      "predictedCorrect": "Predicted correct",
+      "prediction": "Prediction: {{predictedMarks}} out of {{maxMarks}} marks",
+      "submitButton": "Send feedback",
+      "submitted": "Feedback submitted",
+      "title": "Do you agree with the LLM’s predicted marks?"
     },
     "matchingRules": {
       "json": {
@@ -1576,13 +1786,17 @@
     "builder": {
       "addQuestionsButton": "Add questions",
       "createErrorDetail": "Please correct the problems below.",
+      "deselect": "Deselect question",
+      "dragLabel": "Drag to reorder",
       "idError": "The ID may only contain lowercase letters, numbers, dashes and underscores.",
       "idPlaceholder": "Optional",
       "leaveConfirm": "You have unsaved changes - are you sure you want to leave this page?",
+      "previewTooltip": "Preview question '{{questionId}}' in new tab",
       "questionsHeading": "Questions",
       "questionsLimit": "You can add up to {{maxQuestions}} questions.",
       "redoLabel": "Redo last action",
       "searchTitle": "Search questions",
+      "select": "Select question",
       "tagLabel": "Tag as",
       "tagPlaceholder": "None",
       "titleError": "Please provide a title.",
@@ -1609,16 +1823,45 @@
       "stagesHeader_one": "Stage:",
       "stagesHeader_other": "Stages:"
     },
+    "cards": {
+      "loadMoreButton": "Load more",
+      "showingAll": "Showing <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> of <totalCountEmphasis>{{totalCount}}</totalCountEmphasis> results.",
+      "showingFiltered": "Showing <matchedCountEmphasis>{{matchedCount}}</matchedCountEmphasis> match from <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> results.",
+      "viewMoreButton": "View more"
+    },
     "clone": {
       "copiedTitle": "{{gameboardTitle}} (Copy)"
     },
     "created": {
       "setAsAssignment": "Set as assignment"
     },
+    "fastTrack": {
+      "conceptTitleSuffix": "{{conceptTitle}} Practice",
+      "connectionTopTenToUpperMessage": "Practise the concept before returning to complete the board",
+      "connectionUpperToLowerMessage": "Practise the concept with easier questions before returning to complete the board"
+    },
+    "save": {
+      "unsaveConfirm": "Are you sure you want to unsave '{{boardTitle}}' from your account?"
+    },
+    "share": {
+      "duplicateEditLink": "Duplicate and edit"
+    },
     "sidebar": {
       "details": "Details",
       "externalLink": "External link (<em>{{externalUrl}}</em>)",
       "toggleTitle": "Details"
+    },
+    "table": {
+      "attemptedHeader": "Attempted",
+      "correctHeader": "Correct",
+      "createdHeader": "Created",
+      "creatorHeader": "Creator",
+      "difficultiesTooltip": "Practice: {{practiceLevels}}<br/>Challenge: {{challengeLevels}}",
+      "manageButton": "Manage",
+      "shareHeader": "Share",
+      "stagesHeader": "Stages and Difficulties",
+      "unsaveButton": "Unsave",
+      "unsaveCountButton": "Unsave ({{selectedCount}})"
     },
     "usageInfo": {
       "beginsIn": "Begins <bold>{{daysUntil}}</bold>",
@@ -1869,6 +2112,10 @@
       "title": "Select or create a group"
     }
   },
+  "help": {
+    "buttonLabel": "Open help video",
+    "modalTitle": "Help"
+  },
   "inequality": {
     "centreButton": "Centre",
     "chemistry": {
@@ -1979,6 +2226,12 @@
   },
   "navigation": {
     "homeButton": "Home",
+    "nextButton": "Next",
+    "previousButton": "Previous",
+    "search": {
+      "closeLabel": "Close search menu",
+      "openLabel": "Open search menu"
+    },
     "sidebar": {
       "brand": "My Ada",
       "homepageLink": "Go to homepage"
@@ -1990,9 +2243,14 @@
     },
     "emptyState": "No news to display...",
     "errorTitle": "Error fetching news stories",
+    "newsletterBody": "Get fresh teaching ideas, student study tips, and development news about our tools and resources delivered straight to your inbox.",
+    "newsletterTitle": "Stay updated",
+    "sectionTitle": "Tips, tools & support",
     "sidebar": {
       "seeAllNews": "See all news"
-    }
+    },
+    "subscribeButton": "Get tips and updates",
+    "viewAllButton": "See more"
   },
   "notifications": {
     "survey": {
@@ -2132,6 +2390,9 @@
       "title": "University"
     }
   },
+  "pageTitle": {
+    "helpLabel": "Help"
+  },
   "policy": {
     "sidebar": {
       "accessibilityStatement": "Accessibility Statement",
@@ -2139,6 +2400,18 @@
       "privacyPolicy": "Privacy Policy",
       "selectPage": "Select a page",
       "termsOfUse": "Terms of Use"
+    }
+  },
+  "printButton": {
+    "ariaLabel": "Print page",
+    "title": "Print page",
+    "withHints": {
+      "label": "<visuallyHidden>Print </visuallyHidden>With hints",
+      "title": "Print with hints"
+    },
+    "withoutHints": {
+      "label": "<visuallyHidden>Print </visuallyHidden>Without hints",
+      "title": "Print without hints"
     }
   },
   "programmes": {
@@ -2161,6 +2434,26 @@
       "topicFilterLabel": "questions"
     },
     "correctOfAttempts": "{{correct}} of {{attempts}}",
+    "key": {
+      "label": "Key"
+    },
+    "legend": {
+      "correct": "Correct",
+      "failedAttempted": "<{{failThresholdPercentage}}% attempted",
+      "failedCorrect": "<{{failThresholdPercentage}}% correct",
+      "fullAttempted": "100% attempted",
+      "fullCorrect": "100% correct",
+      "fullyAttempted": "Fully attempted",
+      "inProgressAttempted": "≥{{failThresholdPercentage}}% attempted",
+      "inProgressCorrect": "≥{{failThresholdPercentage}}% correct",
+      "incorrect": "Incorrect",
+      "notAttempted": "Not attempted",
+      "partiallyAttempted": "Partially attempted",
+      "partiallyCorrect": "Partially correct",
+      "passedAttempted": "≥{{passPercentage}}% attempted",
+      "passedCorrect": "≥{{passPercentage}}% correct",
+      "title": "Section key:"
+    },
     "legendMaths": "Maths",
     "legendMentalMaths": "Overall Mental Maths",
     "legendSubjects": "Subjects",
@@ -2182,6 +2475,16 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "title": "Allow another attempt?"
+    },
+    "settings": {
+      "attemptedOption": "Attempted",
+      "displayModeLabel": "Table display mode",
+      "fractionsOption": "Fractions",
+      "hideButton": "Hide settings",
+      "offOption": "Off",
+      "onOption": "On",
+      "percentagesOption": "Percentages",
+      "showButton": "Show settings"
     },
     "skillsAttemptsError": "Failed to load skills attempts.",
     "streak": {
@@ -2261,6 +2564,18 @@
     },
     "totalCount": "of <b>{{total}}</b>"
   },
+  "questionMetadata": {
+    "accessibilityWarningsTitle": "Accessibility warnings",
+    "printStageDifficultyLabel": "Stage & difficulty:",
+    "printSubjectTopicsLabel": "Subject & topics:",
+    "stageDifficultyTitle": "Stage & difficulty",
+    "statusAllAttemptedWithErrors": "All attempted (some errors)",
+    "statusCorrect": "Correct",
+    "statusInProgress": "In progress",
+    "statusNotStarted": "Not started",
+    "statusTitle": "Status",
+    "subjectTopicsTitle": "Subject & topics"
+  },
   "questionStats": {
     "aggregate": {
       "correctCountOfAttempted": "{{correctCount}} of {{attemptedCount}}",
@@ -2272,8 +2587,12 @@
     }
   },
   "questions": {
+    "crossTopicIndicator": "Cross-topic question",
     "inputValidation": {
       "warningLabel": "Careful!"
+    },
+    "llmIndicator": {
+      "label": "LLM marked question"
     },
     "loadError": "Unable to load question",
     "multiChoice": {
@@ -2281,10 +2600,30 @@
     },
     "numeric": {
       "unitPlaceholder": "Unit"
+    },
+    "parsons": {
+      "moveBackToItems": "Move {{itemName}} back to the items list",
+      "moveDown": "Move {{itemName}} down",
+      "moveToAnswer": "Move {{itemName}} into your answer",
+      "moveUp": "Move {{itemName}} up"
+    },
+    "preview": {
+      "ariaLabel": "Preview question",
+      "title": "Question preview"
     }
   },
   "quickQuizzes": {
     "title": "Quick quizzes"
+  },
+  "relatedContent": {
+    "questions": {
+      "outsideSpecificationHeader": "Outside your specification:",
+      "specificationHeader": "On your specification:",
+      "title": "Related questions"
+    }
+  },
+  "reportButton": {
+    "label": "Report a problem (opens in new tab)"
   },
   "revision": {
     "alert": {
@@ -2332,6 +2671,12 @@
     "suggestions": "You may want to <refresh>refresh this page and try again</refresh>, <homepage>return to our homepage</homepage>, or <contact>contact</contact> or <email>email</email> us if this keeps happening.",
     "title": "Error"
   },
+  "shareLink": {
+    "buttonTitle": "Share page",
+    "hideButtonLabel": "Hide share link",
+    "inputAriaLabel": "Share URL",
+    "showButtonLabel": "Get share link"
+  },
   "sidebar": {
     "ariaLabel": "Sidebar",
     "backToBook": {
@@ -2370,6 +2715,9 @@
     },
     "search": {
       "decks": "Search question decks"
+    },
+    "toggleButton": {
+      "label": "Search and filter"
     }
   },
   "skillsPractice": {
@@ -2586,6 +2934,9 @@
       "teacherNotice": "You must be signed in with a teacher account to view the weekly resources.",
       "title": "Teacher mentoring programme"
     }
+  },
+  "teacherNotes": {
+    "label": "Teacher notes"
   },
   "teacherResources": {
     "challenges": {
@@ -2821,6 +3172,11 @@
       "dueDate": "Due date: {{dueDate}}",
       "set": "Set: {{setDate}}",
       "started": "Started: {{startDate}}"
+    },
+    "manage": {
+      "assignedDate": "Assigned <strong>{{assignedDate}}</strong>",
+      "dueDate": "Due <strong>{{dueDate}}</strong>",
+      "overdueLabel": "(passed)"
     },
     "pageHelp": "Use this page to see tests you need to take and your test results.<br/>You can also take some tests freely whenever you want to test your knowledge.",
     "pagination": {

@@ -12,27 +12,29 @@ import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { useStatefulElementRef } from './markup/portals/utils';
 import { ScrollShadows } from './ScrollShadows';
 import { ShowLoading } from '../handlers/ShowLoading';
+import { useTranslation } from "react-i18next";
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
 }
 
 const GroupsPanel = ({ groups }: GroupsPanelProps) => {
+    const { t } = useTranslation();
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h4>View group progress</h4>
+        <h4>{t("common:dashboard.groups.title")}</h4>
         {sortedGroups.length ?
             <>
                 <div>
                     {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress/group/${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
-                <Link to="/assignment_progress" className="d-inline panel-link mt-3">See all groups&apos; progress</Link>
+                <Link to="/assignment_progress" className="d-inline panel-link mt-3">{t("common:dashboard.groups.viewAllLink")}</Link>
             </> :
             <>
-                <div className="text-center mt-lg-3">You have no active groups.</div>
-                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>
+                <div className="text-center mt-lg-3">{t("common:dashboard.groups.emptyState")}</div>
+                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">{t("common:dashboard.groups.createButton")}</Button></div>
             </>}
     </div>;
 };
@@ -44,6 +46,7 @@ interface AssignmentsPanelProps {
 };
 
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
+    const { t } = useTranslation();
     const upcomingAssignments = assignments?.filter(a => a.dueDate && !isOverdue(a) ); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
@@ -57,7 +60,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <h4>View scheduled work</h4>
+        <h4>{t("common:dashboard.assignments.title")}</h4>
         <ShowLoading
             until={assignments && quizzes}
             thenRender={() => {
@@ -68,48 +71,49 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
                                 <AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} />
                             </div>)}
                     </div>
-                    : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>;
+                    : <div className="text-center mt-lg-3">{t("common:dashboard.assignments.emptyState")}</div>;
             }}
         />
         <Spacer/>
         <div className="d-flex align-items-center mt-3">
             <Link to="/assigned" className="d-inline text-center panel-link me-3">
-                See all set work
+                {t("common:dashboard.assignments.viewAllLink")}
             </Link>
         </div>
     </div>;
 };
 
 const MyIsaacPanel = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     return <div className='dashboard-panel'>
-        <h4>More in My Isaac</h4>
+        <h4>{t("common:dashboard.myIsaac.title")}</h4>
         <div className="d-flex flex-column">
             <div className="col">
                 {isTutor(user) 
                     ? <Link to="/tutor_features" className='d-block panel-my-isaac-link'>
-                        Tutor features
+                        {t("common:dashboard.myIsaac.tutorFeaturesLink")}
                     </Link>
                     : <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
-                        Teacher features
+                        {t("common:dashboard.myIsaac.teacherFeaturesLink")}
                     </Link>}
                 <Link to="/groups" className='d-block panel-my-isaac-link'>
-                    Manage groups
+                    {t("common:dashboard.myIsaac.manageGroupsLink")}
                 </Link>
                 <Link to="/question_deck_builder" className='d-block panel-my-isaac-link'>
-                    Create a question deck
+                    {t("common:dashboard.myIsaac.createQuestionDeckLink")}
                 </Link>
                 <Link to="/assigned" className='d-block panel-my-isaac-link'>
-                    Set / manage work
+                    {t("common:dashboard.myIsaac.setManageWorkLink")}
                 </Link>
                 <Link to="/assignment_progress" className='d-block panel-my-isaac-link'>
-                    Assignment progress
+                    {t("common:dashboard.myIsaac.assignmentProgressLink")}
                 </Link>
             </div>
         </div>
         <div className="section-divider" />
         <Link to="/account" className="panel-my-isaac-link">
-            My account
+            {t("common:dashboard.myIsaac.myAccountLink")}
         </Link>
     </div>;
 };
@@ -126,19 +130,20 @@ export const BookCardSmall = ({title, image, path}: BookInfo) => {
 };
 
 const BooksPanel = () => {
+    const { t } = useTranslation();
     const [subject, setSubject] = useState<Subject | "all">("all");
     const [scrollRef, setScrollRef] = useStatefulElementRef<HTMLElement>();
 
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
-            <h4>Explore our books</h4>
+            <h4>{t("common:dashboard.books.title")}</h4>
             <Spacer/>
             <select className="books-select ms-2 mb-3" value={subject}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
-                <option value="all">All</option>
-                <option value="physics">Physics</option>
-                <option value="maths">Maths</option>
-                <option value="chemistry">Chemistry</option>
+                <option value="all">{t("common:dashboard.books.filterAll")}</option>
+                <option value="physics">{t("common:dashboard.books.filterPhysics")}</option>
+                <option value="maths">{t("common:dashboard.books.filterMaths")}</option>
+                <option value="chemistry">{t("common:dashboard.books.filterChemistry")}</option>
                 {/* No biology books */}
             </select>
         </div>
@@ -152,7 +157,7 @@ const BooksPanel = () => {
                     </Col>)}
         </div>
         <Spacer/>
-        <Link to="/books" className="d-inline panel-link mt-2">See all books</Link>
+        <Link to="/books" className="d-inline panel-link mt-2">{t("common:dashboard.books.viewAllLink")}</Link>
     </div>;
 };
 
@@ -168,19 +173,20 @@ interface TeacherDashboardProps {
 }
 
 export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignments, myQuizAssignments, groups, streakRecord, dashboardView, setDashboardView }: TeacherDashboardProps) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex flex-wrap">
-            {nameToDisplay && <h3 className="text-wrap">Welcome back, {nameToDisplay}!</h3>}
+            {nameToDisplay && <h3 className="text-wrap">{t("common:dashboard.welcomeHeader", { teacherName: nameToDisplay })}</h3>}
             <span className="ms-auto">
-                <div className="text-center">Dashboard view</div>
+                <div className="text-center">{t("common:dashboard.viewToggleLabel")}</div>
                 <StyledToggle
                     checked={dashboardView === "student"}
-                    falseLabel={isTutor(user) ? "Tutor" : "Teacher"}
-                    trueLabel="Student"
+                    falseLabel={isTutor(user) ? t("common:dashboard.viewToggleTutorOption") : t("common:dashboard.viewToggleTeacherOption")}
+                    trueLabel={t("common:dashboard.viewToggleStudentOption")}
                     onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}             
                 />
             </span>

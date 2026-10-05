@@ -2,6 +2,7 @@ import React from "react";
 import {logAction, useAppDispatch} from "../../state";
 import { siteSpecific } from "../../services";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 interface ReportAccordionButtonProps {
     pageId?: string,
@@ -11,6 +12,7 @@ interface ReportAccordionButtonProps {
 }
 
 export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionIndex} : ReportAccordionButtonProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const getContactFormParams = () => {
@@ -43,8 +45,8 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
     return <div className="d-flex w-100 justify-content-end mb-4 px-4">
         <button
             className="btn-action bg-transparent btn-blank p-0 wf-2 hf-2 vertical-center"
-            aria-label="Report a problem (opens in new tab)"
-            title="Report a problem (opens in new tab)"
+            aria-label={t("common:reportButton.label")}
+            title={t("common:reportButton.label")}
             onClick={() => {
                 logAccordionReport();
                 window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
