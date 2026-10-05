@@ -18,14 +18,14 @@ export const PhysBookGcse = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.gcse.title")} help={pageHelp} /> {/* modalId="help_modal_gcse_book" /> */}
-                <img className="book-cover" src="/assets/phy/books/phys_book_gcse.jpg" alt={t("sci:books.gcse.coverAlt")}/>
+                <img className="book-cover" src="/assets/phy/books/phys_book_gcse.jpg" alt={t("sci:books.coverAltText")}/>
                 <PageFragment fragmentId="phys_book_gcse_intro"/>
             </div>
             <div className="book-levels">
                 <Tabs style="tabs" tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2" activeTabOverride={2}>
                     {{
                         'Boards for Class and Homework': <Col>
-                            <h4>{t("common:books.chapters.heading")}</h4>
+                            <h4>{t("common:books.chaptersHeading")}</h4>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_quick_ch1_boards'} chapterTitle={t("sci:books.gcse.ch1Title")}
@@ -78,7 +78,7 @@ export const PhysBookGcse = () => {
                             </Row>
                         </Col>,
                         'Boards Containing all Questions': <Col>
-                            <h4>{t("common:books.chapters.heading")}</h4>
+                            <h4>{t("common:books.chaptersHeading")}</h4>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_ch1_boards'} chapterTitle={t("sci:books.gcse.ch1Title")}

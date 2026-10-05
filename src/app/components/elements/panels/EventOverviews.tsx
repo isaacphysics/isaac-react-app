@@ -10,6 +10,7 @@ import {PotentialUser} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import orderBy from "lodash/orderBy";
 import { Button, Label, Input, Table } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -19,6 +20,7 @@ export enum EventOverviewFilter {
 }
 const EVENTS_PER_LOAD = 20;
 export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser; setSelectedEventId: (eventId: string | null) => void}) => {
+    const { t } = useTranslation();
 
     const [eventOverviewFilter, setEventOverviewFilter] = useState(EventOverviewFilter["Upcoming events"]);
     const [sortPredicate, setSortPredicate] = useState("date");
@@ -41,9 +43,9 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         }
     }, [total]);
 
-    return <Accordion trustedTitle="Events overview" index={0} startOpen>
+    return <Accordion trustedTitle={t("common:events.overview.title")} index={0} startOpen>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
-            As an event leader, you are only able to see the details of events which you manage.
+            {t("common:events.leaderRestriction")}
         </div>}
         <div className="clearfix">
             <div className="float-start">
@@ -57,9 +59,9 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                         });
                     }
                 }}>
-                    Load more events
+                    {t("common:events.loadMoreButton")}
                 </Button>
-                <span className="ms-2">(showing {eventOverviews?.length ?? 0} of {total ?? 0})</span>
+                <span className="ms-2">{t("common:events.showingCount", { shownCount: eventOverviews?.length ?? 0, totalCount: total ?? 0 })}</span>
             </div>
             <div className="float-end mb-4">
                 <Label>
@@ -74,7 +76,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
 
         <ShowLoadingQuery
             query={eventOverviewQuery}
-            defaultErrorTitle={"Error loading event overviews"}
+            defaultErrorTitle={t("common:events.loadErrorTitle")}
             thenRender={({eventOverviews}) => {
                 return <>
                     {atLeastOne(eventOverviews.length) && <div className="overflow-auto">
@@ -82,31 +84,31 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                             <thead>
                                 <tr>
                                     <th className="align-middle text-center">
-                                        Actions
+                                        {t("common:events.tableActionsHeader")}
                                     </th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('title'); setReverse(!reverse);}}>
-                                        Title
+                                        {t("common:events.tableTitleHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('date'); setReverse(!reverse);}}>
-                                        Date
+                                        {t("common:events.tableDateHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDeadline'); setReverse(!reverse);}}>
-                                        Booking deadline
+                                        {t("common:events.tableDeadlineHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('location.address.town'); setReverse(!reverse);}}>
-                                        Location
+                                        {t("common:events.tableLocationHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('eventStatus'); setReverse(!reverse);}}>
-                                        Status
+                                        {t("common:events.tableStatusHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberOfConfirmedBookings'); setReverse(!reverse);}}>
-                                        Number confirmed
+                                        {t("common:events.tableConfirmedHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberOfWaitingListBookings'); setReverse(!reverse);}}>
-                                        Number waiting
+                                        {t("common:events.tableWaitingHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberAttended'); setReverse(!reverse);}}>
-                                        Number attended
+                                        {t("common:events.tableAttendedHeader")}
                                     </Button></th>
                                 </tr>
                             </thead>
@@ -114,7 +116,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                                 {orderBy(eventOverviews, [sortPredicate], [reverse ? "desc" : "asc"])
                                     .map((event) => <tr key={event.id} data-testid="event-manager-row">
                                         <td className="align-middle"><Button color="keyline" className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
-                                            Manage
+                                            {t("common:events.manageButton")}
                                         </Button></td>
                                         <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
                                         <td className="align-middle"><DateString>{event.date}</DateString></td>
@@ -130,7 +132,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                         </Table>
                     </div>}
                     {zeroOrLess(eventOverviews.length) && <p className="text-center">
-                        <strong>No events to display with this filter setting</strong>
+                        <strong>{t("common:events.emptyState")}</strong>
                     </p>}
                 </>;
             }} />

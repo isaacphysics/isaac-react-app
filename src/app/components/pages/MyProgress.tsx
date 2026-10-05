@@ -39,6 +39,7 @@ import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStat
 import { skipToken } from '@reduxjs/toolkit/query';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -169,7 +170,12 @@ const MyProgress = ({user}: MyProgressProps) => {
 
                     {isPhy && <div className="mt-4">
                         <h4>{t("sci:progress.isaacBooksTitle")}</h4>
-                        {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="sci:progress.isaacBooksDescription" components={{ booksLink: <a href={"/books"} /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                        <Trans
+                            i18nKey="sci:progress.isaacBooksDescription"
+                            components={{
+                                booksLink: <TransAnchor href={"/books"} />,
+                            }}
+                        />
                         <Row>
                             {Object.entries(siteSpecificStats.questionCountByBookTag).map(([bookTag, total]) => {
                                 const book = ISAAC_BOOKS_BY_TAG[bookTag as keyof typeof ISAAC_BOOKS_BY_TAG];
@@ -265,7 +271,12 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
                         caption={t("common:progress.mentalMathsCaption")} 
                         emptyText={<span>
                             <br/>
-                            {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:progress.mentalMathsEmptyState" components={{ mentalMathsLink: <a href='/pages/app_page_mental_maths_overall' target='blank' /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                            <Trans
+                                i18nKey="common:progress.mentalMathsEmptyState"
+                                components={{
+                                    mentalMathsLink: <TransAnchor href='/pages/app_page_mental_maths_overall' target='blank' />,
+                                }}
+                            />
                         </span>}
                         color="var(--subject-color-300)"
                     />;

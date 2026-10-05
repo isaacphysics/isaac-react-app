@@ -90,7 +90,7 @@ export const RegistrationSetPreferences = () => {
             <CardBody>
                 {updateCurrentUserError &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading fw-bold">{t("common:account.preferences.updateError")}</p>
+                        <p className="alert-heading fw-bold">{t("common:account.updateError.alertTitle")}</p>
                         <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                     </ExigentAlert>
                 }

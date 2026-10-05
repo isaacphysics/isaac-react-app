@@ -1,5 +1,9 @@
 {
   "account": {
+    "betaFeatures": {
+      "hideAttemptsHelp": "This feature lets you answer questions again, even if you've answered them before. It's useful if you are reviewing a topic before a test or exam.",
+      "openAiFaq": "For more information, read our <faqLink>FAQs</faqLink>."
+    },
     "context": {
       "examBoardLabel": "Exam Board",
       "showContentLabel": "Show me content for...",
@@ -15,7 +19,11 @@
     "emailPreferences": {
       "assignmentsDescription": "Receive notifications when your teacher sets you work. These are sent as needed by your teacher.",
       "eventsDescription": "Find out about upcoming events designed to support your learning and professional development.",
+      "frequencyNote": "<strong>Frequency</strong>: expect one email per term for News. Assignment notifications will be sent as needed by your teacher.",
       "newsDescription": "Be the first to hear about new features, challenges, topics, and improvements on the platform. Plus, get helpful tips on making the most of new tools."
+    },
+    "linkedAccounts": {
+      "title": "Linked accounts"
     },
     "mobileHint": "Update your Ada Computer Science account, or",
     "preferences": {
@@ -41,8 +49,7 @@
     },
     "notFound": {
       "title": "Quiz not found"
-    },
-    "title": "Tests"
+    }
   },
   "assignments": {
     "add": {
@@ -65,12 +72,6 @@
     },
     "modal": {
       "unknownDeck": "Unknown quiz"
-    },
-    "page": {
-      "emptyState": "You have no quizzes to view.",
-      "help": "A summary of your quizzes",
-      "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> quizzes, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
-      "title": "My quizzes"
     },
     "pageHelp": "Use this page to set quizzes to your groups. You can set any quiz you have saved to your account.<br/>Students in the group will be emailed when you set a new quiz.",
     "pageTitle": "Assigned to me",
@@ -124,6 +125,15 @@
       "skipNote": "You can always skip this now and connect to your teacher later."
     }
   },
+  "connections": {
+    "groups": {
+      "activeInfo": "Active group memberships mean you can receive assignments from the teachers in that group.",
+      "inactiveInfo": "Setting your membership inactive means you won’t receive any assignments from the teachers in that group. You can set yourself as active again at any time."
+    },
+    "students": {
+      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the  <groupsLink>Manage groups</groupsLink> page."
+    }
+  },
   "contact": {
     "metaDescription": "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!"
   },
@@ -138,6 +148,11 @@
       "bookingDeadline": "Booking deadline",
       "location": "Location",
       "when": "When"
+    },
+    "manageBookings": {
+      "table": {
+        "examBoard": "Exam board"
+      }
     }
   },
   "gameboard": {
@@ -169,6 +184,14 @@
     },
     "title": {
       "fallback": "Filter Generated Quiz"
+    }
+  },
+  "gameboards": {
+    "page": {
+      "emptyState": "You have no quizzes to view.",
+      "help": "A summary of your quizzes",
+      "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> quizzes, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
+      "title": "My quizzes"
     }
   },
   "glossary": {
@@ -284,6 +307,17 @@
     },
     "emptyState": "Please select and apply filters.",
     "filterNoResults": "Could not load any results matching the requested filters.",
+    "filters": {
+      "applyButton": "Apply filters",
+      "clearAll": "Clear all",
+      "difficultyHelp": "What do the difficulty levels mean?",
+      "filterIconAlt": "Filter",
+      "header": "Filter by",
+      "statusAllIncorrect": "All incorrect",
+      "statusCompleted": "Completed",
+      "statusNotAttempted": "Not attempted",
+      "statusTryAgain": "Try again"
+    },
     "metaDescription": "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.",
     "noMatchingResults": "No results match the requested filters.",
     "results": {
@@ -298,6 +332,14 @@
     "searchPlaceholder": "e.g. Creating an AST",
     "title": "Questions"
   },
+  "revision": {
+    "challenge": {
+      "complete": "Challenge complete!",
+      "ended": "Challenge over!",
+      "noData": "No data",
+      "progress": "{{correctCount}} correct, {{remainingCount}} to go!"
+    }
+  },
   "support": {
     "student": {
       "metaDescription": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!"
@@ -311,6 +353,9 @@
       "groupResultsTitle": "Group results"
     },
     "pageTitle": "Tests",
+    "set": {
+      "title": "Tests"
+    },
     "view": {
       "filterPlaceholder": "Filter tests by name..."
     }

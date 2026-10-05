@@ -181,7 +181,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                             </DropdownItem>
                         }
                         {userHasAdditionalGroupPrivileges &&
-                            <DropdownItem onClick={confirmDeleteMember} aria-label={t("common:groups.member.removeAriaLabel")}>{t("common:groups.member.removeButton")}</DropdownItem>
+                            <DropdownItem onClick={confirmDeleteMember} aria-label={t("common:groups.member.removeAriaLabel")}>{t("common:button.remove")}</DropdownItem>
                         }
                     </DropdownMenu>
                 </UncontrolledButtonDropdown>
@@ -198,7 +198,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                 {userHasAdditionalGroupPrivileges &&
                     <Tooltip tipText={t("common:groups.member.removeTooltip")} className="text-end d-none d-sm-block">
                         <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label={t("common:groups.member.removeAriaLabel")}>
-                            {t("common:groups.member.removeButton")}
+                            {t("common:button.remove")}
                         </Button>
                     </Tooltip>
                 }
@@ -538,8 +538,8 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                     </Button>
                                     {showArchived && (isPhy ?
                                         <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}}
-                                            aria-label={t("common:groups.selector.deleteButton")} className="ms-1 icon-close" title={t("common:groups.selector.deleteButton")}/> :
-                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label={t("common:groups.selector.deleteButton")} title={t("common:groups.selector.deleteButton")} onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
+                                            aria-label={t("common:groups.editor.deleteButton")} className="ms-1 icon-close" title={t("common:groups.editor.deleteButton")}/> :
+                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label={t("common:groups.editor.deleteButton")} title={t("common:groups.editor.deleteButton")} onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
                                     }
                                 </div>
                                 {isAda && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">

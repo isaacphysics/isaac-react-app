@@ -17,12 +17,12 @@ export const PhysBookYrNine = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("common:books.yr9.title")} help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/phys_book_yr9.jpg" alt={t("common:books.yr9.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/phys_book_yr9.jpg" alt={t("common:books.coverAltText")}/>
                 <PageFragment fragmentId="phys_book_yr9_intro"/>
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>{t("common:books.yr9.chaptersLabel")}</h4>
+                    <h4>{t("common:books.chaptersHeading")}</h4>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'yr9_phys_ch1_boards'} chapterTitle={t("common:books.yr9.chapter1Title")} chapterSubHeading={t("common:books.yr9.chapter1Subheading")} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>

@@ -77,8 +77,8 @@ export const StudentResources = () => {
                         {isLoggedIn(user) ? <>
                             <Button className="mt-3" tag={Link} to="/progress">{t("common:studentResources.progress.viewButton")}</Button>
                         </> : <>
-                            <Button className="me-3" to={"/register"} tag={Link}>{t("common:studentResources.progress.createAccountButton")}</Button>
-                            <Button color="keyline" to={"/login"} tag={Link}>{t("common:studentResources.progress.loginButton")}</Button>
+                            <Button className="me-3" to={"/register"} tag={Link}>{t("common:button.createAccount")}</Button>
+                            <Button color="keyline" to={"/login"} tag={Link}>{t("common:button.logIn")}</Button>
                         </>}
                     </TextBlock>
                 </ColumnSlice>
@@ -99,7 +99,7 @@ export const StudentResources = () => {
                         bodyText: featuredStudentChallengePod.value ?? "",
                         tag: featuredStudentChallengePod.subtitle ?? "",
                         clickUrl: featuredStudentChallengePod.url ?? "",
-                        buttonText: t("common:studentResources.challenges.readMoreButton"),
+                        buttonText: t("common:button.readMore"),
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
                         title: t("common:studentResources.challenges.emptyTitle"),
@@ -180,21 +180,21 @@ export const StudentResources = () => {
                         title: t("common:studentResources.careers.maxFordhamTitle"),
                         image: {src: "/assets/cs/decor/stories/max-fordham.png"},
                         bodyText: t("common:studentResources.careers.maxFordhamBody"),
-                        buttonText: t("common:studentResources.careers.maxFordhamButton"),
+                        buttonText: t("common:button.readMore"),
                         clickUrl: "/pages/20240730_max_fordham"
                     }}/>
                     <AdaCard card={{
                         title: t("common:studentResources.careers.meghnaAsthanaTitle"),
                         image: {src: "/assets/cs/decor/stories/meghna-asthana.png"},
                         bodyText: t("common:studentResources.careers.meghnaAsthanaBody"),
-                        buttonText: t("common:studentResources.careers.meghnaAsthanaButton"),
+                        buttonText: t("common:button.readMore"),
                         clickUrl: "/pages/20240313_meghna_asthana"
                     }}/>
                     <AdaCard card={{
                         title: t("common:studentResources.careers.lellaHalloumTitle"),
                         image: {src: "/assets/cs/decor/stories/lella-halloum.png"},
                         bodyText: t("common:studentResources.careers.lellaHalloumBody"),
-                        buttonText: t("common:studentResources.careers.lellaHalloumButton"),
+                        buttonText: t("common:button.readMore"),
                         clickUrl: "/pages/20240215_lella_halloum"
                     }}/>
                 </ColumnSlice>

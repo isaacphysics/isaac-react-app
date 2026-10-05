@@ -36,6 +36,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {extractErrorMessage} from '../../services/errors';
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
@@ -122,7 +123,7 @@ export const TutorRequest = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">{t("common:account.tutorRequest.firstNameLabel")}</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:form.firstNameLabel")}</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user?.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -130,7 +131,7 @@ export const TutorRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">{t("common:account.tutorRequest.lastNameLabel")}</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:form.lastNameLabel")}</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user?.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -140,7 +141,7 @@ export const TutorRequest = () => {
                                     <Row>
                                         <Col size={12} md={isPhy ? 6 : undefined}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">{t("common:account.tutorRequest.emailLabel")}</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:form.emailLabel")}</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user?.loggedIn ? user.email : ""}
@@ -187,16 +188,22 @@ export const TutorRequest = () => {
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}><>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.tutorRequest.errorContact" components={{ emailLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ errorMessage, emailAddress: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}><><Trans
+                                            i18nKey="common:account.tutorRequest.errorContact"
+                                            components={{
+                                                emailLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
+                                            }}
+                                            values={{ errorMessage, emailAddress: WEBMASTER_EMAIL }}
+                                        /></></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
-                                                {t("common:account.tutorRequest.requiredField")}
+                                                {t("common:form.requiredField")}
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Button type="submit" color="keyline" disabled={!emailVerified} className='w-100'>{t("common:account.tutorRequest.submitButton")}</Button>
+                                            <Button type="submit" color="keyline" disabled={!emailVerified} className='w-100'>{t("common:button.submit")}</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

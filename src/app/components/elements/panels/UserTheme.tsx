@@ -5,6 +5,7 @@ import { Alert, Label } from "reactstrap";
 import { LightnessTheme, lightnessThemes, useLightnessTheme } from "../../../services/theme";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 
 interface UserThemeProps {
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
@@ -24,14 +25,15 @@ const ThemeSelector = ({theme, isCurrentTheme, onChange}: ThemeSelectorProps) =>
 };
 
 export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
+    const { t } = useTranslation();
     const currentTheme = useLightnessTheme();
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Theme</h3>
+            <h3>{t("common:account.theme.title")}</h3>
         </>}
         rightColumn={<>
-            <span>Here you can select your preferred site theme.</span>
+            <span>{t("common:account.theme.description")}</span>
             <div className="d-flex gap-4 mt-4">
                 {Object.values(lightnessThemes).map((theme) => <ThemeSelector 
                     key={theme.value}
@@ -41,10 +43,7 @@ export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
                 />)}
             </div>
             <Alert color="warning" className="mt-4">
-                Please note that dark mode is a new and extensive feature and, as such, certain areas of the site may not yet be fully optimised for this theme. 
-                We also cannot guarantee e.g. AA accessibility compliance for dark mode at this time.
-                <br/><br/>
-                If you encounter any issues, particularly regarding legibility, please report them to us via the <Link to="/contact?subject=Dark%20mode%20issue">contact form</Link> for further investigation. Please include a link to the page containing the issue if possible.
+                <Trans i18nKey="common:account.theme.darkModeWarning" components={{ lineBreak1: <br />, lineBreak2: <br />, contactLink: <Link to="/contact?subject=Dark%20mode%20issue" /> }} />
             </Alert>
         </>}
     />;

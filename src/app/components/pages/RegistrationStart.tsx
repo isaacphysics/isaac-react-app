@@ -28,7 +28,7 @@ export const RegistrationStart = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.register.title", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={0}/>,
@@ -59,7 +59,7 @@ export const RegistrationStart = () => {
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <div className="mt-7">
                             <div className={siteSpecific("h4 mb-3", "h3")}>{t("common:auth.register.existingAccount")}</div>
-                            <Button color={siteSpecific("solid", "keyline")} block onClick={login}>{t("common:auth.register.loginButton")}</Button>
+                            <Button color={siteSpecific("solid", "keyline")} block onClick={login}>{t("common:button.logIn")}</Button>
                         </div>
                     </Col>
                     <Col xs={12} lg={6}>

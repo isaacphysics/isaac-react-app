@@ -278,7 +278,7 @@ export const FreeTextBuilder = () => {
                                             }
                                         }}
                                     >
-                                        {t("common:freeTextBuilder.matchingRules.json.submitButton")}
+                                        {t("common:button.submit")}
                                     </Button>
                                 </div>
                             </div>
@@ -369,7 +369,7 @@ export const FreeTextBuilder = () => {
                                             }
                                         }}
                                     >
-                                        {t("common:freeTextBuilder.testCases.csv.submitButton")}
+                                        {t("common:button.submit")}
                                     </Button>
                                 </div>
                             </div>

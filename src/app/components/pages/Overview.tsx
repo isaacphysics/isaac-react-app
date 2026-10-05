@@ -77,7 +77,7 @@ export const TeacherOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.tests.title"),
+                    title: t("common:overview.tests.title"),
                     icon: {name: "icon-school", color:"secondary"},
                     bodyText: t("common:overview.teacher.tests.description"),
                     clickUrl: "/set_tests",
@@ -93,12 +93,12 @@ export const TeacherOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.assigned.title"),
+                    title: t("common:overview.assigned.title"),
                     icon: {name: "icon-person-check", color: "secondary"},
                     tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
                     bodyText: t("common:overview.teacher.assigned.description"),
                     clickUrl: "/assignments",
-                    buttonText: t("common:overview.teacher.assigned.buttonLabel"),
+                    buttonText: t("common:overview.assigned.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
@@ -114,11 +114,11 @@ export const TeacherOverview = () => {
                     icon: {name: "icon-group", color: "secondary"},
                     bodyText: t("common:overview.teacher.mentoring.description"),
                     clickUrl: "/teacher_mentoring",
-                    buttonText: t("common:overview.teacher.mentoring.buttonLabel"),
+                    buttonText: t("common:button.learnMore"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.support.title"),
+                    title: t("common:overview.support.title"),
                     icon: {name: "icon-help", color: "secondary"},
                     bodyText: t("common:overview.teacher.support.description"),
                     clickUrl: "/support/teacher/general",
@@ -155,16 +155,16 @@ export const StudentOverview = () => {
             <h2>{t("common:overview.browse.sectionTitle")}</h2>
             <ColumnSlice className={"row-cols-lg-4 row-cols-md-2 mt-3"}>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.student.assigned.title"),
+                    title: t("common:overview.assigned.title"),
                     icon: {name: "icon-person-check", color: "secondary"},
                     tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
                     bodyText: t("common:overview.student.assigned.description"),
                     clickUrl: "/assignments",
-                    buttonText: t("common:overview.student.assigned.buttonLabel"),
+                    buttonText: t("common:overview.assigned.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.student.tests.title"),
+                    title: t("common:overview.tests.title"),
                     icon: {name: "icon-school", color:"secondary"},
                     tag: workCounts.tests > 0 ? `${workCounts.tests} to do` : undefined,
                     bodyText: t("common:overview.student.tests.description"),
@@ -214,7 +214,7 @@ export const StudentOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.student.support.title"),
+                    title: t("common:overview.support.title"),
                     icon: {name: "icon-help", color: "secondary"},
                     bodyText: t("common:overview.student.support.description"),
                     clickUrl: "/support/student/general",

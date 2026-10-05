@@ -10,6 +10,7 @@ import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 import { GameboardDTO } from "../../../IsaacApiTypes";
 import { PageMetadata } from "../elements/PageMetadata";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     const { t } = useTranslation();
@@ -131,7 +132,12 @@ export const SubjectOverviewPage = () => {
                 Our resources include questions, tests, concept pages and books.
             </p>
             <p>
-                {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:overview.freeAccount" components={{ teacherFeaturesLink: <a href="/teacher_features" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                <Trans
+                    i18nKey="common:overview.freeAccount"
+                    components={{
+                        teacherFeaturesLink: <TransAnchor href="/teacher_features" />,
+                    }}
+                />
             </p>
             <p>
                 {t("common:overview.examIndependent", { subject: humanSubject })} 

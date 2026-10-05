@@ -42,6 +42,8 @@ import {FixedSizeList} from "react-window";
 import {Spacer} from "../Spacer";
 import {MyAccountTab} from "./MyAccountTab";
 import {Button, Col, Form, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const CONNECTIONS_ROW_HEIGHT = 40;
 const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
@@ -107,11 +109,11 @@ export const authenticateWithTokenAfterPrompt = async (userId: number, token: st
     // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
     const sanitisedToken = token?.trim().split("?authToken=").at(-1)?.toUpperCase();
     if (!sanitisedToken) {
-        dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
+        dispatch(showErrorToast(i18next.t("common:connections.connect.noCodeTitle"), i18next.t("common:connections.connect.noCodeMessage")));
         return;
     }
     else if (!(sanitisedToken && sanitisedToken.length >= 6 && sanitisedToken.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(sanitisedToken))) {
-        dispatch(showErrorToast("Invalid group code", "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers."));
+        dispatch(showErrorToast(i18next.t("common:connections.connect.invalidCodeTitle"), i18next.t("common:connections.connect.invalidCodeMessage")));
         return;
     }
     else {
@@ -126,6 +128,7 @@ export const authenticateWithTokenAfterPrompt = async (userId: number, token: st
 };
 
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
     const {data: groupMemberships} = useGetGroupMembershipsQuery(groupQuery);
@@ -181,24 +184,24 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Connect to your teacher</h3>
+            <h3>{t("common:connections.connect.title")}</h3>
             <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_teacher_connections_teacher" : "help_toptext_teacher_connections_student"} ifNotFound={RenderNothing} />
         </>}
         rightColumn={<>
             <SectionHeading>
                 <span>
-                    Teacher connection code
+                    {t("common:connections.connect.codeHeading")}
                     <i id="teacher-connections-title" className={classNames("icon icon-info icon-inline-sm ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
-                    The teachers that you are connected to can view your {SITE_TITLE_SHORT} assignment progress.
+                    {t("common:connections.connect.codeTooltip", { siteTitle: SITE_TITLE_SHORT })}
                 </UncontrolledTooltip>
             </SectionHeading>
-            <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
+            <p>{t("common:connections.connect.codeInstruction")}</p>
             <div data-testid="teacher-connect-form">
                 <InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
                     <Input
-                        type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
+                        type="text" placeholder={t("common:connections.connect.codePlaceholder")} value={authToken || undefined} className="py-4"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                         onKeyDown={(e) => {if (e.key === 'Enter') {
                             processToken(e);
@@ -206,15 +209,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         }}}
                     />
                     <Button onClick={processToken} className={classNames("py-2", {"px-3": isPhy})} color={siteSpecific("solid", "keyline")} disabled={editingOtherUser}>
-                        Connect
+                        {t("common:button.connect")}
                     </Button>
                 </InputGroup>
             </div>
 
             <div className="connect-list" data-testid="teacher-connections">
                 <ConnectionsHeader
-                    title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch}
-                    setSearchText={setTeacherSearchText} placeholder="Search teachers"/>
+                    title={t("common:connections.teachers.heading")} enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch}
+                    setSearchText={setTeacherSearchText} placeholder={t("common:connections.teachers.searchPlaceholder")}/>
                 <div>
                     <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                         <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -234,15 +237,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                         <UncontrolledTooltip
                                             placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
                                         >
-                                        This user ({teacherAuthorisation.email}) has access to your data.
-                                        To remove this access, click &apos;Revoke&apos;.
+                                        {t("common:connections.teachers.tooltip", { teacherEmail: teacherAuthorisation.email })}
                                         </UncontrolledTooltip>
                                         <Button
                                             color="link" className="revoke-teacher pe-1"
                                             disabled={editingOtherUser}
                                             onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                         >
-                                        Revoke
+                                        {t("common:connections.teachers.revokeButton")}
                                         </Button>
                                     </li>
                                 </React.Fragment>;
@@ -250,29 +252,27 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </FixedSizeList>
                     </ul>
                     {activeAuthorisations && activeAuthorisations.length === 0 && <p className="teachers-connected">
-                        You have no active teacher connections.
+                        {t("common:connections.teachers.emptyState")}
                     </p>}
                 </div>
             </div>
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
                 <SectionHeading>
-                    <span>Your student connections
+                    <span>{t("common:connections.students.heading")}
                         <i id="student-connections-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                     </span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
-                        These are the students who have shared their {SITE_TITLE_SHORT} data with you.
-                        These students are also able to view your name and email address on their Teacher connections page.
+                        {t("common:connections.students.headingTooltip", { siteTitle: SITE_TITLE_SHORT })}
                     </UncontrolledTooltip>
                 </SectionHeading>
                 <p>
-                    You can invite students to share their {SITE_TITLE_SHORT} data with you through the {" "}
-                    <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
+                    <Trans i18nKey="site:connections.students.inviteText" components={{ groupsLink: <Link to="/groups" /> }} values={{ siteTitle: SITE_TITLE_SHORT }} />
                 </p>
                 <div className="connect-list">
                     <ConnectionsHeader
-                        title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch}
-                        setSearchText={setStudentSearchText} placeholder="Search students"/>
+                        title={t("common:connections.students.listTitle")} enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch}
+                        setSearchText={setStudentSearchText} placeholder={t("common:connections.students.searchPlaceholder")}/>
                     <div>
                         <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                             <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -291,14 +291,13 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                         <UncontrolledTooltip
                                             placement="bottom" target={`student-authorisation-${student.id}`}
                                         >
-                                            You have access to this user&apos;s data and they can see your name and email address.
-                                            To remove this access, click &apos;Remove&apos;.
+                                            {t("common:connections.students.studentTooltip")}
                                         </UncontrolledTooltip>
                                         <Button
                                             color="link" className="revoke-teacher pe-1" disabled={editingOtherUser}
                                             onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
                                         >
-                                            Remove
+                                            {t("common:button.remove")}
                                         </Button>
                                     </li>;
                                 }}
@@ -306,12 +305,12 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </ul>
 
                         {studentAuthorisations && studentAuthorisations.length === 0 && <p className="teachers-connected">
-                            You have no active student connections.
+                            {t("common:connections.students.emptyState")}
                         </p>}
                     </div>
                     {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
                         <Button color="link" onClick={() => dispatch(openActiveModal(releaseAllConfirmationModal()))} disabled={editingOtherUser}>
-                            Remove all
+                            {t("common:connections.students.removeAllButton")}
                         </Button>
                     </p>}
                 </div>
@@ -320,24 +319,23 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
             <h3>
                 <span className={classNames({"h4": isPhy})}>
-                    Your group memberships
+                    {t("common:connections.groups.heading")}
                     <i id="group-memberships-title" className={classNames("ms-2 icon icon-info icon-inline-sm", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </span>
                 <UncontrolledTooltip placement="bottom" target="group-memberships-title">
-                    These are the groups you are currently a member of.
-                    Groups on {SITE_TITLE_SHORT} let teachers set assignments to multiple students in one go.
+                    {t("common:connections.groups.headingTooltip", { siteTitle: SITE_TITLE_SHORT })}
                 </UncontrolledTooltip>
             </h3>
             <ul>
-                <li>{`Active group memberships mean you ${siteSpecific("will receive assignments set to that group by teachers in it." ,"can receive assignments from the teachers in that group.")}`}</li>
-                <li>{`Setting your membership inactive means you won’t receive any assignments ${siteSpecific("set to", "from the teachers in")} that group. You can set yourself as active again at any time.`}</li>
-                <li>If you want to permanently leave a group, ask your teacher to remove you.</li>
+                <li>{t("site:connections.groups.activeInfo")}</li>
+                <li>{t("site:connections.groups.inactiveInfo")}</li>
+                <li>{t("common:connections.groups.leaveInfo")}</li>
             </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list mb-3">
                     <ConnectionsHeader
-                        title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch}
-                        setSearchText={setGroupSearchText} placeholder="Search groups"/>
+                        title={t("common:connections.groups.listTitle")} enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch}
+                        setSearchText={setGroupSearchText} placeholder={t("common:connections.groups.searchPlaceholder")}/>
                     <div>
                         <ul className="teachers-connected list-unstyled m-0">
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -349,14 +347,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             <Col className="connections-fixed-length-container me-1">
                                                 <div className="d-flex">
                                                     <span id={`group-membership-${index}`} className={classNames("connections-fixed-length-text", {"text-muted connection-inactive": inactiveInGroup})}>
-                                                        <b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b>
+                                                        <b>{(membership.group.groupName ?? t("common:connections.groups.fallbackName", { groupId: membership.group.id }))}</b>
                                                     </span>
-                                                    {inactiveInGroup && <span>&nbsp;{"("}<i>inactive</i>{")"}</span>}
+                                                    {inactiveInGroup && <span>&nbsp;{"("}<i>{t("common:connections.groups.inactiveLabel")}</i>{")"}</span>}
                                                     {membership.group.selfRemoval && <img className={classNames("self-removal-group", {"ms-1": !inactiveInGroup})} src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
                                                     <UncontrolledTooltip
                                                         placement="top" target={`group-membership-${index}`}
                                                     >
-                                                        {membership.group.groupName ? membership.group.groupName : `Group ${membership.group.id}`}
+                                                        {membership.group.groupName ? membership.group.groupName : t("common:connections.groups.fallbackName", { groupId: membership.group.id })}
                                                     </UncontrolledTooltip>
                                                 </div>
                                                 <div className="d-flex">
@@ -374,14 +372,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                             ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
                                                             : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
                                                     }>
-                                                        Leave
+                                                        {t("common:connections.groups.leaveButton")}
                                                     </Button>
                                                     {isPhy && <>
                                                         <i id={`leave-group-action-${membership.group.id}`} className="ms-2 icon icon-info icon-inline-sm icon-color-grey" />
                                                         <UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
-                                                            If you leave a group you will no longer receive notifications of new assignments.
+                                                            {t("sci:connections.groups.leaveTooltip")}
                                                         </UncontrolledTooltip>
                                                     </>}
                                                 </React.Fragment>}
@@ -390,14 +388,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     <Button className={classNames({"revoke-teacher pe-1 pt-2": isAda})} color="link" disabled={editingOtherUser} onClick={() =>
                                                         changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.ACTIVE})
                                                     }>
-                                                        Rejoin
+                                                        {t("common:connections.groups.rejoinButton")}
                                                     </Button>
                                                     {isPhy && <>
                                                         <i id={`rejoin-group-action-${membership.group.id}`} className="ms-2 icon icon-info icon-inline-sm icon-color-grey" />
                                                         <UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
-                                                            If you rejoin a group you will see all the assignments set since the group was created.
+                                                            {t("sci:connections.groups.rejoinTooltip")}
                                                         </UncontrolledTooltip>
                                                     </>}
                                                 </React.Fragment>}
@@ -409,7 +407,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </ul>
                     </div>
                     {groupMemberships && groupMemberships.length === 0 && <p className="teachers-connected">
-                        You are not a member of any groups.
+                        {t("common:connections.groups.emptyState")}
                     </p>}
                 </div>
             </div>

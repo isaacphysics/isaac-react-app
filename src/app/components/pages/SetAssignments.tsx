@@ -97,7 +97,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
-                {t("common:assignments.table.stagesDifficulties")}
+                {t("common:assignments.table.stagesAndDifficulties")}
                 <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>

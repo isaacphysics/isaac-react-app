@@ -181,7 +181,7 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
     const { t } = useTranslation();
     return <>
         <div className="form-group">
-            {displayLabels && <Label htmlFor="email-input">{t("common:auth.credentials.emailLabel")}</Label>}
+            {displayLabels && <Label htmlFor="email-input">{t("common:form.emailLabel")}</Label>}
             <Input
                 id="email-input" type="email" name="email" placeholder={t("common:auth.credentials.emailPlaceholder")}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
@@ -190,12 +190,12 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
                 required
             />
             <FormFeedback id="emailValidationMessage">
-                {!validEmail && t("common:auth.credentials.emailValidationError")}
+                {!validEmail && t("common:form.emailValidationError")}
             </FormFeedback>
         </div>
 
         <div className="form-group mb-0">
-            {displayLabels && <Label htmlFor="password-input">{t("common:auth.credentials.passwordLabel")}</Label>}
+            {displayLabels && <Label htmlFor="password-input">{t("common:form.passwordLabel")}</Label>}
             <Input
                 id="password-input" type="password" name="password" placeholder={t("common:auth.credentials.passwordPlaceholder")}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}

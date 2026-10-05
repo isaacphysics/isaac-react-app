@@ -210,7 +210,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                         target="_blank"
                     >
-                        {t("common:tests.feedback.downloadCsv")}
+                        {t("common:button.downloadCsv")}
                         <i className="icon icon-download ms-2" color={siteSpecific("white", "primary")}/>
                     </Button>
                 </div>

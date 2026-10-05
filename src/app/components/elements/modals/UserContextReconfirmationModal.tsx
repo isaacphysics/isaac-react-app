@@ -36,12 +36,18 @@ import classNames from "classnames";
 import {ExigentAlert} from "../ExigentAlert";
 import { Trans, useTranslation } from "react-i18next";
 import i18next from "i18next";
+import { TransAnchor } from "../TransAnchor";
 
 const adaModalText = (isTeacher: boolean) => {
     return {
         intro: <span>{i18next.t("ada:account.review.intro")}</span>,
         connections: <span>At the start of the new school year, you might also want to review your {isTeacher ? "student" : "teacher"} connections.</span>,
-        privacyPolicy: <span>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="ada:account.review.privacyPolicy" components={{ privacyPolicyLink: <a target={"_blank"} rel={"noopener"} href={"/privacy"} /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</span>
+        privacyPolicy: <span><Trans
+            i18nKey="ada:account.review.privacyPolicy"
+            components={{
+                privacyPolicyLink: <TransAnchor target={"_blank"} rel={"noopener"} href={"/privacy"} />,
+            }}
+        /></span>
     };
 };
 

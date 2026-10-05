@@ -68,8 +68,8 @@ export const TeacherResources = () => {
                     <p>{t("common:teacherResources.tools.description")}</p>
                     <div className="pb-2 mb-3">
                         {(!isLoggedIn(user) && <> 
-                            <Button className="me-3" to={"/register"} tag={Link}>{t("common:teacherResources.tools.createAccountButton")}</Button>
-                            <Button color="keyline" to={"/login"} tag={Link}>{t("common:teacherResources.tools.loginButton")}</Button>
+                            <Button className="me-3" to={"/register"} tag={Link}>{t("common:button.createAccount")}</Button>
+                            <Button color="keyline" to={"/login"} tag={Link}>{t("common:button.logIn")}</Button>
                         </>) || (isTeacherOrAbove(user) && <>
                             <Button to={"/dashboard"} tag={Link}>{t("common:teacherResources.tools.dashboardButton")}</Button>
                         </>) || <>
@@ -135,7 +135,7 @@ export const TeacherResources = () => {
                         image: {src: "/assets/cs/decor/teacher-2.png"},
                         bodyText: t("common:teacherResources.cpd.coursesCard.description"),
                         clickUrl: "/pages/online_courses",
-                        buttonText: t("common:teacherResources.cpd.coursesCard.button"),
+                        buttonText: t("common:button.learnMore"),
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
@@ -143,7 +143,7 @@ export const TeacherResources = () => {
                         image: {src: "/assets/cs/decor/teacher-3.png"},
                         bodyText: t("common:teacherResources.cpd.mentoringCard.description"),
                         clickUrl: "/teacher_mentoring",
-                        buttonText: t("common:teacherResources.cpd.mentoringCard.button"),
+                        buttonText: t("common:button.learnMore"),
                         className: "bg-cultured-grey",
                     }}/>
                 </ColumnSlice>
@@ -164,7 +164,7 @@ export const TeacherResources = () => {
                         bodyText: featuredStudentChallengePod.value ?? "",
                         tag: featuredStudentChallengePod.subtitle ?? "",
                         clickUrl: featuredStudentChallengePod.url ?? "",
-                        buttonText: t("common:teacherResources.challenges.readMoreButton"),
+                        buttonText: t("common:button.readMore"),
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
                         title: t("common:teacherResources.challenges.emptyState.title"),
@@ -185,7 +185,7 @@ export const TeacherResources = () => {
                         title: t("common:teacherResources.moreResources.researchCard.title"),
                         image: {src: "/assets/cs/decor/teacher-4.png"},
                         bodyText: t("common:teacherResources.moreResources.researchCard.description"),
-                        buttonText: t("common:teacherResources.moreResources.researchCard.button"),
+                        buttonText: t("common:button.learnMore"),
                         clickUrl: "https://www.raspberrypi.org/research/projects",
                         className: "bg-cultured-grey",
                     }}/>
@@ -193,7 +193,7 @@ export const TeacherResources = () => {
                         title: t("common:teacherResources.moreResources.helloWorldCard.title"),
                         image: {src: "/assets/cs/decor/hello-world.png"},
                         bodyText: t("common:teacherResources.moreResources.helloWorldCard.description"),
-                        buttonText: t("common:teacherResources.moreResources.helloWorldCard.button"),
+                        buttonText: t("common:button.learnMore"),
                         clickUrl: "https://www.raspberrypi.org/hello-world",
                         className: "bg-cultured-grey",
                     }}/>
@@ -201,7 +201,7 @@ export const TeacherResources = () => {
                         title: t("common:teacherResources.moreResources.codeClassroomCard.title"),
                         image: {src: "/assets/cs/decor/code-editor.png"},
                         bodyText: t("common:teacherResources.moreResources.codeClassroomCard.description"),
-                        buttonText: t("common:teacherResources.moreResources.codeClassroomCard.button"),
+                        buttonText: t("common:button.learnMore"),
                         clickUrl: "https://editor.raspberrypi.org/en/education",
                         className: "bg-cultured-grey",
                     }}/>

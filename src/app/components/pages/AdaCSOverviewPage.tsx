@@ -13,7 +13,7 @@ export const AdaCSOverviewPage = () => {
     const { t } = useTranslation();
     return <Container data-bs-theme={undefined} className="ada-overview-page">
         <TitleAndBreadcrumb
-            currentPageTitle={t("common:homepage.title")}
+            currentPageTitle={t("common:csOverview.overviewTitle")}
             icon={{
                 type: "img",
                 subject: undefined,
@@ -23,21 +23,21 @@ export const AdaCSOverviewPage = () => {
             }}
         />
         <div>
-            <PageMetadata title={t("common:homepage.pageTitle")} />
+            <PageMetadata title={t("common:csOverview.pageTitle")} />
             <p>
-                {t("common:homepage.description")}
+                {t("common:csOverview.description")}
             </p>
 
             <ColumnSlice>
                 <TextBlock>
-                    <h2>{t("common:homepage.students.title")}</h2>
+                    <h2>{t("common:csOverview.students.title")}</h2>
                     <div>
-                        {t("common:homepage.students.intro")}
+                        {t("common:csOverview.students.intro")}
                         <ul>
-                            <li>{t("common:homepage.students.featureLearn")}</li>
-                            <li>{t("common:homepage.students.featurePractise")}</li>
-                            <li>{t("common:homepage.students.featureTrack")}</li>
-                            <li>{t("common:homepage.students.featureChallenges")}</li>
+                            <li>{t("common:csOverview.students.featureLearn")}</li>
+                            <li>{t("common:csOverview.students.featurePractise")}</li>
+                            <li>{t("common:csOverview.students.featureTrack")}</li>
+                            <li>{t("common:csOverview.students.featureChallenges")}</li>
                         </ul>
                     </div>
                 </TextBlock>
@@ -51,13 +51,13 @@ export const AdaCSOverviewPage = () => {
                     <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
                 </ImageBlock>
                 <TextBlock>
-                    <h2>{t("common:homepage.teachers.title")}</h2>
+                    <h2>{t("common:csOverview.teachers.title")}</h2>
                     <div>
-                        {t("common:homepage.teachers.intro")}
+                        {t("common:csOverview.teachers.intro")}
                         <ul>
-                            <li>{t("common:homepage.teachers.featureTeach")}</li>
-                            <li>{t("common:homepage.teachers.featureAssignments")}</li>
-                            <li>{t("common:homepage.teachers.featureMarkbook")}</li>
+                            <li>{t("common:csOverview.teachers.featureTeach")}</li>
+                            <li>{t("common:csOverview.teachers.featureAssignments")}</li>
+                            <li>{t("common:csOverview.teachers.featureMarkbook")}</li>
                         </ul>
                     </div>
                 </TextBlock>
@@ -71,7 +71,7 @@ export const AdaCSOverviewPage = () => {
                     affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}
                     className="px-9 py-3 fs-6 position-relative"
                 >
-                    {t("common:homepage.visitButton")}
+                    {t("common:csOverview.visitButton")}
                 </AffixButton>
             </div>
 

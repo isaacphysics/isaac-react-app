@@ -39,6 +39,7 @@ import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 interface RegistrationSetDetailsProps {
     userRole: UserRole
@@ -217,7 +218,12 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                                 color={siteSpecific("primary", "")}
                                 onChange={(e) => setTosAccepted(e?.target.checked)}
                                 invalid={attemptedSignUp && !tosAccepted}
-                                label={<span className={classNames({"form-required": isPhy})}>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:auth.registration.termsAccept" components={{ termsLink: <a href="/terms" target="_blank" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</span>}
+                                label={<span className={classNames({"form-required": isPhy})}><Trans
+                                    i18nKey="common:auth.registration.termsAccept"
+                                    components={{
+                                        termsLink: <TransAnchor href="/terms" target="_blank" />,
+                                    }}
+                                /></span>}
                             />
                             <FormFeedback className="mt-0">
                                 {t("common:auth.registration.termsRequired")}
@@ -226,10 +232,10 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                         {isAda && <hr className="text-center"/>}
                         <Row className="justify-content-end">
                             <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                <Button className="mt-2 w-100" color="keyline" onClick={goBack}>{t("common:auth.registration.backButton")}</Button>
+                                <Button className="mt-2 w-100" color="keyline" onClick={goBack}>{t("common:button.back")}</Button>
                             </Col>
                             <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
-                                <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">{t("common:auth.registration.continueButton")}</Button>
+                                <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">{t("common:button.continue")}</Button>
                             </Col>
                         </Row>
                     </Form>}

@@ -2,6 +2,7 @@ import React from "react";
 import { UserProgress } from "../../../../IsaacAppTypes";
 import { ProgressBar } from "../views/ProgressBar";
 import { isAda } from "../../../services";
+import { useTranslation } from "react-i18next";
 
 interface ProgressChallenge {
     name: string;
@@ -31,6 +32,7 @@ const REVISION_CHALLENGES: { [key: string]: ProgressChallenge } = {
 };
 
 export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgress | null}) => {
+    const { t } = useTranslation();
     // assumes there is only one active challenge! (completedQuestionsInChallenge is not challenge-specific)
     const displayedChallenge = Object.values(REVISION_CHALLENGES).find((c) => c.displayed);
     const completedQuestionsInChallenge = userProgress?.totalQuestionsCorrectThisRevisionPeriod ?? 0;
@@ -41,12 +43,12 @@ export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgr
         {displayedChallenge?.text}
         {isComplete
             ? <ProgressBar percentage={100} className="mb-5 mt-2">
-                {"Challenge complete!"}
+                {t("ada:revision.challenge.complete")}
             </ProgressBar>
             : <ProgressBar percentage={100 * (completedQuestionsInChallenge / (displayedChallenge?.target ?? 1))} className="mb-5 mt-2">
                 {displayedChallenge.active 
-                    ? completedQuestionsInChallenge == null ? "No data" : `${completedQuestionsInChallenge} correct, ${displayedChallenge?.target - completedQuestionsInChallenge} to go!`
-                    : "Challenge over!"
+                    ? completedQuestionsInChallenge == null ? t("ada:revision.challenge.noData") : t("ada:revision.challenge.progress", { correctCount: completedQuestionsInChallenge, remainingCount: displayedChallenge?.target - completedQuestionsInChallenge })
+                    : t("ada:revision.challenge.ended")
                 }
             </ProgressBar>
         }

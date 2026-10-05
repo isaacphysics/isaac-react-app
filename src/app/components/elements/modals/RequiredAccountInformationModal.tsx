@@ -28,6 +28,7 @@ import {Button, CardBody, Col, Form, Row} from "reactstrap";
 import {CountryInput} from "../inputs/CountryInput";
 import {ExigentAlert} from "../ExigentAlert";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../TransAnchor";
 
 const RequiredAccountInfoBody = () => {
     const { t } = useTranslation();
@@ -135,7 +136,13 @@ const RequiredAccountInfoBody = () => {
                 </Col>
             </Row>
             <div className="text-muted small pb-2">
-                {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.requiredInfo.privacyNote" components={{ privacyPolicyLink: <a target="_blank" href="/privacy" /> }} values={{ siteTitle: SITE_TITLE }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                <Trans
+                    i18nKey="common:account.requiredInfo.privacyNote"
+                    components={{
+                        privacyPolicyLink: <TransAnchor target="_blank" href="/privacy" />,
+                    }}
+                    values={{ siteTitle: SITE_TITLE }}
+                />
             </div>
         </CardBody>
 

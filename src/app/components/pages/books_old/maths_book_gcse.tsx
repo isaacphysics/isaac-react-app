@@ -18,7 +18,7 @@ export const MathsBookGcse = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.gcseMaths.title")} help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/2021_maths_book_gcse.jpg" alt={t("sci:books.gcseMaths.coverAlt")}/>
+                <img className="book-cover" src="/assets/phy/books/2021_maths_book_gcse.jpg" alt={t("sci:books.coverAltText")}/>
                 <PageFragment fragmentId="maths_book_gcse_intro"/>
             </div>
             <div className="book-levels">

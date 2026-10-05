@@ -10,6 +10,7 @@ import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
 import {Alert, Container} from "reactstrap";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../../elements/TransAnchor";
 
 const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete to see your feedback.
@@ -70,7 +71,13 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
                     <h4 className="alert-heading">{assignedQuizError ? t("common:tests.attempt.assignedErrorTitle") : t("common:tests.attempt.loadErrorTitle")}</h4>
                     {!assignedQuizError && <p data-testid="error-message">{error}</p>}
                     {assignedQuizError && <>
-                        <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:tests.attempt.assignedErrorBody" components={{ br: <br />, assignedTestsLink: <a href={"/tests"} target="_self" rel="noopener noreferrer" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                        <p><Trans
+                            i18nKey="common:tests.attempt.assignedErrorBody"
+                            components={{
+                                br: <br />,
+                                assignedTestsLink: <TransAnchor href={"/tests"} target="_self" rel="noopener noreferrer" />,
+                            }}
+                        />
                         </p>
                     </>}
                 </Alert>

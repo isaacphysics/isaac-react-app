@@ -152,7 +152,7 @@ export const Events = () => {
                                 onClick={() => {
                                     void getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
                                 }}>
-                                {t("common:events.page.loadMore")}
+                                {t("common:events.loadMoreButton")}
                             </Button>
                         </div>}
 

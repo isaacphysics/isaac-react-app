@@ -25,6 +25,7 @@ import {Immutable} from "immer";
 import {extractErrorMessage} from '../../services/errors';
 import { Trans, useTranslation } from "react-i18next";
 import i18next from "i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     const urlQuery = queryString.parse(location.search);
@@ -109,14 +110,31 @@ export const Contact = () => {
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
                     <div>
                         <h3>{t("common:contact.faq.heading")}</h3>
-                        <p> {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:contact.faq.text" components={{ studentFaqLink: <a href="/support/student" />, teacherFaqLink: <a href="/support/teacher" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
+                        <p> <Trans
+                            i18nKey="common:contact.faq.text"
+                            components={{
+                                studentFaqLink: <TransAnchor href="/support/student" />,
+                                teacherFaqLink: <TransAnchor href="/support/teacher" />,
+                            }}
+                        /></p>
                     </div>
                     {isPhy && <>
                         <h3>{t("sci:contact.events.heading")}</h3>
-                        <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="sci:contact.events.text" components={{ eventsLink: <a href="/events" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
+                        <p><Trans
+                            i18nKey="sci:contact.events.text"
+                            components={{
+                                eventsLink: <TransAnchor href="/events" />,
+                            }}
+                        /></p>
                     </>}
                     <h3>{t("common:contact.problems.heading")}</h3>
-                    <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:contact.problems.text" components={{ webmasterEmailLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ webmasterEmail: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
+                    <p><Trans
+                        i18nKey="common:contact.problems.text"
+                        components={{
+                            webmasterEmailLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
+                        }}
+                        values={{ webmasterEmail: WEBMASTER_EMAIL }}
+                    /></p>
                     <h3>{t("common:contact.social.heading")}</h3>
                     <p>{t("common:contact.social.text")}</p>
                     {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
@@ -143,7 +161,7 @@ export const Contact = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">{t("common:contact.form.firstNameLabel")}</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:form.firstNameLabel")}</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user && user.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -151,7 +169,7 @@ export const Contact = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">{t("common:contact.form.lastNameLabel")}</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:form.lastNameLabel")}</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user && user.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -161,14 +179,14 @@ export const Contact = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">{t("common:contact.form.emailLabel")}</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:form.emailLabel")}</Label>
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user && user.loggedIn ? user.email : ""}
                                                     onChange={e => setEmail(e.target.value)}
                                                     aria-describedby="emailValidationMessage" required/>
                                                 <FormFeedback id="emailValidationMessage">
-                                                    {!isValidEmail && t("common:contact.form.emailValidationError")}
+                                                    {!isValidEmail && t("common:form.emailValidationError")}
                                                 </FormFeedback>
                                             </FormGroup>
                                         </Col>
@@ -194,16 +212,22 @@ export const Contact = () => {
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}><>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:contact.form.errorMessage" components={{ webmasterEmailLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ errorMessage, webmasterEmail: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}><><Trans
+                                            i18nKey="common:contact.form.errorMessage"
+                                            components={{
+                                                webmasterEmailLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
+                                            }}
+                                            values={{ errorMessage, webmasterEmail: WEBMASTER_EMAIL }}
+                                        /></></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
                                             {isPhy && <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
-                                                {t("common:contact.form.requiredField")}
+                                                {t("common:form.requiredField")}
                                             </span>}                                  
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Button type="submit" color="secondary" className="w-100">{t("common:contact.form.submitButton")}</Button>
+                                            <Button type="submit" color="secondary" className="w-100">{t("common:button.submit")}</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

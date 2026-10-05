@@ -111,7 +111,7 @@ const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgr
             </Link>}
             {isPhy && <Spacer/>}
             <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentProgressCSVDownloadLink(assignment.id))))}>
-                {t("common:assignments.progress.downloadCsv")}
+                {t("common:button.downloadCsv")}
                 <i className="icon icon-download ms-2" color="white"/>
             </Button>
         </div>

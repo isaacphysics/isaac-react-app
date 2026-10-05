@@ -45,10 +45,10 @@ export const RegistrationAgeCheckParentalConsent = () => {
                 {siteSpecific(<br/>, <hr/>)}
                 <Row className="justify-content-end">
                     <Col sm={3} className="d-flex justify-content-end">
-                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>{t("common:auth.parentalConsent.backButton")}</Button>
+                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>{t("common:button.back")}</Button>
                     </Col>
                     <Col sm={4} lg={3}>
-                        <Button className={classNames("mt-2 w-100")} color="solid" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>{t("common:auth.parentalConsent.continueButton")}</Button>
+                        <Button className={classNames("mt-2 w-100")} color="solid" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>{t("common:button.continue")}</Button>
                     </Col>
                 </Row>
             </CardBody>

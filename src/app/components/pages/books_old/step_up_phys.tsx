@@ -17,7 +17,7 @@ export const StepUpPhys = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.stepUpPhys.title")} help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/step_up_phys.jpg" alt={t("sci:books.stepUpPhys.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/step_up_phys.jpg" alt={t("sci:books.coverAltText")}/>
                 <PageFragment fragmentId="phys_book_step_up_intro"/>
             </div>
             <div className="book-levels">

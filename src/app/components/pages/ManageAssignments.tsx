@@ -110,7 +110,7 @@ const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: numbe
         <div 
             tabIndex={0} 
             role={"button"} 
-            aria-label={(open ? t("common:assignments.manage.timeline.collapse") : t("common:assignments.manage.timeline.expand")) + t("common:assignments.manage.timeline.listForGroup", { groupName })} 
+            aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.manage.timeline.listForGroup", { groupName })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -175,7 +175,7 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
 
     return <>
         <div 
-            tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.manage.timeline.collapse") : t("common:assignments.manage.timeline.expand")) + t("common:assignments.manage.timeline.listForDay", { date })} 
+            tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForDay", { date })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -202,9 +202,9 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
                     {" "}⋅{" "}
                     {numGroups} group{numGroups > 1 ? "s" : ""}
                     {" "}⋅{" "}
-                    {assignmentCount > 0 && <>{t("common:assignments.manage.timeline.assignmentCount", { count: assignmentCount })}</>}
+                    {assignmentCount > 0 && <>{t("common:assignments.counts.assignments", { count: assignmentCount })}</>}
                     {assignmentCount > 0 && testCount > 0 && " and "}
-                    {testCount > 0 && <>{t("common:assignments.manage.timeline.testCount", { count: testCount })}</>}
+                    {testCount > 0 && <>{t("common:assignments.counts.tests", { count: testCount })}</>}
                     {viewBy === "startDate" ? " set" : " due"}
                 </span>
                 <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": open})} />
@@ -236,7 +236,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.manage.timeline.collapse") : t("common:assignments.manage.timeline.expand")) + t("common:assignments.manage.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
             className={"month-label w-100 text-end d-flex"} data-testid="month-label" onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -260,9 +260,9 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
             <h4>{`${MONTH_NAMES[month]}`}</h4>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
             <span className={"pt-1 month-assignment-count"}>
-                {assignmentCount > 0 && <>{t("common:assignments.manage.timeline.assignmentCount", { count: assignmentCount })}</>}
+                {assignmentCount > 0 && <>{t("common:assignments.counts.assignments", { count: assignmentCount })}</>}
                 {assignmentCount > 0 && testCount > 0 && " and "}
-                {testCount > 0 && <>{t("common:assignments.manage.timeline.testCount", { count: testCount })}</>}
+                {testCount > 0 && <>{t("common:assignments.counts.tests", { count: testCount })}</>}
                 {viewBy === "startDate" ? " set" : " due"}
             </span>
         </div>

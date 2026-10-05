@@ -354,7 +354,7 @@ export const Glossary = () => {
         <PageContainer data-bs-theme={pageContext?.subject}
             pageTitle={<>
                 <TitleAndBreadcrumb 
-                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? i18next.t("common:glossary.title.contextual", { context: getHumanContext(pageContext) }) : i18next.t("common:glossary.title")}
+                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? i18next.t("common:glossary.contextualTitle", { context: getHumanContext(pageContext) }) : i18next.t("common:glossary.title")}
                     icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
                     intermediateCrumbs={crumb ? [crumb] : []}
                 />

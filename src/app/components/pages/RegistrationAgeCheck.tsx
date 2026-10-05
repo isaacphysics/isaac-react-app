@@ -54,7 +54,7 @@ export const RegistrationAgeCheck = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.ageCheck.title", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -108,10 +108,10 @@ export const RegistrationAgeCheck = () => {
                     {isAda && <hr/>}
                     <Row className="justify-content-end">
                         <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
-                            <Button className="w-100 h-100" color="keyline" onClick={goBack}>{t("common:auth.registration.ageCheck.backButton")}</Button>
+                            <Button className="w-100 h-100" color="keyline" onClick={goBack}>{t("common:button.back")}</Button>
                         </Col>
                         <Col sm={siteSpecific(4,5)} lg={3}>
-                            <Button type="submit" color="solid" className="w-100 h-100">{t("common:auth.registration.ageCheck.continueButton")}</Button>
+                            <Button type="submit" color="solid" className="w-100 h-100">{t("common:button.continue")}</Button>
                         </Col>
                     </Row>
                 </Form>

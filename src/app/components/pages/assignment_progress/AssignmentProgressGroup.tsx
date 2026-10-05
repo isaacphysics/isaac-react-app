@@ -75,7 +75,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                     </Badge>}
                     {assignment.dueDate && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
-                        {t("common:groups.progress.dueDate", { dueDate: formatDate(assignment.dueDate) })}
+                        {t("common:assignments.progress.dueDate", { dueDate: formatDate(assignment.dueDate) })}
                     </Badge>}
                     {/* // TODO: restore this badge when group progress data is available at this level */}
                     {/* <Badge className="d-flex align-items-center me-2 text-black fw-bold" color="cultured-grey">
@@ -87,7 +87,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
             <Spacer/>
             {!isScheduled && <strong className="align-content-center mw-max-content">
                 <a href={csvDownloadLink} className="assignment-csv-download-link" target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
-                    {t("common:groups.progress.downloadCsv")}
+                    {t("common:button.downloadCsv")}
                 </a>
             </strong>}
             <i className="icon icon-chevron-right ms-3" color="tertiary"/>
@@ -167,11 +167,11 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-file icon-sm me-2"} color="secondary"/>
-                    {t("common:groups.progress.assignmentCount", { count: groupBoardAssignments?.length })}
+                    {t("common:assignments.counts.assignments", { count: groupBoardAssignments?.length })}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-school icon-sm me-2"} color="secondary"/>
-                    {t("common:groups.progress.testCount", { count: groupQuizAssignments?.length })}
+                    {t("common:assignments.counts.tests", { count: groupQuizAssignments?.length })}
                 </div>
             </CardBody>
         </Card>

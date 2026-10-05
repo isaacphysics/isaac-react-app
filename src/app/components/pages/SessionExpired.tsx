@@ -3,6 +3,7 @@ import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {trackEvent, WEBMASTER_EMAIL} from "../../services";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 export const SessionExpired = () => {
     const { t } = useTranslation();
@@ -34,7 +35,13 @@ export const SessionExpired = () => {
                 {", which may have saved an outdated version of Isaac."}
             </p>
             <p>
-                {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:clientError.sessionExpired.contactSupport" components={{ mailtoLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} values={{ webmasterEmail: WEBMASTER_EMAIL }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                <Trans
+                    i18nKey="common:clientError.sessionExpired.contactSupport"
+                    components={{
+                        mailtoLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
+                    }}
+                    values={{ webmasterEmail: WEBMASTER_EMAIL }}
+                />
             </p>
         </div>
     </Container>;

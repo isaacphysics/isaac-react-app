@@ -17,6 +17,6 @@ export const SessionCookieExpired = () => {
     return <Container>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired" currentPageTitle={t("common:auth.sessionExpired.title")} icon={{type: "icon", icon: "icon-error"}} className="mb-4" />
         <p className="pb-2">{t("common:auth.sessionExpired.message", { siteTitle: SITE_TITLE })}</p>
-        <Button color="solid" onClick={clearRenewPath} href={target}>{t("common:auth.sessionExpired.continueButton")}</Button>
+        <Button color="solid" onClick={clearRenewPath} href={target}>{t("common:button.continue")}</Button>
     </Container>;
 };

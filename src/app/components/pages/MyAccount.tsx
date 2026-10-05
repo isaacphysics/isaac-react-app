@@ -65,6 +65,7 @@ import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { UserTheme } from '../elements/panels/UserTheme';
 import { Trans, useTranslation } from "react-i18next";
 import i18next from "i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -97,17 +98,34 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
             </p>
             <ol type='1'>
                 <li>
-                    {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.changeSchools.checkGroups" components={{ strong: <strong />, groupsLink: <a target="_blank" href="/groups" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                    <Trans
+                        i18nKey="common:account.changeSchools.checkGroups"
+                        components={{
+                            strong: <strong />,
+                            groupsLink: <TransAnchor target="_blank" href="/groups" />,
+                        }}
+                    />
                 </li>
                 <li>
-                    {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.changeSchools.checkConnections" components={{ strong: <strong />, connectionsLink: <a target="_blank" href="/account#teacherconnections" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                    <Trans
+                        i18nKey="common:account.changeSchools.checkConnections"
+                        components={{
+                            strong: <strong />,
+                            connectionsLink: <TransAnchor target="_blank" href="/account#teacherconnections" />,
+                        }}
+                    />
                 </li>
             </ol>
-            <p><strong>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.changeSchools.faqReference" components={{ faqLink: <a target="_blank" href="/support/teacher/general#moving_schools" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</strong></p>
+            <p><strong><Trans
+                i18nKey="common:account.changeSchools.faqReference"
+                components={{
+                    faqLink: <TransAnchor target="_blank" href="/support/teacher/general#moving_schools" />,
+                }}
+            /></strong></p>
         </>,
         buttons: [
             <Button key={1} color="solid" onClick={() => dispatch(closeActiveModal())}>
-                {i18next.t("common:account.changeSchools.continueButton")}
+                {i18next.t("common:button.continue")}
             </Button>
         ]
     }));

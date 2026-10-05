@@ -20,6 +20,7 @@ import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppD
 import {TogglablePasswordInput} from "../inputs/TogglablePasswordInput";
 import { MyAccountTab } from "./MyAccountTab";
 import { Spacer } from "../Spacer";
+import { useTranslation } from "react-i18next";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -36,6 +37,7 @@ interface UserPasswordProps {
 }
 
 const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: AuthenticationProvider, isLinked: boolean, imgCss: string}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     return <button 
@@ -50,13 +52,14 @@ const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: Authenticat
         <span className="ms-2">{AUTHENTICATOR_FRIENDLY_NAMES_MAP[provider]}</span>
         <Spacer/>
         <span className="me-4 btn btn-link">
-            {isLinked ? <span>Unlink</span> : <span>Link</span>}
+            {isLinked ? <span>{t("common:account.linkedAccounts.unlink")}</span> : <span>{t("common:account.linkedAccounts.link")}</span>}
         </span>
     </button>;
 };
 
 export const UserPassword = (
     {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordValid, userAuthSettings, setNewPassword, newPassword, editingOtherUser, submissionAttempted}: UserPasswordProps) => {
+    const { t } = useTranslation();
 
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
@@ -91,18 +94,18 @@ export const UserPassword = (
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Account security</h3>
-            <p>Here you can change your password, link or unlink a third party account you use to sign in, and log out of all devices.</p>
+            <h3>{t("common:account.security.title")}</h3>
+            <p>{t("common:account.security.description")}</p>
         </>}
         rightColumn={<>
-            <h4>Password</h4>
+            <h4>{t("common:account.security.passwordTitle")}</h4>
             {userAuthSettings && userAuthSettings.hasSegueAccount ? 
                 <>  
                     {(isPhy || (isAda && showPasswordFields)) && 
                     <>
                         {!editingOtherUser && 
                         <FormGroup className="form-group">
-                            <Label htmlFor="password-current">Current password</Label>
+                            <Label htmlFor="password-current">{t("common:account.security.currentPasswordLabel")}</Label>
                             <TogglablePasswordInput
                                 id="password-current" type="password" name="current-password"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -111,7 +114,7 @@ export const UserPassword = (
                             />
                         </FormGroup>}
                         <FormGroup className="form-group pb-2">
-                            <Label htmlFor="new-password">New password</Label>
+                            <Label htmlFor="new-password">{t("common:account.security.newPasswordLabel")}</Label>
                             <TogglablePasswordInput
                                 invalid={submissionAttempted && !isNewPasswordValid}
                                 id="new-password" type="password" name="new-password"
@@ -124,19 +127,19 @@ export const UserPassword = (
                                     passwordDebounce(e.target.value, setPasswordFeedback);
                                 }}
                                 onFocus={loadZxcvbnIfNotPresent}
-                                feedbackText={`Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.`}
+                                feedbackText={t("common:account.security.minLengthFeedback", { minLength: MINIMUM_PASSWORD_LENGTH })}
                                 aria-describedby="passwordValidationMessage"
                                 disabled={!editingOtherUser && currentPassword == ""}
                             />
                             {passwordFeedback && <span className='float-end small'>
-                                <strong>Password strength: </strong>
+                                <strong>{t("common:account.security.strengthLabel")} </strong>
                                 <span id="password-strength-feedback">
                                     {passwordFeedback.feedbackText}
                                 </span>
                             </span>}
                         </FormGroup>
                     </>}
-                    {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" color="keyline" onClick={() => setShowPasswordFields(true)}>Change password</Button>}
+                    {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" color="keyline" onClick={() => setShowPasswordFields(true)}>{t("common:account.security.changePasswordButton")}</Button>}
                 </>
                 : !passwordResetRequested ?
                     <React.Fragment>
@@ -157,7 +160,7 @@ export const UserPassword = (
                         <Row className="pb-4">
                             <Col className="text-center">
                                 <Button className="btn-keyline" onClick={resetPasswordIfValidEmail}>
-                                    Click here to add a password
+                                    {t("common:account.security.addPasswordButton")}
                                 </Button>
                             </Col>
                         </Row>
@@ -165,15 +168,15 @@ export const UserPassword = (
                     :
                     <React.Fragment>
                         <p>
-                            <strong className="d-block">Your password reset request is being processed.</strong>
-                            <strong className="d-block">Please check your inbox.</strong>
+                            <strong className="d-block">{t("common:account.security.resetProcessing")}</strong>
+                            <strong className="d-block">{t("common:account.security.checkInbox")}</strong>
                         </p>
                     </React.Fragment>
             }
             <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 {connectedAccounts.length > 0 && <FormGroup className="form-group">
-                    <h4>Linked {siteSpecific("Accounts", "accounts")}</h4>
+                    <h4>{t("site:account.linkedAccounts.title")}</h4>
                     <Col>
                         {connectedAccounts.map((provider) => {
                             return <React.Fragment key={provider}>{authButtonsMap[provider](true)}</React.Fragment>;
@@ -181,7 +184,7 @@ export const UserPassword = (
                     </Col>
                 </FormGroup>}
                 {unconnectedAccounts.length > 0 && <FormGroup className="form-group">
-                    <h4>Link other accounts</h4>
+                    <h4>{t("common:account.linkedAccounts.otherTitle")}</h4>
                     <Col>
                         {unconnectedAccounts.map((provider) => {
                             return <React.Fragment key={provider}>{authButtonsMap[provider](false)}</React.Fragment>;
@@ -192,10 +195,9 @@ export const UserPassword = (
             <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 <FormGroup className="form-group">
-                    <h4>Log Out</h4>
+                    <h4>{t("common:account.logOut.title")}</h4>
                     <p>
-                        {"This button will log you out on all devices, including this one. " +
-                        "You might want to do this if you forgot to log out on a shared device like a school computer."}
+                        {t("common:account.logOut.description")}
                     </p>
                     <Col className="text-center mt-2 px-0">
                         <Button className={classNames("w-100 py-2", {"mt-3": isAda})} color="keyline" onClick={() => dispatch(logOutUserEverywhere())}>

@@ -9,6 +9,7 @@ import {extractTeacherName, SITE_TITLE_SHORT} from "../../../services";
 import { Table, Button } from "reactstrap";
 import { Trans } from "react-i18next";
 import i18next from "i18next";
+import { TransAnchor } from "../TransAnchor";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
@@ -42,7 +43,12 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
                 </small>
                 <br />
                 <small>
-                    {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:account.sharingData.privacyNote" components={{ privacyPolicyLink: <a href="/privacy" target="_blank" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                    <Trans
+                        i18nKey="common:account.sharingData.privacyNote"
+                        components={{
+                            privacyPolicyLink: <TransAnchor href="/privacy" target="_blank" />,
+                        }}
+                    />
                 </small>
             </p>
         </React.Fragment>,

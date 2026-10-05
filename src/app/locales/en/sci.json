@@ -1,5 +1,8 @@
 {
   "account": {
+    "betaFeatures": {
+      "hideAttemptsHelp": "This feature lets you answer questions that you have answered before, without seeing your old answer. It's useful if you are reviewing a topic before a test or exam."
+    },
     "context": {
       "interestedLabel": "I am interested in...",
       "teachingLabel": "I am teaching...",
@@ -14,7 +17,11 @@
     "emailPreferences": {
       "assignmentsDescription": "Get notified when your teacher gives your group a new assignment.",
       "eventsDescription": "Information about new online or in-person events.",
+      "frequencyNote": "<strong>Frequency</strong>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher.",
       "newsDescription": "New content and website feature updates, as well as interesting news about Isaac."
+    },
+    "linkedAccounts": {
+      "title": "Linked Accounts"
     },
     "preferences": {
       "emailFrequency": "<b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
@@ -44,8 +51,7 @@
     },
     "notFound": {
       "title": "Question deck not found"
-    },
-    "title": "Set / manage tests"
+    }
   },
   "assignments": {
     "add": {
@@ -63,12 +69,6 @@
     },
     "modal": {
       "unknownDeck": "Unknown question deck"
-    },
-    "page": {
-      "emptyState": "You have no question decks to view.",
-      "help": "A summary of your question decks",
-      "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> question decks, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
-      "title": "My saved decks"
     },
     "pageHelp": "Use this page to set assignments to your groups. You can assign any question deck you have saved to your account.<br/>Students in the group will be emailed when you set a new assignment.",
     "pageTitle": "My assignments",
@@ -147,6 +147,7 @@
       "helpText": "The Isaac Physics Mastering Essential Pre-University Chemistry book",
       "title": "Mastering Essential Pre-University Chemistry"
     },
+    "coverAltText": "Cover of the book.",
     "gcse": {
       "ch1Subtitle": "(Sections 1-7)",
       "ch1Title": "Skills",
@@ -162,7 +163,6 @@
       "ch6Title": "Nuclear",
       "ch7Subtitle": "(Sections 59-62)",
       "ch7Title": "Gas",
-      "coverAlt": "Cover of the book.",
       "title": "Mastering Essential GCSE Physics",
       "titleHelp": "The Isaac Physics Mastering Essential GCSE Physics book"
     },
@@ -185,7 +185,6 @@
       "chapter8Title": "Geometry",
       "chapter9Subheading": "(Sections 51-57)",
       "chapter9Title": "Probability and Statistics",
-      "coverAlt": "Cover of the book.",
       "pageHelp": "The Isaac Physics GCSE Mathematics book",
       "title": "Using Essential GCSE Mathematics"
     },
@@ -214,7 +213,6 @@
         "subtitle": "(Sections 31-35)",
         "title": "Gases and Exponentials"
       },
-      "coverAltText": "Cover of the book.",
       "helpText": "The Isaac Physics Linking Concepts book",
       "title": "Linking Concepts in Pre-University Physics"
     },
@@ -269,9 +267,19 @@
       "chapter7SubHeading": "(Sections 42-48)",
       "chapter7Title": "Extra Questions",
       "chaptersLabel": "Chapters:",
-      "coverAltText": "Cover of the book.",
       "pageHelp": "The Isaac Physics Step Up to GCSE Physics book",
       "title": "Step Up to GCSE Physics"
+    }
+  },
+  "connections": {
+    "groups": {
+      "activeInfo": "Active group memberships mean you will receive assignments set to that group by teachers in it.",
+      "inactiveInfo": "Setting your membership inactive means you won’t receive any assignments set to that group. You can set yourself as active again at any time.",
+      "leaveTooltip": "If you leave a group you will no longer receive notifications of new assignments.",
+      "rejoinTooltip": "If you rejoin a group you will see all the assignments set since the group was created."
+    },
+    "students": {
+      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the  <groupsLink>group management page</groupsLink>."
     }
   },
   "contact": {
@@ -320,6 +328,14 @@
       "fallback": "Question deck"
     }
   },
+  "gameboards": {
+    "page": {
+      "emptyState": "You have no question decks to view.",
+      "help": "A summary of your question decks",
+      "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> question decks, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
+      "title": "My saved decks"
+    }
+  },
   "glossary": {
     "metaDescription": "A glossary of important words and phrases used in maths, physics, chemistry and biology."
   },
@@ -362,7 +378,10 @@
     "isaacBooksDescription": "Questions completed correctly, against questions attempted for each of our <booksLink>books</booksLink>.",
     "isaacBooksTitle": "Isaac Books",
     "pageTitle": "My progress",
-    "questionAttemptsCaption": "Question attempts"
+    "questionAttemptsCaption": "Question attempts",
+    "streak": {
+      "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/>Answer at least <strong>ten question parts</strong> correctly per week to fill up your daily progress bar and increase your streak!"
+    }
   },
   "questionFinder": {
     "difficulty": {
@@ -375,6 +394,18 @@
       "title": "Difficulty Levels"
     },
     "filteredIntro": "The questions shown on this page have been filtered to only show those that are relevant to {{contextLabel}}. You can browse all questions <allQuestionsLink>here</allQuestionsLink>.",
+    "filters": {
+      "difficultyHelp": "Learn more about difficulty levels",
+      "header": "Filter questions by",
+      "statusAllAttempted": "All attempted",
+      "statusAllAttemptedIcon": "All attempted",
+      "statusFullyCorrect": "Fully correct",
+      "statusFullyCorrectIcon": "Fully correct",
+      "statusInProgress": "In progress",
+      "statusInProgressIcon": "In Progress",
+      "statusNotStarted": "Not started",
+      "statusNotStartedIcon": "Not started"
+    },
     "intro": "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
     "metaDescription": "Find physics, maths, chemistry and biology questions by topic and difficulty.",
     "noResults": "No results.",
@@ -402,6 +433,9 @@
       "backToGroup": "Back to group assignments and tests",
       "overviewTitle": "Overview: {{quizTitle}}"
     },
-    "pageTitle": "My tests"
+    "pageTitle": "My tests",
+    "set": {
+      "title": "Set / manage tests"
+    }
   }
 }

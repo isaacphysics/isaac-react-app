@@ -9,10 +9,34 @@
     "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
   },
   "account": {
+    "accessibility": {
+      "description": "Here you can manage various accessibility features across the site.",
+      "inaccessibleWarning": {
+        "helpText": "Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.",
+        "label": "Warn about inaccessible content"
+      },
+      "mathml": {
+        "helpText": "With this setting you can toggle between using alternative text or MathML for mathematical equations.",
+        "label": "Use MathML for accessible maths"
+      },
+      "reducedMotion": {
+        "helpText": "Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.",
+        "label": "Prefer reduced motion"
+      },
+      "title": "Accessibility settings"
+    },
+    "betaFeatures": {
+      "chemEntryHelp": "This feature allows you to enter text-based answers for chemistry questions, as an alternative to the graphical editor. See our <guidanceLink>guidance on using this feature</guidanceLink>.",
+      "chemEntryLabel": "Enable text entry for chemistry questions",
+      "description": "Here you can opt-in to beta features of the {{siteTitle}} platform.",
+      "hideAttemptsLabel": "Hide previous question attempts",
+      "openAiConsentLabel": "Consent to sending free-text answers to OpenAI for marking",
+      "openAiHelp": "We use a large language model (LLM) to mark free-text questions on the site. We only send your answer to OpenAI, we do not send any personal data.",
+      "title": "Beta Features"
+    },
     "changeSchools": {
       "checkConnections": "Check your <strong><connectionsLink>connections</connectionsLink></strong>. Remove any connections with old colleagues and students.",
       "checkGroups": "Check your <strong><groupsLink>groups</groupsLink></strong>. Delete any groups that you will no longer teach.",
-      "continueButton": "Continue",
       "faqReference": "This information can be found in the <faqLink>Teacher FAQ</faqLink> for future reference.",
       "intro": "If you are changing schools, we recommend you take the following steps:",
       "title": "Changing schools?"
@@ -25,6 +49,10 @@
     },
     "country": {
       "label": "Country"
+    },
+    "customise": {
+      "description": "Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time.",
+      "title": "Customise what content you see"
     },
     "deletion": {
       "cancelButton": "Cancel",
@@ -57,12 +85,15 @@
     },
     "emailPreferences": {
       "assignmentsLabel": "Assignments",
+      "description": "Get important information about the {{siteTitle}} programme delivered to your inbox. These settings can be changed at any time.",
       "descriptionHeader": "Description",
       "eventsLabel": "Events",
       "newsLabel": "News",
       "preferenceHeader": "Preference",
       "tipsLabel": "Tips and updates",
-      "typeHeader": "Email type"
+      "title": "Set your email notification preferences",
+      "typeHeader": "Email type",
+      "validationError": "Please specify all email preferences"
     },
     "gender": {
       "label": "Gender",
@@ -78,10 +109,31 @@
       "confirmButton": "Leave group",
       "title": "Leave group"
     },
+    "linkedAccounts": {
+      "link": "Link",
+      "otherTitle": "Link other accounts",
+      "unlink": "Unlink"
+    },
+    "logOut": {
+      "description": "This button will log you out on all devices, including this one. You might want to do this if you forgot to log out on a shared device like a school computer.",
+      "title": "Log Out"
+    },
+    "mfa": {
+      "changeDeviceButton": "Change 2FA Device",
+      "configureTitle": "Configure Two-factor Authentication (2FA)",
+      "disableForUserButton": "Disable 2FA for user",
+      "enableButton": "Enable 2FA",
+      "qrAltText": "Follow this URL to setup 2FA: {{authenticatorUrl}}",
+      "statusDisabled": "Disabled",
+      "statusEnabled": "Enabled",
+      "statusLabel": "2FA Status:",
+      "stepOne": "<strong>Step 1:</strong> Scan the QRcode below on your phone",
+      "stepTwo": "<strong>Step 2:</strong> Enter the code provided by your app",
+      "title": "Two-factor Authentication (2FA)",
+      "verificationCodeLabel": "Verification Code"
+    },
     "mobileLogOut": "Log out",
     "nameInput": {
-      "familyNameLabel": "Last name",
-      "givenNameLabel": "First name",
       "invalidNameMessage": "Please enter a valid name."
     },
     "preferences": {
@@ -93,8 +145,21 @@
       "saveButton": "Save preferences",
       "sectionTitle": "Set your preferences",
       "skipButton": "I'll do this later",
-      "title": "Customise your account",
-      "updateError": "Unable to update your account"
+      "title": "Customise your account"
+    },
+    "profile": {
+      "description": "Here you can see and manage your account details for {{siteTitle}}.",
+      "disableWarnings": "Disable warnings",
+      "disableWarningsWarning": "If your IT department is unable to assist, you can disable banner warnings on the site for this browser. We strongly recommend against this. Unverified email addresses may lead to issues with account recovery and you may miss important security notifications from {{siteTitle}}.",
+      "emailBlockedInfo": "In some situations, schools or departments block email from external sites like ours, which may prevent you from receiving verification emails. If this is the case, please contact your IT department to see if they can allow emails from {{siteTitle}}. We have a <emailHelpLink>help page</emailHelpLink> regarding our email setup that may be of use.",
+      "emailSent": "Verification email sent!",
+      "emailUnverified": "Your email address is unverified. This may affect your ability to receive important notifications, and you will not be eligible to enter events and competitions.",
+      "optionReversible": "You can change this option at any time.",
+      "otherOptions": "Other options",
+      "requestVerification": "Click here to request a new verification email.",
+      "restoreWarnings": "Restore warnings",
+      "success": "Success!",
+      "title": "Account details"
     },
     "releaseAccess": {
       "cancelButton": "Cancel",
@@ -126,6 +191,19 @@
       "useAsName": "Use \"{{schoolName}}\" as your school name",
       "validationError": "Please specify your school association."
     },
+    "security": {
+      "addPasswordButton": "Click here to add a password",
+      "changePasswordButton": "Change password",
+      "checkInbox": "Please check your inbox.",
+      "currentPasswordLabel": "Current password",
+      "description": "Here you can change your password, link or unlink a third party account you use to sign in, and log out of all devices.",
+      "minLengthFeedback": "Passwords must be at least {{minLength}} characters long.",
+      "newPasswordLabel": "New password",
+      "passwordTitle": "Password",
+      "resetProcessing": "Your password reset request is being processed.",
+      "strengthLabel": "Password strength:",
+      "title": "Account security"
+    },
     "sharingData": {
       "cancelButton": "Cancel",
       "confirmBody": "Are you sure you would like to give the following {{siteName}} users access to your data?",
@@ -134,19 +212,19 @@
       "rememberNote": "<strong>Remember</strong>: you can always revoke access to your data from the Teacher Connections tab of My Account.",
       "title": "Sharing your data"
     },
+    "theme": {
+      "darkModeWarning": "Please note that dark mode is a new and extensive feature and, as such, certain areas of the site may not yet be fully optimised for this theme. We also cannot guarantee e.g. AA accessibility compliance for dark mode at this time.<lineBreak1/><lineBreak2/>If you encounter any issues, particularly regarding legibility, please report them to us via the <contactLink>contact form</contactLink> for further investigation. Please include a link to the page containing the issue if possible.",
+      "description": "Here you can select your preferred site theme.",
+      "title": "Theme"
+    },
     "tutorRequest": {
       "alreadyTutor": "You already have a tutor or teacher account",
-      "emailLabel": "Email address",
       "errorContact": "{{errorMessage}} You can contact us at <emailLink>{{emailAddress}}</emailLink>",
-      "firstNameLabel": "First name",
       "formInstruction": "To request a tutor account on {{siteTitle}}, please fill in this form. ",
       "formIntro": "{{siteTitle}}You must have verified your account email address. If any of the information is incorrect or missing, you can amend it on your <accountLink>My account</accountLink> page.",
-      "lastNameLabel": "Last name",
       "reasonLabel": "Please tell us why you would like to apply for a tutor account",
-      "requiredField": "Required field",
       "subjectsLabel": "Subjects",
       "subjectsPlaceholder": "All",
-      "submitButton": "Submit",
       "submittedNote": "We will be in touch shortly. Please note that account verification is a manual process and may take a few days.",
       "submittedThanks": "Thank you for submitting a tutor account request.",
       "title": "Tutor Account request"
@@ -309,22 +387,7 @@
     },
     "stats": {
       "answering": {
-        "heading": "Answering Questions",
-        "ninetyDays": {
-          "all": "All: {{count}}",
-          "students": "Students: {{count}}",
-          "teachers": "Teachers: {{count}}"
-        },
-        "sevenDays": {
-          "all": "All: {{count}}",
-          "students": "Students: {{count}}",
-          "teachers": "Teachers: {{count}}"
-        },
-        "thirtyDays": {
-          "all": "All: {{count}}",
-          "students": "Students: {{count}}",
-          "teachers": "Teachers: {{count}}"
-        }
+        "heading": "Answering Questions"
       },
       "content": {
         "conceptPageViews": "Concept Page Views: {{count}}",
@@ -332,25 +395,20 @@
         "questionAttempts": "Total Question Attempts: {{count}}",
         "questionPageViews": "Question Page Views: {{count}}"
       },
+      "counts": {
+        "all": "All: {{count}}",
+        "students": "Students: {{count}}",
+        "teachers": "Teachers: {{count}}"
+      },
       "lastSeen": {
-        "heading": "Last Seen",
-        "ninetyDays": {
-          "all": "All: {{count}}",
-          "students": "Students: {{count}}",
-          "teachers": "Teachers: {{count}}"
-        },
-        "sevenDays": {
-          "all": "All: {{count}}",
-          "students": "Students: {{count}}",
-          "teachers": "Teachers: {{count}}"
-        },
-        "thirtyDays": {
-          "all": "All: {{count}}",
-          "students": "Students: {{count}}",
-          "teachers": "Teachers: {{count}}"
-        }
+        "heading": "Last Seen"
       },
       "overview": "A high-level overview of the users and activity on the platform:",
+      "period": {
+        "ninetyDays": "Previous 90 days:",
+        "sevenDays": "Previous 7 days:",
+        "thirtyDays": "Previous 30 days:"
+      },
       "title": "{{siteTitle}} statistics",
       "users": {
         "gender": {
@@ -360,12 +418,14 @@
           "other": "Other: {{count}} ({{percentage}}%)",
           "preferNotToSay": "Prefer not to say: {{count}} ({{percentage}}%)"
         },
+        "genderTitle": "Gender",
         "heading": "Users:",
         "profileCompletion": {
           "noSchool": "No school provided: {{count}}",
           "otherSchool": "Other school provided: {{count}}",
           "ukIeSchool": "UK/IE school provided: {{count}}"
         },
+        "profileCompletionTitle": "Profile Completion",
         "role": {
           "admin": "Admin: {{count}}",
           "contentEditor": "Content Editor: {{count}}",
@@ -375,6 +435,7 @@
           "teacher": "Teacher: {{count}}",
           "tutor": "Tutor: {{count}}"
         },
+        "roleTitle": "Role",
         "sixMonths": "Last 6 months: <strong>{{activeUsersSixMonths}}</strong>",
         "total": "Total (excl. archived): <strong>{{totalUsers}}</strong>",
         "twoYears": "Last 2 years: <strong>{{activeUsersTwoYears}}</strong>"
@@ -462,14 +523,6 @@
     "universityTitle": "Skills practice"
   },
   "assignment": {
-    "available": {
-      "empty": "There are no tests you can set which match your search term.",
-      "intro": "The following tests are available to set to your groups."
-    },
-    "emptyState": "You have not set any tests to your groups yet.",
-    "help": "Use this page to manage and set tests to your groups. You can assign any test the {{siteName}} team have built.<br/>Students in the group will be emailed when you set a new test.",
-    "loadError": "Tests you have assigned have failed to load, please try refreshing the page.",
-    "search": "Search tests",
     "sidebar": {
       "button": "Details"
     }
@@ -483,11 +536,11 @@
     "breadcrumb": {
       "label": "Assignments"
     },
-    "display": {
-      "filters": "Filters",
-      "show": "Show",
-      "sort": "Sort by",
-      "view": "Display in"
+    "counts": {
+      "assignments_one": "{{count}} assignment",
+      "assignments_other": "{{count}} assignments",
+      "tests_one": "{{count}} test",
+      "tests_other": "{{count}} tests"
     },
     "downloadCsvButton": "Download CSV",
     "downloadPrivacyTitle": "Privacy Notice",
@@ -519,11 +572,6 @@
       "setterLabel": "Set by",
       "statusLabel": "Status"
     },
-    "filters": {
-      "creator": "Filter by Creator",
-      "name": "Filter boards by name",
-      "status": "Filter by Status"
-    },
     "help": {
       "overdueExplanation": "Any quizzes you have been set will appear here.<br/>Overdue quizzes which have not been fully attempted will be treated as quizzes <statusTodo>To do</statusTodo> until they are due, after which they are considered <statusOlder>Older</statusOlder> quizzes."
     },
@@ -544,15 +592,7 @@
       "setNewTestButton": "Set a new test",
       "showEarlierWork": "Show work before {{date}}",
       "timeline": {
-        "assignmentCount_one": "{{count}} assignment",
-        "assignmentCount_other": "{{count}} assignments",
-        "collapse": "Collapse",
-        "expand": "Expand",
-        "listForDay": " list for day {{date}}",
         "listForGroup": " list for group {{groupName}}",
-        "listForMonth": " list for {{monthName}}",
-        "testCount_one": "{{count}} test",
-        "testCount_other": "{{count}} tests",
         "unknownGroup": "Unknown group"
       }
     },
@@ -584,7 +624,6 @@
       "detailedTab": {
         "title": "Performance on questions"
       },
-      "downloadCsv": "Download CSV",
       "dueDate": "Due: {{dueDate}}",
       "errorFetching": "Error fetching assignment progress",
       "fullMarks": "{{completedCount}} of {{totalCount}} got full marks",
@@ -604,14 +643,10 @@
       "assignedTo": "Assigned to: <strong>{{groupName}}</strong>",
       "byDueDate": "By due date",
       "byStartDate": "By start date",
-      "collapse": "Collapse",
       "collapseButton": "Collapse schedule",
       "dueDate": "Due date: <strong>{{date}}</strong>",
       "emptyState": "You have no assignments",
-      "expand": "Expand",
       "filterByGroup": "Filter by group:",
-      "listForDay": " list for day {{date}}",
-      "listForMonth": " list for {{monthName}}",
       "noAssignmentsForGroups_one": "There are no assignments set to group: {{groupNames}}",
       "noAssignmentsForGroups_other": "There are no assignments set to groups: {{groupNames}}",
       "noGroupsEmptyState": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
@@ -660,8 +695,13 @@
       "quizName": "Quiz name",
       "share": "Share",
       "stagesAndDifficulties": "Stages and Difficulties",
-      "stagesDifficulties": "Stages and Difficulties",
       "unsave": "Unsave"
+    },
+    "timeline": {
+      "collapse": "Collapse",
+      "expand": "Expand",
+      "listForDay": " list for day {{date}}",
+      "listForMonth": " list for {{monthName}}"
     }
   },
   "attempt": {
@@ -673,9 +713,7 @@
       "ariaLabel": "My Account link"
     },
     "ageCheckFailed": {
-      "backButton": "Back",
-      "heading": "Unable to create account",
-      "title": "Create an {{siteTitle}} account"
+      "heading": "Unable to create account"
     },
     "consent": {
       "explanation": "If you'd like to use your Microsoft account for signing in to {{siteTitle}}, you need to let us read your name and email address from your Microsoft account.",
@@ -689,10 +727,7 @@
     },
     "continueGuest": "Continue without an account",
     "credentials": {
-      "emailLabel": "Email address",
       "emailPlaceholder": "Email address",
-      "emailValidationError": "Please enter a valid email address",
-      "passwordLabel": "Password",
       "passwordLengthError": "Passwords must be at least {{minLength}} characters long",
       "passwordPlaceholder": "Password"
     },
@@ -700,7 +735,6 @@
       "label": "Date of birth"
     },
     "emailInput": {
-      "label": "Email address",
       "validationError": "Please enter a valid email address."
     },
     "formIntro": "To <emphasis>continue with an account</emphasis>, please do so below",
@@ -725,15 +759,12 @@
     },
     "pageTitle": "Login – {{siteName}}",
     "parentalConsent": {
-      "backButton": "Back",
       "checkboxLabel": "Please check the box to confirm that you have read and understood this message.",
-      "continueButton": "Continue",
       "permissionIntro": "Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.",
       "privacyNote": "Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service <privacyLink>here</privacyLink>.",
       "title": "Additional information"
     },
     "password": {
-      "label": "Password",
       "minLengthError": "Passwords must be at least {{minLength}} characters long.",
       "minLengthHint": "Your password must be at least {{minLength}} characters long.",
       "strengthLabel": "Password strength:"
@@ -752,22 +783,15 @@
       "description": "Here, you can create an {{siteTitle}} account, or log in to an existing one.",
       "emailHeading": "Create a new account with your email:",
       "existingAccount": "Already have an account?",
-      "loginButton": "Log in",
-      "ssoHeading": "Or log in with:",
-      "title": "Create an {{siteTitle}} account"
+      "ssoHeading": "Or log in with:"
     },
     "registration": {
       "ageCheck": {
         "ageQuestion": "How old are you?",
-        "backButton": "Back",
-        "continueButton": "Continue",
         "goBackConfirm": "Are you sure you want go back? Any information you have entered will be lost.",
         "overLabel": "13 and over",
-        "selectionRequired": "Please make a selection.",
-        "title": "Create an {{siteTitle}} account"
+        "selectionRequired": "Please make a selection."
       },
-      "backButton": "Back",
-      "continueButton": "Continue",
       "errorHeading": "Unable to create your account",
       "goBackConfirm": "Are you sure you want go back? Any information you have entered will be lost.",
       "pageTitle": "Create an {{siteTitle}} account",
@@ -798,17 +822,14 @@
         "intro": "With a teacher account you can:",
         "noAccessNote": "Teacher accounts do not give you access to the answers. <learnMoreLink>Learn more</learnMoreLink>",
         "title": "Teacher"
-      },
-      "title": "Create an {{siteTitle}} account"
+      }
     },
     "sessionError": {
-      "continueButton": "Continue",
       "message": "You have logged out in another tab or browser window, so we've logged you out here. Use the button below to continue where you left off.",
       "tip": "<strong>Tip:</strong> If you want to be logged in to two accounts at the same time, you can use your browser's <privacyLink>private browsing</privacyLink> feature.",
       "title": "Your {{siteTitle}} session has changed"
     },
     "sessionExpired": {
-      "continueButton": "Continue",
       "message": "Your {{siteTitle}} session has expired, so we've logged you out. Use the button below to continue where you left off.",
       "title": "Your session has expired"
     },
@@ -819,27 +840,19 @@
     "teacherConnect": {
       "codeError": "Please enter a valid code.",
       "codeLabel": "Teacher connection code",
-      "connectButton": "Connect",
       "connectedTeachers": "Connected teachers:",
-      "continueButton": "Continue",
       "heading": "Connect your account to your teacher",
-      "skipButton": "Skip",
-      "title": "Create an {{siteTitle}} account"
+      "skipButton": "Skip"
     },
     "teacherRequest": {
       "alreadyTeacher": "You already have a teacher account",
       "emailBody": "Hello,\n\n{{requestLine}}\n\nMy school is: {{school}}\n{{verificationMessage}}\n\n\nAny other information: {{otherInformation}}\n\nThanks, \n\n{{firstName}} {{lastName}}",
-      "emailLabel": "Email address",
       "emailSubject": "Teacher Account Request",
-      "firstName": "First name",
-      "lastName": "Last name",
       "noSchool": "If you don't have an associated school please fill out our <contactFormLink>Contact us</contactFormLink> form. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
       "noSchoolError": "You have not provided your school – please add your school on your <accountLink>My Account</accountLink> page. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
       "otherInfo": "Any other information",
       "pending": "We will be in touch shortly. Please note that account verification is a manual process and may take a few days.",
-      "requiredField": "Required field",
       "school": "School",
-      "submit": "Submit",
       "submitError": "{{errorMessage}} You can contact us at <webmasterContact>{{webmasterEmail}}</webmasterContact>",
       "submitted": "Thank you for submitting a teacher account request.",
       "teacherFaq": "Go to the <faqLink>Teacher FAQ page</faqLink> to learn about your new account features.",
@@ -875,6 +888,36 @@
     "cardSubtitle": "Stretch your understanding of biology with our extension questions that make you think outside the box.",
     "cardTitle": "Biology extension"
   },
+  "birthdayStats": {
+    "community": {
+      "assignments": "total assignments set",
+      "schools": "schools using Isaac",
+      "teachers": "teachers setting assignments"
+    },
+    "hard": {
+      "heading": "Most <emphasis>difficult</emphasis> question"
+    },
+    "highlights": {
+      "hintViews": "total hint views",
+      "longestStreak": "longest student streak",
+      "streakUnit": "weeks"
+    },
+    "overview": {
+      "accounts": "Accounts",
+      "conceptsViewed": "Concepts viewed",
+      "questionAttempts": "Question attempts"
+    },
+    "page": {
+      "closing": "Thank you for being a part of Isaac!",
+      "intro": "The 1st September 2025 marked the 11th anniversary of the first question attempts on the Isaac Physics platform. To celebrate, we're taking a look back at Isaac's statistics over this time.",
+      "metaTitle": "Happy <emphasis>11th</emphasis> birthday to Isaac Science!",
+      "title": "Isaac 11th birthday stats"
+    },
+    "popular": {
+      "conceptHeading": "Most popular concept",
+      "questionHeading": "Most popular question"
+    }
+  },
   "bookmarks": {
     "emptyState": {
       "message": "You have no bookmarks yet."
@@ -887,12 +930,7 @@
     }
   },
   "books": {
-    "chapters": {
-      "heading": "Chapters:"
-    },
     "chaptersHeading": "Chapters:",
-    "chaptersLabel": "Chapters:",
-    "chaptersTitle": "Chapters:",
     "coverAltText": "Cover of the book.",
     "overview": {
       "exploreDescription": "Click on a book image below to go to the homepage of each book and explore further.",
@@ -927,11 +965,21 @@
       "chapter5Title": "Calculation Practice",
       "chapter6Subheading": "(Sections 39-48)",
       "chapter6Title": "Extra Questions",
-      "chaptersLabel": "Chapters:",
-      "coverAltText": "Cover of the book.",
       "helpText": "The Isaac Physics Step up to GCSE Physics book",
       "title": "Step up to GCSE Physics"
     }
+  },
+  "button": {
+    "back": "Back",
+    "connect": "Connect",
+    "continue": "Continue",
+    "createAccount": "Create an account",
+    "downloadCsv": "Download CSV",
+    "learnMore": "Learn more",
+    "logIn": "Log in",
+    "readMore": "Read more",
+    "remove": "Remove",
+    "submit": "Submit"
   },
   "challenges": {
     "emptyState": {
@@ -992,23 +1040,58 @@
       "title": "Information"
     }
   },
+  "connections": {
+    "connect": {
+      "codeHeading": "Teacher connection code",
+      "codeInstruction": "Enter the code given by your teacher to create a teacher connection and join a group.",
+      "codePlaceholder": "Enter your code in here",
+      "codeTooltip": "The teachers that you are connected to can view your {{siteTitle}} assignment progress.",
+      "invalidCodeMessage": "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers.",
+      "invalidCodeTitle": "Invalid group code",
+      "noCodeMessage": "You have to enter a group code!",
+      "noCodeTitle": "No group code provided",
+      "title": "Connect to your teacher"
+    },
+    "groups": {
+      "emptyState": "You are not a member of any groups.",
+      "fallbackName": "Group {{groupId}}",
+      "heading": "Your group memberships",
+      "headingTooltip": "These are the groups you are currently a member of. Groups on {{siteTitle}} let teachers set assignments to multiple students in one go.",
+      "inactiveLabel": "inactive",
+      "leaveButton": "Leave",
+      "leaveInfo": "If you want to permanently leave a group, ask your teacher to remove you.",
+      "listTitle": "Group memberships",
+      "rejoinButton": "Rejoin",
+      "searchPlaceholder": "Search groups"
+    },
+    "students": {
+      "emptyState": "You have no active student connections.",
+      "heading": "Your student connections",
+      "headingTooltip": "These are the students who have shared their {{siteTitle}} data with you. These students are also able to view your name and email address on their Teacher connections page.",
+      "listTitle": "Student connections",
+      "removeAllButton": "Remove all",
+      "searchPlaceholder": "Search students",
+      "studentTooltip": "You have access to this user's data and they can see your name and email address. To remove this access, click 'Remove'."
+    },
+    "teachers": {
+      "emptyState": "You have no active teacher connections.",
+      "heading": "Teacher connections",
+      "revokeButton": "Revoke",
+      "searchPlaceholder": "Search teachers",
+      "tooltip": "This user ({{teacherEmail}}) has access to your data. To remove this access, click 'Revoke'."
+    }
+  },
   "contact": {
     "faq": {
       "heading": "Frequently Asked Question?",
       "text": "You might like to check our FAQs pages to see if they can help you: <studentFaqLink>student FAQs</studentFaqLink> | <teacherFaqLink>teacher FAQs</teacherFaqLink>"
     },
     "form": {
-      "emailLabel": "Email address",
-      "emailValidationError": "Please enter a valid email address",
       "errorMessage": "{{errorMessage}} You can contact us at <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>",
-      "firstNameLabel": "First name",
       "heading": "Send us a message",
-      "lastNameLabel": "Last name",
       "maxLengthWarning": "Your message has reached the maximum length.",
       "messageLabel": "Message",
-      "requiredField": "Required field",
       "subjectLabel": "Message subject",
-      "submitButton": "Submit",
       "successMessage": "Thank you for your message."
     },
     "preset": {
@@ -1039,6 +1122,27 @@
     "resetButton": "Reset viewing context",
     "stageLabel": "Stage"
   },
+  "csOverview": {
+    "description": "Ada Computer Science is a free learning platform for computing teachers and students. Developed by the Raspberry Pi Foundation in partnership with the Isaac Science team at the University of Cambridge, it is tailored to support learners aged 14-19. Ada Computer Science offers structured resources to support both teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a wide range of other resources designed to enhance computer science education.",
+    "overviewTitle": "Computer Science",
+    "pageTitle": "Ada Computer Science",
+    "students": {
+      "featureChallenges": "Join termly challenges to test your knowledge and skills.",
+      "featureLearn": "Learn through a full curriculum of topics explained in concept pages.",
+      "featurePractise": "Practise and test your understanding with interactive questions.",
+      "featureTrack": "Track your progress and identify areas to improve.",
+      "intro": "Explore interactive resources designed to help you study computer science:",
+      "title": "For students"
+    },
+    "teachers": {
+      "featureAssignments": "Set self-marking assignments to save time and support independent learning.",
+      "featureMarkbook": "Track student progress with a personal markbook to identify areas for improvement.",
+      "featureTeach": "Teach with over 50 curriculum-aligned topics covering the full breadth of computer science.",
+      "intro": "Access structured resources to help you deliver high-quality computer science education:",
+      "title": "For teachers"
+    },
+    "visitButton": "Go to Ada CS"
+  },
   "dateInput": {
     "clearButtonLabel": "Clear date{{labelSuffix}}",
     "dayLabel": "Day{{labelSuffix}}",
@@ -1046,8 +1150,43 @@
     "yearLabel": "Year{{labelSuffix}}"
   },
   "events": {
+    "addUsers": {
+      "bookingExists": "Booking exists",
+      "noResults": "No users returned from query",
+      "roleAdmin": "Admin",
+      "roleAny": "Any Role",
+      "roleContentEditor": "Content editor",
+      "roleTeacher": "Teacher",
+      "roleTutor": "Tutor",
+      "schoolSetNone": "None Set",
+      "schoolSetOther": "Yes (Other)",
+      "schoolSetYes": "Yes",
+      "searchButton": "Find user",
+      "searchEmailLabel": "Find a user by email:",
+      "searchEmailPlaceholder": "Enter user email",
+      "searchFamilyNameLabel": "Find a user by family name:",
+      "searchFamilyNamePlaceholder": "Enter user family name",
+      "searchRoleLabel": "Find by user role:",
+      "tableHeaderActions": "Actions",
+      "tableHeaderEmail": "Email",
+      "tableHeaderLastSeen": "Last seen",
+      "tableHeaderMemberSince": "Member since",
+      "tableHeaderName": "Name",
+      "tableHeaderRole": "User role",
+      "tableHeaderSchoolSet": "School set",
+      "title": "Add users to booking"
+    },
     "admin": {
       "title": "Event booking admin"
+    },
+    "attendance": {
+      "leaderNotice": "As an event leader, you are only able to see the bookings of users who have granted you access to their data.",
+      "table": {
+        "attendanceHeader": "Attendance",
+        "medicalRequirementsHeader": "Medical requirements",
+        "surnameFilterPlaceholder": "Surname filter"
+      },
+      "title": "Record event attendance"
     },
     "booking": {
       "cancelledMessage": "You cannot sign up to a teacher event as a student.",
@@ -1058,6 +1197,19 @@
       "manageReservations": "Manage reservations",
       "teacherReservationWarning": "Places on this event can only be reserved by teachers. Please ask your teacher to reserve a place for you. You will need to be accompanied by a teacher to the event.",
       "terms": "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your <teacherConnectionsLink>account settings</teacherConnectionsLink>.<br1/>Your data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your <emailPreferencesLink>account settings</emailPreferencesLink>."
+    },
+    "bookingsTable": {
+      "accessibility": "Accessibility requirements",
+      "accountType": "Account type",
+      "actions": "Actions",
+      "bookingCreated": "Booking created",
+      "bookingUpdated": "Booking updated",
+      "email": "Email",
+      "emergencyName": "Emergency name",
+      "emergencyPhone": "Emergency telephone",
+      "jobYearGroup": "Job / year group",
+      "name": "Name",
+      "school": "School"
     },
     "confirmation": {
       "body": "This is an event for <emphasis>teachers only</emphasis>. Please confirm that you are a teacher (or a teacher trainee), and not a student, private tutor or parent.",
@@ -1081,14 +1233,44 @@
       "studentBadge": "Student event",
       "teacherBadge": "Teacher event"
     },
+    "emptyState": "No events to display with this filter setting",
     "filters": {
       "label": "Filter by"
     },
+    "leaderRestriction": "As an event leader, you are only able to see the details of events which you manage.",
+    "loadErrorTitle": "Error loading event overviews",
+    "loadMoreButton": "Load more events",
+    "manageBookings": {
+      "actions": {
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "promote": "Promote",
+        "resendEmail": "Resend email"
+      },
+      "emailDropdown": {
+        "item": "Email {{bookingStatus}} users",
+        "toggle": "Email Users"
+      },
+      "emptyState": "There aren't currently any bookings for this event.",
+      "exportCsv": "Export as CSV",
+      "leaderRestriction": "As an event leader, you are only able to see the bookings of users who have granted you access to their data.",
+      "table": {
+        "bookingStatus": "Booking status",
+        "medicalDietary": "Medical / dietary",
+        "reservedById": "Reserved by ID",
+        "stage": "Stage",
+        "teachingExperience": "Level of teaching experience"
+      },
+      "title": "Manage current bookings"
+    },
+    "manageButton": "Manage",
     "notFound": "Event not found",
+    "overview": {
+      "title": "Events overview"
+    },
     "page": {
       "errorLoading": "Error loading events list",
       "help": "Follow the links below to find out more about our FREE events.",
-      "loadMore": "Load more events",
       "noResults": "Sorry, we cannot find any events that match your filter settings.",
       "showingCount": "Showing {{loadedCount}} of {{total}}",
       "title": "Events"
@@ -1121,6 +1303,26 @@
       "supervisorContactTitle": "Contact details for main group supervisor",
       "title": "Group reservations"
     },
+    "selectedDetails": {
+      "bookingDeadlineLabel": "Booking deadline:",
+      "eventLabel": "Event:",
+      "locationLabel": "Location:",
+      "placesAvailableLabel": "Number of places available:",
+      "prepWorkDeadlineLabel": "Prepwork deadline:",
+      "startDateLabel": "Event start:",
+      "statusLabel": "Event status:",
+      "title": "Selected event details"
+    },
+    "showingCount": "(showing {{shownCount}} of {{totalCount}})",
+    "tableActionsHeader": "Actions",
+    "tableAttendedHeader": "Number attended",
+    "tableConfirmedHeader": "Number confirmed",
+    "tableDateHeader": "Date",
+    "tableDeadlineHeader": "Booking deadline",
+    "tableLocationHeader": "Location",
+    "tableStatusHeader": "Status",
+    "tableTitleHeader": "Title",
+    "tableWaitingHeader": "Number waiting",
     "userBooking": {
       "authorisationLabel": "Booking/personal data sharing authorised by",
       "bookingTitle": "Create a booking for {{givenName}} {{familyName}}",
@@ -1166,13 +1368,18 @@
     "elements": {
       "requiredError": "required",
       "trueFalseAccessibilityLabel": "for {{fieldName}}"
-    }
+    },
+    "emailLabel": "Email address",
+    "emailValidationError": "Please enter a valid email address",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "passwordLabel": "Password",
+    "requiredField": "Required field"
   },
   "freeTextBuilder": {
     "matchingRules": {
       "json": {
-        "description": "JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion",
-        "submitButton": "Submit"
+        "description": "JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion"
       },
       "table": {
         "addButton": "Add matching rule",
@@ -1197,8 +1404,7 @@
     "submitButton": "Test question",
     "testCases": {
       "csv": {
-        "description": "Enter test cases as CSV with the headers: expected(true/false), value",
-        "submitButton": "Submit"
+        "description": "Enter test cases as CSV with the headers: expected(true/false), value"
       },
       "table": {
         "actualColumn": "Actual",
@@ -1250,14 +1456,41 @@
       "details": "Details"
     }
   },
+  "gameboards": {
+    "display": {
+      "filters": "Filters",
+      "show": "Show",
+      "sort": "Sort by",
+      "view": "Display in"
+    },
+    "filters": {
+      "creator": "Filter by Creator",
+      "name": "Filter boards by name",
+      "status": "Filter by Status"
+    }
+  },
   "generic": {
     "error": {
       "title": "Unable to load page"
     }
   },
+  "getStarted": {
+    "intro": "Follow these steps to get started with your teacher account:",
+    "tasks": {
+      "assignQuiz": "Assign a quiz to students",
+      "createAccount": "Create your account",
+      "createGroup": "Create a student group",
+      "manageGroupsTitle": "Manage groups",
+      "personaliseContentHint": "Pick a teaching level and exam board, or choose to see all content.",
+      "personaliseContentTitle": "Personalise your content"
+    },
+    "title": "Get started with Ada CS",
+    "videoCta": "Prefer a video overview? Try our <strong><youtubeLink>YouTube playlist</youtubeLink></strong>!"
+  },
   "glossary": {
     "cardSubtitle": "Use the glossary to understand the vocabulary you need for {{subjectContext}}.",
     "cardTitle": "Glossary",
+    "contextualTitle": "{{context}} Glossary",
     "empty": {
       "noResults": "We could not find glossary terms to match your search criteria.",
       "noTerms": "There are no glossary terms in the glossary yet! Please try again later.",
@@ -1412,7 +1645,6 @@
         "sentTooltip": "Password reset request sent."
       },
       "removeAriaLabel": "Remove member",
-      "removeButton": "Remove",
       "removeConfirm": "Are you sure you want to remove this user from the group '{{groupName}}'?",
       "removeTooltip": "Remove this user from the group."
     },
@@ -1426,12 +1658,8 @@
       "title": "Manage groups"
     },
     "progress": {
-      "assignmentCount_one": "{{count}} assignment",
-      "assignmentCount_other": "{{count}} assignments",
       "downloadAssignmentsCsv": "Download assignments CSV",
-      "downloadCsv": "Download CSV",
       "downloadTestsCsv": "Download tests CSV",
-      "dueDate": "Due: {{dueDate}}",
       "fallbackTitle": "Unknown quiz",
       "scheduledBadge": "(scheduled)",
       "searchLabel": "Search:",
@@ -1441,17 +1669,17 @@
       "startDate": "Starts: {{startDate}}",
       "studentCount_one": "{{count}} student",
       "studentCount_other": "{{count}} students",
-      "testCount_one": "{{count}} test",
-      "testCount_other": "{{count}} tests",
       "title": "Group progress",
       "unknownCount": "Unknown"
     },
     "qr": {
       "loadError": "Failed to load QR code panel."
     },
+    "qrCode": {
+      "altText": "Follow this URL to join the group: {{url}}"
+    },
     "selector": {
       "createButton": "Create a new group",
-      "deleteButton": "Delete group",
       "groupIdTitle": "Group id: {{groupId}}",
       "label": "Groups:"
     },
@@ -1461,45 +1689,6 @@
     "shared": {
       "title": "Shared group"
     }
-  },
-  "homepage": {
-    "books": {
-      "title": "Interactive online books <emphasis>({{bookCount}})</emphasis>",
-      "viewMore": "View more books"
-    },
-    "description": "Ada Computer Science is a free learning platform for computing teachers and students. Developed by the Raspberry Pi Foundation in partnership with the Isaac Science team at the University of Cambridge, it is tailored to support learners aged 14-19. Ada Computer Science offers structured resources to support both teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a wide range of other resources designed to enhance computer science education.",
-    "events": {
-      "title": "Events <emphasis>({{eventCount}})</emphasis>"
-    },
-    "news": {
-      "title": "News & Features"
-    },
-    "pageTitle": "Ada Computer Science",
-    "randomQuestion": {
-      "differentButton": "Get a different question",
-      "emptyState": "No questions found.",
-      "errorTitle": "Unable to load question",
-      "title": "Try a random question!"
-    },
-    "students": {
-      "featureChallenges": "Join termly challenges to test your knowledge and skills.",
-      "featureLearn": "Learn through a full curriculum of topics explained in concept pages.",
-      "featurePractise": "Practise and test your understanding with interactive questions.",
-      "featureTrack": "Track your progress and identify areas to improve.",
-      "intro": "Explore interactive resources designed to help you study computer science:",
-      "title": "For students"
-    },
-    "teachers": {
-      "featureAssignments": "Set self-marking assignments to save time and support independent learning.",
-      "featureMarkbook": "Track student progress with a personal markbook to identify areas for improvement.",
-      "featureTeach": "Teach with over 50 curriculum-aligned topics covering the full breadth of computer science.",
-      "intro": "Access structured resources to help you deliver high-quality computer science education:",
-      "title": "For teachers"
-    },
-    "title": {
-      "aLevelMaths": "A Level Maths and Further Maths"
-    },
-    "visitButton": "Go to Ada CS"
   },
   "inequality": {
     "centreButton": "Centre",
@@ -1589,6 +1778,10 @@
       "subtitle": "Our A Level {{subject}} resources further strengthen the understanding of {{subjectName}}, while developing problem solving skills. Our resources include questions, concepts and books.",
       "title": "A Level"
     },
+    "assigned": {
+      "buttonLabel": "Work for you",
+      "title": "Assigned to me"
+    },
     "browse": {
       "sectionTitle": "Browse Ada CS"
     },
@@ -1620,9 +1813,7 @@
     },
     "student": {
       "assigned": {
-        "buttonLabel": "Work for you",
-        "description": "This is where you’ll find assignments that have been assigned to you.",
-        "title": "Assigned to me"
+        "description": "This is where you’ll find assignments that have been assigned to you."
       },
       "progress": {
         "buttonLabel": "View progress",
@@ -1641,19 +1832,20 @@
       },
       "support": {
         "buttonLabel": "Student support",
-        "description": "Our student support page has useful information for common questions and issues.",
-        "title": "Need help?"
+        "description": "Our student support page has useful information for common questions and issues."
       },
       "tests": {
         "buttonLabel": "View tests",
-        "description": "This is where you’ll find tests that have been set for you.",
-        "title": "Tests"
+        "description": "This is where you’ll find tests that have been set for you."
       },
       "topics": {
         "buttonLabel": "Browse topics",
         "description": "Browse all the topics in Ada CS.",
         "title": "Topics"
       }
+    },
+    "support": {
+      "title": "Need help?"
     },
     "teacher": {
       "account": {
@@ -1662,9 +1854,7 @@
         "title": "Account"
       },
       "assigned": {
-        "buttonLabel": "Work for you",
-        "description": "If you join a group for your development, this is where you’ll find quizzes assigned to you.",
-        "title": "Assigned to me"
+        "description": "If you join a group for your development, this is where you’ll find quizzes assigned to you."
       },
       "groups": {
         "buttonLabel": "Manage groups",
@@ -1677,7 +1867,6 @@
         "title": "Review your markbook"
       },
       "mentoring": {
-        "buttonLabel": "Learn more",
         "description": "Participate in live sessions with an experienced Ada CS mentor to get advice on teaching core topics.",
         "title": "Teacher mentoring"
       },
@@ -1688,14 +1877,15 @@
       },
       "support": {
         "buttonLabel": "Teacher support",
-        "description": "Our teacher support page has useful information for common questions and issues.",
-        "title": "Need help?"
+        "description": "Our teacher support page has useful information for common questions and issues."
       },
       "tests": {
         "buttonLabel": "Set a test",
-        "description": "Set a test curated by the Ada Computer Science team.",
-        "title": "Tests"
+        "description": "Set a test curated by the Ada Computer Science team."
       }
+    },
+    "tests": {
+      "title": "Tests"
     },
     "university": {
       "subtitle": "Our University {{subject}} resources help you prepare for your university STEM degree.",
@@ -1722,7 +1912,10 @@
     "otherUserTitle": "Progress for {{userName}}",
     "questionPartsTitle": "Question parts correct by type",
     "questionTypeLabel": "{{questionType}} questions",
-    "skillsAttemptsError": "Failed to load skills attempts."
+    "skillsAttemptsError": "Failed to load skills attempts.",
+    "streak": {
+      "title": "Weekly Streak"
+    }
   },
   "projects": {
     "emptyState": "No projects to display...",
@@ -1753,6 +1946,9 @@
       "closeButton": "Close",
       "excludeBooks": "Exclude skills books questions"
     },
+    "filters": {
+      "excludeSkillsBook": "Exclude skills book questions"
+    },
     "loadMore": "Load more",
     "results": {
       "difficultyColumn": "Difficulty",
@@ -1775,6 +1971,16 @@
     },
     "shuffleButton": "Shuffle <responsiveWord>questions</responsiveWord>",
     "totalCount": "of <b>{{total}}</b>"
+  },
+  "questionStats": {
+    "aggregate": {
+      "correctCountOfAttempted": "{{correctCount}} of {{attemptedCount}}",
+      "correctPartsTitle": "Correct question parts",
+      "correctQuestionsTitle": "Correct questions",
+      "noData": "No data",
+      "sinceAccountCreation": "Since account creation:",
+      "thisAcademicYear": "This academic year:"
+    }
   },
   "questions": {
     "inputValidation": {
@@ -1802,13 +2008,10 @@
       "title": "Revision"
     },
     "sections": {
-      "contentHeading": "Revision",
       "contentTitle": "Revision",
       "introDescription": "First, have a go at these baseline questions to assess your understanding and identify which aspects of this topic you should focus your revision on:",
-      "introHeading": "Introduction",
       "introTitle": "Introduction",
       "testsDescription": "To demonstrate your progress once you've revised this section, have a go at a practice test:",
-      "testsHeading": "Practice tests",
       "testsTitle": "Practice tests"
     }
   },
@@ -1863,47 +2066,14 @@
       "subtitle": "Practise the important equations in GCSE Physics with these tools."
     }
   },
-  "stats": {
-    "community": {
-      "assignments": "total assignments set",
-      "schools": "schools using Isaac",
-      "teachers": "teachers setting assignments"
-    },
-    "hard": {
-      "heading": "Most <emphasis>difficult</emphasis> question"
-    },
-    "highlights": {
-      "hintViews": "total hint views",
-      "longestStreak": "longest student streak",
-      "streakUnit": "weeks"
-    },
-    "overview": {
-      "accounts": "Accounts",
-      "conceptsViewed": "Concepts viewed",
-      "questionAttempts": "Question attempts"
-    },
-    "page": {
-      "closing": "Thank you for being a part of Isaac!",
-      "intro": "The 1st September 2025 marked the 11th anniversary of the first question attempts on the Isaac Physics platform. To celebrate, we're taking a look back at Isaac's statistics over this time.",
-      "metaTitle": "Happy <emphasis>11th</emphasis> birthday to Isaac Science!",
-      "title": "Isaac 11th birthday stats"
-    },
-    "popular": {
-      "conceptHeading": "Most popular concept",
-      "questionHeading": "Most popular question"
-    }
-  },
   "studentResources": {
     "careers": {
       "description": "Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.",
       "lellaHalloumBody": "Meet Lella, a young digital changemaker who uses technology to inspire, engage, and upskill the next generation of talent.",
-      "lellaHalloumButton": "Read more",
       "lellaHalloumTitle": "Lella Halloum",
       "maxFordhamBody": "Explore how Max’s passion for computer science led him to become a software engineer through a digital technology solutions apprenticeship.",
-      "maxFordhamButton": "Read more",
       "maxFordhamTitle": "Max Fordham",
       "meghnaAsthanaBody": "Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.",
-      "meghnaAsthanaButton": "Read more",
       "meghnaAsthanaTitle": "Meghna Asthana",
       "title": "Explore a career in computer science",
       "viewMoreButton": "View more stories"
@@ -1913,7 +2083,6 @@
       "emptyBody": "Check back soon!",
       "emptyTitle": "There are no active challenges at the moment.",
       "learnMoreButton": "Find out more",
-      "readMoreButton": "Read more",
       "title": "Win prizes with our student challenges"
     },
     "curriculum": {
@@ -1951,9 +2120,7 @@
       "tryButton": "Try our practise questions"
     },
     "progress": {
-      "createAccountButton": "Create an account",
       "description": "With an Ada CS account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.",
-      "loginButton": "Log in",
       "title": "Track your progress",
       "viewButton": "View my progress"
     },
@@ -1979,6 +2146,27 @@
     "physicsShort": "Phys",
     "title": "Subject Interests",
     "universityHeader": "University<br/><small>18+ yrs</small>"
+  },
+  "subjectLanding": {
+    "books": {
+      "title": "Interactive online books <emphasis>({{bookCount}})</emphasis>",
+      "viewMore": "View more books"
+    },
+    "events": {
+      "title": "Events <emphasis>({{eventCount}})</emphasis>"
+    },
+    "news": {
+      "title": "News & Features"
+    },
+    "randomQuestion": {
+      "differentButton": "Get a different question",
+      "emptyState": "No questions found.",
+      "errorTitle": "Unable to load question",
+      "title": "Try a random question!"
+    },
+    "title": {
+      "aLevelMaths": "A Level Maths and Further Maths"
+    }
   },
   "support": {
     "selectTopicButton": "Select a topic"
@@ -2059,18 +2247,15 @@
         "title": "There are no active challenges at the moment."
       },
       "exploreButton": "Find out more",
-      "readMoreButton": "Read more",
       "title": "Student challenges"
     },
     "cpd": {
       "coursesCard": {
-        "button": "Learn more",
         "description": "Join one of our self-guided courses for teachers covering a wide range of computing topics.",
         "title": "Free online courses"
       },
       "description": "Learn new skills and build confidence with our free courses for continuing professional development (CPD). They're designed to support you, whatever your level of experience.",
       "mentoringCard": {
-        "button": "Learn more",
         "description": "Get support through our online programme for newly qualified and non-specialist computer science teachers.",
         "title": "Teacher mentoring"
       },
@@ -2099,18 +2284,15 @@
     },
     "moreResources": {
       "codeClassroomCard": {
-        "button": "Learn more",
         "description": "Code Classroom is a free, safe platform for teaching and learning computing in schools. It includes a simple-to-use code editor with different programming languages, and lots of other features to support your teaching.",
         "title": "Code Classroom"
       },
       "description": "Support, lesson plans, ideas, and tools from the Raspberry Pi Foundation's world-class range of computer science resources.",
       "helloWorldCard": {
-        "button": "Learn more",
         "description": "Get a global perspective on computing education with Hello World – our magazine and podcast for educators. Share your expertise and write for us!",
         "title": "Hello World magazine"
       },
       "researchCard": {
-        "button": "Learn more",
         "description": "Discover groundbreaking research that advances the understanding of how people learn about computing. These projects are a collaboration between the Raspberry Pi Foundation and the University of Cambridge.",
         "title": "Research projects"
       },
@@ -2126,7 +2308,6 @@
         "description": "Create self-marking assignments for your students. There are over 1000 questions for you to choose from.",
         "title": "Set assignments"
       },
-      "createAccountButton": "Create an account",
       "dashboardButton": "Go to My Ada",
       "description": "An Ada CS account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.",
       "groupsCard": {
@@ -2134,7 +2315,6 @@
         "description": "Organise your students into groups and set work appropriate for each group.",
         "title": "Create student groups"
       },
-      "loginButton": "Log in",
       "markbookCard": {
         "button": "View markbook",
         "description": "Track student progress with a personal markbook to help pinpoint areas to work on.",
@@ -2209,7 +2389,6 @@
       "table": "Table"
     },
     "feedback": {
-      "downloadCsv": "Download CSV",
       "error": {
         "heading": "Error loading your feedback!"
       },
@@ -2268,6 +2447,16 @@
       "backToContents": "Back to Contents",
       "previewQuestions": "Preview questions",
       "setTest": "Set test"
+    },
+    "set": {
+      "available": {
+        "empty": "There are no tests you can set which match your search term.",
+        "intro": "The following tests are available to set to your groups."
+      },
+      "emptyState": "You have not set any tests to your groups yet.",
+      "help": "Use this page to manage and set tests to your groups. You can assign any test the {{siteName}} team have built.<br/>Students in the group will be emailed when you set a new test.",
+      "loadError": "Tests you have assigned have failed to load, please try refreshing the page.",
+      "search": "Search tests"
     },
     "setQuiz": {
       "completionEmail": "Email me when a student completes this test",

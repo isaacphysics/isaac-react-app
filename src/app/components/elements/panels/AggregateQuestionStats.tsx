@@ -3,8 +3,10 @@ import {ProgressBar} from "../views/ProgressBar";
 import {UserProgress} from "../../../../IsaacAppTypes";
 import {safePercentage} from "../../../services";
 import { Row, Col } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgress | null}) => {
+    const { t } = useTranslation();
     const fullCorrect = userProgress?.totalQuestionsCorrect;
     const fullAttempt = userProgress?.totalQuestionsAttempted;
     const fullCorrectThisYear = userProgress?.totalQuestionsCorrectThisAcademicYear;
@@ -19,34 +21,34 @@ export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgr
     const partPercentageThisYear = safePercentage(partCorrectThisYear, partAttemptThisYear);
 
     return <div>
-        <strong>Correct questions</strong>
+        <strong>{t("common:questionStats.aggregate.correctQuestionsTitle")}</strong>
         <Row className="mb-3">
             <Col md={6}>
-                <p className="mb-0">This academic year:</p>
+                <p className="mb-0">{t("common:questionStats.aggregate.thisAcademicYear")}</p>
                 <ProgressBar percentage={fullPercentageThisYear || 0}>
-                    {fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}
+                    {fullPercentageThisYear == null ? t("common:questionStats.aggregate.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: fullCorrectThisYear, attemptedCount: fullAttemptThisYear })}
                 </ProgressBar>
             </Col>
             <Col md={6}>
-                <p className="mb-0">Since account creation:</p>
+                <p className="mb-0">{t("common:questionStats.aggregate.sinceAccountCreation")}</p>
                 <ProgressBar percentage={fullPercentage || 0}>
-                    {fullPercentage == null ? "No data" : `${fullCorrect} of ${fullAttempt}`}
+                    {fullPercentage == null ? t("common:questionStats.aggregate.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: fullCorrect, attemptedCount: fullAttempt })}
                 </ProgressBar>
             </Col>
         </Row>
 
-        <strong>Correct question parts</strong>
+        <strong>{t("common:questionStats.aggregate.correctPartsTitle")}</strong>
         <Row className="mb-3">
             <Col md={6}>
-                <p className="mb-0">This academic year:</p>
+                <p className="mb-0">{t("common:questionStats.aggregate.thisAcademicYear")}</p>
                 <ProgressBar percentage={partPercentageThisYear || 0}>
-                    {partPercentageThisYear == null ? "No data" : `${partCorrectThisYear} of ${partAttemptThisYear}`}
+                    {partPercentageThisYear == null ? t("common:questionStats.aggregate.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: partCorrectThisYear, attemptedCount: partAttemptThisYear })}
                 </ProgressBar>
             </Col>
             <Col md={6}>
-                <p className="mb-0">Since account creation:</p>
+                <p className="mb-0">{t("common:questionStats.aggregate.sinceAccountCreation")}</p>
                 <ProgressBar percentage={partPercentage || 0}>
-                    {partPercentage == null ? "No data" : `${partCorrect} of ${partAttempt}`}
+                    {partPercentage == null ? t("common:questionStats.aggregate.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: partCorrect, attemptedCount: partAttempt })}
                 </ProgressBar>
             </Col>
         </Row>

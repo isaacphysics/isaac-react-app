@@ -4,6 +4,7 @@ import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {siteSpecific, WEBMASTER_EMAIL} from "../../services";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 const buildContactUrl = (state: {overridePathname?: string}, pathname: string) => {
     const page = encodeURIComponent((state && state.overridePathname) || pathname);
@@ -26,10 +27,22 @@ export const NotFound = () => {
 
             {window.navigator.onLine ?
                 <p>
-                    {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:clientError.notFound.reportPrompt" components={{ contactAction: <a className="ps-1" href={buildContactUrl(state, pathname)} />, srOnly: <span className="visually-hidden" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                    <Trans
+                        i18nKey="common:clientError.notFound.reportPrompt"
+                        components={{
+                            contactAction: <TransAnchor className="ps-1" href={buildContactUrl(state, pathname)} />,
+                            srOnly: <span className="visually-hidden" />,
+                        }}
+                    />
                 </p> :
                 <p>
-                    {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:clientError.notFound.offlineMessage" components={{ br: <br />, webmasterEmail: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                    <Trans
+                        i18nKey="common:clientError.notFound.offlineMessage"
+                        components={{
+                            br: <br />,
+                            webmasterEmail: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
+                        }}
+                    />
                 </p> // Email link rather than contact form, as the contact form may not work offline
             }
         </div>

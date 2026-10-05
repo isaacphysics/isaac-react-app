@@ -26,6 +26,7 @@ import { useNavigate } from "react-router";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 export const RegistrationTeacherConnect = () => {
     const { t } = useTranslation();
@@ -66,7 +67,7 @@ export const RegistrationTeacherConnect = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.teacherConnect.title", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={4}/>,
@@ -79,11 +80,21 @@ export const RegistrationTeacherConnect = () => {
                     <h3>{t("common:auth.teacherConnect.heading")}</h3>
                     {siteSpecific(
                         <>
-                            <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="sci:auth.teacherConnect.groupInfo" components={{ learnMoreLink: <a href="/support/student/homework#join_group" target="_blank" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
+                            <p><Trans
+                                i18nKey="sci:auth.teacherConnect.groupInfo"
+                                components={{
+                                    learnMoreLink: <TransAnchor href="/support/student/homework#join_group" target="_blank" />,
+                                }}
+                            /></p>
                             <p>{t("sci:auth.teacherConnect.skipNote")}</p>
                         </>,
                         <>
-                            <p>{/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="ada:auth.teacherConnect.groupInfo" components={{ learnMoreLink: <a href="/support/student/general" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}</p>
+                            <p><Trans
+                                i18nKey="ada:auth.teacherConnect.groupInfo"
+                                components={{
+                                    learnMoreLink: <TransAnchor href="/support/student/general" />,
+                                }}
+                            /></p>
                             <p>{t("ada:auth.teacherConnect.skipNote")}</p>
                         </>
                     )}
@@ -103,7 +114,7 @@ export const RegistrationTeacherConnect = () => {
                                 />
                                 <div className="input-group-append">
                                     <Button disabled={!codeIsValid} onClick={submit} color="keyline">
-                                        {t("common:auth.teacherConnect.connectButton")}
+                                        {t("common:button.connect")}
                                     </Button>
                                 </div>
                             </InputGroup>
@@ -130,12 +141,12 @@ export const RegistrationTeacherConnect = () => {
                                     <Button className="w-100 my-2 px-2" color="keyline" onClick={continueToNext}>{t("common:auth.teacherConnect.skipButton")}</Button>
                                 </Col>
                                 <Col xs={6} md={4} lg={3}>
-                                    <Button className="w-100 my-2 px-2" color="solid" disabled={!activeAuthorisations?.length} onClick={continueToNext}>{t("common:auth.teacherConnect.continueButton")}</Button>
+                                    <Button className="w-100 my-2 px-2" color="solid" disabled={!activeAuthorisations?.length} onClick={continueToNext}>{t("common:button.continue")}</Button>
                                 </Col>
                             </>, 
                             <>
                                 <Col xs={6} md={4} lg={3}>
-                                    <Button className="w-100 my-2 px-2" color="solid" onClick={continueToNext}>{t("common:auth.teacherConnect.continueButton")}</Button>
+                                    <Button className="w-100 my-2 px-2" color="solid" onClick={continueToNext}>{t("common:button.continue")}</Button>
                                 </Col>
                             </>
                         )}

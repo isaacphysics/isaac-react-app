@@ -65,15 +65,15 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
-            <h4 className="m-0">{t("common:homepage.randomQuestion.title")}</h4>
+            <h4 className="m-0">{t("common:subjectLanding.randomQuestion.title")}</h4>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
-                {t("common:homepage.randomQuestion.differentButton")}
+                {t("common:subjectLanding.randomQuestion.differentButton")}
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
         <ShowLoadingQuery
             query={searchQuestionsQuery}
-            defaultErrorTitle={t("common:homepage.randomQuestion.errorTitle")}
+            defaultErrorTitle={t("common:subjectLanding.randomQuestion.errorTitle")}
             placeholder={loadingPlaceholder}
             thenRender={({ results: questions }) => {
                 const question = questions?.[0];
@@ -87,7 +87,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     } as ContentSummaryDTO]}/>
                     : <ul className="w-100 list-group ">
                         <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
-                            <span>{t("common:homepage.randomQuestion.emptyState")}</span>
+                            <span>{t("common:subjectLanding.randomQuestion.emptyState")}</span>
                         </li>
                     </ul>;
             }}
@@ -123,7 +123,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             {books?.length
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                        <h4 className="m-0"><Trans i18nKey="common:homepage.books.title" components={{ emphasis: <span className="text-theme" /> }} values={{ bookCount: books.length }} /></h4>
+                        <h4 className="m-0"><Trans i18nKey="common:subjectLanding.books.title" components={{ emphasis: <span className="text-theme" /> }} values={{ bookCount: books.length }} /></h4>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <Col className={classNames("item-list-container", {"flex-column": !fullWidthBooks})}>
@@ -131,14 +131,14 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                             {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
                         </Row>
                         <Row className="px-7 mx-0">
-                            {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">{t("common:homepage.books.viewMore")}</Button>}
+                            {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">{t("common:subjectLanding.books.viewMore")}</Button>}
                         </Row>
                     </Col>
                 </>
                 : <>
                     <div className="d-flex flex-column">
                         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                            <h4>{t("common:homepage.news.title")}</h4>
+                            <h4>{t("common:subjectLanding.news.title")}</h4>
                             <div className="section-divider-bold flex-grow-1"/>
                         </div>
                         {news && <Row className="h-100">
@@ -152,7 +152,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
         </div>
         {!!relevantEvents?.length && <div className="d-flex flex-column mt-3">
             <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                <h4 className="m-0"><Trans i18nKey="common:homepage.events.title" components={{ emphasis: <span className="text-theme" /> }} values={{ eventCount: relevantEvents.length }} /></h4>
+                <h4 className="m-0"><Trans i18nKey="common:subjectLanding.events.title" components={{ emphasis: <span className="text-theme" /> }} values={{ eventCount: relevantEvents.length }} /></h4>
                 <div className="section-divider-bold flex-grow-1"/>
             </div>
             <Row className="h-100 item-list-container">
@@ -195,7 +195,7 @@ export const SubjectLandingPage = () => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
     const title = (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.includes(STAGE.A_LEVEL))
-        ? t("common:homepage.title.aLevelMaths") : getHumanContext(pageContext);
+        ? t("common:subjectLanding.title.aLevelMaths") : getHumanContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb

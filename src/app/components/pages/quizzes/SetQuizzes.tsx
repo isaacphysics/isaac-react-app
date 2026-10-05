@@ -310,9 +310,9 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
 
-    const pageTitle= t("site:assignment.title");
+    const pageTitle= t("site:tests.set.title");
     const pageHelp = <span>
-        <Trans i18nKey="common:assignment.help" components={{ br: <br /> }} values={{ siteName: SITE_TITLE_SHORT }} />
+        <Trans i18nKey="common:tests.set.help" components={{ br: <br /> }} values={{ siteName: SITE_TITLE_SHORT }} />
     </span>;
 
     const rowFiltersView = above["md"](deviceSize);
@@ -384,7 +384,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
             <MyAdaSidebar />        
         )}
     >
-        <PageMetadata noTitle showSidebarButton sidebarButtonText={t("common:assignment.search")} helpModalId="help_modal_set_tests">
+        <PageMetadata noTitle showSidebarButton sidebarButtonText={t("common:tests.set.search")} helpModalId="help_modal_set_tests">
             <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         </PageMetadata>
         <Tabs style="tabs" className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
@@ -392,9 +392,9 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                 [siteSpecific("Set tests", "Available tests")]:
                 <ShowLoading until={undeprecatedQuizzes}>
                     {undeprecatedQuizzes && <>
-                        <p>{t("common:assignment.available.intro")}</p>
+                        <p>{t("common:tests.set.available.intro")}</p>
 
-                        {undeprecatedQuizzes.length === 0 && <p><em>{t("common:assignment.available.empty")}</em></p>}
+                        {undeprecatedQuizzes.length === 0 && <p><em>{t("common:tests.set.available.empty")}</em></p>}
 
                         <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>
                     </>}
@@ -430,7 +430,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
                     <ShowLoadingQuery
                         query={quizAssignmentsQuery}
-                        ifError={() => <Alert color="warning">{t("common:assignment.loadError")}</Alert>}
+                        ifError={() => <Alert color="warning">{t("common:tests.set.loadError")}</Alert>}
                         thenRender={quizAssignments => {
                             let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
                                 const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
@@ -475,7 +475,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                             quizAssignment.sort((a, b) => a.assignedGroups[0].assignment.quizSummary?.title?.localeCompare(b.assignedGroups[0].assignment.quizSummary?.title ?? "") ?? 0);
 
                             return <>
-                                {quizAssignments.length === 0 && <p>{t("common:assignment.emptyState")}</p>}
+                                {quizAssignments.length === 0 && <p>{t("common:tests.set.emptyState")}</p>}
                                 {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
                                     {isAda && <colgroup>
                                         <col width={"120px"}/>

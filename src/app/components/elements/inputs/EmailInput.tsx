@@ -19,7 +19,7 @@ export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsVal
     const { t } = useTranslation();
     return <FormGroup className={`form-group ${className}`}>
         <Label className={classNames("fw-bold", (required ? "form-required" : "form-optional"))} htmlFor="email-input">
-            {t("common:auth.emailInput.label")}
+            {t("common:form.emailLabel")}
         </Label>
         {isAda &&
                 <p className="d-block input-description">

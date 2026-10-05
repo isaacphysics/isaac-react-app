@@ -17,12 +17,12 @@ export const LinkingConcepts = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.linkingConcepts.title")} help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/linking_concepts.png" alt={t("sci:books.linkingConcepts.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/linking_concepts.png" alt={t("sci:books.coverAltText")}/>
                 <PageFragment fragmentId="phys_linking_concepts_intro"/>
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>{t("common:books.chapters.heading")}</h4>
+                    <h4>{t("common:books.chaptersHeading")}</h4>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'linking_concepts_ch1_boards'} chapterTitle={t("sci:books.linkingConcepts.chapter1.title")} chapterSubHeading={t("sci:books.linkingConcepts.chapter1.subtitle")} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>

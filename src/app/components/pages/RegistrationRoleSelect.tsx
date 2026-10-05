@@ -4,6 +4,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE_TITLE} from "../../services";
 import { useNavigate } from "react-router";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 
 export const RegistrationRoleSelect = () => {
@@ -21,7 +22,7 @@ export const RegistrationRoleSelect = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:auth.roleSelect.title", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <Card className="my-7">
             <CardBody>
                 <h2>{t("common:auth.roleSelect.heading")}</h2>
@@ -59,7 +60,12 @@ export const RegistrationRoleSelect = () => {
                                         <li>{t("common:auth.roleSelect.teacher.featureProgress")}</li>
                                     </ul>
                                     <p>
-                                        {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:auth.roleSelect.teacher.noAccessNote" components={{ learnMoreLink: <a href="/support/teacher/general" /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                                        <Trans
+                                            i18nKey="common:auth.roleSelect.teacher.noAccessNote"
+                                            components={{
+                                                learnMoreLink: <TransAnchor href="/support/teacher/general" />,
+                                            }}
+                                        />
                                     </p>
                                 </CardText>
                                 <Button block className="align-self-end mt-auto" onClick={teacherSignUp}>{t("common:auth.roleSelect.teacher.button")}</Button>

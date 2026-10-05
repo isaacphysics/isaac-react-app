@@ -59,7 +59,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
         </MetadataContainer>
 
         {!!page.gameboards?.length && <>
-            <h4 className="mb-3" id="introduction">{t("common:revision.sections.introHeading")}</h4>
+            <h4 className="mb-3" id="introduction">{t("common:revision.sections.introTitle")}</h4>
             <span>{t("common:revision.sections.introDescription")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
@@ -69,13 +69,13 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
             </div>
         </>}
 
-        <h4 className="mb-3" id="revision">{t("common:revision.sections.contentHeading")}</h4>
+        <h4 className="mb-3" id="revision">{t("common:revision.sections.contentTitle")}</h4>
         <IsaacContentValueOrChildren value={page.value} encoding={page.encoding}>
             {page.children}
         </IsaacContentValueOrChildren>
 
         {!!tests.length && <>
-            <h4 className="mt-4 mb-3" id="tests">{t("common:revision.sections.testsHeading")}</h4>
+            <h4 className="mt-4 mb-3" id="tests">{t("common:revision.sections.testsTitle")}</h4>
             <span>{t("common:revision.sections.testsDescription")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView

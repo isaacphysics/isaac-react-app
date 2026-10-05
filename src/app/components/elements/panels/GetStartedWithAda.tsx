@@ -6,8 +6,10 @@ import { ProgressBar } from "../views/ProgressBar";
 import { useAdaGetStartedTasks } from "../../../services/adaOnboardingTasks";
 import { useLinkableSetting } from "../../../services/linkableSetting";
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 
 export const GetStartedWithAda = () => {
+    const { t } = useTranslation();
     const [getStartedOpen, setGetStartedOpen] = useState(false);
     const {setLinkedSetting} = useLinkableSetting();
     const getStartedTasks = useAdaGetStartedTasks();
@@ -22,14 +24,14 @@ export const GetStartedWithAda = () => {
     return <Accordion open={getStartedOpen ? ["1"] : []} toggle={() => setGetStartedOpen(o => !o)} className="position-relative">
         <AccordionItem>
             <AccordionHeader targetId="1">
-                <span className="fw-bold">Get started with Ada CS</span>
+                <span className="fw-bold">{t("common:getStarted.title")}</span>
                 {getStartedTasks && Object.values(getStartedTasks).every(Boolean) && <i className="icon icon-tick icon-sm mx-3" />}
             </AccordionHeader>
             <AccordionBody accordionId="1">
                 <ShowLoading
                     until={getStartedTasks}
                     thenRender={(tasks) => <>
-                        Follow these steps to get started with your teacher account:
+                        {t("common:getStarted.intro")}
 
                         <div className="d-flex align-items-center gap-4 mt-2">
                             <span className="fw-bold">{percentComplete}%</span>
@@ -38,29 +40,29 @@ export const GetStartedWithAda = () => {
 
                         <ul className="list-unstyled d-flex flex-column mt-3 gap-3">
                             <CompletableTask tag={"li"} complete={tasks.createAccount}>
-                                <strong>Create your account</strong>
+                                <strong>{t("common:getStarted.tasks.createAccount")}</strong>
                             </CompletableTask>
 
                             <CompletableTask tag={"li"} complete={tasks.personaliseContent} disabled={!tasks.createAccount} action={{
-                                title: "Personalise your content",
+                                title: t("common:getStarted.tasks.personaliseContentTitle"),
                                 to: "/account#customise",
                                 onClick: () => setLinkedSetting("account-context")
                             }}>
                                 <div className="d-flex flex-column">
-                                    <h5 className="m-0">Personalise your content</h5>
-                                    <span>Pick a teaching level and exam board, or choose to see all content.</span>
+                                    <h5 className="m-0">{t("common:getStarted.tasks.personaliseContentTitle")}</h5>
+                                    <span>{t("common:getStarted.tasks.personaliseContentHint")}</span>
                                 </div>
                             </CompletableTask>
 
                             <CompletableTask tag={"li"} complete={tasks.createGroup} disabled={!tasks.createAccount} action={{
-                                title: "Manage groups",
+                                title: t("common:getStarted.tasks.manageGroupsTitle"),
                                 to: "/groups",
                             }}>
-                                <strong>Create a student group</strong>
+                                <strong>{t("common:getStarted.tasks.createGroup")}</strong>
                             </CompletableTask>
 
                             <CompletableTask tag={"li"} complete={tasks.assignQuiz} disabled={!tasks.createGroup}>
-                                <strong>Assign a quiz to students</strong>
+                                <strong>{t("common:getStarted.tasks.assignQuiz")}</strong>
                             </CompletableTask>
 
                             {/* <CompletableTask tag={"li"} complete={tasks.viewMarkbook} disabled={!tasks.assignQuiz}>
@@ -69,7 +71,7 @@ export const GetStartedWithAda = () => {
                         </ul>
 
                         <div className="text-md-end">
-                            Prefer a video overview? Try our <strong><Link to="https://www.youtube.com/playlist?list=PLxyaWvsfmq49mjnh8LQeztQSZAcrvB6bk" target="_blank">YouTube playlist</Link></strong>!
+                            <Trans i18nKey="common:getStarted.videoCta" components={{ strong: <strong />, youtubeLink: <Link to="https://www.youtube.com/playlist?list=PLxyaWvsfmq49mjnh8LQeztQSZAcrvB6bk" target="_blank" /> }} />
                         </div>
                     </>}
                 />

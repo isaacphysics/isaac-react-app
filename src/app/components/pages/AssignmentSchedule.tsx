@@ -312,7 +312,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.schedule.collapse") : t("common:assignments.schedule.expand")) + t("common:assignments.schedule.listForDay", { date })} onKeyPress={(e) => {
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForDay", { date })} onKeyPress={(e) => {
             if (e.key === "Enter") {
                 setOpen(o => !o);
                 setCollapsed(false);
@@ -359,7 +359,7 @@ const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, 
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.schedule.collapse") : t("common:assignments.schedule.expand")) + t("common:assignments.schedule.listForMonth", { monthName: MONTH_NAMES[month] })}
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
             className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);

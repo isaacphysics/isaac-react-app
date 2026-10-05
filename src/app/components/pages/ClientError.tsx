@@ -7,6 +7,7 @@ import {FallbackProps} from "react-error-boundary";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Loading} from "../handlers/IsaacSpinner";
 import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     const isChunkError = error.name === "ChunkLoadError";
@@ -51,7 +52,15 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
             <TitleAndBreadcrumb currentPageTitle={t("common:clientError.title")} icon={{type: "icon", icon: "icon-error"}}/>
             <h3 className="my-4">{t("common:clientError.heading", { siteName: SITE_TITLE_SHORT })}</h3>
             <p>
-                {/* eslint-disable jsx-a11y/anchor-has-content */}<Trans i18nKey="common:clientError.recoveryOptions" components={{ refreshLink: <a role="button" tabIndex={0} href={window.location.href} onKeyPress={() => window.location.reload()} onClick={() => window.location.reload()} />, homeLink: <Link to="/" onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()} />, contactLink: <Link to={`/contact?subject=App Error&message=${encodeURIComponent(plainTextUsefulInformation)}`} onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()} />, emailLink: <a href={`mailto:${WEBMASTER_EMAIL}`} /> }} />{/* eslint-enable jsx-a11y/anchor-has-content */}
+                <Trans
+                    i18nKey="common:clientError.recoveryOptions"
+                    components={{
+                        refreshLink: <TransAnchor role="button" tabIndex={0} href={window.location.href} onKeyPress={() => window.location.reload()} onClick={() => window.location.reload()} />,
+                        homeLink: <Link to="/" onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()} />,
+                        contactLink: <Link to={`/contact?subject=App Error&message=${encodeURIComponent(plainTextUsefulInformation)}`} onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()} />,
+                        emailLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
+                    }}
+                />
             </p>
 
             <Row className="mt-4 mb-7">
