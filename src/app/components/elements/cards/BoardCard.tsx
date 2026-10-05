@@ -38,6 +38,8 @@ import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { useSetAssignment } from "../../../services/setAssignment";
 import { SaveBoardButton } from "../SaveBoardButton";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 
 interface HexagonGroupsButtonProps {
@@ -61,12 +63,12 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
     <button onClick={toggleAssignModal} id={id} className="d-flex justify-content-center bg-white board-subject-hexagon-size">
         <div className="board-subject-hexagon-container justify-content-center">
             {generateGameboardSubjectHexagons(boardSubjects)}
-            <span className="groups-assigned" title={"Number of groups assigned"}>
+            <span className="groups-assigned" title={i18next.t("common:gameboard.card.groupsAssigned")}>
                 <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
                 group{(!assignees || assignees.length != 1) && "s"}
                 {isDefined(assignees) &&
                 <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
-                    "No groups have been assigned."
+                    i18next.t("common:gameboard.assignments.noGroupsAssigned")
                     : (`${siteSpecific("Question deck", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
                 </UncontrolledTooltip>}
             </span>
@@ -98,21 +100,22 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
 };
 
 const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal}: InfoShapeProps) => {
+    const { t } = useTranslation();
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
     return <svg className={"board-circle d-flex overflow-auto mx-auto"} id={hexagonId} width={48} height={48}>
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
-                ? <div title={"Number of groups assigned"}>
+                ? <div title={t("common:gameboard.card.groupsAssigned")}>
                     {isDefined(assignees)
                         ? <span className={assignees.length >= 100 ? "font-size-1" : "font-size-1-25"}>{assignees.length}</span>
                         : <Spinner size="sm" />
-                    }<br/><small>group{assignees.length !== 1 ? "s" : ""}</small>
+                    }<br/><small>{t("common:gameboard.assignments.groupCount", { count: assignees.length })}</small>
                     {isDefined(assignees) &&
                         <UncontrolledTooltip placement={"top"} target={"#" + hexagonId}>{assignees.length === 0 ?
-                            "No groups have been assigned to this quiz."
-                            : ("Quiz assigned to: " + assignees.map(g => g.groupName).join(", "))}
+                            t("common:gameboard.assignments.noGroupsQuizAssigned")
+                            : (t("common:gameboard.assignments.assignedTo", { groupNames: assignees.map(g => g.groupName).join(", ") }))}
                         </UncontrolledTooltip>
                     }
                 </div>
@@ -134,6 +137,7 @@ type BoardCardProps = {
 };
 
 export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSelectedBoards, selectedBoards}: BoardCardProps) => {
+    const { t } = useTranslation();
     // Decides whether we show the "Assign/Unassign" button, along with other "Set Assignments"-specific stuff
     const isSetAssignments = displayAssignmentInfo;
 
@@ -200,7 +204,13 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 </td>
                 <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                     <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
-                    {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                    {isPhy && <span className="text-muted"><br/><Trans
+                        i18nKey="common:gameboard.card.createdBy"
+                        components={{
+                            owner: <span data-testid={"owner"} />,
+                        }}
+                        values={{ ownerName: formatBoardOwner(user, board) }}
+                    /></span>}
                     <br/>
                     <SupersededDeprecatedBoardContentWarning gameboard={board} />
                 </td>
@@ -211,7 +221,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <div className="d-flex gap-2 align-items-center">
                         {isPhy && <SaveBoardButton board={board} color="keyline" size="sm" />}
                         <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
-                            {isSetAssignments ? "Assign / Unassign" : "Assign"}
+                            {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:cards.assign")}
                         </Button>
                     </div>
                 </td>
@@ -228,7 +238,13 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 <>
                     <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                         <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
-                        {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                        {isPhy && <span className="text-muted"><br/><Trans
+                            i18nKey="common:gameboard.card.createdBy"
+                            components={{
+                                owner: <span data-testid={"owner"} />,
+                            }}
+                            values={{ ownerName: formatBoardOwner(user, board) }}
+                        /></span>}
                         <br/>
                         <SupersededDeprecatedBoardContentWarning gameboard={board} hideFullDetails />
                     </td>
@@ -257,7 +273,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                             <div className="d-flex gap-2">
                                 <SaveBoardButton board={board} color="keyline" size="sm" />
                                 <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
-                                    {isSetAssignments ? "Assign / Unassign" : "Assign"}
+                                    {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:cards.assign")}
                                 </Button>
                             </div>
                         </td>,
@@ -270,7 +286,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                                 checked={board && selectedBoards?.some(e => e.id === board.id)}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                                     board && updateBoardSelection(board, event.target.checked)
-                                } aria-label="Delete quiz"
+                                } aria-label={t("ada:gameboard.assignments.deleteQuiz")}
                             />
                         </td>
                     )}
@@ -286,10 +302,22 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 <Row>
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
-                            Created <strong>{getFriendlyDaysUntil(board.creationDate)}</strong>
+                            <Trans
+                                i18nKey="common:gameboard.card.createdDate"
+                                components={{
+                                    strong: <strong />,
+                                }}
+                                values={{ creationDate: getFriendlyDaysUntil(board.creationDate) }}
+                            />
                         </p>}
                         {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
-                            Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
+                            <Trans
+                                i18nKey="common:gameboard.card.lastVisited"
+                                components={{
+                                    strong: <strong />,
+                                }}
+                                values={{ lastVisitedDate: getFriendlyDaysUntil(board.lastVisited) }}
+                            />
                         </p>}
                     </Col>
                 </Row>
@@ -301,9 +329,9 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <Row className={"mb-2"}>
                         <Col xs={8} sm={7} md={8}>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
-                            <span data-testid={"owner"}><b>By</b>: {formatBoardOwner(user, board)}</span><br/>
-                            <span data-testid={"created-date"}><b>Created</b>: {formatDate(board.creationDate)}</span><br/>
-                            <span data-testid={"last-visited"}><b>Last visited</b>: {formatDate(board.lastVisited)}</span><br/>
+                            <span data-testid={"owner"}><b>{t("common:gameboard.card.byLabel")}</b>: {formatBoardOwner(user, board)}</span><br/>
+                            <span data-testid={"created-date"}><b>{t("common:gameboard.card.createdLabel")}</b>: {formatDate(board.creationDate)}</span><br/>
+                            <span data-testid={"last-visited"}><b>{t("common:gameboard.card.lastVisitedLabel")}</b>: {formatDate(board.lastVisited)}</span><br/>
                         </Col>
                         {isSetAssignments ? (
                             <Col>
@@ -313,31 +341,31 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         ) : (
                             deviceSize === "sm" ? <Col sm={5} className="ps-0 d-flex flex-sm-row">
                                 <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
-                                    <span>Attempted</span>
+                                    <span>{t("common:gameboard.card.attempted")}</span>
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                                 </Col>
                                 <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
-                                    <span className="p-0">Correct</span>
+                                    <span className="p-0">{t("common:gameboard.card.correct")}</span>
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                                 </Col>
                             </Col> :
                                 <Col xs={4} className="ps-0 d-flex flex-column justify-content-start">
                                     <Row className="p-0 align-items-center">
                                         <Col className="d-flex flex-column align-items-center">
-                                            <span>Attempted</span>
+                                            <span>{t("common:gameboard.card.attempted")}</span>
                                             <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                                         </Col>
                                     </Row>
                                     <Row className="p-0 align-items-center">
                                         <Col className="d-flex flex-column align-items-center">
-                                            <span className="pt-2">Correct</span>
+                                            <span className="pt-2">{t("common:gameboard.card.correct")}</span>
                                             <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                                         </Col>
                                     </Row>
                                 </Col>
                         )}
                         <Col className="pt-3">
-                            <b>Stages and difficulties</b>:
+                            <b>{t("common:gameboard.card.stagesDifficulties")}</b>:
                             <br/> 
                             <p>
                                 {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
@@ -352,7 +380,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <SaveBoardButton board={board} color="keyline" size="sm" />
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={openAssignModal}>
-                            Assign / Unassign
+                            {t("common:gameboard.assignments.assignUnassignButton")}
                         </Button>}
                     </CardFooter>
                 </CardBody>

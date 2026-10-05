@@ -6,6 +6,7 @@ import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
 import classNames from "classnames";
 import { Spacer } from "../Spacer";
+import { useTranslation } from "react-i18next";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
@@ -14,13 +15,15 @@ interface NewsCardProps extends CardProps {
 }
 
 const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassName, ...props}: NewsCardProps) => {
+    const { t } = useTranslation();
     const {title, value, image, url} = newsItem;
 
     const CardImage = (image: ImageDTO) => {
+        const { t } = useTranslation();
         return <CardImg
             top
             src={image.src && apiHelper.determineImageUrl(image.src)}
-            alt={image.altText || `Illustration for ${title}`}
+            alt={image.altText || t("common:cards.imageAlt", { title })}
         />;
     };
 
@@ -42,12 +45,12 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
             <Spacer/>
             <CardText>
                 {!url?.startsWith("http") ?
-                    <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
-                        Read more
+                    <Link aria-label={t("common:cards.readMoreAria", { title })} className="focus-target btn btn-keyline" to={`${url}`}>
+                        {t("common:cards.readMore")}
                     </Link>
                     :
                     <a className="focus-target btn btn-keyline" href={url} target="_blank" rel="noopener">
-                        Find out more
+                        {t("common:news.card.findOutMoreButton")}
                     </a>
                 }
             </CardText>
@@ -56,12 +59,13 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
 };
 
 const AdaNewsCard = ({newsItem, showTitle, cardClassName, ...props}: NewsCardProps) => {
+    const { t } = useTranslation();
     const {title, value, image, url} = newsItem;
     return <AdaCard {...props} data-testid={"news-pod"} className="px-3 my-3" card={{
         title: showTitle && title || "",
         image: {
             src: (image?.src && apiHelper.determineImageUrl(image.src)) || "/assets/cs/decor/news-placeholder.png",
-            altText: image?.altText || `Illustration for ${title}`,
+            altText: image?.altText || t("common:cards.imageAlt", { title }),
         },
         bodyText: value ?? "",
         clickUrl: url,

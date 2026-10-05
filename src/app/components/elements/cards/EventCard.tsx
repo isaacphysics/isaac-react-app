@@ -9,6 +9,7 @@ import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
 import { ContentPropertyTags } from "../ContentPropertyTags";
+import { useTranslation } from "react-i18next";
 
 const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
     return <div className="d-inline-flex">
@@ -18,6 +19,7 @@ const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) =
 };
 
 const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
+    const { t } = useTranslation();
     const {location} = event;
     return <>
         <IconText icon="icon-events">
@@ -27,21 +29,22 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
             {!event.isVirtual ? <>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</> : "Online"}
         </IconText>}
         {event.userBookingStatus === "CONFIRMED"
-            ? <IconText icon="icon-tick">You are booked on this event.</IconText>
+            ? <IconText icon="icon-tick">{t("common:events.card.bookedStatus")}</IconText>
             : event.userBookingStatus === "RESERVED"
-                ? <IconText icon="icon-tick">You have a reservation for this event.</IconText>
+                ? <IconText icon="icon-tick">{t("common:events.card.reservedStatus")}</IconText>
                 : event.userBookingStatus === "WAITING_LIST"
-                    ? <IconText icon="icon-tick">You are on the waiting list for this event.</IconText>
+                    ? <IconText icon="icon-tick">{t("common:events.card.waitingListStatus")}</IconText>
                     : event.hasExpired 
-                        ? <IconText icon="icon-cross">Event has expired</IconText> 
+                        ? <IconText icon="icon-cross">{t("common:events.card.expired")}</IconText> 
                         : event.isWithinBookingDeadline 
-                            ? <IconText icon="icon-tick">Available to book</IconText>
-                            : <IconText icon="icon-cross">Booking closed</IconText>
+                            ? <IconText icon="icon-tick">{t("common:events.card.availableToBook")}</IconText>
+                            : <IconText icon="icon-cross">{t("common:events.card.bookingClosed")}</IconText>
         }
     </>;
 };
 
 export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
+    const { t } = useTranslation();
     const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
@@ -57,29 +60,29 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                 <span className="event-pod-badges align-self-end">
                     {isVirtualEvent &&
                         <span>
-                            <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
+                            <Badge className="badge rounded-pill" color="primary">{t("common:events.card.onlineBadge")}</Badge>
                         </span>
                     }
                     {hasExpired &&
                         <span className="expired-badge">
-                            <Badge className="badge rounded-pill" color="failed">EXPIRED</Badge>
+                            <Badge className="badge rounded-pill" color="failed">{t("common:events.card.expiredBadge")}</Badge>
                         </span>}
                     {bookingDeadlineSoon &&
                         <span>
                             <span className="warning-tag px-2 fw-semibold">
-                                Booking deadline soon!
+                                {t("common:events.card.bookingDeadlineSoon")}
                             </span>
                         </span>}
                 </span>
                 {isTeacherEvent &&
                     <div className="event-pod-hex">
-                        <b>TEACHER EVENT</b>
-                        <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
+                        <b>{t("common:events.card.teacherEvent")}</b>
+                        <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={t("common:events.card.teacherEventIconAlt")}/>
                     </div>}
                 {isStudentEvent &&
                     <div className="event-pod-hex">
-                        <b>STUDENT EVENT</b>
-                        <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
+                        <b>{t("common:events.card.studentEvent")}</b>
+                        <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={t("common:events.card.studentEventIconAlt")}/>
                     </div>}
             </Link>}
         <CardBody className="d-flex flex-column">
@@ -95,7 +98,7 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                 <PhysicsCardContents event={event} />
             </CardText>
             {layout !== "landing-page" && <CardText>
-                <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`/events/${id}`}>
+                <Link aria-label={t("common:events.card.readMoreAriaLabel", { eventTitle: title })} className="focus-target btn btn-keyline" to={`/events/${id}`}>
                     Read more
                     <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>
@@ -105,39 +108,40 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
 };
 
 const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
+    const { t } = useTranslation();
     const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled, userBookingStatus}
         = event;
 
     return <AdaCard card={{
-        title: title || "Untitled event",
+        title: title || t("common:events.card.untitled"),
         image: {src: eventThumbnail?.src ?? ""},
-        buttonText: "View details",
-        buttonAltText: `View details of the event: ${title} - ${formatDate(date, FRIENDLY_DATE_AND_TIME)}`,
+        buttonText: t("common:events.card.viewDetailsButton"),
+        buttonAltText: t("common:events.card.viewDetailsAriaLabel", { eventTitle: title, eventDate: formatDate(date, FRIENDLY_DATE_AND_TIME) }),
         clickUrl: `/events/${id}`,
         className: classnames({'disabled text-muted': hasExpired || isCancelled}),
     }} className="h-100">
         <div>
-            {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color="perfect" outline>Booked</Badge></>}
-            {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color="in-progress" outline>On waiting list</Badge></>}
-            {userBookingStatus === "RESERVED" && <>{" "}<Badge color="in-progress" outline>Reserved</Badge></>}
+            {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color="perfect" outline>{t("common:events.card.bookedBadge")}</Badge></>}
+            {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color="in-progress" outline>{t("common:events.card.waitingListBadge")}</Badge></>}
+            {userBookingStatus === "RESERVED" && <>{" "}<Badge color="in-progress" outline>{t("common:events.card.reservedBadge")}</Badge></>}
             {isCancelled
-                ? <>{" "}<Badge color="failed">Cancelled</Badge></>
-                : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<Badge>Full</Badge></>
+                ? <>{" "}<Badge color="failed">{t("common:events.card.cancelledBadge")}</Badge></>
+                : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<Badge>{t("common:events.card.fullBadge")}</Badge></>
             }
         </div>
         {subtitle && <CardText className='m-0 my-auto card-date-time'>{subtitle}</CardText>}
         <CardText className="m-0 my-auto card-date-time">
             <span className="d-block my-2">
-                <span className="fw-bold">When:</span>
+                <span className="fw-bold">{t("common:events.card.whenLabel")}</span>
                 <span className="d-block">
                     {formatEventCardDate(event, pod)}
                 </span>
             </span>
             {location && location.address && <span className='d-block my-2'>
-                <span className="fw-bold">Location:</span> {" "}
+                <span className="fw-bold">{t("common:events.card.locationLabel")}</span> {" "}
                 {!event.isVirtual ?
                     <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
-                    <span>Online</span>
+                    <span>{t("common:events.card.online")}</span>
                 }
             </span>}
         </CardText>

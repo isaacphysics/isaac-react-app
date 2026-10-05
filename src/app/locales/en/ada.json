@@ -172,6 +172,9 @@
       "save": "Save to My quizzes",
       "saveLogin": "Log in to save to My quizzes"
     },
+    "assignments": {
+      "deleteQuiz": "Delete quiz"
+    },
     "builder": {
       "createError": "Unable to create quiz",
       "helpText": "You can create custom question sets to assign to your groups. Search by question title or topic and add up to ten questions to a quiz.<br/>You cannot modify a quiz after it has been created. You'll find a link underneath any existing quiz to duplicate and edit it.",

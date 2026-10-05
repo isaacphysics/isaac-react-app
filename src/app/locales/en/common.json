@@ -1049,6 +1049,16 @@
     "remove": "Remove",
     "submit": "Submit"
   },
+  "cards": {
+    "assign": "Assign",
+    "imageAlt": "Illustration for {{title}}",
+    "opensNewTab": "(opens in new tab)",
+    "readMore": "Read more",
+    "readMoreAria": "{{title}} read more",
+    "seeMore": "See more",
+    "setAgain": "Set again",
+    "unassign": "Unassign"
+  },
   "challenges": {
     "emptyState": {
       "notifyButton": "Notify me",
@@ -1284,6 +1294,33 @@
       "jobYearGroup": "Job / year group",
       "name": "Name",
       "school": "School"
+    },
+    "card": {
+      "availableToBook": "Available to book",
+      "bookedBadge": "Booked",
+      "bookedStatus": "You are booked on this event.",
+      "bookingClosed": "Booking closed",
+      "bookingDeadlineSoon": "Booking deadline soon!",
+      "cancelledBadge": "Cancelled",
+      "expired": "Event has expired",
+      "expiredBadge": "EXPIRED",
+      "fullBadge": "Full",
+      "locationLabel": "Location:",
+      "online": "Online",
+      "onlineBadge": "ONLINE",
+      "readMoreAriaLabel": "{{eventTitle}} read more",
+      "reservedBadge": "Reserved",
+      "reservedStatus": "You have a reservation for this event.",
+      "studentEvent": "STUDENT EVENT",
+      "studentEventIconAlt": "student event icon",
+      "teacherEvent": "TEACHER EVENT",
+      "teacherEventIconAlt": "teacher event icon",
+      "untitled": "Untitled event",
+      "viewDetailsAriaLabel": "View details of the event: {{eventTitle}} - {{eventDate}}",
+      "viewDetailsButton": "View details",
+      "waitingListBadge": "On waiting list",
+      "waitingListStatus": "You are on the waiting list for this event.",
+      "whenLabel": "When:"
     },
     "confirmation": {
       "body": "This is an event for <emphasis>teachers only</emphasis>. Please confirm that you are a teacher (or a teacher trainee), and not a student, private tutor or parent.",
@@ -1525,6 +1562,14 @@
       "dueLabel": "Due: <b>{{dueDate}}</b>",
       "setLabel": "Set: <b>{{setDate}}</b>"
     },
+    "assignments": {
+      "assignUnassignButton": "Assign / Unassign",
+      "assignedTo": "Quiz assigned to: {{groupNames}}",
+      "groupCount_one": "group",
+      "groupCount_other": "groups",
+      "noGroupsAssigned": "No groups have been assigned.",
+      "noGroupsQuizAssigned": "No groups have been assigned to this quiz."
+    },
     "breadcrumb": {
       "assignments": "Assignments"
     },
@@ -1547,6 +1592,23 @@
       "wildcardLabel": "Wildcard",
       "wildcardNone": "No wildcard"
     },
+    "card": {
+      "attempted": "Attempted",
+      "byLabel": "By",
+      "correct": "Correct",
+      "createdBy": "Created by <owner>{{ownerName}}</owner>",
+      "createdDate": "Created <strong>{{creationDate}}</strong>",
+      "createdLabel": "Created",
+      "groupsAssigned": "Number of groups assigned",
+      "hideDetailsButton": "Hide details",
+      "lastVisited": "Last visited <strong>{{lastVisitedDate}}</strong>",
+      "lastVisitedLabel": "Last visited",
+      "questionsLabel": "Questions:",
+      "showDetailsButton": "Show details",
+      "stagesDifficulties": "Stages and difficulties",
+      "stagesHeader_one": "Stage:",
+      "stagesHeader_other": "Stages:"
+    },
     "clone": {
       "copiedTitle": "{{gameboardTitle}} (Copy)"
     },
@@ -1557,6 +1619,10 @@
       "details": "Details",
       "externalLink": "External link (<em>{{externalUrl}}</em>)",
       "toggleTitle": "Details"
+    },
+    "usageInfo": {
+      "beginsIn": "Begins <bold>{{daysUntil}}</bold>",
+      "viewProgress": "View group progress"
     }
   },
   "gameboards": {
@@ -1919,6 +1985,9 @@
     }
   },
   "news": {
+    "card": {
+      "findOutMoreButton": "Find out more"
+    },
     "emptyState": "No news to display...",
     "errorTitle": "Error fetching news stories",
     "sidebar": {
@@ -2654,6 +2723,18 @@
       "noFeedback": "No feedback",
       "start": "Start test",
       "viewFeedback": "View feedback"
+    },
+    "card": {
+      "manage": {
+        "changeFeedbackType": "Change feedback type",
+        "extendDueDate": "Extend due date",
+        "toggle": "Manage"
+      },
+      "untitledTitle": "Untitled Test",
+      "usage": {
+        "begins": "Begins <strong>{{startDate}}</strong>",
+        "viewResults": "View group results"
+      }
     },
     "cardTitle": "Tests",
     "details": {

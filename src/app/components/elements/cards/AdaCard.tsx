@@ -4,6 +4,7 @@ import {Button, Card, CardBody, CardFooter, CardImg, CardTitle} from "reactstrap
 import { isAppLink } from "../../../services";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "../ExternalLink";
+import { useTranslation } from "react-i18next";
 
 export interface AdaCardContentProps {
     title: string;
@@ -22,6 +23,7 @@ export interface AdaCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const AdaCard = ({card, ...props}: AdaCardProps) => {
+    const { t } = useTranslation();
     const {title, image, bodyText, clickUrl, buttonText, buttonStyle, buttonAltText, disabled} = card;
     return <div {...props} className={classNames("cs-card-container", props?.className ?? "")}>
         <Card className={classNames("cs-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card}>
@@ -42,10 +44,10 @@ export const AdaCard = ({card, ...props}: AdaCardProps) => {
                             outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} 
                             tag={Link} to={clickUrl} aria-label={buttonAltText}
                         >
-                            {buttonText || "See more"}
+                            {buttonText || t("common:cards.seeMore")}
                         </Button> :
                         <ExternalLink asButton href={clickUrl}>
-                            {buttonText || "See more"}
+                            {buttonText || t("common:cards.seeMore")}
                         </ExternalLink>
                     }
                 </CardFooter>}

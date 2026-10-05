@@ -12,6 +12,7 @@ import { selectors, useAppSelector } from "../../../state";
 import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 import { FeatureFlag, useFeatureFlag } from "../../../services/featureFlag";
 import { getFriendlyDaysUntil } from "../DateString";
+import { Trans, useTranslation } from "react-i18next";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -48,6 +49,7 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     return <div {...rest} data-testid="card-usage-info" className={classNames(
         className,
@@ -57,15 +59,15 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
         {usageDisplay?.type === "correctness" && <>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
-                Attempted
+                {t("common:gameboard.card.attempted")}
             </Label>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
-                Correct
+                {t("common:gameboard.card.correct")}
             </Label> 
         </>}
         {usageDisplay?.type === "group" && <>
-            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
+            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title={t("common:gameboard.card.groupsAssigned")}>
                 Assigned to
                 <div className="board-bubble-info">{usageDisplay.groupCount ?? 0}</div>
                 group{usageDisplay.groupCount !== 1 && "s"}
@@ -75,13 +77,18 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
             {isDefined(usageDisplay.assignment.scheduledStartDate) && usageDisplay.assignment.scheduledStartDate >= TODAY()
                 ? <div className="d-flex align-items-center">
                     <span>
-                        Begins&nbsp;
-                        <b>{getFriendlyDaysUntil(usageDisplay.assignment.scheduledStartDate)}</b>
+                        <Trans
+                            i18nKey="common:gameboard.usageInfo.beginsIn"
+                            components={{
+                                bold: <b />,
+                            }}
+                            values={{ daysUntil: getFriendlyDaysUntil(usageDisplay.assignment.scheduledStartDate) }}
+                        />
                     </span>
                 </div>
                 : <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/${usageDisplay.assignment.id}`} target="_blank" className="d-flex align-items-center gap-2">
-                    <b>View group progress</b>
-                    <span className={"visually-hidden"}>(opens in new tab)</span>
+                    <b>{t("common:gameboard.usageInfo.viewProgress")}</b>
+                    <span className={"visually-hidden"}>{t("common:cards.opensNewTab")}</span>
                     <i className="icon icon-arrow-right icon-color-white" aria-hidden="true" />
                 </Link>
             }
@@ -103,6 +110,7 @@ type GameboardCardProps = React.HTMLAttributes<HTMLElement> & {
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
+    const { t } = useTranslation();
     const {gameboard, linkLocation, children, assignment, openAssignModal, unassign, useAssignmentLink, allowManaging, usageDisplay, ...rest} = props;
 
     const user = useAppSelector(selectors.user.orNull);
@@ -170,7 +178,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
         <div className="d-flex flex-column flex-sm-row align-items-start mt-2">
             {gameboard?.contents?.length && <Button className="my-2 btn-underline order-1 order-sm-0" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
-                {showMore ? "Hide details" : "Show details"}
+                {showMore ? t("common:gameboard.card.hideDetailsButton") : t("common:gameboard.card.showDetailsButton")}
             </Button>}
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
@@ -183,15 +191,15 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 {allowManaging
                     ? isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); unassign?.();}}>
-                            Unassign
+                            {t("common:cards.unassign")}
                         </Button>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            Set again
+                            {t("common:cards.setAgain")}
                         </Button>
                     </>
                     : isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            Assign
+                            {t("common:cards.assign")}
                         </Button>
                     </>
                 }
@@ -204,7 +212,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 <Col xs={12} md={8} className="mt-sm-2">
                     <p className="mb-0 d-flex align-items-center gap-2">
                         <span>
-                            <strong>Questions:</strong>{" "}
+                            <strong>{t("common:gameboard.card.questionsLabel")}</strong>{" "}
                             {gameboard?.contents?.length || "0"}
                         </span>
                     </p>
@@ -219,7 +227,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             <thead>
                                 <tr>
                                     <th className="w-50">
-                                        {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
+                                        {t("common:gameboard.card.stagesHeader", { count: boardStagesAndDifficulties.length })}
                                     </th>
                                     <th className="w-50">
                                         {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}

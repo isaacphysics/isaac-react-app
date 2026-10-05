@@ -10,6 +10,8 @@ import { Spacer } from "../Spacer";
 import { HexIcon } from "../svg/HexIcon";
 import { GameboardLinkLocation } from "./GameboardCard";
 import { getFriendlyDaysUntil } from "../DateString";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type TestCardUsageDisplay = {
     type: "progressLink";
@@ -22,6 +24,7 @@ interface CardUsageInfoProps extends React.HTMLAttributes<HTMLDivElement> {
     
 // "Attempted/Correct" percentages or "Assigned to X groups"
 const CardUsageInfo = ({ quizAssignment, usageDisplay, className, ...rest }: CardUsageInfoProps) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     if (!quizAssignment) return;
 
@@ -34,13 +37,18 @@ const CardUsageInfo = ({ quizAssignment, usageDisplay, className, ...rest }: Car
             {isDefined(quizAssignment.scheduledStartDate) && quizAssignment.scheduledStartDate >= TODAY()
                 ? <div className="d-flex align-items-center">
                     <span>
-                        Begins&nbsp;
-                        <b>{getFriendlyDaysUntil(quizAssignment.scheduledStartDate)}</b>
+                        <Trans
+                            i18nKey="common:tests.card.usage.begins"
+                            components={{
+                                strong: <b />,
+                            }}
+                            values={{ startDate: getFriendlyDaysUntil(quizAssignment.scheduledStartDate) }}
+                        />
                     </span>
                 </div>
                 : <Link to={`${PATHS.TEST}/${quizAssignment.id}/feedback`} target="_blank" className="d-flex align-items-center gap-2">
-                    <b>View group results</b>
-                    <span className={"visually-hidden"}>(opens in new tab)</span>
+                    <b>{t("common:tests.card.usage.viewResults")}</b>
+                    <span className={"visually-hidden"}>{t("common:cards.opensNewTab")}</span>
                     <i className="icon icon-arrow-right" aria-hidden="true" />
                 </Link>
             }
@@ -92,7 +100,7 @@ export const TestCard = (props: TestCardProps) => {
                                         {quizAssignment.quizSummary?.title}
                                         <i className="icon icon-new-tab ms-2 icon-color-black" />
                                     </Link>
-                                    : quizAssignment.quizSummary?.title || "Untitled Test"
+                                    : quizAssignment.quizSummary?.title || i18next.t("common:tests.card.untitledTitle")
                             )}
                         </h4>
                         {above['sm'](deviceSize) && subjects.length > 0 && <div className="d-flex align-items-center mb-2">
@@ -123,21 +131,21 @@ export const TestCard = (props: TestCardProps) => {
                     ? isTutorOrAbove(user) && <>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle caret className="text-nowrap" color="keyline" size="md">
-                                Manage
+                                {i18next.t("common:tests.card.manage.toggle")}
                             </DropdownToggle>
                             <DropdownMenu container={"root"}>
-                                <DropdownItem onClick={cancel}>Unassign</DropdownItem>
-                                <DropdownItem onClick={openSetFeedbackModeModal}>Change feedback type</DropdownItem>
-                                <DropdownItem onClick={extendDueDate}>Extend due date</DropdownItem>
+                                <DropdownItem onClick={cancel}>{i18next.t("common:cards.unassign")}</DropdownItem>
+                                <DropdownItem onClick={openSetFeedbackModeModal}>{i18next.t("common:tests.card.manage.changeFeedbackType")}</DropdownItem>
+                                <DropdownItem onClick={extendDueDate}>{i18next.t("common:tests.card.manage.extendDueDate")}</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            Set again
+                            {i18next.t("common:cards.setAgain")}
                         </Button>
                     </>
                     : isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            Assign
+                            {i18next.t("common:cards.assign")}
                         </Button>
                     </>
                 }
