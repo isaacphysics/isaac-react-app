@@ -1,6 +1,7 @@
 import { logOutDeletedUser } from "../../actions";
 import {isaacApi} from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 export const accountApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -11,9 +12,9 @@ export const accountApi = isaacApi.injectEndpoints({
                 body: {},
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Account deletion request failed.",
-                successTitle: "Account deletion request sent.",
-                successMessage: "An email has been sent to you with instructions on how to confirm your account deletion.",
+                errorTitle: i18next.t("common:account.deletion.errorTitle"),
+                successTitle: i18next.t("common:account.deletion.successTitle"),
+                successMessage: i18next.t("common:account.deletion.successMessage"),
             }),
         }),
         deleteAccount: build.mutation<void, {token: string, deletionReason: string}>({
@@ -25,7 +26,7 @@ export const accountApi = isaacApi.injectEndpoints({
                 },
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Account deletion failed.",
+                errorTitle: i18next.t("common:account.deletion.failedTitle"),
                 onQuerySuccess: (_arg, _data, {getState: _getState, dispatch}) => {
                     dispatch(logOutDeletedUser());
                 }

@@ -4,6 +4,7 @@ import {onQueryLifecycleEvents} from "./utils";
 import {AdditionalInformation, AugmentedEvent, EventOverview} from "../../../../IsaacAppTypes";
 import {apiHelper, EventStatusFilter, EventTypeFilter, isDefined, STAGE} from "../../../services";
 import {EventOverviewFilter} from "../../../components/elements/panels/EventOverviews";
+import i18next from "i18next";
 
 const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     const augmentedEvent: AugmentedEvent = Object.assign({}, event);
@@ -106,7 +107,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             },
             providesTags: ["EventsList"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Events request failed",
+                errorTitle: i18next.t("common:events.fetch.errorTitle"),
             })
         }),
 
@@ -132,7 +133,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             },
             providesTags: ["AdminEventsList"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to load event overviews",
+                errorTitle: i18next.t("common:events.adminOverviews.errorTitle"),
             })
         }),
 
@@ -146,9 +147,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, {eventId}) => [{type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Event booking failed",
-                successTitle: "Event booking confirmed",
-                successMessage: "You have been successfully booked onto this event.",
+                errorTitle: i18next.t("common:events.selfBooking.book.errorTitle"),
+                successTitle: i18next.t("common:events.selfBooking.book.successTitle"),
+                successMessage: i18next.t("common:events.selfBooking.book.successMessage"),
             })
         }),
 
@@ -163,13 +164,13 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, {eventId}) => [{type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Event booking failed",
+                errorTitle: i18next.t("common:events.selfBooking.waitingList.errorTitle"),
                 successTitle: ({waitingListOnly}) => waitingListOnly
-                    ? "Booking request received"
-                    : "Waiting list booking confirmed",
+                    ? i18next.t("common:events.selfBooking.waitingList.requestReceivedTitle")
+                    : i18next.t("common:events.selfBooking.waitingList.confirmedTitle"),
                 successMessage: ({waitingListOnly}) => waitingListOnly
-                    ? "You have requested a place on this event."
-                    : "You have been successfully added to the waiting list for this event.",
+                    ? i18next.t("common:events.selfBooking.waitingList.requestReceivedMessage")
+                    : i18next.t("common:events.selfBooking.waitingList.confirmedMessage"),
             })
         }),
 
@@ -180,9 +181,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, eventId) => [{type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Event booking cancellation failed",
-                successTitle: "Your booking has been cancelled",
-                successMessage: "Your booking has successfully been cancelled.",
+                errorTitle: i18next.t("common:events.selfBooking.cancel.errorTitle"),
+                successTitle: i18next.t("common:events.selfBooking.cancel.successTitle"),
+                successMessage: i18next.t("common:events.selfBooking.cancel.successMessage"),
             })
         }),
 
@@ -192,7 +193,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: (eventId) => `/events/${encodeURIComponent(eventId)}/bookings`,
             providesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to load event bookings",
+                errorTitle: i18next.t("common:events.bookings.fetch.errorTitle"),
             })
         }),
 
@@ -200,7 +201,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: ({eventId, groupId}) => `/events/${encodeURIComponent(eventId)}/bookings/for_group/${groupId}`,
             providesTags: (eventBookings, _, {eventId, groupId}) => isDefined(eventBookings) ? [{type: "EventGroupBookings", id: `${eventId}|${groupId}`}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to load event bookings",
+                errorTitle: i18next.t("common:events.bookings.fetch.errorTitle"),
             })
         }),
 
@@ -208,7 +209,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: (eventId) => `/events/${encodeURIComponent(eventId)}/groups_bookings`,
             providesTags: (eventBookings, _, eventId) => isDefined(eventBookings) ? [{type: "AllEventGroupBookings", id: eventId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to load event bookings",
+                errorTitle: i18next.t("common:events.bookings.fetch.errorTitle"),
             })
         }),
 
@@ -220,9 +221,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, error, {eventId, groupId}) => !error ? [{type: "Event", id: eventId}, {type: "AllEventGroupBookings" as const, id: eventId}, ...(groupId ? [{type: "EventGroupBookings" as const, id: `${eventId}|${groupId}`}] : [])] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to cancel some of the reservations",
-                successTitle: "Reservations cancelled",
-                successMessage: "You have successfully cancelled students reservations for this event."
+                errorTitle: i18next.t("common:events.adminBooking.cancelReservations.errorTitle"),
+                successTitle: i18next.t("common:events.adminBooking.cancelReservations.successTitle"),
+                successMessage: i18next.t("common:events.adminBooking.cancelReservations.successMessage")
             })
         }),
 
@@ -234,9 +235,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "The action on behalf of the user was unsuccessful",
-                successTitle: "Action successful",
-                successMessage: "The action on behalf of the user was successful."
+                errorTitle: i18next.t("common:events.adminBooking.bookUser.errorTitle"),
+                successTitle: i18next.t("common:events.adminBooking.bookUser.successTitle"),
+                successMessage: i18next.t("common:events.adminBooking.bookUser.successMessage")
             })
         }),
 
@@ -248,9 +249,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, {eventId}) => ["EventGroupBookings", {type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Reservation failed",
-                successTitle: "Reservations confirmed",
-                successMessage: "You have successfully reserved students onto this event."
+                errorTitle: i18next.t("common:events.adminBooking.reserveUsers.errorTitle"),
+                successTitle: i18next.t("common:events.adminBooking.reserveUsers.successTitle"),
+                successMessage: i18next.t("common:events.adminBooking.reserveUsers.successMessage")
             })
         }),
 
@@ -264,7 +265,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to promote event booking"
+                errorTitle: i18next.t("common:events.adminBooking.promote.errorTitle")
             })
         }),
 
@@ -274,9 +275,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 method: "POST"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to resend email for event booking",
-                successTitle: "Event email sent",
-                successMessage: ({userId}) => `Email sent to ${userId}`
+                errorTitle: i18next.t("common:events.adminBooking.resendEmail.errorTitle"),
+                successTitle: i18next.t("common:events.adminBooking.resendEmail.successTitle"),
+                successMessage: ({userId}) => i18next.t("common:events.adminBooking.resendEmail.successMessage", { userId })
             })
         }),
 
@@ -287,7 +288,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to cancel event booking",
+                errorTitle: i18next.t("common:events.adminBooking.cancel.errorTitle"),
             })
         }),
 
@@ -298,7 +299,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to un-book user from event"
+                errorTitle: i18next.t("common:events.adminBooking.delete.errorTitle")
             })
         }),
 
@@ -309,7 +310,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to record event attendance"
+                errorTitle: i18next.t("common:events.adminBooking.recordAttendance.errorTitle")
             })
         }),
     })

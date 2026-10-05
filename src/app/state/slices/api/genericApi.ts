@@ -2,6 +2,7 @@ import { SeguePageDTO } from "../../../../IsaacApiTypes";
 import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 export const genericApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -10,7 +11,7 @@ export const genericApi = isaacApi.injectEndpoints({
                 url: `/pages/${id}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to load question",
+                errorTitle: i18next.t("common:questions.load.errorTitle"),
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                 },

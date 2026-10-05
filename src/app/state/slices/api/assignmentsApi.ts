@@ -2,7 +2,7 @@ import {isaacApi} from "./baseApi";
 import {AssignmentDTO, AssignmentProgressDTO, AssignmentStatusDTO, QuizAssignmentDTO} from "../../../../IsaacApiTypes";
 import {EnhancedAssignment} from "../../../../IsaacAppTypes";
 import {anonymisationFunctions, anonymiseIfNeededWith, onQueryLifecycleEvents} from "./utils";
-import {siteSpecific} from "../../../services";
+import i18next from "i18next";
 
 export const assignmentsApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -42,7 +42,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
             }),
             providesTags: ["AssignmentProgress"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading assignment progress failed"
+                errorTitle: i18next.t("common:assignments.progress.loadErrorTitle")
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.progressState)
         }),
@@ -84,9 +84,9 @@ export const assignmentsApi = isaacApi.injectEndpoints({
                         allAssignmentsPromise.undo(); groupAssignmentsPromise.undo();
                     }};
                 },
-                successTitle: siteSpecific("Assignment deleted", "Quiz unassigned"),
-                successMessage: siteSpecific("This assignment has been unset successfully.", "You have successfully unassigned the quiz"),
-                errorTitle: siteSpecific("Assignment deletion failed", "Quiz unassignment failed")
+                successTitle: i18next.t("site:assignments.delete.successTitle"),
+                successMessage: i18next.t("site:assignments.delete.successMessage"),
+                errorTitle: i18next.t("site:assignments.delete.errorTitle")
             })
         }),
 

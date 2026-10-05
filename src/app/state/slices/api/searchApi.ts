@@ -1,6 +1,7 @@
 import { ContentSummaryDTO, ResultsWrapper } from "../../../../IsaacApiTypes";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 const searchApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -11,7 +12,7 @@ const searchApi = isaacApi.injectEndpoints({
             }),
 
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to perform search",
+                errorTitle: i18next.t("common:search.errorTitle"),
             }),
         })
     })

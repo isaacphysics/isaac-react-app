@@ -1,6 +1,7 @@
 import { AnvilMarkingRequestDTO, SkillAttemptsByDate } from "../../../../IsaacApiTypes";
 import {isaacApi} from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 export const skillsApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -9,7 +10,7 @@ export const skillsApi = isaacApi.injectEndpoints({
                 url: `/skills/attempts/${userId}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to load skills questions",
+                errorTitle: i18next.t("common:clientError.skills.loadError"),
             }),
         }),
         postSkillsAnswer: build.mutation<void, { appId: string, body: AnvilMarkingRequestDTO}>({
@@ -19,7 +20,7 @@ export const skillsApi = isaacApi.injectEndpoints({
                 body,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Couldn't save answer.",
+                errorTitle: i18next.t("common:clientError.skills.saveError"),
             }),
         }),
     })

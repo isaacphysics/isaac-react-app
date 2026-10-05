@@ -11,6 +11,7 @@ import {
 import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
 import {AdminStatsResponse, ContentErrorsResponse, UserSchoolLookup} from "../../../../IsaacAppTypes";
+import i18next from "i18next";
 
 export const adminApi = isaacApi.enhanceEndpoints({
     addTagTypes: ["MisuseStatistics"],
@@ -24,7 +25,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             providesTags: ["MisuseStatistics"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to get misuse statistics for user"
+                errorTitle: i18next.t("common:admin.misuseStatistics.errorTitle")
             })
         }),
 
@@ -39,9 +40,9 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["MisuseStatistics"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to reset misuse monitor for user",
+                errorTitle: i18next.t("common:admin.misuseMonitor.resetErrorTitle"),
                 onQuerySuccess: ({eventLabel}, _, {dispatch}) => {
-                    dispatch(showSuccessToast("Reset successfully", `${eventLabel.replace("MisuseHandler", "")} misuse event count reset for user`));
+                    dispatch(showSuccessToast(i18next.t("common:admin.misuseMonitor.resetSuccessTitle"), i18next.t("common:admin.misuseMonitor.resetSuccessMessage", { eventLabel: eventLabel.replace("MisuseHandler", "") })));
                 },
             })
         }),
@@ -53,7 +54,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             providesTags: ["ContentErrors"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading Content Errors Failed",
+                errorTitle: i18next.t("common:admin.contentErrors.errorTitle"),
             })
         }),
 
@@ -62,7 +63,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 url: "/admin/stats",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading Site Statistics Failed",
+                errorTitle: i18next.t("common:admin.siteStatistics.errorTitle"),
             })
         }),
 
@@ -75,7 +76,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 params
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "User search failed",
+                errorTitle: i18next.t("common:admin.users.searchErrorTitle"),
             })
         }),
 
@@ -89,9 +90,9 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 }
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Merging users failed",
+                errorTitle: i18next.t("common:admin.users.mergeErrorTitle"),
                 onQuerySuccess: ({targetId, sourceId}, _, {dispatch}) => {
-                    dispatch(showSuccessToast("Users merged", `User with id: ${sourceId} was merged into user with id: ${targetId}`));
+                    dispatch(showSuccessToast(i18next.t("common:admin.users.mergeSuccessTitle"), i18next.t("common:admin.users.mergeSuccessMessage", { sourceId, targetId })));
                 }
             })
         }),
@@ -102,9 +103,9 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 method: "DELETE",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "User deletion failed",
-                successTitle: "User deleted",
-                successMessage: "Selected user was deleted successfully",
+                errorTitle: i18next.t("common:admin.users.deleteErrorTitle"),
+                successTitle: i18next.t("common:admin.users.deleteSuccessTitle"),
+                successMessage: i18next.t("common:admin.users.deleteSuccessMessage"),
             })
         }),
 
@@ -115,7 +116,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 body: userIds,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "User role modification failed",
+                errorTitle: i18next.t("common:admin.users.modifyRoleErrorTitle"),
             })
         }),
 
@@ -126,7 +127,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 body: emails,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Email verification status modification failed",
+                errorTitle: i18next.t("common:admin.users.modifyEmailVerificationErrorTitle"),
             })
         }),
 
@@ -136,7 +137,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 method: "GET",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to get user",
+                errorTitle: i18next.t("common:admin.users.getUserErrorTitle"),
             }),
         }),
 
@@ -145,7 +146,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 url: `/users/school_lookup?user_ids=${userIds.join(",")}`,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to load user school lookup details",
+                errorTitle: i18next.t("common:admin.users.getSchoolLookupErrorTitle"),
             })
         }),
 
@@ -159,7 +160,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             transformResponse: (response: {results: string[], totalResults: number}) => response.results,
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "There was a problem generating an answer specification",
+                errorTitle: i18next.t("common:questions.generateAnswerSpec.errorTitle"),
             })
         }),
     })

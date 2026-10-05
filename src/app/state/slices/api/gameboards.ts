@@ -25,6 +25,7 @@ import {
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {Immutable} from "immer";
+import i18next from "i18next";
 
 export interface AssignmentSpec {
     boardId: string;
@@ -41,8 +42,8 @@ export const assignGameboard = createAsyncThunk(
         const appDispatch = dispatch as AppDispatch;
         if (groups.length === 0) {
             appDispatch(showErrorToast(
-                `${siteSpecific("Question deck", "Quiz")} assignment failed`,
-                "Error: Please choose one or more groups."
+                i18next.t("site:gameboard.assign.failedTitle"),
+                i18next.t("common:gameboard.assign.noGroupsErrorTitle")
             ));
             return rejectWithValue(null);
         }
@@ -74,21 +75,21 @@ export const assignGameboard = createAsyncThunk(
             if (failedIds.length === 0) {
                 appDispatch(showSuccessToast(
                     siteSpecific(
-                        `Assignment${successfulIds.length > 1 ? "s" : ""} saved`,
-                        "Quiz assigned"
+                        i18next.t("sci:gameboard.assign.savedTitle", { count: successfulIds.length }),
+                        i18next.t("ada:gameboard.assign.savedTitle")
                     ),
                     siteSpecific(
                         successfulIds.length > 1
-                            ? "All assignments have been saved successfully."
-                            : "This assignment has been saved successfully.",
-                        "Quiz assigned successfully."
+                            ? i18next.t("sci:gameboard.assign.allSaved")
+                            : i18next.t("sci:gameboard.assign.singleSaved"),
+                        i18next.t("ada:gameboard.assign.savedMessage")
                     )
                 ));
             } else {
                 // Show each group assignment error in a separate toast
                 failedIds.forEach(({groupId, errorMessage}) => {
                     appDispatch(showErrorToast(
-                        `${siteSpecific("Question deck", "Quiz")} assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
+                        i18next.t("site:gameboard.assign.groupFailed", { groupName: groupLookUp.get(groupId) ?? "unknown group" }),
                         errorMessage as string
                     ));
                 });
@@ -98,14 +99,14 @@ export const assignGameboard = createAsyncThunk(
                 } else {
                     const partialSuccessMessage = siteSpecific(
                         successfulIds.length > 1
-                            ? "Some assignments were saved successfully."
-                            : `Assignment to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
-                        "The quiz was assigned to some groups successfully."
+                            ? i18next.t("sci:gameboard.assign.someSaved")
+                            : i18next.t("sci:gameboard.assign.singleGroupSaved", { groupName: groupLookUp.get(successfulIds[0] as number) }),
+                        i18next.t("ada:gameboard.assign.someGroupsSaved")
                     );
                     appDispatch(showSuccessToast(
                         siteSpecific(
-                            `Assignment${successfulIds.length > 1 ? "s" : ""} saved`,
-                            "Quiz assigned"
+                            i18next.t("sci:gameboard.assign.savedTitle", { count: successfulIds.length }),
+                            i18next.t("ada:gameboard.assign.savedTitle")
                         ),
                         partialSuccessMessage
                     ));
@@ -143,8 +144,8 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
         if (!isDefined(boardId)) {
             // This really shouldn't happen!
             dispatch(showErrorToast(
-                `${siteSpecific("Question deck", "Quiz")} deletion failed`,
-                `${siteSpecific("Question deck", "Quiz")} ID is missing: please contact us about this error.`
+                i18next.t("site:gameboard.delete.failedTitle"),
+                i18next.t("site:gameboard.delete.idMissing")
             ) as any);
             return rejectWithValue(null);
         }
@@ -165,14 +166,14 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
                 return mutationSucceeded(deleteResponse) ? boardId : rejectWithValue(null);
             } else {
                 dispatch(showErrorToast(
-                    `${siteSpecific("Question deck", "Quiz")} deletion failed`,
-                    `Could not fetch assignments to determine if the ${siteSpecific("question deck", "quiz")} deletion is safe.`
+                    i18next.t("site:gameboard.delete.failedTitle"),
+                    i18next.t("site:gameboard.delete.fetchFailed")
                 ) as any);
                 return rejectWithValue(null);
             }
         } catch (e) {
             dispatch(showRTKQueryErrorToastIfNeeded(
-                `${siteSpecific("Question deck", "Quiz")} deletion failed`,
+                i18next.t("site:gameboard.delete.failedTitle"),
                 e
             ) as any);
             return rejectWithValue(null);
@@ -217,7 +218,7 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
             dispatch(showSuccessToast(`${siteSpecific("Question deck", "Quiz")} saved`, `The ${siteSpecific("question deck", "quiz")} ${boardTitle ? `${boardTitle} ` : ''}has successfully been saved to your account.`) as any);
             return {boardId, boardTitle};
         } catch (e) {
-            dispatch(showRTKQueryErrorToastIfNeeded(`Error saving ${siteSpecific("question deck", "quiz")}`, e) as any);
+            dispatch(showRTKQueryErrorToastIfNeeded(i18next.t("site:gameboard.save.error"), e) as any);
             return rejectWithValue(null);
         }
     }

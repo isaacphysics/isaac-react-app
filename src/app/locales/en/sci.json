@@ -60,6 +60,11 @@
     "add": {
       "fromTitle": "Add a question deck from ..."
     },
+    "delete": {
+      "errorTitle": "Assignment deletion failed",
+      "successMessage": "This assignment has been unset successfully.",
+      "successTitle": "Assignment deleted"
+    },
     "display": {
       "currentlyAssigned": "Question deck currently assigned to:",
       "pendingDescription": "These assignments are scheduled to begin at a future date. On the morning of the scheduled date, students will be able to see the assignment, and will receive a notification email.",
@@ -336,6 +341,16 @@
     "add": {
       "loading": "Adding question deck..."
     },
+    "assign": {
+      "allSaved": "All assignments have been saved successfully.",
+      "failedTitle": "Question deck assignment failed",
+      "groupFailed": "Question deck assignment to {{groupName}} failed",
+      "savedTitle_one": "Assignment saved",
+      "savedTitle_other": "Assignments saved",
+      "singleGroupSaved": "Assignment to {{groupName}} was saved successfully.",
+      "singleSaved": "This assignment has been saved successfully.",
+      "someSaved": "Some assignments were saved successfully."
+    },
     "builder": {
       "createError": "Unable to create question deck",
       "helpText": "You can create custom question sets to assign to your groups. Search by question title or topic and add up to ten questions to a question deck.<br/>You cannot modify a question deck after it has been created. You'll find a link underneath any existing question deck to duplicate and edit it.",
@@ -345,19 +360,34 @@
       "tagCreatedIsaac": "Created by Isaac",
       "titlePlaceholder": "e.g. Year 12 Dynamics"
     },
+    "create": {
+      "errorTitle": "Error creating deck"
+    },
     "created": {
       "createAnother": "Create another question deck",
       "failed": "Your question deck was not successfully created.<br/>{{errorMessage}}",
       "success": "Your question deck has been created. You can now set it as an assignment, create another question deck or view all of your question decks.",
       "viewAll": "View all of your question decks"
     },
+    "delete": {
+      "failedTitle": "Question deck deletion failed",
+      "fetchFailed": "Could not fetch assignments to determine if the question deck deletion is safe.",
+      "idMissing": "Question deck ID is missing: please contact us about this error."
+    },
     "error": {
       "fetchError": "Error fetching question deck with id: {{boardId}}"
+    },
+    "link": {
+      "errorTitle": "Linking the deck to your account failed"
+    },
+    "load": {
+      "errorTitle": "Loading question decks failed"
     },
     "notFound": {
       "title": "Question deck not found"
     },
     "save": {
+      "error": "Error saving question deck",
       "saveLabel": "Save deck",
       "unsaveLabel": "Unsave deck",
       "unsaveOwnerConfirm": "Are you sure you want to unsave your deck '{{boardTitle}}' from your account? You'll only be able to find it again if you've set it as an assignment."
@@ -367,6 +397,11 @@
     },
     "title": {
       "fallback": "Question deck"
+    },
+    "unlink": {
+      "errorTitle": "Deck removal failed",
+      "successMessage": "The deck has been removed from your saved decks.",
+      "successTitle": "Deck removed"
     }
   },
   "gameboards": {

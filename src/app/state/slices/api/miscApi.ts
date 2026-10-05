@@ -1,6 +1,7 @@
 import {isaacApi} from "./baseApi";
 import {School} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
+import i18next from "i18next";
 
 export const miscApi = isaacApi.enhanceEndpoints({
     addTagTypes: [],
@@ -29,7 +30,7 @@ export const miscApi = isaacApi.enhanceEndpoints({
                 body: params,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Error sending Contact Us form",
+                errorTitle: i18next.t("common:contact.formErrorTitle"),
             })
         }),
 

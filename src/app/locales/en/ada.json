@@ -56,6 +56,11 @@
       "fromTitle": "Add a quiz from ..."
     },
     "createQuizButton": "Create a quiz",
+    "delete": {
+      "errorTitle": "Quiz unassignment failed",
+      "successMessage": "You have successfully unassigned the quiz",
+      "successTitle": "Quiz unassigned"
+    },
     "display": {
       "currentlyAssigned": "Quiz currently assigned to:",
       "pendingDescription": "These quizzes are scheduled to begin at a future date. On the morning of the scheduled date, students will be able to see the quiz, and will receive a notification email.",
@@ -188,6 +193,13 @@
     "add": {
       "loading": "Adding quiz..."
     },
+    "assign": {
+      "failedTitle": "Quiz assignment failed",
+      "groupFailed": "Quiz assignment to {{groupName}} failed",
+      "savedMessage": "Quiz assigned successfully.",
+      "savedTitle": "Quiz assigned",
+      "someGroupsSaved": "The quiz was assigned to some groups successfully."
+    },
     "assignments": {
       "deleteQuiz": "Delete quiz"
     },
@@ -202,19 +214,34 @@
       "tagCreatedAda": "Created by Ada",
       "titlePlaceholder": "e.g. Year 12 Network components"
     },
+    "create": {
+      "errorTitle": "Error creating quiz"
+    },
     "created": {
       "createAnother": "Create another quiz",
       "failed": "Your quiz was not successfully created.<br/>{{errorMessage}}",
       "success": "Your quiz has been created. You can now set it as an assignment, create another quiz or view all of your quizzes.",
       "viewAll": "View all of your quizzes"
     },
+    "delete": {
+      "failedTitle": "Quiz deletion failed",
+      "fetchFailed": "Could not fetch assignments to determine if the quiz deletion is safe.",
+      "idMissing": "Quiz ID is missing: please contact us about this error."
+    },
     "error": {
       "fetchError": "Error fetching quiz with id: {{boardId}}"
+    },
+    "link": {
+      "errorTitle": "Linking the quiz to your account failed"
+    },
+    "load": {
+      "errorTitle": "Loading quizzes failed"
     },
     "notFound": {
       "title": "Quiz not found"
     },
     "save": {
+      "error": "Error saving quiz",
       "saveLabel": "Save quiz",
       "unsaveLabel": "Unsave quiz",
       "unsaveOwnerConfirm": "Are you sure you want to unsave your quiz '{{boardTitle}}' from your account? You'll only be able to find it again if you've set it as an assignment."
@@ -224,6 +251,11 @@
     },
     "title": {
       "fallback": "Filter Generated Quiz"
+    },
+    "unlink": {
+      "errorTitle": "Quiz removal failed",
+      "successMessage": "You have successfully unlinked your account from this quiz.",
+      "successTitle": "Quiz removed"
     }
   },
   "gameboards": {

@@ -2,6 +2,7 @@ import {groupsApi} from "./groupsApi";
 import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {anonymisationFunctions, anonymiseIfNeededWith, onQueryLifecycleEvents} from "./utils";
 import {showErrorToast} from "../../actions/popups";
+import i18next from "i18next";
 
 export const authorisationsApi = groupsApi.enhanceEndpoints({
     addTagTypes: ["ActiveAuthorisations", "OtherAuthorisations"],
@@ -14,7 +15,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 : ["ActiveAuthorisations"],
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading authorised teachers failed"
+                errorTitle: i18next.t("common:groups.authorisations.loadTeachersErrorTitle")
             })
         }),
 
@@ -25,7 +26,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 : ["OtherAuthorisations"],
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading authorised students failed"
+                errorTitle: i18next.t("common:groups.authorisations.loadStudentsErrorTitle")
             })
         }),
 
@@ -35,13 +36,13 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 onQueryError: (args, error, {dispatch}) => {
                     if (error.status == 429) {
                         dispatch(showErrorToast(
-                            "Too many attempts",
-                            "You have entered too many group codes. Please check your code with your teacher and try again later!"
+                            i18next.t("common:groups.authorisations.rateLimitTitle"),
+                            i18next.t("common:groups.authorisations.rateLimitMessage")
                         ));
                     } else {
                         dispatch(showErrorToast(
-                            "Teacher connection failed",
-                            "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+                            i18next.t("common:groups.authorisations.connectionErrorTitle"),
+                            i18next.t("common:groups.authorisations.connectionErrorMessage")
                         ));
                     }
                 }
@@ -55,10 +56,10 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["ActiveAuthorisations", "Groups", "GroupMemberships", "MyGroupMemberships", "AllMyAssignments"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Granted access",
-                successMessage: "You have granted access to your data.",
-                errorTitle: "Teacher connection failed",
-                errorMessage: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+                successTitle: i18next.t("common:groups.authorisations.grantSuccessTitle"),
+                successMessage: i18next.t("common:groups.authorisations.grantSuccessMessage"),
+                errorTitle: i18next.t("common:groups.authorisations.connectionErrorTitle"),
+                errorMessage: i18next.t("common:groups.authorisations.connectionErrorMessage")
             })
         }),
 
@@ -69,9 +70,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["ActiveAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Access revoked",
-                successMessage: "You have revoked access to your data.",
-                errorTitle: "Revoking access failed",
+                successTitle: i18next.t("common:groups.authorisations.revokeSuccessTitle"),
+                successMessage: i18next.t("common:groups.authorisations.revokeSuccessMessage"),
+                errorTitle: i18next.t("common:groups.authorisations.revokeErrorTitle"),
             })
         }),
 
@@ -82,9 +83,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["OtherAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Access removed",
-                successMessage: "You have ended your access to your student's data.",
-                errorTitle: "Ending access failed",
+                successTitle: i18next.t("common:groups.authorisations.releaseSuccessTitle"),
+                successMessage: i18next.t("common:groups.authorisations.releaseSuccessMessage"),
+                errorTitle: i18next.t("common:groups.authorisations.releaseErrorTitle"),
             })
         }),
 
@@ -95,9 +96,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["OtherAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Access removed",
-                successMessage: "You have ended your access to all of your students' data.",
-                errorTitle: "Ending access failed",
+                successTitle: i18next.t("common:groups.authorisations.releaseSuccessTitle"),
+                successMessage: i18next.t("common:groups.authorisations.releaseAllSuccessMessage"),
+                errorTitle: i18next.t("common:groups.authorisations.releaseErrorTitle"),
             })
         })
     })

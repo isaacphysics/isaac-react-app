@@ -7,6 +7,7 @@ import {showToast} from "../../actions/popups";
 import {isFirstLoginInPersistence, isTeacherOrAbove, KEY, navigateComponentless, persistence} from "../../../services";
 import {questionsApi} from "./questionsApi";
 import {continueToAfterAuthPath, requestCurrentUser} from "../../actions";
+import i18next from "i18next";
 
 export const userApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -19,9 +20,9 @@ export const userApi = isaacApi.injectEndpoints({
                 body: {sharedSecret, mfaVerificationCode}
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "2FA Configured",
-                successMessage: "You have enabled 2FA on your account!",
-                errorTitle: "Failed to setup 2FA on account."
+                successTitle: i18next.t("common:auth.mfa.setupSuccessTitle"),
+                successMessage: i18next.t("common:auth.mfa.setupSuccessMessage"),
+                errorTitle: i18next.t("common:auth.mfa.setupErrorTitle")
             })
         }),
 
@@ -31,9 +32,9 @@ export const userApi = isaacApi.injectEndpoints({
                 method: "DELETE"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "2FA Disabled",
-                successMessage: "You have disabled 2FA on this account!",
-                errorTitle: "Failed to disable 2FA on account."
+                successTitle: i18next.t("common:auth.mfa.disableSuccessTitle"),
+                successMessage: i18next.t("common:auth.mfa.disableSuccessMessage"),
+                errorTitle: i18next.t("common:auth.mfa.disableErrorTitle")
             })
         }),
 
@@ -43,7 +44,7 @@ export const userApi = isaacApi.injectEndpoints({
                 method: "GET",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to get 2FA secret"
+                errorTitle: i18next.t("common:auth.mfa.secretErrorTitle")
             })
         }),
 
@@ -53,9 +54,9 @@ export const userApi = isaacApi.injectEndpoints({
                 method: "POST"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Account upgraded",
-                successMessage: "You have upgraded to a teacher account!",
-                errorTitle: "Failed to upgrade account",
+                successTitle: i18next.t("common:account.upgrade.successTitle"),
+                successMessage: i18next.t("common:account.upgrade.successMessage"),
+                errorTitle: i18next.t("common:account.upgrade.errorTitle"),
             }),
         }),
 
@@ -73,9 +74,9 @@ export const userApi = isaacApi.injectEndpoints({
                 body: {password: params.password}
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Password reset successful",
-                successMessage: "Your password has been updated successfully.",
-                errorTitle: "Failed to reset password"
+                successTitle: i18next.t("common:auth.passwordReset.completedTitle"),
+                successMessage: i18next.t("common:auth.passwordReset.successMessage"),
+                errorTitle: i18next.t("common:auth.passwordReset.failedTitle")
             })
         }),
 
@@ -175,8 +176,8 @@ export const userApi = isaacApi.injectEndpoints({
                             }
                         } else if (!editingOtherUser) {
                             dispatch(showToast({
-                                title: "Account settings updated",
-                                body: "Your account settings were updated successfully.",
+                                title: i18next.t("common:account.update.successTitle"),
+                                body: i18next.t("common:account.update.ownSuccessMessage"),
                                 color: "success",
                                 timeout: 5000,
                                 closable: false,
@@ -186,8 +187,8 @@ export const userApi = isaacApi.injectEndpoints({
                                 void navigateComponentless('/');
                             }
                             dispatch(showToast({
-                                title: "Account settings updated",
-                                body: "The user's account settings were updated successfully.",
+                                title: i18next.t("common:account.update.successTitle"),
+                                body: i18next.t("common:account.update.otherSuccessMessage"),
                                 color: "success",
                                 timeout: 5000,
                                 closable: false,
@@ -195,7 +196,7 @@ export const userApi = isaacApi.injectEndpoints({
                         }
                     } catch {
                         dispatch(showToast({
-                            title: "Account settings not updated",
+                            title: i18next.t("common:account.update.notUpdatedTitle"),
                             body: `Unable to update ${editingOtherUser ? "the user's" : "your"} account settings.`,
                             color: "danger",
                             timeout: 5000,

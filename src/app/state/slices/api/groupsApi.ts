@@ -9,6 +9,7 @@ import {
 import {isDefined, MEMBERSHIP_STATUS} from "../../../services";
 import {showSuccessToast} from "../../actions/popups";
 import {UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
+import i18next from "i18next";
 
 export const groupsApi = assignmentsApi.injectEndpoints({
     endpoints: (build) => ({
@@ -19,7 +20,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             providesTags: ["Groups"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading groups failed"
+                errorTitle: i18next.t("common:groups.fetch.errorTitle")
             }),
             transformResponse: anonymiseListIfNeededWith(anonymisationFunctions.appGroup),
             keepUnusedDataFor: 60
@@ -41,7 +42,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         (groups) => [...groups, newGroup]
                     ));
                 },
-                errorTitle: "Group creation failed"
+                errorTitle: i18next.t("common:groups.create.errorTitle")
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
@@ -60,7 +61,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         (groups) => groups.filter(g => g.id !== groupId)
                     )));
                 },
-                errorTitle: "Group deletion failed"
+                errorTitle: i18next.t("common:groups.delete.errorTitle")
             })
         }),
 
@@ -74,7 +75,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: ({updatedGroup, message}, _, {dispatch}) => {
                     if (message) {
-                        dispatch(showSuccessToast("Group updated successfully", message));
+                        dispatch(showSuccessToast(i18next.t("common:groups.update.successTitle"), message));
                     }
                     [true, false].forEach(archivedGroupsOnly => {
                         dispatch(groupsApi.util.updateQueryData(
@@ -99,7 +100,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         );
                     });
                 },
-                errorTitle: "Group saving failed"
+                errorTitle: i18next.t("common:groups.update.errorTitle")
             })
         }),
 
@@ -111,7 +112,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             providesTags: (_, __, userId) => userId ? [{type: "GroupMemberships", id: userId}] : ["MyGroupMemberships"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading group memberships failed"
+                errorTitle: i18next.t("common:groups.memberships.fetch.errorTitle")
             }),
             transformResponse: anonymiseListIfNeededWith<GroupMembershipDetailDTO>(anonymisationFunctions.groupMembershipDetail)
         }),
@@ -123,9 +124,9 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             invalidatesTags: ["MyGroupMemberships"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Status Updated",
-                successMessage: "You have updated your membership status.",
-                errorTitle: "Membership status update failed"
+                successTitle: i18next.t("common:groups.memberships.updateStatus.successTitle"),
+                successMessage: i18next.t("common:groups.memberships.updateStatus.successMessage"),
+                errorTitle: i18next.t("common:groups.memberships.updateStatus.errorTitle")
             }),
         }),
 
@@ -147,7 +148,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                errorTitle: "Loading group members failed"
+                errorTitle: i18next.t("common:groups.members.fetch.errorTitle")
             }),
             keepUnusedDataFor: 0,
             transformResponse: anonymiseListIfNeededWith<UserSummaryWithGroupMembershipDTO>(anonymisationFunctions.userSummary())
@@ -176,10 +177,10 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                successTitle: "Removal successful",
-                successMessage: "User removed from the group.",
-                errorTitle: "Failed to delete",
-                errorMessage: "User not removed from the group, please try again."
+                successTitle: i18next.t("common:groups.members.remove.successTitle"),
+                successMessage: i18next.t("common:groups.members.remove.successMessage"),
+                errorTitle: i18next.t("common:groups.members.remove.errorTitle"),
+                errorMessage: i18next.t("common:groups.members.remove.errorMessage")
             })
         }),
 
@@ -205,7 +206,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                errorTitle: "Group manager addition failed"
+                errorTitle: i18next.t("common:groups.managers.add.errorTitle")
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
@@ -245,7 +246,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         }
                     });
                 },
-                errorTitle: "Group manager removal failed"
+                errorTitle: i18next.t("common:groups.managers.removeManager.errorTitle")
             }),
         }),
 
@@ -256,9 +257,9 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             invalidatesTags: ["AllSetTests", "AllSetAssignments", "GroupAssignments", "GroupTests", "Groups"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Group manager promoted to owner",
-                successMessage: "You have been demoted to an additional manager of this group",
-                errorTitle: "Group manager promotion failed"
+                successTitle: i18next.t("common:groups.managers.promote.successTitle"),
+                successMessage: i18next.t("common:groups.managers.promote.successMessage"),
+                errorTitle: i18next.t("common:groups.managers.promote.errorTitle")
             })
         }),
 
@@ -282,7 +283,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                errorTitle: "Loading group token failed"
+                errorTitle: i18next.t("common:groups.token.fetch.errorTitle")
             }),
         }),
     })

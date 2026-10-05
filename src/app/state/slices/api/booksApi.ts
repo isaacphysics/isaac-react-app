@@ -1,6 +1,7 @@
 import { IsaacBookDetailPageDTO, IsaacBookIndexPageDTO } from "../../../../IsaacApiTypes";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 const booksApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -9,7 +10,7 @@ const booksApi = isaacApi.injectEndpoints({
                 url: `/pages/books/index/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to fetch book contents."
+                errorTitle: i18next.t("common:books.error.fetchContents")
             }),
             keepUnusedDataFor: 60
         }),
@@ -19,7 +20,7 @@ const booksApi = isaacApi.injectEndpoints({
                 url: `/pages/books/page/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to fetch book page."
+                errorTitle: i18next.t("common:books.error.fetchPage")
             }),
             keepUnusedDataFor: 60
         })

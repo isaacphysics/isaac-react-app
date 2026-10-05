@@ -2,6 +2,7 @@ import {GameboardItem, IsaacPageFragmentDTO, IsaacPodDTO} from "../../../../Isaa
 import {FEATURED_NEWS_TAG} from "../../../services";
 import {onQueryLifecycleEvents} from "./utils";
 import {isaacApi} from "./baseApi";
+import i18next from "i18next";
 
 const contentApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -22,7 +23,7 @@ const contentApi = isaacApi.injectEndpoints({
                 });
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to display news"
+                errorTitle: i18next.t("common:news.displayErrorTitle")
             }),
             keepUnusedDataFor: 60
         }),

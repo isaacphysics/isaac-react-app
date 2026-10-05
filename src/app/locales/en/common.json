@@ -70,6 +70,8 @@
       "confirmButton": "Confirm via email",
       "confirmWarning": "I understand that deleting my account is permanent and cannot be undone.",
       "deleteButton": "Delete Account",
+      "errorTitle": "Account deletion request failed.",
+      "failedTitle": "Account deletion failed.",
       "noToken": "You must have a valid token to delete your account. Visit your <accountLink>account page</accountLink> to generate a new email with a token.",
       "notLoggedIn": "You must be logged in to delete your account.",
       "reasonAccidental": "I made an account by mistake.",
@@ -78,6 +80,8 @@
       "reasonNoLongerNeed": "I no longer need my account.",
       "reasonOther": "Another reason / prefer not to say.",
       "selectReason": "Please select the reason you wish to delete your account:",
+      "successMessage": "An email has been sent to you with instructions on how to confirm your account deletion.",
+      "successTitle": "Account deletion request sent.",
       "title": "Account deletion",
       "tutorRestriction": "Only student accounts can be deleted automatically. Please <contactLink>contact us</contactLink> to request account deletion."
     },
@@ -252,7 +256,11 @@
       "errorTitle": "Unable to update your account",
       "fillAllFields": "Please fill in all required fields.",
       "incompleteFields": "Not all required fields have been correctly filled.",
-      "submitButton": "Update details"
+      "notUpdatedTitle": "Account settings not updated",
+      "otherSuccessMessage": "The user's account settings were updated successfully.",
+      "ownSuccessMessage": "Your account settings were updated successfully.",
+      "submitButton": "Update details",
+      "successTitle": "Account settings updated"
     },
     "updateError": {
       "alertTitle": "Unable to update your account",
@@ -260,6 +268,9 @@
       "toastTitle": "Account update failed"
     },
     "upgrade": {
+      "errorTitle": "Failed to upgrade account",
+      "successMessage": "You have upgraded to a teacher account!",
+      "successTitle": "Account upgraded",
       "title": "Upgrade to a teacher account",
       "upgradeButton": "Get a teacher account"
     }
@@ -324,6 +335,7 @@
       }
     },
     "contentErrors": {
+      "errorTitle": "Loading Content Errors Failed",
       "filters": {
         "errorMessageLabel": "Filter by error message",
         "errorMessagePlaceholder": "Filter errors by error message",
@@ -354,6 +366,13 @@
     },
     "demonstration": {
       "title": "Demonstration Mode"
+    },
+    "email": {
+      "sendErrorTitle": "Sending email failed",
+      "sendSuccessMessage": "Email sent to users successfully",
+      "sendSuccessTitle": "Email sent",
+      "sendWithIdsErrorTitle": "Sending email with ids failed",
+      "templateErrorTitle": "Failed to get email template"
     },
     "emails": {
       "contentObject": {
@@ -420,6 +439,17 @@
         "status": "Misused?"
       },
       "title": "Misuse statistics"
+    },
+    "misuseMonitor": {
+      "resetErrorTitle": "Failed to reset misuse monitor for user",
+      "resetSuccessMessage": "{{eventLabel}} misuse event count reset for user",
+      "resetSuccessTitle": "Reset successfully"
+    },
+    "misuseStatistics": {
+      "errorTitle": "Failed to get misuse statistics for user"
+    },
+    "siteStatistics": {
+      "errorTitle": "Loading Site Statistics Failed"
     },
     "stats": {
       "answering": {
@@ -550,6 +580,19 @@
         "verificationStatusVerified": "Verified"
       },
       "title": "User manager"
+    },
+    "users": {
+      "deleteErrorTitle": "User deletion failed",
+      "deleteSuccessMessage": "Selected user was deleted successfully",
+      "deleteSuccessTitle": "User deleted",
+      "getSchoolLookupErrorTitle": "Failed to load user school lookup details",
+      "getUserErrorTitle": "Failed to get user",
+      "mergeErrorTitle": "Merging users failed",
+      "mergeSuccessMessage": "User with id: {{sourceId}} was merged into user with id: {{targetId}}",
+      "mergeSuccessTitle": "Users merged",
+      "modifyEmailVerificationErrorTitle": "Email verification status modification failed",
+      "modifyRoleErrorTitle": "User role modification failed",
+      "searchErrorTitle": "User search failed"
     }
   },
   "anvilApps": {
@@ -708,6 +751,7 @@
       "groupTab": {
         "description": "See who attempted the assignment and which questions they struggled with."
       },
+      "loadErrorTitle": "Loading assignment progress failed",
       "questionCard": {
         "attemptedBadge": "{{attemptedCount}} of {{totalCount}} attempted"
       },
@@ -844,8 +888,13 @@
       "continueButton": "Continue",
       "failedTitle": "Couldn't verify email address",
       "loginToResend": "Please login to your <accountLink>account</accountLink> to resend the verification email.",
+      "requestErrorTitle": "Email verification request failed.",
+      "requestSuccessMessage": "Please follow the verification link given in the email sent to your address.",
+      "requestSuccessTitle": "Email verification request succeeded.",
       "resendButton": "Resend verification email",
       "sentTo": "Verification email sent to {{email}}",
+      "successMessage": "The email address has been verified",
+      "successTitle": "Email address verified",
       "title": "Email verification",
       "userMismatch": "You are signed in as a different user to the user with the email you have just verified.",
       "verified": "Email address verified."
@@ -874,7 +923,14 @@
       "failureMessage": "Logout everywhere failed"
     },
     "mfa": {
-      "errorWithVerificationCode": "Error with verification code."
+      "disableErrorTitle": "Failed to disable 2FA on account.",
+      "disableSuccessMessage": "You have disabled 2FA on this account!",
+      "disableSuccessTitle": "2FA Disabled",
+      "errorWithVerificationCode": "Error with verification code.",
+      "secretErrorTitle": "Failed to get 2FA secret",
+      "setupErrorTitle": "Failed to setup 2FA on account.",
+      "setupSuccessMessage": "You have enabled 2FA on your account!",
+      "setupSuccessTitle": "2FA Configured"
     },
     "microsoft": {
       "buttonLabel": "Microsoft",
@@ -915,7 +971,9 @@
     },
     "passwordReset": {
       "checkInbox": "Please check your inbox.",
+      "completedTitle": "Password reset successful",
       "errorTitle": "Unable to reset your password",
+      "failedTitle": "Failed to reset password",
       "failureMessage": "Password reset failed",
       "forgottenLink": "Forgotten your password?",
       "newPasswordLabel": "New password",
@@ -923,6 +981,7 @@
       "noTokenTitle": "No reset token provided",
       "submitButton": "Change password",
       "successBody": "If an account exists with the email address {{email}}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.",
+      "successMessage": "Your password has been updated successfully.",
       "successTitle": "Password reset email sent",
       "title": "Reset your password",
       "verifyingToken": "Verifying reset token..."
@@ -1132,6 +1191,10 @@
     "detail": {
       "loadError": "Unable to load book page"
     },
+    "error": {
+      "fetchContents": "Unable to fetch book contents.",
+      "fetchPage": "Unable to fetch book page."
+    },
     "index": {
       "loadError": "Unable to load book contents"
     },
@@ -1218,10 +1281,17 @@
     "pageTitle": "Student challenges"
   },
   "clientError": {
+    "concept": {
+      "loadError": "Unable to load concept"
+    },
+    "concepts": {
+      "loadError": "Unable to load concepts"
+    },
     "contentNotFound": "Content not found",
     "defaultTitle": "Error fetching data from server",
     "fragmentNotFound": "We're sorry, page fragment not found:<code>{{fragmentId}}</code>",
     "heading": "We're sorry, but an error has occurred in the {{siteName}} app!",
+    "loadTopicFailure": "Unable to load topic",
     "notFound": {
       "message": "We're sorry, page not found: <code>{{pathname}}</code>",
       "offlineMessage": "It looks like you're offline. You may want to check your internet connection, and then refresh this page to try again.<br/>If you are still having issues, please <webmasterEmail>let us know</webmasterEmail>.",
@@ -1237,8 +1307,15 @@
       "heading": "We're sorry, but your session has expired!",
       "title": "Session expired"
     },
+    "skills": {
+      "loadError": "Unable to load skills questions",
+      "saveError": "Couldn't save answer."
+    },
     "statusCode": "Status code: {{statusCode}}",
     "title": "Error",
+    "topic": {
+      "loadError": "Unable to load topic"
+    },
     "userInfo": {
       "errorDetails": "Error Details",
       "notLoggedIn": "Not currently logged in",
@@ -1355,6 +1432,7 @@
       "subjectLabel": "Message subject",
       "successMessage": "Thank you for your message."
     },
+    "formErrorTitle": "Error sending Contact Us form",
     "preset": {
       "accountDeletionMessage": "Hello,\n\nPlease could you delete my {{siteTitle}} account.\n\nThanks, \n\n",
       "accountDeletionSubject": "Account Deletion Request",
@@ -1562,6 +1640,43 @@
     "admin": {
       "title": "Event booking admin"
     },
+    "adminBooking": {
+      "bookUser": {
+        "errorTitle": "The action on behalf of the user was unsuccessful",
+        "successMessage": "The action on behalf of the user was successful.",
+        "successTitle": "Action successful"
+      },
+      "cancel": {
+        "errorTitle": "Failed to cancel event booking"
+      },
+      "cancelReservations": {
+        "errorTitle": "Unable to cancel some of the reservations",
+        "successMessage": "You have successfully cancelled students reservations for this event.",
+        "successTitle": "Reservations cancelled"
+      },
+      "delete": {
+        "errorTitle": "Failed to un-book user from event"
+      },
+      "promote": {
+        "errorTitle": "Failed to promote event booking"
+      },
+      "recordAttendance": {
+        "errorTitle": "Failed to record event attendance"
+      },
+      "resendEmail": {
+        "errorTitle": "Failed to resend email for event booking",
+        "successMessage": "Email sent to {{userId}}",
+        "successTitle": "Event email sent"
+      },
+      "reserveUsers": {
+        "errorTitle": "Reservation failed",
+        "successMessage": "You have successfully reserved students onto this event.",
+        "successTitle": "Reservations confirmed"
+      }
+    },
+    "adminOverviews": {
+      "errorTitle": "Failed to load event overviews"
+    },
     "attendance": {
       "leaderNotice": "As an event leader, you are only able to see the bookings of users who have granted you access to their data.",
       "table": {
@@ -1629,6 +1744,11 @@
       "schoolRequiredTitle": "School information required",
       "yearGroupRequiredBody": "You must enter a year group to proceed.",
       "yearGroupRequiredTitle": "Year group required"
+    },
+    "bookings": {
+      "fetch": {
+        "errorTitle": "Failed to load event bookings"
+      }
     },
     "bookingsTable": {
       "accessibility": "Accessibility requirements",
@@ -1704,6 +1824,9 @@
       "teacherBadge": "Teacher event"
     },
     "emptyState": "No events to display with this filter setting",
+    "fetch": {
+      "errorTitle": "Events request failed"
+    },
     "filters": {
       "label": "Filter by"
     },
@@ -1792,6 +1915,25 @@
       "startDateLabel": "Event start:",
       "statusLabel": "Event status:",
       "title": "Selected event details"
+    },
+    "selfBooking": {
+      "book": {
+        "errorTitle": "Event booking failed",
+        "successMessage": "You have been successfully booked onto this event.",
+        "successTitle": "Event booking confirmed"
+      },
+      "cancel": {
+        "errorTitle": "Event booking cancellation failed",
+        "successMessage": "Your booking has successfully been cancelled.",
+        "successTitle": "Your booking has been cancelled"
+      },
+      "waitingList": {
+        "confirmedMessage": "You have been successfully added to the waiting list for this event.",
+        "confirmedTitle": "Waiting list booking confirmed",
+        "errorTitle": "Event booking failed",
+        "requestReceivedMessage": "You have requested a place on this event.",
+        "requestReceivedTitle": "Booking request received"
+      }
     },
     "showingCount": "(showing {{shownCount}} of {{totalCount}})",
     "sidebar": {
@@ -1967,6 +2109,9 @@
       "duplicateEdit": "Duplicate and edit",
       "setAssignment": "Set as assignment"
     },
+    "assign": {
+      "noGroupsErrorTitle": "Error: Please choose one or more groups."
+    },
     "assignment": {
       "assignedTo": "Assigned to <emphasis>{{groupName}}</emphasis> by <emphasis2>{{assigner}}</emphasis2>",
       "dueLabel": "Due: <b>{{dueDate}}</b>",
@@ -2069,6 +2214,9 @@
     "usageInfo": {
       "beginsIn": "Begins <bold>{{daysUntil}}</bold>",
       "viewProgress": "View group progress"
+    },
+    "wildcards": {
+      "errorTitle": "Error loading wildcards"
     }
   },
   "gameboards": {
@@ -2165,13 +2313,32 @@
       "title": "Archive group",
       "unarchiveHint": "A group can be unarchived at any time by navigating to the group in the \"Archived\" section of this page and clicking \"Unarchive group\"."
     },
+    "authorisations": {
+      "connectionErrorMessage": "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length.",
+      "connectionErrorTitle": "Teacher connection failed",
+      "grantSuccessMessage": "You have granted access to your data.",
+      "grantSuccessTitle": "Granted access",
+      "loadStudentsErrorTitle": "Loading authorised students failed",
+      "loadTeachersErrorTitle": "Loading authorised teachers failed",
+      "rateLimitMessage": "You have entered too many group codes. Please check your code with your teacher and try again later!",
+      "rateLimitTitle": "Too many attempts",
+      "releaseAllSuccessMessage": "You have ended your access to all of your students' data.",
+      "releaseErrorTitle": "Ending access failed",
+      "releaseSuccessMessage": "You have ended your access to your student's data.",
+      "releaseSuccessTitle": "Access removed",
+      "revokeErrorTitle": "Revoking access failed",
+      "revokeSuccessMessage": "You have revoked access to your data.",
+      "revokeSuccessTitle": "Access revoked"
+    },
     "create": {
+      "errorTitle": "Group creation failed",
       "nameError": "Please enter a valid name.",
       "nameLabel": "Enter your group name",
       "submitButton": "Create group",
       "title": "Create a group"
     },
     "delete": {
+      "errorTitle": "Group deletion failed",
       "nonOwnerConfirm": "You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '{{groupName}}'?",
       "ownerConfirm": "Are you sure you want to permanently delete the group '{{groupName}}' and remove all associated assignments?\n\nThis action cannot be undone!"
     },
@@ -2200,6 +2367,9 @@
       "infoText": "An admin user can use the user IDs below to email these users:",
       "title": "Email Users"
     },
+    "fetch": {
+      "errorTitle": "Loading groups failed"
+    },
     "invite": {
       "addManagers": "Add group managers",
       "codeDescription": "Students can enter this code in their {{siteTitle}} account. They’ll need to go to <accountPage>My account</accountPage>, then <teacherConnections>Teacher Connections</teacherConnections>.",
@@ -2219,6 +2389,9 @@
     },
     "managers": {
       "actionsDropdown": "Actions",
+      "add": {
+        "errorTitle": "Group manager addition failed"
+      },
       "addButton": "Add group manager",
       "addInstructions": "Enter the email of another {{siteTitle}} teacher account below to add them as a group manager. Note that this will share their email address with the students.",
       "addSectionTitle": "Add additional managers",
@@ -2244,9 +2417,15 @@
       "privilegeRemoveMembers": "Remove group members",
       "promote": {
         "confirmWithPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager.\n\n• You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.\n            ",
-        "confirmWithoutPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.\n\n• If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.\n            "
+        "confirmWithoutPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.\n\n• If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.\n            ",
+        "errorTitle": "Group manager promotion failed",
+        "successMessage": "You have been demoted to an additional manager of this group",
+        "successTitle": "Group manager promoted to owner"
       },
       "remove": "Remove",
+      "removeManager": {
+        "errorTitle": "Group manager removal failed"
+      },
       "removeSelf": {
         "cancel": "Cancel",
         "confirm": "Confirm",
@@ -2274,6 +2453,27 @@
       "removeAriaLabel": "Remove member",
       "removeConfirm": "Are you sure you want to remove this user from the group '{{groupName}}'?",
       "removeTooltip": "Remove this user from the group."
+    },
+    "members": {
+      "fetch": {
+        "errorTitle": "Loading group members failed"
+      },
+      "remove": {
+        "errorMessage": "User not removed from the group, please try again.",
+        "errorTitle": "Failed to delete",
+        "successMessage": "User removed from the group.",
+        "successTitle": "Removal successful"
+      }
+    },
+    "memberships": {
+      "fetch": {
+        "errorTitle": "Loading group memberships failed"
+      },
+      "updateStatus": {
+        "errorTitle": "Membership status update failed",
+        "successMessage": "You have updated your membership status.",
+        "successTitle": "Status Updated"
+      }
     },
     "page": {
       "addTeachersInfo": "You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.",
@@ -2318,6 +2518,15 @@
     },
     "sidebar": {
       "title": "Select or create a group"
+    },
+    "token": {
+      "fetch": {
+        "errorTitle": "Loading group token failed"
+      }
+    },
+    "update": {
+      "errorTitle": "Group saving failed",
+      "successTitle": "Group updated successfully"
     }
   },
   "help": {
@@ -2488,6 +2697,7 @@
     "card": {
       "findOutMoreButton": "Find out more"
     },
+    "displayErrorTitle": "Unable to display news",
     "emptyState": "No news to display...",
     "errorTitle": "Error fetching news stories",
     "newsletterBody": "Get fresh teaching ideas, student study tips, and development news about our tools and resources delivered straight to your inbox.",
@@ -2889,6 +3099,9 @@
     "freeText": {
       "validationWarningLabel": "Warning:"
     },
+    "generateAnswerSpec": {
+      "errorTitle": "There was a problem generating an answer specification"
+    },
     "hints": {
       "defaultTitle": "Hint {{index}}",
       "heading": "Need some help?",
@@ -2916,6 +3129,9 @@
     },
     "llmIndicator": {
       "label": "LLM marked question"
+    },
+    "load": {
+      "errorTitle": "Unable to load question"
     },
     "loadError": "Unable to load question",
     "maxMarks_one": "[{{count}} mark]",
@@ -2952,6 +3168,9 @@
     },
     "reorder": {
       "dragInstruction": "Drag these items to put them in the correct order"
+    },
+    "search": {
+      "errorTitle": "Unable to search for questions"
     },
     "submit": {
       "check": "Check my answer",
@@ -2993,6 +3212,7 @@
     },
     "cardSubtitle": "Revise with our summary videos, topic tests and question decks.",
     "cardTitle": "Revision",
+    "errorTitle": "Unable to fetch revision page.",
     "mathsALevel": {
       "subtitle": "Revise with our tailored revision decks on core pure, further pure, and mechanics."
     },
@@ -3012,6 +3232,7 @@
     "error": {
       "failed": "Failed to search. Please try again later."
     },
+    "errorTitle": "Unable to perform search",
     "filter": {
       "placeholder": "Select page type filter..."
     },
@@ -3414,6 +3635,27 @@
       "body": "A submission has already been recorded for this test by your account.",
       "title": "Test already submitted"
     },
+    "api": {
+      "loadAssignedToMeFailed": "Loading tests assigned to you failed",
+      "loadAssignmentFeedbackFailed": "Loading test assignment feedback failed",
+      "loadAssignmentsSetByMeFailed": "Loading test assignments failed",
+      "loadAvailableFailed": "Loading tests failed",
+      "loadFreelyAttemptedFailed": "Loading attempted freely tests failed",
+      "loadMyFeedbackFailed": "Loading test feedback failed",
+      "loadPreviewFailed": "Loading test preview failed",
+      "loadRubricFailed": "Loading test rubric failed",
+      "loadStudentFeedbackFailed": "Loading student test feedback failed",
+      "returnWorkFailed": "Failed to return work to the student",
+      "startAttemptFailed": "Starting test attempt failed",
+      "startFreeAttemptFailed": "Starting free test attempt failed",
+      "submitAnswersFailed": "Failed to submit your test answers",
+      "updateAssignmentFailed": "Failed to update test assignment",
+      "updateDueDateFailed": "Failed to update test due date",
+      "updateFeedbackModeFailed": "Failed to update test feedback mode"
+    },
+    "assign": {
+      "errorTitle": "Failed to assign test"
+    },
     "assignedEmpty": {
       "none": "You have no tests in progress."
     },
@@ -3458,6 +3700,9 @@
       "noFeedback": "No feedback",
       "start": "Start test",
       "viewFeedback": "View feedback"
+    },
+    "cancelAssignment": {
+      "errorTitle": "Cancelling test assignment failed"
     },
     "card": {
       "manage": {

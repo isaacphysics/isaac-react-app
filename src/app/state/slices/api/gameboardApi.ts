@@ -2,8 +2,8 @@ import {isaacApi} from "./baseApi";
 import {AssignmentBoardOrder, Boards, NumberOfBoards} from "../../../../IsaacAppTypes";
 import {GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {siteSpecific} from "../../../services";
 import {logAction} from "../../actions/logging";
+import i18next from "i18next";
 
 export const gameboardApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -19,7 +19,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 totalResults: response.totalResults ?? 0
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Loading ${siteSpecific("question decks", "quizzes")} failed`
+                errorTitle: i18next.t("site:gameboard.load.errorTitle")
             })
         }),
 
@@ -43,7 +43,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 url: "gameboards/wildcards"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Error loading wildcards"
+                errorTitle: i18next.t("common:gameboard.wildcards.errorTitle")
             }),
             keepUnusedDataFor: 60
         }),
@@ -64,7 +64,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                         }));
                     }
                 },
-                errorTitle: `Error creating ${siteSpecific("deck", "quiz")}`
+                errorTitle: i18next.t("site:gameboard.create.errorTitle")
             }),
             invalidatesTags: ["AllGameboards"],
         }),
@@ -77,7 +77,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: (_, _error, {boardId}) => ["AllGameboards", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Linking the ${siteSpecific("deck", "quiz")} to your account failed`
+                errorTitle: i18next.t("site:gameboard.link.errorTitle")
             })
         }),
 
@@ -89,7 +89,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
             // TODO requires invalidating AllSetAssignments as the assignment's gameboard can be updated by this and so should not be cached
             invalidatesTags: (_, _error, boardId) => ["AllGameboards", "AllSetAssignments", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Linking the ${siteSpecific("deck", "quiz")} to your account failed`
+                errorTitle: i18next.t("site:gameboard.link.errorTitle")
             })
         }),
 
@@ -100,9 +100,9 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: (_, _error, boardId) => ["AllGameboards", "AllSetAssignments", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: `${siteSpecific("Deck", "Quiz")} removed`,
-                successMessage: siteSpecific("The deck has been removed from your saved decks.", "You have successfully unlinked your account from this quiz."),
-                errorTitle: `${siteSpecific("Deck", "Quiz")} removal failed`
+                successTitle: i18next.t("site:gameboard.unlink.successTitle"),
+                successMessage: i18next.t("site:gameboard.unlink.successMessage"),
+                errorTitle: i18next.t("site:gameboard.unlink.errorTitle")
             })
         }),
     })

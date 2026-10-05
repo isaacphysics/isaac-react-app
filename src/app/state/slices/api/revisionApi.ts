@@ -1,6 +1,7 @@
 import { IsaacRevisionDetailPageDTO } from "../../../../IsaacApiTypes";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 const revisionApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -9,7 +10,7 @@ const revisionApi = isaacApi.injectEndpoints({
                 url: `/pages/revision/detail/${id}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to fetch revision page."
+                errorTitle: i18next.t("common:revision.errorTitle")
             }),
             keepUnusedDataFor: 60
         }),

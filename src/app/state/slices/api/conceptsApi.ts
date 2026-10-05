@@ -3,6 +3,7 @@ import { Concepts } from "../../../../IsaacAppTypes";
 import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 export const conceptsApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -13,7 +14,7 @@ export const conceptsApi = isaacApi.injectEndpoints({
             }),
             
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to load concepts",
+                errorTitle: i18next.t("common:clientError.concepts.loadError"),
             }),
         }),
         getConcept: build.query<IsaacConceptPageDTO, string>({
@@ -21,7 +22,7 @@ export const conceptsApi = isaacApi.injectEndpoints({
                 url: `/pages/concepts/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to load concept",
+                errorTitle: i18next.t("common:clientError.concept.loadError"),
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                 },

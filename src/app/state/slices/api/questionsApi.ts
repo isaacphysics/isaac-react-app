@@ -4,6 +4,7 @@ import { isDefined, SEARCH_RESULTS_PER_PAGE } from "../../../services";
 import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
+import i18next from "i18next";
 
 export interface QuestionSearchResponseType {
     results?: ContentSummaryDTO[];
@@ -53,7 +54,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 return currentArg !== previousArg;
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to search for questions",
+                errorTitle: i18next.t("common:questions.search.errorTitle"),
             }),
         }),
 
@@ -62,7 +63,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 url: `/pages/questions/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Unable to load question",
+                errorTitle: i18next.t("common:questions.load.errorTitle"),
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                 },
