@@ -204,6 +204,9 @@
       "strengthLabel": "Password strength:",
       "title": "Account security"
     },
+    "settings": {
+      "title": "Account settings"
+    },
     "sharingData": {
       "cancelButton": "Cancel",
       "confirmBody": "Are you sure you would like to give the following {{siteName}} users access to your data?",
@@ -596,6 +599,16 @@
         "unknownGroup": "Unknown group"
       }
     },
+    "manageSidebar": {
+      "collapseButton": "Collapse schedule",
+      "dateShownLabel": "Date shown",
+      "dueDateOption": "Due date",
+      "filterByTitleLabel": "Filter by title",
+      "filterByWorkTypeLabel": "Filter by work type",
+      "searchTitlePlaceholder": "Search by title",
+      "startDateOption": "Start date",
+      "title": "Filter & sort"
+    },
     "modal": {
       "assignButton_one": "Assign to group",
       "assignButton_other": "Assign to groups",
@@ -684,6 +697,23 @@
       "title": "Assign \"{{boardTitle}}\"",
       "unassignButton": "Unassign",
       "unassignGroup": "Unassign group"
+    },
+    "sidebar": {
+      "filterGroup": "Filter by group",
+      "searchTitle": "Search assignments",
+      "sortAttemptedHighest": "Attempted (highest first)",
+      "sortAttemptedLowest": "Attempted (lowest first)",
+      "sortByTitle": "Sort by",
+      "sortCorrectnessHighest": "Correctness (highest first)",
+      "sortCorrectnessLowest": "Correctness (lowest first)",
+      "sortDisabledMessage": "Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.",
+      "sortDueDateLatest": "Due date (latest first)",
+      "sortDueDateSoonest": "Due date (soonest first)",
+      "sortOrderLabel": "Set sort order",
+      "sortStartDateNewest": "Start date (recent first)",
+      "sortStartDateOldest": "Start date (oldest first)",
+      "sortTitle": "Sort",
+      "subjectFilterTitle": "Filter by subject"
     },
     "table": {
       "creator": "Creator",
@@ -833,7 +863,18 @@
       "message": "Your {{siteTitle}} session has expired, so we've logged you out. Use the button below to continue where you left off.",
       "title": "Your session has expired"
     },
+    "sidebar": {
+      "tabAge": "Age verification",
+      "tabDetails": "Account details",
+      "tabGroup": "Join a group",
+      "tabMethod": "Sign-up method",
+      "tabPreferences": "Preferences",
+      "title": "Create an account"
+    },
     "signUpButton": "Sign up",
+    "signup": {
+      "goBackConfirm": "Are you sure you want go back? Any information you have entered will be lost."
+    },
     "sso": {
       "learnMore": "Learn more about Single Sign-On"
     },
@@ -927,6 +968,13 @@
     },
     "page": {
       "title": "My bookmarks"
+    },
+    "sidebar": {
+      "filterTitle": "Filter bookmarks by...",
+      "searchTitle": "Search bookmarks",
+      "sortTitle": "Sort bookmarks by...",
+      "stageFilter": "Learning stage",
+      "subjectFilter": "Subject"
     }
   },
   "books": {
@@ -936,7 +984,8 @@
       "exploreDescription": "Click on a book image below to go to the homepage of each book and explore further.",
       "exploreTitle": "Explore our books online",
       "sidebarButton": "View all books",
-      "title": "Our books"
+      "title": "Our books",
+      "viewAll": "View all books"
     },
     "preUniMaths": {
       "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book",
@@ -1032,6 +1081,12 @@
     "loadErrorTitle": "Unable to load concept",
     "noResults": "No results found",
     "resultsCount": "Showing <b>{{count}}</b> results",
+    "sidebar": {
+      "filterStageTitle": "Filter by stage",
+      "filterSubjectTopicTitle": "Filter by subject and topic",
+      "filterTopicTitle": "Filter by topic",
+      "searchTitle": "Search concepts"
+    },
     "title": "Concepts"
   },
   "confidence": {
@@ -1314,6 +1369,12 @@
       "title": "Selected event details"
     },
     "showingCount": "(showing {{shownCount}} of {{totalCount}})",
+    "sidebar": {
+      "eventTypeLabel": "Event type",
+      "filterButtonTitle": "Filter events",
+      "groupsLabel": "Groups",
+      "stagesLabel": "Stages"
+    },
     "tableActionsHeader": "Actions",
     "tableAttendedHeader": "Number attended",
     "tableConfirmedHeader": "Number confirmed",
@@ -1424,6 +1485,11 @@
       "duplicateEdit": "Duplicate and edit",
       "setAssignment": "Set as assignment"
     },
+    "assignment": {
+      "assignedTo": "Assigned to <emphasis>{{groupName}}</emphasis> by <emphasis2>{{assigner}}</emphasis2>",
+      "dueLabel": "Due: <b>{{dueDate}}</b>",
+      "setLabel": "Set: <b>{{setDate}}</b>"
+    },
     "breadcrumb": {
       "assignments": "Assignments"
     },
@@ -1453,7 +1519,9 @@
       "setAsAssignment": "Set as assignment"
     },
     "sidebar": {
-      "details": "Details"
+      "details": "Details",
+      "externalLink": "External link (<em>{{externalUrl}}</em>)",
+      "toggleTitle": "Details"
     }
   },
   "gameboards": {
@@ -1467,6 +1535,9 @@
       "creator": "Filter by Creator",
       "name": "Filter boards by name",
       "status": "Filter by Status"
+    },
+    "sidebar": {
+      "filterCompletionTitle": "Filter by completion"
     }
   },
   "generic": {
@@ -1508,7 +1579,11 @@
       "label": "Search by term"
     },
     "sidebar": {
-      "button": "Search glossary"
+      "button": "Search glossary",
+      "searchTitle": "Search glossary",
+      "selectStageTitle": "Select stage",
+      "selectSubjectTitle": "Select subject",
+      "switchStageTitle": "Switch learning stage"
     },
     "title": "Glossary"
   },
@@ -1688,6 +1763,9 @@
     },
     "shared": {
       "title": "Shared group"
+    },
+    "sidebar": {
+      "title": "Select or create a group"
     }
   },
   "inequality": {
@@ -1748,11 +1826,18 @@
     }
   },
   "navigation": {
-    "homeButton": "Home"
+    "homeButton": "Home",
+    "sidebar": {
+      "brand": "My Ada",
+      "homepageLink": "Go to homepage"
+    }
   },
   "news": {
     "emptyState": "No news to display...",
-    "errorTitle": "Error fetching news stories"
+    "errorTitle": "Error fetching news stories",
+    "sidebar": {
+      "seeAllNews": "See all news"
+    }
   },
   "notifications": {
     "survey": {
@@ -1892,10 +1977,23 @@
       "title": "University"
     }
   },
+  "policy": {
+    "sidebar": {
+      "accessibilityStatement": "Accessibility Statement",
+      "cookiePolicy": "Cookie Policy",
+      "privacyPolicy": "Privacy Policy",
+      "selectPage": "Select a page",
+      "termsOfUse": "Terms of Use"
+    }
+  },
   "programmes": {
     "cardSubtitle": "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level.",
     "page": {
       "title": "Programmes"
+    },
+    "sidebar": {
+      "title": "Our programmes",
+      "toggleLabel": "Explore programmes"
     }
   },
   "progress": {
@@ -1970,6 +2068,12 @@
       "selectedCount_other": "{{count}} questions selected"
     },
     "shuffleButton": "Shuffle <responsiveWord>questions</responsiveWord>",
+    "sidebar": {
+      "searchTitle": "Search questions",
+      "stageHeading": "Decks by stage",
+      "subjectHeading": "Decks by subject",
+      "switchContextButton": "Switch stage/subject"
+    },
     "totalCount": "of <b>{{total}}</b>"
   },
   "questionStats": {
@@ -2034,6 +2138,44 @@
     "heading": "We're sorry, but an error has occurred on the {{siteTitle}} server!",
     "suggestions": "You may want to <refresh>refresh this page and try again</refresh>, <homepage>return to our homepage</homepage>, or <contact>contact</contact> or <email>email</email> us if this keeps happening.",
     "title": "Error"
+  },
+  "sidebar": {
+    "backToBook": {
+      "button": "Back to book section"
+    },
+    "completionKey": {
+      "allAttempted": "All attempted (some errors)",
+      "allCorrect": "All correct",
+      "inProgress": "In progress",
+      "notStarted": "Not started",
+      "title": "Question key"
+    },
+    "display": {
+      "limit": "Limit:",
+      "limitLabel": "Set display limit",
+      "modeLabel": "Set display mode",
+      "title": "Display"
+    },
+    "filter": {
+      "all": "All",
+      "assigner": "Filter by assigner",
+      "creator": "Filter by creator",
+      "status": "Filter by status"
+    },
+    "optionsButton": "Options",
+    "relatedContent": {
+      "conceptsTitle": "Related concepts",
+      "noConcepts": "There are no related concepts for this {{pageType}}.",
+      "noQuestions": "There are no related questions for this {{pageType}}.",
+      "otherStagesTitle": "Related questions for other learning stages",
+      "questionsTitle": "Related questions",
+      "stageQuestionsTitle": "Related {{stageName}} questions",
+      "viewAllConcepts": "See all concepts for {{contextName}}",
+      "viewAllQuestions": "See all questions for {{contextName}}"
+    },
+    "search": {
+      "decks": "Search question decks"
+    }
   },
   "skillsPractice": {
     "bioGcse": {
@@ -2169,7 +2311,11 @@
     }
   },
   "support": {
-    "selectTopicButton": "Select a topic"
+    "selectTopicButton": "Select a topic",
+    "sidebar": {
+      "selectTopicButton": "Select a topic",
+      "selectTopicTitle": "Select a topic"
+    }
   },
   "teacherFeatures": {
     "cta": {
@@ -2407,13 +2553,25 @@
       "after": "after",
       "assigner": "Filter by assigner",
       "before": "before",
+      "dateAfter": "after",
+      "dateBefore": "before",
+      "dateOn": "on",
+      "dateSectionTitle": "Filter by date",
+      "dueDateFilter": "Filter by due date",
+      "dueDateLabel": "Due",
       "dueDatePlaceholder": "Filter by due date",
       "dueLabel": "Due",
       "groupPlaceholder": "Filter by group",
       "hide": "Hide filters",
       "on": "on",
+      "searchGroupLabel": "Search by group",
+      "searchGroupPlaceholder": "Group name",
+      "searchTitleAriaLabel": "Search by title",
+      "searchTitleLabel": "Search tests",
       "setDatePlaceholder": "Filter by set date",
       "show": "Show filters",
+      "startDateFilter": "Filter by set date",
+      "startDateLabel": "Starting",
       "startingLabel": "Starting",
       "status": "Filter by status",
       "title": "Filter by quiz title",
@@ -2448,6 +2606,10 @@
       "previewQuestions": "Preview questions",
       "setTest": "Set test"
     },
+    "search": {
+      "placeholder": "e.g. Practice",
+      "title": "Search tests"
+    },
     "set": {
       "available": {
         "empty": "There are no tests you can set which match your search term.",
@@ -2475,6 +2637,22 @@
       "submitButton": "Set test",
       "title": "Setting test '{{testTitle}}'"
     },
+    "sidebar": {
+      "detailsButton": "Details",
+      "displayCardOption": "Card View",
+      "displayTableOption": "Table View",
+      "legendTitle": "Key",
+      "overviewTab": "Overview",
+      "searchAriaLabel": "Search by title",
+      "searchFilterButton": "Search & Filter",
+      "searchTitle": "Search tests",
+      "sectionsButton": "Sections",
+      "statusCompleted": "Section completed",
+      "statusInProgress": "Section in progress",
+      "statusNotStarted": "Section not started",
+      "testTitle": "Test",
+      "title": "Search & Filter"
+    },
     "status": {
       "completed": "Completed ·",
       "feedbackAvailable": "Feedback available",
@@ -2485,9 +2663,21 @@
     },
     "view": {
       "emptyState": "There are no practice tests currently available.",
+      "filterStageTitle": "Filter by stage",
+      "filterSubjectTopicTitle": "Filter by subject and topic",
+      "filterTopicTitle": "Filter by topic",
       "loginRequired": "You must be logged in to view practice tests.",
+      "myTestsButton": "My tests",
+      "searchPlaceholder": "e.g. Admissions",
+      "searchTitle": "Search practice tests",
       "takeTest": "Take Test",
       "title": "View tests"
+    }
+  },
+  "tools": {
+    "listing": {
+      "seeAllButton": "See all tools",
+      "selectStageTitle": "Select stage"
     }
   },
   "topics": {

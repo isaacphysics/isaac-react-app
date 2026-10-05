@@ -7,6 +7,7 @@ import { CollapsibleList } from "../CollapsibleList";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
 import { BOOKMARKS_ORDER_NAMES, BookmarksOrder } from "../../../../IsaacAppTypes";
 import { SearchInputWithIcon } from "../SearchInputs";
+import { useTranslation } from "react-i18next";
 
 interface MyBookmarksSidebarProps extends ContentSidebarProps {
     bookmarks: ContentSummaryDTO[];
@@ -21,6 +22,7 @@ interface MyBookmarksSidebarProps extends ContentSidebarProps {
 }
 
 export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
+    const { t } = useTranslation();
     const { bookmarks, searchText, setSearchText, searchSubjects, setSearchSubjects, searchStages, setSearchStages, sortOrder, setSortOrder, ...rest } = props;
 
     const [subjectExpanded, toggleSubjectExpanded] = useState(true);
@@ -52,7 +54,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
     return <ContentSidebar {...rest}>
         <search>
             <div className="section-divider"/>
-            <h5>Search bookmarks</h5>
+            <h5>{t("common:bookmarks.sidebar.searchTitle")}</h5>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}
@@ -62,11 +64,11 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
 
             <div className="section-divider"/>
 
-            <h5>Filter bookmarks by...</h5>
+            <h5>{t("common:bookmarks.sidebar.filterTitle")}</h5>
 
             <div className="d-flex flex-column my-4">
                 <CollapsibleList
-                    title={"Subject"} expanded={subjectExpanded}
+                    title={t("common:bookmarks.sidebar.subjectFilter")} expanded={subjectExpanded}
                     toggle={() => toggleSubjectExpanded(e => !e)}
                     numberSelected={searchSubjects.length}
                     className="ps-0"
@@ -89,7 +91,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
                 </CollapsibleList>
 
                 <CollapsibleList
-                    title={"Learning stage"} expanded={stageExpanded}
+                    title={t("common:bookmarks.sidebar.stageFilter")} expanded={stageExpanded}
                     toggle={() => toggleStageExpanded(e => !e)}
                     numberSelected={searchStages.length}
                 >
@@ -111,7 +113,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
                 </CollapsibleList>
             </div>
 
-            <h5>Sort bookmarks by...</h5>
+            <h5>{t("common:bookmarks.sidebar.sortTitle")}</h5>
 
             <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as BookmarksOrder)}>
                 {Object.values(BookmarksOrder).map(order => <option key={order} value={order}>{BOOKMARKS_ORDER_NAMES[order]}</option>)}

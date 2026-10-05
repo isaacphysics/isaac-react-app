@@ -3,18 +3,20 @@ import { useLocation, useNavigate } from "react-router";
 import { IsaacProgrammeDTO } from "../cards/ProgrammeCard";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
+import { useTranslation } from "react-i18next";
 
 interface ProgrammesSidebarProps extends ContentSidebarProps {
     programmes?: IsaacProgrammeDTO[];
 }
 
 export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
 
-    return <ContentSidebar buttonTitle="Explore programmes" {...rest}>
+    return <ContentSidebar buttonTitle={t("common:programmes.sidebar.toggleLabel")} {...rest}>
         <div className="section-divider"/>
-        <h5>Our programmes</h5>
+        <h5>{t("common:programmes.sidebar.title")}</h5>
         <ul>
             <li>
                 {programmes?.map((programme) =>

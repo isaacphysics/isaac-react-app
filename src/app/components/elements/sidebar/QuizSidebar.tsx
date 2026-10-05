@@ -8,6 +8,7 @@ import { ContentSidebar } from "../layout/SidebarLayout";
 import { SectionProgress, QuizRubricButton } from "../quiz/QuizContentsComponent";
 import { tags as tagsService } from "../../../services";
 import { Pill, KeyItem } from "./SidebarElements";
+import { useTranslation } from "react-i18next";
 
 export interface QuizSidebarProps {
     quiz: IsaacQuizDTO | DetailedQuizSummaryDTO;
@@ -36,9 +37,10 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const SidebarContents = () => {
-        return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
+        const { t } = useTranslation();
+        return <ContentSidebar buttonTitle={hasSections ? t("common:tests.sidebar.sectionsButton") : t("common:tests.sidebar.detailsButton")}>
             <div className="section-divider"/>
-            <h5 className="mb-3">Test</h5>
+            <h5 className="mb-3">{t("common:tests.sidebar.testTitle")}</h5>
             <div className="mb-2">
                 Subject{subjects?.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
@@ -53,7 +55,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                 <h5 className="mb-3">Section(s)</h5>
                 <ul>
                     <li>
-                        <StyledTabPicker type="link" checkboxTitle={"Overview"} checked={!isDefined(currentSection)} to={rubricPath} />
+                        <StyledTabPicker type="link" checkboxTitle={t("common:tests.sidebar.overviewTab")} checked={!isDefined(currentSection)} to={rubricPath} />
                     </li>
                     {Array.from({length: totalSections}, (_, i) => i).map(section =>
                         <li key={section}>
@@ -68,11 +70,11 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                 <div className="section-divider"/>
 
                 <div className="d-flex flex-column sidebar-key">
-                    Key
+                    {t("common:tests.sidebar.legendTitle")}
                     <ul>
-                        <KeyItem icon="not-started" text="Section not started"/>
-                        <KeyItem icon="in-progress" text="Section in progress"/>
-                        <KeyItem icon="correct" text="Section completed"/>
+                        <KeyItem icon="not-started" text={t("common:tests.sidebar.statusNotStarted")}/>
+                        <KeyItem icon="in-progress" text={t("common:tests.sidebar.statusInProgress")}/>
+                        <KeyItem icon="correct" text={t("common:tests.sidebar.statusCompleted")}/>
                     </ul>
                 </div>
             </>}

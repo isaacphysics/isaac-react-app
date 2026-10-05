@@ -5,6 +5,7 @@ import { BoardViews, BoardLimit, BoardCreators, BoardCompletions, useDeviceSize,
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Spacer } from "../Spacer";
 import { SearchInputWithIcon } from "../SearchInputs";
+import { useTranslation } from "react-i18next";
 
 interface MyGameboardsSidebarProps extends ContentSidebarProps {
     displayMode: BoardViews;
@@ -21,6 +22,7 @@ interface MyGameboardsSidebarProps extends ContentSidebarProps {
 }
 
 export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
+    const { t } = useTranslation();
     const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, forceAllBoards, ...rest } = props;
 
     const deviceSize = useDeviceSize();
@@ -28,7 +30,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h5>Search question decks</h5>
+            <h5>{t("common:sidebar.search.decks")}</h5>
             <SearchInputWithIcon 
                 data-testid="title-filter"
                 outerClassName="my-3"
@@ -37,23 +39,23 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
-            <h5 className="mb-3">Filter by creator</h5>
+            <h5 className="mb-3">{t("common:sidebar.filter.creator")}</h5>
             <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
                 {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
-            <h5 className="mt-4 mb-3">Filter by completion</h5>
+            <h5 className="mt-4 mb-3">{t("common:gameboards.sidebar.filterCompletionTitle")}</h5>
             <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
                 {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
             </Input>
             <div className="section-divider"/>
-            <h5 className="mb-4">Display</h5>
+            <h5 className="mb-4">{t("common:sidebar.display.title")}</h5>
             <div className="d-flex flex-xl-column flex-xxl-row">
-                <Input className="w-auto" type="select" aria-label="Set display mode" data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                <Input className="w-auto" type="select" aria-label={t("common:sidebar.display.modeLabel")} data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
-                <div className="select-pretext me-2">Limit:</div>
-                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label="Set display limit" data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <div className="select-pretext me-2">{t("common:sidebar.display.limit")}</div>
+                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label={t("common:sidebar.display.limitLabel")} data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>

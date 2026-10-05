@@ -7,6 +7,7 @@ import { AssignmentDTO } from "../../../../IsaacApiTypes";
 import { AppGroup } from "../../../../IsaacAppTypes";
 import { StyledSelect } from "../inputs/StyledSelect";
 import { selectors, useAppSelector } from "../../../state";
+import i18next from "i18next";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -28,31 +29,31 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
-    return <ContentSidebar buttonTitle="Filter & sort">
+    return <ContentSidebar buttonTitle={i18next.t("common:assignments.manageSidebar.title")}>
         <div className="section-divider" />
 
         {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
-            <h5>Date shown</h5>
+            <h5>{i18next.t("common:assignments.manageSidebar.dateShownLabel")}</h5>
             <ButtonGroup className={"w-100"}>
                 <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
                     color={viewBy === "startDate" ? "solid" : "keyline"}
                     onClick={() => setViewBy("startDate")}
                 >
-                    Start date
+                    {i18next.t("common:assignments.manageSidebar.startDateOption")}
                 </Button>
                 <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
                     color={viewBy === "dueDate" ? "solid" : "keyline"}
                     onClick={() => setViewBy("dueDate")}
                 >
-                    Due date
+                    {i18next.t("common:assignments.manageSidebar.dueDateOption")}
                 </Button>
             </ButtonGroup>
         </>}
 
         <div className="section-divider" />
 
-        <h5>Filter by group</h5>
-        <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
+        <h5>{i18next.t("common:assignments.sidebar.filterGroup")}</h5>
+        <StyledSelect inputId="groups-filter" isMulti isClearable placeholder={i18next.t("common:sidebar.filter.all")}
             value={groupsToInclude}
             onChange={selectOnChange(setGroupsToInclude, false)}
             options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
@@ -60,8 +61,8 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         />
 
         {isTeacherOrAbove(user) && <>
-            <h5 className="mt-3">Filter by work type</h5>
-            <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder="All"
+            <h5 className="mt-3">{i18next.t("common:assignments.manageSidebar.filterByWorkTypeLabel")}</h5>
+            <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder={i18next.t("common:sidebar.filter.all")}
                 value={workTypesToInclude}
                 onChange={selectOnChange(setWorkTypesToInclude, false)}
                 options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
@@ -69,8 +70,8 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
             />
         </>}
 
-        <h5 className="mt-3">Filter by title</h5>
-        <Input type="text" placeholder="Search by title" value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
+        <h5 className="mt-3">{i18next.t("common:assignments.manageSidebar.filterByTitleLabel")}</h5>
+        <Input type="text" placeholder={i18next.t("common:assignments.manageSidebar.searchTitlePlaceholder")} value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
         {/* TODO swap the above title filter with the below filters pair, once subject information is available for assignments */}
         {/* <details>
             <summary className="mt-3">More filters</summary>
@@ -91,7 +92,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         <div className="section-divider" />
 
         <Button onClick={collapse}>
-            Collapse schedule
+            {i18next.t("common:assignments.manageSidebar.collapseButton")}
         </Button>
     </ContentSidebar>;
 };

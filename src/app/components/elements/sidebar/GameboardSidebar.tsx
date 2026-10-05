@@ -4,6 +4,7 @@ import { determineGameboardSubjects, isDefined, TAG_ID, tags, HUMAN_SUBJECTS, ex
 import { getFriendlyDaysUntil } from "../DateString";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Pill, CompletionKey, BackToBookButton } from "./SidebarElements";
+import { Trans, useTranslation } from "react-i18next";
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments?: AssignmentDTO[];
@@ -44,9 +45,28 @@ const AssignmentDetails = ({ assignment, multipleAssignments }: { assignment: As
     const startDate = scheduledStartDate ?? creationDate;
     return <>
         {multipleAssignments && <div className="section-divider"/>}
-        <div>Assigned to <b>{groupName}</b> by <b>{assigner}</b></div>
-        {startDate && <div>Set: <b>{getFriendlyDaysUntil(startDate)}</b></div>}
-        {dueDate && <div>Due: <b>{getFriendlyDaysUntil(dueDate)}</b></div>}
+        <div><Trans
+            i18nKey="common:gameboard.assignment.assignedTo"
+            components={{
+                emphasis: <b />,
+                emphasis2: <b />,
+            }}
+            values={{ groupName, assigner }}
+        /></div>
+        {startDate && <div><Trans
+            i18nKey="common:gameboard.assignment.setLabel"
+            components={{
+                b: <b />,
+            }}
+            values={{ setDate: getFriendlyDaysUntil(startDate) }}
+        /></div>}
+        {dueDate && <div><Trans
+            i18nKey="common:gameboard.assignment.dueLabel"
+            components={{
+                b: <b />,
+            }}
+            values={{ dueDate: getFriendlyDaysUntil(dueDate) }}
+        /></div>}
     </>;
 };
 
@@ -61,9 +81,10 @@ const AllAssignmentDetails = ({ assignments }: { assignments?: AssignmentDTO[] }
 };
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
+    const { t } = useTranslation();
     const {gameboard, assignments, linkedBookSection, ...rest} = props;
 
-    return <ContentSidebar buttonTitle="Details" {...rest}>
+    return <ContentSidebar buttonTitle={t("common:gameboard.sidebar.toggleTitle")} {...rest}>
         {linkedBookSection && linkedBookSection[0] && linkedBookSection[1] && <BackToBookButton linkedBookSection={linkedBookSection} />}
         <GameboardDetails gameboard={gameboard} />
         <AllAssignmentDetails assignments={assignments} />

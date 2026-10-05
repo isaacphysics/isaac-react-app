@@ -6,6 +6,7 @@ import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../.
 import { ifKeyIsEnter, isStudent, isTeacherOrAbove, isTutorOrAbove, useFullSidebarLayout, useUserNotifications } from "../../../services";
 import { Spacer } from "../Spacer";
 import { useLocation } from "react-router";
+import { useTranslation } from "react-i18next";
 
 interface MyAdaTab {
     title: string;
@@ -80,13 +81,14 @@ interface AdaSidebarCollapserProps extends React.HTMLAttributes<HTMLButtonElemen
 }
 
 const AdaSidebarCollapser = ({collapsed, toggleSidebar, ...rest}: AdaSidebarCollapserProps) => {
+    const { t } = useTranslation();
     return <button
         {...rest}
         type="button"
         className={classNames("bg-transparent d-flex justify-content-between align-items-center w-100 px-3 my-ada-tab", rest.className)}
         onClick={toggleSidebar}
     >
-        <b>My Ada</b>
+        <b>{t("common:navigation.sidebar.brand")}</b>
         <Spacer />
         <i className={classNames("icon icon-md", collapsed ? "icon-chevron-right" : "icon-chevron-left")} aria-hidden="true" />
     </button>;
@@ -94,6 +96,7 @@ const AdaSidebarCollapser = ({collapsed, toggleSidebar, ...rest}: AdaSidebarColl
 
 
 export const MyAdaSidebar = (props: ContentSidebarProps) => {
+    const { t } = useTranslation();
     const location = useLocation();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -104,7 +107,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const isOpen = useAppSelector(selectors.sidebar.open);
     const toggleSidebar = () => dispatch(sidebarSlice.actions.toggle());
 
-    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle="My Ada">
+    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle={t("common:navigation.sidebar.brand")}>
         <div className="sticky-top overflow-x-hidden">
             {fullSidebarLayout && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
 
