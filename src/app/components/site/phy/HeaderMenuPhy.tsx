@@ -6,8 +6,10 @@ import { above, below, isAdmin, isAdminOrEventManager, isEventLeader, isStaff, i
 import { openActiveModal, selectors, useAppDispatch, useAppSelector, useGetSegueEnvironmentQuery } from "../../../state";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
 import { FeatureFlagModal, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
+import { useTranslation } from "react-i18next";
 
 export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
+    const { t } = useTranslation();
     const { toggleMenu, ...rest } = props;
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
@@ -25,46 +27,46 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
             <NavigationMenuPhy toggleMenu={toggleMenu}/>
             <div className="my-3"/>
         </>}
-        {isOffcanvas && <NavigationSection topLevelLink to="/" title={"Home"}/>}
-        {(isOffcanvas || above["xl"](deviceSize)) && <NavigationSection topLevelLink to="/about" title={"About Isaac"}/>}
-        <NavigationSection topLevelLink to="/questions" title={"Question finder"}/>
-        <NavigationSection topLevelLink to="/concepts" title={"Concepts"}/>
-        <NavigationSection topLevelLink to="/view_tests" title={"Tests"}/>
-        <NavigationSection topLevelLink to="/news" title={"News"}/>
-        <NavigationSection to="/events" title={"Events"}>
-            <LinkItem to="/events">Events</LinkItem>
-            <LinkItem to="/programmes">Programmes</LinkItem>
+        {isOffcanvas && <NavigationSection topLevelLink to="/" title={t("sci:navigation.home")}/>}
+        {(isOffcanvas || above["xl"](deviceSize)) && <NavigationSection topLevelLink to="/about" title={t("sci:navigation.about")}/>}
+        <NavigationSection topLevelLink to="/questions" title={t("sci:navigation.questionFinder")}/>
+        <NavigationSection topLevelLink to="/concepts" title={t("sci:navigation.concepts")}/>
+        <NavigationSection topLevelLink to="/view_tests" title={t("sci:navigation.tests")}/>
+        <NavigationSection topLevelLink to="/news" title={t("sci:navigation.news")}/>
+        <NavigationSection to="/events" title={t("sci:navigation.events.title")}>
+            <LinkItem to="/events">{t("sci:navigation.events.all")}</LinkItem>
+            <LinkItem to="/programmes">{t("sci:navigation.events.programmes")}</LinkItem>
         </NavigationSection>
-        <NavigationSection topLevelLink to="/books" title={"Books"}/>
-        <NavigationSection title={"Help"} className={classNames({"border-end" : !isOffcanvas})}>
+        <NavigationSection topLevelLink to="/books" title={t("sci:navigation.books")}/>
+        <NavigationSection title={t("sci:navigation.help.title")} className={classNames({"border-end" : !isOffcanvas})}>
             {/* <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem> -- bring back when updated content created! */}
-            <LinkItem to="/solving_problems">Problem-solving guide</LinkItem>
-            <LinkItem to="/support/student">Student FAQ</LinkItem>
+            <LinkItem to="/solving_problems">{t("sci:navigation.help.problemSolving")}</LinkItem>
+            <LinkItem to="/support/student">{t("sci:navigation.help.studentFaq")}</LinkItem>
             {isTutor(user)
-                ? <LinkItem to="/support/tutor">Tutor FAQ</LinkItem>
-                : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
-            <LinkItem to="/glossary">Glossary</LinkItem>
-            <LinkItem to="/contact">Contact Us</LinkItem>
+                ? <LinkItem to="/support/tutor">{t("sci:navigation.help.tutorFaq")}</LinkItem>
+                : <LinkItem to="/support/teacher">{t("sci:navigation.help.teacherFaq")}</LinkItem>}
+            <LinkItem to="/glossary">{t("sci:navigation.help.glossary")}</LinkItem>
+            <LinkItem to="/contact">{t("sci:navigation.help.contact")}</LinkItem>
         </NavigationSection>
 
         {isAdminTabVisible && <NavigationSection 
             title={isOffcanvas 
-                ? (isStaff(user) || isEventLeader(user)) ? "Admin" : "Staging"
-                : <i className="icon icon-cog icon-color-black no-print align-text-bottom" aria-label="Admin"/>
+                ? (isStaff(user) || isEventLeader(user)) ? t("sci:navigation.admin.title") : t("sci:navigation.admin.staging")
+                : <i className="icon icon-cog icon-color-black no-print align-text-bottom" aria-label={t("sci:navigation.admin.title")}/>
             } 
             className={classNames({"align-content-center" : !isOffcanvas})}
         >
-            {isStaff(user) && <LinkItem to="/admin">Admin Tools</LinkItem>}
-            {isAdmin(user) && <LinkItem to="/admin/usermanager">User Manager</LinkItem>}
-            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event Admin</LinkItem>}
-            {isStaff(user) && <LinkItem to="/admin/stats">Site Statistics</LinkItem>}
-            {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
+            {isStaff(user) && <LinkItem to="/admin">{t("sci:navigation.admin.tools")}</LinkItem>}
+            {isAdmin(user) && <LinkItem to="/admin/usermanager">{t("sci:navigation.admin.userManager")}</LinkItem>}
+            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">{t("sci:navigation.admin.eventAdmin")}</LinkItem>}
+            {isStaff(user) && <LinkItem to="/admin/stats">{t("sci:navigation.admin.statistics")}</LinkItem>}
+            {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">{t("sci:navigation.admin.contentErrors")}</LinkItem>}
             {isNonProd && <>
                 <div className="section-divider"/>  
                 <LinkItemButton onClick={() => {
                     dispatch(openActiveModal(FeatureFlagModal));
                 }}>
-                    Feature flags
+                    {t("sci:navigation.admin.featureFlags")}
                     {hasActiveFeatureFlagOverrides() && <span className="ms-3 bg-primary active-dot" />}
                 </LinkItemButton>
             </>}

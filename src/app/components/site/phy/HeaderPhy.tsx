@@ -9,22 +9,25 @@ import { MenuOpenContext, NavigationSection } from "../../navigation/NavigationB
 import classNames from "classnames";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
 import { useLightnessTheme } from "../../../services/theme";
+import { useTranslation } from "react-i18next";
 
 export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLButtonElement>) => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
     return (user && user.loggedIn
         ? above["lg"](deviceSize) 
             ? <Nav navbar className="justify-content-end" id="login-logout-button">
-                <NavigationSection topLevelLink className="mx-n3" to="/logout" title={"Log out"}/> 
+                <NavigationSection topLevelLink className="mx-n3" to="/logout" title={t("sci:auth.loginLogout.logout")}/> 
             </Nav>
-            : <Button tag={Link} to="/logout" color="link" {...props}>Log out</Button>
-        : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>Sign up / log in</Button>
+            : <Button tag={Link} to="/logout" color="link" {...props}>{t("sci:auth.loginLogout.logout")}</Button>
+        : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>{t("sci:auth.loginLogout.signUpOrLogIn")}</Button>
     );
 };
 
 export const HeaderPhy = () => {
+    const { t } = useTranslation();
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -38,14 +41,14 @@ export const HeaderPhy = () => {
                     <div className="header-logo align-content-center">
                         <Link to="/">
                             {lightnessTheme.value === "light"
-                                ? <img src="/assets/phy/logo.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-none d-sm-block d-print-block"/>
-                                : <img src="/assets/phy/logo-dark.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-none d-sm-block d-print-block"/>
+                                ? <img src="/assets/phy/logo.svg" alt={t("sci:navigation.header.logoAlt")} className="d-none d-sm-block d-print-block"/>
+                                : <img src="/assets/phy/logo-dark.svg" alt={t("sci:navigation.header.logoAlt")} className="d-none d-sm-block d-print-block"/>
                             }
-                            <img src="/assets/phy/logo-small.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-block d-sm-none d-print-none"/>
+                            <img src="/assets/phy/logo-small.svg" alt={t("sci:navigation.header.logoAlt")} className="d-block d-sm-none d-print-none"/>
                         </Link>
                     </div>
 
-                    <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
+                    <a href={`#${mainContentId}`} className="skip-main">{t("sci:navigation.header.skipToMainContent")}</a>
 
                     {above["lg"](deviceSize) 
                         ? <>
@@ -63,7 +66,7 @@ export const HeaderPhy = () => {
                                     affix: "icon-menu", 
                                     position: "suffix", 
                                     type: "icon"
-                                }}>Menu</AffixButton>
+                                }}>{t("sci:navigation.header.menuToggle")}</AffixButton>
                             </div>
 
                             <MenuOpenContext.Provider value={{menuOpen, setMenuOpen}}>
@@ -75,11 +78,11 @@ export const HeaderPhy = () => {
                                                 affix: "icon-close", 
                                                 position: "suffix", 
                                                 type: "icon"
-                                            }}>Menu</AffixButton>
+                                            }}>{t("sci:navigation.header.menuToggle")}</AffixButton>
                                         </div>
                                     }>
                                         <Link to="/" onClick={toggleMenu}>
-                                            <img src="/assets/phy/logo-small.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-block"/>
+                                            <img src="/assets/phy/logo-small.svg" alt={t("sci:navigation.header.logoAlt")} className="d-block"/>
                                         </Link>
                                     </OffcanvasHeader>
                                     <OffcanvasBody>

@@ -331,7 +331,59 @@
   },
   "meta": {
     "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.",
+    "footer": {
+      "cambridgeAlt": "University of Cambridge website",
+      "licenseText": "All teaching materials on this site are available under a <licenseLink>CC BY-NC-SA 4.0</licenseLink> license, except where otherwise stated.",
+      "logoAlt": "Ada Computer Science homepage",
+      "raspberryPiAlt": "Raspberry Pi website"
+    },
     "title": "Ada Computer Science"
+  },
+  "navigation": {
+    "admin": {
+      "contentErrors": "Content errors",
+      "events": "Event admin",
+      "featureFlags": "Feature flags",
+      "siteStatistics": "Site statistics",
+      "title": "Admin",
+      "tools": "Admin tools",
+      "userManager": "User manager"
+    },
+    "contactUs": "Contact us",
+    "dashboard": "My Ada",
+    "home": "Home",
+    "logIn": "Log in",
+    "logoAlt": "Ada Computer Science",
+    "logout": "Log out",
+    "resources": {
+      "glossary": "Glossary",
+      "projects": "Projects",
+      "questions": "Questions",
+      "specifications": "Specifications",
+      "title": "Resources",
+      "topics": "Topics"
+    },
+    "signUp": "Sign up",
+    "skipToContent": "Skip to main content",
+    "staging": {
+      "title": "Staging"
+    },
+    "students": {
+      "challenges": "Challenges",
+      "landingPage": "Ada CS for students",
+      "stemSmart": "STEM SMART",
+      "support": "Support",
+      "title": "Students"
+    },
+    "teachers": {
+      "landingPage": "Ada CS for teachers",
+      "mentoring": "Mentoring programme",
+      "onlineCourses": "Online courses",
+      "support": "Support",
+      "teachingOrder": "Suggested teaching order",
+      "title": "Teachers"
+    },
+    "toggleSearch": "Toggle search bar"
   },
   "news": {
     "loadMoreButton": "Load more",

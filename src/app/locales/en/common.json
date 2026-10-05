@@ -2285,6 +2285,7 @@
     "homeButton": "Home",
     "nextButton": "Next",
     "previousButton": "Previous",
+    "scrollToTop": "Scroll to top of page",
     "search": {
       "closeLabel": "Close search menu",
       "openLabel": "Open search menu"

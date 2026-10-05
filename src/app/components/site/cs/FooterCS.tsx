@@ -3,6 +3,9 @@ import {Container, Col, Row} from "reactstrap";
 import {ListGroupFooter} from "../../elements/list-groups/ListGroupFooter";
 import {Link} from "react-router-dom";
 import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
+import { Trans } from "react-i18next";
+import i18next from "i18next";
+import { TransAnchor } from "../../elements/TransAnchor";
 
 export const FooterCS = () => (
     <footer>
@@ -14,7 +17,7 @@ export const FooterCS = () => (
                             <img
                                 src="/assets/common/logos/ada_logo_stamp_aqua.svg"
                                 className="footer-logo"
-                                alt="Ada Computer Science homepage"
+                                alt={i18next.t("ada:meta.footer.logoAlt")}
                             />
                         </Link>
                     </Col>
@@ -34,19 +37,24 @@ export const FooterCS = () => (
                     <Row className="justify-content-between">
                         <Col xs={{size: 12}} md={{size: 7, order: 2}} lg={{size: 8}} xl={{size: 9}} className="text-cs-white text-start text-md-end">
                             <p>
-                                All teaching materials on this site are available under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" className="d-inline link-light text-white">CC BY-NC-SA 4.0</a> license, except where otherwise stated.
+                                <Trans
+                                    i18nKey="ada:meta.footer.licenseText"
+                                    components={{
+                                        licenseLink: <TransAnchor href="https://creativecommons.org/licenses/by-nc-sa/4.0" className="d-inline link-light text-white" />,
+                                    }}
+                                />
                             </p>
                         </Col>
                         <Col xs={{size: 12}} md={{size: 5, order: 1}} lg={{size: 4}} xl={{size: 3}} className="col-xxl-2">
                             <Row className="align-items-center">
                                 <Col>
                                     <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                        <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                        <img src="/assets/common/logos/university_of_cambridge.svg" alt={i18next.t("ada:meta.footer.cambridgeAlt")} className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
                                 <Col>
                                     <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                        <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                                        <img src="/assets/common/logos/ada_rpf_icon.svg" alt={i18next.t("ada:meta.footer.raspberryPiAlt")} className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
                             </Row>

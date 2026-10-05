@@ -9,6 +9,7 @@ import { LoginLogoutButton } from "./HeaderPhy";
 import { Link, useNavigate } from "react-router-dom";
 import { HoverableNavigationContext, PageContextState } from "../../../../IsaacAppTypes";
 import max from "lodash/max";
+import { useTranslation } from "react-i18next";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
@@ -173,6 +174,7 @@ interface NavigationSectionProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const ContentNavSection = (props: NavigationSectionProps) => {
+    const { t } = useTranslation();
     const { title, categories, toggleMenu, ...rest } = props;
     const deviceSize = useDeviceSize();
     const pageContext = useAppSelector(selectors.pageContext.context);
@@ -223,7 +225,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                         data-bs-theme={quickSwitcher.subject}
                         href={`/${quickSwitcher.subject}/${quickSwitcher.stage}`}
                     >
-                        <span className="mb-1">Quick switch to</span>
+                        <span className="mb-1">{t("sci:navigation.quickSwitch.label")}</span>
                         <span className="d-flex align-items-center">
                             <i className="icon icon-hexagon-bullet me-1" />
                             {`${HUMAN_STAGES[quickSwitcher.stage]} ${HUMAN_SUBJECTS[quickSwitcher.subject]}`}
@@ -282,6 +284,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
 };
 
 const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const { notifications: _, workCounts } = useUserNotifications();
 
@@ -298,33 +301,33 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                     <div className="d-flex flex-column flex-grow-1">
 
                         {deviceSize === "xs" && isTutorOrAbove(user) && <>
-                            <h5 className="mt-2">ACCOUNT</h5>
+                            <h5 className="mt-2">{t("sci:navigation.profile.accountHeading")}</h5>
                             <ul className="plain-list">
                                 <NavigationItemClose href="/account">
-                                    My account
+                                    {t("sci:navigation.profile.myAccount")}
                                 </NavigationItemClose>
                             </ul>
                             <div className="section-divider" />
                         </>}
 
-                        {isTutorOrAbove(user) && <h5 className="pt-2 pt-sm-0">STUDENT</h5>}
+                        {isTutorOrAbove(user) && <h5 className="pt-2 pt-sm-0">{t("sci:navigation.profile.studentHeading")}</h5>}
                         <ul className="plain-list flex-grow-1">
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
-                                My saved decks
+                                {t("sci:navigation.profile.savedDecks")}
                             </NavigationItemClose>
                             <NavigationItemClose href={PATHS.BOOKMARKS}>
-                                My bookmarks
+                                {t("sci:navigation.profile.bookmarks")}
                             </NavigationItemClose>
                             <NavigationItemClose href="/assignments" className="d-flex align-items-center">
-                                My assignments
+                                {t("sci:navigation.profile.myAssignments")}
                                 {workCounts.assignments > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</span>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/tests" className="d-flex align-items-center">
-                                My tests
+                                {t("sci:navigation.profile.myTests")}
                                 {workCounts.tests > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.tests > 99 ? "99+" : workCounts.tests}</span>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/progress">
-                                My progress
+                                {t("sci:navigation.profile.myProgress")}
                             </NavigationItemClose>
                         </ul>
 
@@ -333,13 +336,13 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                 ? <>
                                     <div className="section-divider me-n2" />
                                     <Spacer />
-                                    <h5 className="mt-2">ACCOUNT</h5>
+                                    <h5 className="mt-2">{t("sci:navigation.profile.accountHeading")}</h5>
                                 </>
                                 : <div className="section-divider" />
                             }
                             <ul className="plain-list">
                                 <NavigationItemClose href="/account">
-                                    My account
+                                    {t("sci:navigation.profile.myAccount")}
                                 </NavigationItemClose>
                             </ul>
                         </>}
@@ -352,22 +355,22 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             <ul className="plain-list">
                                 {isTutor(user)
                                     ? <NavigationItemClose href="/tutor_features">
-                                        Tutor features
+                                        {t("sci:navigation.profile.tutorFeatures")}
                                     </NavigationItemClose>
                                     : <NavigationItemClose href="/teacher_features">
-                                        Teacher features
+                                        {t("sci:navigation.profile.teacherFeatures")}
                                     </NavigationItemClose>}
                                 <NavigationItemClose href="/groups">
-                                    Manage groups
+                                    {t("sci:navigation.profile.manageGroups")}
                                 </NavigationItemClose>
                                 <NavigationItemClose href="/question_deck_builder">
-                                    Create a question deck
+                                    {t("sci:navigation.profile.createQuestionDeck")}
                                 </NavigationItemClose>
                                 <NavigationItemClose href="/assigned">
-                                    Set / manage work
+                                    {t("sci:navigation.profile.setManageWork")}
                                 </NavigationItemClose>
                                 <NavigationItemClose href="/assignment_progress">
-                                    Assignment progress
+                                    {t("sci:navigation.profile.assignmentProgress")}
                                 </NavigationItemClose>
                             </ul>
                         </div>
@@ -375,7 +378,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 </div>
             </div>
             : <div className="px-4">
-                <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
+                <span>{t("sci:navigation.profile.notLoggedIn")}</span>
                 <br/>
                 <LoginLogoutButton className="my-2 w-max-content" onClick={toggleMenu}/>
             </div>
@@ -397,7 +400,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 </>
                 : <i className="icon icon-my-isaac"/>}
         </div>
-        My Isaac
+        {t("sci:navigation.profile.title")}
         {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content" data-testid={"my-assignments-badge"}>
             {taskCount > 99 ? "99+" : taskCount}
         </span>}
@@ -406,7 +409,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
     return above["md"](deviceSize)
         ? <ContentNavHoverableWrapper className="ps-0">
             <HoverableNavigationDropdown
-                ariaTitle={`My Isaac (${taskCount} tasks to do)`}
+                ariaTitle={t("sci:navigation.profile.ariaTitle", { taskCount })}
                 title={title}
                 id="my-isaac-dropdown"
                 toggleClassName="ps-0"
@@ -435,6 +438,7 @@ const NavigationItem = (props: NavigationItemProps) => {
 };
 
 export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
+    const { t } = useTranslation();
     const openHoverable = useRef<number | undefined>(undefined);
     // we use a ref over useState for tracking which hoverable is open as the delay from using setState can lead to this not being reset to undefined
     // while moving the mouse between two hoverables, preventing the second dropdown from opening.
@@ -485,8 +489,8 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
         </div>}
 
         <ContentNavProfile toggleMenu={toggleMenu}/>
-        <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
-        <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
+        <ContentNavSection title={t("sci:navigation.explore.stageTitle")} categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
+        <ContentNavSection title={t("sci:navigation.explore.subjectTitle")} categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
 
         {above["md"](deviceSize) && <>
             <Spacer />

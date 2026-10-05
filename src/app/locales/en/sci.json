@@ -99,6 +99,10 @@
       "returnButton": "Take me back"
     },
     "closeButton": "CLOSE",
+    "loginLogout": {
+      "logout": "Log out",
+      "signUpOrLogIn": "Sign up / log in"
+    },
     "logoAlt": "Isaac Science Logo",
     "metaDescription": "Log in to Isaac to learn and track your progress.",
     "notLinked": {
@@ -307,6 +311,15 @@
       "when": "When:"
     }
   },
+  "footer": {
+    "accessibilityLink": "Accessibility statement",
+    "cambridgeLogoAlt": "University of Cambridge website",
+    "cookieLink": "Cookie policy",
+    "licenseText": "All materials on this site are licensed under the  <creativeCommonsLink><u>Creative Commons license</u></creativeCommonsLink> unless stated otherwise.",
+    "privacyLink": "Privacy policy",
+    "supportText": "Supported by the   <cambridgeLink><u1>University of Cambridge</u1></cambridgeLink> and <ogdenTrustLink><u2>The Ogden Trust</u2>.</ogdenTrustLink><br/>Founded in collaboration with the   <dfeLink><u3>Department for Education England</u3></dfeLink>.",
+    "termsLink": "Terms of use"
+  },
   "freeTextBuilder": {
     "attempts": {
       "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.\n            To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool.\n            This is in line with our mission to make science accessible to all."
@@ -383,6 +396,37 @@
       "manageTestsLink": "Manage tests"
     }
   },
+  "homepage": {
+    "dashboard": {
+      "ariaLabel": "Dashboard"
+    },
+    "events": {
+      "empty": "No events available. Check back soon!",
+      "error": "There was an error loading the events list. Please try again later!",
+      "moreLink": "More events",
+      "title": "Upcoming events"
+    },
+    "hero": {
+      "description": "From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.",
+      "headline": "<highlight>Master science subjects</highlight> by solving problems",
+      "studentLabel": "STUDENTS",
+      "studentTag": "student card tag",
+      "studentTitle": "Build confidence in science through practice",
+      "teacherLabel": "TEACHERS",
+      "teacherTag": "teacher card tag",
+      "teacherTitle": "Support students in developing skills and achieving higher results"
+    },
+    "news": {
+      "empty": "No news available. Check back soon!",
+      "error": "There was an error loading the news list. Please try again later!",
+      "moreLink": "More news",
+      "title": "News and features"
+    },
+    "subjects": {
+      "ariaLabel": "Explore {{stage}} {{subject}}",
+      "title": "Explore and learn!"
+    }
+  },
   "listViews": {
     "footer": {
       "exploreBySubject": "Explore by subject",
@@ -395,6 +439,70 @@
   "meta": {
     "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.",
     "title": "Isaac Physics"
+  },
+  "navigation": {
+    "about": "About Isaac",
+    "admin": {
+      "contentErrors": "Content Errors",
+      "eventAdmin": "Event Admin",
+      "featureFlags": "Feature flags",
+      "staging": "Staging",
+      "statistics": "Site Statistics",
+      "title": "Admin",
+      "tools": "Admin Tools",
+      "userManager": "User Manager"
+    },
+    "books": "Books",
+    "concepts": "Concepts",
+    "events": {
+      "all": "Events",
+      "programmes": "Programmes",
+      "title": "Events"
+    },
+    "explore": {
+      "stageTitle": "Explore by learning stage",
+      "subjectTitle": "Explore by subject"
+    },
+    "header": {
+      "logoAlt": "The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text.",
+      "menuToggle": "Menu",
+      "skipToMainContent": "Skip to main content"
+    },
+    "help": {
+      "contact": "Contact Us",
+      "glossary": "Glossary",
+      "problemSolving": "Problem-solving guide",
+      "studentFaq": "Student FAQ",
+      "teacherFaq": "Teacher FAQ",
+      "title": "Help",
+      "tutorFaq": "Tutor FAQ"
+    },
+    "home": "Home",
+    "news": "News",
+    "profile": {
+      "accountHeading": "ACCOUNT",
+      "ariaTitle": "My Isaac ({{taskCount}} tasks to do)",
+      "assignmentProgress": "Assignment progress",
+      "bookmarks": "My bookmarks",
+      "createQuestionDeck": "Create a question deck",
+      "manageGroups": "Manage groups",
+      "myAccount": "My account",
+      "myAssignments": "My assignments",
+      "myProgress": "My progress",
+      "myTests": "My tests",
+      "notLoggedIn": "You're not currently logged in. Log in or sign up for free below!",
+      "savedDecks": "My saved decks",
+      "setManageWork": "Set / manage work",
+      "studentHeading": "STUDENT",
+      "teacherFeatures": "Teacher features",
+      "title": "My Isaac",
+      "tutorFeatures": "Tutor features"
+    },
+    "questionFinder": "Question finder",
+    "quickSwitch": {
+      "label": "Quick switch to"
+    },
+    "tests": "Tests"
   },
   "news": {
     "loadMoreButton": "Load older news",
