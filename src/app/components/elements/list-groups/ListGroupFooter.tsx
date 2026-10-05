@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {ListGroup} from "reactstrap";
 import {isAda, siteSpecific} from "../../../services";
 import classNames from "classnames";
+import i18next from "i18next";
 
 interface FooterLinkProps {
     linkTo: string;
@@ -58,7 +59,7 @@ export const ListGroupFooter = () => (
                 {footerLinksPhy.left}
             </ListGroup>
             <div className="mb-3 w-max-content me-xl-4">
-                <p className="footer-link-header">Explore by subject</p>
+                <p className="footer-link-header">{i18next.t("sci:listViews.footer.exploreBySubject")}</p>
                 <ListGroup>
                     {footerLinksPhy.right}
                 </ListGroup>

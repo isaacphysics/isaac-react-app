@@ -281,6 +281,14 @@
       "title": "Tools to aid learning"
     }
   },
+  "listViews": {
+    "footer": {
+      "socialLinks": "Get social"
+    },
+    "shortcut": {
+      "label": "Shortcut"
+    }
+  },
   "markbook": {
     "title": "Markbook"
   },

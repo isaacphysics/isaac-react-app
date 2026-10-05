@@ -358,6 +358,12 @@
       "manageTestsLink": "Manage tests"
     }
   },
+  "listViews": {
+    "footer": {
+      "exploreBySubject": "Explore by subject",
+      "socialLinks": "Follow us"
+    }
+  },
   "markbook": {
     "title": "Assignment progress"
   },

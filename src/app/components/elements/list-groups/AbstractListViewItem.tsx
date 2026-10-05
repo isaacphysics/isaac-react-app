@@ -20,6 +20,7 @@ import { SaveBoardButton } from "../SaveBoardButton";
 import { BoardItemIndicator } from "../cards/GameboardCard";
 import { useBookmarks } from "../../../services/bookmarks";
 import { PreviewQuestionButton } from "../PreviewButton";
+import { useTranslation } from "react-i18next";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -33,23 +34,24 @@ interface StatusDisplayProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const StatusDisplay = (props: StatusDisplayProps) => {
+    const { t } = useTranslation();
     const { status, showText, className, ...rest } = props;
     switch (status) {
         case CompletionState.IN_PROGRESS:
             return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
                 <i className="icon icon-raw icon-in-progress" />
-                {showText && "In progress"}
+                {showText && t("common:listViews.status.inProgress")}
             </span>;
         case CompletionState.ALL_CORRECT:
             return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
                 <i className="icon icon-raw icon-correct" />
-                {showText && "Correct"}
+                {showText && t("common:listViews.status.correct")}
             </span>;
         case CompletionState.ALL_INCORRECT:
         case CompletionState.ALL_ATTEMPTED:
             return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
                 <i className="icon icon-raw icon-attempted" />
-                {showText && "Attempted"}
+                {showText && t("common:listViews.status.attempted")}
             </span>;
         case CompletionState.NOT_ATTEMPTED:
             return;
@@ -78,16 +80,18 @@ const LinkTags = ({linkTags, disabled}: LinkTagProps) => {
 };
 
 const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl?: string, quizButton?: ReactNode}) => {
+    const { t } = useTranslation();
     const { previewQuizUrl, quizButton, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
         {previewQuizUrl && <Button to={previewQuizUrl} color={"keyline"} tag={Link} className="set-quiz-button-md h-100">
-            {previewQuizUrl.includes("/preview/") ? "Preview" : "View test"}
+            {previewQuizUrl.includes("/preview/") ? t("common:listViews.action.preview") : t("common:listViews.action.viewTest")}
         </Button>}
         {quizButton}
     </span>;
 };
 
 const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const [ getGroups ] = useLazyGetGroupsQuery();
     const [ getAssignments ] = useLazyGetMySetAssignmentsQuery();
@@ -110,7 +114,7 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
             })));
         }}
     >
-        Assign
+        {t("common:listViews.action.assign")}
     </Button>;
 };
 

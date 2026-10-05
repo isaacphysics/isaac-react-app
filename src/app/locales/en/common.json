@@ -1801,6 +1801,32 @@
       "syntaxError": "Syntax error: unexpected token \"{{tokenValue}}\""
     }
   },
+  "listViews": {
+    "action": {
+      "assign": "Assign",
+      "preview": "Preview",
+      "setTest": "Set test",
+      "takeTest": "Take the test",
+      "viewTest": "View test"
+    },
+    "dragToReorder": "Drag to reorder",
+    "hiddenFromTeachers": "Hidden from teachers",
+    "moveDown": "Move question down",
+    "moveUp": "Move question up",
+    "noTitle": "no title",
+    "question": {
+      "label": "Question"
+    },
+    "status": {
+      "attempted": "Attempted",
+      "correct": "Correct",
+      "inProgress": "In progress"
+    },
+    "topic": {
+      "label": "Topic"
+    },
+    "visibleToStudents": "Visible to students"
+  },
   "markdownBuilder": {
     "guideLinkText": "Markdown guide",
     "rawInputLabel": "Raw input",

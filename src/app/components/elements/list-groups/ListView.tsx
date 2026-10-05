@@ -13,6 +13,8 @@ import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 import { IconProps } from "../svg/HexIcon";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const DraggableListViewWrapper = lazy(() => import("../DraggableListViewItemWrapper"));
 
@@ -43,7 +45,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "") + bookSectionUrlParams;
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
-    const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
+    const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : i18next.t("common:listViews.question.label"),
         icon: isPhy
             ? {name: "icon-question", size: "lg"}
             : {name: QUESTION_STATUS_TO_ICON[state], size: hideIconLabel ? "md" : "lg", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
@@ -106,7 +108,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-    const icon: TitleIconProps = {type: "icon", label: "Topic", icon: {name: "icon-topic", size: "lg", altText: "Topic summary page icon", color: "tertiary"}};
+    const icon: TitleIconProps = {type: "icon", label: i18next.t("common:listViews.topic.label"), icon: {name: "icon-topic", size: "lg", altText: "Topic summary page icon", color: "tertiary"}};
 
     return <AbstractListViewItem
         icon={icon}
@@ -152,25 +154,26 @@ type QuizListViewItemProps = ListViewItemBaseProps<"quiz", "list" | "card"> & {
 }
 
 export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}: QuizListViewItemProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ?
         <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
-            Set test
+            {t("common:listViews.action.setTest")}
         </AffixButton> :
         <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
-            Take the test
+            {t("common:listViews.action.takeTest")}
         </AffixButton>;
 
     // If the user is event admin or above, and the quiz is hidden from teachers, then show that
     // Otherwise, show if the quiz is visible to students
     const roleVisibilitySummary = (quiz: QuizSummaryDTO): string | undefined => {
         if (isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER")) {
-            return "Hidden from teachers";
+            return t("common:listViews.hiddenFromTeachers");
         }
         if (((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents)) {
-            return "Visible to students";
+            return t("common:listViews.visibleToStudents");
         }
     };
 
@@ -200,6 +203,7 @@ type QuestionDeckListViewItemProps = ListViewItemBaseProps<"gameboard", "list" |
 }
 
 export const QuestionDeckListViewItem = ({item, linkedBookSection, ...rest}: QuestionDeckListViewItemProps) => {
+    const { t } = useTranslation();
     const questionTagsCountMap = item.contents?.filter(c => c.contentType === "isaacQuestionPage").map(q => q.tags as TAG_ID[]).reduce((acc, tags) => {
         tags?.forEach(tag => {
             acc[tag] = (acc[tag] || 0) + 1;
@@ -215,7 +219,7 @@ export const QuestionDeckListViewItem = ({item, linkedBookSection, ...rest}: Que
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
-        title={item.title ?? "no title"}
+        title={item.title ?? t("common:listViews.noTitle")}
         subject={questionSubjects.length === 1 ? questionSubjects[0].id as Subject : undefined}
         breadcrumb={breadcrumb}
         url={url}
@@ -288,6 +292,7 @@ type ShortcutListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> 
 }
 
 export const ShortcutListViewItem = ({item, linkedBoardId, linkedBookSection, ...rest}: ShortcutListViewItemProps) => {
+    const { t } = useTranslation();
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
@@ -297,7 +302,7 @@ export const ShortcutListViewItem = ({item, linkedBoardId, linkedBookSection, ..
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
     const icon: TitleIconProps = isPhy ?
         {type: "icon", icon: {name: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}} :
-        {type: "icon", icon: {name: "icon-info-filled", size: "lg", color: "tertiary"}, label: "Shortcut", alt: "Shortcut page icon" };
+        {type: "icon", icon: {name: "icon-info-filled", size: "lg", color: "tertiary"}, label: t("ada:listViews.shortcut.label"), alt: "Shortcut page icon" };
 
     return <AbstractListViewItem
         icon={icon}
@@ -371,7 +376,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     const topicTag = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
     const topic = topicTag ? topicTag.alias ?? topicTag.title : undefined;
 
-    const icon: TitleIconProps = { type: "icon", label: "Question",
+    const icon: TitleIconProps = { type: "icon", label: i18next.t("common:listViews.question.label"),
         icon: isPhy
             ? {name: "icon-question", size: "md"}
             : {name: QUESTION_STATUS_TO_ICON[CompletionState.NOT_ATTEMPTED], size: "md", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
@@ -382,11 +387,11 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     return <DraggableListViewWrapper id={item.id ?? ""} index={index ?? -1}>
         {deviceSize !== "xs" && <div className="d-flex vertical-center rounded-2">
             <div className="d-flex flex-column align-items-center">
-                <button type="button" title="Move question up" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
+                <button type="button" title={i18next.t("common:listViews.moveUp")} className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
                     <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
-                <i aria-label="Drag to reorder" className="mx-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black" />
-                <button type="button" title="Move question down" className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
+                <i aria-label={i18next.t("common:listViews.dragToReorder")} className="mx-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black" />
+                <button type="button" title={i18next.t("common:listViews.moveDown")} className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
                     <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
             </div>
