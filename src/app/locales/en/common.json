@@ -794,6 +794,9 @@
     "ageCheckFailed": {
       "heading": "Unable to create account"
     },
+    "callback": {
+      "signingIn": "Signing in..."
+    },
     "consent": {
       "explanation": "If you'd like to use your Microsoft account for signing in to {{siteTitle}}, you need to let us read your name and email address from your Microsoft account.",
       "readMore": "Read more about signing in with Microsoft.",
@@ -816,12 +819,26 @@
     "emailInput": {
       "validationError": "Please enter a valid email address."
     },
+    "emailVerification": {
+      "badParameters": "This page received bad parameters.",
+      "continueButton": "Continue",
+      "failedTitle": "Couldn't verify email address",
+      "loginToResend": "Please login to your <accountLink>account</accountLink> to resend the verification email.",
+      "resendButton": "Resend verification email",
+      "sentTo": "Verification email sent to {{email}}",
+      "title": "Email verification",
+      "userMismatch": "You are signed in as a different user to the user with the email you have just verified.",
+      "verified": "Email address verified."
+    },
     "formIntro": "To <emphasis>continue with an account</emphasis>, please do so below",
     "google": {
       "logoAlt": "Google logo"
     },
     "login": {
       "heading": "Log in or sign up:"
+    },
+    "logout": {
+      "loggingOut": "Logging out..."
     },
     "microsoft": {
       "buttonLabel": "Microsoft",
@@ -862,7 +879,14 @@
     },
     "passwordReset": {
       "checkInbox": "Please check your inbox.",
-      "forgottenLink": "Forgotten your password?"
+      "errorTitle": "Unable to reset your password",
+      "forgottenLink": "Forgotten your password?",
+      "newPasswordLabel": "New password",
+      "noTokenMessage": "Please ensure you have clicked the link provided in your password reset email.",
+      "noTokenTitle": "No reset token provided",
+      "submitButton": "Change password",
+      "title": "Reset your password",
+      "verifyingToken": "Verifying reset token..."
     },
     "raspberryPi": {
       "conciseLabel": "Raspberry Pi",
@@ -1148,6 +1172,7 @@
   },
   "clientError": {
     "contentNotFound": "Content not found",
+    "defaultTitle": "Error fetching data from server",
     "fragmentNotFound": "We're sorry, page fragment not found:<code>{{fragmentId}}</code>",
     "heading": "We're sorry, but an error has occurred in the {{siteName}} app!",
     "notFound": {
@@ -1158,12 +1183,14 @@
       "title": "Page not found"
     },
     "offlineMessage": "It looks like you're offline. You may want to check your internet connection, and then refresh this page to try again.<br/>If you are still having issues, please <contactLink>let us know</contactLink>.",
+    "offlineWarning": "You appear to be offline.",
     "recoveryOptions": "You may want to <refreshLink>refresh this page and try again</refreshLink>, <homeLink>return to our homepage</homeLink>, or <contactLink>contact</contactLink> or <emailLink>email</emailLink> us if this keeps happening.",
     "sessionExpired": {
       "contactSupport": "Please email <mailtoLink>{{webmasterEmail}}</mailtoLink> if this keeps happening.",
       "heading": "We're sorry, but your session has expired!",
       "title": "Session expired"
     },
+    "statusCode": "Status code: {{statusCode}}",
     "title": "Error",
     "userInfo": {
       "errorDetails": "Error Details",
@@ -1290,6 +1317,21 @@
   "contextPicker": {
     "resetButton": "Reset viewing context",
     "stageLabel": "Stage"
+  },
+  "cookieConsent": {
+    "accept": "Accept",
+    "anvil": {
+      "title": "Allow Anvil content?"
+    },
+    "desmos": {
+      "title": "Allow Desmos content?"
+    },
+    "geogebra": {
+      "title": "Allow GeoGebra content?"
+    },
+    "youtube": {
+      "title": "Allow YouTube content?"
+    }
   },
   "csOverview": {
     "description": "Ada Computer Science is a free learning platform for computing teachers and students. Developed by the Raspberry Pi Foundation in partnership with the Isaac Science team at the University of Cambridge, it is tailored to support learners aged 14-19. Ada Computer Science offers structured resources to support both teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a wide range of other resources designed to enhance computer science education.",
@@ -2116,6 +2158,15 @@
     "buttonLabel": "Open help video",
     "modalTitle": "Help"
   },
+  "homepage": {
+    "video": {
+      "altText": "Isaac Physics introduction video",
+      "copyLink": "Copy Link",
+      "linkCopied": "Copied!",
+      "thumbnailAlt": "A group of students solving problems at an in-person Isaac event.",
+      "title": "Why use Isaac Physics?"
+    }
+  },
   "inequality": {
     "centreButton": "Centre",
     "chemistry": {
@@ -2186,6 +2237,9 @@
       "label": "Topic"
     },
     "visibleToStudents": "Visible to students"
+  },
+  "loading": {
+    "text": "Loading..."
   },
   "markdownBuilder": {
     "guideLinkText": "Markdown guide",

@@ -6,17 +6,20 @@ import {isDefined, isFound, NO_CONTENT, NOT_FOUND, SITE_TITLE, WEBMASTER_EMAIL} 
 import {getRTKQueryErrorMessage} from "../../state";
 import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export const LoadingPlaceholder = () => <div className="w-100 text-center pb-2">
-    <h2 aria-hidden="true" className="pt-7">Loading...</h2>
+    <h2 aria-hidden="true" className="pt-7">{i18next.t("common:loading.text")}</h2>
     <IsaacSpinner />
 </div>;
 
 export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError | SerializedError, title: string}) => {
+    const { t } = useTranslation();
     const errorDetails = getRTKQueryErrorMessage(error);
     return <Alert color={"warning"} className={"my-2"}>
-        {title ?? "Error fetching data from server"}: {window.navigator.onLine ? errorDetails.message : "You appear to be offline."}
-        {errorDetails.status ? <><br/>Status code: {errorDetails.status}</> : ""}
+        {title ?? t("common:clientError.defaultTitle")}: {window.navigator.onLine ? errorDetails.message : t("common:clientError.offlineWarning")}
+        {errorDetails.status ? <><br/>{t("common:clientError.statusCode", { statusCode: errorDetails.status })}</> : ""}
         <br/>
         You may want to{!window.navigator.onLine && " check your internet connection,"} refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
         this continues to happen.

@@ -182,6 +182,9 @@
       "save": "Save to My quizzes",
       "saveLogin": "Log in to save to My quizzes"
     },
+    "add": {
+      "loading": "Adding quiz..."
+    },
     "assignments": {
       "deleteQuiz": "Delete quiz"
     },

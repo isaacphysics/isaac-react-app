@@ -1,6 +1,7 @@
 import React from "react";
 import {siteSpecific} from "../../services";
 import classNames from "classnames";
+import i18next from "i18next";
 
 export interface IsaacSpinnerProps {
     size?: "sm" | "md" | "lg";
@@ -23,6 +24,6 @@ export const IsaacSpinner = ({size = "md", className, color = "primary", inline 
 
 export const Loading = ({noText, className, displayText}: {noText?: boolean; className?: string, displayText?: string}) =>
     <div className={classNames(className, "w-100 text-center pb-2")}>
-        {!noText && <h2 aria-hidden="true" className="pt-7">{displayText ?? "Loading..."}</h2>}
+        {!noText && <h2 aria-hidden="true" className="pt-7">{displayText ?? i18next.t("common:loading.text")}</h2>}
         <IsaacSpinner />
     </div>;

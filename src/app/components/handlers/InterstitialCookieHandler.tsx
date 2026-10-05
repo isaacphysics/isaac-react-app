@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { ANVIL_COOKIE, cookieConsentSlice, DESMOS_COOKIE, GEOGEBRA_COOKIE, useAppDispatch, YOUTUBE_COOKIE } from '../../state';
 import { SOCIAL_LINKS, useUserConsent } from '../../services';
 import { IsaacVideo } from '../content/IsaacVideo';
+import { useTranslation } from "react-i18next";
 
 const youtubeHomepageCookieText = <p className="text-muted m-0"><small>We use YouTube to show you videos on our website. By clicking the above, you agree to Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a>.</small></p>;
 const youtubeCookieText = <p>We use YouTube to show you videos on our website. We ask for your permission before loading the content, as YouTube may be using cookies to help them track usage and improve their services.<br/><br/>You may wish to read Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a> before accepting.</p>;
@@ -22,6 +23,7 @@ export const InterstitialCookieHandler = (props: InterstitialCookieHandlerProps)
 };
 
 export const HomepageYoutubeCookieHandler = () => {
+    const { t } = useTranslation();
     const [autoplay, setAutoplay] = useState(false);
     const [videoActive, setVideoActive] = useState(false);
     const [copyActive, setCopyActive] = useState(false);
@@ -38,7 +40,7 @@ export const HomepageYoutubeCookieHandler = () => {
                     <div className="d-flex align-items-center">
                         {/* eslint-disable-next-line jsx-a11y/anchor-has-content -- content in css */}
                         <a className="channel-icon" href={SOCIAL_LINKS.youtube.href}/>
-                        <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">Why use Isaac Physics?</a>
+                        <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">{t("common:homepage.video.title")}</a>
                     </div>
                     <div className="copy-container d-flex flex-column align-items-center">
                         <button className={classNames("copy-link m-0", {"copied" : linkCopied}, {"selected" : copyActive})} onClick={() => {
@@ -46,7 +48,7 @@ export const HomepageYoutubeCookieHandler = () => {
                             setLinkCopied(true);
                         }} onMouseLeave={() => setLinkCopied(false)}
                         onFocus={() => setCopyActive(true)} onBlur={() => setCopyActive(false)}/>
-                        <div className="copy-text">{linkCopied ? "Copied!" : "Copy Link"}</div>
+                        <div className="copy-text">{linkCopied ? t("common:homepage.video.linkCopied") : t("common:homepage.video.copyLink")}</div>
                     </div>
                 </div>
                 <button className={`youtube-play w-100 h-100 p-0 m-0 ${videoActive ? "selected" : ""}`} type="button" onClick={() => {
@@ -54,29 +56,30 @@ export const HomepageYoutubeCookieHandler = () => {
                     setAutoplay(true);
                 }} onFocus={() => setVideoActive(true)} onBlur={() => setVideoActive(false)}>
                 </button>
-                <img data-testid={"yt-thumbnail"} src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt="A group of students solving problems at an in-person Isaac event." className="w-100 h-100"/>
+                <img data-testid={"yt-thumbnail"} src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt={t("common:homepage.video.thumbnailAlt")} className="w-100 h-100"/>
             </div>
             {youtubeHomepageCookieText}
         </div>}
         afterAccepted={<IsaacVideo
-            doc={{src: `https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&autoplay=${autoplay ? 1 : 0}&modestbranding=1&origin=home`, altText: "Isaac Physics introduction video"}}
+            doc={{src: `https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&autoplay=${autoplay ? 1 : 0}&modestbranding=1&origin=home`, altText: t("common:homepage.video.altText")}}
         />}
     />;
 };
 
 export const YoutubeCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.youtubeCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow YouTube content?</h3>
+            <h3>{t("common:cookieConsent.youtube.title")}</h3>
             {youtubeCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button className="" onClick={() => {
                     dispatch(cookieConsentSlice.actions.acceptCookie(YOUTUBE_COOKIE));
-                }}>Accept</Button>
+                }}>{t("common:cookieConsent.accept")}</Button>
             </div>
         </div>}
         afterAccepted={<>{afterAcceptedElement}</>}
@@ -84,18 +87,19 @@ export const YoutubeCookieHandler = ({afterAcceptedElement} : {afterAcceptedElem
 };
 
 export const AnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.anvilCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow Anvil content?</h3>
+            <h3>{t("common:cookieConsent.anvil.title")}</h3>
             {anvilCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
                     dispatch(cookieConsentSlice.actions.acceptCookie(ANVIL_COOKIE));
-                }}>Accept</Button>
+                }}>{t("common:cookieConsent.accept")}</Button>
             </div>
         </div>}
         afterAccepted={<>{afterAcceptedElement}</>}
@@ -103,18 +107,19 @@ export const AnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElemen
 };
 
 export const DesmosCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const userConsent = useUserConsent();
     
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.desmosCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow Desmos content?</h3>
+            <h3>{t("common:cookieConsent.desmos.title")}</h3>
             {desmosCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
                     dispatch(cookieConsentSlice.actions.acceptCookie(DESMOS_COOKIE));
-                }}>Accept</Button>
+                }}>{t("common:cookieConsent.accept")}</Button>
             </div>
         </div>}
         afterAccepted={<>{afterAcceptedElement}</>}
@@ -122,19 +127,20 @@ export const DesmosCookieHandler = ({afterAcceptedElement} : {afterAcceptedEleme
 };
 
 export const GeogebraCookieHandler = ({afterAcceptedElement, onAccepted} : {afterAcceptedElement: JSX.Element, onAccepted?: () => void}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const userConsent = useUserConsent();
     
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.geogebraCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>Allow GeoGebra content?</h3>
+            <h3>{t("common:cookieConsent.geogebra.title")}</h3>
             {geogebraCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
                     dispatch(cookieConsentSlice.actions.acceptCookie(GEOGEBRA_COOKIE));
                     onAccepted?.();
-                }}>Accept</Button>
+                }}>{t("common:cookieConsent.accept")}</Button>
             </div>
         </div>}
         afterAccepted={<>{afterAcceptedElement}</>}

@@ -317,6 +317,9 @@
       "save": "Save this deck",
       "saveLogin": "Log in to save this deck"
     },
+    "add": {
+      "loading": "Adding question deck..."
+    },
     "builder": {
       "createError": "Unable to create question deck",
       "helpText": "You can create custom question sets to assign to your groups. Search by question title or topic and add up to ten questions to a question deck.<br/>You cannot modify a question deck after it has been created. You'll find a link underneath any existing question deck to duplicate and edit it.",

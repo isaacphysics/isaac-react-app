@@ -9,9 +9,11 @@ import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useParams, useSearchParams} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 
 export const ResetPasswordHandler = () => {
+    const { t } = useTranslation();
 
     const {token: oldStyleToken} = useParams<{token: string}>();
     const [searchParams] = useSearchParams();
@@ -36,20 +38,20 @@ export const ResetPasswordHandler = () => {
     }
 
     return <Container id="password-reset" className={"mb-7"}>
-        <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
-        {isLoading && <div>Verifying reset token...</div>}
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle={t("common:auth.passwordReset.title")} icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
+        {isLoading && <div>{t("common:auth.passwordReset.verifyingToken")}</div>}
         <div>
             {(!!tokenVerifyError || !!passwordResetError) &&
                 <ExigentAlert data-testid={"warning-invalid-token"} color={"warning"}>
-                    <p className="alert-heading fw-bold">Unable to reset your password</p>
+                    <p className="alert-heading fw-bold">{t("common:auth.passwordReset.errorTitle")}</p>
                     {tokenVerifyError ?
                         getRTKQueryErrorMessage(tokenVerifyError).message : getRTKQueryErrorMessage(passwordResetError).message}
                 </ExigentAlert>
             }
             {!token && 
                 <ExigentAlert color={"warning"}>
-                    <p className="alert-heading fw-bold">No reset token provided</p>
-                    <p>Please ensure you have clicked the link provided in your password reset email.</p>
+                    <p className="alert-heading fw-bold">{t("common:auth.passwordReset.noTokenTitle")}</p>
+                    <p>{t("common:auth.passwordReset.noTokenMessage")}</p>
                 </ExigentAlert>
             }
             <Form onSubmit={submit}>
@@ -58,7 +60,7 @@ export const ResetPasswordHandler = () => {
                         <SetPasswordInput
                             idPrefix={"reset"}
                             password={newPassword}
-                            label={"New password"}
+                            label={t("common:auth.passwordReset.newPasswordLabel")}
                             onChange={setNewPassword}
                             onValidityChange={setPasswordValid}
                             submissionAttempted={submissionAttempted}
@@ -67,7 +69,7 @@ export const ResetPasswordHandler = () => {
                     </CardBody>
                     <CardFooter>
                         <Button disabled={!urlTokenValid} type={"submit"} color="secondary" className="mb-2" block id="change-password">
-                            Change password
+                            {t("common:auth.passwordReset.submitButton")}
                         </Button>
                     </CardFooter>
                 </Card>
