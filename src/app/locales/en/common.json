@@ -732,6 +732,10 @@
       "expand": "Expand",
       "listForDay": " list for day {{date}}",
       "listForMonth": " list for {{monthName}}"
+    },
+    "warning": {
+      "assignmentDetail": "<assignmentLink><strong>{{assignmentTitle}}</strong></assignmentLink> (set to <bold>{{groupName}}</bold> by {{teacherName}})",
+      "outsideAssignment": "This question has been set to you as part of an active assignment. Answering it here will <strong>not</strong> count towards the assignment."
     }
   },
   "attempt": {
@@ -1438,6 +1442,22 @@
     "requiredField": "Required field"
   },
   "freeTextBuilder": {
+    "infoAlert": {
+      "consentButton": "Consent",
+      "consentDescription": "We use a large language model (LLM) to mark free-text questions like this one. The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.",
+      "consentPrivacy": "We only send your answer to OpenAI, we do not send any personal data. OpenAI will not train their models using data you submit; you may wish to read OpenAI’s <privacyPolicyLink>privacy policy</privacyPolicyLink> before accepting.",
+      "consentTitle": "Do you consent to sending your answers to OpenAI for marking?",
+      "consentWithdraw": "You can withdraw your consent at any time in your <accountSettingsLink>account settings</accountSettingsLink>.",
+      "generalAccuracy": "In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time. This means that the marks you receive will not always be accurate.",
+      "generalDataPrivacy": "Do not include personal data in your answer as we send your answer to OpenAI. We only send your answer, we do not send any personal data with it. You can withdraw your consent at any time in your <accountSettingsLink>account settings</accountSettingsLink>.",
+      "generalTitle": "Free text questions are marked by a large language model (LLM)",
+      "loggedOutDataPrivacy": "The only data we send to the LLM is your answer; we do not send any personal data.",
+      "loggedOutDescription": "We use a large language model (LLM) to mark free-text questions like this one. The model typically returns a predicted mark in under 10 seconds, along with the mark scheme. This gives you a low-stakes way to practise exam-style questions as well as an insight into how LLMs work, and their accuracy.",
+      "loggedOutTitle": "You must be logged in to answer this question",
+      "loginButton": "Log in",
+      "signupButton": "Sign up",
+      "skipQuestion": "Skip question"
+    },
     "matchingRules": {
       "json": {
         "description": "JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion"
@@ -1799,6 +1819,13 @@
       "missingBrackets": "You are missing some brackets.",
       "stateSymbolsNotRequired": "This question does not require state symbols.",
       "syntaxError": "Syntax error: unexpected token \"{{tokenValue}}\""
+    }
+  },
+  "intendedAudience": {
+    "warning": {
+      "changePreferences": "You can change your preferences <strong>by updating your profile <accountLink>here</accountLink>.</strong>",
+      "noContentFor": "There is no content on this page for {{examBoard}} {{stage}}. ",
+      "reportTaggingIssue": "If you think that the page is incorrectly tagged, please <strong><contactLink>contact us</contactLink></strong>."
     }
   },
   "latex": {
@@ -2169,6 +2196,14 @@
     "title": "Quick quizzes"
   },
   "revision": {
+    "alert": {
+      "correctAnswerTimespan": "You answered this question correctly {{timespan}}.",
+      "lastMonth": "in the last month",
+      "lastTwelveMonths": "in the last 12 months",
+      "lastWeek": "in the last week",
+      "modeNotice": "You are currently in <revisionModeLink>revision mode</revisionModeLink> which hides your previous attempts.",
+      "overOneYear": "more than 1 year ago"
+    },
     "cardSubtitle": "Revise with our summary videos, topic tests and question decks.",
     "cardTitle": "Revision",
     "mathsALevel": {

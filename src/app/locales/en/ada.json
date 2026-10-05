@@ -155,6 +155,13 @@
       }
     }
   },
+  "freeTextBuilder": {
+    "infoAlert": {
+      "consentFaq": "See our <faqLink>FAQs</faqLink> for more information.",
+      "generalFaq": "For more information, read our <faqLink>FAQs</faqLink>.",
+      "loggedOutFaq": "You can read more in our <faqLink>FAQs</faqLink>."
+    }
+  },
   "gameboard": {
     "actions": {
       "save": "Save to My quizzes",
