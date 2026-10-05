@@ -11,12 +11,12 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = () => {
     // If not in a cloze question, don't bother trying to find and render drop-zone divs
     const dropRegionContext = useContext(DragAndDropRegionContext);
 
-    const [dropIds, setDropIds] = useState<{ divId: string; zoneId: string; width: string; height: string; }[]>([]);
+    const [dropIds, setDropIds] = useState<{ divId: string; zoneId: string; width: string; height: string; altText?: string; }[]>([]);
 
     const modifyHtml = useCallback((html: string): string => {
         if (!dropRegionContext) return html;
 
-        const newDropIds: { divId: string; zoneId: string; width: string; height: string; }[] = [];
+        const newDropIds: { divId: string; zoneId: string; width: string; height: string; altText?: string; }[] = [];
         const safeQuestionId = dropRegionContext.questionPartId.replaceAll("_", "-");
         const htmlDom = document.createElement("html");
         htmlDom.innerHTML = html;
@@ -37,13 +37,13 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = () => {
                     }
 
                     dropZones[i].setAttribute("id", `drop-region-${index}-${safeQuestionId}`);
-                    newDropIds.push({divId: dropZones[i].id, zoneId: `${index}`, width, height});
+                    newDropIds.push({divId: dropZones[i].id, zoneId: `${index}`, width, height, altText: dropZones[i].getAttribute("alt") ?? undefined});
                     break;
                 }
                 case "isaacDragAndDropQuestion": {
                     const id = dropZones[i].dataset.index;
                     dropZones[i].setAttribute("id", `drop-region-${id}-${safeQuestionId}`);
-                    newDropIds.push({divId: dropZones[i].id, zoneId: id ?? "", width, height});
+                    newDropIds.push({divId: dropZones[i].id, zoneId: id ?? "", width, height, altText: dropZones[i].getAttribute("alt") ?? undefined});
                     break;
                 }
             }
@@ -59,7 +59,7 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = () => {
 
     const portalFunc = useCallback((ref?: HTMLElement): JSX.Element[] => {
         return ref 
-            ? dropIds.map(({divId, zoneId, width, height}) => 
+            ? dropIds.map(({divId, zoneId, width, height, altText}) => 
                 <InlineDropRegion
                     key={divId}
                     rootElement={ref}
@@ -67,6 +67,7 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = () => {
                     zoneId={zoneId}
                     emptyWidth={width}
                     emptyHeight={height}
+                    altText={altText}
                 />
             ) 
             : [];

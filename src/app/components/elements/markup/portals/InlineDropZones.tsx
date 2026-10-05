@@ -17,10 +17,11 @@ interface InlineDropRegionProps {
     rootElement?: HTMLElement;
     skipPortalling?: boolean;
     boxAlign?: "left" | "center" | "right";
+    altText?: string;
 }
 
 // Inline droppables rendered for each registered drop region
-function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling, boxAlign}: InlineDropRegionProps) {
+function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling, boxAlign, altText}: InlineDropRegionProps) {
     const dropRegionContext = useContext(DragAndDropRegionContext);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + zoneId;
@@ -72,7 +73,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     >
         {item
             ? <DropZoneItem item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
-            : <>&nbsp;<span className={"visually-hidden"}>drop zone</span></>
+            : <>&nbsp;<span className={"visually-hidden"}>{altText || "drop zone"}</span></>
         }
     </span>;
 

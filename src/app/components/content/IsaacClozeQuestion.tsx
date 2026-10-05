@@ -58,17 +58,18 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>
         data: { type: "item-section", itemIds }
     });
     const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
+    const itemSectionInfoId = `item-section-info-${uuid_v4()}`;
 
     return <div className={"mb-3"}>
         <Label className="mt-3">Items: </Label>
-        <Label className={"visually-hidden"} id={"item-section-info"}>
+        <Label className={"visually-hidden"} id={itemSectionInfoId}>
             To pick up an item, press space or enter.
             Use the up and down arrow keys to navigate between drop zones and items in the question.
             Press space or enter again to drop the item into a new position, or to swap it with another
             item being hovered over.
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-describedby={itemSectionInfoId} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <DropZoneItem key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
