@@ -2225,6 +2225,9 @@
     }
   },
   "navigation": {
+    "comingSoon": {
+      "badge": "Coming soon"
+    },
     "homeButton": "Home",
     "nextButton": "Next",
     "previousButton": "Previous",
@@ -2235,6 +2238,15 @@
     "sidebar": {
       "brand": "My Ada",
       "homepageLink": "Go to homepage"
+    },
+    "supersededDeprecated": {
+      "bookBoardTip": "If you want to set this work again, you should use the most up-to-date version from our book page.",
+      "deprecatedTitle": "Deprecated content",
+      "deprecatedUnsupported": "As this {{contentType}} is unsupported, we do not recommend using it with your students.",
+      "deprecatedWarning": "This {{contentType}} is no longer supported, and may contain errors.",
+      "supersededEditPrompt": "We recommend that you <editLink>duplicate and edit</editLink> this assignment to replace them with their newer version.",
+      "supersededTitle": "Superseded content",
+      "teacherNote": "Teacher note:"
     }
   },
   "news": {

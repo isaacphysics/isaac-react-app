@@ -6,6 +6,7 @@ import {ISAAC_BOOKS_BY_TAG, isAQuestionLikeDoc, isStudent, isTutorOrAbove, PATHS
 import { UncontrolledTooltip, Alert, Button, AlertProps } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router";
+import { Trans, useTranslation } from "react-i18next";
 
 interface SupersededOrDeprecatedContentWarningProps extends AlertProps {
     gameboard?: GameboardDTO;
@@ -14,6 +15,7 @@ interface SupersededOrDeprecatedContentWarningProps extends AlertProps {
 
 // a warning banner to be used on / around gameboards that contain superseded or deprecated content
 export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDeprecatedContentWarningProps) => {
+    const { t } = useTranslation();
     const {gameboard, hideFullDetails, ...rest} = props;
     const user = useAppSelector(selectors.user.orNull);
 
@@ -30,14 +32,19 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
     return (containsSuperseded || containsDeprecated) && isTutorOrAbove(user) && <Alert {...rest} color="warning" fade={false} className={classNames("mt-2 d-flex", props.className)}>
         <i className="icon icon-warning icon-color-alert icon-sm me-3" />
         <div>
-            <h5>{containsDeprecated ? "Deprecated content" : "Superseded content"}</h5>
+            <h5>{containsDeprecated ? t("common:navigation.supersededDeprecated.deprecatedTitle") : t("common:navigation.supersededDeprecated.supersededTitle")}</h5>
             {!hideFullDetails && <p className="small mb-0">
                 This assignment contains {containsDeprecated ? "content that we no longer maintain" : "content that has a newer version"}.{" "}
                 {isBookBoard
-                    ? <>If you want to set this work again, you should use the most up-to-date version from our book page.</>
+                    ? <>{t("common:navigation.supersededDeprecated.bookBoardTip")}</>
                     : containsDeprecated
                         ? <>Please <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to remove or replace the deprecated question(s).</>
-                        : <>We recommend that you <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to replace them with their newer version.</>
+                        : <><Trans
+                            i18nKey="common:navigation.supersededDeprecated.supersededEditPrompt"
+                            components={{
+                                editLink: <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`} />,
+                            }}
+                        /></>
                 }
             </p>}
         </div>
@@ -46,6 +53,7 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
 
 // a warning banner to be used above *standalone content* such as individual questions or concept pages. 
 export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SeguePageDTO}) {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
 
@@ -76,7 +84,7 @@ export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SegueP
                     Students will not see this message, but will see a smaller note at the bottom of the page.{doc.deprecated && <br/>}
                 </>}
                 {doc.deprecated && <>
-                    As this {contentType} is unsupported, we do not recommend using it with your students.
+                    {t("common:navigation.supersededDeprecated.deprecatedUnsupported", { contentType })}
                 </>}
             </div>
         </UncontrolledTooltip>
@@ -85,11 +93,11 @@ export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SegueP
     // First check if question is deprecated, if so amalgamate deprecated and superseded messages
     return <Alert color="warning">
         {isTutorOrAbove(user) && <strong>
-            Teacher note: {" "}
+            {t("common:navigation.supersededDeprecated.teacherNote")}
         </strong>}
         {doc.deprecated ? <div className="d-flex align-items-center">
             <span>
-                This {contentType} is no longer supported, and may contain errors. {" "}
+                {t("common:navigation.supersededDeprecated.deprecatedWarning", { contentType })}
                 {supersededBy && <>
                     It has been replaced by {" "} <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
                         this question
