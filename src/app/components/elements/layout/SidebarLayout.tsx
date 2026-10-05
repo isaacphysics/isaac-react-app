@@ -6,6 +6,7 @@ import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSele
 import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { SidebarButton } from "../SidebarButton";
+import { useTranslation } from "react-i18next";
 
 interface SidebarLayoutProps extends RowProps {
     show?: boolean;
@@ -36,13 +37,14 @@ export const MainContent = (props: ColProps) => {
 export type SidebarProps = ColProps
 
 export const NavigationSidebar = (props: SidebarProps) => {
+    const { t } = useTranslation();
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
     // the content in such a sidebar will collapse underneath the main content on smaller screens
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, ...rest } = props;
-    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)} />;
+    return <Col tag="aside" aria-label={t("common:sidebar.ariaLabel")} lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)} />;
 };
 
 export interface ContentSidebarProps extends SidebarProps {
@@ -52,6 +54,7 @@ export interface ContentSidebarProps extends SidebarProps {
 }
 
 export const ContentSidebar = (props: ContentSidebarProps) => {
+    const { t } = useTranslation();
     // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
     // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
     const fullSidebarLayout = useFullSidebarLayout();
@@ -68,8 +71,8 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return fullSidebarLayout
         ? siteSpecific(
-            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print ps-lg-3 py-lg-4 pe-lg-5 order-0", className)} />,
-            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
+            <Col tag="aside" data-testid="sidebar" aria-label={t("common:sidebar.ariaLabel")} lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print ps-lg-3 py-lg-4 pe-lg-5 order-0", className)} />,
+            <Col tag="aside" data-testid="sidebar" aria-label={t("common:sidebar.ariaLabel")} {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
         )
         : siteSpecific(
             <>
@@ -85,7 +88,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                                 position: "prefix",
                                 type: "icon"
                             }}>
-                                Close
+                                {t("common:sidebar.closeButton")}
                             </AffixButton>
                         </div>
                     }/>
@@ -97,7 +100,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                 </Offcanvas>
             </>,
             !hideButton && <Container fluid className="w-100">
-                <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
+                <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label={t("common:sidebar.ariaLabel")}>
                     <AccordionItem className="border">
                         <AccordionHeader targetId="myAda">
                             <span className="fw-bold">{buttonTitle}</span>

@@ -2140,9 +2140,11 @@
     "title": "Error"
   },
   "sidebar": {
+    "ariaLabel": "Sidebar",
     "backToBook": {
       "button": "Back to book section"
     },
+    "closeButton": "Close",
     "completionKey": {
       "allAttempted": "All attempted (some errors)",
       "allCorrect": "All correct",
