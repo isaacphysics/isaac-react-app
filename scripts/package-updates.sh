@@ -5,6 +5,10 @@
 # used, particularly after running e.g. yarn upgrade-interactive. Where we can update package.json to match the
 # installed version in yarn.lock, we should do so for clarity.
 
+# Note for Windows users: ensure line endings for all relevant files are set to LF, or modify the following lines to cope with CRLF endings:
+# allInstalled=$(cat yarn.lock | grep -A1 "^$name@" | grep version | awk '{print $2}' | sed 's/"//g; s/\r$//' | while read installed; do
+# cat yarn.lock | grep -A1 "^$dep:" | grep version | awk '{print $2}' | sed 's/"//g; s/\r$//' | while read installed; do
+
 json=$(< package.json)
 deps=$(echo $json | jq -r '.dependencies * .devDependencies | to_entries[] | "\(.key)@\(.value)"')
 
