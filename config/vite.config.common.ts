@@ -1,5 +1,6 @@
 import type { Plugin, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import checker from 'vite-plugin-checker';
 import fs from 'fs/promises';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
@@ -143,25 +144,9 @@ export const generateCypressCompatibleViteConfig = (site: "sci" | "ada", rendere
 };
 
 export const generateViteConfig = (site: "sci" | "ada", renderer = false) => async (env: Record<string, any>) => {
-    const isBuild = env['command'] === 'build';
-
-    let checker: ((options: object) => Plugin) | undefined;
-    if (!isBuild) {
-        // owing to Cypress not supporting ESM, importing this at the top level causes Cypress to attempt to require() it.
-        // vite-plugin-checker has a transitive dependency in `unicorn-magic` which does not support CJS at all, so these are
-        // simply incompatible. This workaround imports the checker only when we are not in test mode (set in cypress.config.ts).
-
-        // if at any point Cypress supports ESM, you can remove the if-check and move this import back to the top.
-        await import('vite-plugin-checker').then(mod => mod.checker).then(checkerFunc => {
-            checker = checkerFunc;
-        }).catch(err => {
-            console.error("Failed to load vite-plugin-checker,", err);
-        });
-    }
-
     return generateConfigInternal(site, renderer, {
         additionalPlugins: [
-            !isBuild && checker?.({ typescript: true }),
+            checker({ typescript: true }),
         ].filter(Boolean) as Plugin[],
     })(env);
 };
