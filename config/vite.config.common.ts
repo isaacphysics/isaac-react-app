@@ -137,7 +137,7 @@ const generateConfigInternal = (site: "sci" | "ada", renderer = false, options: 
             ISAAC_SITE: JSON.stringify(site),
         }
     } satisfies UserConfig;
-}
+};
 
 export const generateCypressCompatibleViteConfig = (site: "sci" | "ada", renderer = false) => (env: Record<string, any>) => {
     return generateConfigInternal(site, renderer)(env);
