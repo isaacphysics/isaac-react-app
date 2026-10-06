@@ -8,9 +8,10 @@
   },
   "engineStrict": true,
   "resolutions": {
-    "@types/react": "^18.3.23",
+    "@types/react": "^18.3.31",
     "unicorn-magic": "^0.4.1",
-    "js-yaml": "^5.4.2"
+    "js-yaml": "^5.4.3",
+    "glob": "^13.0.6"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -125,8 +126,8 @@
     "@types/redux-mock-store": "^1.5.0",
     "@types/remarkable": "^2.0.8",
     "@types/uuid": "^11.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.60.1",
-    "@typescript-eslint/parser": "^8.60.1",
+    "@typescript-eslint/eslint-plugin": "^8.71.1",
+    "@typescript-eslint/parser": "^8.71.1",
     "axios-mock-adapter": "^2.1.0",
     "bootstrap": "^5.3.8",
     "bootstrap-block-grid": "^1.1.7",
@@ -149,8 +150,8 @@
     "sass": "~1.78.0",
     "ts-jest": "^29.4.14",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.71.0",
-    "vite": "^7.3.6",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^7.3.7",
     "vite-bundle-analyzer": "^1.3.9",
     "vite-plugin-checker": "^0.14.5",
     "vite-plugin-static-copy": "^4.1.1"
