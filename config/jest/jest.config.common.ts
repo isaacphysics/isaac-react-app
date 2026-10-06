@@ -31,7 +31,7 @@ export function generateJestConfig(isaacSite: string): Config {
             }],
         },
         transformIgnorePatterns: [
-            "/node_modules/(?!@popperjs|leaflet)",
+            "/node_modules/(?!@popperjs|leaflet|query-string|decode-uri-component|filter-obj|split-on-first)",
             "^.+\\.module\\.(css|sass|scss)$"
         ],
         moduleNameMapper: {
