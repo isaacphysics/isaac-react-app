@@ -8,7 +8,7 @@ export function generateJestConfig(isaacSite: string): Config {
         ],
         globalSetup: "<rootDir>/src/test/globalSetup.ts",
         setupFiles: [
-            "<rootDir>/config/jest/jest.polyfills.js"
+            "<rootDir>/config/jest/jest.polyfills.ts"
         ],
         setupFilesAfterEnv: [
             "<rootDir>src/test/setupTests.ts",
@@ -24,8 +24,8 @@ export function generateJestConfig(isaacSite: string): Config {
             customExportConditions: [''],
         },
         transform: {
-            "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
-            "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>config/jest/fileTransform.js",
+            "^.+\\.css$": "<rootDir>config/jest/cssTransform.ts",
+            "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>config/jest/fileTransform.ts",
             "^.+\\.[jt]sx?$": ["ts-jest", {
                 tsconfig: "<rootDir>/tsconfig.json",
             }],
