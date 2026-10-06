@@ -206,8 +206,8 @@ export const AdminUserManager = () => {
                             <FormGroup>
                                 <Label htmlFor="school-urn-search">Find a user with school URN:</Label>
                                 <Input
-                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
-                                    onChange={e => setParamIfNotDefault("schoolURN", e.target.value, "")}
+                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolId || undefined}
+                                    onChange={e => setParamIfNotDefault("schoolId", e.target.value, "")}
                                 />
                             </FormGroup>
                             <FormGroup>

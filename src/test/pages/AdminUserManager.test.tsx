@@ -72,9 +72,9 @@ describe("AdminUserManager", () => {
             const schoolInput = await screen.findByLabelText<HTMLInputElement>("Find by manually entered school:");
             await userEvent.type(schoolInput, params.schoolOther);
         }
-        if (isDefined(params["schoolURN"])) {
+        if (isDefined(params["schoolId"])) {
             const urnInput = await screen.findByLabelText<HTMLInputElement>("Find a user with school URN:");
-            await userEvent.type(urnInput, params.schoolURN);
+            await userEvent.type(urnInput, params.schoolId);
         }
         // Then initiate a search
         const searchButton = await screen.findByRole("button", {name: "Search"});
@@ -195,7 +195,7 @@ describe("AdminUserManager", () => {
 
     it("allows the user to filter the search by role and school urn", async () => {
         const searchHandler = buildSearchHandler(
-            {role: mockUser.role, schoolURN: mockSchool.schoolId},
+            {role: mockUser.role, schoolId: mockSchool.schoolId},
             {defaultUsersToReturn: []}
         );
         await renderTestEnvironment({
@@ -206,7 +206,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         await searchWithParams(
-            {role: mockUser.role, schoolURN: mockSchool.schoolId},
+            {role: mockUser.role, schoolId: mockSchool.schoolId},
             {
                 expectNumberOfResults: 1,
                 searchHandler,
