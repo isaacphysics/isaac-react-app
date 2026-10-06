@@ -10,7 +10,7 @@ const booksApi = isaacApi.injectEndpoints({
                 url: `/pages/books/index/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:books.error.fetchContents")
+                errorTitle: () => i18next.t("common:books.error.fetchContents")
             }),
             keepUnusedDataFor: 60
         }),
@@ -20,7 +20,7 @@ const booksApi = isaacApi.injectEndpoints({
                 url: `/pages/books/page/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:books.error.fetchPage")
+                errorTitle: () => i18next.t("common:books.error.fetchPage")
             }),
             keepUnusedDataFor: 60
         })

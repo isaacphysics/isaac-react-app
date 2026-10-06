@@ -19,7 +19,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 totalResults: response.totalResults ?? 0
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("site:gameboard.load.errorTitle")
+                errorTitle: () => i18next.t("site:gameboard.load.errorTitle")
             })
         }),
 
@@ -43,7 +43,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 url: "gameboards/wildcards"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:gameboard.wildcards.errorTitle")
+                errorTitle: () => i18next.t("common:gameboard.wildcards.errorTitle")
             }),
             keepUnusedDataFor: 60
         }),
@@ -64,7 +64,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                         }));
                     }
                 },
-                errorTitle: i18next.t("site:gameboard.create.errorTitle")
+                errorTitle: () => i18next.t("site:gameboard.create.errorTitle")
             }),
             invalidatesTags: ["AllGameboards"],
         }),
@@ -77,7 +77,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: (_, _error, {boardId}) => ["AllGameboards", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("site:gameboard.link.errorTitle")
+                errorTitle: () => i18next.t("site:gameboard.link.errorTitle")
             })
         }),
 
@@ -89,7 +89,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
             // TODO requires invalidating AllSetAssignments as the assignment's gameboard can be updated by this and so should not be cached
             invalidatesTags: (_, _error, boardId) => ["AllGameboards", "AllSetAssignments", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("site:gameboard.link.errorTitle")
+                errorTitle: () => i18next.t("site:gameboard.link.errorTitle")
             })
         }),
 
@@ -100,9 +100,9 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: (_, _error, boardId) => ["AllGameboards", "AllSetAssignments", {type: "Gameboard", id: boardId}],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: i18next.t("site:gameboard.unlink.successTitle"),
-                successMessage: i18next.t("site:gameboard.unlink.successMessage"),
-                errorTitle: i18next.t("site:gameboard.unlink.errorTitle")
+                successTitle: () => i18next.t("site:gameboard.unlink.successTitle"),
+                successMessage: () => i18next.t("site:gameboard.unlink.successMessage"),
+                errorTitle: () => i18next.t("site:gameboard.unlink.errorTitle")
             })
         }),
     })

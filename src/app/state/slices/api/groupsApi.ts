@@ -20,7 +20,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             providesTags: ["Groups"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:groups.fetch.errorTitle")
+                errorTitle: () => i18next.t("common:groups.fetch.errorTitle")
             }),
             transformResponse: anonymiseListIfNeededWith(anonymisationFunctions.appGroup),
             keepUnusedDataFor: 60
@@ -42,7 +42,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         (groups) => [...groups, newGroup]
                     ));
                 },
-                errorTitle: i18next.t("common:groups.create.errorTitle")
+                errorTitle: () => i18next.t("common:groups.create.errorTitle")
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
@@ -61,7 +61,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         (groups) => groups.filter(g => g.id !== groupId)
                     )));
                 },
-                errorTitle: i18next.t("common:groups.delete.errorTitle")
+                errorTitle: () => i18next.t("common:groups.delete.errorTitle")
             })
         }),
 
@@ -100,7 +100,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         );
                     });
                 },
-                errorTitle: i18next.t("common:groups.update.errorTitle")
+                errorTitle: () => i18next.t("common:groups.update.errorTitle")
             })
         }),
 
@@ -112,7 +112,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             providesTags: (_, __, userId) => userId ? [{type: "GroupMemberships", id: userId}] : ["MyGroupMemberships"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:groups.memberships.fetch.errorTitle")
+                errorTitle: () => i18next.t("common:groups.memberships.fetch.errorTitle")
             }),
             transformResponse: anonymiseListIfNeededWith<GroupMembershipDetailDTO>(anonymisationFunctions.groupMembershipDetail)
         }),
@@ -124,9 +124,9 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             invalidatesTags: ["MyGroupMemberships"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: i18next.t("common:groups.memberships.updateStatus.successTitle"),
-                successMessage: i18next.t("common:groups.memberships.updateStatus.successMessage"),
-                errorTitle: i18next.t("common:groups.memberships.updateStatus.errorTitle")
+                successTitle: () => i18next.t("common:groups.memberships.updateStatus.successTitle"),
+                successMessage: () => i18next.t("common:groups.memberships.updateStatus.successMessage"),
+                errorTitle: () => i18next.t("common:groups.memberships.updateStatus.errorTitle")
             }),
         }),
 
@@ -148,7 +148,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                errorTitle: i18next.t("common:groups.members.fetch.errorTitle")
+                errorTitle: () => i18next.t("common:groups.members.fetch.errorTitle")
             }),
             keepUnusedDataFor: 0,
             transformResponse: anonymiseListIfNeededWith<UserSummaryWithGroupMembershipDTO>(anonymisationFunctions.userSummary())
@@ -177,10 +177,10 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                successTitle: i18next.t("common:groups.members.remove.successTitle"),
-                successMessage: i18next.t("common:groups.members.remove.successMessage"),
-                errorTitle: i18next.t("common:groups.members.remove.errorTitle"),
-                errorMessage: i18next.t("common:groups.members.remove.errorMessage")
+                successTitle: () => i18next.t("common:groups.members.remove.successTitle"),
+                successMessage: () => i18next.t("common:groups.members.remove.successMessage"),
+                errorTitle: () => i18next.t("common:groups.members.remove.errorTitle"),
+                errorMessage: () => i18next.t("common:groups.members.remove.errorMessage")
             })
         }),
 
@@ -206,7 +206,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                errorTitle: i18next.t("common:groups.managers.add.errorTitle")
+                errorTitle: () => i18next.t("common:groups.managers.add.errorTitle")
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
@@ -246,7 +246,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         }
                     });
                 },
-                errorTitle: i18next.t("common:groups.managers.removeManager.errorTitle")
+                errorTitle: () => i18next.t("common:groups.managers.removeManager.errorTitle")
             }),
         }),
 
@@ -257,9 +257,9 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             }),
             invalidatesTags: ["AllSetTests", "AllSetAssignments", "GroupAssignments", "GroupTests", "Groups"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: i18next.t("common:groups.managers.promote.successTitle"),
-                successMessage: i18next.t("common:groups.managers.promote.successMessage"),
-                errorTitle: i18next.t("common:groups.managers.promote.errorTitle")
+                successTitle: () => i18next.t("common:groups.managers.promote.successTitle"),
+                successMessage: () => i18next.t("common:groups.managers.promote.successMessage"),
+                errorTitle: () => i18next.t("common:groups.managers.promote.errorTitle")
             })
         }),
 
@@ -283,7 +283,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                         ));
                     });
                 },
-                errorTitle: i18next.t("common:groups.token.fetch.errorTitle")
+                errorTitle: () => i18next.t("common:groups.token.fetch.errorTitle")
             }),
         }),
     })

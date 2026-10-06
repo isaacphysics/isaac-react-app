@@ -12,9 +12,9 @@ export const accountApi = isaacApi.injectEndpoints({
                 body: {},
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:account.deletion.errorTitle"),
-                successTitle: i18next.t("common:account.deletion.successTitle"),
-                successMessage: i18next.t("common:account.deletion.successMessage"),
+                errorTitle: () => i18next.t("common:account.deletion.errorTitle"),
+                successTitle: () => i18next.t("common:account.deletion.successTitle"),
+                successMessage: () => i18next.t("common:account.deletion.successMessage"),
             }),
         }),
         deleteAccount: build.mutation<void, {token: string, deletionReason: string}>({
@@ -26,7 +26,7 @@ export const accountApi = isaacApi.injectEndpoints({
                 },
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:account.deletion.failedTitle"),
+                errorTitle: () => i18next.t("common:account.deletion.failedTitle"),
                 onQuerySuccess: (_arg, _data, {getState: _getState, dispatch}) => {
                     dispatch(logOutDeletedUser());
                 }

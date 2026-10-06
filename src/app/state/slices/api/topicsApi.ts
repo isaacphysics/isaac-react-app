@@ -13,7 +13,7 @@ export const topicsApi = isaacApi.injectEndpoints({
                 url: `/pages/topics/${id}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:clientError.topic.loadError"),
+                errorTitle: () => i18next.t("common:clientError.topic.loadError"),
             })
         }),
 
@@ -22,7 +22,7 @@ export const topicsApi = isaacApi.injectEndpoints({
                 url: `/pages/topics/${id}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:clientError.loadTopicFailure"),
+                errorTitle: () => i18next.t("common:clientError.loadTopicFailure"),
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                     dispatch(topicSlice.actions.clearCurrentTopic());

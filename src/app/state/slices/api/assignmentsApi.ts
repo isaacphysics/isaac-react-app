@@ -42,7 +42,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
             }),
             providesTags: ["AssignmentProgress"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:assignments.progress.loadErrorTitle")
+                errorTitle: () => i18next.t("common:assignments.progress.loadErrorTitle")
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.progressState)
         }),
@@ -84,9 +84,9 @@ export const assignmentsApi = isaacApi.injectEndpoints({
                         allAssignmentsPromise.undo(); groupAssignmentsPromise.undo();
                     }};
                 },
-                successTitle: i18next.t("site:assignments.delete.successTitle"),
-                successMessage: i18next.t("site:assignments.delete.successMessage"),
-                errorTitle: i18next.t("site:assignments.delete.errorTitle")
+                successTitle: () => i18next.t("site:assignments.delete.successTitle"),
+                successMessage: () => i18next.t("site:assignments.delete.successMessage"),
+                errorTitle: () => i18next.t("site:assignments.delete.errorTitle")
             })
         }),
 

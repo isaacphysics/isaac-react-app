@@ -34,7 +34,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             transformResponse: (response: ResultsWrapper<QuizSummaryDTO>) => response.results ?? [],
             providesTags: ["AvailableQuizList"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadAvailableFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadAvailableFailed"),
             })
         }),
 
@@ -42,7 +42,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             query: () => `/quiz/assignments`,
             providesTags: ["QuizzesAssignedToMe"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadAssignedToMeFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadAssignedToMeFailed"),
             })
         }),
 
@@ -50,14 +50,14 @@ export const quizApi = isaacApi.enhanceEndpoints({
             query: () => `/quiz/free_attempts`,
             providesTags: ["QuizzesAttemptedFreelyByMe"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadFreelyAttemptedFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadFreelyAttemptedFailed"),
             })
         }),
 
         getMyQuizAttemptWithFeedback: build.query<QuizAttemptDTO, number>({
             query: (quizAttemptId) => `/quiz/attempt/${quizAttemptId}/feedback`,
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadMyFeedbackFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadMyFeedbackFailed"),
             })
         }),
 
@@ -66,7 +66,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             query: ({quizAssignmentId, userId}) => `/quiz/assignment/${quizAssignmentId}/attempt/${userId}`,
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.quizAttempt),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadStudentFeedbackFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadStudentFeedbackFailed"),
             })
         }),
 
@@ -79,21 +79,21 @@ export const quizApi = isaacApi.enhanceEndpoints({
             providesTags: (result, error, quizAssignmentId) => [{type: "QuizAssignment", id: quizAssignmentId}],
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.assignment),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadAssignmentFeedbackFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadAssignmentFeedbackFailed"),
             })
         }),
 
         getQuizPreview: build.query<IsaacQuizDTO, string>({
             query: (quizId) => `/quiz/${quizId}/preview`,
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadPreviewFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadPreviewFailed"),
             })
         }),
 
         getQuizRubric: build.query<DetailedQuizSummaryDTO, string>({
             query: (quizId) => `/quiz/${quizId}/rubric`,
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadRubricFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadRubricFailed"),
             })
         }),
 
@@ -110,7 +110,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: [], // TODO what does this invalidate?
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.startAttemptFailed"),
+                errorTitle: () => i18next.t("common:tests.api.startAttemptFailed"),
             })
         }),
 
@@ -125,7 +125,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["QuizzesAttemptedFreelyByMe"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.startFreeAttemptFailed"),
+                errorTitle: () => i18next.t("common:tests.api.startFreeAttemptFailed"),
             })
         }),
 
@@ -149,7 +149,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["QuizzesAttemptedFreelyByMe", "QuizzesAssignedToMe"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.submitAnswersFailed"),
+                errorTitle: () => i18next.t("common:tests.api.submitAnswersFailed"),
             })
         }),
 
@@ -171,7 +171,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             providesTags: ["QuizzesSetByMe"],
             transformResponse: anonymiseListIfNeededWith(anonymisationFunctions.assignment),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.loadAssignmentsSetByMeFailed"),
+                errorTitle: () => i18next.t("common:tests.api.loadAssignmentsSetByMeFailed"),
             })
         }),
 
@@ -183,7 +183,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["QuizzesAssignedToMe", "QuizzesSetByMe"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.assign.errorTitle"),
+                errorTitle: () => i18next.t("common:tests.assign.errorTitle"),
             })
         }),
 
@@ -211,7 +211,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["QuizzesAssignedToMe", "QuizzesSetByMe"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.cancelAssignment.errorTitle"),
+                errorTitle: () => i18next.t("common:tests.cancelAssignment.errorTitle"),
             })
         }),
 
@@ -223,7 +223,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             invalidatesTags: (result, error, {quizAssignmentId}) =>
                 ["QuizzesAssignedToMe", "QuizzesSetByMe", {type: "QuizAssignment", id: quizAssignmentId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:tests.api.returnWorkFailed"),
+                errorTitle: () => i18next.t("common:tests.api.returnWorkFailed"),
             })
         }),
     })

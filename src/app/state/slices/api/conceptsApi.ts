@@ -14,7 +14,7 @@ export const conceptsApi = isaacApi.injectEndpoints({
             }),
             
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:clientError.concepts.loadError"),
+                errorTitle: () => i18next.t("common:clientError.concepts.loadError"),
             }),
         }),
         getConcept: build.query<IsaacConceptPageDTO, string>({
@@ -22,7 +22,7 @@ export const conceptsApi = isaacApi.injectEndpoints({
                 url: `/pages/concepts/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:clientError.concept.loadError"),
+                errorTitle: () => i18next.t("common:clientError.concept.loadError"),
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                 },

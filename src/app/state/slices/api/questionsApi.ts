@@ -54,7 +54,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 return currentArg !== previousArg;
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:questions.search.errorTitle"),
+                errorTitle: () => i18next.t("common:questions.search.errorTitle"),
             }),
         }),
 
@@ -63,7 +63,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 url: `/pages/questions/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:questions.load.errorTitle"),
+                errorTitle: () => i18next.t("common:questions.load.errorTitle"),
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                 },

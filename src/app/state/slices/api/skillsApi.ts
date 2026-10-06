@@ -10,7 +10,7 @@ export const skillsApi = isaacApi.injectEndpoints({
                 url: `/skills/attempts/${userId}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:clientError.skills.loadError"),
+                errorTitle: () => i18next.t("common:clientError.skills.loadError"),
             }),
         }),
         postSkillsAnswer: build.mutation<void, { appId: string, body: AnvilMarkingRequestDTO}>({
@@ -20,7 +20,7 @@ export const skillsApi = isaacApi.injectEndpoints({
                 body,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:clientError.skills.saveError"),
+                errorTitle: () => i18next.t("common:clientError.skills.saveError"),
             }),
         }),
     })

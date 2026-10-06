@@ -10,7 +10,7 @@ const revisionApi = isaacApi.injectEndpoints({
                 url: `/pages/revision/detail/${id}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:revision.errorTitle")
+                errorTitle: () => i18next.t("common:revision.errorTitle")
             }),
             keepUnusedDataFor: 60
         }),

@@ -30,7 +30,7 @@ export const miscApi = isaacApi.enhanceEndpoints({
                 body: params,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:contact.formErrorTitle"),
+                errorTitle: () => i18next.t("common:contact.formErrorTitle"),
             })
         }),
 

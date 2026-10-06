@@ -12,7 +12,7 @@ const searchApi = isaacApi.injectEndpoints({
             }),
 
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: i18next.t("common:search.errorTitle"),
+                errorTitle: () => i18next.t("common:search.errorTitle"),
             }),
         })
     })
