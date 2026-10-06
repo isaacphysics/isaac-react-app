@@ -2,11 +2,12 @@
 // needs to happen before it's imported
 global.window.scrollTo = jest.fn();
 
+// translations first, as in the app (initI18n() runs before the app's modules are imported): the mock server below imports the app's API code
+import "./i18nForTests";
 import 'core-js';
 import '@testing-library/jest-dom';
 import {server} from "../mocks/server";
 import "./matchers";
-import "./i18nForTests"; // translations, loaded synchronously, as the app has them after initI18n()
 
 global.window.alert = jest.fn();
 global.window.confirm = jest.fn(() => true);
