@@ -70,7 +70,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     const [deleteUserBooking] = useDeleteUserBookingMutation();
     const [resendUserConfirmationEmail] = useResendUserConfirmationEmailMutation();
 
-    return <Accordion trustedTitle="Manage current bookings">
+    return <Accordion id="manage-current-bookings" trustedTitle="Manage current bookings">
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
             As an event leader, you are only able to see the bookings of users who have granted you access to their data.
         </div>}

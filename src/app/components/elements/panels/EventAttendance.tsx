@@ -45,7 +45,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
     }
 
     return <>
-        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion trustedTitle="Record event attendance" disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
+        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle="Record event attendance" disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
                 As an event leader, you are only able to see the bookings of users who have granted you access to their data.
             </div>}
