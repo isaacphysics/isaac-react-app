@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Button, Col, Row} from "reactstrap";
 import {useLocation, useParams} from "react-router-dom";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery, useGetQuestionQuery} from "../../state";
@@ -48,6 +48,7 @@ interface QuestionPageProps{
 }
 
 export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
+    const [metadataReadyForDoc, setMetadataReadyForDoc] = useState<string>();
     const location = useLocation();
     const params = useParams();
     const questionId = questionIdOverride || params.questionId || "";
@@ -70,6 +71,12 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
     const {data: assignments} = useGetMyAssignmentsQuery(params.assignmentId ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const assignment = assignments?.find(a => a.id?.toString() === params.assignmentId);
+
+    useEffect(() => {
+        if (doc?.id) {
+            setMetadataReadyForDoc(doc.id);
+        }
+    }, [doc?.id]);
 
     const gameboardId = assignment
         ? assignment.gameboardId 
@@ -119,6 +126,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                             allQuestionsCorrect={allQuestionsCorrect} 
                             allQuestionsAttempted={allQuestionsAttempted} 
                             anyQuestionAttempted={anyQuestionAttempted}
+                            statusReady={metadataReadyForDoc === doc.id}
                         />}
                     </PageMetadata>
                     {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}

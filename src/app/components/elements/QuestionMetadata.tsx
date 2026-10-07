@@ -23,10 +23,11 @@ interface QuestionMetaDataProps {
     allQuestionsCorrect: boolean;
     allQuestionsAttempted: boolean;
     anyQuestionAttempted: boolean;
+    statusReady: boolean;
 }
 
 export const QuestionMetaData = (props: QuestionMetaDataProps) => {
-    const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, audienceViews} = props;
+    const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, statusReady, audienceViews} = props;
     const accessibilitySettings = useAccessibilitySettings();
     const accessibilityTags = getAccessibilityTags(doc?.tags);
 
@@ -44,7 +45,7 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
             </Col>
             <Col className="d-flex flex-column mw-max-content" id="metadata-status">
                 <span>Status</span>
-                {allQuestionsCorrect
+                {statusReady && (allQuestionsCorrect
                     ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
                     : allQuestionsAttempted
                         // uncomment the lines below if reusing this logic elsewhere!
@@ -54,7 +55,7 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
                         : anyQuestionAttempted
                             ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
                             : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
-                }
+                )}
             </Col>
             <Col className="d-flex flex-column mw-max-content" id="metadata-stage-difficulty">
                 <span>Stage & difficulty</span>
