@@ -188,7 +188,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     }
 
     function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
-        let confirm_text = "";
+        let confirm_text;
         if (group?.additionalManagerPrivileges) {
             confirm_text = `
 Are you sure you want to promote this manager to group owner?\n

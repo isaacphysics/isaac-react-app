@@ -501,7 +501,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
     const stagesFilteredByUserContext = audienceStages.filter(s => userContext.contexts.some(c => c.stage == s));
-    let stagesToView: Stage[] = [];
+    let stagesToView: Stage[];
 
     if (isAda) {
         // Ada currently (subject to change) want to show the stages as 3 groups:

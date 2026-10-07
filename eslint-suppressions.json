@@ -190,6 +190,11 @@
       "count": 1
     }
   },
+  "src/app/components/elements/list-groups/ListGroupFooter.tsx": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
   "src/app/components/elements/markup/portals/InlineEntryZone.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -580,6 +585,11 @@
   },
   "src/app/components/pages/quizzes/SetQuizzes.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/app/components/site/cs/RoutesCS.tsx": {
+    "no-useless-assignment": {
       "count": 1
     }
   },
