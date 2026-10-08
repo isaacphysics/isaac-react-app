@@ -74,11 +74,12 @@ $cards-per-line: (
   .icon-card-tag {
     position: absolute;
     background-color: $pink-400;
-    height: 44px;
-    margin-top: -22px;
-    right: 2rem;
-    padding: 0.8rem 1rem;
-    border-radius: 2rem;
+    margin-top: calc(-1 * (2 * 14px + 1rem) / 2);
+    right: 32px;
+    line-height: 1rem;
+    padding: 14px 16px;
+    border-radius: 32px;
+    max-width: 65%;
   }
 }
 
