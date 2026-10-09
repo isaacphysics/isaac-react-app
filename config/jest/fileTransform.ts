@@ -11,9 +11,9 @@ const transformer: Transformer = {
         if (/\.svg$/.test(filename)) {
             return {
                 code: `
-                    const React = require('react');
+                    import React from 'react'
 
-                    module.exports = {
+                    export default {
                         __esModule: true,
                         default: ${assetFilename},
                         ReactComponent: React.forwardRef((props, ref) => ({
