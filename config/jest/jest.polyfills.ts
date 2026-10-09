@@ -1,4 +1,3 @@
-// jest.polyfills.js
 /**
  * @note The block below contains polyfills for Node.js globals
  * required for Jest to function when running JSDOM tests.
@@ -21,7 +20,8 @@ Object.defineProperties(globalThis, {
 });
 
 globalThis.ResizeObserver = class MockResizeObserver {
-    constructor(_callback) {}
+    constructor(_callback: ResizeObserverCallback) {}
     observe() {}
+    unobserve(_target: Element) {}
     disconnect() {}
-}
+};

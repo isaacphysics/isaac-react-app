@@ -43,6 +43,7 @@ import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSO
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 
+/* eslint-disable no-useless-assignment */ // The increment from the final key++ is not used, but we keep it for the sake of consistency
 let key = 0;
 export const RoutesCS = [
 
