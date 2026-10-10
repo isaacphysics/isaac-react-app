@@ -16,6 +16,7 @@ import {
     QuestionPartState,
     QuizFeedbackMode,
     Stage,
+    UserRole,
 } from "../../IsaacApiTypes";
 import {ArrayElement, isAda, isPhy, isUnder13, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
@@ -1204,6 +1205,16 @@ export const ACCOUNT_TABS_ALIASES: {[alias: string]: ACCOUNT_TAB} = {
     "notifications": ACCOUNT_TAB.emailpreferences,
 };
 
+export const UserFacingRoleWithArticle: {[role in UserRole]: string} = {
+    ADMIN: "an admin",
+    EVENT_MANAGER: "an event manager",
+    CONTENT_EDITOR: "a content editor",
+    EVENT_LEADER: "an event leader",
+    TEACHER: "a teacher",
+    TUTOR: "a tutor",
+    STUDENT: "a student"
+};
+
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
 
@@ -1531,3 +1542,4 @@ export const reactSelectDarkModeStyles = siteSpecific({
 
 export const SITE_LOWER_AGE_LIMIT = siteSpecific(10, 11);
 export const SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT = 13;
+export const ADULT_AGE_LIMIT = 18;
