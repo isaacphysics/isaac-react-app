@@ -110,7 +110,7 @@ export const authenticateWithTokenAfterPrompt = async (userId: number, token: st
         dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
         return;
     }
-    else if (!(sanitisedToken && sanitisedToken.length >= 6 && sanitisedToken.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(sanitisedToken))) {
+    else if (!(sanitisedToken && /^([ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6,8}|IPPC[0-9]{2})$/.test(sanitisedToken))) {
         dispatch(showErrorToast("Invalid group code", "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers."));
         return;
     }
