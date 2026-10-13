@@ -4,7 +4,7 @@ import {FigureNumberingContext, FigureNumbersById} from "../../../../IsaacAppTyp
 import he from "he";
 import {BOOLEAN_NOTATION, dndDropZoneRegex, dropZoneRegex, isAda, renderA11yString, useUserPreferences} from "../../../services";
 import katex, {KatexOptions} from "katex";
-import 'katex/dist/contrib/mhchem.mjs';
+import 'katex/contrib/mhchem';
 import i18next from "i18next";
 
 type MathJaxMacro = string|[string, number];

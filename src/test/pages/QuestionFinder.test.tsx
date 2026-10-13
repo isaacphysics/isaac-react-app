@@ -5,7 +5,7 @@ import shuffle from "lodash/shuffle";
 import times from "lodash/times";
 import flatten from "lodash/flatten";
 import { buildFunctionHandler } from "../../mocks/handlers";
-import { isPhy, siteSpecific } from "../../app/services";
+import { isAda, isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
@@ -93,6 +93,26 @@ describe("QuestionFinder", () => {
         const container = await screen.findByTestId("question-finder-results");
         expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
     });
+
+    if (isAda) {
+        const expectFocusedResultsHeader = async (content: string) => await waitFor(() => {
+            const header = screen.getByTestId("question-finder-results-header");
+            expect(document.activeElement).toBe(header);
+            expect(header).toHaveTextContent(content);
+        }, { timeout: 5000 });
+
+        it('should move focus to the results when filters are applied', async () => {
+            await renderQuestionFinderPage({ response: () => resultsResponse });
+            await toggleFilter(F.GCSE);
+            await expectFocusedResultsHeader("Showing 30 of 40");
+        });
+
+        it('should still announce when applying filters returns no results', async () => {
+            await renderQuestionFinderPage({ response: () => buildMockQuestionFinderResults([], 0) });
+            await toggleFilter(F.GCSE);
+            await expectFocusedResultsHeader("No results");
+        });
+    }
 
     describe('Question shuffling', () => {
         const shuffledQuestions = shuffle(questions);

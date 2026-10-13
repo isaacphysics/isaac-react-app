@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Row} from "reactstrap";
-import {isAda, SITE_TITLE, siteSpecific} from "../../services";
+import {isAda, SITE_LOWER_AGE_LIMIT, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
@@ -27,8 +27,8 @@ export const RegistrationAgeCheckFailed = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h3>{t("common:auth.ageCheckFailed.heading")}</h3>
-                <p>{t("site:auth.ageCheckFailed.ageRestriction")}</p>
+                <h2 className="h3">{t("common:auth.ageCheckFailed.heading")}</h2>
+                <p>Unfortunately, we aren&apos;t able to offer accounts to students under {SITE_LOWER_AGE_LIMIT} years old.</p>
                 <p>{siteSpecific(
                     <><Trans i18nKey="sci:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>,
                     <><Trans i18nKey="ada:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>

@@ -33,7 +33,7 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
         }
         <MyAccountTab
             leftColumn={<>
-                <h3>{t("common:account.emailPreferences.title")}</h3>
+                <h2 className="h3">{t("common:account.emailPreferences.title")}</h2>
                 <p>{t("common:account.emailPreferences.description", { siteTitle: SITE_TITLE })}</p>
                 <Trans i18nKey="site:account.emailPreferences.frequencyNote" components={{ strong: <b /> }} />
             </>}

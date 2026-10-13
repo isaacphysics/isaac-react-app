@@ -74,7 +74,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
             return <>
                 {above["lg"](deviceSize) && <div className="section-divider"/>}
                 <search>
-                    <h5>{t("common:tests.sidebar.searchTitle")}</h5>
+                    <h3 className="h5">{t("common:tests.sidebar.searchTitle")}</h3>
                     <SearchInputWithIcon 
                         outerClassName="my-3" 
                         type="search" 
@@ -82,7 +82,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         placeholder={t("common:tests.search.placeholder")} aria-label={t("common:tests.sidebar.searchAriaLabel")}
                     />
                     <div className="section-divider"/>
-                    <h5 className="mb-3">{t("common:sidebar.filter.status")}</h5>
+                    <h3 className="mb-3 h5">{t("common:sidebar.filter.status")}</h3>
                     <ul>
                         <li><QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/></li>
                         <div className="section-divider-small"/>
@@ -91,13 +91,13 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         </li>)}
                     </ul>
                     {activeTab === 1 && <>
-                        <h5 className="my-3">{t("common:sidebar.filter.assigner")}</h5>
+                        <h3 className="my-3 h5">{t("common:sidebar.filter.assigner")}</h3>
                         <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
                             {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                         </Input>
                     </>}
                     <div className="section-divider mt-4"/>
-                    <h5 className="mb-3">{t("common:sidebar.display.title")}</h5>
+                    <h3 className="mb-3 h5">{t("common:sidebar.display.title")}</h3>
                     <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
                         <option value="table">{t("common:tests.sidebar.displayTableOption")}</option>
                         <option value="cards">{t("common:tests.sidebar.displayCardOption")}</option>

@@ -95,7 +95,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
             return <>
                 <div className="section-divider"/>
                 <search data-testid="my-assignments-sidebar">
-                    <h5>{t("common:assignments.sidebar.searchTitle")}</h5>
+                    <h3 className="h5">{t("common:assignments.sidebar.searchTitle")}</h3>
                     <SearchInputWithIcon
                         outerClassName='my-3'
                         type="search" value={titleFilter || ""}
@@ -103,12 +103,12 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
                     />
                     <div className="section-divider"/>
-                    <h5>{t("common:assignments.sidebar.sortTitle")}</h5>
+                    <h3 className="h5">{t("common:assignments.sidebar.sortTitle")}</h3>
                     <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
                         {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
                     </Input>
                     <div className="section-divider"/>
-                    <h5 className="mb-4">{t("common:sidebar.filter.status")}</h5>
+                    <h3 className="mb-4 h5">{t("common:sidebar.filter.status")}</h3>
                     <ul>
                         <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={totalAssignmentCount}/></li>
                         <div className="section-divider-small"/>
@@ -116,11 +116,11 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                             <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus[ASSIGNMENT_STATE_MAP[state]]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
                         </li>)}
                     </ul>
-                    <h5 className="mt-4 mb-3">{t("common:assignments.sidebar.filterGroup")}</h5>
+                    <h3 className="mt-4 mb-3 h5">{t("common:assignments.sidebar.filterGroup")}</h3>
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
                     </Input>
-                    <h5 className="mt-4 mb-3">{t("common:sidebar.filter.assigner")}</h5>
+                    <h3 className="mt-4 mb-3 h5">{t("common:sidebar.filter.assigner")}</h3>
                     <Input type="select" value={setByFilter} onChange={e => setSetByFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                     </Input>

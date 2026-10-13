@@ -114,8 +114,8 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
         <div className={classNames("question-component", {"p-md-4": isAda})}>
             <div className="quick-question">
                 {isAda &&
-                    <div className="quick-question-title">
-                        <h3>{t("ada:questions.quickQuestion.title")}</h3>
+                    <div className="quick-question-title h3">
+                        {t("ada:questions.quickQuestion.title")}
                     </div>
                 }
                 <div className="question-content clearfix">

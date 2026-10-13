@@ -10,7 +10,7 @@ import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
 import { useTranslation } from "react-i18next";
 
-export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, focusRef, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
+export const InlineNumericEntryZone = ({questionDTO, setModified, index, correctness, focusRef, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
     const { t } = useTranslation();
 
     const questionId = questionDTO?.id ?? "";
@@ -73,6 +73,8 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
                     // if the answer is incorrect because the units are wrong but the value is correct, hide the green outline from the value
                     correctnessClass((correctness === "INCORRECT" && valueCorrectness === "CORRECT") ? "NOT_SUBMITTED" : valueCorrectness)
                 )}
+                name={`Input field for part ${questionDTO?.title ?? (index+1)}`}
+                aria-label={`Input field for part ${questionDTO?.title ?? (index+1)}`}
                 style={contentStyle}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
@@ -90,16 +92,19 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
                 className={classNames(
-                    "feedback-wrapper px-2 py-0 d-flex", 
+                    "align-items-center px-2 py-0 d-flex", 
                     {"border-dark": !noDisplayUnit}
                 )}
                 color={noDisplayUnit ? undefined : "white"}
                 caret={isPhy && noDisplayUnit}
             >
-                <div className={classNames("align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
-                    <Markup encoding={"latex"}>
-                        {isDefined(unit) ? wrapUnitForSelect(unit) : t("common:questions.numeric.unitPlaceholder")}
-                    </Markup>
+                {/* this seemingly redundant div structure is necessary – the toggle and first use a distinct ::after elements, and the latter must independently define the correctness */}
+                <div className="feedback-wrapper d-flex">
+                    <div className={classNames("d-flex align-items-center align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
+                        <Markup encoding={"latex"}>
+                            {isDefined(unit) ? wrapUnitForSelect(unit) : t("common:questions.numeric.unitPlaceholder")}
+                        </Markup>
+                    </div>
                 </div>
             </DropdownToggle>
             <DropdownMenu container={entryZoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>

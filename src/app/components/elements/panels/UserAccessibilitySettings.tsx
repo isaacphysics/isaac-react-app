@@ -18,7 +18,7 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>{t("common:account.accessibility.title")}</h3>
+            <h2 className="h3">{t("common:account.accessibility.title")}</h2>
             <p>{t("common:account.accessibility.description")}</p>
         </>}
         rightColumn={<>
@@ -36,8 +36,7 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 /></b>
                 <p>{t("common:account.accessibility.reducedMotion.helpText")}</p>
             </WithLinkableSetting>
-            <div className="pt-2"/>
-            <WithLinkableSetting id={"prefer-mathml-feature"}>
+            <WithLinkableSetting id={"show-inaccessible-warning-feature"}>
                 <b><StyledCheckbox 
                     checked={accessibilitySettings.SHOW_INACCESSIBLE_WARNING ?? isTeacherOrAbove(user)}
                     onChange={e => {
@@ -51,6 +50,20 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 /></b>
                 <p id="show-inaccessible-helptext">{t("common:account.accessibility.inaccessibleWarning.helpText")}</p>
             </WithLinkableSetting>
+            <WithLinkableSetting id={"non-dragging-movement-feature"}>
+                <b><StyledCheckbox checked={accessibilitySettings.NON_DRAGGING_INPUTS ?? false}
+                    onChange={e => {
+                        setAccessibilitySettings((oldDs) => ({...oldDs, NON_DRAGGING_INPUTS: e.target.checked}));
+                    }}
+                    color={siteSpecific("primary", "")}
+                    label={<p>Enable non-dragging alternative inputs</p>}
+                    id={"non-dragging-movement"}
+                    aria-describedby="non-dragging-movement-helptext"
+                    removeVerticalOffset
+                /></b>
+                <p id="non-dragging-helptext">{`Enabling this will allow you to use alternative input methods that don't require dragging for certain question types (e.g. drag-and-drop).`}</p>
+            </WithLinkableSetting>
+            {/* Seperate maths-specific setting from the general site-wide accessibility settings */}
             <div className="section-divider" />
             <div className="pt-2"/>
             <WithLinkableSetting id={"prefer-mathml-feature"}>

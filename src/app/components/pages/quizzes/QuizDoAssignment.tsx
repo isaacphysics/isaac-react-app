@@ -64,7 +64,7 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle={t("common:attempt.title")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <h4 className="alert-heading">{t("common:attempt.assignmentError")}</h4>
+                    <div className="alert-heading h4">{t("common:attempt.assignmentError")}</div>
                     <p>{error}</p>
                 </Alert>
             </>}

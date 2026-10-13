@@ -34,6 +34,11 @@
     padding: 0.8125rem 1.625rem;
     min-width: 120px;
   }
+
+  &.btn-danger.disabled, &.btn-danger:disabled {
+    // other button themes have disabled styles built in, but this is one of the few bootstrap defaults we still use and so is expecting BS's default 0.65 opacity.
+    opacity: 0.65;
+  }
 }
 
 // TODO: replace btn-primary with btn-solid

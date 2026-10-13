@@ -39,7 +39,10 @@ function DropZoneItem({item, id, type, overrideOver, isCorrect}: {item: Immutabl
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dropRegionContext?.shouldGetFocus]);
 
-    return <Badge id={id} className={classNames("p-1 cloze-item feedback-zone", {"cloze-bg": !!item, "m-2": type === "item-section", "feedback-showing": isDefined(isCorrect)})} color="theme" style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
+    return <Badge id={id} className={classNames("p-1 cloze-item feedback-zone align-middle", {"m-2": type === "item-section", "feedback-showing": isDefined(isCorrect)})}
+        color="cloze" style={style} innerRef={setNodeRef} {...listeners} {...attributes}
+        aria-describedby={undefined} // We manage the aria-describedby attribute once in the ItemSection rather than on each individual item
+    >
         <span className={"visually-hidden"}>{item.altText ?? item.value ?? t("common:dnd.clozeFallbackText")}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>

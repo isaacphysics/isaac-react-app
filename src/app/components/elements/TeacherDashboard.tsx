@@ -23,7 +23,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h4>{t("common:dashboard.groups.title")}</h4>
+        <h2 className="panel-title">{t("common:dashboard.groups.title")}</h2>
         {sortedGroups.length ?
             <>
                 <div>
@@ -60,7 +60,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <h4>{t("common:dashboard.assignments.title")}</h4>
+        <h2 className="panel-title">{t("common:dashboard.assignments.title")}</h2>
         <ShowLoading
             until={assignments && quizzes}
             thenRender={() => {
@@ -87,7 +87,7 @@ const MyIsaacPanel = () => {
     const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     return <div className='dashboard-panel'>
-        <h4>{t("common:dashboard.myIsaac.title")}</h4>
+        <h2 className="panel-title">{t("common:dashboard.myIsaac.title")}</h2>
         <div className="d-flex flex-column">
             <div className="col">
                 {isTutor(user) 
@@ -136,7 +136,7 @@ const BooksPanel = () => {
 
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
-            <h4>{t("common:dashboard.books.title")}</h4>
+            <h2 className="panel-title">{t("common:dashboard.books.title")}</h2>
             <Spacer/>
             <select className="books-select ms-2 mb-3" value={subject}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
@@ -180,7 +180,7 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex flex-wrap">
-            {nameToDisplay && <h3 className="text-wrap">{t("common:dashboard.welcomeHeader", { teacherName: nameToDisplay })}</h3>}
+            {nameToDisplay && <h1 className="text-wrap h3">{t("common:dashboard.welcomeHeader", { teacherName: nameToDisplay })}</h1>}
             <span className="ms-auto">
                 <div className="text-center">{t("common:dashboard.viewToggleLabel")}</div>
                 <StyledToggle

@@ -94,11 +94,11 @@ export const UserPassword = (
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>{t("common:account.security.title")}</h3>
+            <h2 className="h3">{t("common:account.security.title")}</h2>
             <p>{t("common:account.security.description")}</p>
         </>}
         rightColumn={<>
-            <h4>{t("common:account.security.passwordTitle")}</h4>
+            <h3 className="h4">{t("common:account.security.passwordTitle")}</h3>
             {userAuthSettings && userAuthSettings.hasSegueAccount ? 
                 <>  
                     {(isPhy || (isAda && showPasswordFields)) && 
@@ -157,13 +157,13 @@ export const UserPassword = (
                                 </p>}
                             </Col>
                         </Row>
-                        <Row className="pb-4">
+                        {myUser.emailVerificationStatus !== "AGE_RESTRICTED" && <Row className="pb-4">
                             <Col className="text-center">
                                 <Button className="btn-keyline" onClick={resetPasswordIfValidEmail}>
                                     {t("common:account.security.addPasswordButton")}
                                 </Button>
                             </Col>
-                        </Row>
+                        </Row>}
                     </React.Fragment>
                     :
                     <React.Fragment>
@@ -176,7 +176,7 @@ export const UserPassword = (
             <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 {connectedAccounts.length > 0 && <FormGroup className="form-group">
-                    <h4>{t("site:account.linkedAccounts.title")}</h4>
+                    <h3 className="h4">{t("site:account.linkedAccounts.title")}</h3>
                     <Col>
                         {connectedAccounts.map((provider) => {
                             return <React.Fragment key={provider}>{authButtonsMap[provider](true)}</React.Fragment>;
@@ -184,7 +184,7 @@ export const UserPassword = (
                     </Col>
                 </FormGroup>}
                 {unconnectedAccounts.length > 0 && <FormGroup className="form-group">
-                    <h4>{t("common:account.linkedAccounts.otherTitle")}</h4>
+                    <h3 className="h4">{t("common:account.linkedAccounts.otherTitle")}</h3>
                     <Col>
                         {unconnectedAccounts.map((provider) => {
                             return <React.Fragment key={provider}>{authButtonsMap[provider](false)}</React.Fragment>;
@@ -195,7 +195,7 @@ export const UserPassword = (
             <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 <FormGroup className="form-group">
-                    <h4>{t("common:account.logOut.title")}</h4>
+                    <h3 className="h4">{t("common:account.logOut.title")}</h3>
                     <p>
                         {t("common:account.logOut.description")}
                     </p>

@@ -131,22 +131,22 @@ const Equality = () => {
         {currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex && <Row>
             {/* Result Summary */}
             <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
-                <h4>LaTeX</h4>
+                <div className="h4">LaTeX</div>
                 <pre>${currentAttemptValue?.result?.tex}$</pre>
                 {["chemistry", "nuclear"].includes(editorMode) && <>
-                    <h4>MhChem</h4>
+                    <div className="h4">MhChem</div>
                     <pre>{currentAttemptValue?.result?.mhchem}</pre>
                 </>}
                 {!["chemistry", "nuclear"].includes(editorMode) && <>
-                    <h4>Python</h4>
+                    <div className="h4">Python</div>
                     <pre>{currentAttemptValue?.result?.python}</pre>
-                    <h4>MathML</h4>
+                    <div className="h4">MathML</div>
                     <pre>{currentAttemptValue?.result?.mathml}</pre>
                 </>}
-                <h4>Available symbols</h4>
+                <div className="h4">Available symbols</div>
                 <pre>{currentAttemptValue?.result?.uniqueSymbols}</pre>
                 {(segueEnvironment === "DEV" || isStaff(user)) && <>
-                    <h4>Inequality seed</h4>
+                    <div className="h4">Inequality seed</div>
                     <pre>{currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
                 </>}
             </Col>

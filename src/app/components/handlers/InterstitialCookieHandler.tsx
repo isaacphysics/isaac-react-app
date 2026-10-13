@@ -74,7 +74,7 @@ export const YoutubeCookieHandler = ({afterAcceptedElement} : {afterAcceptedElem
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.youtubeCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>{t("common:cookieConsent.youtube.title")}</h3>
+            <div className="h3">{t("common:cookieConsent.youtube.title")}</div>
             {youtubeCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button className="" onClick={() => {
@@ -94,7 +94,7 @@ export const AnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElemen
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.anvilCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>{t("common:cookieConsent.anvil.title")}</h3>
+            <div className="h3">{t("common:cookieConsent.anvil.title")}</div>
             {anvilCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
@@ -114,7 +114,7 @@ export const DesmosCookieHandler = ({afterAcceptedElement} : {afterAcceptedEleme
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.desmosCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>{t("common:cookieConsent.desmos.title")}</h3>
+            <div className="h3">{t("common:cookieConsent.desmos.title")}</div>
             {desmosCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
@@ -134,7 +134,7 @@ export const GeogebraCookieHandler = ({afterAcceptedElement, onAccepted} : {afte
     return <InterstitialCookieHandler
         accepted={userConsent.cookieConsent?.geogebraCookiesAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
-            <h3>{t("common:cookieConsent.geogebra.title")}</h3>
+            <div className="h3">{t("common:cookieConsent.geogebra.title")}</div>
             {geogebraCookieText}
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {

@@ -162,9 +162,9 @@ export const StudentResources = () => {
         <section id="testimonial" className="bg-black">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
-                    <h2>
+                    <div className="h2">
                         {t("common:studentResources.testimonial.quote")}
-                    </h2>
+                    </div>
                     <p>{t("common:studentResources.testimonial.attribution")}</p>
                 </TextBlock>
             </Container>
@@ -211,7 +211,7 @@ export const StudentResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-cyan-200" src="/assets/cs/decor/help-slice-cyan.svg" alt=""/>
                     <TextBlock className="py-3 text-center">
-                        <h3>{t("common:studentResources.support.title")}</h3>
+                        <div className="h3">{t("common:studentResources.support.title")}</div>
                         <p>{t("common:studentResources.support.description")}</p>
                         <Button to="/support/student/general" tag={Link}>{t("common:studentResources.support.button")}</Button>
                     </TextBlock>

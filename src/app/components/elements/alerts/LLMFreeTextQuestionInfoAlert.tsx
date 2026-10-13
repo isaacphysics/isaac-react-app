@@ -1,7 +1,7 @@
 import React from "react";
 
 import {Button, Col, Row} from "reactstrap";
-import {ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent} from "../../../services";
+import {ACCOUNT_TAB, isAda, isLoggedIn, isUnder13, KEY, persistence, useNavigation, useUserConsent} from "../../../services";
 import {Link, useLocation} from "react-router-dom";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {ContentBaseDTO} from "../../../../IsaacApiTypes";
@@ -26,7 +26,7 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h4>{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} {t("common:freeTextBuilder.infoAlert.loggedOutTitle")}</h4>
+        <div className="h4">{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} {t("common:freeTextBuilder.infoAlert.loggedOutTitle")}</div>
         <p>
             {t("common:freeTextBuilder.infoAlert.loggedOutDescription")}
         </p>
@@ -57,6 +57,25 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     </>;
 }
 
+function OpenAIUnder13Copy({doc}: InfoBannerProps) {
+    const navigation = useNavigation(doc);
+
+    return <>
+        <h4>We cannot collect your consent</h4>
+        <p>
+            We use a large language model (LLM) to mark free-text questions like this one.
+            This requires your consent to send your answer to OpenAI for marking.
+            Because you are under 13, we cannot collect your consent for this under the GDPR law.
+        </p>
+        <p>
+            You can still read the question, but we will not be able to mark your answer.
+        </p>
+        {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
+            Skip question
+        </Button>}
+    </>;
+};
+
 function OpenAIConsentCopy({doc}: InfoBannerProps) {
     const { t } = useTranslation();
     const navigation = useNavigation(doc);
@@ -76,7 +95,7 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h4>{t("common:freeTextBuilder.infoAlert.consentTitle")}</h4>
+        <div className="h4">{t("common:freeTextBuilder.infoAlert.consentTitle")}</div>
         <p>
             {t("common:freeTextBuilder.infoAlert.consentDescription")}
             {isAda && <> <Trans
@@ -118,7 +137,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
     const {setLinkedSetting} = useLinkableSetting();
 
     return <>
-        <h4>{t("common:freeTextBuilder.infoAlert.generalTitle")}</h4>
+        <div className="h4">{t("common:freeTextBuilder.infoAlert.generalTitle")}</div>
         <p>
             {t("common:freeTextBuilder.infoAlert.generalAccuracy")}
             {isAda && <><Trans
@@ -146,6 +165,8 @@ export function LLMFreeTextQuestionInfoAlert({doc}: InfoBannerProps) {
     let CopyToDisplay;
     if (!isLoggedIn(user)) {
         CopyToDisplay = LoggedOutCopy;
+    } else if (isUnder13(user)) {
+        CopyToDisplay = OpenAIUnder13Copy;
     } else if (!userConsent?.openAIConsent) {
         CopyToDisplay = OpenAIConsentCopy;
     } else {

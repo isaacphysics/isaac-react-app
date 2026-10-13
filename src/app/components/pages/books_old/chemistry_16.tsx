@@ -22,7 +22,7 @@ export const Chemistry16 = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>{t("common:books.chaptersHeading")}</h4>
+                    <div className="h4">{t("common:books.chaptersHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'chem_16_a_boards'} chapterTitle={t("sci:books.chemistry16.chapterA")} chapterIcon={'A'} chapterSubject={SUBJECTS.CHEMISTRY}/>

@@ -10,9 +10,9 @@ export const Unauthorised = () => {
     return <Container>
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle={t("common:auth.unauthorised.title")} icon={{type: "icon", icon: "icon-error"}} />
-            <h3 className="my-4">
+            <div className="my-4 h3">
                 {t("common:auth.unauthorised.message")}
-            </h3>
+            </div>
             <code>
                 {(state && state.overridePathname) || pathname}
             </code>

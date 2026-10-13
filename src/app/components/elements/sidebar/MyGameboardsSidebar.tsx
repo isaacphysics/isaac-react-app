@@ -30,7 +30,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h5>{t("common:sidebar.search.decks")}</h5>
+            <h3 className="h5">{t("common:sidebar.search.decks")}</h3>
             <SearchInputWithIcon 
                 data-testid="title-filter"
                 outerClassName="my-3"
@@ -39,16 +39,16 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
-            <h5 className="mb-3">{t("common:sidebar.filter.creator")}</h5>
+            <h3 className="mb-3 h5">{t("common:sidebar.filter.creator")}</h3>
             <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
                 {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
-            <h5 className="mt-4 mb-3">{t("common:gameboards.sidebar.filterCompletionTitle")}</h5>
+            <h3 className="mt-4 mb-3 h5">{t("common:gameboards.sidebar.filterCompletionTitle")}</h3>
             <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
                 {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
             </Input>
             <div className="section-divider"/>
-            <h5 className="mb-4">{t("common:sidebar.display.title")}</h5>
+            <h3 className="mb-4 h5">{t("common:sidebar.display.title")}</h3>
             <div className="d-flex flex-xl-column flex-xxl-row">
                 <Input className="w-auto" type="select" aria-label={t("common:sidebar.display.modeLabel")} data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}

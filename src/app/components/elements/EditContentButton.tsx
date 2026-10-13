@@ -12,12 +12,12 @@ export interface EditContentButtonProps {
 export const EditContentButton = ({doc, className}: EditContentButtonProps) => {
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     if (segueEnvironment === "DEV" && doc?.canonicalSourceFile) {
-        return <div className="not-mobile">
-            <h4>
+        return <div className="not-mobile no-print">
+            <span className="h4">
                 <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={className}>
                     {doc.published ? "Published" : "Unpublished"} ✎
                 </ExternalLink>
-            </h4>
+            </span>
         </div>;
     } else {
         return null; // does not render

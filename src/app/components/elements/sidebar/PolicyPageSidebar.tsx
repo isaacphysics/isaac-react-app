@@ -11,7 +11,7 @@ export const PolicyPageSidebar = (props: ContentSidebarProps) => {
 
     return <ContentSidebar buttonTitle={t("common:policy.sidebar.selectPage")} optionBar={props.optionBar}>
         <div className="section-divider"/>
-        <h5>{t("common:policy.sidebar.selectPage")}</h5>
+        <h3 className="h5">{t("common:policy.sidebar.selectPage")}</h3>
         <ul>
             <li><StyledTabPicker checkboxTitle={t("common:policy.sidebar.accessibilityStatement")} checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onChange={() => navigate("/accessibility")}/></li>
             <li><StyledTabPicker checkboxTitle={t("common:policy.sidebar.privacyPolicy")} checked={path === "/privacy"  || path === "/pages/privacy_policy"} onChange={() => navigate("/privacy")}/></li>

@@ -99,8 +99,8 @@ export const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSe
             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment showLegend
                 headerText={<div>
                     {siteSpecific(
-                        <h4>{t("sci:assignments.progress.groupTab.overview", { boardTitle: assignment.gameboard.title })} <BoardLink id={assignment.gameboard?.id} /></h4>,
-                        <h3>{t("ada:assignments.progress.groupTab.overview")} <BoardLink id={assignment.gameboard?.id} /></h3>
+                        <h2 className="h4">{t("sci:assignments.progress.groupTab.overview", { boardTitle: assignment.gameboard.title })} <BoardLink id={assignment.gameboard?.id} /></h2>,
+                        <h2 className="h3">{t("ada:assignments.progress.groupTab.overview")} <BoardLink id={assignment.gameboard?.id} /></h2>
                     )}
                     <span>{t("common:assignments.progress.groupTab.description")}</span>
                 </div>}
@@ -154,10 +154,10 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
         <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
             <div className="d-flex flex-column">
                 <div className="d-flex">
-                    <h5 className="m-0">
+                    <div className="m-0 h5">
                         {questionIndex + 1}.{" "}
                         <Markup encoding="latex">{questions[questionIndex].title}</Markup>
-                    </h5>
+                    </div>
                     <QuestionLink questionId={questions[questionIndex].id} boardId={gameboardId} />
                 </div>
 
@@ -200,7 +200,7 @@ export const DetailedMarksTab = ({assignment, progress, settingsVisible, setSett
         <CardBody>
             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment 
                 headerText={<div>
-                    {siteSpecific(<h4>{t("common:assignments.progress.detailedTab.title")}</h4>, <h3>{t("common:assignments.progress.detailedTab.title")}</h3>)}
+                    <h2 className={siteSpecific("h4", "h3")}>{t("common:assignments.progress.detailedTab.title")}</h2>
                     <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
                 </div>}
             />

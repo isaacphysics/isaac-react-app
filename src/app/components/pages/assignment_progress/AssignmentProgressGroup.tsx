@@ -181,7 +181,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             <CardBody>
                 <Row className="mb-3">
                     <Col xs={12}>
-                        <h3>{t("common:groups.progress.sectionTitle")}</h3>
+                        <h2 className="h3">{t("common:groups.progress.sectionTitle")}</h2>
                         <span>{t("common:groups.progress.sectionDescription")}</span>
                     </Col>
                     <Col xs={12} sm={6} lg={4}>

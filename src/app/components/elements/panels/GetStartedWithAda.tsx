@@ -39,30 +39,30 @@ export const GetStartedWithAda = () => {
                         </div>
 
                         <ul className="list-unstyled d-flex flex-column mt-3 gap-3">
-                            <CompletableTask tag={"li"} complete={tasks.createAccount}>
-                                <strong>{t("common:getStarted.tasks.createAccount")}</strong>
+                            <CompletableTask tag={"li"} complete={tasks.createAccount} inputId="create-account">
+                                <label htmlFor="create-account" className="mb-0"><strong>{t("common:getStarted.tasks.createAccount")}</strong></label>
                             </CompletableTask>
 
-                            <CompletableTask tag={"li"} complete={tasks.personaliseContent} disabled={!tasks.createAccount} action={{
+                            <CompletableTask tag={"li"} complete={tasks.personaliseContent} inputId="personalise-content" disabled={!tasks.createAccount} action={{
                                 title: t("common:getStarted.tasks.personaliseContentTitle"),
                                 to: "/account#customise",
                                 onClick: () => setLinkedSetting("account-context")
                             }}>
                                 <div className="d-flex flex-column">
-                                    <h5 className="m-0">{t("common:getStarted.tasks.personaliseContentTitle")}</h5>
+                                    <label className="mb-0" htmlFor="personalise-content"><strong>{t("common:getStarted.tasks.personaliseContentTitle")}</strong></label>
                                     <span>{t("common:getStarted.tasks.personaliseContentHint")}</span>
                                 </div>
                             </CompletableTask>
 
-                            <CompletableTask tag={"li"} complete={tasks.createGroup} disabled={!tasks.createAccount} action={{
+                            <CompletableTask tag={"li"} complete={tasks.createGroup} inputId="create-group" disabled={!tasks.createAccount} action={{
                                 title: t("common:getStarted.tasks.manageGroupsTitle"),
                                 to: "/groups",
                             }}>
-                                <strong>{t("common:getStarted.tasks.createGroup")}</strong>
+                                <label htmlFor="create-group" className="mb-0"><strong>{t("common:getStarted.tasks.createGroup")}</strong></label>
                             </CompletableTask>
 
-                            <CompletableTask tag={"li"} complete={tasks.assignQuiz} disabled={!tasks.createGroup}>
-                                <strong>{t("common:getStarted.tasks.assignQuiz")}</strong>
+                            <CompletableTask tag={"li"} complete={tasks.assignQuiz} inputId="assign-quiz" disabled={!tasks.createGroup}>
+                                <label htmlFor="assign-quiz" className="mb-0"><strong>{t("common:getStarted.tasks.assignQuiz")}</strong></label>
                             </CompletableTask>
 
                             {/* <CompletableTask tag={"li"} complete={tasks.viewMarkbook} disabled={!tasks.assignQuiz}>

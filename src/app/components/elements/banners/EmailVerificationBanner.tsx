@@ -30,10 +30,10 @@ const EmailVerificationBannerBody = ({setHidden, status}: EmailVerificationBanne
 
     return <Row className="align-items-center" id="email-status-banner">
         <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
-            <h3 className="d-flex align-items-center justify-content-center gap-2">
+            <span className="d-flex align-items-center justify-content-center gap-2" >
                 <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
-                <span id="email-verification-heading" className="d-inline-block d-sm-none">{t("common:banners.emailVerification.heading")}</span>
-            </h3>
+                <span id="email-verification-heading" className="d-inline-block d-sm-none h3">{t("common:banners.emailVerification.heading")}</span>
+            </span>
         </Col>
         {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
             <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
@@ -65,7 +65,7 @@ export const EmailVerificationBanner = () => {
     const {cookieConsent} = useUserConsent();
     const isHiddenViaCookie = !!(user?.loggedIn && user?.emailVerificationStatus === "DELIVERY_FAILED" && cookieConsent?.disableEmailVerificationWarningCookiesAccepted);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
-    const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
+    const show = useMemo(() => user?.loggedIn && status !== "VERIFIED" && status !== "AGE_RESTRICTED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
     return <DismissibleBanner
         dismissText={t("common:banners.emailVerification.dismissButton")}

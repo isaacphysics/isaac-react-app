@@ -2,7 +2,7 @@
 import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
-import {BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
+import {AdaTopicBase, BooleanNotation, NOT_FOUND_TYPE, PageContextState, PotentialUser, UserEmailPreferences} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
@@ -17,9 +17,10 @@ import {
     QuizFeedbackMode,
     Stage,
 } from "../../IsaacApiTypes";
-import {ArrayElement, isAda, isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
+import {ArrayElement, isAda, isPhy, isUnder13, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 import { CSSObjectWithLabel } from "react-select";
+import {Immutable} from "immer";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -130,6 +131,8 @@ export enum ACTION_TYPE {
     USER_PREFERENCES_REQUEST = "USER_PREFERENCES_REQUEST",
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
+
+    ACCESSIBILITY_TYPE_SET = "ACCESSIBILITY_TYPE_SET",
 
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
@@ -682,6 +685,19 @@ export enum TAG_ID {
     theoryOfComputation = "theory_of_computation",
     projects = "projects",
 
+    // 11-14
+    computerScience11_14 = "computer_science_11_14",
+    aiAndMachineLearning11_14 = "ai_and_machine_learning_11_14",
+    algorithmsAndDataStructures11_14 = "algorithms_and_data_structures_11_14",
+    computingSystems11_14 = "computing_systems_11_14",
+    cyberSecurity11_14 = "cyber_security_11_14",
+    dataRepresentation11_14 = "data_representation_11_14",
+    designAndDevelopment11_14 = "design_and_development_11_14",
+    digitalLiteracy11_14 = "digital_literacy_11_14",
+    frontierTechnologies11_14 = "frontier_technologies_11_14",
+    networks11_14 = "networks_11_14",
+    programming11_14 = "programming_11_14",
+
     // AI and machine learning topics
     artificialIntelligence = "artificial_intelligence",
     machineLearning = "machine_learning",
@@ -974,6 +990,103 @@ export enum TAG_LEVEL {
 
 type ContextSpecificTags = Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID[]>>>;
 
+export const Ada11To14TopicsToConcepts: Partial<Record<TAG_ID, AdaTopicBase[]>> = {
+    [TAG_ID.aiAndMachineLearning11_14]: [
+        {title: "AI in everyday life", url: undefined},
+        {title: "Understanding and using data", url: undefined},
+        {title: "How machines learn from data", url: undefined},
+    ],
+    [TAG_ID.algorithmsAndDataStructures11_14]: [
+        {title: "Computational thinking", url: undefined},
+        {title: "Designing algorithms", url: undefined},
+        {title: "Data structures", url: undefined},
+        {title: "Searching", url: undefined},
+        {title: "Sorting", url: undefined},
+    ],
+    [TAG_ID.computingSystems11_14]: [
+        {title: "Types of computing systems", url: undefined},
+        {title: "Computer architecture", url: undefined},
+        {title: "Boolean logic", url: undefined},
+        {title: "Operating systems", url: undefined},
+    ],
+    [TAG_ID.cyberSecurity11_14]: [
+        {title: "Social engineering", url: "/concepts/social_engineering_11_14"},
+        {title: "Cyberattacks", url: "/concepts/cyberattacks_11_14"},
+        {title: "Defending against malware", url: "/concepts/defend_malware_11_14"},
+        {title: "Network security", url: "/concepts/network_security_11_14"},
+    ],
+    [TAG_ID.dataRepresentation11_14]: [
+        {title: "Representation of numbers", url: undefined},
+        {title: "Representation of text", url: undefined},
+        {title: "Representation of images", url: undefined},
+        {title: "Representation of sound", url: undefined},
+        {title: "Compression", url: undefined},
+    ],
+    [TAG_ID.designAndDevelopment11_14]: [
+        {title: "Features of a digital product", url: undefined},
+        {title: "Planning a digital product", url: undefined},
+        {title: "Reviewing a digital product", url: undefined},
+        {title: "Testing", url: undefined},
+    ],
+    [TAG_ID.digitalLiteracy11_14]: [
+        {title: "Safe and responsible use of digital devices", url: undefined},
+        {title: "Collaboration using digital tools", url: undefined},
+        {title: "Finding, searching and using credible sources", url: undefined},
+        {title: "Safe and responsible use of AI", url: undefined},
+        {title: "Impacts of technology", url: undefined},
+    ],
+    [TAG_ID.frontierTechnologies11_14]: [
+        {title: "AI and machine learning", url: undefined},
+        {title: "Quantum computing", url: undefined},
+        {title: "Advanced connectivity", url: undefined},
+        {title: "Engineering biology", url: undefined},
+        {title: "Semiconductors", url: undefined},
+    ],
+    [TAG_ID.networks11_14]: [
+        {title: "Network basics", url: undefined},
+        {title: "Wired and wireless networks", url: undefined},
+        {title: "The internet", url: undefined},
+        {title: "WWW", url: undefined},
+        {title: "Internet of things", url: undefined},
+    ],
+    [TAG_ID.programming11_14]: [
+        {title: "Input and output", url: undefined},
+        {title: "Sequence", url: undefined},
+        {title: "Variables", url: undefined},
+        {title: "Selection", url: undefined},
+        {title: "Operators", url: undefined},
+        {title: "Iteration", url: undefined},
+        {title: "Functions", url: undefined},
+    ],
+};
+
+export const AdaTopicsToIcons: Partial<Record<TAG_ID, string>> = {
+    [TAG_ID.cyberSecurity11_14]: "icon-cyber-security",
+    [TAG_ID.aiAndMachineLearning11_14]: "icon-ai-data-science-and-machine-learning",
+    [TAG_ID.designAndDevelopment11_14]: "icon-design-and-development",
+    [TAG_ID.digitalLiteracy11_14]: "icon-digital-literacy",
+    [TAG_ID.algorithmsAndDataStructures11_14]: "icon-algorithms-and-data-structures",
+    [TAG_ID.computingSystems11_14]: "icon-computing-systems",
+    [TAG_ID.dataRepresentation11_14]: "icon-data-and-information",
+    [TAG_ID.frontierTechnologies11_14]: "icon-impact-of-technology",
+    [TAG_ID.networks11_14]: "icon-networks",
+    [TAG_ID.programming11_14]: "icon-programming",
+
+    [TAG_ID.aiAndMachineLearning]: "icon-ai-and-machine-learning",
+    [TAG_ID.dataStructuresAndAlgorithms]: "icon-algorithms-and-data-structures",
+    [TAG_ID.computerSystems]: "icon-computing-systems",
+    [TAG_ID.creatingMedia]: "icon-creating-media",
+    [TAG_ID.dataAndInformation]: "icon-data-and-information",
+    [TAG_ID.designAndDevelopment]: "icon-design-and-development",
+    [TAG_ID.effectiveUseOfTools]: "icon-effective-use-of-tools",
+    [TAG_ID.impactsOfDigitalTechnology]: "icon-impact-of-technology",
+    [TAG_ID.computerNetworks]: "icon-networks",
+    [TAG_ID.programming]: "icon-programming",
+    [TAG_ID.cyberSecurity]: "icon-safety-and-security",
+    [TAG_ID.theoryOfComputation]: "icon-models-of-computation",
+    [TAG_ID.projects]: "icon-software-projects",
+};
+
 // A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
 export const SUBJECT_SPECIFIC_CHILDREN_MAP: ContextSpecificTags = {
     [SUBJECTS.MATHS]: {[LEARNING_STAGE.A_LEVEL]: [TAG_ID.mechanics]},
@@ -1065,20 +1178,24 @@ export interface AccountTabs {
     tab: ACCOUNT_TAB,
     title: string,
     titleShort?: string,
-    hidden?: boolean,
-    hiddenIfEditingOtherUser?: boolean,
+    isHidden?: (user?: Immutable<PotentialUser> | null, editingOtherUser?: boolean) => boolean,
 }
 
 export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.account, title: "Profile"},
-    {tab: ACCOUNT_TAB.customise, title: "Customise", hidden: isPhy},
-    {tab: ACCOUNT_TAB.theme, title: "Theme", hidden: isAda},
+    {tab: ACCOUNT_TAB.customise, title: "Customise", isHidden: () => isPhy},
+    {tab: ACCOUNT_TAB.theme, title: "Theme", isHidden: () => isAda},
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
-    {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
-    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", hiddenIfEditingOtherUser: true},
-    {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
+    {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", isHidden: (user, editingOtherUser) => !!editingOtherUser || isUnder13(user)},
+    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", isHidden: (_, editingOtherUser) => !!editingOtherUser},
+    {tab: ACCOUNT_TAB.betafeatures, title: "Beta", isHidden: (_, editingOtherUser) => !!editingOtherUser},
 ];
+
+// Shared id helpers so the tab controls (MyAccount tablist / MyAccountSidebar) and their tabpanels can cross-reference each other consistently across the app
+export const accountTabSlug = (tab: ACCOUNT_TAB) => ACCOUNT_TABS.find(accountTab => accountTab.tab === tab)!.title.toLowerCase().replaceAll(" ", "-");
+export const accountTabId = (tab: ACCOUNT_TAB) => `account-tab-${accountTabSlug(tab)}`;
+export const accountPanelId = (tab: ACCOUNT_TAB) => `account-panel-${accountTabSlug(tab)}`;
 
 // we can't change the names of tabs as we have historic links to them, so use aliases to use updated names instead
 export const ACCOUNT_TABS_ALIASES: {[alias: string]: ACCOUNT_TAB} = {
@@ -1294,9 +1411,10 @@ export const PATHS = {
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
-// Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
-export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
-export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?\]/g;
+// Matches: [drop-zone], [drop-zone|i-1], [drop-zone|w-50], [drop-zone|h-200], [drop-zone|w-50h-200], [drop-zone|i-1w-50h-200], [drop-zone|altText="some text"], [drop-zone|i-1w-50h-200|altText="some text"]
+export const dropZoneRegex = /\[drop-zone(?<params>(?:\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?(?:\|altText=(?:"|&quot;)(?<altText>.*)(?:"|&quot;))?)?]/g;
+// Matches [drop-zone:id], [drop-zone:id|w-50], [drop-zone:id|h-200], [drop-zone:id|w-50h-200], [drop-zone:id|altText="some text"], [drop-zone:id|w-50h-200|altText="some text"]
+export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>(?:\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?(?:\|altText=(?:"|&quot;)(?<altText>.*?)(?:"|&quot;))?)?\]/g;
 export const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
 export const NULL_CLOZE_ITEM: ItemDTO = {
     type: "item",
@@ -1330,18 +1448,11 @@ export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific([
 
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
 
-export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = siteSpecific(
-    {
-        ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: undefined,
-        EVENTS: undefined
-    },
-    {
-        ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: false,
-        EVENTS: false
-    }
-);
+export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = {
+    ASSIGNMENTS: true,
+    NEWS_AND_UPDATES: undefined,
+    EVENTS: undefined
+};
 
 // this must exist outside of ActiveModals to avoid circular dependencies
 export const MODAL_TYPES = {
@@ -1417,3 +1528,6 @@ export const reactSelectDarkModeStyles = siteSpecific({
         color: "white",
     }),
 });
+
+export const SITE_LOWER_AGE_LIMIT = siteSpecific(10, 11);
+export const SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT = 13;

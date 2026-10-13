@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {SITE_TITLE} from "../../services";
+import {SITE_TITLE, useQueryParams} from "../../services";
 import { useNavigate } from "react-router";
 import { Trans, useTranslation } from "react-i18next";
 import { TransAnchor } from "../elements/TransAnchor";
@@ -10,6 +10,7 @@ import { TransAnchor } from "../elements/TransAnchor";
 export const RegistrationRoleSelect = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const params = useQueryParams();
 
     const teacherSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
@@ -18,7 +19,12 @@ export const RegistrationRoleSelect = () => {
 
     const studentSignup = (event: React.MouseEvent) => {
         event.preventDefault();
-        void navigate("/register/student/age");
+        if (params.method === "sso") {
+            // skip age check, as sso is assumed to provide this for us
+            void navigate("/register/student/details");
+        } else {
+            void navigate("/register/student/age");
+        }
     };
 
     return <Container>
@@ -29,7 +35,7 @@ export const RegistrationRoleSelect = () => {
                 <p>{t("common:auth.roleSelect.description")}</p>
                 <Row>
                     <Col xs={12} lg={6}>
-                        <Card className="h-100">
+                        <Card className="h-100 border-1">
                             <CardBody className="d-flex flex-column">
                                 <CardTitle>
                                     <h3>{t("common:auth.roleSelect.student.title")}</h3>
@@ -47,7 +53,7 @@ export const RegistrationRoleSelect = () => {
                         </Card>
                     </Col>
                     <Col xs={12} lg={6}>
-                        <Card className="h-100">
+                        <Card className="h-100 border-1">
                             <CardBody className="d-flex flex-column">
                                 <CardTitle>
                                     <h3>{t("common:auth.roleSelect.teacher.title")}</h3>

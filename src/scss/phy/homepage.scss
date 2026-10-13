@@ -1,22 +1,23 @@
-.physics-strapline {
-  h2 {
+.homepage {
+  .physics-strapline {
     font-family: $secondary-font;
     font-weight: bold;
     font-size: 40px;
+
+    .text-green {
+      color: var(--color-brand-700);
+    }
   }
 
-  .text-green {
-    color: var(--color-brand-700);
-  }
-}
-
-.homepage {
-  h3 {
-    font-family: $secondary-font;
-    font-weight: bold;
-    font-size: 24px;
-    display: inline;
-    text-wrap: nowrap;
+  h1, h2 {
+    &:not(.physics-strapline, .panel-title, .card-title) {
+      font-family: $secondary-font;
+      font-weight: bold;
+      font-size: 24px;
+      display: inline;
+      text-wrap: nowrap;
+      line-height: 1.54;
+    }
   }
 
   .news-events-link {
@@ -140,12 +141,13 @@ $dashboard-panel-padding: 30px;
     max-height: 500px;
   }
 
-  h4 {
+  .panel-title {
     color: var(--color-brand-700);
     font-size: 18px;
     font-family: $secondary-font;
     font-weight: bold;
     padding-bottom: 10px;
+    line-height: 1.6;
   }
 
   .streak-text {
@@ -229,10 +231,12 @@ a:has(.assignment-card) {
   padding: 10px;
   transition: all 0.2s ease-out;
 
-  h5 {
+  .assignment-card-title {
     font-size: 17px;
     font-family: $secondary-font;
     font-weight: 600;
+    line-height: 1.14;
+    margin-bottom: 0.5rem;
 
     max-height: 5rem;
     overflow: hidden;
@@ -242,7 +246,6 @@ a:has(.assignment-card) {
     -webkit-line-clamp: 4;
     line-clamp: 4;
     -webkit-box-orient: vertical;
-    
   }
 
   .overdue {

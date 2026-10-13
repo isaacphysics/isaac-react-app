@@ -1,19 +1,26 @@
 import React, { useEffect } from "react";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { convertToALVIGameboards, ListView } from "./list-groups/ListView";
-import { GameboardDTO, IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
+import { GameboardDTO, IsaacBookDetailPageDTO, QuizSummaryDTO } from "../../../IsaacApiTypes";
 import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataContainer";
 import { Markup } from "./markup";
 import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
-import { scrollVerticallyIntoView } from "../../services";
+import { isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
+import { selectors, useAppSelector } from "../../state";
 import { useTranslation } from "react-i18next";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
     const { t } = useTranslation();
+
+    const user = useAppSelector(selectors.user.loggedInOrNull);
+    const tests = (page.relatedContent?.filter(c => c.type === "isaacQuiz") || []) as QuizSummaryDTO[];
+    const relevantTests = user?.role ? tests.filter(t => !t.hiddenFromRoles?.includes(user.role!)) : [];
+
     
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
+    const hasRelevantTests = relevantTests.length > 0;
     const hasExtension = page.extensionGameboards && page.extensionGameboards.length > 0;
 
     const bookPageUrlParam = (() => {
@@ -47,12 +54,13 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         <MetadataContainer className="d-flex flex-column gap-2">
             {hasQuestions && <MetadataContainerLink id="questions" title={t("common:books.page.questionsTitle")} />}
             {hasResources && <MetadataContainerLink id="resources" title={t("common:books.page.resourcesTitle")} />}
+            {hasRelevantTests && <MetadataContainerLink id="tests" title="Practice tests" />}
             {hasExtension && <MetadataContainerLink id="extension" title={t("common:books.page.extensionTitle")} />}
             {!hasQuestions && !hasResources && !hasExtension && <span className="ms-2">{t("common:books.page.emptyState")}</span>}
         </MetadataContainer>
 
         {hasQuestions && <>
-            <h4 className="mb-3" id="questions">{t("common:books.page.questionsTitle")}</h4>
+            <h3 className="mb-3 h4" id="questions">{t("common:books.page.questionsTitle")}</h3>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
@@ -63,7 +71,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasResources && <>
-            <h4 className="mb-3" id="resources">{t("common:books.page.resourcesTitle")}</h4>
+            <h3 className="mb-3 h4" id="resources">{t("common:books.page.resourcesTitle")}</h3>
             {!!page.relatedContent?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
@@ -78,8 +86,19 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             </IsaacContentValueOrChildren>
         </>}
 
+        {hasRelevantTests && <>
+            <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
+            <span>Set a test to check your {isTeacherOrAbove(user) ? <>students&apos; </> : <></>}understanding of this topic:</span>
+            <div className="mt-3 mb-7 list-results-container p-2">
+                <ListView
+                    type="quiz"
+                    items={relevantTests}
+                />
+            </div>
+        </>}
+
         {hasExtension && <>
-            <h4 className="mt-4 mb-3" id="extension">{t("common:books.page.extensionTitle")}</h4>
+            <h3 className="mt-4 mb-3 h4" id="extension">{t("common:books.page.extensionTitle")}</h3>
             <span>{t("common:books.page.extensionIntroText")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView

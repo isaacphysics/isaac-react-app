@@ -1,8 +1,9 @@
 import React from "react";
 import { ContentSidebarContext } from "../../../../IsaacAppTypes";
-import { ACCOUNT_TAB, ACCOUNT_TABS, ifKeyIsEnter } from "../../../services";
+import { ACCOUNT_TAB, ACCOUNT_TABS, accountPanelId, accountTabId, ifKeyIsEnter } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
+import { selectors, useAppSelector } from "../../../state";
 import { useTranslation } from "react-i18next";
 
 interface MyAccountSidebarProps extends SidebarProps {
@@ -14,17 +15,22 @@ interface MyAccountSidebarProps extends SidebarProps {
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     const { t } = useTranslation();
     const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
+    const user = useAppSelector(selectors.user.orNull);
     return <ContentSidebar buttonTitle={t("common:account.settings.title")} data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
-        <h5>{t("common:account.settings.title")}</h5>
-        <ul>
+        <h3 className="h5">{t("common:account.settings.title")}</h3>
+        {/* The <li>s carry role="presentation", so the tablist/tab structure is what's exposed to assistive tech while the valid <ul>/<li> markup is preserved */
+        /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
+        <ul role="tablist" aria-label="Account settings">
             {ACCOUNT_TABS
-                .filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser))
+                .filter(tab => !tab.isHidden?.(user, editingOtherUser))
                 .map(({tab, title}) => (
-                    <li key={tab}>
+                    <li key={tab} role="presentation">
                         <ContentSidebarContext.Consumer>
                             {(context) =>
-                                <StyledTabPicker id={title} type="radio" tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                                <StyledTabPicker
+                                    id={accountTabId(tab)} role="tab" aria-selected={activeTab === tab} aria-controls={accountPanelId(tab)}
+                                    type="radio" tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
                                     onChange={() => setActiveTab(tab)}
                                     onClick={() => context?.close()}
                                     onKeyDown={ifKeyIsEnter(() => context?.close())}

@@ -109,7 +109,7 @@ export const Contact = () => {
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
                     <div>
-                        <h3>{t("common:contact.faq.heading")}</h3>
+                        <div className="h3">{t("common:contact.faq.heading")}</div>
                         <p> <Trans
                             i18nKey="common:contact.faq.text"
                             components={{
@@ -119,7 +119,7 @@ export const Contact = () => {
                         /></p>
                     </div>
                     {isPhy && <>
-                        <h3>{t("sci:contact.events.heading")}</h3>
+                        <div className="h3">{t("sci:contact.events.heading")}</div>
                         <p><Trans
                             i18nKey="sci:contact.events.text"
                             components={{
@@ -127,7 +127,7 @@ export const Contact = () => {
                             }}
                         /></p>
                     </>}
-                    <h3>{t("common:contact.problems.heading")}</h3>
+                    <div className="h3">{t("common:contact.problems.heading")}</div>
                     <p><Trans
                         i18nKey="common:contact.problems.text"
                         components={{
@@ -135,7 +135,7 @@ export const Contact = () => {
                         }}
                         values={{ webmasterEmail: WEBMASTER_EMAIL }}
                     /></p>
-                    <h3>{t("common:contact.social.heading")}</h3>
+                    <div className="h3">{t("common:contact.social.heading")}</div>
                     <p>{t("common:contact.social.text")}</p>
                     {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
                 </Col>
@@ -144,9 +144,9 @@ export const Contact = () => {
                         {messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
-                                    <h3 ref={successRef} tabIndex={-1}>
+                                    <div className="h3" ref={successRef} tabIndex={-1}>
                                         {t("common:contact.form.successMessage")}
-                                    </h3>
+                                    </div>
                                 </Col>
                             </Row>:
                             <Form name="contact" onSubmit={e => {
@@ -156,7 +156,7 @@ export const Contact = () => {
                                 setMessageSent(true);
                             }}>
                                 <CardBody>
-                                    <h3>{t("common:contact.form.heading")}</h3>
+                                    <h2 className="h3">{t("common:contact.form.heading")}</h2>
                                     <PageFragment fragmentId="contact_intro"/>
                                     <Row>
                                         <Col size={12} md={6}>

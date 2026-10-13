@@ -11,7 +11,7 @@
       "tooltipTutor": "Add a stage and examination board for each qualification you are teaching.<br/>On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching."
     },
     "country": {
-      "description": "This helps us personalise the platform for you."
+      "description": "The country you go to school in. This helps us personalise the platform for you."
     },
     "deletion": {
       "title": "Delete account"
@@ -37,7 +37,7 @@
       "privacyPolicy": "Updating this information helps us continue to show you relevant content. Full details on how we use your personal information can be found in our <privacyPolicyLink>privacy policy</privacyPolicyLink>."
     },
     "school": {
-      "description": "The country you go to school in. This helps us measure our reach and impact.",
+      "description": "This helps us measure our reach and impact.",
       "notAssociated": "Not associated with a UK school"
     },
     "title": "Account"
@@ -95,13 +95,16 @@
     },
     "title": "Quizzes",
     "viewPremadeQuizzes": "View pre-made quizzes",
-    "yourQuizzes": "Your quizzes"
+    "yourQuizzes": "Your quizzes",
+    "pagination": {
+      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes."
+    }
   },
   "auth": {
     "ageCheckFailed": {
       "ageRestriction": "Unfortunately, we aren't able to offer accounts to students under 13 years old.",
       "freeAccessNote": "<b>However, you can still access the whole site for free!</b> However you will not be able to track your progress.",
-      "returnButton": "Back to the site"
+      "returnButton": "Go home"
     },
     "closeButton": "Close",
     "emailInput": {
@@ -310,7 +313,9 @@
       "ukEngland": "<b>England:</b> GCSE and A Level",
       "ukScotland": "<b>Scotland:</b> National 5, Higher, and Advanced Higher",
       "ukTitle": "In the UK",
-      "ukWales": "<b>Wales:</b> GCSE and A Level"
+      "ukWales": "<b>Wales:</b> GCSE and A Level",
+      "seeUkSpecifications": "See UK specifications",
+      "seeCurriculum": "See the Ada CS curriculum"
     },
     "explore": {
       "studentsButton": "Explore Ada CS for students",

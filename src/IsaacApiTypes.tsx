@@ -660,6 +660,7 @@ export interface FigureRegion {
     width: number;
     left: number;
     top: number;
+    boxAlign?: "left" | "center" | "right";
 }
 
 export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "foundation" | "core" | "advanced" | "post_18" | "all";
@@ -785,7 +786,7 @@ export interface AdminSearchEndpointParams {
     familyName?: string;
     role?: UserRole;
     schoolOther?: string;
-    schoolURN?: string;
+    schoolId?: string;
     emailVerificationStatus?: EmailVerificationStatus;
     subjectOfInterest?: string;
 }
@@ -918,7 +919,7 @@ export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTEND
 export const USER_ROLES = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
-export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
+export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED" | "AGE_RESTRICTED";
 
 export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETAILED_FEEDBACK";
 

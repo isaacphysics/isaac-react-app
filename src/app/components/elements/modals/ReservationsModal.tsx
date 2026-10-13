@@ -361,8 +361,8 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </Table>
 
                             {/* Contact details for main supervisor */}
-                            <div className={"mt-2 mb-3"}>
-                                <h4>{t("common:events.reservations.supervisorContactTitle")}</h4>
+                            <div className="mt-2 mb-3">
+                                <h2 className="h4">{t("common:events.reservations.supervisorContactTitle")}</h2>
                                 <p>{t("common:events.reservations.supervisorContactDescription")}</p>
                                 <Row>
                                     <Col md={6}>
@@ -389,8 +389,8 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </div>
 
                             {/* Additional booking information for teachers */}
-                            <div className={"mt-2 mb-3"}>
-                                <h4>{t("common:events.reservations.additionalInfoTitle")}</h4>
+                            <div className="mt-2 mb-3">
+                                <h2 className="h4">{t("common:events.reservations.additionalInfoTitle")}</h2>
                                 <p>
                                     {t("common:events.reservations.additionalInfoDescription")}
                                 </p>

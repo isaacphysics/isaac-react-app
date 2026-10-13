@@ -40,14 +40,10 @@ describe('Required field validation', () => {
         const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
 
         // Assert
-        expect(actual).toEqual({
+        expect(actual).toMatchObject({
             "email": false,
             "familyName": false,
             "givenName": false,
-            "countryCode": true,
-            "emailPreferences": true,
-            "school": true,
-            "userContexts": true
         });
     });
 
@@ -61,15 +57,9 @@ describe('Required field validation', () => {
 
             // Assert
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
                 "countryCode": false,
-                "emailPreferences": true,
-                "school": true,
-                "userContexts": true
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
 
     } else {
@@ -82,15 +72,9 @@ describe('Required field validation', () => {
 
             // Assert
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
                 "countryCode": false,
-                "emailPreferences": true,
-                "school": true,
-                "userContexts": true
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
     }
 
@@ -104,15 +88,9 @@ describe('Required field validation', () => {
 
             // Assert
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
-                "countryCode": true,
-                "emailPreferences": true,
                 "school": true,
-                "userContexts": true
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
 
         it("requires school for TEACHER on Ada CS", () => {
@@ -124,15 +102,9 @@ describe('Required field validation', () => {
 
             // Assert
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
-                "countryCode": true,
-                "emailPreferences": true,
                 "school": false,
-                "userContexts": true
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
 
     } else {
@@ -145,15 +117,9 @@ describe('Required field validation', () => {
 
             // Assert
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
-                "countryCode": true,
-                "emailPreferences": true,
                 "school": true,
-                "userContexts": true
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
     }
 
@@ -167,15 +133,9 @@ describe('Required field validation', () => {
 
             // Arrange
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
-                "countryCode": true,
-                "emailPreferences": true,
-                "school": true,
-                "userContexts": true
+                "userContexts": true,
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
     } else {
         it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires non-default user context for %s on Isaac", (role) => {
@@ -187,58 +147,83 @@ describe('Required field validation', () => {
 
             // Arrange
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
-                "countryCode": true,
-                "emailPreferences": true,
-                "school": true,
                 "userContexts": false
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
     }
 
-    if(isAda) {
-        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require non-default email preferences for %s on Ada CS", (role) => {
+    it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires non-default email preferences for %s", (role) => {
+        // Arrange
+        const user = {...testUser, user: {...testUser.user, role: role}, prefs: {"EMAIL_PREFERENCE": EMAIL_PREFERENCE_DEFAULTS}};
+
+        // Act
+        const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
+
+        // Arrange
+        const expected = {
+            "emailPreferences": false,
+        };
+        expect(actual).toMatchObject(expected);
+    });
+
+    if (isAda) {
+        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires specified gender for %s for Ada CS", (role) => {
             // Arrange
-            const user = {...testUser, user: {...testUser.user, role: role}, prefs: {"EMAIL_PREFERENCE": EMAIL_PREFERENCE_DEFAULTS}};
+            const user = {...testUser, user: {...testUser.user, role: role, gender: undefined}};
 
             // Act
             const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
 
-            // Arrange
+            // Assert
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
-                "countryCode": true,
-                "emailPreferences": true,
-                "school": true,
-                "userContexts": true
+                "gender": false,
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
     } else {
-        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires non-default email preferences for %s on Isaac", (role) => {
+        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require specified gender for %s for Isaac", (role) => {
             // Arrange
-            const user = {...testUser, user: {...testUser.user, role: role}, prefs: {"EMAIL_PREFERENCE": EMAIL_PREFERENCE_DEFAULTS}};
+            const user = {...testUser, user: {...testUser.user, role: role, gender: undefined}};
 
             // Act
             const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
 
-            // Arrange
+            // Assert
             const expected = {
-                "email": true,
-                "familyName": true,
-                "givenName": true,
-                "countryCode": true,
-                "emailPreferences": false,
-                "school": true,
-                "userContexts": true
+                "gender": true,
             };
-            expect(actual).toEqual(expected);
+            expect(actual).toMatchObject(expected);
         });
     }
 
+    if (isAda) {
+        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires specified date of birth for %s for Ada CS", (role) => {
+            // Arrange
+            const user = {...testUser, user: {...testUser.user, role: role, dateOfBirth: undefined}};
+
+            // Act
+            const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
+
+            // Assert
+            const expected = {
+                "dateOfBirth": false,
+            };
+            expect(actual).toMatchObject(expected);
+        });
+    } else {
+        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require specified date of birth for %s for Isaac", (role) => {
+            // Arrange
+            const user = {...testUser, user: {...testUser.user, role: role, dateOfBirth: undefined}};
+
+            // Act
+            const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
+
+            // Assert
+            const expected = {
+                "dateOfBirth": true,
+            };
+            expect(actual).toMatchObject(expected);
+        });
+    }
 });

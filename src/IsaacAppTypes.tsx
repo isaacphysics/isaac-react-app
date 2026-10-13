@@ -63,7 +63,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
-
+    | {type: ACTION_TYPE.ACCESSIBILITY_TYPE_SET; accessibilityType: AccessibilitySettings}
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; authResponse: ApiTypes.AuthenticationResponseDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
@@ -235,6 +235,11 @@ export interface AccessibilitySettings {
     PREFER_MATHML?: boolean;
     REDUCED_MOTION?: boolean;
     SHOW_INACCESSIBLE_WARNING?: boolean;
+    NON_DRAGGING_INPUTS?: boolean;
+}
+
+export interface AccessibilitySettingsWithOverride extends AccessibilitySettings {
+    MANUAL_OVERRIDE?: boolean;
 }
 
 export interface UserConsent {
@@ -464,6 +469,7 @@ export const DragAndDropRegionContext = React.createContext<(
     nonSelectedItems: Immutable<ReplaceableItem>[],
     allItems: Immutable<ReplaceableItem>[],
     zoneIds: Set<string>,
+    dragAndDropEnabled: boolean;
 } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
@@ -700,7 +706,6 @@ export type LevelAttempts<T> = { [level in Levels]?: T; }
 interface TagInstruction {
     hidden?: boolean; comingSoonDate?: string; new?: boolean;
 }
-
 export interface BaseTag {
     id: TAG_ID;
     title: string;
@@ -715,6 +720,15 @@ export interface BaseTag {
 export interface Tag extends BaseTag {
     type: TAG_LEVEL;
     level: number;
+}
+
+export interface AdaTopicBase {
+    // inherits similar properties to BaseTag, but explicitly used for topic contents which may not be tags. must include URL, unlike tags.
+    title: string;
+    url: string | undefined;
+    comingSoonDate?: string;
+    new?: boolean;
+    hidden?: boolean;
 }
 
 export interface Choice extends ChoiceDTO {
@@ -802,3 +816,5 @@ export type PageContextState = {
     subject?: Subject;
     previousContext?: Omit<PageContextState, "previousContext">;
 } | null | undefined;
+
+export type PodLayout = "flush" | undefined;

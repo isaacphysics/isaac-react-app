@@ -28,7 +28,7 @@ const GroupJoinPanel = () => {
     }
 
     return <div className='w-100 dashboard-panel'>
-        <h4>{t("common:dashboard.groupJoin.title")}</h4>
+        <h2 className="panel-title">{t("common:dashboard.groupJoin.title")}</h2>
         {t("common:dashboard.groupJoin.description")}
         <InputGroup className="my-4 separate-input-group">
             <Input
@@ -66,7 +66,7 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
     const inStreakFreezeRange = new Date(1766361600000) <= new Date() && new Date() <= new Date(1767571200000);
 
     return <div className='w-100 dashboard-panel'>
-        <h4>{t("common:dashboard.streak.title")}</h4>
+        <h2 className="panel-title">{t("common:dashboard.streak.title")}</h2>
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
@@ -134,10 +134,10 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
 
     return <Link to={link} className="w-100">
         <Card className="assignment-card px-3 d-flex flex-column h-100">
-            <h5 className="d-inline">
+            <div className="assignment-card-title">
                 <i className={`${icon} icon-inline me-2`}/>
                 {title}
-            </h5>
+            </div>
             <Spacer/>
             <div className="d-flex text-nowrap">
                 {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">{t("common:dashboard.currentWork.overdue")}</span> : <span className="me-3">{t("common:dashboard.currentWork.dueDate", { dueLabel: getFriendlyDaysUntil(dueDate) })}</span>)}
@@ -162,7 +162,7 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
     const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
-        <h4>{t("common:dashboard.currentWork.title")}</h4>
+        <h2 className="panel-title">{t("common:dashboard.currentWork.title")}</h2>
         {toDo.length === 0 
             ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">
                 <span className="mb-2 row d-flex justify-content-center">{t("common:dashboard.currentWork.emptyState")}</span>
@@ -198,7 +198,7 @@ interface MyIsaacPanelProps {
 const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
     const { t } = useTranslation();
     return <div className='w-100 dashboard-panel'>
-        <h4>{t("common:dashboard.myIsaac.title")}</h4>
+        <h2 className="panel-title">{t("common:dashboard.myIsaac.title")}</h2>
         <div className="d-flex flex-column">
             <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
                 {t("common:dashboard.myIsaac.savedDecks")}
@@ -238,7 +238,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <h3>{t("common:dashboard.greeting", { studentName: nameToDisplay })}</h3>}
+        {nameToDisplay && <h1 className="text-wrap h3">{t("common:dashboard.greeting", { studentName: nameToDisplay })}</h1>}
         {deviceSize === "lg"
             ? <>
                 <Row>

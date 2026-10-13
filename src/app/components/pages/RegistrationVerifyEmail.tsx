@@ -93,7 +93,7 @@ export const RegistrationVerifyEmail = () => {
                         <Row className="justify-content-center">
                             {verifyingCurrentUser ?
                                 <>
-                                    <h4 className="mb-3">{t("common:auth.verifyEmail.resendPrompt")}</h4>
+                                    <div className="mb-3 h4">{t("common:auth.verifyEmail.resendPrompt")}</div>
                                     <p>
                                         {verificationNotResent ?
                                             <Button onClick={requestNewVerificationEmail}>

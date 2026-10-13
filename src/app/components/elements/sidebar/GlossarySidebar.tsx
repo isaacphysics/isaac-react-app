@@ -54,12 +54,12 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     return <ContentSidebar buttonTitle={t("common:glossary.sidebar.searchTitle")} optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>{t("common:glossary.sidebar.searchTitle")}</h5>
+            <h3 className="h5">{t("common:glossary.sidebar.searchTitle")}</h3>
             <GlossarySearch searchText={searchText} setSearchText={setSearchText} />
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>
-                <h5>{t("common:glossary.sidebar.selectSubjectTitle")}</h5>
+                <h3 className="h5">{t("common:glossary.sidebar.selectSubjectTitle")}</h3>
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
@@ -72,7 +72,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             {!pageContext?.subject && !pageContext?.stage?.length && <div className="section-divider"/>}
 
             {!pageContext?.stage?.length && <>
-                <h5 className="mt-4">{t("common:glossary.sidebar.selectStageTitle")}</h5>
+                <h3 className="mt-4 h5">{t("common:glossary.sidebar.selectStageTitle")}</h3>
                 <ul>
                     <li>
                         <StyledTabPicker checkboxTitle={t("common:sidebar.filter.all")} data-bs-theme={filterSubject?.id}
@@ -88,7 +88,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             </>}
 
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
-                <h5>{t("common:glossary.sidebar.switchStageTitle")}</h5>
+                <h3 className="h5">{t("common:glossary.sidebar.switchStageTitle")}</h3>
                 <ul>
                     {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) =>
                         <li key={index}>

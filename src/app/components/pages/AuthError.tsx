@@ -33,9 +33,9 @@ const ErrorMessage = ({ state }: { state?: State }) => {
 };
 
 const GenericError = ({ state }: { state?: State }) => <>
-    <h3>
+    <h2 className="h3">
         {state?.errorMessage || ""}
-    </h3>
+    </h2>
     <p>
         An error occurred while attempting to log in.
         <br />
@@ -50,7 +50,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
     const provider = state?.provider === 'google' ? "Google" : "Microsoft";
 
     return <>
-        <h3>{t("common:auth.notLinked.title", { provider })}</h3>
+        <h2 className="h3">{t("common:auth.notLinked.title", { provider })}</h2>
         <p>
             {t("common:auth.notLinked.explanation", { siteName: SITE_TITLE_SHORT, provider, siteAccountName: SITE_TITLE_SHORT, providerAccount: provider, signInProvider: provider, siteAccount: SITE_TITLE_SHORT, alternateProvider: provider })}
         </p>
@@ -68,7 +68,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
 };
 
 const ConsentMissingMicrosoft = () => <>
-    <h3>{i18next.t("common:auth.consent.title")}</h3>
+    <h2 className="h3">{i18next.t("common:auth.consent.title")}</h2>
     <p>
         {i18next.t("common:auth.consent.explanation", { siteTitle: SITE_TITLE_SHORT })}
     </p>

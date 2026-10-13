@@ -30,7 +30,7 @@ export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>{t("common:account.theme.title")}</h3>
+            <h2 className="h3">{t("common:account.theme.title")}</h2>
         </>}
         rightColumn={<>
             <span>{t("common:account.theme.description")}</span>

@@ -25,7 +25,7 @@ export const TutorFeatures = () => {
             {t("common:teacherFeatures.tutor.description")}
         </PageMetadata>
         <Row className="my-4">
-            <h4>{t("common:teacherFeatures.tutor.workflowTitle")}</h4>
+            <h2 className="h4">{t("common:teacherFeatures.tutor.workflowTitle")}</h2>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
@@ -57,7 +57,7 @@ export const TutorFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <h4>{t("common:teacherFeatures.tutor.resourcesTitle")}</h4>
+            <h2 className="h4">{t("common:teacherFeatures.tutor.resourcesTitle")}</h2>
         </Row>
         <Row className="isaac-cards-body mb-7 px-3 row-gap-4">
             <Col sm={6} md={4}>

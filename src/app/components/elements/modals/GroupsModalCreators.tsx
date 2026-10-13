@@ -92,17 +92,17 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             defaultErrorTitle={t("common:groups.invite.errorTitle")}
             thenRender={token => <div className="d-flex flex-column gap-3">
                 <div>
-                    {firstTime && <h3>{t("common:groups.invite.membersHeading")}</h3>}
+                    {firstTime && <h2 className="h3">{t("common:groups.invite.membersHeading")}</h2>}
                     <p>{t("common:groups.invite.shareIntro")}</p>
                     <p className={"mb-0"}>{t("common:groups.invite.studentInfo")}</p>
                 </div>
                 <div>
-                    <h3>{t("common:groups.invite.linkHeading")}</h3>
+                    <h2 className="h3">{t("common:groups.invite.linkHeading")}</h2>
                     <p>{t("common:groups.invite.linkDescription")}</p>
                     <ReadonlyClipboardInput data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
                 </div>
                 <div>
-                    <h3>{t("common:groups.invite.qrHeading")}</h3>
+                    <h2 className="h3">{t("common:groups.invite.qrHeading")}</h2>
                     <p>{t("common:groups.invite.qrDescription")}</p>
                     {showQR
                         ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} groupName={group.groupName} />
@@ -116,12 +116,12 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                     }
                 </div>
                 <div>
-                    <h3>{t("common:groups.invite.codeHeading")}</h3>
+                    <h2 className="h3">{t("common:groups.invite.codeHeading")}</h2>
                     <p><Trans i18nKey="common:groups.invite.codeDescription" components={{ accountPage: <b />, teacherConnections: <b /> }} values={{ siteTitle: SITE_TITLE_SHORT }} /></p>
                     <ReadonlyClipboardInput data-testid={"share-code"} value={token?.token} />
                 </div>
                 <div>
-                    <h3>{t("common:groups.invite.nextSteps")}</h3>
+                    <h2 className="h3">{t("common:groups.invite.nextSteps")}</h2>
                 </div>
             </div>}
         />
@@ -193,7 +193,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     }
 
     function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
-        let confirm_text = "";
+        let confirm_text;
         if (group?.additionalManagerPrivileges) {
             confirm_text = t("common:groups.managers.promote.confirmWithPrivileges");
         } else {
@@ -241,8 +241,8 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <h3>{t("common:groups.managers.selectedGroup", { groupName: group.groupName })}</h3>
-        <h4>{t("common:groups.managers.permissions.heading")}</h4>
+        <h2 className="h3">{t("common:groups.managers.selectedGroup", { groupName: group.groupName })}</h2>
+        <h3 className="h4">{t("common:groups.managers.permissions.heading")}</h3>
         <p>
             {t("common:groups.managers.permissions.intro")}
             <ul>
@@ -254,7 +254,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
-            <h4>{t("common:groups.managers.ownerHeading")}</h4>
+            <h3 className="h4">{t("common:groups.managers.ownerHeading")}</h3>
             <Table className="group-table">
                 <tbody>
                     <tr key={group.ownerSummary.email} data-testid={"group-owner"}>
@@ -265,7 +265,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             </Table>
         </div>}
 
-        <h4>{t("common:groups.managers.currentHeading")}</h4>
+        <h3 className="h4">{t("common:groups.managers.currentHeading")}</h3>
 
         {additionalManagers.length == 0 &&
             <p>{t("common:groups.managers.emptyState")}</p>}
@@ -338,7 +338,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         </Alert>}
 
         {(userIsOwner || group.additionalManagerPrivileges) && <>
-            <h4 className="mt-3">{t("common:groups.managers.addSectionTitle")}</h4>
+            <h3 className="mt-3 h4">{t("common:groups.managers.addSectionTitle")}</h3>
             <p>{t("common:groups.managers.addInstructions", { siteTitle: SITE_TITLE_SHORT })}</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder={t("common:groups.managers.emailPlaceholder")} onChange={event => setNewManagerEmail(event.target.value)}/>

@@ -1,10 +1,7 @@
-.sidebar {
-    background-color: $cs-white;
-}
+$expanded_width: 220px;
+$collapsed_width: 69px; // 2*20px padding + 24px icon + 5px border
 
 :not(.offcanvas-body) > .sidebar {
-    background-color: $cs-white;
-
     @include not-reduced-motion {
         transition: all 0.3s ease-out;
         
@@ -12,31 +9,56 @@
             transition: opacity 0.3s ease-out;
             white-space: nowrap;
         }
+
+        .background-white {
+            transition: all 0.3s ease-out;
+        }
     }
 
     &:not(.collapsed) {
-        width: 220px;
-        max-width: 220px;
-        min-width: 220px;
+        width: $expanded_width;
+        max-width: $expanded_width;
+        min-width: $expanded_width;
 
         b {
             opacity: 1;
         }
+
+        .background-white {
+            width: $expanded_width;
+        }
     }
 
     &.collapsed {
-        width: 69px; // 2*20px padding + 24px icon + 5px border
-        max-width: 69px;
-        min-width: 69px;
+        width: $collapsed_width;
+        max-width: $collapsed_width;
+        min-width: $collapsed_width;
 
         b {
             opacity: 0;
             max-width: 0;
         }
+
+        .background-white {
+            width: $collapsed_width;
+        }
     }
 
     button i {
         --mask-size: 60%;
+    }
+
+    .background-white {
+        // Fixes https://trello.com/c/VZJoEykw/6210-my-ada-sidebar-background-not-reaching-bottom-of-small-pages,
+        // a local workaround to setting `display: flex` on <main>. DOM order paint means this is covered up just right.
+        height: 0;
+
+        &::before {
+            display: block;
+            content: '';
+            background-color: $cs-white;
+            height: 10000vh; // just needs to be something big enough
+        }
     }
 }
 

@@ -51,11 +51,11 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         className="a-alt"
                         onClick={() => printWithHintsAndLoadedFonts(dispatch, true)}
                     ><Trans
-                        i18nKey="common:printButton.withHints.label"
-                        components={{
-                            visuallyHidden: <span className="visually-hidden" />,
-                        }}
-                    />
+                            i18nKey="common:printButton.withHints.label"
+                            components={{
+                                visuallyHidden: <span className="visually-hidden" />,
+                            }}
+                        />
                     </Button>
                     |
                     <Button
@@ -65,11 +65,11 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         className="a-alt"
                         onClick={() => printWithHintsAndLoadedFonts(dispatch, false)}
                     ><Trans
-                        i18nKey="common:printButton.withoutHints.label"
-                        components={{
-                            visuallyHidden: <span className="visually-hidden" />,
-                        }}
-                    /></Button>
+                            i18nKey="common:printButton.withoutHints.label"
+                            components={{
+                                visuallyHidden: <span className="visually-hidden" />,
+                            }}
+                        /></Button>
                 </div>
             </div>}
             <IconButton

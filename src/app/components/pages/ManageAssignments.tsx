@@ -57,9 +57,9 @@ const FindDeckButtons = () => {
     const dispatch = useAppDispatch();
     return <>
         <PageFragment fragmentId={"manage_assignments_set_new_modal_text"} ifNotFound={RenderNothing} />
-        <h4 className="mb-3">
+        <h2 className="mb-3 h4">
             {t("common:assignments.manage.findDeckFrom")}
-        </h4>
+        </h2>
         <Row className="d-flex row-cols-1 row-cols-md-2 row-gap-3 mb-5">
             <Col>
                 <Button onClick={() => {
@@ -193,7 +193,7 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
                     <Hexagon className={"fill-secondary"} {...dateHexagon}/>
                     <foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
                         <div className={"position-relative w-100"}>
-                            <h4 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h4>
+                            <div className={"position-absolute text-white h4"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</div>
                         </div>
                     </foreignObject>
                 </svg>
@@ -257,7 +257,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
                     </svg>
                 </svg>
             </div>
-            <h4>{`${MONTH_NAMES[month]}`}</h4>
+            <div className="h4">{`${MONTH_NAMES[month]}`}</div>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
             <span className={"pt-1 month-assignment-count"}>
                 {assignmentCount > 0 && <>{t("common:assignments.counts.assignments", { count: assignmentCount })}</>}
@@ -477,10 +477,10 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                         <CardBody>
                             <Row className={classNames("row-cols-1", { "row-cols-md-2": isTeacherOrAbove(user) })}>
                                 <Col>
-                                    <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><h5 className="mb-0">{i18next.t("common:assignments.manage.setNewButton")}</h5></Button>
+                                    <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><div className="mb-0 h5">{i18next.t("common:assignments.manage.setNewButton")}</div></Button>
                                 </Col>
                                 {isTeacherOrAbove(user) && <Col>
-                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><h5 className="mb-0">{i18next.t("common:assignments.manage.setNewTestButton")}</h5></Button>
+                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><div className="mb-0 h5">{i18next.t("common:assignments.manage.setNewTestButton")}</div></Button>
                                 </Col>}
                             </Row>
                             <div className="section-divider-bold" />
@@ -493,7 +493,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                                 {i18next.t("common:assignments.manage.noMatchingWork")}
                             </div>}
                             {groups && groups.length > 0 && !someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
-                                {i18next.t("common:assignments.manage.noWorkSet")}
+                                {isTeacherOrAbove(user) ? i18next.t("common:assignments.manage.noWorkSet") : i18next.t("common:assignments.manage.noWorkSetTutor")}
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
@@ -504,7 +504,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                                 {workGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
                                         <div className="year-label w-100 text-end">
-                                            <h3 className="mb-n3">{`${y}`}</h3>
+                                            <div className="mb-n3 h3">{`${y}`}</div>
                                             <hr className="ms-4"/>
                                         </div>
                                         {ms.map(([m, ds]) => <MonthWorkList key={m} year={y} month={m} datesAndWork={ds}/>)}

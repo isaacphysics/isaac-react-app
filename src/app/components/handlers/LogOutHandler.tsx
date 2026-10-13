@@ -11,9 +11,9 @@ export const LogOutHandler = () => {
     }, []);
     return <>
         <div className="w-100 text-center">
-            <h2 className="pt-7 pb-2">
+            <div className="pt-7 pb-2 h2">
                 {t("common:auth.logout.loggingOut")}
-            </h2>
+            </div>
             <IsaacSpinner />
         </div>
     </>;

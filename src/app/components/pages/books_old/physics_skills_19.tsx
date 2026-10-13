@@ -21,7 +21,7 @@ export const PhysicsSkills19 = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>{t("sci:books.physicsSkills19.asLevelHeading")}</h4>
+                    <div className="h4">{t("sci:books.physicsSkills19.asLevelHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'phys19_a_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterGeneralQuestions")} chapterIcon={'A'}/>
@@ -43,7 +43,7 @@ export const PhysicsSkills19 = () => {
                             <BookChapter chapterId={'phys19_e_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterUncertainties")} chapterIcon={'E'}/>
                         </Col>
                     </Row>
-                    <h4>{t("sci:books.physicsSkills19.a2LevelHeading")}</h4>
+                    <div className="h4">{t("sci:books.physicsSkills19.a2LevelHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'phys19_f_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterMechanicsA2")} chapterIcon={'F'}/>

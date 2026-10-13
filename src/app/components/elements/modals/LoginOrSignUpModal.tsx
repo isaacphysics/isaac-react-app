@@ -7,8 +7,8 @@ import {
     PasswordResetButton,
     SsoHelpLink,
     TFAInput,
-    useLoginLogic
-} from "../../pages/LogIn";
+} from "../LogInInputs";
+import { useLoginLogic } from "../../../services/login";
 import {isAda, isPhy, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
@@ -54,7 +54,7 @@ const LoginOrSignUpBody = () => {
                 )}
             </div>
             <div className={"px-3 mb-4"}>
-                <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
+                <h1 className={"h2 mb-lg-3 mt-2"}>
                     {t("common:auth.modalTitle")}<br/>
                 </h1>
                 <p><Trans i18nKey="common:auth.modalBody" components={{ saveProgress: <b />, signUpFree: <b /> }} /></p>
@@ -78,25 +78,23 @@ const LoginOrSignUpBody = () => {
                             passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                             errorMessage={errorMessage} displayLabels={false} />
 
-                        <h5 role="alert" className="text-danger text-end mb-0 py-1">
+                        <div role="alert" className="text-danger text-end mb-0 py-1 h5">
                             {errorMessage}
-                        </h5>
-                        <Row className={classNames("mb-4", {"mt-2": isAda})}>
-                            <Col className={"col-6 mt-1 d-flex"}>
+                        </div>
+                        <div className={classNames("mb-4 d-flex justify-content-between flex-wrap-reverse", {"mt-2": isAda})}>
+                            <div className={"me-4 mt-1"}>
                                 <StyledCheckbox
                                     id="rememberMe" 
                                     checked={rememberMe} 
                                     onChange={e => setRememberMe(e.target.checked)}
                                     label={<p>{t("common:auth.rememberMe")}</p>} className='mb-4'
                                 />
-                            </Col>
-                            <Col className="align-content-center">
-                                <PasswordResetButton 
-                                    email={email} isValidEmail={isValidEmail} 
-                                    setPasswordResetAttempted={setPasswordResetAttempted}
-                                />
-                            </Col>
-                        </Row>
+                            </div>
+                            <PasswordResetButton 
+                                email={email} isValidEmail={isValidEmail} 
+                                setPasswordResetAttempted={setPasswordResetAttempted}
+                            />
+                        </div>
 
                         <Button
                             id="log-in"

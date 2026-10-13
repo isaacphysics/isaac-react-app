@@ -85,7 +85,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
             {isDefined(error) && <>
                 <TitleAndBreadcrumb currentPageTitle={t("common:tests.feedback.title")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <h4 className="alert-heading">{t("common:tests.feedback.error.heading")}</h4>
+                    <div className="alert-heading h4">{t("common:tests.feedback.error.heading")}</div>
                     <p>{error}</p>
                 </Alert>
             </>}

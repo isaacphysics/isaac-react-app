@@ -156,7 +156,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     // Focus on the feedback banner after submission
     useEffect(() => {
-        if (hasSubmitted) {
+        if (hasSubmitted && !isInlineQuestion) {
             feedbackRef.current?.focus();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,10 +196,6 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const fastTrackPrimaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) : null;
     const fastTrackSecondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
 
-    const checkAnswerButtonProps = isInlineQuestion 
-        ? {disabled: !canSubmit, onClick: () => submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts)} 
-        : {disabled: !canSubmit || awaitingFeedback};
-
     const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
 
@@ -210,7 +206,11 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            void submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
+            if (isInlineQuestion) {
+                void submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
+            } else {
+                void submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
+            }
             setHasSubmitted(true);
             setSentFeedback(false);
         }}>
@@ -240,22 +240,18 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
-                    <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
-                        {
-                            <h1 className="m-0">
-                                {correct ? t("common:questions.feedback.correct") :
-                                    tooManySigFigsError ? t("common:questions.feedback.tooManySigFigs") :
-                                        tooFewSigFigsError ? t("common:questions.feedback.tooFewSigFigs") :
-                                            almost ? t("common:questions.feedback.partlyCorrect") :
-                                                t("common:questions.feedback.incorrect")
-                                }
-                            </h1>
+                    <div className={classNames("pb-1", siteSpecific("response-heading", "h1"))} tabIndex={-1} ref={feedbackRef}>
+                        {correct ? t("common:questions.feedback.correct") :
+                            tooManySigFigsError ? t("common:questions.feedback.tooManySigFigs") :
+                                tooFewSigFigsError ? t("common:questions.feedback.tooFewSigFigs") :
+                                    almost ? t("common:questions.feedback.partlyCorrect") :
+                                        t("common:questions.feedback.incorrect")
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 && isDefined(inlineContext?.feedbackIndex) ? <>
                             <span>{t("common:questions.inlineFeedback.selectBox")}</span>
-                            <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
+                            <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
@@ -296,7 +292,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         <div className={classNames("submission-buttons d-flex align-items-stretch flex-column-reverse flex-sm-row flex-lg-row")}>
                             {isFastTrack 
                                 ? <FastTrackSubmissionButtons fastTrackPrimaryAction={fastTrackPrimaryAction} fastTrackSecondaryAction={fastTrackSecondaryAction} />
-                                : <Button {...checkAnswerButtonProps} className="mx-auto w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
+                                : <Button disabled={!canSubmit || awaitingFeedback} className="mx-auto w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
                             }
                         </div>
                 }

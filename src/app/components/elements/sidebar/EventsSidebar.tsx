@@ -20,7 +20,7 @@ export const EventsSidebar = (props: SidebarProps) => {
     return <ContentSidebar buttonTitle={t("common:events.sidebar.filterButtonTitle")} {...props}>
         <Form tag={"search"}>
             {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
-            <h5 className="mb-3">{t("common:events.sidebar.eventTypeLabel")}</h5>
+            <h3 className="mb-3 h5">{t("common:events.sidebar.eventTypeLabel")}</h3>
             <ul>
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
@@ -49,7 +49,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h5 className="mb-3">{t("common:events.sidebar.groupsLabel")}</h5>
+            <h3 className="mb-3 h5">{t("common:events.sidebar.groupsLabel")}</h3>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li key={typeValue}>
@@ -67,7 +67,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h5 className="mb-3">{t("common:events.sidebar.stagesLabel")}</h5>
+            <h3 className="mb-3 h5">{t("common:events.sidebar.stagesLabel")}</h3>
             <ul>
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li key={value}>

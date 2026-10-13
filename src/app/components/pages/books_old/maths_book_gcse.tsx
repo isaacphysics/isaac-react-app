@@ -25,7 +25,7 @@ export const MathsBookGcse = () => {
                 <Tabs style="tabs" tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2">
                     {{
                         'Boards for Class and Homework': <Col>
-                            <h4>{t("common:books.chaptersHeading")}</h4>
+                            <div className="h4">{t("common:books.chaptersHeading")}</div>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_maths_ch1_boards'} chapterTitle={t("sci:books.gcseMaths.chapter1Title")} chapterSubHeading={t("sci:books.gcseMaths.chapter1Subheading")} chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}/>
@@ -65,7 +65,7 @@ export const MathsBookGcse = () => {
                             </Row>
                         </Col>,
                         'Boards Containing all Questions': <Col>
-                            <h4>{t("common:books.chaptersHeading")}</h4>
+                            <div className="h4">{t("common:books.chaptersHeading")}</div>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_maths_ch1_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter1Title")} chapterSubHeading={t("sci:books.gcseMaths.chapter1Subheading")} chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}/>

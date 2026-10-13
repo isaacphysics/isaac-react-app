@@ -236,10 +236,15 @@
 }
 
 .bg-grey {
-  background: $color-neutral-200 !important;
+  background: var(--color-neutral-200) !important;
 }
 
 .bg-inline-question:not(:active) {
-  background: $color-neutral-200 !important;
-  background: color-mix(in srgb, $color-neutral-300 50%, transparent 50%) !important;
+  background: var(--color-neutral-200) !important;
+  background: color-mix(in srgb, var(--color-neutral-300) 50%, transparent 50%) !important;
+}
+
+.bg-inline-question:active {
+  background: var(--color-neutral-100) !important;
+  background: color-mix(in srgb, var(--color-neutral-200) 50%, transparent 50%) !important;
 }

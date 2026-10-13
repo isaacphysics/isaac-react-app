@@ -12,7 +12,10 @@ const revisionApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: () => i18next.t("common:revision.errorTitle")
             }),
-            keepUnusedDataFor: 60
+            providesTags: (page) => {
+                const boards = page?.gameboards?.map((gb) => ({type: "Gameboard" as const, id: gb.id})) || [];
+                return [...boards]; // required to refetch decks inside the detail page if saved status is updated
+            }
         }),
     })
 });

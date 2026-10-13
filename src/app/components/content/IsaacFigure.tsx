@@ -70,6 +70,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                         emptyHeight="100%"
                         rootElement={root || undefined}
                         skipPortalling={true}
+                        boxAlign={figureRegion.boxAlign}
                     />
                     : <InlineEntryZoneBase
                         inlineSpanId={parentId}
@@ -160,8 +161,8 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                         root: clozeDropRootElement.current, 
                                         style: (region: FigureRegion) => ({
                                             position: 'absolute',
-                                            left: `calc(${region.left}% - (max(${region.width}%, ${region.minWidth}) * ${(region.left)/100})`,
-                                            top: `calc(${region.top}% - (${regionHeight} * ${(region.top)/100})`,
+                                            left: `calc(${region.left}% - (max(${region.width}%, ${region.minWidth}) * ${(region.left)/100}))`,
+                                            top: `calc(${region.top}% - (${regionHeight} * ${(region.top)/100}))`,
                                             width: region.width ? `${region.width}%` : undefined,
                                             minWidth: region.minWidth,
                                             height: regionHeight,

@@ -182,7 +182,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             {limit < filteredAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    <Trans i18nKey="common:assignments.pagination.showingInfo" components={{ boldShown: <strong />, boldTotal: <strong /> }} values={{ shownCount: limit, totalCount: filteredAssignments.length }} />
+                                    <Trans i18nKey="site:assignments.pagination.showingInfo" components={{ boldShown: <strong />, boldTotal: <strong /> }} values={{ shownCount: limit, totalCount: filteredAssignments.length }} />
                                 </p>
                                 <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     {t("common:assignments.pagination.showMore")}

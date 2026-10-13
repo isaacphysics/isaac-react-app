@@ -143,7 +143,7 @@ const ContentNavAccordionWrapper = (props : ContentNavWrapperProps) => {
 
     return <Accordion className="explore-group mb-3" open={open} toggle={toggle} tag={"li"}>
         <AccordionItem>
-            <AccordionHeader targetId="1" tag={"h5"}>
+            <AccordionHeader targetId="1" tag={"div"}>
                 {title}
             </AccordionHeader>
             <AccordionBody accordionId="1" {...rest}>
@@ -249,7 +249,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     <StaticNavigationDropdown title={title} {...rest}>
                         {categories?.map((category, i) => {
                             return <div key={i}>
-                                <h5 className="px-4 m-0 py-2">{category.title}</h5>
+                                <div className="nav-list-title px-4 m-0 py-2">{category.title}</div>
                                 <ul className="plain-list">
                                     {category.subcategories.map((subcategory, j) => {
                                         return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject}>
@@ -268,7 +268,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
             : <ContentNavAccordionWrapper title={title}>
                 {categories?.map((category, i) => {
                     return <div key={i}>
-                        <h5 className="px-4 m-0 py-2">{category.title}</h5>
+                        <div className="px-4 m-0 py-2 nav-list-title">{category.title}</div>
                         <ul className="plain-list">
                             {category.subcategories.map((subcategory, j) => {
                                 return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
@@ -301,7 +301,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                     <div className="d-flex flex-column flex-grow-1">
 
                         {deviceSize === "xs" && isTutorOrAbove(user) && <>
-                            <h5 className="mt-2">{t("sci:navigation.profile.accountHeading")}</h5>
+                            <div className="nav-list-title mt-2">{t("sci:navigation.profile.accountHeading")}</div>
                             <ul className="plain-list">
                                 <NavigationItemClose href="/account">
                                     {t("sci:navigation.profile.myAccount")}
@@ -310,7 +310,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             <div className="section-divider" />
                         </>}
 
-                        {isTutorOrAbove(user) && <h5 className="pt-2 pt-sm-0">{t("sci:navigation.profile.studentHeading")}</h5>}
+                        {isTutorOrAbove(user) && <div className="nav-list-title pt-2 pt-sm-0">{t("sci:navigation.profile.studentHeading")}</div>}
                         <ul className="plain-list flex-grow-1">
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
                                 {t("sci:navigation.profile.savedDecks")}
@@ -336,7 +336,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                 ? <>
                                     <div className="section-divider me-n2" />
                                     <Spacer />
-                                    <h5 className="mt-2">{t("sci:navigation.profile.accountHeading")}</h5>
+                                    <div className="nav-list-title mt-2">{t("sci:navigation.profile.accountHeading")}</div>
                                 </>
                                 : <div className="section-divider" />
                             }
@@ -351,7 +351,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                     {isTutorOrAbove(user) && <>
                         <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
                         <div className="flex-grow-1">
-                            <h5 className="pt-2 pt-sm-0">{isTutor(user) ? "TUTOR" : "TEACHER"}</h5>
+                            <div className="nav-list-title pt-2 pt-sm-0">{isTutor(user) ? "TUTOR" : "TEACHER"}</div>
                             <ul className="plain-list">
                                 {isTutor(user)
                                     ? <NavigationItemClose href="/tutor_features">

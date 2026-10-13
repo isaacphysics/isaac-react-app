@@ -208,8 +208,8 @@ export const AdminUserManager = () => {
                             <FormGroup>
                                 <Label htmlFor="school-urn-search">{t("common:admin.userManager.search.schoolUrnLabel")}</Label>
                                 <Input
-                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
-                                    onChange={e => setParamIfNotDefault("schoolURN", e.target.value, "")}
+                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolId || undefined}
+                                    onChange={e => setParamIfNotDefault("schoolId", e.target.value, "")}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -234,7 +234,7 @@ export const AdminUserManager = () => {
 
         {/* Result panel */}
         <Card className="my-4">
-            <CardTitle data-testid="user-search-numbers" tag="h4" className="ps-4 pt-3 mb-0">
+            <CardTitle data-testid="user-search-numbers" className="ps-4 pt-3 mb-0 h4">
                 <Trans i18nKey="common:admin.userManager.results.title" components={{ br: <br /> }} values={{ resultCount: isDefined(searchResults) && searchResults.length || 0, selectedCount: selectedUserIds.length }} />
             </CardTitle>
 
@@ -350,7 +350,7 @@ export const AdminUserManager = () => {
             <hr/>
             <Card className={"my-4"}>
                 <CardBody>
-                    <h3>{t("common:admin.userManager.merge.title")}</h3>
+                    <div className="h3">{t("common:admin.userManager.merge.title")}</div>
                     <FormGroup className="form-group">
                         <InputGroup className={"separate-input-group d-flex align-items-center"}>
                             <Input

@@ -74,7 +74,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <CardBody className="pt-0 px-0">
                 <Row>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
-                    <h4>{t("common:account.mfa.title")}</h4>
+                    <h3 className="h4">{t("common:account.mfa.title")}</h3>
                 </Row>
                 {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
                     <Col>
@@ -87,7 +87,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                             <Form onSubmit={setupMFA}>
                                 <Row>
                                     <Col>
-                                        <h5>{t("common:account.mfa.configureTitle")}</h5>
+                                        <div className="h5">{t("common:account.mfa.configureTitle")}</div>
                                         <p><Trans i18nKey="common:account.mfa.stepOne" components={{ strong: <strong /> }} /></p>
                                         <div className="qrcode-mfa vertical-center">
                                             {qrCodeStringBase64SVG && <img

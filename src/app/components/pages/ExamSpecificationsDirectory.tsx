@@ -16,7 +16,7 @@ export const ExamSpecificationsDirectory = () => {
                 <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
-                            <h3>Ada CS</h3>
+                            <div className="h3">Ada CS</div>
                         </CardTitle>
                         <CardText>
                             <ul>
@@ -36,7 +36,7 @@ export const ExamSpecificationsDirectory = () => {
                 <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
-                            <h3>England</h3>
+                            <div className="h3">England</div>
                         </CardTitle>
                         <CardText>
                             <ul>
@@ -57,7 +57,7 @@ export const ExamSpecificationsDirectory = () => {
                 <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
-                            <h3>Scotland</h3>
+                            <div className="h3">Scotland</div>
                         </CardTitle>
                         <CardText>
                             <ul>
@@ -78,7 +78,7 @@ export const ExamSpecificationsDirectory = () => {
                 <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
-                            <h3>Wales</h3>
+                            <div className="h3">Wales</div>
                         </CardTitle>
                         <CardText>
                             <ul>

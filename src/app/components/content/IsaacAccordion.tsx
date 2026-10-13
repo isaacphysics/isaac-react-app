@@ -42,10 +42,10 @@ const StageInsert = ({stage}: {stage: string}) => {
     const isAdditional = stage.startsWith("additional");
     return <>
         <div className="section-divider mt-4 mb-3"/>
-        <h4>{isAdditional 
+        <div className="h4">{isAdditional 
             ? t("common:accordion.additionalStagesTitle") 
             : stageLabelMap[stage as keyof typeof stageLabelMap]
-        }</h4>
+        }</div>
         {isAdditional && <p className="small text-muted">
             {t("common:accordion.additionalStagesDescription")}
         </p>}

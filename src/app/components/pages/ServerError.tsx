@@ -16,7 +16,7 @@ export const ServerError = () => {
         <div>
             <TitleAndBreadcrumb currentPageTitle={t("common:serverError.title")} icon={{type: "icon", icon: "icon-error"}} />
 
-            <h3 className="my-4">{t("common:serverError.heading", { siteTitle: SITE_TITLE_SHORT })}</h3>
+            <div className="my-4 h3">{t("common:serverError.heading", { siteTitle: SITE_TITLE_SHORT })}</div>
 
             <p>
                 <Trans

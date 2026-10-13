@@ -72,7 +72,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     const [deleteUserBooking] = useDeleteUserBookingMutation();
     const [resendUserConfirmationEmail] = useResendUserConfirmationEmailMutation();
 
-    return <Accordion trustedTitle={t("common:events.manageBookings.title")}>
+    return <Accordion id="manage-current-bookings" trustedTitle={t("common:events.manageBookings.title")}>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
             {t("common:events.manageBookings.leaderRestriction")}
         </div>}

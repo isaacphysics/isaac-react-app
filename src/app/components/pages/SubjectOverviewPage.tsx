@@ -7,8 +7,11 @@ import { PageContextState } from "../../../IsaacAppTypes";
 import { convertToALVIGameboard, CustomListViewItemProps, ListView, ListViewCards, transformItemsForCustomListView } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
-import { GameboardDTO } from "../../../IsaacApiTypes";
 import { PageMetadata } from "../elements/PageMetadata";
+import { useGetGameboardByIdQuery } from "../../state";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { RenderNothing } from "../elements/RenderNothing";
 import { Trans, useTranslation } from "react-i18next";
 import { TransAnchor } from "../elements/TransAnchor";
 
@@ -79,27 +82,23 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 };
 
 const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {
-    const { t } = useTranslation();
-    const items: { [key in Subject]: GameboardDTO[] } = {
-        maths: [{
-            title: t("common:overview.sampleQuestions.maths"),
-            id: "sample_maths_questions",
-        }],
-        physics: [{
-            title: t("common:overview.sampleQuestions.physics"),
-            id: "sample_phy_questions",
-        }],
-        chemistry: [{
-            title: t("common:overview.sampleQuestions.chemistry"),
-            id: "sample_chem_questions",
-        }],
-        biology: [{
-            title: t("common:overview.sampleQuestions.biology"),
-            id: "sample_bio_questions",
-        }],
+    const gameboard_ids: { [key in Subject]: string } = {
+        maths: "sample_maths_questions_r2",
+        physics: "sample_phy_questions",
+        chemistry: "sample_chem_questions",
+        biology: "sample_bio_questions"
     };
 
-    return items[subject].length > 0 ? <ListView className={className} type="gameboard" items={items[subject].map(convertToALVIGameboard)} /> : null;
+    const gameboardByIdQuery = useGetGameboardByIdQuery(gameboard_ids[subject] ?? skipToken);
+
+    return <ShowLoadingQuery
+        query={gameboardByIdQuery}
+        defaultErrorTitle="Unable to load example questions"
+        ifNotFound={RenderNothing}
+        uninitializedPlaceholder={RenderNothing}
+        maintainOnRefetch
+        thenRender={(gameboard) => <ListView className={className} type="gameboard" items={[convertToALVIGameboard(gameboard)]}/>}
+    />;
 };
 
 export const SubjectOverviewPage = () => {

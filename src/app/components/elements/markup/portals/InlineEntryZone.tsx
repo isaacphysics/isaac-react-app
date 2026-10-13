@@ -27,6 +27,7 @@ export interface InlineEntryZoneProps<T> extends InputProps {
     questionDTO: T & AppQuestionDTO;
     contentClasses: string;
     contentStyle: React.CSSProperties,
+    index: number;
 }
 
 export interface InlineEntryZoneBaseProps {
@@ -154,25 +155,27 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, width, mi
             case "isaacNumericQuestion": {
                 return <InlineNumericEntryZone 
                     correctness={correctness}
-                    questionDTO={questionDTO as IsaacNumericQuestionDTO & AppQuestionDTO} 
+                    questionDTO={questionDTO as IsaacNumericQuestionDTO & AppQuestionDTO}
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
                     contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
+                    index={elementIndex}
                 />;
             }
             case "isaacStringMatchQuestion": {
                 return <InlineStringEntryZone 
                     correctness={correctness}
-                    questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO} 
+                    questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO}
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
                     contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
+                    index={elementIndex}
                 />;
             }
             case "isaacMultiChoiceQuestion": {
@@ -185,6 +188,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, width, mi
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
+                    index={elementIndex}
                 />;
             }
             case "isaacRegexMatchQuestion": {
@@ -197,6 +201,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, width, mi
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
+                    index={elementIndex}
                 />;
             }
         }

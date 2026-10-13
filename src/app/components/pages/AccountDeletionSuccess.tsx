@@ -18,7 +18,7 @@ export const AccountDeletionSuccess = () => {
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
-                        <h3>{t("common:account.deletionSuccess.title")}</h3>
+                        <h2 className="h3">{t("common:account.deletionSuccess.title")}</h2>
                     </Col>
                 </Row>
                 <Row className="justify-content-center">

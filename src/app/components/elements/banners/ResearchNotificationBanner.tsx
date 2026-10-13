@@ -12,10 +12,10 @@ const ResearchNotificationBannerBody = () => {
     const { t } = useTranslation();
     return <Row className="align-items-center" id="research-banner">
         <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
-            <h3 className="d-flex align-items-center justify-content-center gap-2">
+            <div className="d-flex align-items-center justify-content-center gap-2">
                 <i className="icon icon-info icon-sm icon-color-black" aria-hidden="true" />
-                <span id="research-heading" className="d-inline-block d-sm-none">{t("common:banners.research.heading")}</span>
-            </h3>
+                <span id="research-heading" className="d-inline-block d-sm-none h3">{t("common:banners.research.heading")}</span>
+            </div>
         </Col>
         <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
             <Trans i18nKey="site:banners.research.body" components={{ privacyLink: <Link to="/privacy" /> }} />

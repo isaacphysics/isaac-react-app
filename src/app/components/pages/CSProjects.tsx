@@ -44,7 +44,7 @@ export const CSProjects = () => {
         {allProjects.length === 0 ?
             <ShowLoadingQuery
                 query={projectsQuery}
-                thenRender={() => <div className={"w-100 text-start"}><h4>{t("common:projects.emptyState")}</h4></div>}
+                thenRender={() => <div className="w-100 text-start h4">{t("common:projects.emptyState")}</div>}
                 defaultErrorTitle={t("common:projects.errorTitle")}
             /> :
             <>

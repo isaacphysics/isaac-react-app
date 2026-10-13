@@ -47,14 +47,14 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     return <ContentSidebar buttonTitle={t("common:tests.sidebar.title")} {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h5>{t("common:tests.filters.searchTitleLabel")}</h5>
+            <h3 className="h5">{t("common:tests.filters.searchTitleLabel")}</h3>
             <SearchInputWithIcon
                 outerClassName="mt-3 mb-4"
                 id="manage-quizzes-title-filter" type="search"
                 value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
                 placeholder={t("common:tests.search.placeholder")} aria-label={t("common:tests.filters.searchTitleAriaLabel")}
             />
-            <h5>{t("common:tests.filters.searchGroupLabel")}</h5>
+            <h3 className="h5">{t("common:tests.filters.searchGroupLabel")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 id="manage-quizzes-group-name-filter" type="search"
@@ -62,7 +62,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
                 placeholder={t("common:tests.filters.searchGroupPlaceholder")}  aria-label={t("common:tests.filters.searchGroupLabel")}
             />
             <div className="section-divider"/>
-            <h5>{t("common:tests.filters.dateSectionTitle")}</h5>
+            <h3 className="h5">{t("common:tests.filters.dateSectionTitle")}</h3>
             <div className="d-flex align-items-center">
                 <span className="quiz-filter-date-span">{t("common:tests.filters.startDateLabel")}</span>
                 {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}

@@ -16,7 +16,7 @@ export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps)
 
     return <ContentSidebar buttonTitle={t("common:programmes.sidebar.toggleLabel")} {...rest}>
         <div className="section-divider"/>
-        <h5>{t("common:programmes.sidebar.title")}</h5>
+        <h3 className="h5">{t("common:programmes.sidebar.title")}</h3>
         <ul>
             <li>
                 {programmes?.map((programme) =>

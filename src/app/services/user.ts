@@ -78,6 +78,10 @@ export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, r
     "ADMIN": isAdmin
 };
 
+export const isUnder13 = (user?: Immutable<PotentialUser> | {emailVerificationStatus?: string} | null) => {
+    return !!user && 'loggedIn' in user && user.loggedIn && user.emailVerificationStatus === "AGE_RESTRICTED";
+};
+
 export function extractTeacherName(teacher: {readonly givenName?: string; readonly familyName?: string} | null | undefined): string | null {
     if (null == teacher) {
         return null;
@@ -87,7 +91,7 @@ export function extractTeacherName(teacher: {readonly givenName?: string; readon
 
 export function schoolNameWithTownAndPostcode(schoolResult: School): string | undefined {
     let schoolName = schoolResult.schoolName;
-    if (schoolResult.town) {
+    if (schoolResult.town && !schoolName.includes(schoolResult.town)) {
         schoolName += ", " + schoolResult.town;
     }
     if (schoolResult.postalCode) {

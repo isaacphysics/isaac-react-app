@@ -22,7 +22,7 @@ export const LinkingConcepts = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>{t("common:books.chaptersHeading")}</h4>
+                    <div className="h4">{t("common:books.chaptersHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'linking_concepts_ch1_boards'} chapterTitle={t("sci:books.linkingConcepts.chapter1.title")} chapterSubHeading={t("sci:books.linkingConcepts.chapter1.subtitle")} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>

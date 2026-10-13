@@ -225,9 +225,9 @@ const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { cla
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     return <>
-        <h4 className="mt-4 mb-3">
+        <div className="mt-4 mb-3 h4">
             {t("site:assignments.add.fromTitle")}
-        </h4>
+        </div>
         <Row className={className}>
             <Col md={6} lg={4} className="pt-1">
                 <Button role={"link"} onClick={() => {
@@ -387,9 +387,9 @@ export const SetAssignments = () => {
                     </Alert>
                     :
                     <>
-                        <h5>
+                        <div className="h5">
                             <Trans i18nKey="sci:assignments.scheduleInfo" components={{ scheduleLink: <Link to={"/assignment_schedule"} /> }} />
-                        </h5>
+                        </div>
                         <div className="section-divider my-4"/>
                     </>
                 }
@@ -414,7 +414,7 @@ export const SetAssignments = () => {
                     }}
                 />
             }
-            <h3>{t("ada:assignments.yourQuizzes")}</h3>
+            <h2 className="h3">{t("ada:assignments.yourQuizzes")}</h2>
             <div
                 className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
                 {boards && boards.totalResults > 0 &&

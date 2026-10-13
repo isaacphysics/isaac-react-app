@@ -5,6 +5,7 @@ import { isAppLink } from "../../../services";
 import { Link } from "react-router-dom";
 import { IconProps } from "../svg/HexIcon";
 import { ExternalLink } from "../ExternalLink";
+import { v4 as uuid_v4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
 export interface IconCardContentProps {
@@ -15,6 +16,7 @@ export interface IconCardContentProps {
     clickUrl?: string;
     onButtonClick?: () => void;
     buttonText?: string;
+    includeTitleInAriaLabel?: boolean; // if true, will tie the link / button to the title via aria-describedby; use if the provided button text is not accessible by itself
     disabled?: boolean;
     buttonStyle?: "outline" | "link" | "card";
     className?: string;
@@ -26,28 +28,29 @@ export interface IconCardProps extends ContainerProps {
 
 export const IconCard = ({card, children, ...props}: IconCardProps) => {
     const { t } = useTranslation();
-    const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, disabled, buttonStyle} = card;
-    const {name, altText, size, color, raw} = typeof icon === "string" ? {name: icon} : icon;
+    const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, includeTitleInAriaLabel, disabled, buttonStyle} = card;
+    const {name, size, color, raw} = typeof icon === "string" ? {name: icon} : icon;
+    const uuid = uuid_v4();
 
     return <Container {...props} className={classNames("icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card} to={clickUrl}>
-            <i className={classNames(`icon icon-${size ?? "md"}`, {"icon-raw": raw}, name)} color={color ?? "tertiary"} aria-label={altText}/>
+            <i className={classNames(`icon icon-${size ?? "md"}`, {"icon-raw": raw}, name)} color={color ?? "tertiary"}/>
             {tag && <div className="icon-card-tag">
                 <span><b>{tag}</b></span>
             </div>}
             <div className={classNames("d-flex flex-column h-100 icon-card-main-content", {"pb-4" : !clickUrl || buttonStyle === "card"})}>
                 <CardTitle className="px-4 mt-4">
-                    <h3 className="mb-0">{title}</h3>
+                    <div className="mb-0 h3" id={`card-title-${uuid}`}>{title}</div>
                 </CardTitle>
                 {(children || bodyText) && <CardBody className="pt-2 pb-1 px-4">
                     {children ?? <p className="mb-0">{bodyText}</p>}
                 </CardBody>}
                 {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4 pt-3"}>
                     {isAppLink(clickUrl) ? 
-                        <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center": buttonStyle === "link"})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl}>
+                        <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center": buttonStyle === "link"})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl} aria-describedby={includeTitleInAriaLabel ? `card-title-${uuid}` : undefined}>
                             {buttonText || t("common:cards.seeMore")}
                         </Button> :
-                        <ExternalLink asButton href={clickUrl}>
+                        <ExternalLink asButton href={clickUrl} aria-describedby={includeTitleInAriaLabel ? `card-title-${uuid}` : undefined}>
                             {buttonText || t("common:cards.seeMore")}
                         </ExternalLink>
                     }

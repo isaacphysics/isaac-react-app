@@ -22,7 +22,7 @@ export const StepUpPhys = () => {
             </div>
             <div className="book-levels">
                 <Col>
-                    <h4>{t("sci:books.stepUpPhys.chaptersLabel")}</h4>
+                    <div className="h4">{t("sci:books.stepUpPhys.chaptersLabel")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'step_up_ch1_boards'} chapterTitle={t("sci:books.stepUpPhys.chapter1Title")} chapterSubHeading={t("sci:books.stepUpPhys.chapter1SubHeading")} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>

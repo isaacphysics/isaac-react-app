@@ -210,10 +210,8 @@ const UserContextReconfirmationModalBody = () => {
         </Col>
         <div className="text-muted small pb-2">{modalText.privacyPolicy}</div>
 
-        {submissionAttempted && !allFieldsAreValid && <div>
-            <h4 role="alert" className="text-danger text-center mb-4">
-                {t("common:account.update.incompleteFields")}
-            </h4>
+        {submissionAttempted && !allFieldsAreValid && <div role="alert" className="text-danger text-center mb-4 h4">
+            {t("common:account.update.incompleteFields")}
         </div>}
 
         <div className="text-center pb-3 pt-1">

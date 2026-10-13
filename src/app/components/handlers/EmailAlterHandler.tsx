@@ -23,7 +23,7 @@ export const EmailAlterHandler = () => {
     const user = useAppSelector(selectors.user.orNull);
     const idsMatch = user && user.loggedIn && user.id === Number(userid);
 
-    const [verifyEmail, {isSuccess: emailVerificationSuccess, isError: emailVerificationFailed, error: emailVerificationError}] = useVerifyEmailMutation();
+    const [verifyEmail, {isSuccess: emailVerificationSuccess, isError: emailVerificationFailed, error: emailVerificationError, isUninitialized: emailVerificationNotInitiated}] = useVerifyEmailMutation();
     const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
 
     const successMessage = idsMatch
@@ -32,7 +32,7 @@ export const EmailAlterHandler = () => {
 
     useEffect(() => {
         if (userid && token) {
-            verifyEmail({userid, token});
+            void verifyEmail({userid, token});
         }
     }, [verifyEmail, userid, token]);
 
@@ -45,24 +45,19 @@ export const EmailAlterHandler = () => {
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card className="my-7 text-center">
                     <CardBody className="m-4">
-                        {/* Isaac Physics had a large icon here */}
-
                         {emailVerificationSuccess &&
                             <>
-                                <h3 className="mb-4">{successMessage}</h3>
+                                <div className="mb-4 h3">{successMessage}</div>
                                 <Button tag={Link} to="/" color="secondary" block>
                                     {t("common:auth.emailVerification.continueButton")}
                                 </Button>
                             </>}
                         {emailVerificationFailed &&
                             <>
-                                <h3 className="mb-4">{t("common:auth.emailVerification.failedTitle")}</h3>
-                                <p className="m-0">
-                                    {(!userid || !token) && t("common:auth.emailVerification.badParameters")}
-                                    {getRTKQueryErrorMessage(emailVerificationError).message}
-                                </p>
+                                <div className="mb-4 h3">{t("common:auth.emailVerification.failedTitle")}</div>
+                                <p>{getRTKQueryErrorMessage(emailVerificationError).message}</p>
                                 {idsMatch
-                                    ? <p className="mt-4">
+                                    ? <p>
                                         {verificationNotResent ?
                                             <Button onClick={() => {
                                                 if (!user.email) {
@@ -71,7 +66,7 @@ export const EmailAlterHandler = () => {
                                                         "You are not logged in or don't have an e-mail address to verify."
                                                     ));
                                                 } else {
-                                                    sendVerificationEmail({email: user.email});
+                                                    void sendVerificationEmail({email: user.email});
                                                 }
                                             }}>
                                                 {t("common:auth.emailVerification.resendButton")}
@@ -89,6 +84,10 @@ export const EmailAlterHandler = () => {
                                 }
                             </>
                         }
+                        {emailVerificationNotInitiated && <>
+                            <div className="mb-4 h3">Couldn&apos;t verify email address</div>
+                            <p>This page received bad parameters. Please ensure you are using the link as provided in the email.</p>
+                        </>}
                     </CardBody>
                 </Card>
             </Col>

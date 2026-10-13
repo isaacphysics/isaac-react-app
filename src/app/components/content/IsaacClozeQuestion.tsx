@@ -12,11 +12,8 @@ import {
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM,
     NULL_CLOZE_ITEM_ID,
-    below,
     isDefined,
-    isTouchDevice,
     useCurrentQuestionAttempt,
-    useDeviceSize
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -44,6 +41,7 @@ import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import { useDragAndDropAccessibility } from "../../services/accessibility";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -63,14 +61,15 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>
         data: { type: "item-section", itemIds }
     });
     const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
+    const itemSectionInfoId = `item-section-info-${uuid_v4()}`;
 
     return <div className={"mb-3"}>
         <Label className="mt-3">{t("common:dragAndDrop.itemSectionLabel")} </Label>
-        <Label className={"visually-hidden"} id={"item-section-info"}>
+        <Label className={"visually-hidden"} id={itemSectionInfoId}>
             {t("common:dragAndDrop.keyboardInstructions")}
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={t("common:dragAndDrop.unselectedItems")} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-describedby={itemSectionInfoId} ref={setNodeRef} aria-label={t("common:dragAndDrop.unselectedItems")} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <DropZoneItem key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
@@ -134,9 +133,10 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 };
 
 const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ItemValidationResponseDTO>) => {
-    const deviceSize = useDeviceSize();
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
+
+    const { dragAndDropEnabled } = useDragAndDropAccessibility();
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -488,6 +488,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             nonSelectedItems,
             allItems,
             zoneIds: new Set<string>(),
+            dragAndDropEnabled
         }}>
             <DndContext
                 sensors={sensors}
@@ -502,10 +503,10 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {(!(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)))) && <>
+                {dragAndDropEnabled && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
-                        {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">
+                        {activeItem && <Badge className="p-1 cloze-item is-dragging" color="cloze">
                             <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
                                 {activeItem.children as ContentDTO[]}
                             </IsaacContentValueOrChildren>

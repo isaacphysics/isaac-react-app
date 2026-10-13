@@ -13,7 +13,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
     const { t } = useTranslation();
     return <Card>
         <CardBody>
-            <h3 className="h-subtitle mb-1">{t("common:events.selectedDetails.title")}</h3>
+            <div className="h-subtitle mb-1 h3">{t("common:events.selectedDetails.title")}</div>
             <p className="m-0">
                 <strong>{t("common:events.selectedDetails.eventLabel")} </strong>
                 <Link to={`/events/${event.id}`} target="_blank">

@@ -3,6 +3,7 @@ export enum KEY {
     AFTER_SESSION_RENEW_PATH = "afterSessionRenewPath",
     CURRENT_USER_ID = "currentUserId",
     FIRST_LOGIN = "firstLogin",
+    SSO_SIGNUP_ROLE = "ssoSignupRole",
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
     RECONFIRM_USER_CONTEXT_SHOWN_TIME = "reconfirmStageExamBoardShownTime",
     LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME = "loginOrSignUpModalShownTime",
@@ -17,6 +18,7 @@ export enum KEY {
     FEATURE_FLAG_OVERRIDES = "featureFlagOverrides",
     ASSIGNMENT_SORT_ORDER = "assignmentSortOrder",
     GROUP_SORT_ORDER = "groupSortOrder",
+    TOPICS_TAB = "topicsTab",
     LANGUAGE = "i18nextLng",
 }
 

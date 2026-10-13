@@ -4,7 +4,7 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {useDroppable} from "@dnd-kit/core";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isDefined} from "../../../../services";
 import { Markup } from "..";
 import DropZoneItem from "../../DnDItem";
 import { Spacer } from "../../Spacer";
@@ -17,13 +17,14 @@ interface InlineDropRegionProps {
     emptyHeight?: string; // as above for height
     rootElement?: HTMLElement;
     skipPortalling?: boolean;
+    boxAlign?: "left" | "center" | "right";
+    altText?: string;
 }
 
 // Inline droppables rendered for each registered drop region
-function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling}: InlineDropRegionProps) {
+function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, skipPortalling, boxAlign, altText}: InlineDropRegionProps) {
     const { t } = useTranslation();
     const dropRegionContext = useContext(DragAndDropRegionContext);
-    const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + zoneId;
     const dropdownItems = dropRegionContext?.allItems ?? [];
@@ -63,13 +64,18 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     const width = (item || !emptyWidth) ? "auto" : emptyWidth;
 
     const draggableDropZone = <span
-        style={{minHeight: height, minWidth: width}}
-        className={classNames("d-inline-block cloze-drop-zone align-bottom", !item && `rounded bg-inline-question border ${isOver ? "border-dark" : "border-light"}`)}
+        style={{
+            minHeight: height,
+            minWidth: width,
+            // Only apply justifyContent if boxAlign is defined (figure drop zones), otherwise empty
+            ...(boxAlign ? {justifyContent: boxAlign === "right" ? "flex-end" : boxAlign === "center" ? "center" : "flex-start"} : {})
+        }}
+        className={classNames(boxAlign ? "d-flex" : "d-inline-block", "cloze-drop-zone align-middle", !item && `rounded bg-inline-question border ${isOver ? "border-dark" : "border-light"}`)}
         ref={setNodeRef}
     >
         {item
             ? <DropZoneItem item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
-            : <>&nbsp;<span className={"visually-hidden"}>{t("common:markup.inlineDropZone.ariaLabel")}</span></>
+            : <>&nbsp;<span className={"visually-hidden"}>{altText || t("common:markup.inlineDropZone.ariaLabel")}</span></>
         }
     </span>;
 
@@ -80,8 +86,8 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
         toggle={() => {setIsOpen(!isOpen);}}
         className="cloze-dropdown"
     >
-        <DropdownToggle className={classNames("py-1 px-3", {"empty": !item, "pe-2": isDefined(isCorrect) || !item})} outline={isAda} style={{minHeight: height, width: width}} innerRef={zoneRef}>
-            <div className={classNames("d-flex cloze-item feedback-zone", {"cloze-bg": !!item && isPhy, "feedback-showing": isDefined(isCorrect)})}>
+        <DropdownToggle className={classNames("py-1 px-3 bg-white text-black", {"empty": !item, "pe-2": isDefined(isCorrect) || !item})} color="blank" style={{minHeight: height, width: width}} innerRef={zoneRef}>
+            <div className={classNames("d-flex cloze-item feedback-zone", {"feedback-showing": isDefined(isCorrect)})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
                     <Markup trusted-markup-encoding={"html"}>
@@ -118,8 +124,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     </Dropdown>;
 
     if (dropRegionContext && droppableTarget) {
-        const result = (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) 
-            ? dropdownZone : draggableDropZone;
+        const result = dropRegionContext?.dragAndDropEnabled ? draggableDropZone : dropdownZone;
         return skipPortalling ? result : ReactDOM.createPortal(result, droppableTarget);
     }
     return null;

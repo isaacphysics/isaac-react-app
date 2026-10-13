@@ -91,12 +91,8 @@ export const HeaderCS = () => {
                             <LinkItem to="/support/teacher">{t("ada:navigation.teachers.support")}</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection className={"text-start-nav"} topLevelLink to="/contact" title={t("ada:navigation.contactUs")}/>
+                        <NavigationSection className={"text-start-nav me-nav-auto navbar-separator"} topLevelLink to="/contact" title={t("ada:navigation.contactUs")}/>
 
-                        <div className={"navbar-separator d-nav-none d-block"}/>
-
-                        <div className={"ms-nav-auto"}></div>
-                        
                         {(isStaff(user) || isEventLeader(user) || isNonProd) && <NavigationSection title={isStaff(user) || isEventLeader(user) ? t("ada:navigation.admin.title") : t("ada:navigation.staging.title")}>
                             {isStaff(user) && <LinkItem to="/admin">{t("ada:navigation.admin.tools")}</LinkItem>}
                             {isAdmin(user) && <LinkItem to="/admin/usermanager">{t("ada:navigation.admin.userManager")}</LinkItem>}
@@ -116,17 +112,14 @@ export const HeaderCS = () => {
 
                         {isLoggedIn(user)
                             ? <>
-                                <NavigationSection topLevelLink to="/dashboard" title={<>{t("ada:navigation.dashboard")} {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />
-                                <div className={"navbar-separator d-nav-none d-block"}/>
-                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={t("ada:navigation.logout")}/>
+                                <NavigationSection className={"navbar-separator"} topLevelLink to="/dashboard" title={<>{t("ada:navigation.dashboard")} {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />
+                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/logout" title={t("ada:navigation.logout")}/>
                             </>
                             : <>
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/register" title={t("ada:navigation.signUp")}/>
-                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/login" title={t("ada:navigation.logIn")}/>
+                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/login" title={t("ada:navigation.logIn")}/>
                             </>
                         }
-
-                        <div className={"navbar-separator d-nav-none d-block"}/>
                     </Nav>
                 </Collapse>
             </MenuOpenContext.Provider>

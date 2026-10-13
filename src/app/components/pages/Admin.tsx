@@ -129,29 +129,29 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                 }
                                 {contentVersionUpdateIsLoading &&
                                     <Alert color="info">
-                                        <h4>{t("common:admin.content.updatingTitle")}</h4>
+                                        <div className="h4">{t("common:admin.content.updatingTitle")}</div>
                                         <p>{t("common:admin.content.updatingMessage", { currentVersion: liveContentVersion, newVersion })}</p>
                                         <IsaacSpinner />
                                     </Alert>
                                 }
                                 {contentVersionUpdateIsSuccess &&
                                     <Alert color="success">
-                                        <h4>{t("common:admin.content.successMessage")}</h4>
+                                        <div className="h4">{t("common:admin.content.successMessage")}</div>
                                     </Alert>
                                 }
                                 {contentVersionUpdateIsError &&
                                     <Alert color="danger">
-                                        <h4>{t("common:admin.content.errorMessage")}</h4>
+                                        <div className="h4">{t("common:admin.content.errorMessage")}</div>
                                     </Alert>
                                 }
                             </>;
                         }}
                     />
-                    <h3 className={"mt-3"}>{t("common:admin.demonstration.title")}</h3>
+                    <h3 className="mt-3">{t("common:admin.demonstration.title")}</h3>
                     <AnonymisationCheckboxes/>
 
                     {isAdmin(user) && <>
-                        <h3 className={"mt-3"}>{t("common:admin.misuse.title")}</h3>
+                        <h3 className="mt-3">{t("common:admin.misuse.title")}</h3>
                         <MisuseStats/>
                     </>}
                 </CardBody>

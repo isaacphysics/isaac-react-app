@@ -57,6 +57,13 @@ export const ActivityGraph = ({ id, answeredQuestionsByDate, caption, color, emp
                         tick: {fit: false, format: '%b %Y', count: Math.min(8, nTicks)},
                         min: minDate,  // If these are undefined, then the values from the data will be used.
                         max: maxDate,
+                    },
+                    y: {
+                        tick: {
+                            format: function(x: number) {
+                                return Number.isInteger(x) ? x : "";
+                            }
+                        }
                     }
                 },
                 zoom: {enabled: zoom()},

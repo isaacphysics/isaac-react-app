@@ -47,7 +47,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
     }
 
     return <>
-        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion trustedTitle={t("common:events.attendance.title")} disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
+        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle={t("common:events.attendance.title")} disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
                 {t("common:events.attendance.leaderNotice")}
             </div>}

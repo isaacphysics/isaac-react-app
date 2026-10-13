@@ -59,20 +59,23 @@ export const UserProfile = (props: UserProfileProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>{t("common:account.profile.title")}</h3>
+            <h2 className="h3">{t("common:account.profile.title")}</h2>
             <p>{t("common:account.profile.description", { siteTitle: SITE_TITLE })}</p>
             <p>
-                <AccountTypeMessage role={userToUpdate?.role} />
+                <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage={userToUpdate.emailVerificationStatus === "AGE_RESTRICTED"} />
             </p>
-            {!isTutorOrAbove(userToUpdate) ? <p>
-                If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
-                    store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
-                }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
-            </p> : <p>
-                Only student accounts can be deleted automatically. Please{" "}
-                <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
-                {" "}to request account deletion.
-            </p>}
+            {userToUpdate.emailVerificationStatus === "AGE_RESTRICTED" ?
+                <p>If you would like to delete your account, please ask your parent or guardian to <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>.</p>
+                : !isTutorOrAbove(userToUpdate) ? <p>
+                    If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
+                        store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
+                    }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
+                </p>
+                    : <p>
+                        Only student accounts can be deleted automatically. Please{" "}
+                        <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
+                        {" "}to request account deletion.
+                    </p>}
         </>}
         rightColumn={<>
             {siteSpecific(
@@ -111,14 +114,14 @@ export const UserProfile = (props: UserProfileProps) => {
                     />
                 </>
             )}
-            <EmailInput
+            {userToUpdate.emailVerificationStatus !== "AGE_RESTRICTED" && <EmailInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 emailIsValid={!!validateEmail(userToUpdate.email)}
                 submissionAttempted={submissionAttempted}
                 required={true}
-            />
-            {userToUpdate.emailVerificationStatus !== "VERIFIED" && <Alert color="warning" className="d-flex mt-2">
+            />}
+            {(userToUpdate.emailVerificationStatus === "NOT_VERIFIED" || userToUpdate.emailVerificationStatus === "DELIVERY_FAILED") && <Alert color="warning" className="d-flex mt-2">
                 <i className="icon icon-warning icon-color-alert icon-sm me-3 mt-1" />
                 <div>
                     {t("common:account.profile.emailUnverified")}
@@ -168,7 +171,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                 submissionAttempted={submissionAttempted}
                 required={true}
-                textOverride={siteSpecific("This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
+                textOverride={siteSpecific("The country you go to school in. This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
             />
             <SchoolInput
                 userToUpdate={userToUpdate}
@@ -177,18 +180,16 @@ export const UserProfile = (props: UserProfileProps) => {
                 required={isAda && isTeacherOrAbove(userToUpdate)}
             />
             <hr className={siteSpecific("section-divider-bold", "my-4 text-center")} />
-            {isPhy &&
-                <DobInput
-                    userToUpdate={userToUpdate}
-                    setUserToUpdate={setUserToUpdate}
-                    submissionAttempted={submissionAttempted}
-                />
-            }
+            <DobInput
+                userToUpdate={userToUpdate}
+                setUserToUpdate={setUserToUpdate}
+                submissionAttempted={submissionAttempted}
+            />
             <GenderInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
-                required={false}
+                required={isAda}
             />
             {isPhy &&
                 <UserContextAccountInput

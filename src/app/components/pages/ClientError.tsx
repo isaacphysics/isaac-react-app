@@ -10,11 +10,16 @@ import { Trans, useTranslation } from "react-i18next";
 import { TransAnchor } from "../elements/TransAnchor";
 
 export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) => {
-    const isChunkError = error.name === "ChunkLoadError";
+    const isChunkOrStaleImportError = error.name === "ChunkLoadError"
+        || error.message.includes('Failed to fetch dynamically imported module') // chrome
+        || error.message.includes('error loading dynamically imported module')   // firefox
+        || error.message.includes('Importing a module script failed');           // safari
+
     useEffect(() => {
-        if (isChunkError) location.reload();
-    }, [isChunkError]);
-    return isChunkError ? <Loading/> : <ClientError error={error} resetErrorBoundary={resetErrorBoundary}/>;
+        if (isChunkOrStaleImportError) location.reload();
+    }, [isChunkOrStaleImportError]);
+
+    return isChunkOrStaleImportError ? <Loading/> : <ClientError error={error} resetErrorBoundary={resetErrorBoundary}/>;
 };
 
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
@@ -50,7 +55,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle={t("common:clientError.title")} icon={{type: "icon", icon: "icon-error"}}/>
-            <h3 className="my-4">{t("common:clientError.heading", { siteName: SITE_TITLE_SHORT })}</h3>
+            <h2 className="my-4 h3">{t("common:clientError.heading", { siteName: SITE_TITLE_SHORT })}</h2>
             <p>
                 <Trans
                     i18nKey="common:clientError.recoveryOptions"
@@ -66,7 +71,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
             <Row className="mt-4 mb-7">
                 <Col>
                     <div className="alert alert-info small overflow-auto">
-                        <h4>{t("common:clientError.userInfo.sectionTitle")}</h4>
+                        <div className="h4">{t("common:clientError.userInfo.sectionTitle")}</div>
                         <small>
                             {Object.entries(usefulInformation).map(([key, value]) => (
                                 <p key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>

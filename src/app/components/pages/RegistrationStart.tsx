@@ -5,10 +5,11 @@ import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
-import { SsoHelpLink } from "./LogIn";
+import { SsoHelpLink } from "../elements/LogInInputs";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 
 export const RegistrationStart = () => {
@@ -35,20 +36,24 @@ export const RegistrationStart = () => {
             undefined
         )}
     >
-        <Card className="my-7">
+        <Card className="my-5">
             <CardBody>
                 <Row className="align-items-start">
                     <Col xs={12} lg={6}>
-                        <div className="mb-7">
-                            <h2>{t("site:auth.register.heading")}</h2>
-                            <p>{t("common:auth.register.description", { siteTitle: SITE_TITLE })}</p>
+                        <div className="mb-5">
+                            {siteSpecific(
+                                <>
+                                    <h3>Hello!</h3>
+                                    <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
+                                </>,
+                                <>
+                                    <h3>How would you like to sign up?</h3>
+                                    <p>You will have access to the same content no matter how you sign up.</p>
+                                </>
+                            )}
                         </div>
                         <div className="my-7">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>{t("common:auth.register.emailHeading")}</div>
-                            <Button block onClick={emailSignUp}>{t("common:auth.register.continueWithEmail")}</Button>
-                        </div>
-                        <div className="my-7">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>{t("common:auth.register.ssoHeading")}</div>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Continue with:</h3>
                             <div className="d-flex flex-column gap-2 mb-2">
                                 {isAda && <RaspberryPiSignInButton />}
                                 <GoogleSignInButton />
@@ -56,9 +61,13 @@ export const RegistrationStart = () => {
                             </div>
                             {isPhy && <SsoHelpLink />}                            
                         </div>
+                        <div className="my-5">
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>Or use an email:</h3>
+                            <Button block onClick={emailSignUp}>Sign up with email</Button>
+                        </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
-                        <div className="mt-7">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>{t("common:auth.register.existingAccount")}</div>
+                        <div className="my-5">
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("common:auth.register.existingAccount")}</h3>
                             <Button color={siteSpecific("solid", "keyline")} block onClick={login}>{t("common:button.logIn")}</Button>
                         </div>
                     </Col>

@@ -15,7 +15,7 @@ export const MarkdownBuilder = () => {
             <CardBody>
                 <InputGroup>
                     <Label className="w-100">
-                        <h2 className="h4">{t("common:markdownBuilder.rawInputLabel")}</h2>
+                        <h2 className="h3">{t("common:markdownBuilder.rawInputLabel")}</h2>
                         <Input type="textarea" rows={10} value={markdownToTest} onChange={e => setMarkdownToTest(e.target.value)}/>
                     </Label>
                 </InputGroup>
@@ -26,7 +26,7 @@ export const MarkdownBuilder = () => {
                 </div>
                 <InputGroup>
                     <Label className="w-100">
-                        <h2 className="h4">{t("common:markdownBuilder.renderedLabel")}</h2>
+                        <h2 className="h3">{t("common:markdownBuilder.renderedLabel")}</h2>
                         <Card>
                             <CardBody>
                                 <Markup trusted-markup-encoding={"markdown"} >

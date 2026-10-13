@@ -246,13 +246,19 @@ figure .inline-container {
         &:hover::after {
           background-color: white;
         }
+
+        &:has(.is-valid, .is-unanswered, .is-invalid) {
+          .feedback-wrapper::after {
+            right: -4px;
+          }
+        }
       }
 
       &.feedback-shown {
         padding-right: 36px !important;
       }
 
-      > div {
+      > .feedback-wrapper > div {
         // force contents of button to fit in $inline-feedback-size, so we can use it at all sizes
         height: $inline-feedback-size;
       }
@@ -545,11 +551,11 @@ figure .inline-container {
   min-height: 64px;
 }
 
-.cloze-item {
+:not(button) > .cloze-item { // non-dropdown cloze items
   touch-action: none;
   position: relative;
   font-size: 1rem !important;
-  border: 1px solid $border-color;
+  border: 1px solid var(--subject-color-700);
 
   &.is-dragging {
     opacity: 0.666;
@@ -568,17 +574,16 @@ figure .inline-container {
 
 .cloze-dropdown > button {
   min-width: 40px !important; // Bootstrap thinks its important
-
-  &.empty.empty {
-    &, &:hover, &:active, &:focus { // Apply regardless of hover
-      border: grey solid 1px !important;
-      background-color: transparent !important;
-    }
-  }
+  background-color: var(--color-neutral-white, white);
+  border: grey solid 1px !important;
 
   &:has(.katex) {
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
+  }
+
+  > .cloze-item {
+    font-size: 0.85rem;
   }
 }
 
@@ -799,4 +804,11 @@ p > .katex, .katex-display {
 
 .spaced-tooltip br {
     margin-bottom: 0.5rem;
+}
+
+.input-mode-toggle {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: min-content;
 }

@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 
 export const LoadingPlaceholder = () => <div className="w-100 text-center pb-2">
-    <h2 aria-hidden="true" className="pt-7">{i18next.t("common:loading.text")}</h2>
+    <div aria-hidden="true" className="pt-7 h2">{i18next.t("common:loading.text")}</div>
     <IsaacSpinner />
 </div>;
 

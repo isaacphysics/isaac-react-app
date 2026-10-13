@@ -35,7 +35,7 @@ const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) =>
                     </>
                 }
             </div>
-            <CardTitle className="mt-1" tag="h4">{title}</CardTitle>
+            <CardTitle className="mt-1 h4" tag="h2">{title}</CardTitle>
             <CardText>{content}</CardText>
             <Spacer/>
             <Button className="w-max-content" tag={Link} to={isStudent ? "/login" : "/teacher_account_request"}>Create a {isStudent ? "student" : "teacher"} account</Button>
@@ -52,9 +52,9 @@ const HomepageHero = () => {
             {above['md'](deviceSize) && <div className="homepage-hero-img"/>}
             <Container className="pt-7">
                 <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
-                    <div className="physics-strapline mb-3">
-                        <h2><Trans i18nKey="sci:homepage.hero.headline" components={{ highlight: <span className="text-green" /> }} /></h2>
-                    </div>
+                    <h1 className="physics-strapline mb-3">
+                        <Trans i18nKey="sci:homepage.hero.headline" components={{ highlight: <span className="text-green" /> }} />
+                    </h1>
                     <Trans i18nKey="sci:homepage.hero.description" components={{ b: <b /> }} />
                 </div>
                 {!above['md'](deviceSize) && <div className="homepage-hero-img container-override"/>}
@@ -201,7 +201,7 @@ export const HomepagePhy = () => {
                 <section id="explore-learn">
                     <div className="mt-7">
                         <div className="d-flex">
-                            <h3>{t("sci:homepage.subjects.title")}</h3>
+                            <h2>{t("sci:homepage.subjects.title")}</h2>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
                         <ListViewCards type="item" items={cards.map(transformItemsForCustomListView)} />
@@ -211,7 +211,7 @@ export const HomepagePhy = () => {
                     <Row className="mt-7 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>{t("sci:homepage.events.title")}</h3>
+                                <h2>{t("sci:homepage.events.title")}</h2>
                                 <Link to="/events" className="news-events-link">{t("sci:homepage.events.moreLink")}</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>
@@ -231,7 +231,7 @@ export const HomepagePhy = () => {
                         </div>
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>{t("sci:homepage.news.title")}</h3>
+                                <h2>{t("sci:homepage.news.title")}</h2>
                                 <Link to="/news" className="news-events-link">{t("sci:homepage.news.moreLink")}</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>

@@ -17,7 +17,7 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
     return <ContentSidebar buttonTitle={t("common:tests.search.title")} {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h5>{t("common:tests.search.title")}</h5>
+            <h3 className="h5">{t("common:tests.search.title")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 id="available-quizzes-title-filter" type="search"

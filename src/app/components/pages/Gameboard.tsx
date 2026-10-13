@@ -68,9 +68,9 @@ export const Gameboard = () => {
             currentPageTitle={t("site:gameboard.notFound.title")}
             icon={{type: "icon", icon: "icon-error"}}
         />
-        <h3 className="my-4">
+        <div className="my-4 h3">
             {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
-        </h3>
+        </div>
     </>;
 
     return !gameboardId

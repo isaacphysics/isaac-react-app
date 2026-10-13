@@ -158,7 +158,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
-            <h4 className="alert-heading">{t("common:tests.feedback.errorTitle")}</h4>
+            <div className="alert-heading h4">{t("common:tests.feedback.errorTitle")}</div>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
         </Alert>
     </>;
@@ -222,7 +222,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <Card className="p-4 my-3">
                             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} showLegend
-                                headerText={siteSpecific(<h4>{t("sci:tests.feedback.overviewTitle", { quizTitle })}</h4>, <h3>{t("ada:tests.feedback.groupResultsTitle")}</h3>)} 
+                                headerText={siteSpecific(<h2 className="h4">{t("sci:tests.feedback.overviewTitle", { quizTitle })}</h2>, <h2 className="h3">{t("ada:tests.feedback.groupResultsTitle")}</h2>)} 
                             />
                             <QuizProgressDetails assignment={quizAssignment} />
                         </Card>

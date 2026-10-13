@@ -30,7 +30,7 @@ export const AdaCSOverviewPage = () => {
 
             <ColumnSlice>
                 <TextBlock>
-                    <h2>{t("common:csOverview.students.title")}</h2>
+                    <h3 className="h2">{t("common:csOverview.students.title")}</h3>
                     <div>
                         {t("common:csOverview.students.intro")}
                         <ul>
@@ -51,7 +51,7 @@ export const AdaCSOverviewPage = () => {
                     <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
                 </ImageBlock>
                 <TextBlock>
-                    <h2>{t("common:csOverview.teachers.title")}</h2>
+                    <h3 className="h2">{t("common:csOverview.teachers.title")}</h3>
                     <div>
                         {t("common:csOverview.teachers.intro")}
                         <ul>

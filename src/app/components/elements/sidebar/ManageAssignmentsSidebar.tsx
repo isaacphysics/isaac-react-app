@@ -1,6 +1,6 @@
 import { ContentSidebar } from "../layout/SidebarLayout";
 import { above, isTeacherOrAbove, Item, itemise, reactSelectDarkModeStyles, selectOnChange, useDeviceSize } from "../../../services";
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 import React from "react";
 import { Button, ButtonGroup, Input } from "reactstrap";
 import { AssignmentDTO } from "../../../../IsaacApiTypes";
@@ -33,7 +33,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         <div className="section-divider" />
 
         {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
-            <h5>{i18next.t("common:assignments.manageSidebar.dateShownLabel")}</h5>
+            <h3 className="h5">{i18next.t("common:assignments.manageSidebar.dateShownLabel")}</h3>
             <ButtonGroup className={"w-100"}>
                 <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
                     color={viewBy === "startDate" ? "solid" : "keyline"}
@@ -52,7 +52,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
 
         <div className="section-divider" />
 
-        <h5>{i18next.t("common:assignments.sidebar.filterGroup")}</h5>
+        <h3 className="h5">{i18next.t("common:assignments.sidebar.filterGroup")}</h3>
         <StyledSelect inputId="groups-filter" isMulti isClearable placeholder={i18next.t("common:sidebar.filter.all")}
             value={groupsToInclude}
             onChange={selectOnChange(setGroupsToInclude, false)}
@@ -61,7 +61,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         />
 
         {isTeacherOrAbove(user) && <>
-            <h5 className="mt-3">{i18next.t("common:assignments.manageSidebar.filterByWorkTypeLabel")}</h5>
+            <h3 className="mt-3 h5">{i18next.t("common:assignments.manageSidebar.filterByWorkTypeLabel")}</h3>
             <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder={i18next.t("common:sidebar.filter.all")}
                 value={workTypesToInclude}
                 onChange={selectOnChange(setWorkTypesToInclude, false)}
@@ -70,16 +70,16 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
             />
         </>}
 
-        <h5 className="mt-3">{i18next.t("common:assignments.manageSidebar.filterByTitleLabel")}</h5>
+        <h3 className="mt-3 h5">{i18next.t("common:assignments.manageSidebar.filterByTitleLabel")}</h3>
         <Input type="text" placeholder={i18next.t("common:assignments.manageSidebar.searchTitlePlaceholder")} value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
         {/* TODO swap the above title filter with the below filters pair, once subject information is available for assignments */}
         {/* <details>
             <summary className="mt-3">More filters</summary>
 
-            <h5 className="mt-3">Filter by title</h5>
+            <h3 className="mt-3 h5">Filter by title</h3>
             <Input type="text" placeholder="Search by title" value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
 
-            <h5 className="mt-3">Filter by subject</h5>
+            <h3 className="mt-3 h5">Filter by subject</h3>
             <StyledSelect inputId="subjects-filter" isMulti isClearable placeholder="All"
                 value={subjectsToInclude}
                 onChange={selectOnChange(setSubjectsToInclude, false)}

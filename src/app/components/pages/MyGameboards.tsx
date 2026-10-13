@@ -216,7 +216,7 @@ export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
         </PageMetadata>
         {boards && boards.totalResults == 0 ?
             <>
-                <h3 className="text-center mt-4">{t("site:gameboards.page.emptyState")}</h3>
+                <div className="text-center mt-4 h3">{t("site:gameboards.page.emptyState")}</div>
             </>
             :
             <>

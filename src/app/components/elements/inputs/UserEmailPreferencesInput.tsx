@@ -1,4 +1,3 @@
-import {StyledCheckbox} from "./StyledCheckbox";
 import {FormGroup, Table} from "reactstrap";
 import React, {SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
@@ -25,7 +24,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
     };
 
     return <FormGroup className={classNames("form-group", {"pt-4": isPhy})}>
-        {isPhy && submissionAttempted !== undefined ? <> {/* submissionAttempted should always exist on phy, just here for typing */}
+        {isPhy ? <>
             <Table className="mb-0">
                 <thead>
                     <tr>
@@ -78,30 +77,39 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             </Table>
         </> : <>
             <WithLinkableSetting className={"email-preference"} id={"assignments-preference"}>
-                <StyledCheckbox checked={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
-                    onChange={(e) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: e.target.checked})}
-                    label={<span><b>{t("common:account.emailPreferences.assignmentsLabel")}</b></span>}
-                />
+                <h5>{t("common:account.emailPreferences.assignmentsLabel")}</h5>
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
+
+                <TrueFalseRadioInput
+                    id={`${idPrefix}assignments`} stateObject={emailPreferences}
+                    propertyName="ASSIGNMENTS" accessibleName="assignments"
+                    setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
+                    className="d-flex gap-2"
+                />
             </WithLinkableSetting>
 
             <WithLinkableSetting className={"email-preference"} id={"news-preference"}>
-                <StyledCheckbox checked={emailPreferences?.NEWS_AND_UPDATES ?? false} id={`${idPrefix}news`}
-                    onChange={(e) => setEmailPreferences({
-                        ...emailPreferences,
-                        NEWS_AND_UPDATES: e.target.checked
-                    })}
-                    label={<span><b>{t("common:account.emailPreferences.tipsLabel")}</b></span>}
-                />
+                <h5>{t("common:account.emailPreferences.tipsLabel")}</h5>
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
+                
+                <TrueFalseRadioInput
+                    id={`${idPrefix}news`} stateObject={emailPreferences}
+                    propertyName="NEWS_AND_UPDATES" accessibleName="news and updates"
+                    setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
+                    className="d-flex gap-2"
+                />
             </WithLinkableSetting>
 
             <WithLinkableSetting className={"email-preference"} id={"events-preference"}>
-                <StyledCheckbox checked={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
-                    onChange={(e) => setEmailPreferences({...emailPreferences, EVENTS: e.target.checked})}
-                    label={<span><b>{t("common:account.emailPreferences.eventsLabel")}</b></span>}
-                />
+                <h5>{t("common:account.emailPreferences.eventsLabel")}</h5>
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
+
+                <TrueFalseRadioInput
+                    id={`${idPrefix}events`} stateObject={emailPreferences}
+                    propertyName="EVENTS" accessibleName="events"
+                    setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
+                    className="d-flex gap-2"
+                />
             </WithLinkableSetting>
         </>}
     </FormGroup>;

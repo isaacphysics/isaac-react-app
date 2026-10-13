@@ -12,7 +12,7 @@
       "tooltipContent": "Choose a stage here to pre-select the material that is most relevant to your interests.<br1/>You will be able to change this preference on relevant pages.<br2/>If you prefer to see all content by default, select \"All stages\"."
     },
     "country": {
-      "description": "This helps us to measure our reach and impact."
+      "description": "The country you go to school in. This helps us to measure our reach and impact."
     },
     "deletion": {
       "title": "Delete Account"
@@ -39,7 +39,7 @@
       "tutorIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year."
     },
     "school": {
-      "description": "The country you go to school in. This helps us promote events near you.",
+      "description": "This helps us promote events near you.",
       "notAssociated": "Not associated with a school"
     },
     "title": "My account",
@@ -95,7 +95,10 @@
       "unknownDeck": "Unknown question deck (may belong to another user)"
     },
     "scheduleInfo": "Use the <scheduleLink>assignment schedule</scheduleLink> page to view assignments by start date and due date.",
-    "title": "Set assignments"
+    "title": "Set assignments",
+    "pagination": {
+      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered assignments."
+    }
   },
   "auth": {
     "ageCheckFailed": {
@@ -608,7 +611,6 @@
     },
     "intro": "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
     "metaDescription": "Find physics, maths, chemistry and biology questions by topic and difficulty.",
-    "noResults": "No results.",
     "pageHelp": "You can find a question by selecting the areas of interest, stage and difficulties.<br/>You can select more than one entry in each area.",
     "search": {
       "bookLabel": "Book",

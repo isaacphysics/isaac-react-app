@@ -31,7 +31,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
     useEffect(() => {
         if (searchText && searchText.length > 0) {
             const remainingFilters = conceptFilters.filter(tag => tagCounts[tag.id] > 0);
-            setConceptFilters(remainingFilters.length ? remainingFilters : (subjectTag ? [subjectTag] : []));
+            setConceptFilters(remainingFilters);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchText]);
@@ -39,7 +39,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>{t("common:concepts.sidebar.searchTitle")}</h5>
+            <h3 className="h5">{t("common:concepts.sidebar.searchTitle")}</h3>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}
@@ -50,7 +50,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <h5>{t("common:concepts.sidebar.filterTopicTitle")}</h5>
+                <div className="h4">{t("common:concepts.sidebar.filterTopicTitle")}</div>
                 <ul>
                     <li>
                         <AllFiltersCheckbox
@@ -106,7 +106,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>{t("common:concepts.sidebar.searchTitle")}</h5>
+            <h3 className="h5">{t("common:concepts.sidebar.searchTitle")}</h3>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}
@@ -117,7 +117,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <h5>{t("common:concepts.sidebar.filterSubjectTopicTitle")}</h5>
+                <h3 className="h5">{t("common:concepts.sidebar.filterSubjectTopicTitle")}</h3>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -145,7 +145,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
                     })}
                 </ul>
                 <div className="section-divider"/>
-                <h5>{t("common:concepts.sidebar.filterStageTitle")}</h5>
+                <h3 className="h5">{t("common:concepts.sidebar.filterStageTitle")}</h3>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.value] > 0 || searchStages.includes(s.value)).map((stage) =>
                         <li key={stage.value}>

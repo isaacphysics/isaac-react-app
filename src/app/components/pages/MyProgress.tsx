@@ -147,7 +147,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </Card>
 
                     <div className="mt-4">
-                        <h4>{t("common:progress.questionPartsTitle")}</h4>
+                        <h2 className="h4">{t("common:progress.questionPartsTitle")}</h2>
                         <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
                                 const groupedTypes = PROGRESS_QUESTION_TYPE_MAP[qType] || [qType];
@@ -169,7 +169,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </div>
 
                     {isPhy && <div className="mt-4">
-                        <h4>{t("sci:progress.isaacBooksTitle")}</h4>
+                        <h2 className="h4">{t("sci:progress.isaacBooksTitle")}</h2>
                         <Trans
                             i18nKey="sci:progress.isaacBooksDescription"
                             components={{
@@ -201,13 +201,13 @@ const MyProgress = ({user}: MyProgressProps) => {
                     {isPhy
                         ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} userIdOfInterest={userIdOfInterest} />
                         : <div className="mt-4">
-                            <h4> {t("ada:progress.questionAttemptsOverTime")}</h4>
+                            <h2 className="h4"> {t("ada:progress.questionAttemptsOverTime")}</h2>
                             <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
                         </div>}
 
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h4>{t("common:progress.mostRecentTitle")}</h4>
+                            <h2 className="h4">{t("common:progress.mostRecentTitle")}</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.mostRecentQuestions} 
@@ -216,7 +216,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                             />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h4>{t("common:progress.oldestUnsolvedTitle")}</h4>
+                            <h2 className="h4">{t("common:progress.oldestUnsolvedTitle")}</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.oldestIncompleteQuestions}
@@ -235,7 +235,7 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfIntere
     const { t } = useTranslation();
     return <Card className="mt-4 attempts-min-height">
         <CardBody className='h-100 d-flex flex-column'>
-            <h4>{t("common:progress.attemptsOverTime")}</h4>
+            <h2 className="h4">{t("common:progress.attemptsOverTime")}</h2>
             <div className='flex-grow-1 d-flex flex-column'>
                 <Tabs style="tabs" tabContentClass='mt-4' renderHiddenTabs={false}>
                     {{

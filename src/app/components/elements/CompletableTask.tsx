@@ -7,6 +7,7 @@ import { Spacer } from "./Spacer";
 interface CompletableTaskProps extends React.HTMLAttributes<HTMLDivElement> {
     complete?: boolean;
     disabled?: boolean;
+    inputId?: string;
     action?: {
         title: string;
         to?: string;
@@ -16,24 +17,26 @@ interface CompletableTaskProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const CompletableTask = (props: CompletableTaskProps) => {
-    const { complete, disabled, action, children, tag : Tag = "div", className, ...rest } = props;
+    const { complete, disabled, action, children, tag : Tag = "div", className, inputId, ...rest } = props;
     return <Tag {...rest} className={classNames("d-flex flex-column flex-md-row gap-2 p-3 border-radius-2 bg-cultured-grey align-items-start align-items-md-center", {"text-silver-grey": disabled}, className)}>
         <div className="d-flex gap-3 align-items-center">
             <div className="position-relative d-flex align-self-start">
-                <input type="radio" readOnly disabled={disabled} className={classNames("styled-checkbox-readonly rounded-pill", {"checked": complete})} checked={complete} />
+                <input type="radio" readOnly disabled={disabled} className={classNames("styled-checkbox-readonly rounded-pill", {"checked": complete})} checked={complete} id={inputId} />
                 {complete && <div className="tick" />}
             </div>
             {children}
         </div>
-        <Spacer />
-        {action && !complete && !disabled && <Button
-            className="bg-transparent fs-6 py-1 px-3 my-md-n2 justify-self-end w-100 w-md-auto"
-            tag={action.to ? Link : undefined}
-            to={action.to}
-            onClick={action.onClick}
-            outline
-        >
-            {action.title}
-        </Button>}
+        {action && !complete && !disabled && <>
+            <Spacer />
+            <Button
+                className="bg-transparent fs-6 py-1 px-3 my-md-n2 justify-self-end w-100 w-md-auto"
+                tag={action.to ? Link : undefined}
+                to={action.to}
+                onClick={action.onClick}
+                outline
+            >
+                {action.title}
+            </Button>
+        </>}
     </Tag>;
 };

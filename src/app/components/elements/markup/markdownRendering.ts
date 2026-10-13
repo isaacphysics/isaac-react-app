@@ -14,6 +14,17 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpe
         return `<a class="a-link" href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
     }
 };
+
+// "#" headings used for styling that do not match the structure of the page should not use <h*> tags.
+// Headings that do follow this structure should instead be written as <h*> tags in the content directly.
+// https://www.w3.org/WAI/tutorials/page-structure/headings
+MARKDOWN_RENDERER.renderer.rules.heading_open = function(tokens: Remarkable.HeadingOpenToken[], idx: number) {
+    return `<div class="h${tokens[idx].hLevel}">`;
+};
+MARKDOWN_RENDERER.renderer.rules.heading_close = function() {
+    return `</div>\n`;
+};
+
 export const renderRemarkableMarkdown = (markdown: string) => MARKDOWN_RENDERER.render(markdown);
 
 // This is used to match and render cloze question drop zones into span elements
@@ -29,9 +40,10 @@ export const renderClozeDropZones = (markdown: string) => {
     }
 
     let nonReservedIndex = 0;
-    return markdown.replace(dropZoneRegex, (_match, _params, indexMatch, widthMatch, heightMatch) => {
+    return markdown.replace(dropZoneRegex, (_match, _params, indexMatch, widthMatch, heightMatch, altTextMatch) => {
         const width = widthMatch ? widthMatch.slice("w-".length) : "100";
         const height = heightMatch ? heightMatch.slice("h-".length) : "27";
+        const altText = altTextMatch || undefined;
         const manualIndex: number | undefined = indexMatch ? parseInt(indexMatch.slice("i-".length)) : undefined;
         let usingManualIndex = isDefined(manualIndex) && !isNaN(manualIndex) && (manualIndex < dropZoneMatches.length);
         if (usingManualIndex && reservedIndices.get(manualIndex as number) as number > 1) {
@@ -41,16 +53,17 @@ export const renderClozeDropZones = (markdown: string) => {
         const index = usingManualIndex ? manualIndex : nonReservedIndex++;
         while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
         const dropId = `drop-region-${index}`;
-        return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
+        return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block" ${altText ? `alt="${altText}"` : undefined}></span>`;
     });
 };
 
 export const renderDndDropZones = (markdown: string) => {
-    return markdown.replace(dndDropZoneRegex, (_match, id, _params, widthMatch, heightMatch) => {
+    return markdown.replace(dndDropZoneRegex, (_match, id, _params, widthMatch, heightMatch, altTextMatch) => {
         const width = widthMatch ? widthMatch.slice("w-".length) : "100";
         const height = heightMatch ? heightMatch.slice("h-".length) : "27";
+        const altText = altTextMatch || undefined;
         const dropId = `drop-region-${id}`;
-        return `<span data-index="${id}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
+        return `<span data-index="${id}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block" ${altText ? `alt="${altText}"` : undefined}></span>`;
     });
 };
 
@@ -88,9 +101,9 @@ export const renderInlineGlossaryTerms = (markdown: string) => {
     });
 };
 
-// RegEx replacements to match Latex inspired Isaac Physics functionality
 export const regexProcessMarkdown = (pageContext?: PageContextState) => (markdown: string) => {
     const regexRules = {
+        // RegEx replacement to match Latex inspired Isaac Physics functionality
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
     if (isPhy) {

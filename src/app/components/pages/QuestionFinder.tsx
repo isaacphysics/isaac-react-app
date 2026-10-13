@@ -171,7 +171,7 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
 
 const loadingPlaceholder = <ResultsListContainer>
     <div className="w-100 text-center pb-2">
-        <h2 aria-hidden="true" className="pt-7">Searching...</h2>
+        <div aria-hidden="true" className="pt-7 h2">Searching...</div>
         <IsaacSpinner />
     </div>
 </ResultsListContainer>;
@@ -369,6 +369,16 @@ export const QuestionFinder = () => {
 
     const [validFiltersSelected, setValidFiltersSelected] = useState(false);
 
+    const resultsHeaderRef = useRef<HTMLDivElement>(null);
+    const [focusResultsOnceLoaded, setFocusResultsOnceLoaded] = useState(false);
+
+    useEffect(() => {
+        if (focusResultsOnceLoaded && !searchQuestionsQuery.isFetching) {
+            resultsHeaderRef.current?.focus();
+            setFocusResultsOnceLoaded(false);
+        }
+    }, [focusResultsOnceLoaded, searchQuestionsQuery.isFetching]);
+
     useEffect(function onFiltersChanged() {
         setSearchDisabled(false);
         setValidFiltersSelected(searchDifficulties.length > 0
@@ -533,6 +543,7 @@ export const QuestionFinder = () => {
                     choices,
                     selections, setSelections,
                     applyFilters: () => {
+                        setFocusResultsOnceLoaded(true);
                         if (isDefined(randomSeed)) {
                             // on Ada, if randomSeed is defined, we need to unset it before running the search.
                             // since it is state, running this first won't necessarily have it updated when searchAndUpdateURL is called.
@@ -566,14 +577,14 @@ export const QuestionFinder = () => {
                         return <>
                             <ResultsListContainer>
                                 <ResultsListHeader className="d-flex">
-                                    <div className="flex-grow-1" data-testid="question-finder-results-header">
+                                    <div className="flex-grow-1" data-testid="question-finder-results-header" ref={resultsHeaderRef} tabIndex={-1}>
                                         {questions && questions.length > 0 
                                             ? <>
                                                 <Trans i18nKey="common:questionFinder.resultsCount" components={{ b: <b /> }} values={{ count: questions.length }} />
                                                 {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> <Trans i18nKey="common:questionFinder.totalCount" components={{ b: <b /> }} values={{ total: totalQuestions }} /></>}
                                                 .
                                             </>
-                                            : isPhy && <>{i18next.t("sci:questionFinder.noResults")}</>
+                                            : <span className={classNames({"visually-hidden": isAda})}>{i18next.t("common:questionFinder.noResults")}</span>
                                         }
                                     </div>
                                     <button 

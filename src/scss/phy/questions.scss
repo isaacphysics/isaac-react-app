@@ -92,15 +92,11 @@
 }
 
 .validation-response-panel {
-  .question-response {
-    font-family: desyrel, serif;
-    font-size: 36px;
-    font-weight: 600;
-  }
-  h1 {
+  .response-heading {
     font-family: desyrel, serif;
     font-size: 48px;
     font-weight: 700;
+    line-height: 1.14;
   }
   &.correct {
     background: var(--subject-color-500);
@@ -223,4 +219,24 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
 
 .coordinate-input-separator, .coordinate-input > span {
   font-size: 1.2rem;
+}
+
+.alert-warning .input-mode-toggle > .styled-toggle {
+  background-color: var(--color-misc-orange-200);
+
+  > input:checked ~ span:first-of-type, > input:not(:checked) ~ span:last-of-type {
+    color: var(--color-neutral-800);
+  }
+}
+
+@include color-mode(light) {
+  .bg-cloze {
+    background-color: var(--subject-color-500);
+  }
+}
+
+@include color-mode(dark) {
+  .bg-cloze {
+    background-color: var(--subject-color-300);
+  }
 }

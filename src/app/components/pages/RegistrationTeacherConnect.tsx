@@ -52,7 +52,7 @@ export const RegistrationTeacherConnect = () => {
 
     const continueToNext = (event: React.MouseEvent) => {
         event.preventDefault();
-        void navigate(siteSpecific("/register/preferences", "/register/success"));
+        void navigate("/register/preferences");
     };
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export const RegistrationTeacherConnect = () => {
         <Card className={"my-7"}>
             <CardBody>
                 <Form onSubmit={submit}>
-                    <h3>{t("common:auth.teacherConnect.heading")}</h3>
+                    <h2 className="h3">{t("common:auth.teacherConnect.heading")}</h2>
                     {siteSpecific(
                         <>
                             <p><Trans
@@ -124,7 +124,7 @@ export const RegistrationTeacherConnect = () => {
                         </FormGroup>
                         {activeAuthorisations && activeAuthorisations.length > 0 &&
                             <div className="mb-3">
-                                <h5>{t("common:auth.teacherConnect.connectedTeachers")}</h5>
+                                <div className="h5">{t("common:auth.teacherConnect.connectedTeachers")}</div>
                                 <ul>
                                     {activeAuthorisations.map((auth) => (
                                         <li key={auth.id}>{extractTeacherName(auth)} - ({auth.email})</li>
@@ -133,7 +133,7 @@ export const RegistrationTeacherConnect = () => {
                             </div>
                         }
                     </Col>
-                    <hr />
+                    {siteSpecific(<div className="section-divider my-4" />, <hr />)}
                     <Row className="justify-content-end">
                         {siteSpecific(
                             <>
