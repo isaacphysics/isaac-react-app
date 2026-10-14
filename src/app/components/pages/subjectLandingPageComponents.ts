@@ -118,7 +118,7 @@ const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): CardPr
 };
 
 /*const SPCCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
-    return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: '/pages/spc'}])(context);
+    return ArbitraryPageLinkCard("Isaac Pre-Uni Physics Challenge", "Take your problem solving skills to the next level in the Isaac Pre-Uni Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: '/pages/spc'}])(context);
 };*/
 
 /*const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): CardProps => {

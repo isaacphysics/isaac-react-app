@@ -25,8 +25,8 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
             },
             {
                 id: "02_spc",
-                title: "Senior Physics Challenge",
-                value: "A 4-day residential in July for UK students in year 12 or equivalent. Students are invited based on performance on the Isaac Science platform.",
+                title: "Isaac Pre-Uni Physics Challenge",
+                value: "A competition around physics problem solving for UK students in year 12 or equivalent. The top prize is a 4-day residential in July in Cambridge. Previously known as the Senior Physics Challenge (SPC).",
                 url: "/pages/spc",
                 image: {
                     src: "/assets/phy/programmes/spc.jpg",
