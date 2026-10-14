@@ -90,6 +90,7 @@ interface MetadataTitleProps {
 }
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
+    const isBookQuestion = doc?.tags?.includes("book");
     return <div>
         {(title || doc?.title || badges) && <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
             {title
@@ -104,7 +105,10 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
                 {badges}
             </div>}
         </h2>}
-        {(subtitle || doc?.subtitle) && <Markup className="h5" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
+        <div className="d-flex align-items-center">
+            {isBookQuestion && <i className="icon icon-book me-1"/>}
+            {(subtitle || doc?.subtitle) && <Markup className="h5 mb-0" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
+        </div>
     </div>;
 };
 

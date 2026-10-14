@@ -194,6 +194,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
 
     const isCrossTopic = isAda && tags?.includes("cross_topic");
     const isLLM = tags?.includes("llm_question_page");
+    const isBookQuestion = isPhy && tags?.includes("book");
 
     const flatLayout = style === "flat" && above['lg'](deviceSize);
     const stackedLayout = style === "stacked" || (isPhy && below["sm"](deviceSize)) || (isAda && below["xs"](deviceSize));
@@ -237,7 +238,8 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             />}
                         </>
                     </div>
-                    {subtitle && <div className="small text-muted text-wrap">
+                    {subtitle && <div className="small text-muted text-wrap d-flex align-items-center">
+                        {isBookQuestion && <i className="icon icon-book me-1"/>}
                         <Markup encoding="latex">{subtitle}</Markup>
                     </div>}
                     {!flatLayout && breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
