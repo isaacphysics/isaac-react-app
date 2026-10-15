@@ -9,7 +9,7 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, SKILLS_BOOKS, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
@@ -90,6 +90,7 @@ interface MetadataTitleProps {
 }
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
+    const isSkillsBookQuestion = isPhy && doc?.tags?.some(tag => SKILLS_BOOKS.some(book => book === tag));
     return <div>
         {(title || doc?.title || badges) && <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
             {title
@@ -104,7 +105,10 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
                 {badges}
             </div>}
         </h2>}
-        {(subtitle || doc?.subtitle) && <Markup className="h5" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
+        <div className="d-flex align-items-center">
+            {isSkillsBookQuestion && <i className="icon icon-book me-1"/>}
+            {(subtitle || doc?.subtitle) && <Markup className="h5 mb-0" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
+        </div>
     </div>;
 };
 
