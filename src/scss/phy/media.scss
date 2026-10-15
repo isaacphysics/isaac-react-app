@@ -2,4 +2,9 @@
 
 .figure-caption {
   background-color: $gray-103;
+  border-top: 1px solid $gray-110;
+
+  @media print {
+    border-top: 0;
+  }
 }
