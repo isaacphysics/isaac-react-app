@@ -36,6 +36,10 @@
     width: 1px;
     height: 3.5rem;
     background-color: white;
+    @media print {
+      background-color: black;
+      print-color-adjust: exact;
+    }
     top: -5px;
     left: 50%;
   }
