@@ -84,7 +84,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const queryKey = gameboard
         ? {
             gameboardId: gameboard.id as string,
-            concept: (doc.title as string).replace(/\s*\d+i{1,2}$/i, ""),
+            concept: doc.title as string,
             upperQuestionId: upper,
         } : skipToken;
     // currentData is initially set to undefined whenever the queryKey changes (i.e. it always holds the data for the
