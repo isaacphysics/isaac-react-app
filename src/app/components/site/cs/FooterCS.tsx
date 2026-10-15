@@ -40,25 +40,20 @@ export const FooterCS = () => (
                         <Col xs={{size: 12}} md={{size: 6, order: 1}} lg={{size: 6}} xl={{size: 6}} className="col-xxl-2">
                             <div className="logo-grid">
                                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <picture>
-                                        <source media="print" srcSet="/assets/common/logos/university_of_cambridge_black.png" />
-                                        <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' data-site="uoc" />
-                                    </picture>
+                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='no-print img-fluid footer-org-logo' data-site="uoc" />
+                                    <img src="/assets/common/logos/university_of_cambridge_black.png" alt='University of Cambridge website' className='only-print img-fluid footer-org-logo' data-site="uoc" />
                                 </a>
+
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <picture>
-                                        <source media="print" srcSet="/assets/common/logos/rpf_black.svg" />
-                                        <img src="/assets/common/logos/rpf_white.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' data-site="rpf" />
-                                    </picture>
+                                    <img src="/assets/common/logos/rpf_white.svg" alt='Raspberry Pi website' className='no-print img-fluid footer-org-logo' data-site="rpf" />
+                                    <img src="/assets/common/logos/rpf_black.svg" alt='Raspberry Pi website' className='only-print img-fluid footer-org-logo' data-site="rpf" />
                                 </a>
-                                <picture>
-                                    <source media="print" srcSet="/assets/common/logos/funded-by-uk-govt-black.svg" />
-                                    <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' data-site="ukgovt" />
-                                </picture>
-                                <picture>
-                                    <source media="print" srcSet="/assets/common/logos/techfirst-black.svg" />
-                                    <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' data-site="techfirst" />
-                                </picture>
+
+                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='no-print img-fluid' data-site="ukgovt" />
+                                <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt='Funded by the UK Government' className='only-print img-fluid' data-site="ukgovt" />
+                                
+                                <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='no-print img-fluid' data-site="techfirst" />
+                                <img src="/assets/common/logos/techfirst-black.svg" alt='The TechFirst logo' className='only-print img-fluid' data-site="techfirst" />
                             </div>
                         </Col>
                         
