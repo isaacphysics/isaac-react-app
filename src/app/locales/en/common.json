@@ -8,6 +8,11 @@
     "sort-by": "Sort by:",
     "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
   },
+  "accessibility": {
+    "dragAndDropLabel": "Drag and drop",
+    "dropdownLabel": "Dropdown",
+    "inputModeTitle": "Question input mode"
+  },
   "accordion": {
     "additionalStagesDescription": "You may also be interested in exploring additional material relevant to other learning stages:",
     "additionalStagesTitle": "Additional learning stages",
@@ -29,6 +34,10 @@
       "mathml": {
         "helpText": "With this setting you can toggle between using alternative text or MathML for mathematical equations.",
         "label": "Use MathML for accessible maths"
+      },
+      "nonDraggingInputs": {
+        "helpText": "Enabling this will allow you to use alternative input methods that don't require dragging for certain question types (e.g. drag-and-drop).",
+        "label": "Enable non-dragging alternative inputs"
       },
       "reducedMotion": {
         "helpText": "Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.",
@@ -59,7 +68,8 @@
       "stageLabel": "Stage"
     },
     "country": {
-      "label": "Country"
+      "label": "Country",
+      "validationError": "Please select your country."
     },
     "customise": {
       "description": "Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time.",
@@ -174,7 +184,11 @@
       "requestVerification": "Click here to request a new verification email.",
       "restoreWarnings": "Restore warnings",
       "success": "Success!",
-      "title": "Account details"
+      "title": "Account details",
+      "warningsDisabledMessage": "Email verification warnings have been disabled for this browser.",
+      "warningsDisabledTitle": "Warnings disabled",
+      "warningsRestoredMessage": "Email verification warnings have been restored.",
+      "warningsRestoredTitle": "Warnings restored"
     },
     "releaseAccess": {
       "cancelButton": "Cancel",
@@ -201,6 +215,7 @@
       "title": "Revoke access to your data"
     },
     "roleMessage": "You have {{article}} <strong>{{role}}</strong> account.",
+    "saveButton": "Save",
     "school": {
       "label": "School",
       "placeholder": "Type your school name",
@@ -221,6 +236,7 @@
       "title": "Account security"
     },
     "settings": {
+      "ariaLabel": "Account settings",
       "title": "Account settings"
     },
     "sharingData": {
@@ -264,6 +280,7 @@
     },
     "updateError": {
       "alertTitle": "Unable to update your account",
+      "genericToastMessage": "Something went wrong. Please make sure all required fields have been filled in and try again.",
       "toastMessage": "Please make sure that all required fields in the \"Profile\" tab have been filled in.",
       "toastTitle": "Account update failed"
     },
@@ -280,6 +297,7 @@
       "groupsLabel": "Disguise both user and group details in teacher tools",
       "usersOnlyLabel": "Disguise only user names and emails in teacher tools"
     },
+    "breadcrumbTitle": "Admin tools",
     "console": {
       "apiVersionLabel": "API Version:",
       "title": "Admin Console"
@@ -300,6 +318,8 @@
     "contentEmails": {
       "recipientWarning": "<warningLabel>Warning:</warningLabel> There are currently <countEmphasis>{{recipientCount}}</countEmphasis> selected recipients.",
       "sendButton": "Send emails",
+      "sendConfirm_one": "Are you sure you want to send a {{emailType}} email to {{count}} user?",
+      "sendConfirm_other": "Are you sure you want to send a {{emailType}} email to {{count}} users?",
       "sendVia": {
         "isaac": "Isaac",
         "label": "The method of sending the email",
@@ -409,6 +429,8 @@
         "title": "Plain text preview"
       },
       "send": {
+        "confirm_one": "Are you sure you want to send a {{emailType}} email ({{contentObjectId}}) to {{count}} user?",
+        "confirm_other": "Are you sure you want to send a {{emailType}} email ({{contentObjectId}}) to {{count}} users?",
         "recipientsWarning": "<warning>Warning:</warning> There are currently <count>{{recipientCount}}</count> selected recipients.",
         "requestMade": "Request made, to send another refresh.",
         "sendButton": "Send emails"
@@ -455,6 +477,7 @@
       "answering": {
         "heading": "Answering Questions"
       },
+      "breadcrumb": "Admin statistics",
       "content": {
         "conceptPageViews": "Concept Page Views: {{count}}",
         "heading": "Content Statistics",
@@ -694,6 +717,7 @@
       "noGroups": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
       "noMatchingWork": "There is no work matching your filters.",
       "noWorkSet": "You have not set any work yet. Use the buttons above to set a new assignment or test.",
+      "noWorkSetTutor": "You have not set any work yet. Use the button above to set a new assignment.",
       "notesLabel": "Notes:",
       "overdueLabel": "(passed)",
       "pageHelp": "Use this page to set and manage assigned work for your groups, and view set work as a timeline. You can unassign work, and assign existing work to other groups.",
@@ -705,8 +729,7 @@
       "timeline": {
         "listForGroup": " list for group {{groupName}}",
         "unknownGroup": "Unknown group"
-      },
-      "noWorkSetTutor": "You have not set any work yet. Use the button above to set a new assignment."
+      }
     },
     "manageSidebar": {
       "collapseButton": "Collapse schedule",
@@ -770,6 +793,7 @@
       "dueDate": "Due date: <strong>{{date}}</strong>",
       "emptyState": "You have no assignments",
       "filterByGroup": "Filter by group:",
+      "loadError": "Error loading assignments and/or question decks",
       "noAssignmentsForGroups_one": "There are no assignments set to group: {{groupNames}}",
       "noAssignmentsForGroups_other": "There are no assignments set to groups: {{groupNames}}",
       "noGroupsEmptyState": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
@@ -857,7 +881,8 @@
       "ariaLabel": "My Account link"
     },
     "ageCheckFailed": {
-      "heading": "Unable to create account"
+      "heading": "Unable to create account",
+      "restrictionMessage": "Unfortunately, we aren't able to offer accounts to students under {{minAge}} years old."
     },
     "callback": {
       "signingIn": "Signing in..."
@@ -879,6 +904,7 @@
       "passwordPlaceholder": "Password"
     },
     "dob": {
+      "invalidDate": "Please enter a valid date of birth.",
       "label": "Date of birth"
     },
     "emailInput": {
@@ -886,7 +912,11 @@
     },
     "emailVerification": {
       "badParameters": "This page received bad parameters.",
+      "badParamsMessage": "This page received bad parameters. Please ensure you are using the link as provided in the email.",
+      "badParamsTitle": "Couldn't verify email address",
       "continueButton": "Continue",
+      "errorToastMessage": "You are not logged in or don't have an e-mail address to verify.",
+      "errorToastTitle": "Email verification request failed.",
       "failedTitle": "Couldn't verify email address",
       "loginToResend": "Please login to your <accountLink>account</accountLink> to resend the verification email.",
       "requestErrorTitle": "Email verification request failed.",
@@ -908,7 +938,14 @@
       "failureMessage": "Failed to link account"
     },
     "login": {
-      "heading": "Log in or sign up:"
+      "button": "Log in",
+      "emailInvalid": "Please enter a valid email address",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Email address",
+      "heading": "Log in or sign up:",
+      "passwordLabel": "Password",
+      "passwordLength": "Passwords must be at least {{minLength}} characters long",
+      "passwordPlaceholder": "Password"
     },
     "loginFailure": {
       "toastMessage": "Login Failed"
@@ -948,6 +985,7 @@
     "orSection": "Alternatively, you can",
     "page": {
       "ariaLabel": "Authentication Error",
+      "breadcrumbTitle": "Authentication error",
       "rememberMe": "Remember me",
       "signUpButton": "Sign up",
       "ssoHeading": "Log in with:",
@@ -961,8 +999,10 @@
       "title": "Additional information"
     },
     "password": {
+      "forgotten": "Forgotten your password?",
       "minLengthError": "Passwords must be at least {{minLength}} characters long.",
       "minLengthHint": "Your password must be at least {{minLength}} characters long.",
+      "resetInbox": "Please check your inbox.",
       "strengthLabel": "Password strength:"
     },
     "passwordInput": {
@@ -971,6 +1011,7 @@
       "showButton": "Show"
     },
     "passwordReset": {
+      "breadcrumbTitle": "Password reset",
       "checkInbox": "Please check your inbox.",
       "completedTitle": "Password reset successful",
       "errorTitle": "Unable to reset your password",
@@ -1001,18 +1042,40 @@
       "description": "Here, you can create an {{siteTitle}} account, or log in to an existing one.",
       "emailHeading": "Create a new account with your email:",
       "existingAccount": "Already have an account?",
+      "pageTitle": "Create an {{siteName}} account",
       "ssoHeading": "Or log in with:"
     },
     "registration": {
       "ageCheck": {
         "ageQuestion": "How old are you?",
+        "backButton": "Back",
         "goBackConfirm": "Are you sure you want go back? Any information you have entered will be lost.",
+        "heading": "Unable to use email",
+        "message": "As you are between {{minAge}}-{{maxAge}} years old, we need you to <strong>sign up using a third-party provider</strong>.",
+        "optionBetween": "{{minAge}} - {{maxAgeWithConsent}} years old",
+        "optionOver": "{{minAgeWithConsent}} and over",
+        "optionUnder": "{{maxAge}} or under",
         "overLabel": "13 and over",
-        "selectionRequired": "Please make a selection."
+        "selectionRequired": "Please make a selection.",
+        "terms": "We can only create accounts for users {{minAge}} years old or over.",
+        "tryOtherProvider": "Please try again, using either {{authProviders}}."
+      },
+      "emailSection": {
+        "button": "Sign up with email",
+        "title": "Or use an email:"
       },
       "errorHeading": "Unable to create your account",
       "goBackConfirm": "Are you sure you want go back? Any information you have entered will be lost.",
       "pageTitle": "Create an {{siteTitle}} account",
+      "socialSignIn": {
+        "title": "Continue with:"
+      },
+      "ssoVerified": "Your age has already been verified by your SSO provider.",
+      "success": {
+        "continue": "Let's go!",
+        "viewAccount": "Check my account",
+        "welcome": "You're all set up. Welcome!"
+      },
       "termsAccept": "I accept the <termsLink>terms of use</termsLink>.",
       "termsRequired": "You must accept the terms to continue."
     },
@@ -1043,11 +1106,13 @@
       }
     },
     "sessionError": {
+      "breadcrumbTitle": "User consistency error",
       "message": "You have logged out in another tab or browser window, so we've logged you out here. Use the button below to continue where you left off.",
       "tip": "<strong>Tip:</strong> If you want to be logged in to two accounts at the same time, you can use your browser's <privacyLink>private browsing</privacyLink> feature.",
       "title": "Your {{siteTitle}} session has changed"
     },
     "sessionExpired": {
+      "breadcrumb": "Session expired",
       "message": "Your {{siteTitle}} session has expired, so we've logged you out. Use the button below to continue where you left off.",
       "title": "Your session has expired"
     },
@@ -1089,13 +1154,17 @@
       "wrongEmailError": "You have not used your school email address – please change your email address on your <accountLink>My Account</accountLink> page."
     },
     "tfa": {
+      "codeInvalid": "Please enter a valid verification code",
       "codeLabel": "Verification Code",
       "codePlaceholder": "Verification code",
       "codeValidationError": "Please enter a valid verification code",
+      "description": "Two-factor authentication has been enabled for this account.",
       "enabled": "Two-factor authentication has been enabled for this account.",
-      "title": "Two-Factor Authentication"
+      "title": "Two-Factor Authentication",
+      "verifyButton": "Verify"
     },
     "unauthorised": {
+      "breadcrumbTitle": "Unauthorised",
       "message": "You do not have authorisation to access the page:",
       "title": "Access denied"
     },
@@ -1168,6 +1237,7 @@
     }
   },
   "bookmarks": {
+    "addAriaLabel": "Add bookmark",
     "emptyState": {
       "message": "You have no bookmarks yet."
     },
@@ -1177,6 +1247,7 @@
     "page": {
       "title": "My bookmarks"
     },
+    "removeAriaLabel": "Remove bookmark",
     "saveConfirmation": "Saved!",
     "sidebar": {
       "filterTitle": "Filter bookmarks by...",
@@ -1211,7 +1282,8 @@
       "extensionIntroText": "Expand your boundaries by having a go at these additional extension questions.",
       "extensionTitle": "Extension work",
       "questionsTitle": "Questions",
-      "resourcesTitle": "Resources"
+      "resourcesTitle": "Resources",
+      "testsTitle": "Practice tests"
     },
     "preUniMaths": {
       "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book",
@@ -1304,8 +1376,10 @@
     "offlineWarning": "You appear to be offline.",
     "recoveryOptions": "You may want to <refreshLink>refresh this page and try again</refreshLink>, <homeLink>return to our homepage</homeLink>, or <contactLink>contact</contactLink> or <emailLink>email</emailLink> us if this keeps happening.",
     "sessionExpired": {
+      "breadcrumbTitle": "Session expired error",
       "contactSupport": "Please email <mailtoLink>{{webmasterEmail}}</mailtoLink> if this keeps happening.",
       "heading": "We're sorry, but your session has expired!",
+      "retryInstructions": "You should <refresh>refresh this page and try again</refresh>, or try refreshing whilst <bypassCache>bypassing your browser's cache</bypassCache>, which may have saved an outdated version of Isaac.",
       "title": "Session expired"
     },
     "skills": {
@@ -1319,6 +1393,7 @@
     },
     "userInfo": {
       "errorDetails": "Error Details",
+      "locationLabel": "Location",
       "notLoggedIn": "Not currently logged in",
       "sectionTitle": "Useful information to include in your email",
       "userAgent": "User Agent",
@@ -1511,6 +1586,69 @@
     },
     "visitButton": "Go to Ada CS"
   },
+  "cyberExplorers": {
+    "about": {
+      "classroomTools": "Classroom tools to group students into classes, assign activities, and track learners' progress",
+      "discoverButton": "Discover more of Ada CS",
+      "expertContent": "Expert content developed by the Raspberry Pi Foundation in collaboration with partners including the University of Cambridge",
+      "freeResources": "Free computing resources, from practical activities for ages 11 to 14 to structured computer science learning for ages 14 to 19",
+      "registerButton": "Create an account",
+      "subtitle": "One place to learn computing, from ages 11 to 19.",
+      "title": "What is Ada Computer Science?"
+    },
+    "fundingLogoAlt": "Funded by the UK Government",
+    "header": {
+      "description": "Practical activities that help learners understand technology, build confidence, and prepare for what's next.",
+      "exploreButton": "Explore learning topics",
+      "freeNote": "Always available for free.",
+      "imageAlt": "A teacher assisting two students.",
+      "title": "<slash>/</slash><br/>Your future in tech starts here"
+    },
+    "metaDescription": "Resources for students and teachers for ages 11-14.",
+    "partners": {
+      "description": "TechFirst connects schools with in-person activities and events delivered by Regional Delivery Partners across the UK. These partners bring together schools, colleges, employers, local authorities and community organisations to provide inspiring enrichment opportunities and showcase local technology and computing pathways.",
+      "imageAlt": "Stylised map of the UK showing example regional partner locations.",
+      "recognition": "Schools can also work towards TechFirst School recognition, with Bronze, Silver and Gold awards available. From September 2026, TechFirst will operate in every region and home nation of the UK.",
+      "title": "Regional delivery partners"
+    },
+    "techFirstLogoAlt": "The TechFirst logo",
+    "topics": {
+      "comingSoon": "Start with cyber security, with more topics coming soon.",
+      "cyberSecurityTitle": "Cyber security",
+      "cyberattacks": {
+        "body": "Understand who carries out cyberattacks, why and how they use malware to do so.",
+        "title": "Cyberattacks"
+      },
+      "defendMalware": {
+        "body": "Explore the tools and techniques used to detect, stop, and remove malware.",
+        "title": "Defending against malware"
+      },
+      "description": "Build your skills through practical activities that help you understand how technology works and how it's used to solve real-world problems.",
+      "exploreAllButton": "Explore all topics",
+      "exploreButton": "Explore",
+      "networkSecurity": {
+        "body": "Discover how networks are protected from attacks and kept secure.",
+        "title": "Network security"
+      },
+      "socialEngineering": {
+        "body": "Stay safe online and learn how systems are attacked and defended.",
+        "title": "Social engineering"
+      },
+      "title": "Choose a topic to explore"
+    },
+    "welcome": {
+      "description": "Explore familiar cyber security resources alongside new computing and technology content for learners.",
+      "exploreMoreText": "Alongside cyber security, Ada CS is growing with new topics and learning experiences for ages 11 to 14.",
+      "exploreMoreTitle": "More to explore",
+      "familiarText": "The cyber security resources you know are now part of Ada CS, supported through our partnership with the UK Government.",
+      "familiarTitle": "Familiar resources",
+      "imageAlt": "A cartoon sketch of Cyber City",
+      "readMoreButton": "Read more",
+      "teachingText": "Create classes, assign activities, and track learners' progress, all in one place.",
+      "teachingTitle": "Teaching tools",
+      "title": "Cyber Explorers welcome"
+    }
+  },
   "dashboard": {
     "assignments": {
       "emptyState": "You have no assignments with upcoming due dates.",
@@ -1580,13 +1718,13 @@
   },
   "dateInput": {
     "clearButtonLabel": "Clear date",
+    "clearButtonLabel_birth": "Clear date of birth",
     "dayLabel": "Day",
-    "monthLabel": "Month",
-    "yearLabel": "Year",
     "dayLabel_birth": "Day of birth",
+    "monthLabel": "Month",
     "monthLabel_birth": "Month of birth",
-    "yearLabel_birth": "Year of birth",
-    "clearButtonLabel_birth": "Clear date of birth"
+    "yearLabel": "Year",
+    "yearLabel_birth": "Year of birth"
   },
   "dateString": {
     "daysAgo": "{{days}} days ago",
@@ -1618,6 +1756,7 @@
   "events": {
     "addUsers": {
       "bookingExists": "Booking exists",
+      "disabledMessage": "You cannot add users to a cancelled event",
       "noResults": "No users returned from query",
       "roleAdmin": "Admin",
       "roleAny": "Any Role",
@@ -1683,7 +1822,10 @@
       "errorTitle": "Failed to load event overviews"
     },
     "attendance": {
+      "cancelledEventNotice": "You cannot record attendance for a cancelled event",
       "leaderNotice": "As an event leader, you are only able to see the bookings of users who have granted you access to their data.",
+      "markAbsentButton": "Mark as Absent",
+      "markAttendedButton": "Mark as Attended",
       "table": {
         "attendanceHeader": "Attendance",
         "medicalRequirementsHeader": "Medical requirements",
@@ -1704,6 +1846,7 @@
       "accessibility": "Accessibility requirements",
       "accessibilityHelp": "For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.",
       "accountSection": "Your account information (<accountLink>update</accountLink>)",
+      "cancelConfirmMessage": "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
       "cancelledMessage": "You cannot sign up to a teacher event as a student.",
       "cancelledTitle": "Event booking cancelled",
       "detailsTitle": "Event booking details",
@@ -1851,6 +1994,10 @@
         "promote": "Promote",
         "resendEmail": "Resend email"
       },
+      "confirmCancel": "Are you sure you want to cancel this booking?",
+      "confirmDelete": "Are you sure you want to delete this booking permanently?",
+      "confirmPromote": "Are you sure you want to convert this to a confirmed booking?",
+      "confirmResendEmail": "Are you sure you want to resend the confirmation email for this booking?",
       "emailDropdown": {
         "item": "Email {{bookingStatus}} users",
         "toggle": "Email Users"
@@ -1879,6 +2026,7 @@
     "page": {
       "errorLoading": "Error loading events list",
       "help": "Follow the links below to find out more about our FREE events.",
+      "listHeading": "Events list",
       "noResults": "Sorry, we cannot find any events that match your filter settings.",
       "showingCount": "Showing {{loadedCount}} of {{total}}",
       "title": "Events"
@@ -2023,10 +2171,10 @@
   },
   "form": {
     "elements": {
+      "no": "No",
       "requiredError": "required",
       "trueFalseAccessibilityLabel": "for {{fieldName}}",
-      "yes": "Yes",
-      "no": "No"
+      "yes": "Yes"
     },
     "emailLabel": "Email address",
     "emailValidationError": "Please enter a valid email address",
@@ -2053,7 +2201,10 @@
       "loggedOutTitle": "You must be logged in to answer this question",
       "loginButton": "Log in",
       "signupButton": "Sign up",
-      "skipQuestion": "Skip question"
+      "skipQuestion": "Skip question",
+      "under13Consequence": "You can still read the question, but we will not be able to mark your answer.",
+      "under13Description": "We use a large language model (LLM) to mark free-text questions like this one. This requires your consent to send your answer to OpenAI for marking. Because you are under 13, we cannot collect your consent for this under the GDPR law.",
+      "under13Title": "We cannot collect your consent"
     },
     "llmFeedback": {
       "accuracyNote": "1 in 3 times the predicted mark will be wrong.",
@@ -2137,6 +2288,7 @@
     },
     "builder": {
       "addQuestionsButton": "Add questions",
+      "cancelButton": "Cancel",
       "createErrorDetail": "Please correct the problems below.",
       "deselect": "Deselect question",
       "dragLabel": "Drag to reorder",
@@ -2245,6 +2397,9 @@
   "generic": {
     "error": {
       "title": "Unable to load page"
+    },
+    "news": {
+      "title": "News"
     }
   },
   "geogebra": {
@@ -2349,6 +2504,9 @@
       "nonOwnerConfirm": "You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '{{groupName}}'?",
       "ownerConfirm": "Are you sure you want to permanently delete the group '{{groupName}}' and remove all associated assignments?\n\nThis action cannot be undone!"
     },
+    "demo": {
+      "name": "Demo Group {{groupId}}"
+    },
     "editor": {
       "deleteButton": "Delete group",
       "emailButton": "Email users",
@@ -2359,6 +2517,7 @@
       "membersTitle": "Group members",
       "moreInfoButton": "More information",
       "nameAriaLabel": "Group Name",
+      "nameEmpty": "Group name cannot be empty.",
       "nameLabel": "Group name",
       "namePlaceholder": "Group name",
       "ownerLabel": "(group owner)",
@@ -2514,6 +2673,7 @@
     },
     "selector": {
       "createButton": "Create a new group",
+      "deleteInfo": "Delete group",
       "groupIdTitle": "Group id: {{groupId}}",
       "label": "Groups:"
     },
@@ -2530,6 +2690,9 @@
       "fetch": {
         "errorTitle": "Loading group token failed"
       }
+    },
+    "unknown": {
+      "label": "Unknown Group"
     },
     "update": {
       "errorTitle": "Group saving failed",
@@ -2616,6 +2779,10 @@
       "takeTest": "Take the test",
       "viewTest": "View test"
     },
+    "bookmark": {
+      "add": "Add bookmark",
+      "remove": "Remove bookmark"
+    },
     "dragToReorder": "Drag to reorder",
     "hiddenFromTeachers": "Hidden from teachers",
     "moveDown": "Move question down",
@@ -2623,6 +2790,9 @@
     "noTitle": "no title",
     "question": {
       "label": "Question"
+    },
+    "quickQuiz": {
+      "levelTag": "Level 1"
     },
     "status": {
       "attempted": "Attempted",
@@ -2760,6 +2930,9 @@
       "practiceDesc": "Practice questions are those that require one concept or equation to solve."
     },
     "examIndependent": "Our materials are exam board independent. They are designed to help students develop and apply their understanding of fundamental concepts in {{subject}}, while developing problem solving skills.",
+    "exampleQuestions": {
+      "errorTitle": "Unable to load example questions"
+    },
     "freeAccount": "You can use our resources for FREE. By creating a free account you will have complete access to all the resources available to students under Isaac Science and you can make the most of our platform by tracking your progress. Teachers can request a free teacher account to access <teacherFeaturesLink>additional features</teacherFeaturesLink>.",
     "gcse": {
       "subtitle": "Our GCSE {{subject}} resources develop the {{subjectName}} knowledge needed at GCSE through the use of questions, concepts and books."
@@ -2857,10 +3030,21 @@
     "university": {
       "subtitle": "Our University {{subject}} resources help you prepare for your university STEM degree.",
       "title": "University"
+    },
+    "welcome": {
+      "subjectLink": "Isaac {{subjectName}}"
     }
+  },
+  "pageMetadata": {
+    "visuallyHiddenTitle": "Main page"
   },
   "pageTitle": {
     "helpLabel": "Help"
+  },
+  "pages": {
+    "load": {
+      "errorTitle": "Unable to load page"
+    }
   },
   "policy": {
     "sidebar": {
@@ -2890,6 +3074,9 @@
   },
   "programmes": {
     "cardSubtitle": "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level.",
+    "list": {
+      "heading": "Programmes list"
+    },
     "page": {
       "title": "Programmes"
     },
@@ -3011,9 +3198,11 @@
       "excludeBooks": "Exclude skills books questions"
     },
     "filters": {
-      "excludeSkillsBook": "Exclude skills book questions"
+      "excludeSkillsBook": "Exclude skills book questions",
+      "togglePanel": "Toggle filter panel"
     },
     "loadMore": "Load more",
+    "noResults": "No results.",
     "results": {
       "difficultyColumn": "Difficulty",
       "loadError": "Failed to load questions.",
@@ -3040,8 +3229,7 @@
       "subjectHeading": "Decks by subject",
       "switchContextButton": "Switch stage/subject"
     },
-    "totalCount": "of <b>{{total}}</b>",
-    "noResults": "No results."
+    "totalCount": "of <b>{{total}}</b>"
   },
   "questionMetadata": {
     "accessibilityWarningsTitle": "Accessibility warnings",
@@ -3105,6 +3293,7 @@
       "tooManySigFigs": "Looks right, but..."
     },
     "freeText": {
+      "answerLabel": "Answer text field",
       "validationWarningLabel": "Warning:"
     },
     "generateAnswerSpec": {
@@ -3118,6 +3307,9 @@
     "inlineFeedback": {
       "boxCounter": "Box {{boxIndex}} of {{boxCount}}",
       "selectBox": "View feedback for a specific box by selecting it above or using the arrows below."
+    },
+    "inlineInput": {
+      "ariaLabel": "Input field for part {{partName}}"
     },
     "inlineRegion": {
       "feedback": {
@@ -3152,6 +3344,7 @@
       "exponentSymbol": "Use a correct exponent symbol, e.g. 10^-3 or 10**-3.",
       "helpPrompt": "What can I type in this box?",
       "inputHelp": "Here are some examples of numbers you can write:<br1/><br2/>3.7<br3/>-3x10^14<br4/>2.8e-12<br5/><br6/>Do not use commas or spaces.",
+      "inputLabel": "Input field for part {{partTitle}}",
       "invalidCharacters": "Some of the characters you are using are not allowed: {{badCharacters}}",
       "noSpaces": "Do not use spaces when entering your answer.",
       "noThousandSeparators": "Do not use commas or spaces as thousand separators when entering your answer.",
@@ -3183,6 +3376,9 @@
     "submit": {
       "check": "Check my answer",
       "marking": "Marking your answer…"
+    },
+    "symbolicLogic": {
+      "emptyPreview": "Click to enter your expression"
     },
     "title": "Question {{questionNumber}}",
     "validation": {
@@ -3282,6 +3478,7 @@
       "notStarted": "Not started",
       "title": "Question key"
     },
+    "contentLabel": "Sidebar",
     "display": {
       "limit": "Limit:",
       "limitLabel": "Set display limit",
@@ -3294,6 +3491,7 @@
       "creator": "Filter by creator",
       "status": "Filter by status"
     },
+    "navigationLabel": "Sidebar",
     "optionsButton": "Options",
     "relatedContent": {
       "conceptsTitle": "Related concepts",
@@ -3430,7 +3628,11 @@
       "viewMore": "View more books"
     },
     "events": {
+      "heading": "Events <theme>({{eventCount}})</theme>",
       "title": "Events <emphasis>({{eventCount}})</emphasis>"
+    },
+    "footer": {
+      "emptyState": "No books or news available for this subject. Check back soon!"
     },
     "news": {
       "title": "News & Features"
@@ -3700,6 +3902,7 @@
       "reviewAnswers": "Review answers",
       "sectionsComplete": "{{completedCount}} / {{totalCount}} sections complete",
       "submitAnyway": "Submit anyway",
+      "submitConfirmIncomplete": "Are you sure? You haven't answered all of the questions",
       "submitToastBody": "Your answers have been submitted successfully.",
       "submitToastTitle": "Test submitted successfully"
     },
@@ -3717,6 +3920,9 @@
         "changeFeedbackType": "Change feedback type",
         "extendDueDate": "Extend due date",
         "toggle": "Manage"
+      },
+      "shareLink": {
+        "tooltip": "(student-only link)"
       },
       "untitledTitle": "Untitled Test",
       "usage": {
@@ -3934,15 +4140,25 @@
       "previewLink": "Preview",
       "title": "Gameboards"
     },
+    "listing": {
+      "ageHeading": "{{ageGroup}} topics"
+    },
+    "meta": {
+      "description": "Discover our free computer science topics and questions. Learn or revise for your exams with us today."
+    },
     "metaDescription": "Discover our free computer science topics and questions. Learn or revise for your exams with us today.",
     "page": {
-      "backButton": "<responsivePrefix>Back to</responsivePrefix>   All topics"
+      "backButton": "<responsivePrefix>Back to</responsivePrefix>   All topics",
+      "title": "Topics"
     },
     "questionFinder": {
       "description": "Using the question finder you can select topics and concepts and we’ll generate a random selection of questions for you to use. You can also specify your level and exam board.",
       "heading": "Check your understanding",
+      "students": "<bold>Students</bold> might want to try our question finder to revise and get feedback on any mistakes.",
       "studentsInfo": "<b>Students</b> might want to try our question finder to revise and get feedback on any mistakes.",
+      "teachers": "<bold>Teachers</bold> might want to try our question finder to create quizzes and assign them to students.",
       "teachersInfo": "<b>Teachers</b> might want to try our question finder to create quizzes and assign them to students.",
+      "title": "Check your understanding",
       "tryButton": "Try our question finder"
     },
     "title": "Topics"
@@ -3950,11 +4166,6 @@
   "video": {
     "embed": {
       "accessibilityLabel": "Embedded YouTube video: {{videoDescription}}."
-    }
-  },
-  "pages": {
-    "load": {
-      "errorTitle": "Unable to load page"
     }
   }
 }

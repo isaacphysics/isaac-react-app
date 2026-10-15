@@ -124,7 +124,7 @@ export const TestCard = (props: TestCardProps) => {
                 {isPhy && testUrl && above['sm'](deviceSize) && <div className="card-share-link">
                     <ShareLink 
                         linkUrl={testUrl} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline", disabled: !!(quizAssignment && isOverdue(quizAssignment))}}
-                        inputInfo="(student-only link)"
+                        inputInfo={i18next.t("common:tests.card.shareLink.tooltip")}
                     />
                 </div>}
                 {allowManaging

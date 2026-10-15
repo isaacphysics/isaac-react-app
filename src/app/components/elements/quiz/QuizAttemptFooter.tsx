@@ -70,7 +70,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
             if (anyAnswered) {
                 controls = <>
                     <div className="text-center">
-                        <Button onClick={() => confirmThen("Are you sure? You haven't answered all of the questions", submitQuiz)}>{submitButton}</Button>
+                        <Button onClick={() => confirmThen(t("common:tests.attempt.submitConfirmIncomplete"), submitQuiz)}>{submitButton}</Button>
                     </div>
                     <Spacer/>
                     {t("common:tests.attempt.sectionsComplete", { completedCount: totalCompleted, totalCount: sectionCount })}<br/>

@@ -62,13 +62,13 @@ const HomepageHero = () => {
                     <Col className="mb-3">
                         <HomepageHeroCard
                             title={t("sci:homepage.hero.studentTitle")}
-                            content="Tackle interactive questions, explore varying difficulty levels, and strengthen problem-solving skills with concept guides, video lessons, and events."
+                            content={t("sci:homepage.hero.studentContent")}
                             isStudent={true}/>
                     </Col>
                     <Col className="mb-3">
                         <HomepageHeroCard
                             title={t("sci:homepage.hero.teacherTitle")}
-                            content="Assign, track, and manage student progress with ease – ideal for classwork, homework, or revision. Trusted by more than 3,500 teachers."
+                            content={t("sci:homepage.hero.teacherContent")}
                             isStudent={false}/>
                     </Col>
                 </Row>

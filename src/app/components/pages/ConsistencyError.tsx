@@ -12,7 +12,7 @@ export const ConsistencyError = () => {
     const [target, clearRenewPath] = useSessionExpired();
 
     return <Container>
-        <TitleAndBreadcrumb breadcrumbTitleOverride="User consistency error" currentPageTitle={t("common:auth.sessionError.title", { siteTitle: SITE_TITLE })} icon={{type: "icon", icon: "icon-error"}} className="mb-4" />
+        <TitleAndBreadcrumb breadcrumbTitleOverride={t("common:auth.sessionError.breadcrumbTitle")} currentPageTitle={t("common:auth.sessionError.title", { siteTitle: SITE_TITLE })} icon={{type: "icon", icon: "icon-error"}} className="mb-4" />
         <p className="pb-2">{t("common:auth.sessionError.message")}</p>
         <p>
             <Trans

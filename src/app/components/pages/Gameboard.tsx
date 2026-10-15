@@ -64,12 +64,12 @@ export const Gameboard = () => {
 
     const notFoundComponent = <>
         <TitleAndBreadcrumb
-            breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
+            breadcrumbTitleOverride={t("site:gameboard.notFound.breadcrumb")}
             currentPageTitle={t("site:gameboard.notFound.title")}
             icon={{type: "icon", icon: "icon-error"}}
         />
         <div className="my-4 h3">
-            {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
+            {t("site:gameboard.notFound.error")}<code>{gameboardId}</code>{"."}
         </div>
     </>;
 

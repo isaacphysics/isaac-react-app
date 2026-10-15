@@ -4,8 +4,10 @@ import { IsaacStringMatchQuestionDTO, StringChoiceDTO } from "../../../../IsaacA
 import { useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 export const InlineStringEntryZone = ({questionDTO, index, focusRef, setModified, correctness, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacStringMatchQuestionDTO>) => {
+    const { t } = useTranslation();
     
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
@@ -29,7 +31,7 @@ export const InlineStringEntryZone = ({questionDTO, index, focusRef, setModified
                     correctnessClass(correctness)
                 )}
                 name={`Input field for part ${questionDTO?.title ?? (index+1)}`}
-                aria-label={`Input field for part ${questionDTO?.title ?? (index+1)}`}
+                aria-label={t("common:questions.inlineInput.ariaLabel", { partName: questionDTO?.title ?? (index+1) })}
                 style={contentStyle}
                 ref={focusRef}
                 value={currentAttempt?.value ?? ""}

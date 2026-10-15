@@ -13,7 +13,7 @@ export const AuthError = () => {
     const { t } = useTranslation();
     const location = useLocation();
     return <Container role="region" aria-label={t("common:auth.page.ariaLabel")}>
-        <TitleAndBreadcrumb currentPageTitle={t("common:auth.page.title")} breadcrumbTitleOverride="Authentication error" icon={{type: "icon", icon: "icon-error"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("common:auth.page.title")} breadcrumbTitleOverride={t("common:auth.page.breadcrumbTitle")} icon={{type: "icon", icon: "icon-error"}}/>
         <Row className="pt-4">
             <Col>
                 <ErrorMessage state={location.state}/>

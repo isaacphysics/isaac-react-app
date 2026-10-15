@@ -143,7 +143,7 @@ const RequiredAccountInfoBody = () => {
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
-                        textOverride={siteSpecific("This is now required information to better help us measure our reach and impact.", undefined)}
+                        textOverride={siteSpecific(t("sci:account.requiredInfo.countryCodeNote"), undefined)}
                     />
                 </Col>}
                 {!validity.school && <Col xs={12} id="rai-missing-school">

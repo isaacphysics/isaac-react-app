@@ -119,9 +119,10 @@ const BooksList = ({books, isFullWidth}: {books: BookInfo[], isFullWidth: boolea
 };
 
 const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
+    const { t } = useTranslation();
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h2 className="h4">News & Features</h2>
+            <h2 className="h4">{t("common:subjectLanding.news.title")}</h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className="h-100 item-list-container">
@@ -135,7 +136,13 @@ const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
 const EventsList = ({events}: {events: AugmentedEvent[]}) => {
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h2 className="h4 m-0">Events <span className="text-theme">({events.length})</span></h2>
+            <h2 className="h4 m-0"><Trans
+                i18nKey="common:subjectLanding.events.heading"
+                components={{
+                    theme: <span className="text-theme" />,
+                }}
+                values={{ eventCount: events.length }}
+            /></h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className="h-100 item-list-container">
@@ -148,6 +155,7 @@ const EventsList = ({events}: {events: AugmentedEvent[]}) => {
 
 // this should be used under the assumption that the above props have been fetched; they may still be undefined, but they will not change
 const FooterRow = ({context, books, news, events}: FooterRowProps) => {
+    const { t } = useTranslation();
     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
     const relevantEvents = events?.filter(event =>
         context?.subject
@@ -163,7 +171,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             ? <BooksList books={books} isFullWidth={noEvents} />
             : news?.length 
                 ? <NewsList news={news} />
-                : <p>No books or news available for this subject. Check back soon!</p>
+                : <p>{t("common:subjectLanding.footer.emptyState")}</p>
         }
         {!noEvents && <EventsList events={relevantEvents} />}
     </Row>;

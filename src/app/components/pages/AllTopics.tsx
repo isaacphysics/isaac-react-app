@@ -22,6 +22,8 @@ import { Tabs } from "../elements/Tabs";
 import { IconCard } from "../elements/cards/IconCard";
 import { PageContainer } from "../elements/layout/PageContainer";
 import sortBy from "lodash/sortBy";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const TOPICS_STAGES = ["11-14", "14-19"] as const;
 
@@ -39,8 +41,8 @@ const renderLink = (topic: AdaTopicBase) => {
             }
             {" "}
             {topic.comingSoonDate && !topic.new &&
-            <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}
-            {topic.new && !topic.comingSoonDate && <Badge color="secondary">New</Badge>}
+            <Badge color="light" className="border bg-white">{i18next.t("common:topics.badge.comingSoon", { date: topic.comingSoonDate })}</Badge>}
+            {topic.new && !topic.comingSoonDate && <Badge color="secondary">{i18next.t("common:topics.badge.new")}</Badge>}
         </>;
     }
 };
@@ -106,12 +108,13 @@ const conceptColumn = (subTags: Tag[]) => {
 };
 
 const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STAGES[number]}) => {
+    const { t } = useTranslation();
     if (!tagCols || tagCols.length === 0) {
         return null;
     }
 
     return <>
-        <h2 className="visually-hidden">{age} topics</h2>
+        <h2 className="visually-hidden">{t("common:topics.listing.ageHeading", { ageGroup: age })}</h2>
         <Container className={"mb-4"}>
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
@@ -123,17 +126,14 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
             <Container className={"mb-7 p-7 mx-auto"}>
                 <Row className={"align-items-center justify-content-center"}>
                     <Col xs={12} lg={6}>
-                        <h2 className={"font-size-1-75 mb-4"}>Check your understanding</h2>
+                        <h2 className={"font-size-1-75 mb-4"}>{t("common:topics.questionFinder.title")}</h2>
                         <p>
-                            Using the question finder you can select topics and concepts and we’ll generate a random
-                            selection of questions for you to use. You can also specify your level and exam board.
+                            {t("common:topics.questionFinder.description")}
                         </p>
-                        <p><b>Students</b> might want to try our question finder to revise and get feedback on any
-                            mistakes.</p>
-                        <p><b>Teachers</b> might want to try our question finder to create quizzes and assign them to
-                            students.</p>
+                        <p><Trans i18nKey="common:topics.questionFinder.students" components={{ bold: <b /> }} /></p>
+                        <p><Trans i18nKey="common:topics.questionFinder.teachers" components={{ bold: <b /> }} /></p>
                         <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='dark-primary'>
-                            Try our question finder
+                            {t("common:topics.questionFinder.tryButton")}
                         </Button>
                     </Col>
                     <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
@@ -149,6 +149,7 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
 };
 
 export const AllTopics = () => {
+    const { t } = useTranslation();
     const coreAdvancedTags = tags.allSubcategoryTags.filter(s => !s.stageOverride?.[STAGE.CORE]?.hidden && !s.stageOverride?.[STAGE.ADVANCED]?.hidden);
     const ks4Tags = tags.getChildren(TAG_ID.computerScience11_14);
     const sortedKs4Tags = sortBy(ks4Tags, s => !!s.comingSoonDate); // move published topics to the top
@@ -162,10 +163,10 @@ export const AllTopics = () => {
         }
     }, [location.hash, setStageTab]);
 
-    const metaDescription = "Discover our free computer science topics and questions. Learn or revise for your exams with us today.";
+    const metaDescription = t("common:topics.meta.description");
 
     return <PageContainer id={"topics"}>
-        <TitleAndBreadcrumb currentPageTitle={"Topics"} />
+        <TitleAndBreadcrumb currentPageTitle={t("common:topics.page.title")} />
         <MetaDescription description={metaDescription} />
         <Row>
             <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">

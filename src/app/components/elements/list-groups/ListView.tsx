@@ -234,6 +234,7 @@ type QuickQuizListViewItemProps = ListViewItemBaseProps<"item", "list" | "card">
 }
 
 export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProps) => {
+    const { t } = useTranslation();
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
@@ -246,7 +247,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProp
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
         status={item.state}
-        quizTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */}
+        quizTag={t("common:listViews.quickQuiz.levelTag") /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */}
         url={url}
         audienceViews={audienceViews}
         {...rest}

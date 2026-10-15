@@ -22,8 +22,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
     return <FormGroup className="form-group">
         <Label className="fw-bold" htmlFor="dob-input">{t("common:auth.dob.label")}</Label>
         {isAda && <p className="d-block input-description mb-2">
-            {"We ask for your month and year of birth so we can give you the right experience for your age." +
-                " Some features work differently for younger users."}
+            {t("ada:auth.dob.helpText")}
         </p>}
         <DateInput
             invalid={isInvalid}
@@ -43,7 +42,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
         <FormFeedback id="age-validation-message">
             {isDefined(userToUpdate.dateOfBirth)
                 ? `${editingOtherUser ? "The user" : "You"} must be over ${SITE_LOWER_AGE_LIMIT} years old to create an account.`
-                : "Please enter a valid date of birth."
+                : t("common:auth.dob.invalidDate")
             }
         </FormFeedback>
     </FormGroup>;

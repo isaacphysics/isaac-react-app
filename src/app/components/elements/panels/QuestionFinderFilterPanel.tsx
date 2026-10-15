@@ -145,7 +145,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <button
                     className="d-flex bg-opacity-10 p-0 bg-white"
                     onClick={handleFilterPanelExpansion}
-                    aria-label="Toggle filter panel"
+                    aria-label={t("common:questionFinder.filters.togglePanel")}
                     aria-expanded={filtersVisible}
                     aria-controls="question-finder-filters-options"
                 >

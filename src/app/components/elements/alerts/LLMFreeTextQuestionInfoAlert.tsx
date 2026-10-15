@@ -58,20 +58,19 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
 }
 
 function OpenAIUnder13Copy({doc}: InfoBannerProps) {
+    const { t } = useTranslation();
     const navigation = useNavigation(doc);
 
     return <>
-        <h4>We cannot collect your consent</h4>
+        <h4>{t("common:freeTextBuilder.infoAlert.under13Title")}</h4>
         <p>
-            We use a large language model (LLM) to mark free-text questions like this one.
-            This requires your consent to send your answer to OpenAI for marking.
-            Because you are under 13, we cannot collect your consent for this under the GDPR law.
+            {t("common:freeTextBuilder.infoAlert.under13Description")}
         </p>
         <p>
-            You can still read the question, but we will not be able to mark your answer.
+            {t("common:freeTextBuilder.infoAlert.under13Consequence")}
         </p>
         {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
-            Skip question
+            {t("common:freeTextBuilder.infoAlert.skipQuestion")}
         </Button>}
     </>;
 };

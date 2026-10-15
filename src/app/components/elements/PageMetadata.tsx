@@ -17,6 +17,7 @@ import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { selectors, useAppSelector } from '../../state';
 import { BookmarkButton } from './BookmarkButton';
+import { useTranslation } from "react-i18next";
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -109,6 +110,7 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
+    const { t } = useTranslation();
     const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, additionalActionButtons } = props;
     const isQuestion = ["isaacQuestionPage", "isaacFastTrackQuestionPage"].includes(doc?.type ?? "");
     const isConcept = doc?.type === "isaacConceptPage";
@@ -119,7 +121,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
         <div className="page-metadata">
-            {(noTitle || !(title || doc?.title) || isAda) && <h2 className="visually-hidden">Main page</h2>}
+            {(noTitle || !(title || doc?.title) || isAda) && <h2 className="visually-hidden">{t("common:pageMetadata.visuallyHiddenTitle")}</h2>}
 
             {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
                 {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="float-end ms-3 mb-2"/>}

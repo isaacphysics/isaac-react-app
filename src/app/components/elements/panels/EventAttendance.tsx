@@ -47,7 +47,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
     }
 
     return <>
-        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle={t("common:events.attendance.title")} disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
+        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle={t("common:events.attendance.title")} disabled={event.isCancelled && t("common:events.attendance.cancelledEventNotice")}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
                 {t("common:events.attendance.leaderNotice")}
             </div>}
@@ -112,12 +112,12 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                         {booking.bookingStatus != 'ATTENDED' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: true})}
                                         >
-                                            Mark&nbsp;as Attended
+                                            {t("common:events.attendance.markAttendedButton")}
                                         </Button>}
                                         {booking.bookingStatus != 'ABSENT' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: false})}
                                         >
-                                            Mark&nbsp;as Absent
+                                            {t("common:events.attendance.markAbsentButton")}
                                         </Button>}
                                     </td>
                                     <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>

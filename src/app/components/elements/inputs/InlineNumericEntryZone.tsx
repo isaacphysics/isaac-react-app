@@ -74,7 +74,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, index, correct
                     correctnessClass((correctness === "INCORRECT" && valueCorrectness === "CORRECT") ? "NOT_SUBMITTED" : valueCorrectness)
                 )}
                 name={`Input field for part ${questionDTO?.title ?? (index+1)}`}
-                aria-label={`Input field for part ${questionDTO?.title ?? (index+1)}`}
+                aria-label={t("common:questions.numeric.inputLabel", { partTitle: questionDTO?.title ?? (index+1) })}
                 style={contentStyle}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {

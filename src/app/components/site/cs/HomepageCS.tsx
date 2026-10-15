@@ -37,9 +37,9 @@ export const HomepageCS = () => {
                             <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
                                 <img src="/assets/common/logos/ada_rpf_icon.svg" alt={t("ada:homepage.hero.raspberryPiAlt")} className='img-fluid footer-org-logo' data-site="rpf" />
                             </a>
-                            <span>in collaboration with</span>
-                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' data-site="ukgovt" />
-                            <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' data-site="techfirst" />
+                            <span>{t("ada:homepage.hero.collaborationLabel")}</span>
+                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:homepage.hero.ukGovAltText")} className='img-fluid' data-site="ukgovt" />
+                            <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:homepage.hero.techFirstAltText")} className='img-fluid' data-site="techfirst" />
                         </div>
                         <div>
                             {isLoggedIn(user) && isTeacherOrAbove(user) &&
@@ -52,16 +52,16 @@ export const HomepageCS = () => {
                 <Card id={"cta-features-card"} className={"mw-1600 icon-card p-5"}>
                     <Row className={"justify-content-center gy-5 fw-bold"}>
                         <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                            Free computer science resources for students aged 11 to 19
+                            {t("ada:homepage.features.resources")}
                         </Col>
                         <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                            Instant feedback with self-marking quizzes
+                            {t("ada:homepage.features.feedback")}
                         </Col>
                         <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                            Track progress in your personal markbook
+                            {t("ada:homepage.features.markbook")}
                         </Col>
                         <Col xs={12} md={6} lg={3} className={"cta-feature"}>
-                            Specific exam alignment for the UK and adaptable to use worldwide
+                            {t("ada:homepage.features.examAlignment")}
                         </Col>
                     </Row>
                 </Card>
@@ -203,19 +203,19 @@ export const HomepageCS = () => {
                 <Container className="homepage-padding mw-1600" fluid>
                     <ColumnSlice breakpoint="lg" reverseUnderBreakpoint>
                         <ImageBlock>
-                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt="A cartoon sketch of Cyber City"/>
+                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt={t("ada:homepage.techfirst.cyberCityAltText")}/>
                         </ImageBlock>
                         <TextBlock className="text-white">
-                            <h2 className={"font-size-2"}>Ada CS is the new TechFirst learning platform</h2>
-                            <p>Ada Computer Science has partnered with the Department for Digital, Culture, Media and Sport to expand our content and features.</p>
-                            <p>This includes new content on artificial intelligence, cybersecurity, quantum computing, engineering biology, semiconductors, and advanced connectivity technologies, designed specifically for learners aged 11–14.</p>
+                            <h2 className={"font-size-2"}>{t("ada:homepage.techfirst.title")}</h2>
+                            <p>{t("ada:homepage.techfirst.partnershipDescription")}</p>
+                            <p>{t("ada:homepage.techfirst.contentDescription")}</p>
                             <div className="d-flex column-gap-3 flex-column flex-md-row">
-                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/techfirst"}>Read more</Button>
-                                <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>Explore the new topics</Button>
+                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/techfirst"}>{t("ada:homepage.techfirst.readMoreButton")}</Button>
+                                <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>{t("ada:homepage.techfirst.exploreTopicsButton")}</Button>
                             </div>
                             <div className="d-flex gap-4 mt-4 mb-6 mt-lg-6 mb-lg-0">
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
+                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:homepage.hero.ukGovAltText")} className='img-fluid' />
+                                <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:homepage.hero.techFirstAltText")} className='img-fluid' />
                             </div>
                         </TextBlock>
                     </ColumnSlice>

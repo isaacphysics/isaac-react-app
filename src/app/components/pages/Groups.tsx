@@ -337,7 +337,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 {t("common:groups.editor.updateButton")}
                             </Button>}
                             <FormFeedback id={"groupNameFeedback"}>
-                                {newGroupName.trim().length === 0 && "Group name cannot be empty."}
+                                {newGroupName.trim().length === 0 && t("common:groups.editor.nameEmpty")}
                                 {isDefined(existingGroupWithConflictingName) && `A${existingGroupWithConflictingName?.archived ? "n archived" : ""} group with that name already exists.`}
                             </FormFeedback>
                         </InputGroup>
@@ -550,7 +550,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 <StyledTabPicker
                                     id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
                                     onChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
-                                    suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: "Delete group"} : undefined}
+                                    suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: t("common:groups.selector.deleteInfo")} : undefined}
                                 />
                             </li>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>

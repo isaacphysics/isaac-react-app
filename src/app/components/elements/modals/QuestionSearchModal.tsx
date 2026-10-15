@@ -187,7 +187,7 @@ export const QuestionSearchModal = (
         <div>
             <Input
                 type="button" data-testid="add-selections-button"
-                value={siteSpecific("Add selections to question deck", "Add selections to quiz")}
+                value={t("site:questionFinder.search.addSelectionsButton")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={classNames("btn w-100 h-100", siteSpecific("btn-keyline", "btn-solid border-0"))}
                 onClick={() => {

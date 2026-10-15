@@ -150,8 +150,8 @@ export const UserProfile = (props: UserProfileProps) => {
                                         dispatch(cookieConsentSlice.actions.acceptCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
                                     }
                                     dispatch(emailVerificationWarningsDisabled 
-                                        ? showSuccessToast("Warnings restored", "Email verification warnings have been restored.")
-                                        : showSuccessToast("Warnings disabled", "Email verification warnings have been disabled for this browser."));
+                                        ? showSuccessToast(t("common:account.profile.warningsRestoredTitle"), t("common:account.profile.warningsRestoredMessage"))
+                                        : showSuccessToast(t("common:account.profile.warningsDisabledTitle"), t("common:account.profile.warningsDisabledMessage")));
                                     setHasModifiedEmailVerificationState(true);
                                 }}>
                                     {hasModifiedEmailVerificationState
@@ -171,7 +171,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                 submissionAttempted={submissionAttempted}
                 required={true}
-                textOverride={siteSpecific("The country you go to school in. This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address.", undefined)}
+                textOverride={siteSpecific(t("sci:account.profile.countryDescription"), undefined)}
             />
             <SchoolInput
                 userToUpdate={userToUpdate}

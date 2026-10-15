@@ -56,12 +56,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, NON_DRAGGING_INPUTS: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Enable non-dragging alternative inputs</p>}
+                    label={<p>{t("common:account.accessibility.nonDraggingInputs.label")}</p>}
                     id={"non-dragging-movement"}
                     aria-describedby="non-dragging-movement-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="non-dragging-helptext">{`Enabling this will allow you to use alternative input methods that don't require dragging for certain question types (e.g. drag-and-drop).`}</p>
+                <p id="non-dragging-helptext">{t("common:account.accessibility.nonDraggingInputs.helpText")}</p>
             </WithLinkableSetting>
             {/* Seperate maths-specific setting from the general site-wide accessibility settings */}
             <div className="section-divider" />

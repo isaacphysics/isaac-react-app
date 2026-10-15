@@ -92,7 +92,7 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                 <Input type="textarea"
                     disabled={canAttemptQuestionType.isError || readonly}
                     spellCheck={true}
-                    aria-label={"Answer text field"}
+                    aria-label={t("common:questions.freeText.answerLabel")}
                     rows={3}
                     value={currentAttemptValue}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>

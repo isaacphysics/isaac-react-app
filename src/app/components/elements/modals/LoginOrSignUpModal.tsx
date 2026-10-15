@@ -98,7 +98,7 @@ const LoginOrSignUpBody = () => {
 
                         <Button
                             id="log-in"
-                            tag="input" value="Log in"
+                            tag="input" value={t("common:auth.login.button")}
                             color="solid" type="submit" block
                             className="mb-2"
                             onClick={attemptLogIn}

@@ -9,6 +9,7 @@ import { useLocation } from "react-router";
 import { isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
     const { t } = useTranslation();
@@ -54,7 +55,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         <MetadataContainer className="d-flex flex-column gap-2">
             {hasQuestions && <MetadataContainerLink id="questions" title={t("common:books.page.questionsTitle")} />}
             {hasResources && <MetadataContainerLink id="resources" title={t("common:books.page.resourcesTitle")} />}
-            {hasRelevantTests && <MetadataContainerLink id="tests" title="Practice tests" />}
+            {hasRelevantTests && <MetadataContainerLink id="tests" title={i18next.t("common:books.page.testsTitle")} />}
             {hasExtension && <MetadataContainerLink id="extension" title={t("common:books.page.extensionTitle")} />}
             {!hasQuestions && !hasResources && !hasExtension && <span className="ms-2">{t("common:books.page.emptyState")}</span>}
         </MetadataContainer>
@@ -87,7 +88,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasRelevantTests && <>
-            <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
+            <h3 className="mt-4 mb-3 h4" id="tests">{i18next.t("common:books.page.testsTitle")}</h3>
             <span>Set a test to check your {isTeacherOrAbove(user) ? <>students&apos; </> : <></>}understanding of this topic:</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView

@@ -82,6 +82,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 };
 
 const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {
+    const { t } = useTranslation();
     const gameboard_ids: { [key in Subject]: string } = {
         maths: "sample_maths_questions_r2",
         physics: "sample_phy_questions",
@@ -93,7 +94,7 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
 
     return <ShowLoadingQuery
         query={gameboardByIdQuery}
-        defaultErrorTitle="Unable to load example questions"
+        defaultErrorTitle={t("common:overview.exampleQuestions.errorTitle")}
         ifNotFound={RenderNothing}
         uninitializedPlaceholder={RenderNothing}
         maintainOnRefetch
@@ -125,7 +126,7 @@ export const SubjectOverviewPage = () => {
                 The place to learn maths and science by solving problems. 
                 Isaac Science also includes {Object.keys(PHY_NAV_SUBJECTS)
                     .filter(x => x !== pageContext.subject)
-                    .map(x => <a key={x} href={`/${x}`}>Isaac {HUMAN_SUBJECTS[x]}</a>)
+                    .map(x => <a key={x} href={`/${x}`}>{t("common:overview.welcome.subjectLink", { subjectName: HUMAN_SUBJECTS[x] })}</a>)
                     .reduce((prev, curr, index, arr) => index === arr.length - 1 ? <>{prev}, and {curr}</> : <>{prev}, {curr}</>)
                 }.
                 Our resources include questions, tests, concept pages and books.

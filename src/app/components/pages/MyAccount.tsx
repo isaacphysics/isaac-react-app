@@ -399,7 +399,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         } else if (activeTab !== ACCOUNT_TAB.account) {
             dispatch(showErrorToast(t("common:account.updateError.toastTitle"), t("common:account.updateError.toastMessage")));
         } else {
-            dispatch(showErrorToast("Account update failed", "Something went wrong. Please make sure all required fields have been filled in and try again."));
+            dispatch(showErrorToast(i18next.t("common:account.updateError.toastTitle"), i18next.t("common:account.updateError.genericToastMessage")));
         }
         setSaving(false);
     }
@@ -426,7 +426,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <div className={siteSpecific("w-lg-75", "card")}>
-                    {isAda && <Nav tabs role="tablist" aria-label="Account settings" className="my-4 flex-wrap mx-4" data-testid="account-nav">
+                    {isAda && <Nav tabs role="tablist" aria-label={i18next.t("ada:account.nav.ariaLabel")} className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS
                             .filter(tab => !tab.isHidden?.(user, editingOtherUser))
                             .map(({tab, title, titleShort}) =>
@@ -573,7 +573,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                         {isPhy && <div className="section-divider-bold"/>}
                         <div className={classNames("d-flex justify-content-center", {"col-12 col-md-6 offset-md-3": isAda})}>
                             <Input
-                                form="my-account" type="submit" value="Save" className={classNames("btn btn-solid border-0", {"w-100": isAda})}
+                                form="my-account" type="submit" value={i18next.t("common:account.saveButton")} className={classNames("btn btn-solid border-0", {"w-100": isAda})}
                                 disabled={!accountInfoChanged}
                             />
                         </div>

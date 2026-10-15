@@ -21,7 +21,7 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
         <h3 className="h5">{t("common:account.settings.title")}</h3>
         {/* The <li>s carry role="presentation", so the tablist/tab structure is what's exposed to assistive tech while the valid <ul>/<li> markup is preserved */
         /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
-        <ul role="tablist" aria-label="Account settings">
+        <ul role="tablist" aria-label={t("common:account.settings.ariaLabel")}>
             {ACCOUNT_TABS
                 .filter(tab => !tab.isHidden?.(user, editingOtherUser))
                 .map(({tab, title}) => (

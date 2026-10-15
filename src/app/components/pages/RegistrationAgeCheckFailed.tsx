@@ -28,7 +28,7 @@ export const RegistrationAgeCheckFailed = () => {
         <Card className="my-7">
             <CardBody>
                 <h2 className="h3">{t("common:auth.ageCheckFailed.heading")}</h2>
-                <p>Unfortunately, we aren&apos;t able to offer accounts to students under {SITE_LOWER_AGE_LIMIT} years old.</p>
+                <p>{t("common:auth.ageCheckFailed.restrictionMessage", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
                 <p>{siteSpecific(
                     <><Trans i18nKey="sci:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>,
                     <><Trans i18nKey="ada:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>

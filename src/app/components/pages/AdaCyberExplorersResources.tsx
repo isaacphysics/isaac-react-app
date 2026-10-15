@@ -8,44 +8,51 @@ import { Link } from "react-router";
 import { IconCard } from "../elements/cards/IconCard";
 import { isLoggedIn } from "../../services";
 import { selectors, useAppSelector } from "../../state";
+import { Trans, useTranslation } from "react-i18next";
 
 export const AdaCyberExplorersResources = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
 
     return <>
-        <MetaDescription description={"Resources for students and teachers for ages 11-14."} />
+        <MetaDescription description={t("common:cyberExplorers.metaDescription")} />
 
         <section id="ada-11-14-header" className="bg-cyan-400">
             <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
                         <h1 className="font-size-2-5 font-size-md-2-5 mb-3">
-                            <span className="text-pink">/</span><br/>
-                            Your future in tech starts here
+                            <Trans
+                                i18nKey="common:cyberExplorers.header.title"
+                                components={{
+                                    slash: <span className="text-pink" />,
+                                    br: <br />,
+                                }}
+                            />
                         </h1>
-                        <p className="font-size-1-25">Practical activities that help learners understand technology, build confidence, and prepare for what&apos;s next.</p>
-                        <p className="font-size-1-25">Always available for free.</p>
-                        <Button outline className="bg-white" href="/topics#11-14">Explore learning topics</Button>
+                        <p className="font-size-1-25">{t("common:cyberExplorers.header.description")}</p>
+                        <p className="font-size-1-25">{t("common:cyberExplorers.header.freeNote")}</p>
+                        <Button outline className="bg-white" href="/topics#11-14">{t("common:cyberExplorers.header.exploreButton")}</Button>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-5.png" alt="A teacher assisting two students."/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-5.png" alt={t("common:cyberExplorers.header.imageAlt")}/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>
         </section>
         <div className="d-flex position-absolute mx-auto start-0 end-0 w-fit-content gap-4 py-4 px-5 bg-white rounded-4 translate-middle-y shadow-pink z-1">
-            <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt='Funded by the UK Government' className='img-fluid' />
-            <img src="/assets/common/logos/techfirst-black.svg" alt='The TechFirst logo' className='img-fluid' />
+            <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt={t("common:cyberExplorers.fundingLogoAlt")} className='img-fluid' />
+            <img src="/assets/common/logos/techfirst-black.svg" alt={t("common:cyberExplorers.techFirstLogoAlt")} className='img-fluid' />
         </div>
         <section id="cyber-explorers">
             <Container className="homepage-padding mw-1600 d-flex flex-column align-items-center" fluid>
                 <div className="text-center w-lg-75 mb-4 text-white">
-                    <h2 className="font-size-2 mt-5">Cyber Explorers welcome</h2>
-                    <p className="font-size-1-25 mt-3">Explore familiar cyber security resources alongside new computing and technology content for learners.</p>
+                    <h2 className="font-size-2 mt-5">{t("common:cyberExplorers.welcome.title")}</h2>
+                    <p className="font-size-1-25 mt-3">{t("common:cyberExplorers.welcome.description")}</p>
                 </div>
                 <ColumnSlice breakpoint="lg" reverseUnderBreakpoint className="row-gap-5">
                     <ImageBlock>
-                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt="A cartoon sketch of Cyber City"/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt={t("common:cyberExplorers.welcome.imageAlt")}/>
                     </ImageBlock>
                     <TextBlock>
                         <Card>
@@ -53,80 +60,80 @@ export const AdaCyberExplorersResources = () => {
                                 <div className="d-flex gap-3">
                                     <i className="icon icon-learning icon-md" color="secondary" />
                                     <div>
-                                        <h3 className="font-size-1-25">Familiar resources</h3>
-                                        <p>The cyber security resources you know are now part of Ada CS, supported through our partnership with the UK Government.</p>
+                                        <h3 className="font-size-1-25">{t("common:cyberExplorers.welcome.familiarTitle")}</h3>
+                                        <p>{t("common:cyberExplorers.welcome.familiarText")}</p>
                                     </div>
                                 </div>
                                 <div className="d-flex gap-3">
                                     <i className="icon icon-search icon-md" color="secondary" />
                                     <div>
-                                        <h3 className="font-size-1-25">More to explore</h3>
-                                        <p>Alongside cyber security, Ada CS is growing with new topics and learning experiences for ages 11 to 14.</p>
+                                        <h3 className="font-size-1-25">{t("common:cyberExplorers.welcome.exploreMoreTitle")}</h3>
+                                        <p>{t("common:cyberExplorers.welcome.exploreMoreText")}</p>
                                     </div>
                                 </div>
                                 <div className="d-flex gap-3">
                                     <i className="icon icon-group icon-md" color="secondary" />
                                     <div>
-                                        <h3 className="font-size-1-25">Teaching tools</h3>
-                                        <p className="mb-0">Create classes, assign activities, and track learners&apos; progress, all in one place.</p>
+                                        <h3 className="font-size-1-25">{t("common:cyberExplorers.welcome.teachingTitle")}</h3>
+                                        <p className="mb-0">{t("common:cyberExplorers.welcome.teachingText")}</p>
                                     </div>
                                 </div>
                             </CardBody>
                         </Card>
                     </TextBlock>
                 </ColumnSlice>
-                <Button outline className="bg-white mt-5" href={"/pages/202609_techfirst"} target="_blank">Read more</Button>
+                <Button outline className="bg-white mt-5" href={"/pages/202609_techfirst"} target="_blank">{t("common:cyberExplorers.welcome.readMoreButton")}</Button>
             </Container>
         </section>
         <section id="11-14-topics" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
                 <div className="w-lg-75 mb-8">
-                    <h2 className="font-size-2 mb-3">Choose a topic to explore</h2>
-                    <p className="font-size-1-25">Build your skills through practical activities that help you understand how technology works and how it&apos;s used to solve real-world problems.</p>
-                    <p className="font-size-1-25">Start with cyber security, with more topics coming soon.</p>
-                    <Button tag={Link} to="/topics#11-14" className="mt-3">Explore all topics</Button>
+                    <h2 className="font-size-2 mb-3">{t("common:cyberExplorers.topics.title")}</h2>
+                    <p className="font-size-1-25">{t("common:cyberExplorers.topics.description")}</p>
+                    <p className="font-size-1-25">{t("common:cyberExplorers.topics.comingSoon")}</p>
+                    <Button tag={Link} to="/topics#11-14" className="mt-3">{t("common:cyberExplorers.topics.exploreAllButton")}</Button>
                 </div>
 
                 <Card className="bg-cyan-200">
                     <CardBody className="position-relative">
                         <img className="full-background-img" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                         <h3 className="font-size-1-5 ms-3 my-3 d-flex gap-3 align-items-center">
-                            Cyber security
+                            {t("common:cyberExplorers.topics.cyberSecurityTitle")}
                         </h3>
                         <div className="d-flex row row-cols-1 row-cols-sm-2 row-cols-lg-4 mt-3 w-100 g-0">
                             <IconCard className={"without-margin"} card={{
-                                title: "Social engineering",
+                                title: t("common:cyberExplorers.topics.socialEngineering.title"),
                                 icon: {name: "icon-hook", color: "secondary"},
-                                bodyText: "Stay safe online and learn how systems are attacked and defended.",
+                                bodyText: t("common:cyberExplorers.topics.socialEngineering.body"),
                                 clickUrl: "/concepts/social_engineering_11_14",
-                                buttonText: "Explore",
+                                buttonText: t("common:cyberExplorers.topics.exploreButton"),
                                 includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
                             <IconCard className={"without-margin"} card={{
-                                title: "Cyberattacks",
+                                title: t("common:cyberExplorers.topics.cyberattacks.title"),
                                 icon: {name: "icon-bug", color: "secondary"},
-                                bodyText: "Understand who carries out cyberattacks, why and how they use malware to do so.",
+                                bodyText: t("common:cyberExplorers.topics.cyberattacks.body"),
                                 clickUrl: "/concepts/cyberattacks_11_14",
-                                buttonText: "Explore",
+                                buttonText: t("common:cyberExplorers.topics.exploreButton"),
                                 includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
                             <IconCard className={"without-margin"} card={{
-                                title: "Defending against malware",
+                                title: t("common:cyberExplorers.topics.defendMalware.title"),
                                 icon: {name: "icon-shield-lock", color: "secondary"},
-                                bodyText: "Explore the tools and techniques used to detect, stop, and remove malware.",
+                                bodyText: t("common:cyberExplorers.topics.defendMalware.body"),
                                 clickUrl: "/concepts/defend_malware_11_14",
-                                buttonText: "Explore",
+                                buttonText: t("common:cyberExplorers.topics.exploreButton"),
                                 includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
                             <IconCard className={"without-margin"} card={{
-                                title: "Network security",
+                                title: t("common:cyberExplorers.topics.networkSecurity.title"),
                                 icon: {name: "icon-globe-lock", color: "secondary"},
-                                bodyText: "Discover how networks are protected from attacks and kept secure.",
+                                bodyText: t("common:cyberExplorers.topics.networkSecurity.body"),
                                 clickUrl: "/concepts/network_security_11_14",
-                                buttonText: "Explore",
+                                buttonText: t("common:cyberExplorers.topics.exploreButton"),
                                 includeTitleInAriaLabel: true,
                                 buttonStyle: "link",
                             }}/>
@@ -142,16 +149,16 @@ export const AdaCyberExplorersResources = () => {
                         <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/panels-pink.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>What is Ada Computer Science?</h2>
-                        <h3 className="font-size-1-25 mb-3">One place to learn computing, from ages 11 to 19.</h3>
+                        <h2>{t("common:cyberExplorers.about.title")}</h2>
+                        <h3 className="font-size-1-25 mb-3">{t("common:cyberExplorers.about.subtitle")}</h3>
                         <ul>
-                            <li>Free computing resources, from practical activities for ages 11 to 14 to structured computer science learning for ages 14 to 19</li>
-                            <li>Classroom tools to group students into classes, assign activities, and track learners&apos; progress</li>
-                            <li>Expert content developed by the Raspberry Pi Foundation in collaboration with partners including the University of Cambridge</li>
+                            <li>{t("common:cyberExplorers.about.freeResources")}</li>
+                            <li>{t("common:cyberExplorers.about.classroomTools")}</li>
+                            <li>{t("common:cyberExplorers.about.expertContent")}</li>
                         </ul>
                         <div className="d-flex flex-column flex-md-row gap-3">
-                            <Button href="/">Discover more of Ada CS</Button>
-                            {!isLoggedIn(user) && <Button outline className="bg-white" href="/register">Create an account</Button>}
+                            <Button href="/">{t("common:cyberExplorers.about.discoverButton")}</Button>
+                            {!isLoggedIn(user) && <Button outline className="bg-white" href="/register">{t("common:cyberExplorers.about.registerButton")}</Button>}
                         </div>
                     </TextBlock>
                 </ColumnSlice>
@@ -161,17 +168,17 @@ export const AdaCyberExplorersResources = () => {
             <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice breakpoint="lg" reverseUnderBreakpoint className="row-gap-5">
                     <TextBlock>
-                        <h2>Regional delivery partners</h2>
+                        <h2>{t("common:cyberExplorers.partners.title")}</h2>
                         <p>
-                            TechFirst connects schools with in-person activities and events delivered by Regional Delivery Partners across the UK. These partners bring together schools, colleges, employers, local authorities and community organisations to provide inspiring enrichment opportunities and showcase local technology and computing pathways.
+                            {t("common:cyberExplorers.partners.description")}
                         </p>
                         <p>
-                            Schools can also work towards TechFirst School recognition, with Bronze, Silver and Gold awards available. From September 2026, TechFirst will operate in every region and home nation of the UK.
+                            {t("common:cyberExplorers.partners.recognition")}
                         </p>
                         {/* <Button outline className="bg-white" href="/pages/techfirst_rdps" target="_blank">Find out more</Button> */}
                     </TextBlock>
                     <ImageBlock>
-                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/regional-partners.png" alt="Stylised map of the UK showing example regional partner locations."/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/regional-partners.png" alt={t("common:cyberExplorers.partners.imageAlt")}/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>

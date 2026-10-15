@@ -154,7 +154,7 @@ const ContentEmails = () => {
                                 type="button" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}
                                 disabled={!canSubmit}
                                 onClick={() => {
-                                    if (window.confirm(`Are you sure you want to send a ${emailType} email to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
+                                    if (window.confirm(t("common:admin.contentEmails.sendConfirm", { emailType, count: numberOfUsers }))) {
                                         setEmailSent(true);
                                         void sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
                                     }

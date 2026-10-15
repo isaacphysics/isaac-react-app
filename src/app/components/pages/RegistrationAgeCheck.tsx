@@ -69,7 +69,7 @@ export const RegistrationAgeCheck = () => {
         <Card className="my-7">
             <CardBody>
                 <h2 className={siteSpecific("h4", "h3")}>{t("common:auth.registration.ageCheck.ageQuestion")}</h2>
-                <p>We can only create accounts for users {SITE_LOWER_AGE_LIMIT} years old or over.</p>
+                <p>{t("common:auth.registration.ageCheck.terms", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
                 <Form onSubmit={submit}>
                     <fieldset>
                         <FormGroup check className="d-flex align-items-center my-2">
@@ -82,7 +82,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-over" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT} and over</Label>
+                            <Label for="registration-age-check-over" className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionOver", { minAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT })}</Label>
                         </FormGroup>
                         <FormGroup check className="d-flex align-items-center my-2">
                             <Input
@@ -94,7 +94,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT} - {SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old</Label>
+                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionBetween", { minAge: SITE_LOWER_AGE_LIMIT, maxAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1 })}</Label>
                         </FormGroup>
                         <FormGroup check className="my-2">
                             <Input
@@ -106,7 +106,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-under" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT - 1} or under</Label>
+                            <Label for="registration-age-check-under" className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionUnder", { maxAge: SITE_LOWER_AGE_LIMIT - 1 })}</Label>
                         </FormGroup>
                         <FormFeedback className={classNames({"d-block": isInvalid})}>
                             {t("common:auth.registration.ageCheck.selectionRequired")}

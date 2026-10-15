@@ -41,7 +41,7 @@ export const AdminStats = () => {
     return <Container id="admin-stats-page">
         <TitleAndBreadcrumb
             currentPageTitle={t("common:admin.stats.title", { siteTitle: SITE_TITLE_SHORT })}
-            breadcrumbTitleOverride="Admin statistics"
+            breadcrumbTitleOverride={t("common:admin.stats.breadcrumb")}
             icon={{type: "icon", icon: "icon-progress"}}
         />
         <ShowLoading

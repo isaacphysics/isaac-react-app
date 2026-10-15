@@ -470,7 +470,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         closeAction: () => {
                                             dispatch(closeActiveModal());
                                         },
-                                        closeLabelOverride: "Cancel",
+                                        closeLabelOverride: t("common:gameboard.builder.cancelButton"),
                                         size: "xl",
                                         title: t("common:gameboard.builder.searchTitle"),
                                         body: <QuestionSearchModal

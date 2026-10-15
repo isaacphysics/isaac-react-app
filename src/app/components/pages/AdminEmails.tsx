@@ -143,7 +143,7 @@ export const AdminEmails = () => {
                             </div>}
                             <Button type='button' color="secondary" disabled={!canSubmit} className={siteSpecific("btn-xl", "form-control border-0")}
                                 onClick={() => {
-                                    if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
+                                    if (window.confirm(t("common:admin.emails.send.confirm", { emailType, contentObjectId: contentObjectID, count: numberOfUsers }))) {
                                         setEmailSent(true);
                                         sendAdminEmailWithIds({contentId: contentObjectID, emailType, ids: csvIDs});
                                     }

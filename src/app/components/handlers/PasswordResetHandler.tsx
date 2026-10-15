@@ -38,7 +38,7 @@ export const ResetPasswordHandler = () => {
     }
 
     return <Container id="password-reset" className={"mb-7"}>
-        <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle={t("common:auth.passwordReset.title")} icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
+        <TitleAndBreadcrumb breadcrumbTitleOverride={t("common:auth.passwordReset.breadcrumbTitle")} currentPageTitle={t("common:auth.passwordReset.title")} icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
         {isLoading && <div>{t("common:auth.passwordReset.verifyingToken")}</div>}
         <div>
             {(!!tokenVerifyError || !!passwordResetError) &&

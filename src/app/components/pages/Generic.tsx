@@ -94,7 +94,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                     <TitleAndBreadcrumb 
                         currentPageTitle={doc.title as string} 
                         subTitle={doc.subtitle}
-                        displayTitleOverride={isPhy && isNews ? "News" : undefined}
+                        displayTitleOverride={isPhy && isNews ? t("common:generic.news.title") : undefined}
                         icon={{type: "icon", icon: isNews ? "icon-news" : "icon-generic"}}
                     /> 
                 }

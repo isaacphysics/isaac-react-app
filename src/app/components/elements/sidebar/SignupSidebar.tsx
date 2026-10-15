@@ -18,7 +18,7 @@ export const SignupSidebar = ({activeTab, sso} : {activeTab: number, sso?: boole
 
     const handleSSOBack = (path: string) => {
         if (sso) {
-            window.alert("Your age has already been verified by your SSO provider.");
+            window.alert(t("common:auth.registration.ssoVerified"));
         } else {
             goBack(path);
         }

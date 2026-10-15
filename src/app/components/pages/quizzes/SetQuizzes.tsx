@@ -434,8 +434,8 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                         thenRender={quizAssignments => {
                             let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
                                 const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
-                                    ? `Demo Group ${assignment.groupId}`
-                                    : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
+                                    ? t("common:groups.demo.name", { groupId: assignment.groupId })
+                                    : groupIdToName[assignment.groupId as number] ?? t("common:groups.unknown.label");
                                 return {...assignment, groupName};
                             }).reverse();
 

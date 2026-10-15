@@ -511,7 +511,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             <StyledSelect inputId="gameboard-to-assign" isClearable placeholder={t("common:assignments.modal.gameboardPlaceholder")}
                 value={selectedGameboard}
                 onChange={selectOnChange(setSelectedGameboard, false)}
-                options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("question deck", "quiz")} (may belong to another user)`))}
+                options={gameboards.map(g => itemise(g.id ?? "", g.title ?? t("site:assignments.modal.unknownGameboard")))}
             />
             {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
                 This {siteSpecific("question deck", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
@@ -693,7 +693,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         {/*</div>*/}
         {/*<PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>*/}
         <ShowLoadingQuery
-            defaultErrorTitle="Error loading assignments and/or question decks"
+            defaultErrorTitle={t("common:assignments.schedule.loadError")}
             query={assignmentsSetByMeQuery}
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>

@@ -26,6 +26,9 @@
       "title": "Linked accounts"
     },
     "mobileHint": "Update your Ada Computer Science account, or",
+    "nav": {
+      "ariaLabel": "Account settings"
+    },
     "preferences": {
       "emailFrequency": "<b>Frequency</b>: expect one email per term for News. Assignment notifications will be sent as needed by your teacher."
     },
@@ -48,6 +51,7 @@
       "title": "Error fetching quiz with id: {{gameboardId}}"
     },
     "notFound": {
+      "breadcrumbTitle": "Quiz",
       "title": "Quiz not found"
     }
   },
@@ -77,10 +81,14 @@
       "sortDisabledTooltip": "Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks."
     },
     "modal": {
-      "unknownDeck": "Unknown quiz"
+      "unknownDeck": "Unknown quiz",
+      "unknownGameboard": "Unknown quiz (may belong to another user)"
     },
     "pageHelp": "Use this page to set quizzes to your groups. You can set any quiz you have saved to your account.<br/>Students in the group will be emailed when you set a new quiz.",
     "pageTitle": "Assigned to me",
+    "pagination": {
+      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes."
+    },
     "progress": {
       "groupTab": {
         "overview": "Group assignment overview"
@@ -95,10 +103,7 @@
     },
     "title": "Quizzes",
     "viewPremadeQuizzes": "View pre-made quizzes",
-    "yourQuizzes": "Your quizzes",
-    "pagination": {
-      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes."
-    }
+    "yourQuizzes": "Your quizzes"
   },
   "auth": {
     "ageCheckFailed": {
@@ -107,6 +112,9 @@
       "returnButton": "Go home"
     },
     "closeButton": "Close",
+    "dob": {
+      "helpText": "We ask for your month and year of birth so we can give you the right experience for your age. Some features work differently for younger users."
+    },
     "emailInput": {
       "studentHint": "This will be the email address you use to log in.",
       "teacherHint": "This will be visible to your students. We recommend using your school email address."
@@ -117,7 +125,10 @@
       "enableSignIn": "If you've not yet enabled sign-in with {{provider}}, first log in with another method (e.g. email and password). Then, on <accountLink>your Account page</accountLink>, on \"Security\", next to \"{{providerSetting}}\", click \"Link\"."
     },
     "register": {
-      "heading": "How would you like to sign up?"
+      "heading": "How would you like to sign up?",
+      "homeButton": "Go home",
+      "signupChoiceDescription": "You will have access to the same content no matter how you sign up.",
+      "signupChoiceTitle": "How would you like to sign up?"
     },
     "registration": {
       "ageCheck": {
@@ -137,6 +148,11 @@
   "banners": {
     "research": {
       "body": "We record your use of this site and the information you enter to support research into online learning at the University of Cambridge and the Raspberry Pi Foundation. Full details are in the <privacyLink>privacy policy</privacyLink>."
+    }
+  },
+  "clientError": {
+    "notFound": {
+      "breadcrumbTitle": "404"
     }
   },
   "connections": {
@@ -166,6 +182,7 @@
     "details": {
       "availability": "Availability",
       "bookingDeadline": "Booking deadline",
+      "breadcrumbTitle": "Event details",
       "location": "Location",
       "when": "When"
     },
@@ -241,6 +258,8 @@
       "errorTitle": "Loading quizzes failed"
     },
     "notFound": {
+      "breadcrumb": "Quiz",
+      "error": "We're sorry, we were not able to find a quiz with the id",
       "title": "Quiz not found"
     },
     "save": {
@@ -307,15 +326,15 @@
       "internationalCore": "<b>Core:</b> Aimed at students aged 14 to 16, with no previous knowledge needed.",
       "internationalDescription": "Learning resources tailored to prior knowledge and learning age groups:",
       "internationalTitle": "Teaching outside the UK",
+      "seeCurriculum": "See the Ada CS curriculum",
       "seeMore": "See more",
+      "seeUkSpecifications": "See UK specifications",
       "title": "Exam board alignment",
       "ukDescription": "Find resources tailored to the specific learning levels and exam boards in the UK:",
       "ukEngland": "<b>England:</b> GCSE and A Level",
       "ukScotland": "<b>Scotland:</b> National 5, Higher, and Advanced Higher",
       "ukTitle": "In the UK",
-      "ukWales": "<b>Wales:</b> GCSE and A Level",
-      "seeUkSpecifications": "See UK specifications",
-      "seeCurriculum": "See the Ada CS curriculum"
+      "ukWales": "<b>Wales:</b> GCSE and A Level"
     },
     "explore": {
       "studentsButton": "Explore Ada CS for students",
@@ -323,15 +342,20 @@
     },
     "features": {
       "examAlignment": "Specific exam alignment for the UK and adaptable to use worldwide",
+      "feedback": "Instant feedback with self-marking quizzes",
       "freeResources": "Free computer science resources for students aged 14 to 19",
       "instantFeedback": "Instant feedback with self-marking quizzes",
-      "markbook": "Track progress in your personal markbook"
+      "markbook": "Track progress in your personal markbook",
+      "resources": "Free computer science resources for students aged 11 to 19"
     },
     "hero": {
       "cambridgeAlt": "University of Cambridge website",
+      "collaborationLabel": "in collaboration with",
       "dashboardButton": "Go to My Ada Overview",
       "raspberryPiAlt": "Raspberry Pi website",
-      "title": "The free learning platform for computing teachers and students"
+      "techFirstAltText": "The TechFirst logo",
+      "title": "The free learning platform for computing teachers and students",
+      "ukGovAltText": "Funded by the UK Government"
     },
     "metaDescription": "Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!",
     "resources": {
@@ -343,6 +367,14 @@
     },
     "teachLearn": {
       "title": "Teach and learn about computer science with confidence"
+    },
+    "techfirst": {
+      "contentDescription": "This includes new content on artificial intelligence, cybersecurity, quantum computing, engineering biology, semiconductors, and advanced connectivity technologies, designed specifically for learners aged 11–14.",
+      "cyberCityAltText": "A cartoon sketch of Cyber City",
+      "exploreTopicsButton": "Explore the new topics",
+      "partnershipDescription": "Ada Computer Science has partnered with the Department for Digital, Culture, Media and Sport to expand our content and features.",
+      "readMoreButton": "Read more",
+      "title": "Ada CS is the new TechFirst learning platform"
     },
     "testimonials": {
       "studentAttribution": "– Computer science student",
@@ -373,9 +405,11 @@
     "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.",
     "footer": {
       "cambridgeAlt": "University of Cambridge website",
+      "fundedByAlt": "Funded by the UK Government",
       "licenseText": "All teaching materials on this site are available under a <licenseLink>CC BY-NC-SA 4.0</licenseLink> license, except where otherwise stated.",
       "logoAlt": "Ada Computer Science homepage",
-      "raspberryPiAlt": "Raspberry Pi website"
+      "raspberryPiAlt": "Raspberry Pi website",
+      "techFirstAlt": "The TechFirst logo"
     },
     "title": "Ada Computer Science"
   },
@@ -464,6 +498,7 @@
       "examBoardColumn": "Exam boards"
     },
     "search": {
+      "addSelectionsButton": "Add selections to quiz",
       "examBoardLabel": "Exam Board",
       "examBoardPlaceholder": "Any",
       "placeholder": "e.g. Creating an AST"

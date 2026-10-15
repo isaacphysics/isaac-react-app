@@ -160,7 +160,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                         {(['WAITING_LIST', 'CANCELLED'].includes(booking.bookingStatus as string)) &&
                                             <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
-                                                    "Are you sure you want to convert this to a confirmed booking?",
+                                                    t("common:events.manageBookings.confirmPromote"),
                                                     () => promoteUserBooking({eventId, userId})
                                                 )
                                             }>
@@ -170,7 +170,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                         {(['WAITING_LIST', 'CONFIRMED'].includes(booking.bookingStatus as string)) &&
                                             <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
-                                                    "Are you sure you want to cancel this booking?",
+                                                    t("common:events.manageBookings.confirmCancel"),
                                                     () => cancelUserBooking({eventId, userId})
                                                 )
                                             }>
@@ -180,7 +180,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                         {isAdmin(user) &&
                                             <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
-                                                    "Are you sure you want to delete this booking permanently?",
+                                                    t("common:events.manageBookings.confirmDelete"),
                                                     () => deleteUserBooking({eventId, userId})
                                                 )
                                             }>
@@ -189,7 +189,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                         }
                                         <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                             confirmThen(
-                                                "Are you sure you want to resend the confirmation email for this booking?",
+                                                t("common:events.manageBookings.confirmResendEmail"),
                                                 () => resendUserConfirmationEmail({eventId, userId})
                                             )
                                         }>

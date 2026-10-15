@@ -88,7 +88,7 @@ export const LogIn = () => {
                                         <Col sm={6}>
                                             <Button
                                                 id="log-in"
-                                                tag="input" value="Log in"
+                                                tag="input" value={t("common:auth.login.button")}
                                                 color="solid"
                                                 type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}

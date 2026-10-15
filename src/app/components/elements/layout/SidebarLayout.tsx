@@ -45,7 +45,7 @@ export const NavigationSidebar = (props: SidebarProps) => {
 
     const { className, children, ...rest } = props;
     return <Col tag="aside" aria-label={t("common:sidebar.ariaLabel")} lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)}>
-        <h2 className="visually-hidden">Sidebar</h2>
+        <h2 className="visually-hidden">{t("common:sidebar.navigationLabel")}</h2>
         {children}
     </Col>;
 };
@@ -98,7 +98,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                     <OffcanvasBody>
                         <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
                             <Col {...rest} className={classNames("sidebar p-4 pt-0", className)}>
-                                <h2 className="visually-hidden">Sidebar</h2>
+                                <h2 className="visually-hidden">{t("common:sidebar.contentLabel")}</h2>
                                 {children}
                             </Col>
                         </ContentSidebarContext.Provider>
@@ -113,7 +113,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                         </AccordionHeader>
                         <AccordionBody accordionId="myAda" className="accordion-flush-body">
                             <Col {...rest} className={classNames("flex-column", className)}>
-                                <h2 className="visually-hidden">Sidebar</h2>
+                                <h2 className="visually-hidden">{t("common:sidebar.contentLabel")}</h2>
                                 {children}
                             </Col>
                         </AccordionBody>

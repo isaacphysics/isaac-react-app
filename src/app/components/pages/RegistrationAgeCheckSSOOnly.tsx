@@ -9,8 +9,10 @@ import { RaspberryPiSignInButton } from "../elements/RaspberryPiSignInButton";
 import { GoogleSignInButton } from "../elements/GoogleSignInButton";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
 import { SsoHelpLink } from "../elements/LogInInputs";
+import { Trans, useTranslation } from "react-i18next";
 
 export const RegistrationAgeCheckSSOOnly = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const returnToHomepage = (event: React.MouseEvent) => {
@@ -29,7 +31,7 @@ export const RegistrationAgeCheckSSOOnly = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:auth.register.pageTitle", { siteName: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -38,9 +40,15 @@ export const RegistrationAgeCheckSSOOnly = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h3>Unable to use email</h3>
-                <p>As you are between {SITE_LOWER_AGE_LIMIT}-{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old, we need you to <strong>sign up using a third-party provider</strong>.</p>
-                <p>Please try again, using either {authProviderListString}.</p>
+                <h3>{t("common:auth.registration.ageCheck.heading")}</h3>
+                <p><Trans
+                    i18nKey="common:auth.registration.ageCheck.message"
+                    components={{
+                        strong: <strong />,
+                    }}
+                    values={{ minAge: SITE_LOWER_AGE_LIMIT, maxAge: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1 }}
+                /></p>
+                <p>{t("common:auth.registration.ageCheck.tryOtherProvider", { authProviders: authProviderListString })}</p>
                 {isAda && <hr/>}
                 <div className="d-flex flex-column gap-2">
                     {isAda && <RaspberryPiSignInButton knownRole="STUDENT" />}
@@ -50,10 +58,10 @@ export const RegistrationAgeCheckSSOOnly = () => {
                 </div>
                 <Row className="justify-content-end">
                     <Col sm={4} lg={3} className="d-flex justify-content-end">
-                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>Back</Button>
+                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>{t("common:auth.registration.ageCheck.backButton")}</Button>
                     </Col>
                     <Col sm={6} lg={4}>
-                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{siteSpecific("Take me back", "Go home")}</Button>
+                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{t("site:auth.register.homeButton")}</Button>
                     </Col>
                 </Row>
             </CardBody>

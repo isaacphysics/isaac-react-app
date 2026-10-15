@@ -29,7 +29,11 @@
     "preferences": {
       "emailFrequency": "<b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
     },
+    "profile": {
+      "countryDescription": "The country you go to school in. This helps us to measure our reach and impact. If you did not select a country when you registered, we may have suggested one from your school or school email address."
+    },
     "requiredInfo": {
+      "countryCodeNote": "This is now required information to better help us measure our reach and impact.",
       "emailFrequencyNote": "<strong>Frequency</strong>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
     },
     "review": {
@@ -53,6 +57,7 @@
       "title": "Error fetching question deck with id: {{gameboardId}}"
     },
     "notFound": {
+      "breadcrumbTitle": "Question deck",
       "title": "Question deck not found"
     }
   },
@@ -77,10 +82,14 @@
       "byName": "Filter question decks by name"
     },
     "modal": {
-      "unknownDeck": "Unknown question deck"
+      "unknownDeck": "Unknown question deck",
+      "unknownGameboard": "Unknown question deck (may belong to another user)"
     },
     "pageHelp": "Use this page to set assignments to your groups. You can assign any question deck you have saved to your account.<br/>Students in the group will be emailed when you set a new assignment.",
     "pageTitle": "My assignments",
+    "pagination": {
+      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered assignments."
+    },
     "progress": {
       "backToGroup": "Back to group assignments and tests",
       "groupTab": {
@@ -95,10 +104,7 @@
       "unknownDeck": "Unknown question deck (may belong to another user)"
     },
     "scheduleInfo": "Use the <scheduleLink>assignment schedule</scheduleLink> page to view assignments by start date and due date.",
-    "title": "Set assignments",
-    "pagination": {
-      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered assignments."
-    }
+    "title": "Set assignments"
   },
   "auth": {
     "ageCheckFailed": {
@@ -121,7 +127,10 @@
       "matchError": "Please ensure your passwords match."
     },
     "register": {
-      "heading": "Hello!"
+      "greetingDescription": "Here, you can create an {{siteTitle}} account, or log in to an existing one.",
+      "greetingTitle": "Hello!",
+      "heading": "Hello!",
+      "homeButton": "Take me back"
     },
     "registration": {
       "ageCheck": {
@@ -292,6 +301,11 @@
       "title": "Step Up to GCSE Physics"
     }
   },
+  "clientError": {
+    "notFound": {
+      "breadcrumbTitle": "Unknown page"
+    }
+  },
   "connections": {
     "groups": {
       "activeInfo": "Active group memberships mean you will receive assignments set to that group by teachers in it.",
@@ -317,6 +331,7 @@
     "details": {
       "availability": "Availability:",
       "bookingDeadline": "Booking deadline:",
+      "breadcrumbTitle": "Event details",
       "location": "Location:",
       "pageTitle": "Events",
       "when": "When:"
@@ -387,6 +402,8 @@
       "errorTitle": "Loading question decks failed"
     },
     "notFound": {
+      "breadcrumb": "Question deck",
+      "error": "We're sorry, we were not able to find a question deck with the id",
       "title": "Question deck not found"
     },
     "save": {
@@ -450,9 +467,11 @@
     "hero": {
       "description": "From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.",
       "headline": "<highlight>Master science subjects</highlight> by solving problems",
+      "studentContent": "Tackle interactive questions, explore varying difficulty levels, and strengthen problem-solving skills with concept guides, video lessons, and events.",
       "studentLabel": "STUDENTS",
       "studentTag": "student card tag",
       "studentTitle": "Build confidence in science through practice",
+      "teacherContent": "Assign, track, and manage student progress with ease – ideal for classwork, homework, or revision. Trusted by more than 3,500 teachers.",
       "teacherLabel": "TEACHERS",
       "teacherTag": "teacher card tag",
       "teacherTitle": "Support students in developing skills and achieving higher results"
@@ -613,6 +632,7 @@
     "metaDescription": "Find physics, maths, chemistry and biology questions by topic and difficulty.",
     "pageHelp": "You can find a question by selecting the areas of interest, stage and difficulties.<br/>You can select more than one entry in each area.",
     "search": {
+      "addSelectionsButton": "Add selections to question deck",
       "bookLabel": "Book",
       "bookPlaceholder": "None",
       "placeholder": "e.g. Man vs. Horse",

@@ -182,7 +182,8 @@ export type AbstractListViewProps = ALVILayout & {
     style?: "flat" | "stacked"; // flat = expand horizontally to fit content on one line; stacked = expand vertically, better for mobile or multi-column layouts; undefined = responsive
 }
 
-export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, style, url, state, className, componentTag, ...typedProps}: AbstractListViewItemProps & AbstractListViewProps) => { 
+export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, style, url, state, className, componentTag, ...typedProps}: AbstractListViewItemProps & AbstractListViewProps) => {
+    const { t } = useTranslation(); 
     const deviceSize = useDeviceSize();
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const user = useAppSelector(selectors.user.orNull);
@@ -296,7 +297,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
                             onClick={() => bookmarkItem(contentId)}
                             type="button"
-                            aria-label={isBookmarked(contentId) ? "Remove bookmark" : "Add bookmark"}
+                            aria-label={isBookmarked(contentId) ? t("common:listViews.bookmark.remove") : t("common:listViews.bookmark.add")}
                         /> 
                     </div>
                     }

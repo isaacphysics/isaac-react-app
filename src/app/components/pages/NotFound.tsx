@@ -2,7 +2,7 @@ import React from "react";
 import {useLocation} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {siteSpecific, WEBMASTER_EMAIL} from "../../services";
+import {WEBMASTER_EMAIL} from "../../services";
 import { Trans, useTranslation } from "react-i18next";
 import { TransAnchor } from "../elements/TransAnchor";
 
@@ -17,7 +17,7 @@ export const NotFound = () => {
     return <Container>
         <div className="pb-1">
             <TitleAndBreadcrumb
-                breadcrumbTitleOverride={siteSpecific("Unknown page", "404")}
+                breadcrumbTitleOverride={t("site:clientError.notFound.breadcrumbTitle")}
                 currentPageTitle={window.navigator.onLine ? t("common:clientError.notFound.title") : t("common:clientError.notFound.offlineTitle")}
                 icon={{type: "icon", icon: "icon-error"}}
             />

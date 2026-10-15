@@ -33,7 +33,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
             value={(userToUpdate && userToUpdate.countryCode) || undefined}
             defaultValue={"blank"}
             invalid={submissionAttempted && required && !countryCodeValid}
-            feedback="Please select your country."
+            feedback={t("common:account.country.validationError")}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {countryCode: e.target.value} : {countryCode: null}))
             }

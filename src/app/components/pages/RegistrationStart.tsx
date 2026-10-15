@@ -43,17 +43,17 @@ export const RegistrationStart = () => {
                         <div className="mb-5">
                             {siteSpecific(
                                 <>
-                                    <h3>Hello!</h3>
-                                    <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
+                                    <h3>{t("sci:auth.register.greetingTitle")}</h3>
+                                    <p>{t("sci:auth.register.greetingDescription", { siteTitle: SITE_TITLE })}</p>
                                 </>,
                                 <>
-                                    <h3>How would you like to sign up?</h3>
-                                    <p>You will have access to the same content no matter how you sign up.</p>
+                                    <h3>{t("ada:auth.register.signupChoiceTitle")}</h3>
+                                    <p>{t("ada:auth.register.signupChoiceDescription")}</p>
                                 </>
                             )}
                         </div>
                         <div className="my-7">
-                            <h3 className={classNames({"h4 mb-3": isPhy})}>Continue with:</h3>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("common:auth.registration.socialSignIn.title")}</h3>
                             <div className="d-flex flex-column gap-2 mb-2">
                                 {isAda && <RaspberryPiSignInButton />}
                                 <GoogleSignInButton />
@@ -62,8 +62,8 @@ export const RegistrationStart = () => {
                             {isPhy && <SsoHelpLink />}                            
                         </div>
                         <div className="my-5">
-                            <h3 className={classNames({"h4 mb-3": isPhy})}>Or use an email:</h3>
-                            <Button block onClick={emailSignUp}>Sign up with email</Button>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("common:auth.registration.emailSection.title")}</h3>
+                            <Button block onClick={emailSignUp}>{t("common:auth.registration.emailSection.button")}</Button>
                         </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <div className="my-5">

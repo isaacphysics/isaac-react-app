@@ -53,8 +53,8 @@ export const FooterCS = () => (
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
                                     <img src="/assets/common/logos/ada_rpf_icon.svg" alt={i18next.t("ada:meta.footer.raspberryPiAlt")} className='img-fluid footer-org-logo' data-site="rpf" />
                                 </a>
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' data-site="ukgovt" />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' data-site="techfirst" />
+                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={i18next.t("ada:meta.footer.fundedByAlt")} className='img-fluid' data-site="ukgovt" />
+                                <img src="/assets/common/logos/techfirst-white.svg" alt={i18next.t("ada:meta.footer.techFirstAlt")} className='img-fluid' data-site="techfirst" />
                             </div>
                         </Col>
                         

@@ -39,7 +39,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     };
     const usefulInformationLabels: {[k in keyof typeof usefulInformation]: string} = {
         userId: t("common:clientError.userInfo.userId"),
-        location: "Location",
+        location: t("common:clientError.userInfo.locationLabel"),
         userAgent: t("common:clientError.userInfo.userAgent"),
         errorMessage: t("common:clientError.userInfo.errorDetails"),
     };

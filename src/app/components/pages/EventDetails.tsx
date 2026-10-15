@@ -301,7 +301,7 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
                     <Button className="mb-3 me-3 btn btn-keyline" onClick={() =>
                         confirmThen(
-                            "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
+                            t("common:events.booking.cancelConfirmMessage"),
                             () => cancelMyBooking(eventId)
                         )
                     }>
@@ -371,11 +371,11 @@ const EventDetails = () => {
                 {isPhy ?
                     <TitleAndBreadcrumb
                         currentPageTitle={t("sci:events.details.pageTitle")} icon={{type: "icon", icon: "icon-events"}}
-                        breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
+                        breadcrumbTitleOverride={t("sci:events.details.breadcrumbTitle")} intermediateCrumbs={[EVENTS_CRUMB]}
                     /> :
                     <TitleAndBreadcrumb
                         currentPageTitle={event.title as string} subTitle={event.subtitle}
-                        breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
+                        breadcrumbTitleOverride={t("ada:events.details.breadcrumbTitle")} intermediateCrumbs={[EVENTS_CRUMB]}
                     />
                 }
                 <PageMetadata 

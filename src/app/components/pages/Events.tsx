@@ -136,7 +136,7 @@ export const Events = () => {
                     const numberOfLoadedEvents = events.length;
 
                     return <div className="my-4">
-                        <h2 className="visually-hidden">Events list</h2>
+                        <h2 className="visually-hidden">{t("common:events.page.listHeading")}</h2>
                         <div className="d-flex flex-col justify-content-end mb-2">
                             {t("common:events.page.showingCount", { loadedCount: numberOfLoadedEvents, total })}
                         </div>

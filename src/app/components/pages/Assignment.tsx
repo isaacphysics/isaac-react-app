@@ -61,7 +61,7 @@ export const Assignment = () => {
 
     const notFoundComponent = <>
         <TitleAndBreadcrumb
-            breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
+            breadcrumbTitleOverride={t("site:assignment.notFound.breadcrumbTitle")}
             currentPageTitle={t("site:assignment.notFound.title")}
             icon={{type: "icon", icon: "icon-error"}}
         />

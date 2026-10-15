@@ -62,8 +62,8 @@ export const EmailAlterHandler = () => {
                                             <Button onClick={() => {
                                                 if (!user.email) {
                                                     dispatch(showErrorToast(
-                                                        "Email verification request failed.",
-                                                        "You are not logged in or don't have an e-mail address to verify."
+                                                        t("common:auth.emailVerification.errorToastTitle"),
+                                                        t("common:auth.emailVerification.errorToastMessage")
                                                     ));
                                                 } else {
                                                     void sendVerificationEmail({email: user.email});
@@ -85,8 +85,8 @@ export const EmailAlterHandler = () => {
                             </>
                         }
                         {emailVerificationNotInitiated && <>
-                            <div className="mb-4 h3">Couldn&apos;t verify email address</div>
-                            <p>This page received bad parameters. Please ensure you are using the link as provided in the email.</p>
+                            <div className="mb-4 h3">{t("common:auth.emailVerification.badParamsTitle")}</div>
+                            <p>{t("common:auth.emailVerification.badParamsMessage")}</p>
                         </>}
                     </CardBody>
                 </Card>
