@@ -526,7 +526,7 @@ export const HUMAN_STATUS: {[key in CompletionState]: string} = {
 };
 
 type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_14" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
-export const SKILLS_BOOKS: BookTag[] = ["phys_book_step_into", "phys_book_step_up", "phys_book_gcse", "physics_skills_14", "physics_skills_19", "physics_linking_concepts", "maths_book_gcse", "chemistry_16"]
+export const SKILLS_BOOKS: BookTag[] = ["phys_book_step_into", "phys_book_step_up", "phys_book_gcse", "physics_skills_14", "physics_skills_19", "physics_linking_concepts", "maths_book_gcse", "chemistry_16"];
 
 export enum BookHiddenState {
     BOOKS_LISTING_ONLY = "books_listing_only",
