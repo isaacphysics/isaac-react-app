@@ -40,13 +40,22 @@ export const FooterCS = () => (
                         <Col xs={{size: 12}} md={{size: 6, order: 1}} lg={{size: 6}} xl={{size: 6}} className="col-xxl-2">
                             <div className="logo-grid">
                                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' data-site="uoc" />
+                                    <picture>
+                                        <source media="print" srcSet="/assets/common/logos/university_of_cambridge_black.png" />
+                                        <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' data-site="uoc" />
+                                    </picture>
                                 </a>
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
                                     <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' data-site="rpf" />
                                 </a>
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' data-site="ukgovt" />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' data-site="techfirst" />
+                                <picture>
+                                    <source media="print" srcSet="/assets/common/logos/funded-by-uk-govt-black.svg" />
+                                    <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' data-site="ukgovt" />
+                                </picture>
+                                <picture>
+                                    <source media="print" srcSet="/assets/common/logos/techfirst-black.svg" />
+                                    <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' data-site="techfirst" />
+                                </picture>
                             </div>
                         </Col>
                         
