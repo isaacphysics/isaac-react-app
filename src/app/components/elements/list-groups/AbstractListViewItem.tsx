@@ -5,7 +5,7 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { above, below, isAda, isDefined, isLoggedIn, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { above, below, isAda, isDefined, isLoggedIn, isPhy, isStaff, isTeacherOrAbove, siteSpecific, SKILLS_BOOKS, Subject, useDeviceSize } from "../../../services";
 import { TitleIcon, TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
@@ -194,7 +194,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
 
     const isCrossTopic = isAda && tags?.includes("cross_topic");
     const isLLM = tags?.includes("llm_question_page");
-    const isBookQuestion = isPhy && tags?.includes("book");
+    const isSkillsBookQuestion = isPhy && tags?.some(tag => SKILLS_BOOKS.some(book => book === tag));
 
     const flatLayout = style === "flat" && above['lg'](deviceSize);
     const stackedLayout = style === "stacked" || (isPhy && below["sm"](deviceSize)) || (isAda && below["xs"](deviceSize));
@@ -239,7 +239,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         </>
                     </div>
                     {subtitle && <div className="small text-muted text-wrap d-flex align-items-center">
-                        {isBookQuestion && <i className="icon icon-book me-1"/>}
+                        {isSkillsBookQuestion && <i className="icon icon-book me-1"/>}
                         <Markup encoding="latex">{subtitle}</Markup>
                     </div>}
                     {!flatLayout && breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
