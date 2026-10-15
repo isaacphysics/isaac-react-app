@@ -41,7 +41,7 @@ export const FooterCS = () => (
                             <div className="logo-grid">
                                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
                                     <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='no-print img-fluid footer-org-logo' data-site="uoc" />
-                                    <img src="/assets/common/logos/university_of_cambridge_black.png" alt='University of Cambridge website' className='only-print img-fluid footer-org-logo' data-site="uoc" />
+                                    <img src="/assets/common/logos/university_of_cambridge_black.svg" alt='University of Cambridge website' className='only-print img-fluid footer-org-logo' data-site="uoc" />
                                 </a>
 
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
