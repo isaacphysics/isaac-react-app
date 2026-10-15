@@ -6,7 +6,8 @@ import classNames from "classnames";
 import {isAda, isPhy, SITE_TITLE_SHORT} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
-import i18next from "i18next";
+import i18next, {TFunction} from "i18next";
+import {useTranslation} from "react-i18next";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -26,50 +27,50 @@ interface ConfidenceVariables {
 
 // Text to show in the confidence component depending on the type of content
 // "color" only applies to Physics.
-const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
+const getConfidenceOptions = (t: TFunction): {[option in ConfidenceType]: ConfidenceVariables} => ({
     "question": {
-        title: "Click a button to check your answer",
+        title: t("common:confidence.question.title"),
         states: {
             initial: {
-                question: "What is your level of confidence that your answer is correct?",
+                question: t("common:confidence.question.initial.question"),
                 options: [
-                    {label: "Low", color: "negative"},
-                    {label: "Medium", color: "neutral"},
-                    {label: "High", color: "positive"}
+                    {label: t("common:confidence.options.low"), color: "negative"},
+                    {label: t("common:confidence.options.medium"), color: "neutral"},
+                    {label: t("common:confidence.options.high"), color: "positive"}
                 ]
             },
             followUp: {
-                question: "Having read the feedback, what is your level of confidence in answering this question correctly now?",
+                question: t("common:confidence.question.followUp.question"),
                 options: [
-                    {label: "Low", color: "negative"},
-                    {label: "Medium", color: "neutral"},
-                    {label: "High", color: "positive"}
+                    {label: t("common:confidence.options.low"), color: "negative"},
+                    {label: t("common:confidence.options.medium"), color: "neutral"},
+                    {label: t("common:confidence.options.high"), color: "positive"}
                 ]
             }
         }
     },
     "quick_question": {
-        title: "Click a button to show the answer",
+        title: t("common:confidence.quickQuestion.title"),
         states: {
             initial: {
-                question: "What is your level of confidence that your own answer is correct?",
+                question: t("common:confidence.quickQuestion.initial.question"),
                 options: [
-                    {label: "Low", color: "negative"},
-                    {label: "Medium", color: "neutral"},
-                    {label: "High", color: "positive"}
+                    {label: t("common:confidence.options.low"), color: "negative"},
+                    {label: t("common:confidence.options.medium"), color: "neutral"},
+                    {label: t("common:confidence.options.high"), color: "positive"}
                 ]
             },
             followUp: {
-                question: "Is your own answer correct?",
+                question: t("common:confidence.quickQuestion.followUp.question"),
                 options: [
-                    {label: "No", color:"negative"},
-                    {label: "Partly", color: "neutral"},
-                    {label: "Yes", color: "secondary"}
+                    {label: t("common:confidence.options.no"), color:"negative"},
+                    {label: t("common:confidence.options.partly"), color: "neutral"},
+                    {label: t("common:confidence.options.yes"), color: "secondary"}
                 ]
             }
         }
     }
-};
+});
 
 interface ConfidenceQuestionsProps {
     state: ConfidenceState;
@@ -101,6 +102,7 @@ type ValidationPendingState =
 }
 
 export const ConfidenceQuestions = ({state, setState, validationPending, setValidationPending, disableInitialState, identifier, type, validationResponse}: ConfidenceQuestionsProps) => {
+    const {t} = useTranslation();
     const dispatch = useAppDispatch();
 
     const toggle = (confidence: string, state: ActiveConfidenceState) => {
@@ -149,7 +151,7 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
 
     if (state === "hidden") return null;
 
-    const confidenceVariables = confidenceOptions[type];
+    const confidenceVariables = getConfidenceOptions(t)[type];
     const confidenceStateVariables = confidenceVariables?.states[state];
 
     const disabled = state === "initial" && disableInitialState === true;

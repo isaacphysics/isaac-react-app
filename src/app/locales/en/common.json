@@ -1452,6 +1452,32 @@
     "infoModal": {
       "body": "We regularly review and update the {{siteName}} platform’s content and would like your input in order to prioritise content and assess the impact of updates. Data captured with these buttons will help us identify priority areas.",
       "title": "Information"
+    },
+    "options": {
+      "high": "High",
+      "low": "Low",
+      "medium": "Medium",
+      "no": "No",
+      "partly": "Partly",
+      "yes": "Yes"
+    },
+    "question": {
+      "followUp": {
+        "question": "Having read the feedback, what is your level of confidence in answering this question correctly now?"
+      },
+      "initial": {
+        "question": "What is your level of confidence that your answer is correct?"
+      },
+      "title": "Click a button to check your answer"
+    },
+    "quickQuestion": {
+      "followUp": {
+        "question": "Is your own answer correct?"
+      },
+      "initial": {
+        "question": "What is your level of confidence that your own answer is correct?"
+      },
+      "title": "Click a button to show the answer"
     }
   },
   "connections": {
