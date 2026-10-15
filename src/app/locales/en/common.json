@@ -1579,10 +1579,14 @@
     "welcomeHeader": "Welcome back, {{teacherName}}!"
   },
   "dateInput": {
-    "clearButtonLabel": "Clear date{{labelSuffix}}",
-    "dayLabel": "Day{{labelSuffix}}",
-    "monthLabel": "Month{{labelSuffix}}",
-    "yearLabel": "Year{{labelSuffix}}"
+    "clearButtonLabel": "Clear date",
+    "dayLabel": "Day",
+    "monthLabel": "Month",
+    "yearLabel": "Year",
+    "dayLabel_birth": "Day of birth",
+    "monthLabel_birth": "Month of birth",
+    "yearLabel_birth": "Year of birth",
+    "clearButtonLabel_birth": "Clear date of birth"
   },
   "dateString": {
     "daysAgo": "{{days}} days ago",
@@ -2020,7 +2024,9 @@
   "form": {
     "elements": {
       "requiredError": "required",
-      "trueFalseAccessibilityLabel": "for {{fieldName}}"
+      "trueFalseAccessibilityLabel": "for {{fieldName}}",
+      "yes": "Yes",
+      "no": "No"
     },
     "emailLabel": "Email address",
     "emailValidationError": "Please enter a valid email address",

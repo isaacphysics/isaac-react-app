@@ -14,15 +14,17 @@ interface TrueFalseRadioProps {
     trueLabel?: string;
     falseLabel?: string;
 }
-export function TrueFalseRadioInput({id, className, stateObject, propertyName, accessibleName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps) {
+export function TrueFalseRadioInput({id, className, stateObject, propertyName, accessibleName, setStateFunction, submissionAttempted, trueLabel, falseLabel}: TrueFalseRadioProps) {
     const { t } = useTranslation();
+    const yesLabel = trueLabel ?? t("common:form.elements.yes");
+    const noLabel = falseLabel ?? t("common:form.elements.no");
     const invalid = submissionAttempted && (typeof stateObject?.[propertyName] !== "boolean");
 
     return <FormGroup>
         <div className={className}>
             <div className="d-flex flex-nowrap flex-grow-1">
                 <Label htmlFor={`${id}-t`} className="w-50 text-end text-nowrap pe-2">
-                    {trueLabel}<span className='visually-hidden'> {t("common:form.elements.trueFalseAccessibilityLabel", { fieldName: accessibleName ?? propertyName })}</span>
+                    {yesLabel}<span className='visually-hidden'> {t("common:form.elements.trueFalseAccessibilityLabel", { fieldName: accessibleName ?? propertyName })}</span>
                 </Label>
                 <Input
                     id={`${id}-t`} type="radio" name={id} color="primary" className="d-inline"
@@ -35,7 +37,7 @@ export function TrueFalseRadioInput({id, className, stateObject, propertyName, a
             </div>
             <div className="d-flex flex-nowrap flex-grow-1">
                 <Label htmlFor={`${id}-f`} className="w-50 text-end text-nowrap pe-2">
-                    {falseLabel}<span className='visually-hidden'> {t("common:form.elements.trueFalseAccessibilityLabel", { fieldName: accessibleName ?? propertyName })}</span>
+                    {noLabel}<span className='visually-hidden'> {t("common:form.elements.trueFalseAccessibilityLabel", { fieldName: accessibleName ?? propertyName })}</span>
                 </Label>
                 <Input
                     id={`${id}-f`} type="radio" name={id} color="primary" className="d-inline"

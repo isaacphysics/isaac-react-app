@@ -42,7 +42,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}assignments`} stateObject={emailPreferences}
-                                propertyName="ASSIGNMENTS" accessibleName="assignments"
+                                propertyName="ASSIGNMENTS" accessibleName={t("common:account.emailPreferences.assignmentsLabel")}
                                 setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
@@ -55,7 +55,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}news`} stateObject={emailPreferences}
-                                propertyName="NEWS_AND_UPDATES" accessibleName="news and updates"
+                                propertyName="NEWS_AND_UPDATES" accessibleName={t("common:account.emailPreferences.tipsLabel")}
                                 setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
@@ -68,7 +68,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}events`} stateObject={emailPreferences}
-                                propertyName="EVENTS" accessibleName="events"
+                                propertyName="EVENTS" accessibleName={t("common:account.emailPreferences.eventsLabel")}
                                 setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
@@ -82,7 +82,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
 
                 <TrueFalseRadioInput
                     id={`${idPrefix}assignments`} stateObject={emailPreferences}
-                    propertyName="ASSIGNMENTS" accessibleName="assignments"
+                    propertyName="ASSIGNMENTS" accessibleName={t("common:account.emailPreferences.assignmentsLabel")}
                     setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                     className="d-flex gap-2"
                 />
@@ -94,7 +94,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                 
                 <TrueFalseRadioInput
                     id={`${idPrefix}news`} stateObject={emailPreferences}
-                    propertyName="NEWS_AND_UPDATES" accessibleName="news and updates"
+                    propertyName="NEWS_AND_UPDATES" accessibleName={t("common:account.emailPreferences.tipsLabel")}
                     setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                     className="d-flex gap-2"
                 />
@@ -106,7 +106,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
 
                 <TrueFalseRadioInput
                     id={`${idPrefix}events`} stateObject={emailPreferences}
-                    propertyName="EVENTS" accessibleName="events"
+                    propertyName="EVENTS" accessibleName={t("common:account.emailPreferences.eventsLabel")}
                     setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                     className="d-flex gap-2"
                 />
