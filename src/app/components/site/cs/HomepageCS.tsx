@@ -33,7 +33,7 @@ export const HomepageCS = () => {
                                 <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' data-site="uoc" />
                             </a>
                             <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' data-site="rpf" />
+                                <img src="/assets/common/logos/rpf_white.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' data-site="rpf" />
                             </a>
                             <span>in collaboration with</span>
                             <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' data-site="ukgovt" />

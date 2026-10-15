@@ -46,7 +46,10 @@ export const FooterCS = () => (
                                     </picture>
                                 </a>
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' data-site="rpf" />
+                                    <picture>
+                                        <source media="print" srcSet="/assets/common/logos/rpf_black.svg" />
+                                        <img src="/assets/common/logos/rpf_white.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' data-site="rpf" />
+                                    </picture>
                                 </a>
                                 <picture>
                                     <source media="print" srcSet="/assets/common/logos/funded-by-uk-govt-black.svg" />
