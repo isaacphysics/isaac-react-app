@@ -215,8 +215,8 @@ export const HomepageCS = () => {
                                 <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>Explore the new topics</Button>
                             </div>
                             <div className="d-flex gap-4 mt-4 mb-6 mt-lg-6 mb-lg-0">
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='img-fluid' />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='img-fluid' />
+                                <PrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
+                                <PrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" />
                             </div>
                         </TextBlock>
                     </ColumnSlice>

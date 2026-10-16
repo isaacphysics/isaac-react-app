@@ -34,8 +34,8 @@ export const AdaCyberExplorersResources = () => {
             </Container>
         </section>
         <div className="d-flex position-absolute mx-auto start-0 end-0 w-fit-content gap-4 py-4 px-5 bg-white rounded-4 translate-middle-y shadow-pink z-1">
-            <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt='Funded by the UK Government' className='img-fluid' />
-            <img src="/assets/common/logos/techfirst-black.svg" alt='The TechFirst logo' className='img-fluid' />
+            <img src="/assets/common/logos/funded_by_uk_govt_black.svg" alt='Funded by the UK Government' className='img-fluid' />
+            <img src="/assets/common/logos/techfirst_black.svg" alt='The TechFirst logo' className='img-fluid' />
         </div>
         <section id="cyber-explorers">
             <Container className="homepage-padding mw-1600 d-flex flex-column align-items-center" fluid>

@@ -53,8 +53,7 @@ export const FooterCS = () => (
                                     <PrintableLogo logo="rpf" alt="Raspberry Pi website" dataSite="rpf" />
                                 </a>
                                 <PrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
-                                <PrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" />
-                                
+                                <PrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" /> 
                             </div>
                         </Col>
                         
