@@ -10,7 +10,7 @@ export const FooterPhy = () => (
         <Row className="pt-7">
             <Col xl={{size: 3, offset: 0}}>
                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-1 img-link">
-                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
+                    <img src="/assets/common/logos/university_of_cambridge_white.svg" alt='University of Cambridge website' className='footer-org-logo' />
                 </a>
                 <div className="logo-text">
                     Supported by the {' '} <ExternalLink href="https://www.cam.ac.uk/" className="d-inline">
