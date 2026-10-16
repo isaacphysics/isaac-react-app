@@ -45,7 +45,7 @@ interface UserProfileProps {
 export const UserProfile = (props: UserProfileProps) => {
     const {
         userToUpdate, setUserToUpdate, userContexts, setUserContexts,
-        setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted
+        setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted, userAuthSettings
     } = props;
     const [confirmAccountDeletionRequest, {isLoading: _isLoading}] = useConfirmAccountDeletionRequestMutation();
     const [sendVerificationEmail, {isSuccess: isVerificationEmailSent}] = useRequestEmailVerificationMutation();
@@ -185,6 +185,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
+                requireOver13={isAda && userAuthSettings?.hasSegueAccount}
             />
             <GenderInput
                 userToUpdate={userToUpdate}
