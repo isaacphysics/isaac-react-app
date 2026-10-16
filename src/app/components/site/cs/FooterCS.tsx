@@ -4,6 +4,13 @@ import {ListGroupFooter} from "../../elements/list-groups/ListGroupFooter";
 import {Link} from "react-router-dom";
 import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
 
+export const PrintableLogo = ({logo, alt, dataSite}: {logo: string, alt: string, dataSite: string}) => {
+    return <>
+        <img src={`/assets/common/logos/${logo}_white.svg`} alt={alt} className="no-print img-fluid footer-org-logo" data-site={dataSite} />
+        <img src={`/assets/common/logos/${logo}_black.svg`} alt={alt} className="only-print img-fluid footer-org-logo" data-site={dataSite} />
+    </>;
+};
+
 export const FooterCS = () => (
     <footer>
         <div className="footer-top d-print-none">
@@ -40,20 +47,14 @@ export const FooterCS = () => (
                         <Col xs={{size: 12}} md={{size: 6, order: 1}} lg={{size: 6}} xl={{size: 6}} className="col-xxl-2">
                             <div className="logo-grid">
                                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='no-print img-fluid footer-org-logo' data-site="uoc" />
-                                    <img src="/assets/common/logos/university_of_cambridge_black.svg" alt='University of Cambridge website' className='only-print img-fluid footer-org-logo' data-site="uoc" />
+                                    <PrintableLogo logo="university_of_cambridge" alt="University of Cambridge website" dataSite="uoc" />
                                 </a>
-
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/rpf_white.svg" alt='Raspberry Pi website' className='no-print img-fluid footer-org-logo' data-site="rpf" />
-                                    <img src="/assets/common/logos/rpf_black.svg" alt='Raspberry Pi website' className='only-print img-fluid footer-org-logo' data-site="rpf" />
+                                    <PrintableLogo logo="rpf" alt="Raspberry Pi website" dataSite="rpf" />
                                 </a>
-
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt='Funded by the UK Government' className='no-print img-fluid' data-site="ukgovt" />
-                                <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt='Funded by the UK Government' className='only-print img-fluid' data-site="ukgovt" />
+                                <PrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
+                                <PrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" />
                                 
-                                <img src="/assets/common/logos/techfirst-white.svg" alt='The TechFirst logo' className='no-print img-fluid' data-site="techfirst" />
-                                <img src="/assets/common/logos/techfirst-black.svg" alt='The TechFirst logo' className='only-print img-fluid' data-site="techfirst" />
                             </div>
                         </Col>
                         
