@@ -10,7 +10,7 @@ import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaNewsSection } from "../../elements/AdaNewsSection";
 import classNames from "classnames";
-import { PrintableLogo } from "./FooterCS";
+import { WhitePrintableLogo } from "./FooterCS";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -31,14 +31,14 @@ export const HomepageCS = () => {
 
                         <div className="logo-grid mx-3">
                             <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                <PrintableLogo logo="university_of_cambridge" alt="University of Cambridge website" dataSite="uoc" />
+                                <WhitePrintableLogo logo="university_of_cambridge" alt="University of Cambridge website" dataSite="uoc" />
                             </a>
                             <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                <PrintableLogo logo="rpf" alt="Raspberry Pi website" dataSite="rpf" />
+                                <WhitePrintableLogo logo="rpf" alt="Raspberry Pi website" dataSite="rpf" />
                             </a>
                             <span>in collaboration with</span>
-                            <PrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
-                            <PrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" />
+                            <WhitePrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
+                            <WhitePrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" />
                         </div>
                         <div>
                             {isLoggedIn(user) && isTeacherOrAbove(user) &&
@@ -215,8 +215,8 @@ export const HomepageCS = () => {
                                 <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>Explore the new topics</Button>
                             </div>
                             <div className="d-flex gap-4 mt-4 mb-6 mt-lg-6 mb-lg-0">
-                                <PrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
-                                <PrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" />
+                                <WhitePrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
+                                <WhitePrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" />
                             </div>
                         </TextBlock>
                     </ColumnSlice>

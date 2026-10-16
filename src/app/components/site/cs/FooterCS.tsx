@@ -4,7 +4,7 @@ import {ListGroupFooter} from "../../elements/list-groups/ListGroupFooter";
 import {Link} from "react-router-dom";
 import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
 
-export const PrintableLogo = ({logo, alt, dataSite}: {logo: string, alt: string, dataSite: string}) => {
+export const WhitePrintableLogo = ({logo, alt, dataSite}: {logo: string, alt: string, dataSite: string}) => {
     return <>
         <img src={`/assets/common/logos/${logo}_white.svg`} alt={alt} className="no-print img-fluid footer-org-logo" data-site={dataSite} />
         <img src={`/assets/common/logos/${logo}_black.svg`} alt={alt} className="only-print img-fluid footer-org-logo" data-site={dataSite} />
@@ -47,13 +47,13 @@ export const FooterCS = () => (
                         <Col xs={{size: 12}} md={{size: 6, order: 1}} lg={{size: 6}} xl={{size: 6}} className="col-xxl-2">
                             <div className="logo-grid">
                                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <PrintableLogo logo="university_of_cambridge" alt="University of Cambridge website" dataSite="uoc" />
+                                    <WhitePrintableLogo logo="university_of_cambridge" alt="University of Cambridge website" dataSite="uoc" />
                                 </a>
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <PrintableLogo logo="rpf" alt="Raspberry Pi website" dataSite="rpf" />
+                                    <WhitePrintableLogo logo="rpf" alt="Raspberry Pi website" dataSite="rpf" />
                                 </a>
-                                <PrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
-                                <PrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" /> 
+                                <WhitePrintableLogo logo="funded_by_uk_govt" alt="Funded by the UK Government" dataSite="ukgovt" />
+                                <WhitePrintableLogo logo="techfirst" alt="The TechFirst logo" dataSite="techfirst" /> 
                             </div>
                         </Col>
                         
