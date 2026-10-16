@@ -4,7 +4,6 @@ import {
     determineAudienceViews,
     examBoardLabelMap,
     filterAudienceViewsByProperties,
-    generateQuestionTitle,
     isAda,
     siteSpecific,
     stageLabelMap,
@@ -63,7 +62,7 @@ const GameboardBuilderTableRow = (
                     <div>
                         <div className="d-flex">
                             <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={`Preview question '${question.id}' in new tab`}>
-                                <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
+                                <Markup encoding="latex">{question.title ?? ""}</Markup>
                             </a>
                             <PreviewQuestionButton id={question.id} className="ms-2" />
                             <Spacer />

@@ -6,7 +6,6 @@ import {
     determineAudienceViews,
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
-    generateQuestionTitle,
     usePreviousPageContext,
     isAda,
     isPhy,
@@ -94,7 +93,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                 <PageContainer className="no-shadow" data-bs-theme={pageContext?.subject}
                     pageTitle={
                         <TitleAndBreadcrumb
-                            currentPageTitle={generateQuestionTitle(doc)}
+                            currentPageTitle={doc.title ?? ""}
                             displayTitleOverride={siteSpecific("Question", undefined)}
                             subTitle={doc.subtitle}
                             intermediateCrumbs={navigation.breadcrumbHistory}
@@ -113,7 +112,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                     {!preview && <CanonicalHrefElement />}
 
-                    <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
+                    <PageMetadata doc={doc} title={doc.title ?? ""}>
                         {isPhy && <QuestionMetaData 
                             doc={doc} audienceViews={audienceViews} 
                             allQuestionsCorrect={allQuestionsCorrect} 
