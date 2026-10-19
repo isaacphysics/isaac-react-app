@@ -284,7 +284,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                         {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
                     </div>}
-                    {isQuiz && <Col xs="auto" className="d-flex align-items-center justify-content-end ms-5">
+                    {isQuiz && <Col className="d-flex align-items-center justify-content-end ms-5">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
                     {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && <div
