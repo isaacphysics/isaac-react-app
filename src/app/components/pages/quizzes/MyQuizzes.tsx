@@ -86,7 +86,7 @@ const QuizButton = ({quiz}: QuizAssignmentProps) => {
 
 const QuizInfo = ({quiz}: QuizAssignmentProps) => {
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
-    const siteFormatDate = (date: number | Date) => <strong>{`${siteSpecific(getFriendlyDaysUntil(date), formatDate(date))}`}</strong>;
+    const siteFormatDate = (date: number | Date) => <strong>{siteSpecific(getFriendlyDaysUntil(date), formatDate(date))}</strong>;
     return <>
         {<p>
             {quiz.isAssigned ? 
