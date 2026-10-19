@@ -109,7 +109,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     </p>;
 
     const tooFewSigFigsFeedback = <p className="fs-5">
-        <b>more</b>&nbsp;
+        your answer needs <b>more</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
@@ -223,7 +223,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     <div className={classNames("pb-1", siteSpecific("response-heading", "h1"))} tabIndex={-1} ref={feedbackRef}>
                         {correct ? "Correct!" :
                             tooManySigFigsError ? "Looks right, but..." :
-                                tooFewSigFigsError ? "Your answer needs..." :
+                                tooFewSigFigsError ? "Right or wrong..." :
                                     almost ? "Partly correct..." :
                                         "Incorrect"
                         }
