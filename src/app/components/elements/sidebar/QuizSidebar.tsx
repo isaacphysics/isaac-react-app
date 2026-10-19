@@ -24,7 +24,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
 
     const rubricPath = location.pathname.split(new RegExp(/\/page\/\d+/))[0]; // i.e. "/test/{view|preview|attempt|assignment}/{id}(/feedback)?".
     const hasSections = totalSections > 0;
-    const stages = quiz.audience?.flatMap(a => a.stage ?? []).filter(isDefined);
+    const stages = [...new Set(quiz.audience?.flatMap(a => a.stage ?? []).filter(isDefined))];
     const subjects = tagsService.getSubjectTags(quiz.tags as TAG_ID[]);
     const topics = tagsService.getTopicTags(quiz.tags as TAG_ID[]);
     const fields = tagsService.getFieldTags(quiz.tags as TAG_ID[]);
@@ -40,10 +40,9 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
         return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
             <h3 className="mb-3 h5">Test</h3>
-            {stages && <div className="mb-2">
-                Stage{stages?.length > 1 && "s"}:
-                <span className="ms-1">{stages.map(s => stageLabelMap[s]).join(", ")}</span>
-            </div>}
+            {stages.length > 0 && <span className="mb-2">
+                Stage{stages.length > 1 && "s"}: {stages.map(s => stageLabelMap[s]).join(", ")}
+            </span>}
             <div className="mb-2">
                 Subject{subjects?.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
