@@ -1,5 +1,5 @@
 import React from 'react';
-import {SITE_TITLE, siteSpecific} from "../../../services";
+import {isAda, SITE_TITLE, siteSpecific} from "../../../services";
 import { Col, Row } from 'reactstrap';
 import { DismissibleCookieBanner } from './DismissibleBanner';
 
@@ -14,13 +14,13 @@ const DowntimeWarningBannerBody = () => {
             </div>
         </Col>
         <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
-            {SITE_TITLE} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance.
+            {SITE_TITLE} will be unavailable on Saturday 24 October from 8pm BST for a few hours for essential server maintenance.
         </Col>
     </Row>;
 };
 
 export const DowntimeWarningBanner = () => {
-    return <DismissibleCookieBanner
+    return !!isAda && <DismissibleCookieBanner
         cookieName={DOWNTIME_COOKIE}
         theme={siteSpecific("danger", "warning")}
         dismissText={<>
