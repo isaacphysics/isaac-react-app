@@ -119,7 +119,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.dataRepresentation11_14, title: "Data representation", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.designAndDevelopment11_14, title: "Design and development", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.digitalLiteracy11_14, title: "Digital literacy", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
-        {id: TAG_ID.frontierTechnologies11_14, title: "Frontier technologies", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Autumn 2026"},
+        {id: TAG_ID.frontierTechnologies11_14, title: "Frontier technologies", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Winter 2026"},
         {id: TAG_ID.networks11_14, title: "Networks", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
         {id: TAG_ID.programming11_14, title: "Programming", parent: TAG_ID.computerScience11_14, stageOverride: CONTENT_11_14, comingSoonDate: "Coming Spring 2027"},
 
