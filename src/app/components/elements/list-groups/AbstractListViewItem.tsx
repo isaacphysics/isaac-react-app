@@ -197,7 +197,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isSkillsBookQuestion = isPhy && tags?.some(tag => SKILLS_BOOKS.some(book => book === tag));
 
     const flatLayout = style === "flat" && above['lg'](deviceSize);
-    const stackedLayout = style === "stacked" || (isPhy && below["sm"](deviceSize)) || (isAda && below["xs"](deviceSize));
+    const stackedLayout = style === "stacked" || (isPhy && (isQuiz ? below["lg"](deviceSize) : below["sm"](deviceSize))) || (isAda && below["xs"](deviceSize));
     const wrapTitleTags = below["xs"](deviceSize);
 
     const cardBody = <>
@@ -245,7 +245,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {!flatLayout && breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                         <Breadcrumb breadcrumb={breadcrumb}/>
                     </span>}
-                    {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
+                    {(isItem || isQuiz || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                     </div>}
                     {(isCrossTopic || isLLM) && <div className={classNames("d-flex flex-wrap gap-2 mt-1", {"mt-2": isPhy || !stackedLayout})}>
@@ -277,14 +277,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             <Breadcrumb breadcrumb={breadcrumb}/>
                         </span>
                     </div>}
-                    {(isItem || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
+                    {(isItem || isQuiz || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                     </div>}
                     {isGameboard && typedProps.board && <div className="d-flex align-items-center justify-content-end gap-3 ms-3">
                         <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                         {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
                     </div>}
-                    {isQuiz && <Col md={6} className="d-flex align-items-center justify-content-end">
+                    {isQuiz && <Col className="d-flex align-items-center justify-content-end ms-5">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                     </Col>}
                     {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && <div
