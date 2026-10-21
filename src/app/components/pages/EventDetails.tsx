@@ -389,10 +389,10 @@ const EventDetails = () => {
                         <Badge color="primary" className="fs-6 rounded-pill">
                             {isTeacherEvent ? "Teacher event" : "Student event"}
                         </Badge>
-                        {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
+                        {hasExpired && <Badge className="fs-6 rounded-pill" color="expired">
                             EXPIRED
                         </Badge>}
-                        {bookingDeadlineSoon && <Badge className="fs-6 warning-tag p-1" color="">
+                        {bookingDeadlineSoon && <Badge className="fs-6 rounded-pill" color="alert">
                             Booking deadline soon!
                         </Badge>}
                     </>}

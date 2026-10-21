@@ -80,11 +80,6 @@ details.teacher-notes {
   @include pill-tag(var(--color-neutral-600), var(--color-neutral-white), var(--color-neutral-900));
 }
 
-.warning-tag {
-  @include pill-tag($color-neutral-white, var(--color-misc-orange-600), var(--color-misc-orange-600));
-  padding: 0.15rem 0.5rem;
-}
-
 .tab-picker {
   @include tab-picker(left, 2px, var(--subject-color-100));
 }
