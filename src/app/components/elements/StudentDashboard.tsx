@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
-import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
+import { Badge, Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { getAllSortedWorkToDo, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, useDeviceSize } from '../../services';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
@@ -200,14 +200,14 @@ const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
             </Link>
             <Link to="/assignments" className="panel-my-isaac-link">
                 My assignments
-                {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
+                {assignmentsCount > 0 && <Badge className="rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</Badge>}
             </Link>
             <Link to="/progress" className="panel-my-isaac-link">
                 My progress
             </Link>
             <Link to="/tests" className="panel-my-isaac-link">
                 My tests
-                {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
+                {quizzesCount > 0 && <Badge className="rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</Badge>}
             </Link>
             <div className="section-divider"/>
             <Link to="/account" className="panel-my-isaac-link">

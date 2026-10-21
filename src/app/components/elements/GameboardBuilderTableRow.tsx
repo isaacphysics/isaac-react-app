@@ -25,12 +25,13 @@ import { ContentPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 import { PreviewQuestionButton } from "./PreviewButton";
+import { Badge } from "reactstrap";
 
 const GameboardBuilderTableRow = (
     {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const tagIcon = (tag: string) => {
-        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>;
+        return <Badge key={tag} className={classNames("rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</Badge>;
     };
 
     const audienceViews = determineAudienceViews(question.audience, creationContext);

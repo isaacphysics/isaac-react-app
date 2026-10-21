@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactNode } from "react";
-import { Label, Input } from "reactstrap";
+import { Label, Input, Badge } from "reactstrap";
 import { isDefined } from "../../../services";
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
@@ -46,7 +46,7 @@ export type StyledTabPickerProps = Omit<React.HTMLAttributes<HTMLElement>, 'onCh
 
 const PickerContents = ({checkboxTitle, count, suffix, disabled}: Pick<StyledTabPickerProps, "checkboxTitle" | "count" | "suffix" | "disabled">) => <>
     <span className="ms-3">{checkboxTitle}</span>
-    {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
+    {isDefined(count) && <Badge className="rounded-pill ms-2">{count}</Badge>}
     <Spacer/>
     {suffix && <button type="button" className="px-2 py-1 bg-transparent" onClick={suffix.action} aria-label={suffix.info} title={suffix.info} disabled={disabled}>
         <i className={`${suffix.icon} d-block`}/>

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, DropdownMenu, DropdownProps, DropdownToggle, NavLink } from "reactstrap";
+import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Badge, Dropdown, DropdownMenu, DropdownProps, DropdownToggle, NavLink } from "reactstrap";
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
@@ -317,11 +317,11 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             </NavigationItemClose>
                             <NavigationItemClose href="/assignments" className="d-flex align-items-center">
                                 My assignments
-                                {workCounts.assignments > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</span>}
+                                {workCounts.assignments > 0 && <Badge className="rounded-5 ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</Badge>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/tests" className="d-flex align-items-center">
                                 My tests
-                                {workCounts.tests > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.tests > 99 ? "99+" : workCounts.tests}</span>}
+                                {workCounts.tests > 0 && <Badge className="rounded-5 ms-2 h-max-content">{workCounts.tests > 99 ? "99+" : workCounts.tests}</Badge>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/progress">
                                 My progress
@@ -398,9 +398,9 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 : <i className="icon icon-my-isaac"/>}
         </div>
         My Isaac
-        {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content" data-testid={"my-assignments-badge"}>
+        {taskCount > 0 && <Badge className="rounded-5 ms-2 h-max-content" data-testid={"my-assignments-badge"}>
             {taskCount > 99 ? "99+" : taskCount}
-        </span>}
+        </Badge>}
     </div>;
 
     return above["md"](deviceSize)
