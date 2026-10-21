@@ -31,7 +31,7 @@ const GameboardBuilderTableRow = (
     {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const tagIcon = (tag: string) => {
-        return <Badge key={tag} className="rounded-pill mx-1 text-bg-primary">{tag}</Badge>;
+        return <Badge key={tag} className="rounded-pill mx-1">{tag}</Badge>;
     };
 
     const audienceViews = determineAudienceViews(question.audience, creationContext);

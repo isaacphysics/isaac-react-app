@@ -27,7 +27,7 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
     return <li>
         <DropdownItem tag={Link} className={className} {...props}>
             {children}
-            {badgeTitle && <Badge color="light" className="border-theme border bg-white ms-2 me-1">{badgeTitle}</Badge>}
+            {badgeTitle && <Badge color="light" className="border-theme border text-muted ms-2 me-1">{badgeTitle}</Badge>}
         </DropdownItem>
     </li>;
 };
@@ -35,7 +35,7 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     <LinkItem to="/coming_soon" aria-disabled="true">
         <span className="me-2 text-muted">{children}</span>
-        <Badge  color="light" className="border-theme border bg-white ms-auto me-1">Coming soon</Badge>
+        <Badge color="light" className="border-theme border text-muted ms-auto me-1">Coming soon</Badge>
     </LinkItem>
 );
 

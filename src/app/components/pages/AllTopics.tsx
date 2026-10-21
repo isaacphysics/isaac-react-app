@@ -39,8 +39,8 @@ const renderLink = (topic: AdaTopicBase) => {
             }
             {" "}
             {topic.comingSoonDate && !topic.new &&
-            <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}
-            {topic.new && !topic.comingSoonDate && <Badge color="secondary">New</Badge>}
+                <Badge color="light" className="border text-muted">Coming {topic.comingSoonDate}</Badge>}
+            {topic.new && !topic.comingSoonDate && <Badge>New</Badge>}
         </>;
     }
 };
