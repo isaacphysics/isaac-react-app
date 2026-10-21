@@ -317,11 +317,11 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             </NavigationItemClose>
                             <NavigationItemClose href="/assignments" className="d-flex align-items-center">
                                 My assignments
-                                {workCounts.assignments > 0 && <Badge className="rounded-5 ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</Badge>}
+                                {workCounts.assignments > 0 && <Badge className="rounded-pill ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</Badge>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/tests" className="d-flex align-items-center">
                                 My tests
-                                {workCounts.tests > 0 && <Badge className="rounded-5 ms-2 h-max-content">{workCounts.tests > 99 ? "99+" : workCounts.tests}</Badge>}
+                                {workCounts.tests > 0 && <Badge className="rounded-pill ms-2 h-max-content">{workCounts.tests > 99 ? "99+" : workCounts.tests}</Badge>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/progress">
                                 My progress
@@ -398,7 +398,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 : <i className="icon icon-my-isaac"/>}
         </div>
         My Isaac
-        {taskCount > 0 && <Badge className="rounded-5 ms-2 h-max-content" data-testid={"my-assignments-badge"}>
+        {taskCount > 0 && <Badge className="rounded-pill ms-2 h-max-content" data-testid="my-assignments-badge">
             {taskCount > 99 ? "99+" : taskCount}
         </Badge>}
     </div>;

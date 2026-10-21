@@ -200,14 +200,14 @@ const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
             </Link>
             <Link to="/assignments" className="panel-my-isaac-link">
                 My assignments
-                {assignmentsCount > 0 && <Badge className="rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</Badge>}
+                {assignmentsCount > 0 && <Badge className="rounded-pill ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</Badge>}
             </Link>
             <Link to="/progress" className="panel-my-isaac-link">
                 My progress
             </Link>
             <Link to="/tests" className="panel-my-isaac-link">
                 My tests
-                {quizzesCount > 0 && <Badge className="rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</Badge>}
+                {quizzesCount > 0 && <Badge className="rounded-pill ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</Badge>}
             </Link>
             <div className="section-divider"/>
             <Link to="/account" className="panel-my-isaac-link">
