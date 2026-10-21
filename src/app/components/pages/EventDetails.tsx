@@ -334,7 +334,7 @@ const ImageAndMap = ({event}: EventBookingProps) => {
 
         {isDefined(event.location) && isDefined(event.location?.latitude) && isDefined(event.location?.longitude) 
         && <Col xs={12} sm={6} lg={12} className="mt-3 px-0">
-            <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
+            <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13} className="ratio ratio-1x1">
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
