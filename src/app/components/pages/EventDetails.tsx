@@ -392,9 +392,9 @@ const EventDetails = () => {
                         {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
                             EXPIRED
                         </Badge>}
-                        {bookingDeadlineSoon && <span className="fs-6 warning-tag">
+                        {bookingDeadlineSoon && <Badge className="fs-6 warning-tag p-1" color="">
                             Booking deadline soon!
-                        </span>}
+                        </Badge>}
                     </>}
                 >
                     {isPhy && <KeyEventInfo {...eventBookingProps} />}
