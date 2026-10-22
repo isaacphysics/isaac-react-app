@@ -117,13 +117,13 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         base: {
             stroke: {
                 width: {xxl: 3, xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
-                colour: '#ddd'
+                colour: 'var(--color-neutral-300)'
             },
             fill: {
                 selectedColour: 'none',
-                deselectedColour: '#f0f0f0',
+                deselectedColour: 'var(--color-neutral-100)',
                 completedColour: 'none',
-                deselectedCompletedColour: '#f0f0f0',
+                deselectedCompletedColour: 'var(--color-neutral-100)',
             },
         },
         questionPartProgress: {
@@ -298,7 +298,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             fontSize={{xxl: 26, xl: 26, lg: 26, md: 18, sm: 18, xs: 18}[deviceSize]}
             fontStyle="italic"
             fontWeight={["xs"].includes(deviceSize) ? 500 : 600}
-            fill={isCurrentQuestion ? '#333' : '#ccc'}
+            fill={isCurrentQuestion ? 'var(--color-neutral-900)' : 'var(--color-neutral-500)'}
             stroke="none"
             strokeWidth={1}
             strokeLinejoin="round"
