@@ -7,13 +7,7 @@ const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
 const DowntimeWarningBannerBody = () => {
     return <Row className="align-items-center">
-        <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
-            <div className="d-flex align-items-center justify-content-center gap-2">
-                <i className="icon icon-warning icon-sm icon-color-black" aria-hidden="true" />
-                <span id="research-heading" className="d-inline-block d-sm-none h3">&nbsp;Research</span>
-            </div>
-        </Col>
-        <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
+        <Col xs={12}>
             {SITE_TITLE} will be unavailable on Saturday 24 October from 8pm BST for a few hours for essential server maintenance.
         </Col>
     </Row>;
