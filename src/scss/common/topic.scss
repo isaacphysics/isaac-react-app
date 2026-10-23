@@ -44,7 +44,7 @@
         color: white;
       }
 
-      @include respond-below(xs) {
+      @include media-breakpoint-down(sm) {
         min-width: 105px;
         max-width: 105px;
       }

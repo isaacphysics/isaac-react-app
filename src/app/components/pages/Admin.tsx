@@ -127,29 +127,29 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                 }
                                 {contentVersionUpdateIsLoading &&
                                     <Alert color="info">
-                                        <h4>Updating...</h4>
+                                        <div className="h4">Updating...</div>
                                         <p>Replacing version {liveContentVersion} with {newVersion}</p>
                                         <IsaacSpinner />
                                     </Alert>
                                 }
                                 {contentVersionUpdateIsSuccess &&
                                     <Alert color="success">
-                                        <h4>Content version changed successfully.</h4>
+                                        <div className="h4">Content version changed successfully.</div>
                                     </Alert>
                                 }
                                 {contentVersionUpdateIsError &&
                                     <Alert color="danger">
-                                        <h4>Error: Content version could not be changed.</h4>
+                                        <div className="h4">Error: Content version could not be changed.</div>
                                     </Alert>
                                 }
                             </>;
                         }}
                     />
-                    <h3 className={"mt-3"}>Demonstration Mode</h3>
+                    <h3 className="mt-3">Demonstration Mode</h3>
                     <AnonymisationCheckboxes/>
 
                     {isAdmin(user) && <>
-                        <h3 className={"mt-3"}>Misuse statistics</h3>
+                        <h3 className="mt-3">Misuse statistics</h3>
                         <MisuseStats/>
                     </>}
                 </CardBody>

@@ -1,6 +1,5 @@
 import { IsaacConceptPageDTO } from "../../../../IsaacApiTypes";
 import { Concepts } from "../../../../IsaacAppTypes";
-import { tags } from "../../../services";
 import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
@@ -21,9 +20,6 @@ export const conceptsApi = isaacApi.injectEndpoints({
             query: (id) => ({
                 url: `/pages/concepts/${encodeURIComponent(id)}`
             }),
-            transformResponse: (response: IsaacConceptPageDTO) => {
-                return tags.augmentDocWithSubject(response);
-            },
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to load concept",
                 onQueryStart: (_args, {dispatch}) => {

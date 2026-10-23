@@ -1,27 +1,5 @@
 // ISAAC
-
-figure {
-  background-color: white;
-  img {
-    // do not add padding here! it will break image region positioning. add it to the figure root element instead.
-    max-width: 100%;
-  }
-}
-
-.figure-caption {
-  font-size: 1rem !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-  background-color: $gray-103;
-  p {
-    margin: 0;
-  }
-}
-.figure-reference {
-  font-weight: bold;
-}
-
-@include respond-above(md) {
+@include media-breakpoint-up(lg) {
   .align-start {
     float: left;
     width: 300px;
@@ -43,29 +21,35 @@ figure {
 
 .text-center-column {
   text-align: left;
-  @include respond-above(sm) {
+  @include media-breakpoint-up(md) {
     padding-left: 20%;
     padding-right: 20%;
   }
 }
 
-// NOMENSA figures.scss
-.img-thumbnail {
-  border-width: 0;
-}
-
 figure {
+  background-color: white;
+  color: black;
   box-shadow: 0 2px 30px 0 $shadow-08;
 
+  img {
+    // do not add padding here! it will break image region positioning. add it to the figure root element instead.
+    max-width: 100%;
+  }
+
   .figure-caption {
-    border-top: 1px solid $gray-110;
     color: $black;
-    font-size: .8125rem;
-    padding: .5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+
+    p {
+      margin: 0;
+    }
   }
 
   .figure-fullscreen {
     position: absolute;
+    display: flex;
     right: 0.25rem;
     bottom: 0.25rem;
     opacity: 0.5;
@@ -77,4 +61,8 @@ figure {
       scale: 1.1;
     }
   }
+}
+
+.figure-reference {
+  font-weight: bold;
 }

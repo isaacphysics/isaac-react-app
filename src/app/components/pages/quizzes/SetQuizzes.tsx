@@ -34,7 +34,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
-import { useHistoryState } from "../../../state/actions/history";
+import { useHistoryState } from "../../../services/history";
 import classNames from "classnames";
 import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";

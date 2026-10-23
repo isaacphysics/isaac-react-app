@@ -1,20 +1,21 @@
 import React, {useEffect} from "react";
 import {Button, Col, Form, Row} from "reactstrap";
-import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
+import { closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {
     EmailPasswordInputs,
     PasswordResetButton,
     SsoHelpLink,
     TFAInput,
-    useLoginLogic
-} from "../../pages/LogIn";
+} from "../LogInInputs";
+import { useLoginLogic } from "../../../services/login";
 import {isAda, isPhy, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../GoogleSignInButton";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MicrosoftSignInButton } from "../MicrosoftSignInButton";
+import { ActiveModalProps } from "../../../../IsaacAppTypes";
 
 const LoginOrSignUpBody = () => {
 
@@ -51,7 +52,7 @@ const LoginOrSignUpBody = () => {
                 )}
             </div>
             <div className={"px-3 mb-4"}>
-                <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
+                <h1 className={"h2 mb-lg-3 mt-2"}>
                     Log in or sign up<br/>
                 </h1>
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
@@ -75,25 +76,23 @@ const LoginOrSignUpBody = () => {
                             passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                             errorMessage={errorMessage} displayLabels={false} />
 
-                        <h5 role="alert" className="text-danger text-end mb-0 py-1">
+                        <div role="alert" className="text-danger text-end mb-0 py-1 h5">
                             {errorMessage}
-                        </h5>
-                        <Row className={classNames("mb-4", {"mt-2": isAda})}>
-                            <Col className={"col-6 mt-1 d-flex"}>
+                        </div>
+                        <div className={classNames("mb-4 d-flex justify-content-between flex-wrap-reverse", {"mt-2": isAda})}>
+                            <div className={"me-4 mt-1"}>
                                 <StyledCheckbox
                                     id="rememberMe" 
                                     checked={rememberMe} 
                                     onChange={e => setRememberMe(e.target.checked)}
                                     label={<p>Remember me</p>} className='mb-4'
                                 />
-                            </Col>
-                            <Col className="align-content-center">
-                                <PasswordResetButton 
-                                    email={email} isValidEmail={isValidEmail} 
-                                    setPasswordResetAttempted={setPasswordResetAttempted}
-                                />
-                            </Col>
-                        </Row>
+                            </div>
+                            <PasswordResetButton 
+                                email={email} isValidEmail={isValidEmail} 
+                                setPasswordResetAttempted={setPasswordResetAttempted}
+                            />
+                        </div>
 
                         <Button
                             id="log-in"
@@ -111,13 +110,11 @@ const LoginOrSignUpBody = () => {
                         </Button>
 
                         {siteSpecific(<div className="section-divider"/>, <hr className="text-center hr-or"/>)}
-                        {isAda && <div className="mb-2">
-                            <RaspberryPiSignInButton concise={true} />
-                        </div>}
-                        <GoogleSignInButton/>
-                        {isPhy && <div className="mt-2 mb-2">
+                        <div className="d-flex flex-column gap-2 mb-2">
+                            {isAda && <RaspberryPiSignInButton concise={true} />}
+                            <GoogleSignInButton/>
                             <MicrosoftSignInButton />
-                        </div>}
+                        </div>
                         {isPhy && <SsoHelpLink />}
                     </>}
             </Form>
@@ -125,8 +122,8 @@ const LoginOrSignUpBody = () => {
     </Row>;
 };
 
-export const loginOrSignUpModal = {
+export const loginOrSignUpModal: ActiveModalProps = {
     centered: true,
-    noPadding: true,
-    body: LoginOrSignUpBody
+    bodyContainerClassName: "py-0",
+    body: LoginOrSignUpBody,
 };

@@ -28,7 +28,6 @@ import {
     isQuestion,
     Item,
     matchesAllWordsInAnyOrder,
-    tags,
     toTuple,
     useQueryParams
 } from "./";
@@ -57,13 +56,14 @@ export interface QuizSpec {
     dueDate?: Date;
     scheduledStartDate?: Date;
     quizFeedbackMode?: QuizFeedbackMode;
+    completionNotifications?: boolean;
     userId?: number;
 }
 
 export const assignMultipleQuiz = createAsyncThunk(
     "quiz/assignQuiz",
     async (
-        {quizId, groups, dueDate, scheduledStartDate, quizFeedbackMode, userId}: QuizSpec,
+        {quizId, groups, dueDate, scheduledStartDate, quizFeedbackMode, completionNotifications, userId}: QuizSpec,
         {dispatch, rejectWithValue}
     ) => {
         const appDispatch = dispatch as AppDispatch;
@@ -74,7 +74,8 @@ export const assignMultipleQuiz = createAsyncThunk(
             groupId: id,
             dueDate: dueDate,
             scheduledStartDate: scheduledStartDate,
-            quizFeedbackMode: quizFeedbackMode
+            quizFeedbackMode: quizFeedbackMode,
+            completionNotifications: completionNotifications
         }));
 
         const response = await dispatch(quizApi.endpoints.assignQuiz.initiate(quizzes));
@@ -89,6 +90,7 @@ export const assignMultipleQuiz = createAsyncThunk(
                 creationDate: (new Date()).valueOf() as unknown as Date,
                 dueDate: dueDate?.valueOf() as unknown as Date | undefined,
                 scheduledStartDate: scheduledStartDate?.valueOf() as unknown as Date | undefined,
+                completionNotifications: completionNotifications,
                 ownerUserId: userId,
             }));
             const successfulIds = newQuizAssignments.map(q => q.groupId);
@@ -224,7 +226,7 @@ export function useQuizAttemptFeedback(quizAttemptId: number | undefined, quizAs
     // changes, this causes the quiz attempt to change, but that causes the quiz question attempt to change again, etc.
     const attemptWithQuizSubject = useMemo(() => {
         return attempt
-            ? {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
+            ? {...attempt, quiz: attempt?.quiz}
             : undefined;
     }, [attempt]);
 
@@ -252,17 +254,8 @@ export function useCurrentQuizAttempt() {
         ];
     }, [currentUserAttemptState]);
 
-    // Augment quiz object with subject id, propagating undefined-ness
-    // WARNING: This useMemo stops an infinite loop of re-renders - this is because when a quiz question attempt
-    // changes, this causes the quiz attempt to change, but that causes the quiz question attempt to change again, etc.
-    const attemptWithQuizSubject = useMemo(() => {
-        return attempt
-            ? {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
-            : undefined;
-    }, [attempt]);
-
-    const questions = useQuizQuestions(attemptWithQuizSubject);
-    const sections = useQuizSections(attemptWithQuizSubject);
+    const questions = useQuizQuestions(attempt);
+    const sections = useQuizSections(attempt);
 
     const dispatch = useAppDispatch();
     useEffect( () => {
@@ -272,7 +265,7 @@ export function useCurrentQuizAttempt() {
         return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 
-    return {attempt: attemptWithQuizSubject, error, questions, sections};
+    return {attempt, error, questions, sections};
 }
 
 // type QuizAttemptOrAssignment = (QuizAttemptDTO | QuizAssignmentDTO);

@@ -115,9 +115,9 @@ export const TeacherResources = () => {
         <section id="testimonial" className="bg-black">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
-                    <h2>
+                    <div className="h2">
                         &ldquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
-                    </h2>
+                    </div>
                     <p>– Matt Arnmor, computer science teacher</p>
                 </TextBlock>
             </Container>
@@ -228,7 +228,7 @@ export const TeacherResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
-                        <h3>Need help?</h3>
+                        <div className="h3">Need help?</div>
                         <p>Our teacher support page has lots of information for common questions and issues.</p>
                         <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
                     </TextBlock>

@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
 import {Col, Row} from "reactstrap";
-import {ContentSummaryDTO, GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {isAda, isPhy, showWildcard, siteSpecific, useUrlHashValue} from "../../services";
+import {isAda, isPhy, showWildcard, siteSpecific, useContextFromContentObjectTags, useUrlHashValue} from "../../services";
 import {useParams} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
-import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -32,14 +31,6 @@ interface GenericPageComponentProps {
     pageIdOverride?: string;
 }
 
-// Used to decide whether a page should have huge gutters or not. Generic pages do by default, as most are textual,
-// but pages such as "Computer Science Stories" are entirely composed of cards and shouldn't have their container
-// width restricted as much
-// FIXME this should be decided at a content level (if possible)
-const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
-    "computer_science_stories": true
-};
-
 // Overrides for physics pages which shouldn't use the default GenericPageSidebar
 const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: {pageId: string, tags?: string[], gameboard?: GameboardDTO, relatedContent?: ContentSummaryDTO[]} & React.HTMLAttributes<HTMLDivElement>) => {
     if (["privacy_policy", "terms_of_use", "cookie_policy", "accessibility_statement"].includes(pageId)) {
@@ -65,6 +56,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId || "";
 
     const pageQuery = useGetGenericPageQuery(pageId);
+    const pageContext = useContextFromContentObjectTags(pageQuery.currentData);
 
     const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
 
@@ -86,11 +78,8 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
         query={pageQuery}
         defaultErrorTitle="Unable to load page"
         ifNotFound={<NotFound />}
-        thenRender={supertypedDoc => {
-            const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
-
+        thenRender={doc => {
             const isNews = doc.tags?.includes("news") || false;
-
             const sidebar = doc.sidebar
                 ? <ContentControlledSidebar sidebar={doc.sidebar} />
                 : siteSpecific(
@@ -98,7 +87,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                     undefined
                 );
 
-            return <PageContainer data-bs-theme={doc.subjectId}
+            return <PageContainer data-bs-theme={pageContext?.subject}
                 pageTitle={
                     <TitleAndBreadcrumb 
                         currentPageTitle={doc.title as string} 
@@ -119,8 +108,8 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
 
                 {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningAlert key={tag} type={tag} />)}
 
-                <Row className="generic-content-container">
-                    <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
+                <Row>
+                    <Col className={classNames("pb-4 generic-panel", {"mw-760 pt-4": isAda})}>
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

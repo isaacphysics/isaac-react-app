@@ -41,13 +41,13 @@
     }
 }
 
-@media screen and (orientation: portrait) {
+@media (orientation: portrait) {
     .question-reminder {
         display: none;
     }
 }
 
-@media screen and (max-width: 1023px) {
+@include media-breakpoint-down(lg) {
     .question-reminder {
         left: 100px;
         right: 100px;
@@ -74,7 +74,7 @@
         z-index: 255 !important;
     }
 
-    @media screen and (orientation: landscape) {
+    @media (orientation: landscape) {
         .orientation-warning {
             display: none;
         }

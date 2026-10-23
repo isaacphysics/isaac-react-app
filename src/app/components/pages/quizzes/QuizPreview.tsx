@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from "react";
 import {openActiveModal, useAppDispatch, useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {getThemeFromTags, isDefined, isTeacherOrAbove, tags, useQuizQuestions, useQuizSections} from "../../../services";
+import {getThemeFromTags, isDefined, isTeacherOrAbove, useQuizQuestions, useQuizSections} from "../../../services";
 import {FullQuizInfo, myQuizzesCrumbs, QuizContentsComponent, QuizPagination, QuizProps} from "../../elements/quiz/QuizContentsComponent";
 import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
@@ -41,7 +41,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
     const attempt = useMemo(() =>
         quiz
             ? {
-                quiz: tags.augmentDocWithSubject(quiz),
+                quiz,
                 quizId: quiz.id,
             }
             : undefined

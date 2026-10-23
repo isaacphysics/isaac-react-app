@@ -28,7 +28,7 @@ export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Theme</h3>
+            <h2 className="h3">Theme</h2>
         </>}
         rightColumn={<>
             <span>Here you can select your preferred site theme.</span>

@@ -89,21 +89,21 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <div className="d-flex flex-column gap-3">
                 <div>
-                    {firstTime && <h3>Invite members to join</h3>}
+                    {firstTime && <h2 className="h3">Invite members to join</h2>}
                     <p>Share the link or code to invite people to your group.</p>
                     <p className={"mb-0"}>Students will see the name and email address on your account when they join.</p>
                 </div>
                 <div>
-                    <h3>Share this link</h3>
+                    <h2 className="h3">Share this link</h2>
                     <p>Share this link with students so they can join your group:</p>
                     <ReadonlyClipboardInput data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
                 </div>
                 <div>
-                    <h3>Generate a QR Code</h3>
+                    <h2 className="h3">Generate a QR Code</h2>
                     <p>Students can scan a QR code on their device to join your group:</p>
                     {showQR
                         ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} groupName={group.groupName} />
-                        : <Button color={siteSpecific("primary", "keyline")} onClick={() => {
+                        : <Button color={"keyline"} onClick={() => {
                             startTransition(() => {
                                 setShowQR(true);
                             });
@@ -113,12 +113,12 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                     }
                 </div>
                 <div>
-                    <h3>Or use this code</h3>
+                    <h2 className="h3">Or use this code</h2>
                     <p>Students can enter this code in their {SITE_TITLE_SHORT} account. They’ll need to go to <b>My account</b>, then <b>Teacher Connections</b>.</p>
                     <ReadonlyClipboardInput data-testid={"share-code"} value={token?.token} />
                 </div>
                 <div>
-                    <h3>What to do next</h3>
+                    <h2 className="h3">What to do next</h2>
                 </div>
             </div>}
         />
@@ -130,7 +130,7 @@ const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boole
 
     return <Row key={0} className="w-100">
         <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-            <Button block color="primary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+            <Button block color="solid" className={siteSpecific("", "mb-3")} onClick={() => {
                 store.dispatch(closeActiveModal());
                 void navigate(PATHS.SET_ASSIGNMENTS);
             }}>
@@ -139,7 +139,7 @@ const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boole
         </Col>
         {/* Only teachers are allowed to add additional managers to a group. */}
         {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-            <Button outline block color="secondary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+            <Button block color="keyline" className={siteSpecific("", "mb-3")} onClick={() => {
                 void store.dispatch(closeActiveModal());
                 void store.dispatch(showGroupManagersModal({group, user}));
             }}>
@@ -188,7 +188,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     }
 
     function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
-        let confirm_text = "";
+        let confirm_text;
         if (group?.additionalManagerPrivileges) {
             confirm_text = `
 Are you sure you want to promote this manager to group owner?\n
@@ -246,8 +246,8 @@ Are you sure you want to promote this manager to group owner?\n
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <h3>Selected group: {group.groupName}</h3>
-        <h4>Sharing permissions</h4>
+        <h2 className="h3">Selected group: {group.groupName}</h2>
+        <h3 className="h4">Sharing permissions</h3>
         <p>
             When you share this group, other teachers can:
             <ul>
@@ -259,7 +259,7 @@ Are you sure you want to promote this manager to group owner?\n
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
-            <h4>Group owner:</h4>
+            <h3 className="h4">Group owner:</h3>
             <Table className="group-table">
                 <tbody>
                     <tr key={group.ownerSummary.email} data-testid={"group-owner"}>
@@ -270,7 +270,7 @@ Are you sure you want to promote this manager to group owner?\n
             </Table>
         </div>}
 
-        <h4>Current group managers</h4>
+        <h3 className="h4">Current group managers</h3>
 
         {additionalManagers.length == 0 &&
             <p>There are no additional group managers for this group.</p>}
@@ -288,11 +288,11 @@ Are you sure you want to promote this manager to group owner?\n
                     )}
                     <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</span>
                     <Spacer />
-                    {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
+                    {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={"keyline"} onClick={() => promoteManager(manager)}>
                         Make owner
                     </Button>}
                     {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && !(userIsOwner && below["md"](deviceSize)) &&
-                        <Button className="d-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
+                        <Button className="d-inline ms-2" size="sm" color={"solid"}
                             onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
                         >
                             Remove
@@ -343,7 +343,7 @@ Are you sure you want to promote this manager to group owner?\n
         </Alert>}
 
         {(userIsOwner || group.additionalManagerPrivileges) && <>
-            <h4 className="mt-3">Add additional managers</h4>
+            <h3 className="mt-3 h4">Add additional managers</h3>
             <p>Enter the email of another {SITE_TITLE_SHORT} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>

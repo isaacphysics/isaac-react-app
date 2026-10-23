@@ -10,19 +10,20 @@ import {
     EventStatus,
     IsaacQuizDTO,
     QuizAttemptDTO,
+    School,
     SearchResultsWrapper,
     USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
-import {LoggedInUser, School} from "../IsaacAppTypes";
+import {LoggedInUser} from "../IsaacAppTypes";
 import {recordOf} from "./utils";
 
 export const mockUser = {
     givenName: "Test",
     familyName: "Admin",
     email: "test-admin@test.com",
-    dateOfBirth: new Date(777777777777),
+    dateOfBirth: new Date(2000, 0, 1).getTime(),
     gender: "MALE",
     registrationDate: new Date(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 100)),
     role: "ADMIN" as UserRole,
@@ -49,7 +50,7 @@ export const buildMockStudent = <T extends number>(id: T extends (typeof mockUse
         givenName: "Test",
         familyName: `Student ${id}`,
         email: `test-student-${id}@test.com`,
-        dateOfBirth: 888888888888,
+        dateOfBirth: new Date(2010, 0, 1).getTime(),
         gender: id as number % 2 === 0 ? "MALE" : "FEMALE",
         registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 50),
         role: "STUDENT",
@@ -75,7 +76,7 @@ export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUse
         givenName: "Test",
         familyName: `Teacher ${id}`,
         email: `test-teacher-${id}@test.com`,
-        dateOfBirth: 888888888888,
+        dateOfBirth: new Date(1980, 0, 1).getTime(),
         gender: id as number % 2 === 0 ? "MALE" : "FEMALE",
         registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 50),
         role: "TEACHER",
@@ -4098,7 +4099,7 @@ export const mockRegressionTestQuestionParts = [
             }
         ],
         "published": true,
-        "tags": []
+        "tags": ["access:motor"]
     },
     {
         "id": "_regression_test_acc_inline_q",
@@ -4323,6 +4324,7 @@ export const mockRegressionTestQuestionParts = [
     {
         "id": "_regression_test_acc_drag_and_drop",
         "type": "content",
+        "tags": ["access:motor"],
         "children": [
             {
                 "type": "isaacDndQuestion",
@@ -4484,6 +4486,78 @@ export const mockRegressionTestQuestionParts = [
                     "placeholder",
                     "placeholder"
                 ]
+            }
+        ],
+    },
+    {
+        "id": "_regression_test_acc_reorder",
+        "type": "content",
+        "children": [
+            {
+                "value": "Order the following sections reverse-alphabetically within a single list.\n\n```\nD\nC\nB\nA\n```",
+                "encoding": "markdown",
+                "type": "isaacReorderQuestion",
+                "items": [
+                    {
+                        "type": "item",
+                        "value": "D",
+                        "id": "dddd"
+                    },
+                    {
+                        "type": "item",
+                        "value": "A",
+                        "id": "aaaa"
+                    },
+                    {
+                        "type": "item",
+                        "value": "C",
+                        "id": "cccc"
+                    },
+                    {
+                        "type": "item",
+                        "value": "B",
+                        "id": "bbbb"
+                    }
+                ],
+                "choices": [
+                    {
+                        "encoding": "markdown",
+                        "value": "",
+                        "explanation": {
+                            "type": "content",
+                            "children": []
+                        },
+                        "type": "itemChoice",
+                        "children": [],
+                        "correct": true,
+                        "items": [
+                            {
+                                "type": "item",
+                                "id": "dddd"
+                            },
+                            {
+                                "type": "item",
+                                "id": "cccc"
+                            },
+                            {
+                                "type": "item",
+                                "id": "bbbb"
+                            },
+                            {
+                                "type": "item",
+                                "id": "aaaa"
+                            }
+                        ]
+                    }
+                ],
+                "answer": {
+                    "type": "content",
+                    "value": "_Enter answer here_",
+                    "encoding": "markdown"
+                },
+                "id": "_regression_test_reorder_",
+                "title": "Reorder Question",
+                "useSingleList": true
             }
         ]
     }
@@ -5454,6 +5528,72 @@ export const mockRegressionTestQuestions = {
                             ]
                         }
                     ]
+                },
+                {
+                    "value": "Order the following sections reverse-alphabetically within a single list.\n\n```\nD\nC\nB\nA\n```",
+                    "encoding": "markdown",
+                    "type": "isaacReorderQuestion",
+                    "items": [
+                        {
+                            "type": "item",
+                            "value": "D",
+                            "id": "dddd"
+                        },
+                        {
+                            "type": "item",
+                            "value": "A",
+                            "id": "aaaa"
+                        },
+                        {
+                            "type": "item",
+                            "value": "C",
+                            "id": "cccc"
+                        },
+                        {
+                            "type": "item",
+                            "value": "B",
+                            "id": "bbbb"
+                        }
+                    ],
+                    "choices": [
+                        {
+                            "encoding": "markdown",
+                            "value": "",
+                            "explanation": {
+                                "type": "content",
+                                "children": []
+                            },
+                            "type": "itemChoice",
+                            "children": [],
+                            "correct": true,
+                            "items": [
+                                {
+                                    "type": "item",
+                                    "id": "dddd"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "cccc"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "bbbb"
+                                },
+                                {
+                                    "type": "item",
+                                    "id": "aaaa"
+                                }
+                            ]
+                        }
+                    ],
+                    "answer": {
+                        "type": "content",
+                        "value": "_Enter answer here_",
+                        "encoding": "markdown"
+                    },
+                    "id": "_regression_test_reorder_",
+                    "title": "Reorder Question",
+                    "useSingleList": true
                 }
             ],
             "tags": []
@@ -7726,9 +7866,11 @@ export const buildMockPage = (pageId: string) => ({
 });
 
 export const mockSchool: School = {
-    name: "University of Cambridge",
-    urn: "133801",
-    postcode: "CB2 1TN",
+    schoolName: "University of Cambridge",
+    schoolId: "133801",
+    countryCode: "GB-ENG",
+    postalCode: "CB2 1TN",
+    excluded: false,
     closed: false,
     dataSource: "somewhere-over-the-rainbow",
 };

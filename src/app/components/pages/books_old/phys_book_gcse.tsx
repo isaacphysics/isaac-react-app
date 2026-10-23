@@ -23,7 +23,7 @@ export const PhysBookGcse = () => {
                 <Tabs style="tabs" tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2" activeTabOverride={2}>
                     {{
                         'Boards for Class and Homework': <Col>
-                            <h4>Chapters:</h4>
+                            <div className="h4">Chapters:</div>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_quick_ch1_boards'} chapterTitle={'Skills'}
@@ -76,7 +76,7 @@ export const PhysBookGcse = () => {
                             </Row>
                         </Col>,
                         'Boards Containing all Questions': <Col>
-                            <h4>Chapters:</h4>
+                            <div className="h4">Chapters:</div>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_ch1_boards'} chapterTitle={'Skills'}

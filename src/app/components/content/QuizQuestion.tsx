@@ -2,7 +2,7 @@ import React, {Suspense, useContext, useEffect} from "react";
 import {submitQuizQuestionIfDirty, useAppDispatch} from "../../state";
 import classnames from "classnames";
 import {isAda, isDefined, isPhy, QUESTION_TYPES, siteSpecific} from "../../services";
-import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {IsaacHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {QuizAttemptContext} from "../../../IsaacAppTypes";
@@ -35,24 +35,22 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         <div className={
             classnames(
                 "question-component", siteSpecific("p-md-2", "p-md-4"),
-                {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
             )}>
-            {isAda && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+            {isAda && doc.id && <div className="mb-3 h3">Question {questionNumbers[doc.id]}</div>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             <Suspense fallback={<Loading/>}>
                 <QuestionComponent questionId={doc.id as string} doc={doc} readonly={validated} validationResponse={validationResponse} />
             </Suspense>
 
+            {/* TODO Combine shared question footer logic into one component */}
             {/* CS Hints */}
-            {isAda && <React.Fragment>
-                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
-            </React.Fragment>}
+            {isAda && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="modal"/>}
 
             {/* Validation Response */}
             {validated && <div className={`validation-response-panel p-2 mt-2 ${correct ? "correct" : ""}`}>
                 <div className="pb-1">
-                    <h1 className="m-0">{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                    <div className={siteSpecific("response-heading", "h1")}>{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</div>
                 </div>
                 {validationResponse && validationResponse.explanation && <div className="mb-1">
                     <IsaacContent doc={validationResponse.explanation as ContentDTO} />
@@ -60,9 +58,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </div>}
 
             {/* Physics Hints */}
-            {isPhy && <div className={correct ? "mt-7" : ""}>
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
-            </div>}
+            {isPhy && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="tabbed"/>}
         </div>
     </div>;
 };

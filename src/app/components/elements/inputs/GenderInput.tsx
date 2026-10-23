@@ -38,7 +38,7 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
                 setUserToUpdate(Object.assign({}, userToUpdate, {gender: e.target.value}))
             }
         >
-            <option value="UNKNOWN" disabled hidden></option>
+            <option value="UNKNOWN" disabled className="d-none"></option>
             <option value="FEMALE">Female</option>
             <option value="MALE">Male</option>
             <option value="OTHER">Other gender identity</option>

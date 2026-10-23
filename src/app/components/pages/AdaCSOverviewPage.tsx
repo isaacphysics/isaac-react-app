@@ -25,14 +25,14 @@ export const AdaCSOverviewPage = () => {
             <p>
                 Ada Computer Science is a free learning platform for computing teachers and students.
                 Developed by the Raspberry Pi Foundation in partnership with the Isaac Science team at the University of Cambridge,
-                it is tailored to support learners aged 14-19. Ada Computer Science offers structured resources to support both
+                it is tailored to support learners aged 11-19. Ada Computer Science offers structured resources to support both
                 teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a
                 wide range of other resources designed to enhance computer science education.
             </p>
 
             <ColumnSlice>
                 <TextBlock>
-                    <h2>For students</h2>
+                    <h3 className="h2">For students</h3>
                     <div>
                         Explore interactive resources designed to help you study computer science:
                         <ul>
@@ -53,7 +53,7 @@ export const AdaCSOverviewPage = () => {
                     <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
                 </ImageBlock>
                 <TextBlock>
-                    <h2>For teachers</h2>
+                    <h3 className="h2">For teachers</h3>
                     <div>
                         Access structured resources to help you deliver high-quality computer science education:
                         <ul>

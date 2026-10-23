@@ -9,7 +9,7 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, SKILLS_BOOKS, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
@@ -90,9 +90,10 @@ interface MetadataTitleProps {
 }
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
+    const isSkillsBookQuestion = isPhy && doc?.tags?.some(tag => SKILLS_BOOKS.some(book => book === tag));
     return <div>
-        <h3 className="text-theme-dark d-xl-flex align-items-center gap-3">
-            {title 
+        {(title || doc?.title || badges) && <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
+            {title
                 ? typeof title === "string"
                     ? <Markup encoding="latex">{title}</Markup>
                     : title
@@ -100,17 +101,20 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
                     {doc?.title}
                 </Markup>
             }
-            <div className="d-flex flex-wrap gap-2 mt-1">
+            {badges && <div className="d-flex flex-wrap gap-2 mt-1">
                 {badges}
-            </div>
-        </h3>
-        {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
+            </div>}
+        </h2>}
+        <div className="d-flex align-items-center">
+            {isSkillsBookQuestion && <i className="icon icon-book me-1"/>}
+            {(subtitle || doc?.subtitle) && <Markup className="h5 mb-0" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
+        </div>
     </div>;
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
     const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, additionalActionButtons } = props;
-    const isQuestion = doc?.type === "isaacQuestionPage";
+    const isQuestion = ["isaacQuestionPage", "isaacFastTrackQuestionPage"].includes(doc?.type ?? "");
     const isConcept = doc?.type === "isaacConceptPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
@@ -119,6 +123,8 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
         <div className="page-metadata">
+            {(noTitle || !(title || doc?.title) || isAda) && <h2 className="visually-hidden">Main page</h2>}
+
             {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
                 {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="float-end ms-3 mb-2"/>}
                 {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
@@ -146,3 +152,4 @@ export const PageMetadata = (props: PageMetadataProps) => {
         {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
     </>;
 };
+

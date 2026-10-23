@@ -1,11 +1,8 @@
 .group-item {
-
   + .group-item {
-    border-top: $gray-107 solid 1px;
+    border-top: var(--color-neutral-200, $gray-107) solid 1px;
   }
   .card {
-    //margin-top: 1rem;
-    //margin-bottom: 1rem;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     background: rgba($gray-107, 0.4);

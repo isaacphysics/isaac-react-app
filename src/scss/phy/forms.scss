@@ -34,7 +34,7 @@
 .search--main-group {
   &.form-group {
     &:has(#header-search) {
-      @media (min-width: 768px) and (max-width: 1199px) {
+      @include media-breakpoint-between(md, xl) {
         width: 130px;
       }
     }
@@ -74,8 +74,6 @@ select.form-select {
 }
 
 .form-check-input {
-  width: 24px;
-  height: 24px;
   transition: all 0.1s ease-in-out;
   outline: none;
   box-shadow: none;

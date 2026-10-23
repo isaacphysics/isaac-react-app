@@ -206,8 +206,8 @@ export const AdminUserManager = () => {
                             <FormGroup>
                                 <Label htmlFor="school-urn-search">Find a user with school URN:</Label>
                                 <Input
-                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
-                                    onChange={e => setParamIfNotDefault("schoolURN", e.target.value, "")}
+                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolId || undefined}
+                                    onChange={e => setParamIfNotDefault("schoolId", e.target.value, "")}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -232,7 +232,7 @@ export const AdminUserManager = () => {
 
         {/* Result panel */}
         <Card className="my-4">
-            <CardTitle data-testid="user-search-numbers" tag="h4" className="ps-4 pt-3 mb-0">
+            <CardTitle data-testid="user-search-numbers" className="ps-4 pt-3 mb-0 h4">
                 Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </CardTitle>
@@ -329,7 +329,7 @@ export const AdminUserManager = () => {
                                                     <td>{user.familyName}, {user.givenName}</td>
                                                     <td>{user.email}</td>
                                                     <td>{user.role}</td>
-                                                    <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].name ?? "")}</td>
+                                                    <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].schoolName ?? "")}</td>
                                                     <td>{user.emailVerificationStatus}</td>
                                                     <td><DateString>{user.registrationDate}</DateString></td>
                                                     <td><DateString>{user.lastSeen}</DateString></td>
@@ -349,7 +349,7 @@ export const AdminUserManager = () => {
             <hr/>
             <Card className={"my-4"}>
                 <CardBody>
-                    <h3>Merge user accounts</h3>
+                    <div className="h3">Merge user accounts</div>
                     <FormGroup className="form-group">
                         <InputGroup className={"separate-input-group d-flex align-items-center"}>
                             <Input

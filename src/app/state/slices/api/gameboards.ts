@@ -214,10 +214,10 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                     void navigateComponentless(`${PATHS.MY_GAMEBOARDS}#${boardId}`);
                 }
             }
-            dispatch(showSuccessToast("Deck saved", `The deck ${boardTitle ? `${boardTitle} ` : ''}has successfully been saved to your account.`) as any);
+            dispatch(showSuccessToast(`${siteSpecific("Question deck", "Quiz")} saved`, `The ${siteSpecific("question deck", "quiz")} ${boardTitle ? `${boardTitle} ` : ''}has successfully been saved to your account.`) as any);
             return {boardId, boardTitle};
         } catch (e) {
-            dispatch(showRTKQueryErrorToastIfNeeded("Error saving question deck", e) as any);
+            dispatch(showRTKQueryErrorToastIfNeeded(`Error saving ${siteSpecific("question deck", "quiz")}`, e) as any);
             return rejectWithValue(null);
         }
     }

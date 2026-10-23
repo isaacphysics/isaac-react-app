@@ -91,7 +91,7 @@ export const RegistrationVerifyEmail = () => {
                         <Row className="justify-content-center">
                             {verifyingCurrentUser ?
                                 <>
-                                    <h4 className="mb-3">Didn&apos;t get the email?</h4>
+                                    <div className="mb-3 h4">Didn&apos;t get the email?</div>
                                     <p>
                                         {verificationNotResent ?
                                             <Button onClick={requestNewVerificationEmail}>

@@ -11,7 +11,10 @@ const revisionApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to fetch revision page."
             }),
-            keepUnusedDataFor: 60
+            providesTags: (page) => {
+                const boards = page?.gameboards?.map((gb) => ({type: "Gameboard" as const, id: gb.id})) || [];
+                return [...boards]; // required to refetch decks inside the detail page if saved status is updated
+            }
         }),
     })
 });

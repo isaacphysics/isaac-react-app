@@ -1,7 +1,7 @@
 import React from "react";
 
 import {Button, Col, Row} from "reactstrap";
-import {ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent} from "../../../services";
+import {ACCOUNT_TAB, isAda, isLoggedIn, isUnder13, KEY, persistence, useNavigation, useUserConsent} from "../../../services";
 import {Link, useLocation} from "react-router-dom";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {ContentBaseDTO} from "../../../../IsaacApiTypes";
@@ -23,7 +23,7 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h4>{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} You must be logged in to answer this question</h4>
+        <div className="h4">{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} You must be logged in to answer this question</div>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds, along with the mark scheme.
@@ -51,6 +51,25 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     </>;
 }
 
+function OpenAIUnder13Copy({doc}: InfoBannerProps) {
+    const navigation = useNavigation(doc);
+
+    return <>
+        <h4>We cannot collect your consent</h4>
+        <p>
+            We use a large language model (LLM) to mark free-text questions like this one.
+            This requires your consent to send your answer to OpenAI for marking.
+            Because you are under 13, we cannot collect your consent for this under the GDPR law.
+        </p>
+        <p>
+            You can still read the question, but we will not be able to mark your answer.
+        </p>
+        {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
+            Skip question
+        </Button>}
+    </>;
+};
+
 function OpenAIConsentCopy({doc}: InfoBannerProps) {
     const navigation = useNavigation(doc);
     const user = useAppSelector(selectors.user.orNull);
@@ -69,11 +88,11 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h4>Do you consent to sending your answers to OpenAI for marking?</h4>
+        <div className="h4">Do you consent to sending your answers to OpenAI for marking?</div>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.
-            {isAda && ` See our ${<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>} for more information.`}
+            {isAda && <> See our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link> for more information.</>}
         </p>
         <p>
             We only send your answer to OpenAI, we do not send any personal data.
@@ -98,7 +117,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
     const {setLinkedSetting} = useLinkableSetting();
 
     return <>
-        <h4>Free text questions are marked by a large language model (LLM)</h4>
+        <div className="h4">Free text questions are marked by a large language model (LLM)</div>
         <p>
             In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time.
             This means that the marks you receive will not always be accurate.
@@ -119,6 +138,8 @@ export function LLMFreeTextQuestionInfoAlert({doc}: InfoBannerProps) {
     let CopyToDisplay;
     if (!isLoggedIn(user)) {
         CopyToDisplay = LoggedOutCopy;
+    } else if (isUnder13(user)) {
+        CopyToDisplay = OpenAIUnder13Copy;
     } else if (!userConsent?.openAIConsent) {
         CopyToDisplay = OpenAIConsentCopy;
     } else {

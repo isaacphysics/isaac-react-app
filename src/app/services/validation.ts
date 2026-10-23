@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isAda, isPhy, isStudent, isTutor, siteSpecific, STAGE} from "./";
+import {EXAM_BOARD, isAda, isDefined, isPhy, isStudent, isTutor, isUnder13, SITE_LOWER_AGE_LIMIT, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0;}
@@ -30,19 +30,19 @@ export const isValidGameboardId = (gameboardId?: string) => {
 };
 
 const isDobOverN = (n: number, dateOfBirth?: Date | number) => {
-    if (dateOfBirth) {
-        const today = new Date();
-        const nYearsAgo = new Date(today.getFullYear() - n, today.getMonth(), today.getDate());
-        const hundredAndTwentyYearsAgo = new Date(today.getFullYear() - 120, today.getMonth(), today.getDate());
-        return hundredAndTwentyYearsAgo <= dateOfBirth && dateOfBirth <= nYearsAgo;
-    } else {
-        return false;
-    }
+    if (!dateOfBirth) return false;
+
+    const dob = new Date(dateOfBirth);
+    if (Number.isNaN(dob.getTime())) return false;
+
+    const today = new Date();
+    const nYearsAgo = new Date(today.getFullYear() - n, today.getMonth(), today.getDate());
+    return dob <= nYearsAgo;
 };
 
-export const isDobOverThirteen = (dateOfBirth?: Date | number) => isDobOverN(13, dateOfBirth);
-export const isDobOverTen = (dateOfBirth?: Date | number) => isDobOverN(10, dateOfBirth);
-export const isDobOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
+export const isDobOldEnoughForSite = (dateOfBirth?: Date | number) => isDobOverN(SITE_LOWER_AGE_LIMIT, dateOfBirth);
+
+export const validateDob = (dateOfBirth?: Date | number) => isDobOldEnoughForSite(dateOfBirth) || (isPhy && !isDefined(dateOfBirth));
 
 export const MINIMUM_PASSWORD_LENGTH = 8;
 export const validatePassword = (password: string) => {
@@ -52,8 +52,9 @@ export const validatePassword = (password: string) => {
 export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences | null) => {
     return !!emailPreferences && [
         emailPreferences.ASSIGNMENTS,
-        emailPreferences.NEWS_AND_UPDATES
-    ].concat(siteSpecific([emailPreferences.EVENTS], [])).reduce(
+        emailPreferences.NEWS_AND_UPDATES,
+        emailPreferences.EVENTS
+    ].reduce(
         // Make sure all expected values are either true or false
         (prev, next) => prev && (next === true || next === false),
         true
@@ -88,7 +89,7 @@ export const validateUserSchool = (user?: Immutable<ValidationUser> | null) => {
 };
 
 export const validateUserGender = (user?: Immutable<ValidationUser> | null) => {
-    return user && user.gender && user.gender !== "UNKNOWN";
+    return isPhy || !!(user && user.gender && user.gender !== "UNKNOWN");
 };
 
 export const wasTodayUTC = (dateOfAction: string | null) => {
@@ -121,14 +122,16 @@ export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser>
 
 /* Returns the validity of each potentially required user field. True is valid or not applicable, false is invalid.*/
 export function validateRequiredFields(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, registeredContexts?: UserContext[]) {
-    type Field = "givenName" | "familyName" | "email" | "emailPreferences" | "userContexts" | "school" | "countryCode";
+    type Field = "givenName" | "familyName" | "email" | "emailPreferences" | "userContexts" | "school" | "countryCode" | "dateOfBirth" | "gender";
     const fields: {[field in Field]: boolean} = {
         givenName: validateName(user?.givenName),
         familyName: validateName(user?.familyName),
-        email: validateEmail(user?.email),
+        email: isUnder13(user) || validateEmail(user?.email),
         school: isPhy || isStudent(user) || isTutor(user) || validateUserSchool(user),
         countryCode: validateCountryCode(user?.countryCode),
-        emailPreferences: (userPreferences?.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences?.EMAIL_PREFERENCE)) as boolean,
+        emailPreferences: isUnder13(user) || userPreferences?.EMAIL_PREFERENCE === null || !!validateEmailPreferences(userPreferences?.EMAIL_PREFERENCE),
+        dateOfBirth: validateDob(user?.dateOfBirth),
+        gender: validateUserGender(user),
         userContexts: validateUserContexts(registeredContexts, isAda)
     };
     return fields;

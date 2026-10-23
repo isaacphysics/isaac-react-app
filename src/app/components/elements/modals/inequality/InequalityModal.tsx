@@ -30,6 +30,7 @@ import {
 } from "./utils";
 import { InequalityState } from "../../inputs/SymbolicTextInput";
 import { parsePseudoSymbolicAvailableSymbols, prepareInequality, sanitiseInequalityState } from "../../../../services/inequalityUtils";
+import { Helmet } from "react-helmet";
 
 // This file contains the React components associated with the Inequality modal
 
@@ -496,6 +497,9 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const previewTexString = editorState.result?.tex as string;
 
     return <div id="inequality-modal" ref={inequalityModalRef}>
+        <Helmet>
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no" />
+        </Helmet>
         <div
             className="inequality-ui confirm button"
             role="button" tabIndex={-1}

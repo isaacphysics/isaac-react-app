@@ -9,7 +9,7 @@ export const PolicyPageSidebar = (props: ContentSidebarProps) => {
 
     return <ContentSidebar buttonTitle="Select a page" optionBar={props.optionBar}>
         <div className="section-divider"/>
-        <h5>Select a page</h5>
+        <h3 className="h5">Select a page</h3>
         <ul>
             <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onChange={() => navigate("/accessibility")}/></li>
             <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"  || path === "/pages/privacy_policy"} onChange={() => navigate("/privacy")}/></li>

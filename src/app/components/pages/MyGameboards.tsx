@@ -26,7 +26,7 @@ import {RenderNothing} from "../elements/RenderNothing";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
 import { PageMetadata } from "../elements/PageMetadata";
-import { useHistoryState } from "../../state/actions/history";
+import { useHistoryState } from "../../services/history";
 import { MyGameboardsSidebar } from "../elements/sidebar/MyGameboardsSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 
@@ -212,7 +212,7 @@ export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
         </PageMetadata>
         {boards && boards.totalResults == 0 ?
             <>
-                <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>
+                <div className="text-center mt-4 h3">You have no {siteSpecific("question decks", "quizzes")} to view.</div>
             </>
             :
             <>

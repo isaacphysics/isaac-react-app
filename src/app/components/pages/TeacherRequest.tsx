@@ -4,7 +4,7 @@ import {
     selectors,
     useAppSelector,
     useGetPageFragmentQuery,
-    useLazyGetSchoolByUrnQuery,
+    useLazyGetSchoolByIdQuery,
     useRequestEmailVerificationMutation,
     useSubmitContactFormMutation
 } from "../../state";
@@ -26,7 +26,7 @@ import {
     isAda,
     isPhy,
     isTeacherOrAbove,
-    schoolNameWithPostcode,
+    schoolNameWithTownAndPostcode,
     SITE_TITLE, SITE_TITLE_SHORT, siteSpecific,
     validateEmail,
     WEBMASTER_EMAIL
@@ -78,12 +78,12 @@ export const TeacherRequest = () => {
         "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
 
-    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
-    function fetchSchool(urn: string) {
-        if (urn !== "") {
-            getSchoolByUrn(urn).then(({data}) => {
+    const [getSchoolById] = useLazyGetSchoolByIdQuery();
+    function fetchSchool(id: string) {
+        if (id !== "") {
+            void getSchoolById(id).then(({data}) => {
                 if (data && data.length > 0) {
-                    setSchool(schoolNameWithPostcode(data[0]));
+                    setSchool(schoolNameWithTownAndPostcode(data[0]));
                 }
             });
         } else if (user?.loggedIn && user.schoolOther) {

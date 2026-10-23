@@ -12,11 +12,8 @@ import {
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
     NULL_CLOZE_ITEM_ID,
-    below,
     isDefined,
-    isTouchDevice,
     useCurrentQuestionAttempt,
-    useDeviceSize
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -42,6 +39,7 @@ import {DragAndDropRegionContext, IsaacQuestionProps, ReplaceableItem} from "../
 import {v4 as uuid_v4} from "uuid";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
+import { useDragAndDropAccessibility } from "../../services/accessibility";
 
 const DropZoneItem = lazy(() => import("../elements/DnDItem"));
 
@@ -61,17 +59,18 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>
         data: { type: "item-section", itemIds }
     });
     const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
+    const itemSectionInfoId = `item-section-info-${uuid_v4()}`;
 
     return <div className={"mb-3"}>
         <Label className="mt-3">Items: </Label>
-        <Label className={"visually-hidden"} id={"item-section-info"}>
+        <Label className={"visually-hidden"} id={itemSectionInfoId}>
             To pick up an item, press space or enter.
             Use the up and down arrow keys to navigate between drop zones and items in the question.
             Press space or enter again to drop the item into a new position, or to swap it with another
             item being hovered over.
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-describedby={itemSectionInfoId} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <DropZoneItem key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
@@ -135,7 +134,6 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 };
 
 const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacDragAndDropQuestionDTO, DndValidationResponseDTO>) => {
-    const deviceSize = useDeviceSize();
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<DndChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
 
@@ -154,6 +152,8 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
             .filter(isDefined)
             .map(({replacementId: _, ...item}) => item);
     };
+
+    const { dragAndDropEnabled } = useDragAndDropAccessibility();
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -511,6 +511,7 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
             nonSelectedItems,
             allItems,
             zoneIds: new Set<string>(),
+            dragAndDropEnabled
         }}>
             <DndContext
                 sensors={sensors}
@@ -525,10 +526,10 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {(!(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)))) && <>
+                {dragAndDropEnabled && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
-                        {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">
+                        {activeItem && <Badge className="p-1 cloze-item is-dragging" color="cloze">
                             <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
                                 {activeItem.children as ContentDTO[]}
                             </IsaacContentValueOrChildren>

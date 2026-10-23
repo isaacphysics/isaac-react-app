@@ -1,6 +1,5 @@
-import {AbstractBaseTagService, getTagFromPath, TAG_ID, TAG_LEVEL} from "./";
-import {BaseTag, Tag} from "../../IsaacAppTypes";
-import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
+import {AbstractBaseTagService, TAG_ID, TAG_LEVEL} from "./";
+import {BaseTag} from "../../IsaacAppTypes";
 
 export const softHyphen = "\u00AD";
 
@@ -186,28 +185,6 @@ export class PhysicsTagService extends AbstractBaseTagService {
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}
-    public augmentDocWithSubject<T extends ContentDTO | ContentSummaryDTO>(doc: T) {
-        const documentSubject = this.getPageSubjectTag((doc.tags || []) as TAG_ID[]);
-        return {...doc, subjectId: documentSubject && documentSubject.id};
-    }
-
-    private getPageSubjectTag(tagArray: TAG_ID[]): Tag | undefined {
-        // Extract the subject tag from a tag array,
-        // defaulting to the current site subject if no tags
-        // and intelligently choosing if more than one subject tag.
-        const globalSubjectTagId = getTagFromPath();
-        if (tagArray == null || tagArray.length == 0) {
-            return globalSubjectTagId ? this.getById(globalSubjectTagId) : undefined;
-        }
-
-        const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray, true);
-        for (const i in subjectTags) {
-            if (subjectTags[i].id == globalSubjectTagId) {
-                return subjectTags[i];
-            }
-        }
-        return subjectTags[0];
-    }
 }
 
 

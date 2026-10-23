@@ -9,7 +9,7 @@ import {
     useAppDispatch,
     useAppSelector,
 } from "../../state";
-import {createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, RouterProvider, useLocation} from "react-router-dom";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
@@ -85,25 +85,30 @@ const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 
 const RootLayout = () => {
     const mainContentRef = useRef(null);
+    const location = useLocation();
 
-    return <FeatureFlagProvider>
-        <SiteSpecific.Header />
-        <Toasts />
-        <ActiveModals />
-        <SiteBanners />
-        <OnPageLoad />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
-            <ErrorBoundary FallbackComponent={ChunkOrClientError}>
-                <FigureNumberingProvider>
-                    <Suspense fallback={<Loading/>}>
-                        <Outlet />
-                    </Suspense>
-                </FigureNumberingProvider>
-            </ErrorBoundary>
-        </main>
-        <ScrollToTop mainContent={mainContentRef}/>
-        <SiteSpecific.Footer />
-    </FeatureFlagProvider>;
+    // Needs two ErrorBoundaries, since the outer one would trigger on any error, and the footer/header would not be rendered
+    // Inner one also gets reset on route change, as if you had an error, and clicked on a link in the footer, it would not reset the error state
+    return <ErrorBoundary FallbackComponent={ChunkOrClientError}>
+        <FeatureFlagProvider>
+            <FigureNumberingProvider>
+                <SiteSpecific.Header />
+                <Toasts />
+                <ActiveModals />
+                <SiteBanners />
+                <OnPageLoad />
+                <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
+                    <ErrorBoundary FallbackComponent={ChunkOrClientError} resetKeys={[location.pathname, location.search]}>
+                        <Suspense fallback={<Loading/>}>
+                            <Outlet />
+                        </Suspense>
+                    </ErrorBoundary>
+                </main>
+                <ScrollToTop mainContent={mainContentRef}/>
+                <SiteSpecific.Footer />
+            </FigureNumberingProvider>
+        </FeatureFlagProvider>
+    </ErrorBoundary>;
 };
 
 // Render
@@ -192,7 +197,7 @@ const routes = createRoutesFromElements(
         <Route path="/terms" element={<Generic pageIdOverride={"terms_of_use"} />} />
         <Route path="/cookies" element={<Generic pageIdOverride={"cookie_policy"} />} />
         <Route path="/accessibility" element={<Generic pageIdOverride={"accessibility_statement"} />} />
-        <Route path="/cyberessentials" />
+        <Route path="/cyberessentials" element={<Generic pageIdOverride={"cyberessentials"} />} />
 
         {/* External redirects */}
         <Route path={"/survey/:qId/:refNo?"} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QualtricsRedirect user={authUser} />} />} />

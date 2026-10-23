@@ -25,8 +25,8 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
             },
             {
                 id: "02_spc",
-                title: "Senior Physics Challenge",
-                value: "A 4-day residential in July for UK students in year 12 or equivalent. Students are invited based on performance on the Isaac Science platform.",
+                title: "Isaac Pre-Uni Physics Challenge",
+                value: "A competition around physics problem solving for UK students in year 12 or equivalent. The top prize is a 4-day residential in July in Cambridge. Previously known as the Senior Physics Challenge (SPC).",
                 url: "/pages/spc",
                 image: {
                     src: "/assets/phy/programmes/spc.jpg",
@@ -99,11 +99,14 @@ export const Programmes = () => {
         )}
     >
         <ShowLoading until={programmes} thenRender={(programmes) => {
-            return <ul className="list-unstyled mt-4 d-flex row flex-wrap row-cols-1 row-cols-md-2 g-3">
-                {programmes.map((programme) => <Col key={programme.id}>
-                    <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} className="mb-4" programme={programme} />
-                </Col>)}
-            </ul>;
+            return <>
+                <h2 className="visually-hidden">Programmes list</h2>
+                <ul className="list-unstyled mt-4 d-flex row flex-wrap row-cols-1 row-cols-md-2 g-3">
+                    {programmes.map((programme) => <Col key={programme.id}>
+                        <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} className="mb-4" programme={programme} />
+                    </Col>)}
+                </ul>
+            </>;
         }} />
     </PageContainer>;
 };

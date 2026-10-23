@@ -133,6 +133,7 @@ export const Events = () => {
                     const numberOfLoadedEvents = events.length;
 
                     return <div className="my-4">
+                        <h2 className="visually-hidden">Events list</h2>
                         <div className="d-flex flex-col justify-content-end mb-2">
                             Showing {numberOfLoadedEvents} of {total}
                         </div>

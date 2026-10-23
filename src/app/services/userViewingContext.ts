@@ -226,6 +226,7 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "All stages", value: STAGE.ALL},
 ], [
     {label: "All Stages (Default)", value: STAGE.ALL},
+    {label: "11-14", value: STAGE.FOUNDATION},
     {label: "Core", value: STAGE.CORE},
     {label: "Advanced", value: STAGE.ADVANCED},
     {label: "Post-18", value: STAGE.POST_18},
@@ -499,8 +500,9 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     }
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
-    const stagesFilteredByUserContext = audienceStages.filter(s => userContext.contexts.some(c => c.stage == s));
-    let stagesToView: Stage[] = [];
+    const isAllStages =  userContext.contexts.some(c => c.stage === STAGE.ALL);
+    const stagesFilteredByUserContext = isAllStages ? audienceStages : audienceStages.filter(s => userContext.contexts.some(c => c.stage == s));
+    let stagesToView: Stage[];
 
     if (isAda) {
         // Ada currently (subject to change) want to show the stages as 3 groups:

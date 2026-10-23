@@ -25,7 +25,7 @@
 }
 
 // When reactstrap hides the warning text
-@media (max-width:575px) {
+@include media-breakpoint-down(sm) {
     .manage-tests-btns {
         display: flex;
         flex-direction: column;
@@ -62,7 +62,7 @@ button {
   letter-spacing: unset;
   min-width: unset;
   text-decoration: underline;
-  vertical-align: top;
+  vertical-align: baseline;
   padding: 0 !important;
   border: none;
   &:hover {

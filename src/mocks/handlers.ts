@@ -28,7 +28,7 @@ import {
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
-import {School} from "../IsaacAppTypes";
+import {School} from "../IsaacApiTypes";
 import { errorResponses } from "../test/test-factory";
 
 export const handlers = [

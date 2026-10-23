@@ -246,13 +246,19 @@ figure .inline-container {
         &:hover::after {
           background-color: white;
         }
+
+        &:has(.is-valid, .is-unanswered, .is-invalid) {
+          .feedback-wrapper::after {
+            right: -4px;
+          }
+        }
       }
 
       &.feedback-shown {
         padding-right: 36px !important;
       }
 
-      > div {
+      > .feedback-wrapper > div {
         // force contents of button to fit in $inline-feedback-size, so we can use it at all sizes
         height: $inline-feedback-size;
       }
@@ -351,6 +357,11 @@ figure .inline-container {
 }
 
 .parsons-question {
+  // REMINDER: If you change the PARSONS_MAX_INDENT and PARSONS_INDENT_STEP
+  // constants, you also have to change these two in here.
+  $parsons-max-indent: 3;
+  $parsons-step: 45;
+
   .parsons-items {
     border: solid 1px $gray-136;
     padding: 0 0.5em;
@@ -362,11 +373,6 @@ figure .inline-container {
         padding-bottom: 1.1em;
       }
     }
-
-    // REMINDER: If you change the PARSONS_MAX_INDENT and PARSONS_INDENT_STEP
-    // constants, you also have to change these two in here.
-    $parsons-max-indent: 3;
-    $parsons-step: 45;
 
     .parsons-item {
       @for $i from 0 through $parsons-max-indent {
@@ -414,7 +420,7 @@ figure .inline-container {
       margin: 0.5rem 0;
       background: var(--color-neutral-white, white);
 
-      pre {
+      .item-text {
         margin: 0.25em 0.5em;
         padding: 0.25em 0;
         border: none;
@@ -450,9 +456,12 @@ figure .inline-container {
       // Use negative z-index rather than `display: none` to hide buttons so they can still be selected using keyboard controls
       .hidden-buttons {
         position: absolute;
-        right: 2px;
         background-color: var(--color-neutral-white, white);
-        padding: 2px 0;
+        padding: 4px 0;
+        right: 10px;
+        &:has(+ .swap-button) {
+          right: 38px;
+        }
 
         z-index: -100;
       }
@@ -463,8 +472,8 @@ figure .inline-container {
         }
       }
     }
-
-    &#parsons-choice-area {
+  }
+  .parsons-choice-items .parsons-items {
       @for $i from 0 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
@@ -482,7 +491,6 @@ figure .inline-container {
         }
       }
     }
-  }
 }
 
 .inequality-results {
@@ -543,11 +551,11 @@ figure .inline-container {
   min-height: 64px;
 }
 
-.cloze-item {
+:not(button) > .cloze-item { // non-dropdown cloze items
   touch-action: none;
   position: relative;
   font-size: 1rem !important;
-  border: 1px solid $border-color;
+  border: 1px solid var(--subject-color-700);
 
   &.is-dragging {
     opacity: 0.666;
@@ -566,17 +574,16 @@ figure .inline-container {
 
 .cloze-dropdown > button {
   min-width: 40px !important; // Bootstrap thinks its important
-
-  &.empty.empty {
-    &, &:hover, &:active, &:focus { // Apply regardless of hover
-      border: grey solid 1px !important;
-      background-color: transparent !important;
-    }
-  }
+  background-color: var(--color-neutral-white, white);
+  border: grey solid 1px !important;
 
   &:has(.katex) {
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
+  }
+
+  > .cloze-item {
+    font-size: 0.85rem;
   }
 }
 
@@ -744,7 +751,7 @@ p > .katex, .katex-display {
       color: inherit;
       min-width: 176px;
       flex-basis: 100%;
-      @media (max-width: 768px) {
+      @include media-breakpoint-up(md) {
         min-width: 0;
       }
       &:hover {
@@ -773,8 +780,16 @@ p > .katex, .katex-display {
   @include feedback-panel-classes(#fff, 0.18);
 }
 
-.feedback-panel-dark {
-  @include feedback-panel-classes(#000, 0.08);
+@include color-mode(light) {
+  .feedback-panel-dark {
+    @include feedback-panel-classes(#000, 0.08);
+  }
+}
+
+@include color-mode(dark) {
+  .feedback-panel-dark {
+    @include feedback-panel-classes(#000, 0.28);
+  }
 }
 
 .correct {
@@ -789,4 +804,11 @@ p > .katex, .katex-display {
 
 .spaced-tooltip br {
     margin-bottom: 0.5rem;
+}
+
+.input-mode-toggle {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: min-content;
 }

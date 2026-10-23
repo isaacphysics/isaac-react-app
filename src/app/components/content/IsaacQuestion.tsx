@@ -25,14 +25,14 @@ import {
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
-import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {IsaacHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { Alert, Button, Col, Form, Row } from "reactstrap";
+import { Alert, Button, Form} from "reactstrap";
 import { useLocation } from "react-router";
 
 function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
@@ -55,12 +55,12 @@ interface FastTrackSubmissionButtonsProps {
 const FastTrackSubmissionButtons = ({fastTrackPrimaryAction, fastTrackSecondaryAction}: FastTrackSubmissionButtonsProps) => {
     return <>
         {fastTrackSecondaryAction && <div
-            className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3 pb-3": fastTrackPrimaryAction})}>
-            <input {...fastTrackSecondaryAction} className="h-100 btn btn-outline-primary w-100"/>
+            className={classNames("m-auto pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-lg-3 pb-3": fastTrackPrimaryAction})}>
+            <input {...fastTrackSecondaryAction} className="h-100 btn btn-keyline w-100"/>
         </div>}
         {fastTrackPrimaryAction && <div
-            className={classNames("m-auto pt-3 w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("px-4 px-md-0 pb-3", "pb-1"), {"ps-sm-2 ps-md-0 ps-lg-3": fastTrackSecondaryAction})}>
-            <input {...fastTrackPrimaryAction} className="h-100 btn btn-secondary w-100"/>
+            className={classNames("m-auto w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("pb-3", "pb-1"), {"ps-sm-2 ps-lg-3": fastTrackSecondaryAction})}>
+            <input {...fastTrackPrimaryAction} className="h-100 btn btn-solid w-100"/>
         </div>}
     </>;
 };
@@ -103,13 +103,13 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
         !!locked
     );
 
-    const tooManySigFigsFeedback = <p>
-        Your answer <b>looks right</b>, but it needs <b>fewer</b>&nbsp;
+    const tooManySigFigsFeedback = <p className="fs-5">
+        your answer needs <b>fewer</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
-    const tooFewSigFigsFeedback = <p>
-        Your answer may be <b>right or wrong</b>, but it needs <b>more</b>&nbsp;
+    const tooFewSigFigsFeedback = <p className="fs-5">
+        your answer needs <b>more</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
@@ -136,7 +136,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     // Focus on the feedback banner after submission
     useEffect(() => {
-        if (hasSubmitted) {
+        if (hasSubmitted && !isInlineQuestion) {
             feedbackRef.current?.focus();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,10 +176,6 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const fastTrackPrimaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) : null;
     const fastTrackSecondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
 
-    const checkAnswerButtonProps = isInlineQuestion 
-        ? {disabled: !canSubmit, onClick: () => submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts)} 
-        : {disabled: !canSubmit || awaitingFeedback};
-
     const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
 
@@ -190,7 +186,11 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            void submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
+            if (isInlineQuestion) {
+                void submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
+            } else {
+                void submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
+            }
             setHasSubmitted(true);
             setSentFeedback(false);
         }}>
@@ -198,7 +198,6 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                 classNames(
                     "question-component",
                     doc.type,
-                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)},
                     {"p-md-7": isAda}
                 )}>
 
@@ -212,37 +211,27 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     </div>
                 }
 
-                {/* CS Hint Reminder */}
-                {isAda && (!validationResponse || !correct || canSubmit) && <Row>
-                    <Col xl={{size: 10}} >
-                        {doc.hints && !!doc.hints.length && <p className="no-print mb-0">
-                            <small>{"Don't forget to use the hints if you need help."}</small>
-                        </p>}
-                    </Col>
-                </Row>}
-
                 {/* CS Hints */}
-                {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
+                {isAda && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="modal" 
+                    includePreamble={!validationResponse || !correct || canSubmit}
+                />}
 
                 {/* Validation Response */}
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
-                    <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
-                        {
-                            <h1 className="m-0">
-                                {correct ? "Correct!" : (
-                                    sigFigsError ? "Significant Figures" : (
-                                        almost ? "Partly correct..." : "Incorrect"
-                                    )
-                                )}
-                            </h1>
+                    <div className={classNames("pb-1", siteSpecific("response-heading", "h1"))} tabIndex={-1} ref={feedbackRef}>
+                        {correct ? "Correct!" :
+                            tooManySigFigsError ? "Looks right, but..." :
+                                tooFewSigFigsError ? "Right or wrong..." :
+                                    almost ? "Partly correct..." :
+                                        "Incorrect"
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 && isDefined(inlineContext?.feedbackIndex) ? <>
                             <span>View feedback for a specific box by selecting it above or using the arrows below.</span>
-                            <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
+                            <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
@@ -280,16 +269,16 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         validationResponse={validationResponse}
                     />
                     : (!correct || canSubmit || (isFastTrack && (fastTrackPrimaryAction || fastTrackSecondaryAction))) && !locked &&
-                        <div className={classNames("submission-buttons d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row")}>
+                        <div className={classNames("submission-buttons d-flex align-items-stretch flex-column-reverse flex-sm-row flex-lg-row")}>
                             {isFastTrack 
                                 ? <FastTrackSubmissionButtons fastTrackPrimaryAction={fastTrackPrimaryAction} fastTrackSecondaryAction={fastTrackSecondaryAction} />
-                                : <Button {...checkAnswerButtonProps} className="mx-auto mt-3 w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
+                                : <Button disabled={!canSubmit || awaitingFeedback} className="mx-auto w-100 w-sm-100 w-md-50 w-lg-50" type="submit">{submitButtonLabel}</Button>
                             }
                         </div>
                 }
             </div>
             {/* Physics Hints and LLM free-text response */}
-            {isPhy && doc.hints && !!doc.hints.length && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
+            {isPhy && <IsaacHints questionPartId={doc.id as string} hints={doc.hints} style="tabbed"/>}
             {isPhy && possibleLLMFreeTextQuestionFeedbackView}
         </Form>
 

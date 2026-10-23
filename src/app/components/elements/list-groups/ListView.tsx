@@ -182,6 +182,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
         quizButton={useViewQuizLink ? undefined : quizButton}
         className={siteSpecific(undefined, "px-4 py-2")}
+        tags={item.tags}
         {...rest}
     />;
 };
@@ -257,7 +258,7 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
-    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-info", size: "lg", color: "secondary"}};
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-info", size: "lg"}};
 
     if (isAda) {
         icon.label = "Info";

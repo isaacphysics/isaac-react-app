@@ -52,7 +52,7 @@ import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
-import { useHistoryState } from "../../state/actions/history";
+import { useHistoryState } from "../../services/history";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
@@ -223,27 +223,27 @@ const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { className?: string, redirectBackTo?: string }) => {
     const dispatch = useAppDispatch();
     return <>
-        <h4 className="mt-4 mb-3">
+        <div className="mt-4 mb-3 h4">
             Add a {siteSpecific("question deck", "quiz")} from ...
-        </h4>
+        </div>
         <Row className={className}>
             <Col md={6} lg={4} className="pt-1">
                 <Button role={"link"} onClick={() => {
                     setAssignBoardPath(redirectBackTo);
                     void dispatch(openIsaacBooksModal());
-                }} color="secondary" block className="px-3">
+                }} color="keyline" block className="px-3">
                     our books
                 </Button>
             </Col>
             <Col md={6} lg={4} className="pt-1">
                 <Button tag={Link} to={"/physics/a_level/question_decks"}
-                    onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    onClick={() => setAssignBoardPath(redirectBackTo)} color="keyline" block>
                     our topic question decks
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
                 <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)}
-                    color="secondary" block>
+                    color="keyline" block>
                     create a question deck
                 </Button>
             </Col>
@@ -388,10 +388,10 @@ export const SetAssignments = () => {
                     </Alert>
                     :
                     <>
-                        <h5>
+                        <div className="h5">
                             Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
                             assignments by start date and due date.
-                        </h5>
+                        </div>
                         <div className="section-divider my-4"/>
                     </>
                 }
@@ -416,7 +416,7 @@ export const SetAssignments = () => {
                     }}
                 />
             }
-            <h3>Your quizzes</h3>
+            <h2 className="h3">Your quizzes</h2>
             <div
                 className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
                 {boards && boards.totalResults > 0 &&
@@ -430,7 +430,7 @@ export const SetAssignments = () => {
                         Create a quiz
                     </Button>
                     <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
-                        to={"/pages/revision_quizzes"} color={"secondary"} outline>
+                        to={"/pages/revision_quizzes"} color={"keyline"}>
                         View pre-made quizzes
                     </Button>
                 </div>

@@ -4,7 +4,7 @@ import tseslint, { parser as tsParser } from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginJsxA11y from "eslint-plugin-jsx-a11y";
-import { fixupPluginRules } from "@eslint/compat";
+import { fixupPluginRules, fixupConfigRules } from "@eslint/compat";
 import path from 'path';
 import stylistic from '@stylistic/eslint-plugin'
 
@@ -14,7 +14,7 @@ export default [
     {languageOptions: { globals: globals.browser }},
     pluginJs.configs.recommended,
     ...tseslint.configs.recommended,
-    pluginReact.configs.flat.recommended,
+    ...fixupConfigRules(pluginReact.configs.flat.recommended),
     pluginJsxA11y.flatConfigs.strict,
     {
         plugins: {

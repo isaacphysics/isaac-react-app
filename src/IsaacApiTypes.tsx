@@ -169,9 +169,12 @@ export interface IsaacNumericQuestionDTO extends QuestionDTO {
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
+    useSingleList?: boolean;
 }
 
-export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {}
+export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {
+    useSingleList?: boolean;
+}
 
 export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
     withReplacement?: boolean;
@@ -288,6 +291,7 @@ export interface QuestionPartConceptDTO {
 export interface QuizAssignmentDTO extends IAssignmentLike, IHasQuizSummary {
     assignerSummary?: UserSummaryDTO;
     quizFeedbackMode?: QuizFeedbackMode;
+    completionNotifications?: boolean;
     attempt?: QuizAttemptDTO;
     userFeedback?: QuizUserFeedbackDTO[];
     quiz?: IsaacQuizDTO;
@@ -656,9 +660,10 @@ export interface FigureRegion {
     width: number;
     left: number;
     top: number;
+    boxAlign?: "left" | "center" | "right";
 }
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "post_18" | "all";
+export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "foundation" | "core" | "advanced" | "post_18" | "all";
 
 export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "sqa" | "ada" | "all";
 
@@ -781,7 +786,7 @@ export interface AdminSearchEndpointParams {
     familyName?: string;
     role?: UserRole;
     schoolOther?: string;
-    schoolURN?: string;
+    schoolId?: string;
     emailVerificationStatus?: EmailVerificationStatus;
     subjectOfInterest?: string;
 }
@@ -865,6 +870,17 @@ export interface Address {
     country?: string;
 }
 
+export interface School {
+    schoolId: string;
+    countryCode: string;
+    schoolName: string;
+    postalCode?: string;
+    town?: string;
+    excluded: boolean;
+    closed: boolean;
+    dataSource: string;
+}
+
 export interface AnsweredQuestionsByDate {
     [date: string]: number;
 }
@@ -903,7 +919,7 @@ export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTEND
 export const USER_ROLES = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
-export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
+export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED" | "AGE_RESTRICTED";
 
 export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETAILED_FEEDBACK";
 

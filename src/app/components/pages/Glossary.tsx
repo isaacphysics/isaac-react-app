@@ -419,9 +419,9 @@ export const Glossary = () => {
                 </div>
                 {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-7" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
                     <Col md={{size: 1, offset: 1}}>
-                        <h2 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
+                        <h3 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
                             {letter}
-                        </h2>
+                        </h3>
                     </Col>
                     <Col>
                         {terms.map(term => <IsaacGlossaryTerm

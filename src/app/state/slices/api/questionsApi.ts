@@ -1,6 +1,6 @@
 import { ContentSummaryDTO, IsaacQuestionPageDTO, SearchResultsWrapper } from "../../../../IsaacApiTypes";
 import { CanAttemptQuestionTypeDTO, QuestionSearchQuery } from "../../../../IsaacAppTypes";
-import { isDefined, SEARCH_RESULTS_PER_PAGE, tags } from "../../../services";
+import { isDefined, SEARCH_RESULTS_PER_PAGE } from "../../../services";
 import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
@@ -61,9 +61,6 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
             query: (id) => ({
                 url: `/pages/questions/${encodeURIComponent(id)}`
             }),
-            transformResponse: (response: IsaacQuestionPageDTO) => {
-                return tags.augmentDocWithSubject(response);
-            },
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to load question",
                 onQueryStart: (_args, {dispatch}) => {

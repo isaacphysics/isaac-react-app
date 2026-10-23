@@ -20,7 +20,7 @@ export const TeacherFeatureCard = (props: TeacherFeatureCardProps) => {
     return <Link to={url} className="h-100 w-100" aria-label={title} aria-disabled={disabled} style={{textDecoration: "none"}}>
         <Card className={classNames("p-3 teacher-features h-100", {"disabled": disabled})}>
             <div className="d-flex justify-content-between">
-                <h4 className="mt-2 mb-0 me-2">{title}</h4>
+                <div className="mt-2 mb-0 me-2 h4">{title}</div>
                 <img src={imgSrc} alt=""/>
             </div>
             <p>{subtitle}</p>
@@ -41,7 +41,7 @@ export const TeacherFeatures = () => {
             Isaac provides you with a huge range of resources to support your teaching of science subjects – all for free.
         </PageMetadata>
         <Row className="my-4">
-            <h4>Teacher workflow</h4>
+            <h2 className="h4">Teacher workflow</h2>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
@@ -73,7 +73,7 @@ export const TeacherFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <h4>Teacher support</h4>
+            <h2 className="h4">Teacher support</h2>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
@@ -103,7 +103,7 @@ export const TeacherFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <h4>Teacher resources</h4>
+            <h2 className="h4">Teacher resources</h2>
         </Row>
         <Row className="isaac-cards-body mb-7 px-3 row-gap-4">
             <Col md={6} lg={4}>

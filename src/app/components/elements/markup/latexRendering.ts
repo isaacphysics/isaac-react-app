@@ -4,7 +4,7 @@ import {FigureNumberingContext, FigureNumbersById} from "../../../../IsaacAppTyp
 import he from "he";
 import {BOOLEAN_NOTATION, dndDropZoneRegex, dropZoneRegex, isAda, renderA11yString, useUserPreferences} from "../../../services";
 import katex, {KatexOptions} from "katex";
-import 'katex/dist/contrib/mhchem.mjs';
+import 'katex/contrib/mhchem';
 
 type MathJaxMacro = string|[string, number];
 
@@ -317,6 +317,9 @@ export function katexify(
                                 "Accessible with a screenreader that supports MathML"
                         }"`);
                 }
+
+                // prevent browser auto-translation
+                katexRenderResult = katexRenderResult.replace('<span class="katex"', '<span class="katex" translate="no"');
 
                 output += katexRenderResult;
 

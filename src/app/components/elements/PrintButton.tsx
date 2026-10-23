@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {printingSettingsSlice, useAppDispatch} from "../../state";
+import {AppDispatch, printingSettingsSlice, useAppDispatch} from "../../state";
 import {Button} from "reactstrap";
 import { IconButton } from "./AffixButton";
 import { isAda, siteSpecific } from "../../services";
@@ -7,6 +7,30 @@ import classNames from "classnames";
 
 interface PrintProps {
     questionPage?: boolean;
+}
+
+const FONT_LOAD_TIMEOUT = 2000;
+
+async function printWithHintsAndLoadedFonts(dispatch: AppDispatch, withHints: boolean) {
+    dispatch(printingSettingsSlice.actions.enableHints(withHints));
+
+    // Two animation frames, so that any hints we just toggled have been rendered before we look at them
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    // Ask for every font the page uses...
+    const fontsInUse = new Set<string>();
+    for (const element of document.body.querySelectorAll("*")) {
+        const {fontStyle, fontWeight, fontFamily} = getComputedStyle(element);
+        fontsInUse.add(`${fontStyle} ${fontWeight} 1em ${fontFamily}`);
+    }
+
+    //... and load them specifically
+    await Promise.race([
+        Promise.all(Array.from(fontsInUse, font => document.fonts.load(font).catch(() => undefined))),
+        new Promise(resolve => setTimeout(resolve, FONT_LOAD_TIMEOUT)),
+    ]);
+
+    window.print();
 }
 
 export const PrintButton = ({questionPage}: PrintProps ) => {
@@ -23,10 +47,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         color={"link"}
                         title={"Print with hints"}
                         className="a-alt"
-                        onClick={() => {
-                            dispatch(printingSettingsSlice.actions.enableHints(true));
-                            setTimeout(window.print, 100);
-                        }}
+                        onClick={() => printWithHintsAndLoadedFonts(dispatch, true)}
                     ><span className="visually-hidden">Print{" "}</span>With hints
                     </Button>
                     |
@@ -35,10 +56,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         color={"link"}
                         title={"Print without hints"}
                         className="a-alt"
-                        onClick={() => {
-                            dispatch(printingSettingsSlice.actions.enableHints(false));
-                            setTimeout(window.print, 100);
-                        }}
+                        onClick={() => printWithHintsAndLoadedFonts(dispatch, false)}
                     ><span className="visually-hidden">Print{" "}</span>Without hints</Button>
                 </div>
             </div>}
@@ -60,9 +78,6 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
             title="Print page"
             color={siteSpecific("tint", "primary")}
             data-bs-theme="neutral"
-            onClick={() => {
-                dispatch(printingSettingsSlice.actions.enableHints(false)); 
-                setTimeout(window.print, 100);
-            }}
+            onClick={() => printWithHintsAndLoadedFonts(dispatch, false)}
         />;
 };

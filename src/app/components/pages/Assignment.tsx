@@ -63,9 +63,9 @@ export const Assignment = () => {
             currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
             icon={{type: "icon", icon: "icon-error"}}
         />
-        <h3 className="my-4">
+        <div className="my-4 h3">
             {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboard?.id}</code>{"."}
-        </h3>
+        </div>
     </>;
 
     return <ShowLoadingQuery

@@ -1,7 +1,7 @@
 import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {getThemeFromTags, isDefined, tags} from "../../../services";
+import {getThemeFromTags, isDefined} from "../../../services";
 import {QuizContentsComponent, viewQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
@@ -27,7 +27,7 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     const {quizId} = useParams();
     const quizRubricQuery = useGetQuizRubricQuery(isDefined(quizId) ? quizId : skipToken);
     const view = {
-        quiz: quizRubricQuery.data && tags.augmentDocWithSubject(quizRubricQuery.data),
+        quiz: quizRubricQuery.data,
         quizId: quizRubricQuery.data?.id,
     };
 

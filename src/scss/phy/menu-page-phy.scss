@@ -194,13 +194,13 @@
 }
 
 .hexagon-offset {
-  @include respond-above(lg) {
+  @include media-breakpoint-up(xl) {
     margin-left: -250px;
   }
 }
 
 .hexagon-offset-large {
-  @include respond-above(lg) {
+  @include media-breakpoint-up(xl) {
     margin-top: -55px;
   }
 }

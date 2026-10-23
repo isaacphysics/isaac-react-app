@@ -8,13 +8,14 @@ import {above, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Immutable} from "immer";
+import {v4 as uuid_v4} from "uuid";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
 
-const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
+const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
     const deviceSize = useDeviceSize();
+    const useSingleList = useMemo(() => doc.useSingleList, [doc.useSingleList]);
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
-    const attemptItems = useMemo(() => (currentAttempt?.items || []) as Immutable<ItemChoiceDTO>[], [currentAttempt?.items]);
     const setAttemptItems = useCallback((items: Immutable<ItemChoiceDTO>[]) => {
         if (currentAttempt) {
             dispatchSetCurrentAttempt({...currentAttempt, items});
@@ -22,6 +23,14 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             dispatchSetCurrentAttempt({type: "itemChoice", items});
         }
     }, [currentAttempt, dispatchSetCurrentAttempt]);
+    const attemptItems: Immutable<ItemChoiceDTO>[] = useMemo(() => {
+        if (!useSingleList || doc.items?.every(item => currentAttempt?.items?.some(attemptItem => item.id === attemptItem.id))) {
+            return (currentAttempt?.items || []) as Immutable<ItemChoiceDTO>[];
+        } else {
+            if (!currentAttempt) setAttemptItems([...doc.items ?? []]);
+            return [...doc.items ?? []];
+        }
+    }, [currentAttempt, doc.items, setAttemptItems, useSingleList]);
 
     const onDragEnd = (result: DropResult) => {
         handleParsonsItemDrag(result, availableItems, setAvailableItems, attemptItems, setAttemptItems);
@@ -29,11 +38,13 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
 
     useEffect(() => {
         if (!currentAttempt) {
-            setAttemptItems([]);
+            setAttemptItems(useSingleList ? [...doc.items ?? []] : []);
         } else {
             onParsonsCurrentAttemptUpdate(availableItems, setAvailableItems, attemptItems, doc.items);
         }
-    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems]);
+    }, [availableItems, currentAttempt, doc.items, attemptItems, setAttemptItems, useSingleList]);
+
+    const itemSectionInfoId = `item-section-info-${uuid_v4()}`;
 
     return <div className="parsons-question">
         <div className="question-content">
@@ -43,23 +54,23 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         </div>
         <Row className="my-md-3">
             <DragDropContext onDragEnd={onDragEnd}>
-                <Col md={{size: 6}} className="parsons-available-items">
-                    <h4>Available items</h4>
-                    <Label className="visually-hidden" id="item-section-info">
-                        To pick up an item, press space or enter.
-                        Use the up and down arrow keys to move the item within the current list.
-                        {above['md'](deviceSize) ? 
-                            "Use the left and right arrow keys to move the item between the available items and your answer." : 
-                            "Use the contained list swap button to move the item between the available items and your answer."}
-                        Press space or enter again to move the item to a new position.
-                    </Label>
+                <Label className="visually-hidden" id={itemSectionInfoId}>
+                    To pick up an item, press space or enter.
+                    Use the up and down arrow keys to move the item within the current list.
+                    {!useSingleList && (above['md'](deviceSize) ? 
+                        "Use the left and right arrow keys to move the item between the available items and your answer." : 
+                        "Use the contained list swap button to move the item between the available items and your answer.")}
+                    Press space or enter again to move the item to a new position.
+                </Label>
+                {!useSingleList && <Col md={{size: 6}} className="parsons-available-items" aria-describedby={itemSectionInfoId}>
+                    <div className="h4">Available items</div>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
                             <div ref={provided.innerRef}
                                 className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
                                 {availableItems && availableItems.map((item, index) =>
-                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} inAvailableItems readonly={readonly}
+                                    <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} inAvailableItems readonly={readonly}
                                         setItems={setAvailableItems} items={availableItems}
                                         swapItemList={() => swapItemList(availableItems, setAvailableItems, attemptItems, setAttemptItems, index)}
                                     />
@@ -70,22 +81,23 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             </div>
                         }
                     </Droppable>
-                </Col>
-                <Col md={{size: 6}} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
-                    <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
+                </Col>}
+                <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})} aria-describedby={itemSectionInfoId}>
+                    {useSingleList 
+                        ? <i className="text-muted d-print-none">Drag these items to put them in the correct order</i>
+                        : <div className="mt-sm-4 mt-md-0 h4">Your answer</div>}
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>
-                            <div id="parsons-choice-area" ref={provided.innerRef}
-                                className={classNames("parsons-items", {"empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "drag-over": snapshot.isDraggingOver})}
+                            <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef}
+                                className={classNames("parsons-items mt-1", {"empty": !(attemptItems.length > 0), "drag-over": snapshot.isDraggingOver})}
                             >
-                                {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) =>
-                                    <ParsonsDraggableItem key={item.id} currentItem={item} index={index} readonly={readonly}
-                                        setItems={(items: Immutable<ItemDTO>[]) => dispatchSetCurrentAttempt({...currentAttempt, items})} 
-                                        items={(currentAttempt?.items || []) as Immutable<ItemDTO>[]}
+                                {attemptItems.map((item, index) =>
+                                    <ParsonsDraggableItem key={item.id} questionId={questionId} currentItem={item} index={index} readonly={readonly}
+                                        setItems={setAttemptItems} items={attemptItems} useSingleList={useSingleList}
                                         swapItemList={() => swapItemList(attemptItems, setAttemptItems, availableItems, setAvailableItems, index)}
                                     />
                                 )}
-                                {(!currentAttempt || currentAttempt?.items?.length === 0)
+                                {attemptItems.length === 0
                                     ? <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
                                     </div>

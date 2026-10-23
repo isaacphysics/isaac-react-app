@@ -37,10 +37,13 @@ import { TeacherMentoring } from "../../pages/TeacherMentoring";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
+import { AdaCyberExplorersResources } from "../../pages/AdaCyberExplorersResources";
+import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 
+/* eslint-disable no-useless-assignment */ // The increment from the final key++ is not used, but we keep it for the sake of consistency
 let key = 0;
 export const RoutesCS = [
 
@@ -49,6 +52,7 @@ export const RoutesCS = [
     <Route key={key++} path="/register" element={<RegistrationStart />} />,
     <Route key={key++} path="/register/role" element={<RegistrationRoleSelect />} />,
     <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
+    <Route key={key++} path="/register/student/sso_only" element={<RegistrationAgeCheckSSOOnly />} />,
     <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
     <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
     <Route key={key++} path="/register/teacher/details" element={<RegistrationSetDetails userRole="TEACHER" />} />,
@@ -61,6 +65,7 @@ export const RoutesCS = [
     // Student and teacher resources
     <Route key={key++} path="/students" element={<StudentResources />} />,
     <Route key={key++} path="/teachers" element={<TeacherResources />} />,
+    <Route key={key++} path="/techfirst" element={<AdaCyberExplorersResources />} />,
 
     // Assignments
     <Route key={key++} path="/assignment_progress" element={<Navigate to="/my_markbook" replace />} />,

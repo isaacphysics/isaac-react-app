@@ -1,6 +1,6 @@
 import React from "react";
 import { DisplaySettings, UserConsent } from "../../../../IsaacAppTypes";
-import { SITE_TITLE, isAda, isPhy, isStaff, siteSpecific } from "../../../services";
+import { SITE_TITLE, isAda, isPhy, isStaff, isUnder13, siteSpecific } from "../../../services";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MyAccountTab } from "./MyAccountTab";
 import { Link } from "react-router-dom";
@@ -34,7 +34,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Beta Features</h3>
+            <h2 className="h3">Beta Features</h2>
             <p>Here you can opt-in to beta features of the {SITE_TITLE} platform.</p>
         </>}
         rightColumn={<>
@@ -44,7 +44,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                 <p id="revision-helptext">{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
             </WithLinkableSetting>
 
-            {(isPhy || isStaff(user)) && <WithLinkableSetting id={"show-chem-text-entry"}>
+            {isPhy && <WithLinkableSetting id={"show-chem-text-entry"}>
                 <StyledCheckbox checked={displaySettings.CHEM_TEXT_ENTRY ?? false}
                     onChange={e => {
                         setDisplaySettings((oldDs) => ({...oldDs, CHEM_TEXT_ENTRY: e.target.checked}));
@@ -58,7 +58,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
             </WithLinkableSetting>}
 
             {/* Enabled for staff on Isaac so they can test questions, but not being pursued further for now (these questions should not be published) */}
-            {(isStaff(user) || isAda) && <>
+            {(isStaff(user) || (isAda && !isUnder13(user))) && <>
                 <div className="pt-2"/>
                 <WithLinkableSetting id={"consent-to-openai-marking-feature"}>
                     <StyledCheckbox checked={consentSettings.OPENAI ?? false}
@@ -72,7 +72,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     />
                     <p id="llm-helptext"> 
                         {`We use a large language model (LLM) to mark free-text questions on the site. We only send your answer to OpenAI, we do not send any personal data.`}
-                        {isAda && <>{` `}For more information, read our <Link to="/support/student/general" target="_blank">FAQs</Link>.</>}
+                        {isAda && <>{` `}For more information, read our <Link to="/support/student/general#llm_questions" target="_blank">FAQs</Link>.</>}
                     </p>
                 </WithLinkableSetting>
             </>}

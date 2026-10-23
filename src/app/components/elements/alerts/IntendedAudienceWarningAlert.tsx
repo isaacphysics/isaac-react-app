@@ -10,8 +10,11 @@ export function IntendedAudienceWarningAlert({doc}: {doc: ContentBaseDTO}) {
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 
+    // Specific Ada pages that should never show this banner
+    const adaExcludedPages = /topic_summary_proj_data_science|(coursedata_unit([1-9]|10|11)|topic_summary_data_science_epq|epq_ds_intro|epq_ds_project_examples)/;
+
     // If this page is intended for this user's context no need to show a warning banner
-    if (isIntendedAudience(doc.audience, userContext, user)) {
+    if (isIntendedAudience(doc.audience, userContext, user) || (isAda && doc.id && adaExcludedPages.test(doc.id))) {
         return RenderNothing;
     }
 

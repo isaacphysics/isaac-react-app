@@ -98,9 +98,9 @@ export const Search = () => {
             <Card className="my-4">
                 <CardHeader className="search-header p-3">
                     <Col xs={12}>
-                        <h3 className="me-2">
+                        <h2 className="me-2 h3">
                             Search Results {urlQuery != "" && isDefined(searchResult?.currentData?.results) ? <Badge color="primary">{searchResult?.currentData?.results.length}</Badge> : null}
-                        </h3>
+                        </h2>
                     </Col>
                     <Col className="d-flex justify-content-end flex-grow-1">
                         <Form className="form-inline search-filters w-100 gap-2">

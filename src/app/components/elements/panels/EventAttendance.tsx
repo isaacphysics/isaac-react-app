@@ -45,7 +45,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
     }
 
     return <>
-        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion trustedTitle="Record event attendance" disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
+        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle="Record event attendance" disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
                 As an event leader, you are only able to see the bookings of users who have granted you access to their data.
             </div>}
@@ -121,8 +121,8 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                     <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>
                                     <td className="align-middle">{userBooked.familyName}, {userBooked.givenName}</td>
                                     <td className="align-middle">{additionalInformation?.jobTitle || additionalInformation?.yearGroup || ""}</td>
-                                    {(userSchool === undefined || !userSchool.urn) && <td className="align-middle">{userSchool ? userSchool.name : ""}</td>}
-                                    {userSchool && userSchool.urn && <td className="align-middle">{userSchool.name}</td>} {/* In future can add link to school stats page */}
+                                    {(userSchool === undefined || !userSchool.schoolId) && <td className="align-middle">{userSchool ? userSchool.schoolName : ""}</td>}
+                                    {userSchool && userSchool.schoolId && <td className="align-middle">{userSchool.schoolName}</td>} {/* In future can add link to school stats page */}
                                     <td className="align-middle">{userBooked.role}</td>
                                     <td className="align-middle">{userBooked.email}</td>
                                     <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>

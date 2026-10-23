@@ -38,7 +38,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     const SidebarContents = () => {
         return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
-            <h5 className="mb-3">Test</h5>
+            <h3 className="mb-3 h5">Test</h3>
             <div className="mb-2">
                 Subject{subjects?.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
@@ -50,7 +50,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
 
             {hasSections && <>
                 <div className="section-divider"/>
-                <h5 className="mb-3">Section(s)</h5>
+                <h3 className="mb-3 h5">Section(s)</h3>
                 <ul>
                     <li>
                         <StyledTabPicker type="link" checkboxTitle={"Overview"} checked={!isDefined(currentSection)} to={rubricPath} />

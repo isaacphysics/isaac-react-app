@@ -29,6 +29,7 @@ import {
     topicSlice,
     linkableSettingSlice,
     sidebarSlice,
+    accessibilityType,
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -89,6 +90,9 @@ export const rootReducer = combineReducers({
 
     // Linkable settings
     linkableSetting: linkableSettingSlice.reducer,
+
+    // Accessibility
+    accessibilityType,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

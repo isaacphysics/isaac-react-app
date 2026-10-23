@@ -306,6 +306,8 @@ export const expectH1 = expectHeading(1);
 
 export const expectH2 = expectHeading(2);
 
+export const expectH3 = expectHeading(3);
+
 export const expectH4 = expectHeading(4);
 
 export const expectTextInElementWithId = (testId: string) => (msg: string) => expect(screen.getByTestId(testId)).toHaveTextContent(msg);
@@ -317,3 +319,8 @@ export const expectLink = async (linkText: string | undefined, linkHref: string,
     const link = await (container ? within(container) : screen).findByRole("link", { name: linkText });
     expect(link).toHaveAttribute("href", linkHref);
 };
+
+export const dedent = (strings: TemplateStringsArray, ...values: unknown[]) => strings
+    .reduce((acc, str, i) => acc + str + (values[i] ?? ''), '')
+    .replace(/\s+/g, ' ')
+    .trim();
