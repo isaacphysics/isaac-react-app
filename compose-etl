@@ -54,7 +54,7 @@ ES_CONTAINER=$SITE-elasticsearch-v9-live
 # The content repo is named differently for both sites in a non-standard way:
 if [ "$SITE" == "ada" ]; then
   CONTENT_REPO="ada-content"
-elif [ "$SITE" == "phy" ]; then
+elif [ "$SITE" == "sci" ]; then
   CONTENT_REPO="rutherford-content"
 fi
 
