@@ -373,7 +373,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     <br className="d-none d-lg-block"/>
                     {currentlyWorkingOn.isConcept && <div className="mt-lg-1 mt-xl-3 h4">
                         <Markup encoding={"latex"}>
-                            {`${currentlyWorkingOn.title} Practice`}
+                            {`${currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "")} Practice`}
                         </Markup>
                     </div>}
                 </div>
