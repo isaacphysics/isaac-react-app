@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from "react";
 import {openActiveModal, useAppDispatch, useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {getThemeFromTags, isDefined, isTeacherOrAbove, siteSpecific, useQuizQuestions, useQuizSections} from "../../../services";
+import {getThemeFromTags, isDefined, isTeacherOrAbove, useQuizQuestions, useQuizSections} from "../../../services";
 import {FullQuizInfo, myQuizzesCrumbs, QuizContentsComponent, QuizPagination, QuizProps} from "../../elements/quiz/QuizContentsComponent";
 import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
@@ -19,7 +19,7 @@ const QuizFooter = (props: QuizProps & FullQuizInfo) => {
         : <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
             {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>Set test</Button>}
             <Spacer/>
-            <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{`Attempt ${siteSpecific("test", "quiz")} yourself`}</Button>
+            <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{"Attempt test yourself"}</Button>
             <Button color="solid" tag={Link} to={pageLink(1)}>{"Preview questions"}</Button>
         </div>;
 };
