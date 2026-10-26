@@ -117,13 +117,14 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         base: {
             stroke: {
                 width: {xxl: 3, xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
-                colour: '#ddd'
+                selectedColour: 'var(--color-neutral-500)',
+                deselectedColour: 'var(--color-neutral-300)'
             },
             fill: {
                 selectedColour: 'none',
-                deselectedColour: '#f0f0f0',
+                deselectedColour: 'var(--color-neutral-100)',
                 completedColour: 'none',
-                deselectedCompletedColour: '#f0f0f0',
+                deselectedCompletedColour: 'var(--color-neutral-100)',
             },
         },
         questionPartProgress: {
@@ -298,7 +299,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             fontSize={{xxl: 26, xl: 26, lg: 26, md: 18, sm: 18, xs: 18}[deviceSize]}
             fontStyle="italic"
             fontWeight={["xs"].includes(deviceSize) ? 500 : 600}
-            fill={isCurrentQuestion ? '#333' : '#ccc'}
+            fill={isCurrentQuestion ? 'var(--color-neutral-900)' : 'var(--color-neutral-500)'}
             stroke="none"
             strokeWidth={1}
             strokeLinejoin="round"
@@ -320,13 +321,14 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function createQuestionHexagon(question: AugmentedQuestion) {
+        const strokeColour = question.isCurrentQuestion ? hexagon.base.stroke.selectedColour : hexagon.base.stroke.deselectedColour;
         const fillColour = (question.isCompleted) ?
             question.isCurrentQuestion ? hexagon.base.fill.completedColour : hexagon.base.fill.deselectedCompletedColour :
             question.isCurrentQuestion ? hexagon.base.fill.selectedColour : hexagon.base.fill.deselectedColour;
 
         return <Link to={question.href}>
             <title>{question.title + (question.isCurrentQuestion ? ' (Current)' : '')}</title>
-            <Hexagon {...hexagon} properties={{...hexagon.base, fill: {colour: fillColour}, clickable: true}} />
+            <Hexagon {...hexagon} properties={{...hexagon.base, stroke: {...hexagon.base.stroke, colour: strokeColour}, fill: {colour: fillColour}, clickable: true}} />
             <Hexagon
                 {...hexagon} properties={hexagon.questionPartProgress}
                 states={question.questionPartStates} selector={state => state === "CORRECT"}
