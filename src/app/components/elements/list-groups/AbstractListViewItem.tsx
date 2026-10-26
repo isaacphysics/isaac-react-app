@@ -248,9 +248,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                     </div>}
-                    {isQuiz && <div className="d-flex align-items-center mb-2 mt-1">
-                        {subject && <Badge key={subject} className="rounded-pill me-1" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>}
-                        {typedProps.audienceViews?.flatMap(({stage}) => isDefined(stage) ? <Badge key={stage} className="rounded-pill me-1" color="theme" data-bs-theme="neutral">{HUMAN_STAGES[stage]}</Badge> : [])}
+                    {isQuiz && (subject || typedProps.audienceViews) && <div className="d-flex align-items-center">
+                        {subject && <Badge key={subject} className="rounded-pill m-1 ms-0" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>}
+                        {typedProps.audienceViews?.flatMap(({stage}) => isDefined(stage) ? <Badge key={stage} className="rounded-pill m-1 ms-0" color="theme" data-bs-theme="neutral">{HUMAN_STAGES[stage]}</Badge> : [])}
                     </div>}
                     {(isCrossTopic || isLLM) && <div className={classNames("d-flex flex-wrap gap-2 mt-1", {"mt-2": isPhy || !stackedLayout})}>
                         {isCrossTopic && <CrossTopicQuestionIndicator small />}
