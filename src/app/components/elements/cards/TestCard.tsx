@@ -96,7 +96,7 @@ export const TestCard = (props: TestCardProps) => {
                                     : quizAssignment.quizSummary?.title || "Untitled Test"
                             )}
                         </div>
-                        {above['sm'](deviceSize) && (subjects.length > 0 || subjects.length > 0) && <div className="d-flex align-items-center mb-2">
+                        {above['sm'](deviceSize) && (subjects.length > 0 || stages.length > 0) && <div className="d-flex align-items-center mb-2">
                             {subjects.map((subject) => <Badge key={subject} className="rounded-pill me-1" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>)}
                             {stages.map((stage) => <Badge key={stage} className="rounded-pill me-1" color="theme" data-bs-theme="neutral">{HUMAN_STAGES[stage]}</Badge>)}
                         </div>}
