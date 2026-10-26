@@ -1,8 +1,3 @@
-.leaflet-container {
-    width: 100%;
-    aspect-ratio: 1;
-}
-
 // If browser supports overflow: clip, use it because it prevents programmatic scrolling as well. This is important
 // for div#root, and fixes an issue with dnd-kit causing this element to scroll unexpectedly.
 @supports (overflow:clip) {

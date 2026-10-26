@@ -32,7 +32,7 @@ import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {PageFragment} from "../../elements/PageFragment";
 import { SortItemHeader } from "../../elements/SortableItemHeader";
-import { Card, CardBody, Button, Table, Alert, Row, Col, Label, Input } from "reactstrap";
+import { Card, CardBody, Button, Table, Alert, Row, Col, Label, Input, Badge } from "reactstrap";
 import orderBy from "lodash/orderBy";
 import classNames from "classnames";
 import StyledToggle from "../../elements/inputs/StyledToggle";
@@ -128,7 +128,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                             <div className="d-flex flex-column flex-grow-1">
                                 <div className="h4">{quiz.title || quiz.id}</div>
                                 {above['sm'](deviceSize) && isDefined(subject) && <div className="d-flex align-items-center mb-2">
-                                    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>
+                                    <Badge className="rounded-pill me-1" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>
                                 </div>}
                             </div>
                         </div>

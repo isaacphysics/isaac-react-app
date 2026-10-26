@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { Link } from "react-router";
-import { Row, Col, Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from "reactstrap";
+import { Row, Col, Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, Badge } from "reactstrap";
 import { QuizAssignmentDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY, isOverdue, isTeacherOrAbove } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
@@ -96,7 +96,7 @@ export const TestCard = (props: TestCardProps) => {
                             )}
                         </div>
                         {above['sm'](deviceSize) && subjects.length > 0 && <div className="d-flex align-items-center mb-2">
-                            {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}
+                            {subjects.map((subject) => <Badge key={subject} className="rounded-pill me-1" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>)}
                         </div>}
                     </div>
                     {!below['xs'](deviceSize) && <CardUsageInfo className="float-end" quizAssignment={quizAssignment} usageDisplay={usageDisplay} />}
