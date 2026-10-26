@@ -500,7 +500,8 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     }
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
-    const stagesFilteredByUserContext = audienceStages.filter(s => userContext.contexts.some(c => c.stage == s));
+    const isAllStages =  userContext.contexts.some(c => c.stage === STAGE.ALL);
+    const stagesFilteredByUserContext = isAllStages ? audienceStages : audienceStages.filter(s => userContext.contexts.some(c => c.stage == s));
     let stagesToView: Stage[];
 
     if (isAda) {

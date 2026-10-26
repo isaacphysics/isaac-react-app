@@ -59,6 +59,8 @@ $yellow-500: #FFFAC3;
 $yellow-600: #FFFFE6;
 $yellow-700: #FFFFF5;
 
+$alert: #bd5a00;
+
 $cs-perfect: #05611E;
 $cs-in-progress: #FE8E15;
 $cs-failed: #A90212;
@@ -205,7 +207,7 @@ $question-padding: 3rem;
 $question-font-size: 1rem;
 $question-font-weight: 400;
 
-$text-muted: $cs-dark-silver;
+$text-muted: $cs-muted;
 
 
 // Colour Overrides
@@ -275,6 +277,8 @@ $theme-colour-overrides: (
     "dark-primary": $dark-primary,
     "dark-secondary": $dark-secondary,
     "info": $tertiary,
+    "alert": $alert,
+    "expired": $cs-muted,
 
     "turquoise-blue": $cyan-300,
     "pink" : $pink-300,

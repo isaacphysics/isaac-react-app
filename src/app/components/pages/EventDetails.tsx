@@ -334,7 +334,7 @@ const ImageAndMap = ({event}: EventBookingProps) => {
 
         {isDefined(event.location) && isDefined(event.location?.latitude) && isDefined(event.location?.longitude) 
         && <Col xs={12} sm={6} lg={12} className="mt-3 px-0">
-            <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
+            <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13} className="ratio ratio-1x1">
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -389,12 +389,12 @@ const EventDetails = () => {
                         <Badge color="primary" className="fs-6 rounded-pill">
                             {isTeacherEvent ? "Teacher event" : "Student event"}
                         </Badge>
-                        {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
+                        {hasExpired && <Badge className="fs-6 rounded-pill" color="expired">
                             EXPIRED
                         </Badge>}
-                        {bookingDeadlineSoon && <span className="fs-6 warning-tag">
+                        {bookingDeadlineSoon && <Badge className="fs-6 rounded-pill" color="alert">
                             Booking deadline soon!
-                        </span>}
+                        </Badge>}
                     </>}
                 >
                     {isPhy && <KeyEventInfo {...eventBookingProps} />}

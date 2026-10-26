@@ -25,14 +25,11 @@ import { ContentPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 import { CrossTopicQuestionIndicator } from "./CrossTopicQuestionIndicator";
 import { PreviewQuestionButton } from "./PreviewButton";
+import { Badge } from "reactstrap";
 
 const GameboardBuilderTableRow = (
     {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
-    const tagIcon = (tag: string) => {
-        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>;
-    };
-
     const audienceViews = determineAudienceViews(question.audience, creationContext);
     const filteredAudienceViews = audienceViews.length === 0 ? [{stage: undefined, difficulty: undefined}] : filterAudienceViewsByProperties(audienceViews, AUDIENCE_DISPLAY_FIELDS);
 
@@ -93,8 +90,9 @@ const GameboardBuilderTableRow = (
             {view.difficulty && <DifficultyIcons difficulty={view.difficulty} />}
         </td>}
         {isAda && <td className={classNames(cellClasses, "w-15")}>
-            {audienceViews.filter(audienceView => view.stage === audienceView.stage)
-                .map(audienceView => audienceView.examBoard && tagIcon(examBoardLabelMap[audienceView.examBoard]))}
+            {audienceViews.filter(audienceView => view.stage === audienceView.stage).map(audienceView => audienceView.examBoard &&
+                <Badge key={audienceView.examBoard} className="rounded-pill mx-1">{examBoardLabelMap[audienceView.examBoard]}</Badge>
+            )}
         </td>}
     </tr>);
 };
