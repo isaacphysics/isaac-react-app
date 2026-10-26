@@ -90,6 +90,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                 <ListView
                     type="quiz"
                     items={relevantTests}
+                    useViewQuizLink={!isTeacherOrAbove(user)}
                 />
             </div>
         </>}
