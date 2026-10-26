@@ -32,6 +32,7 @@ import {
     useQueryParams
 } from "./";
 import {
+    AudienceContext,
     ContentDTO,
     IAssignmentLike,
     IsaacQuizSectionDTO,
@@ -309,6 +310,7 @@ export interface DisplayableQuiz {
     link?: string;
     status?: QuizStatus;
     tags?: string[];
+    audience?: AudienceContext[];
 };
 
 export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): DisplayableQuiz | undefined {
@@ -336,7 +338,8 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
             : status === QuizStatus.Overdue ? undefined
                 : `/test/assignment/${assignment.id}`,
         status: status,
-        tags: assignment.quizSummary?.tags
+        tags: assignment.quizSummary?.tags,
+        audience: assignment.quizSummary?.audience,
     };
 }
 
@@ -354,7 +357,8 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         quizFeedbackMode: attempt.feedbackMode,
         link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
         status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
-        tags: attempt.quizSummary?.tags
+        tags: attempt.quizSummary?.tags,
+        audience: attempt.quizSummary?.audience,
     };
 }
 

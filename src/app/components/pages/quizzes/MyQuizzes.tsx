@@ -16,6 +16,7 @@ import {
     convertAttemptToQuiz,
     DisplayableQuiz,
     extractTeacherName,
+    HUMAN_STAGES,
     HUMAN_SUBJECTS,
     isAda,
     isDefined,
@@ -116,6 +117,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
     };
     const subject = determineQuizSubject(quiz);
+    const stages = [...new Set(quiz.audience?.flatMap(({stage}) => stage).filter(isDefined))];
     return <div className="p-2">
         <Card className="h-100 rounded-card">
             <CardBody className="d-flex flex-column">
@@ -129,6 +131,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                                 <div className="h4">{quiz.title || quiz.id}</div>
                                 {above['sm'](deviceSize) && isDefined(subject) && <div className="d-flex align-items-center mb-2">
                                     <Badge className="rounded-pill me-1" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>
+                                    {stages.map((stage) => <Badge key={stage} className="rounded-pill me-1" color="theme" data-bs-theme="neutral">{HUMAN_STAGES[stage]}</Badge>)}
                                 </div>}
                             </div>
                         </div>

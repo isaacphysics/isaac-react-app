@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Link } from "react-router";
 import { Row, Col, Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, Badge } from "reactstrap";
 import { QuizAssignmentDTO } from "../../../../IsaacApiTypes";
-import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY, isOverdue, isTeacherOrAbove } from "../../../services";
+import { useDeviceSize, tags, isDefined, TAG_ID, PATHS, generateGameboardSubjectHexagons, Subject, above, HUMAN_SUBJECTS, below, isPhy, isTutorOrAbove, TODAY, isOverdue, isTeacherOrAbove, HUMAN_STAGES } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { ShareLink } from "../ShareLink";
 import { Spacer } from "../Spacer";
@@ -70,6 +70,7 @@ export const TestCard = (props: TestCardProps) => {
 
     const testUrl = quizAssignment ? `${PATHS.TEST}/${quizAssignment.id}` : undefined;
     const subjects = tags.getSubjectTags(quizAssignment?.quizSummary?.tags as TAG_ID[] || []).map(t => t.id);
+    const stages = [...new Set(quizAssignment?.quizSummary?.audience?.flatMap(({stage}) => stage).filter(isDefined))];
 
     const card = <div className="px-3 py-2 flex-grow-1" data-testid="test-card">
         <Row data-testid="my-assignment">
@@ -95,8 +96,9 @@ export const TestCard = (props: TestCardProps) => {
                                     : quizAssignment.quizSummary?.title || "Untitled Test"
                             )}
                         </div>
-                        {above['sm'](deviceSize) && subjects.length > 0 && <div className="d-flex align-items-center mb-2">
+                        {above['sm'](deviceSize) && (subjects.length > 0 || subjects.length > 0) && <div className="d-flex align-items-center mb-2">
                             {subjects.map((subject) => <Badge key={subject} className="rounded-pill me-1" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>)}
+                            {stages.map((stage) => <Badge key={stage} className="rounded-pill me-1" color="theme" data-bs-theme="neutral">{HUMAN_STAGES[stage]}</Badge>)}
                         </div>}
                     </div>
                     {!below['xs'](deviceSize) && <CardUsageInfo className="float-end" quizAssignment={quizAssignment} usageDisplay={usageDisplay} />}

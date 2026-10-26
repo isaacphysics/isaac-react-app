@@ -41,7 +41,8 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
             <div className="section-divider"/>
             <h3 className="mb-3 h5">Test</h3>
             {stages.length > 0 && <span className="mb-2">
-                Stage{stages.length > 1 && "s"}: {stages.map(s => stageLabelMap[s]).join(", ")}
+                Stage{stages.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{stages.map(st => <li className="d-inline" key={st}><Pill title={stageLabelMap[st]} theme="neutral"/></li>)}</ul>
             </span>}
             <div className="mb-2">
                 Subject{subjects?.length > 1 && "s"}:
