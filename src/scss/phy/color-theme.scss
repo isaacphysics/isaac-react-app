@@ -239,6 +239,10 @@
   background: var(--color-neutral-200) !important;
 }
 
+.bg-alert {
+  background: var(--color-misc-orange-600) !important;
+}
+
 .bg-inline-question:not(:active) {
   background: var(--color-neutral-200) !important;
   background: color-mix(in srgb, var(--color-neutral-300) 50%, transparent 50%) !important;
