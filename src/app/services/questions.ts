@@ -1,7 +1,7 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
-import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, persistence, KEY, trackEvent, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
+import {ChoiceDTO, CompletionState, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {persistence, KEY, trackEvent, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -75,23 +75,6 @@ export function isQuestion(doc: ContentDTO) {
 
 export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
     return questions?.filter(question => question.id == questionPartId)[0];
-}
-
-function fastTrackConceptEnumerator(questionId: string) {
-    // Magic, unfortunately
-    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
-}
-
-export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
-    let title = doc.title as string;
-
-    // FastTrack title renaming
-    if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && doc.id
-        && (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower'))) {
-        title += " " + fastTrackConceptEnumerator(doc.id) + (doc.tags.includes('ft_lower') ? "ii" : "i");
-    }
-
-    return title;
 }
 
 /**
