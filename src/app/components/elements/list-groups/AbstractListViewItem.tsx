@@ -3,9 +3,9 @@ import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
+import { Badge, Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { above, below, isAda, isDefined, isLoggedIn, isPhy, isStaff, isTeacherOrAbove, siteSpecific, SKILLS_BOOKS, Subject, useDeviceSize } from "../../../services";
+import { above, below, HUMAN_STAGES, HUMAN_SUBJECTS, isAda, isDefined, isLoggedIn, isPhy, isStaff, isTeacherOrAbove, siteSpecific, SKILLS_BOOKS, Subject, useDeviceSize } from "../../../services";
 import { TitleIcon, TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
@@ -248,6 +248,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {(isItem || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                     </div>}
+                    {isQuiz && (subject || typedProps.audienceViews) && <div className="d-flex align-items-center">
+                        {subject && <Badge key={subject} className="rounded-pill m-1 ms-0" color="theme" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</Badge>}
+                        {typedProps.audienceViews?.flatMap(({stage}) => isDefined(stage) ? <Badge key={stage} className="rounded-pill m-1 ms-0" color="theme" data-bs-theme="neutral">{HUMAN_STAGES[stage]}</Badge> : [])}
+                    </div>}
                     {(isCrossTopic || isLLM) && <div className={classNames("d-flex flex-wrap gap-2 mt-1", {"mt-2": isPhy || !stackedLayout})}>
                         {isCrossTopic && <CrossTopicQuestionIndicator small />}
                         {isLLM && <LLMFreeTextQuestionIndicator small />}
@@ -284,9 +288,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                         {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
                     </div>}
-                    {isQuiz && <Col md={6} className="d-flex align-items-center justify-content-end">
+                    {isQuiz && <div className="d-flex align-items-center justify-content-end ms-5 mw-max-content">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
-                    </Col>}
+                    </div>}
                     {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && <div
                         className="alvi-bookmark-container"
                     >
