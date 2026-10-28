@@ -6,15 +6,15 @@ import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataConta
 import { Markup } from "./markup";
 import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
-import { isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
+import { DOCUMENT_TYPE, isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
     const user = useAppSelector(selectors.user.loggedInOrNull);
-    const tests = (page.relatedContent?.filter(c => c.type === "isaacQuiz") || []) as QuizSummaryDTO[];
+    const tests = (page.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.QUIZ) || []) as QuizSummaryDTO[];
     const relevantTests = user?.role ? tests.filter(t => !t.hiddenFromRoles?.includes(user.role!)) : [];
-    const resources = page.relatedContent?.filter(c => c.type !== "isaacQuiz");
+    const resources = page.relatedContent?.filter(c => c.type !== DOCUMENT_TYPE.QUIZ);
     
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
     const hasResources = (resources && resources.length > 0) || !!page.value || (page.children && page.children.length > 0);
