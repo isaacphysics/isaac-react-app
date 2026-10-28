@@ -6,17 +6,18 @@ import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataConta
 import { Markup } from "./markup";
 import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
-import { isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
+import { DOCUMENT_TYPE, isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
     const user = useAppSelector(selectors.user.loggedInOrNull);
-    const tests = (page.relatedContent?.filter(c => c.type === "isaacQuiz") || []) as QuizSummaryDTO[];
+    const tests = (page.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.QUIZ) || []) as QuizSummaryDTO[];
     const relevantTests = user?.role ? tests.filter(t => !t.hiddenFromRoles?.includes(user.role!)) : [];
+    const resources = page.relatedContent?.filter(c => c.type !== DOCUMENT_TYPE.QUIZ);
     
     const hasQuestions = page.gameboards && page.gameboards.length > 0;
-    const hasResources = (page.relatedContent && page.relatedContent.length > 0) || !!page.value || (page.children && page.children.length > 0);
+    const hasResources = (resources && resources.length > 0) || !!page.value || (page.children && page.children.length > 0);
     const hasRelevantTests = relevantTests.length > 0;
     const hasExtension = page.extensionGameboards && page.extensionGameboards.length > 0;
 
@@ -53,7 +54,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             {hasResources && <MetadataContainerLink id="resources" title="Resources" />}
             {hasRelevantTests && <MetadataContainerLink id="tests" title="Practice tests" />}
             {hasExtension && <MetadataContainerLink id="extension" title="Extension work" />}
-            {!hasQuestions && !hasResources && !hasExtension && <span className="ms-2">There are no materials for this page.</span>}
+            {!hasQuestions && !hasResources && !hasRelevantTests && !hasExtension && <span className="ms-2">There are no materials for this page.</span>}
         </MetadataContainer>
 
         {hasQuestions && <>
@@ -69,11 +70,11 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
         {hasResources && <>
             <h3 className="mb-3 h4" id="resources">Resources</h3>
-            {!!page.relatedContent?.length && <>
+            {resources?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
                         type="item"
-                        items={page.relatedContent}
+                        items={resources}
                         linkedBookSection={bookPageUrlParam}
                     />
                 </div>
