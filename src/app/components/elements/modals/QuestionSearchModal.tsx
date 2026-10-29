@@ -36,7 +36,8 @@ import {
     TAG_ID,
     itemise,
     difficultyLabelMap,
-    reactSelectDarkModeStyles
+    reactSelectDarkModeStyles,
+    examBoardLabelMap
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
 import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -215,16 +216,19 @@ export const QuestionSearchModal = (
         searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
         searchBook.map(b => {const book = ISAAC_BOOKS.find(book => book.tag === b); return {value: b, label: book ? book.shortTitle : b};}),
-        selectionList,
+        searchExamBoards.map(eb => {return {value: eb, label: examBoardLabelMap[eb]};}),
+        siteSpecific(selectionList, searchTopics.map(t => tags.getById(t as TAG_ID)).map(tag => {return {value: tag.id, label: tag.title};})),
         searchFastTrack ? [{value: "fasttrack", label: "FastTrack"}] : [],
         searchBookmarks ? [{value: "bookmarked", label: "Bookmarked"}] : [],
-    ].flat(), [searchBook, searchBookmarks, searchDifficulties, searchFastTrack, searchStages, selectionList]);
+    ].flat(), [searchBook, searchBookmarks, searchDifficulties, searchFastTrack, searchStages, searchExamBoards, selectionList, searchTopics]);
 
     const removeFilterTag = (filter: string) => {
         if (searchStages.includes(filter as STAGE)) {
             setSearchStages(searchStages.filter(f => f !== filter));
-        } else if (getChoiceTreeLeaves(topicSelections).some(leaf => leaf.value === filter)) {
+        } else if (isPhy && getChoiceTreeLeaves(topicSelections).some(leaf => leaf.value === filter)) {
             setTopicSelections(pruneTreeNode(topicSelections, filter, true));
+        } else if (isAda && searchTopics.includes(filter)) {
+            setSearchTopics(searchTopics.filter(f => f !== filter));
         } else if (searchDifficulties.includes(filter as Difficulty)) {
             setSearchDifficulties(searchDifficulties.filter(f => f !== filter));
         } else if (searchExamBoards.includes(filter as ExamBoard)) {
