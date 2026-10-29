@@ -56,7 +56,7 @@
 }
 
 .filter-tag {
-  @include pill-tag($cs-jet, $cs-light-gray, $cs-dark-silver);
+  @include pill-tag($cs-black, $cs-light-gray, $cs-dark-silver);
   border-width: 2px;
 
   &:focus-within {
