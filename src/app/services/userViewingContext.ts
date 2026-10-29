@@ -293,18 +293,19 @@ function produceAudienceViewingCombinations(audience: AudienceContext): ViewingC
     return audienceOptions;
 }
 
-// Find all combinations of viewing contexts from an audience of the form:
-//   {stage: ["a_level", "gcse"], examBoard: ["aqa", "ocr"]}
+// For each member of audience, find all combinations of viewing contexts from the audience of the form:
+//   {stage: ["a_level", "gcse"], examBoard: ["aqa", "ocr"], difficulty: ["practice_1"]}
 // so that we have a list of the form: [
-//   {stage: "a_level", examBoard: "aqa"},
-//   {stage: "a_level", examBoard: "ocr"},
-//   {stage: "gcse", examBoard: "aqa"},
-//   {stage: "gcse", examBoard: "ocr"},
-// ].
-export function determineAudienceViews(audience?: AudienceContext[]): ViewingContext[] {
+//   {stage: "a_level", examBoard: "aqa", difficulty: "practice_1"},
+//   {stage: "a_level", examBoard: "ocr", difficulty: "practice_1"},
+//   {stage: "gcse", examBoard: "aqa", difficulty: "practice_1"},
+//   {stage: "gcse", examBoard: "ocr", difficulty: "practice_1"},
+// ],
+// then filter the list to the page context if given, or the user context otherwise.
+export function determineAudienceViews(audience?: AudienceContext[], userContext?: readonly UserContext[], pageContext?: PageContextState): ViewingContext[] {
     if (audience === undefined) {return [];}
 
-    const viewsToDisplay: ViewingContext[] = [];
+    const allViews: ViewingContext[] = [];
 
     // Set all Ada audience contexts to the same difficulty level, if not already
     if (isAda) {
@@ -314,10 +315,18 @@ export function determineAudienceViews(audience?: AudienceContext[]): ViewingCon
 
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
-        viewsToDisplay.push(...produceAudienceViewingCombinations(audienceContext));
+        allViews.push(...produceAudienceViewingCombinations(audienceContext));
     });
 
-    return viewsToDisplay.sort((a, b) =>
+    let viewsFilteredByContext = allViews;
+    if (pageContext && pageContext.stage && pageContext.stage.length > 0) {
+        viewsFilteredByContext = viewsFilteredByContext.filter(view => view.stage &&
+            pageContext.stage?.some(stage => LEARNING_STAGE_TO_STAGES[stage].some(learningStage => learningStage === view.stage)));
+    } else if (userContext && userContext.length > 0 && userContext.some(context => context.stage)) {
+        viewsFilteredByContext = viewsFilteredByContext.filter(view => userContext.some(context => context.stage === view.stage));
+    }
+
+    return viewsFilteredByContext.sort((a, b) =>
         comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
 }
 
@@ -350,7 +359,6 @@ export function isRelevantToPageContext(intendedAudience: ContentBaseDTO['audien
 }
 
 export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
-    
     // if we are in a subject-stage-specific route, this is only relevant if there is some overlap between that route and the content object; we ignore the user entirely.
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
         return isRelevantToPageContext(intendedAudience, pageContext);

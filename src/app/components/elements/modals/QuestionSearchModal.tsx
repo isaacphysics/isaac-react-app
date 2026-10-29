@@ -39,7 +39,7 @@ import {
     reactSelectDarkModeStyles
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
-import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";

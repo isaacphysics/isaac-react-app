@@ -74,7 +74,8 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
         ? assignment.gameboardId 
         : query.board instanceof Array ? query.board[0] : query.board;
 
-    const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
+    const userContext = user && user.loggedIn && user.registeredContexts || undefined;
+    const pageContext = usePreviousPageContext(userContext, doc && !isLoading ? doc : undefined);
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
     const wildcard = (gameboard && showWildcard(gameboard)) ? gameboard.wildCard : undefined;
 
@@ -87,7 +88,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
         ifNotFound={<NotFound />}
         thenRender={doc => {
             const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
-            const audienceViews = determineAudienceViews(doc.audience);
+            const audienceViews = determineAudienceViews(doc.audience, userContext, pageContext);
 
             return <GameboardContext.Provider value={navigation.currentGameboard}>
                 <PageContainer className="no-shadow" data-bs-theme={pageContext?.subject}
