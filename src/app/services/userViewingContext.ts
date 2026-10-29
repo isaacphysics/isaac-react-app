@@ -315,7 +315,7 @@ export function determineAudienceViews(audience?: AudienceContext[], userContext
     const allViews: ViewingContext[] = [];
 
     const hasPageStage = !!pageContext?.stage?.length;
-    const hasUserStage = !!(userContext?.length && userContext.some(context => context.stage));
+    const hasUserStage = !!(userContext?.length && userContext.some(context => context.stage) && userContext.every(context => context.stage !== "all"));
 
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
@@ -336,18 +336,15 @@ export function determineAudienceViews(audience?: AudienceContext[], userContext
         const preferredStages = hasPageStage
             ? pageContext.stage?.flatMap(stage => LEARNING_STAGE_TO_STAGES[stage])
             : userContext?.map(context => context.stage).filter((stage) => isDefined(stage));
+
         const availableStages = [...new Set(allViews.map(view => view.stage).filter((stage) => isDefined(stage)))];
 
-        const stageIndex = (stage: string) => stagesOrdered.indexOf(stage as (typeof stagesOrdered)[number]);
-        const preferredIndexes = preferredStages?.map(stageIndex).filter(index => index >= 0);
-
-        if (preferredIndexes && preferredIndexes.length > 0) {
-            const closestStage = availableStages
-                .filter(stage => stageIndex(stage) >= 0)
-                .sort((a, b) => {
-                    const distance = (stage: string) => Math.min(...preferredIndexes.map(index => Math.abs(stageIndex(stage) - index)));
-                    return distance(a) - distance(b);
-                })[0];
+        if (preferredStages && preferredStages.length > 0) {
+            const closestStage = availableStages.sort((a, b) => {
+                const stageIndex = (stage: string) => stagesOrdered.indexOf(stage as (typeof stagesOrdered)[number]);
+                const distance = (stage: string) => Math.min(...preferredStages.map(ps => Math.abs(stageIndex(stage) - stageIndex(ps))));
+                return distance(a) - distance(b);
+            })[0];
 
             if (closestStage !== undefined) {
                 viewsFilteredByContext = allViews.filter(view => view.stage === closestStage);
