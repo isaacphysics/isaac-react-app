@@ -301,11 +301,10 @@ function produceAudienceViewingCombinations(audience: AudienceContext): ViewingC
 //   {stage: "gcse", examBoard: "aqa", difficulty: "practice_1"},
 //   {stage: "gcse", examBoard: "ocr", difficulty: "practice_1"},
 // ],
-// then filter the list to the page context if given, or the user context otherwise.
+// then filter the list to the page context if given, or the user context if given otherwise
+// (if no audiences are left after filtering, instead show the closest applicable audience)
 export function determineAudienceViews(audience?: AudienceContext[], userContext?: readonly UserContext[], pageContext?: PageContextState): ViewingContext[] {
     if (audience === undefined) {return [];}
-
-    const allViews: ViewingContext[] = [];
 
     // Set all Ada audience contexts to the same difficulty level, if not already
     if (isAda) {
@@ -313,17 +312,47 @@ export function determineAudienceViews(audience?: AudienceContext[], userContext
         audience = audience.map(audienceContext => { return {...audienceContext, difficulty: questionDifficulty}; });
     }
 
+    const allViews: ViewingContext[] = [];
+
+    const hasPageStage = !!pageContext?.stage?.length;
+    const hasUserStage = !!(userContext?.length && userContext.some(context => context.stage));
+
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
         allViews.push(...produceAudienceViewingCombinations(audienceContext));
     });
 
+    // Filter the list to the page context if given, or the user context if given otherwise.
     let viewsFilteredByContext = allViews;
-    if (pageContext && pageContext.stage && pageContext.stage.length > 0) {
+    if (hasPageStage) {
         viewsFilteredByContext = viewsFilteredByContext.filter(view => view.stage &&
             pageContext.stage?.some(stage => LEARNING_STAGE_TO_STAGES[stage].some(learningStage => learningStage === view.stage)));
-    } else if (userContext && userContext.length > 0 && userContext.some(context => context.stage)) {
+    } else if (hasUserStage) {
         viewsFilteredByContext = viewsFilteredByContext.filter(view => userContext.some(context => context.stage === view.stage));
+    }
+
+    // If there are no matches, fall back to the closest available stage
+    if (viewsFilteredByContext.length === 0 && (hasPageStage || hasUserStage)) {
+        const preferredStages = hasPageStage
+            ? pageContext.stage?.flatMap(stage => LEARNING_STAGE_TO_STAGES[stage])
+            : userContext?.map(context => context.stage).filter((stage) => isDefined(stage));
+        const availableStages = [...new Set(allViews.map(view => view.stage).filter((stage) => isDefined(stage)))];
+
+        const stageIndex = (stage: string) => stagesOrdered.indexOf(stage as (typeof stagesOrdered)[number]);
+        const preferredIndexes = preferredStages?.map(stageIndex).filter(index => index >= 0);
+
+        if (preferredIndexes && preferredIndexes.length > 0) {
+            const closestStage = availableStages
+                .filter(stage => stageIndex(stage) >= 0)
+                .sort((a, b) => {
+                    const distance = (stage: string) => Math.min(...preferredIndexes.map(index => Math.abs(stageIndex(stage) - index)));
+                    return distance(a) - distance(b);
+                })[0];
+
+            if (closestStage !== undefined) {
+                viewsFilteredByContext = allViews.filter(view => view.stage === closestStage);
+            }
+        }
     }
 
     return viewsFilteredByContext.sort((a, b) =>
