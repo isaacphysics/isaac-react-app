@@ -225,8 +225,10 @@ export const QuestionSearchModal = (
     const removeFilterTag = (filter: string) => {
         if (searchStages.includes(filter as STAGE)) {
             setSearchStages(searchStages.filter(f => f !== filter));
-        } else if (getChoiceTreeLeaves(topicSelections).some(leaf => leaf.value === filter)) {
+        } else if (isPhy && getChoiceTreeLeaves(topicSelections).some(leaf => leaf.value === filter)) {
             setTopicSelections(pruneTreeNode(topicSelections, filter, true));
+        } else if (isAda && searchTopics.includes(filter)) {
+            setSearchTopics(searchTopics.filter(f => f !== filter));
         } else if (searchDifficulties.includes(filter as Difficulty)) {
             setSearchDifficulties(searchDifficulties.filter(f => f !== filter));
         } else if (searchExamBoards.includes(filter as ExamBoard)) {
