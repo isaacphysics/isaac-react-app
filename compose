@@ -106,13 +106,13 @@ services:
   $PG_CONTAINER_NAME:
     container_name: $PG_CONTAINER_NAME
     restart: "no"
-    image: postgres:16
+    image: postgres:18
     shm_size: 128M
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: rutherf0rd
     volumes:
-      - $PG_CONTAINER_NAME:/var/lib/postgresql/data
+      - $PG_CONTAINER_NAME:/var/lib/postgresql
       - /local/src/isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
       - /local/src/isaac-api/src/main/resources/db_scripts/postgres-rutherford-functions.sql:/docker-entrypoint-initdb.d/01-isaac-functions.sql:ro
       - /local/src/isaac-api/src/main/resources/db_scripts/quartz_scheduler_create_script.sql:/docker-entrypoint-initdb.d/02-isaac-quartz.sql:ro
