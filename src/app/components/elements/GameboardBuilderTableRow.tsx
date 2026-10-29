@@ -27,9 +27,9 @@ import { PreviewQuestionButton } from "./PreviewButton";
 import { Badge } from "reactstrap";
 
 const GameboardBuilderTableRow = (
-    {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
+    {isDnd, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack}: GameboardBuilderRowInterface
 ) => {
-    const audienceViews = determineAudienceViews(question.audience, creationContext);
+    const audienceViews = determineAudienceViews(question.audience);
     const filteredAudienceViews = audienceViews.length === 0 ? [{stage: undefined, difficulty: undefined}] : filterAudienceViewsByProperties(audienceViews, AUDIENCE_DISPLAY_FIELDS);
 
     const cellClasses = "text-start align-middle";
@@ -42,14 +42,14 @@ const GameboardBuilderTableRow = (
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
                     {isAda && isDnd
-                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}/>
+                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack })}/>
                         : <StyledCheckbox
                             id={`${isDnd ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                             aria-label={!isSelected ? "Select question" : "Deselect question"}
                             title={!isSelected ? "Select question" : "Deselect question"}
                             color="primary"
                             checked={isSelected}
-                            onChange={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}
+                            onChange={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack })}
                         />}
                 </div>
             </td>

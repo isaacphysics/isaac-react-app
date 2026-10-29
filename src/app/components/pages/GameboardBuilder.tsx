@@ -447,7 +447,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 onDelete={(id) => {
                                     const question= selectedQuestions.get(id);
                                     if (question) {
-                                        handleBuilderRowChange({ isDnd: true, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
+                                        handleBuilderRowChange({ isDnd: true, question, currentQuestions, undoStack, redoStack });
                                     }
                                 }}
                                 allowBookmarking

@@ -4,15 +4,15 @@ import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardI
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, Tag} from "../../IsaacAppTypes";
 import { DraggableStateSnapshot } from "@hello-pangea/dnd";
 
-export const sortQuestions = (sortState: {[s: string]: string}, creationContext?: AudienceContext) => (questions: ContentSummaryDTO[]) => {
+export const sortQuestions = (sortState: {[s: string]: string}) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
         const sortedQuestions = questions.sort((a, b) => sortStringsNumerically(a.title || "", b.title || ""));
         return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
     }
     if (sortState.difficulty && sortState.difficulty != SortOrder.NONE) {
         questions.sort(function compareFirstDifficulty(a, b) {
-            const firstDifficultyA = determineAudienceViews(a.audience, creationContext)[0]?.difficulty;
-            const firstDifficultyB = determineAudienceViews(b.audience, creationContext)[0]?.difficulty;
+            const firstDifficultyA = determineAudienceViews(a.audience)[0]?.difficulty;
+            const firstDifficultyB = determineAudienceViews(b.audience)[0]?.difficulty;
             if (firstDifficultyA === firstDifficultyB) return 0;
             const aIndex = difficultiesOrdered.indexOf(firstDifficultyA as Difficulty);
             const bIndex = difficultiesOrdered.indexOf(firstDifficultyB as Difficulty);
@@ -113,7 +113,7 @@ export interface GameboardBuilderRowInterface {
     creationContext?: AudienceContext;
 }
 
-export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext }: GameboardBuilderRowInterface) => {
+export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undoStack, redoStack }: GameboardBuilderRowInterface) => {
     if (question.id) {
         const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
         const newQuestionOrder = [...currentQuestions.questionOrder];
@@ -121,7 +121,7 @@ export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undo
             newSelectedQuestions.delete(question.id);
             newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
         } else {
-            newSelectedQuestions.set(question.id, {...question, creationContext});
+            newSelectedQuestions.set(question.id, question);
             newQuestionOrder.push(question.id);
         }
         currentQuestions.setSelectedQuestions(newSelectedQuestions);

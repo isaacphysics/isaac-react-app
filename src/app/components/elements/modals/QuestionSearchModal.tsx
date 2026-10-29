@@ -97,12 +97,6 @@ export const QuestionSearchModal = (
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
 
-    const creationContext: AudienceContext = useMemo(() => !isBookSearch ? {
-        stage: searchStages.length > 0 ? searchStages : undefined,
-        difficulty: searchDifficulties.length > 0 ? searchDifficulties : undefined,
-        examBoard: searchExamBoards.length > 0 ? searchExamBoards : undefined,
-    } : {}, [isBookSearch, searchStages, searchDifficulties, searchExamBoards]);
-
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
     const [searchBookmarks, setSearchBookmarks] = useState<boolean>(false);
 
@@ -159,7 +153,7 @@ export const QuestionSearchModal = (
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0, searchBookmarks);
     },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, searchBookmarks]);
 
-    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions({...questionsSort, ...(isBookSearch ? {book: SortOrder.ASC} : {})}, creationContext)(
+    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions({...questionsSort, ...(isBookSearch ? {book: SortOrder.ASC} : {})})(
         questions.filter(question => {
             const qIsPublic = searchResultIsPublic(question, user);
             if (isBookSearch) return qIsPublic;
@@ -391,7 +385,6 @@ export const QuestionSearchModal = (
                                             currentQuestions={modalQuestions}
                                             undoStack={undoStack}
                                             redoStack={redoStack}
-                                            creationContext={creationContext}
                                         />
                                     );
                                 }}

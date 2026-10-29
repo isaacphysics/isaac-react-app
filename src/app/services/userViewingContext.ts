@@ -115,7 +115,7 @@ export const calculateNewUserContext = (transientUserContext: TransientUserConte
         // Gameboard context is active
         const gameboardItem = gameboardAndPathInfo.contentsFromDTO?.filter(c => c.id === gameboardAndPathInfo.questionIdFromPath)[0];
         if (gameboardItem) {
-            const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext);
+            const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience);
             if (gameboardDeterminedViews.length > 0) {
                 explanation.stage = CONTEXT_SOURCE.GAMEBOARD;
                 if (gameboardDeterminedViews.length === 1) {
@@ -301,12 +301,10 @@ function produceAudienceViewingCombinations(audience: AudienceContext): ViewingC
 //   {stage: "gcse", examBoard: "aqa"},
 //   {stage: "gcse", examBoard: "ocr"},
 // ].
-// Then, filter possible viewing context by creation context if any is provided.
-export function determineAudienceViews(audience?: AudienceContext[], creationContext?: AudienceContext): ViewingContext[] {
+export function determineAudienceViews(audience?: AudienceContext[]): ViewingContext[] {
     if (audience === undefined) {return [];}
 
-    const allViews: ViewingContext[] = [];
-    let viewsFilteredByCreationContext: ViewingContext[]  = [];
+    const viewsToDisplay: ViewingContext[] = [];
 
     // Set all Ada audience contexts to the same difficulty level, if not already
     if (isAda) {
@@ -316,27 +314,8 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
 
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
-        allViews.push(...produceAudienceViewingCombinations(audienceContext));
+        viewsToDisplay.push(...produceAudienceViewingCombinations(audienceContext));
     });
-
-    // Restrict by creation context options, if defined
-    if (creationContext) {
-        viewsFilteredByCreationContext = allViews.filter(viewingContext => {
-            let viableView = true;
-            if (creationContext.stage && viewingContext.stage) {
-                viableView = creationContext.stage.includes(viewingContext.stage);
-            }
-            if (creationContext.examBoard && viewingContext.examBoard) {
-                viableView = viableView && creationContext.examBoard.includes(viewingContext.examBoard);
-            }
-            if (creationContext.difficulty && viewingContext.difficulty) {
-                viableView = viableView && creationContext.difficulty.includes(viewingContext.difficulty);
-            }
-            return viableView;
-        });
-    }
-
-    const viewsToDisplay = viewsFilteredByCreationContext.length > 0 ? viewsFilteredByCreationContext : allViews;
 
     return viewsToDisplay.sort((a, b) =>
         comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
