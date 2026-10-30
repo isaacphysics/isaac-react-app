@@ -1,17 +1,7 @@
-import {siteSpecific, TEACHER_REQUEST_ROUTE} from "../../services";
+import {siteSpecific, TEACHER_REQUEST_ROUTE, UserFacingRoleWithArticle} from "../../services";
 import {Link} from "react-router-dom";
 import React from "react";
 import {UserRole} from "../../../IsaacApiTypes";
-
-const UserFacingRoleWithArticle: {[role in UserRole]: string} = {
-    ADMIN: "an admin",
-    EVENT_MANAGER: "an event manager",
-    CONTENT_EDITOR: "a content editor",
-    EVENT_LEADER: "an event leader",
-    TEACHER: "a teacher",
-    TUTOR: "a tutor",
-    STUDENT: "a student"
-};
 
 export const AccountTypeMessage = ({role, hideUpgradeMessage}: { role?: UserRole, hideUpgradeMessage?: boolean }) => {
     if (!role) return null;
