@@ -70,7 +70,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
         {hasResources && <>
             <h3 className="mb-3 h4" id="resources">Resources</h3>
-            {resources?.length && <>
+            {!!resources?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
                         type="item"
