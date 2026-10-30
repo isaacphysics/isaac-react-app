@@ -23,7 +23,7 @@ import {
     validateRequiredFields,
 } from "../../../services";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
+import {RegisteredContextAccountInput} from "../inputs/RegisteredContextAccountInput";
 import {Immutable} from "immer";
 import {AccountTypeMessage} from "../AccountTypeMessage";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
@@ -50,23 +50,23 @@ const RequiredAccountInfoBody = () => {
     const initialEmailPreferencesValue = {...userPreferences?.EMAIL_PREFERENCE};
     const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(initialEmailPreferencesValue);
 
-    const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
-    const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
+    const initialRegisteredContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
+    const [registeredContexts, setRegisteredContexts] = useState(initialRegisteredContexts.length ? initialRegisteredContexts : [{}]);
 
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
 
     const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
-    const validity = validateRequiredFields(initialUserValue, userPreferences, initialUserContexts);
+    const validity = validateRequiredFields(initialUserValue, userPreferences, initialRegisteredContexts);
 
     // If the base user or user preferences objects change outside of this modal, reinitialise the local state. This
     // shouldn't really happen, but it solves a race condition between this modal rendering and the user object being
     // stored in Redux (see notificationManager.ts).
     useEffect(() => {
         setUserToUpdate({...user, password: null});
-        const newUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
-        setUserContexts(newUserContexts.length ? newUserContexts : [{}]);
+        const newRegisteredContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
+        setRegisteredContexts(newRegisteredContexts.length ? newRegisteredContexts : [{}]);
     }, [user]);
     useEffect(() => {
         setEmailPreferences({...userPreferences?.EMAIL_PREFERENCE});
@@ -82,12 +82,12 @@ const RequiredAccountInfoBody = () => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
+        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, registeredContexts)) {
             await updateCurrentUser({
                 currentUser: user,
                 updatedUser: userToUpdate,
                 userPreferences: userPreferencesToUpdate,
-                registeredUserContexts: userContexts,
+                registeredUserContexts: registeredContexts,
                 passwordCurrent: null,
                 redirect: false
             }).unwrap()
@@ -100,7 +100,7 @@ const RequiredAccountInfoBody = () => {
 
     return <Form onSubmit={formSubmission}>
         <CardBody className="py-0">
-            {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) &&
+            {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, registeredContexts) &&
                 <ExigentAlert color="warning">
                     <p className="alert-heading fw-bold">Unable to update your account</p>
                     <p>Please fill in all required fields.</p>
@@ -165,8 +165,8 @@ const RequiredAccountInfoBody = () => {
                     />
                 </Col>}
                 {!validity.userContexts && <Col xs={12} id="rai-missing-user-contexts">
-                    <UserContextAccountInput
-                        user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                    <RegisteredContextAccountInput
+                        user={userToUpdate} registeredContexts={registeredContexts} setRegisteredContexts={setRegisteredContexts}
                         displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                         setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                     />

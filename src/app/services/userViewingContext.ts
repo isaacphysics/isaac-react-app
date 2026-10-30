@@ -38,7 +38,7 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../state";
-import {DisplaySettings, GameboardContext, PageContextState, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
+import {GameboardContext, PageContextState, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {useContext, useEffect, useState} from "react";
 import {Immutable} from "immer";
 
@@ -87,7 +87,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
     const registeredContexts = isLoggedIn(user) ? user.registeredContexts as UserContext[] : undefined;
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext);
 
-    const { id, contents} = useContext(GameboardContext) || {};
+    const { id, contents } = useContext(GameboardContext) || {};
 
     const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
     const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));

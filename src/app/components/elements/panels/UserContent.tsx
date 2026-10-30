@@ -1,7 +1,7 @@
 import React from 'react';
 import { MyAccountTab } from './MyAccountTab';
 import { BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser } from '../../../../IsaacAppTypes';
-import { UserContextAccountInput } from '../inputs/UserContextAccountInput';
+import { RegisteredContextAccountInput } from '../inputs/RegisteredContextAccountInput';
 import { BooleanNotationInput } from '../inputs/BooleanNotationInput';
 import { UserContext, UserAuthenticationSettingsDTO } from '../../../../IsaacApiTypes';
 import { ProgrammingLanguageInput } from '../inputs/ProgrammingLanguageInput';
@@ -9,8 +9,8 @@ import { ProgrammingLanguageInput } from '../inputs/ProgrammingLanguageInput';
 interface UserContentProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
-    userContexts: UserContext[];
-    setUserContexts: (uc: UserContext[]) => void;
+    registeredContexts: UserContext[];
+    setRegisteredContexts: (uc: UserContext[]) => void;
     programmingLanguage: Nullable<ProgrammingLanguage>;
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
     booleanNotation: Nullable<BooleanNotation>;
@@ -24,7 +24,7 @@ interface UserContentProps {
 export const UserContent = (props: UserContentProps) => {
     const {
         userToUpdate, setUserToUpdate,
-        userContexts, setUserContexts,
+        registeredContexts, setRegisteredContexts,
         programmingLanguage, setProgrammingLanguage,
         booleanNotation, setBooleanNotation,
         displaySettings, setDisplaySettings,
@@ -37,8 +37,8 @@ export const UserContent = (props: UserContentProps) => {
             <p>Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time.</p>
         </>}
         rightColumn={<>
-            <UserContextAccountInput
-                user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+            <RegisteredContextAccountInput
+                user={userToUpdate} registeredContexts={registeredContexts} setRegisteredContexts={setRegisteredContexts}
                 displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                 setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} required={false}
             />

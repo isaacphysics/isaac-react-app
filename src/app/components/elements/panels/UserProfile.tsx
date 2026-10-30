@@ -18,7 +18,7 @@ import {
 import {CountryInput} from '../inputs/CountryInput';
 import {GenderInput} from '../inputs/GenderInput';
 import {SchoolInput} from "../inputs/SchoolInput";
-import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
+import {RegisteredContextAccountInput} from "../inputs/RegisteredContextAccountInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 import {DobInput} from "../inputs/DobInput";
 import {AccountTypeMessage} from "../AccountTypeMessage";
@@ -31,8 +31,8 @@ import classNames from 'classnames';
 interface UserProfileProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
-    userContexts: UserContext[];
-    setUserContexts: (uc: UserContext[]) => void;
+    registeredContexts: UserContext[];
+    setRegisteredContexts: (uc: UserContext[]) => void;
     booleanNotation: Nullable<BooleanNotation>;
     setBooleanNotation: (bn: BooleanNotation) => void;
     displaySettings: Nullable<DisplaySettings>;
@@ -44,7 +44,7 @@ interface UserProfileProps {
 
 export const UserProfile = (props: UserProfileProps) => {
     const {
-        userToUpdate, setUserToUpdate, userContexts, setUserContexts,
+        userToUpdate, setUserToUpdate, registeredContexts, setRegisteredContexts,
         setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted
     } = props;
     const [confirmAccountDeletionRequest, {isLoading: _isLoading}] = useConfirmAccountDeletionRequestMutation();
@@ -193,8 +193,8 @@ export const UserProfile = (props: UserProfileProps) => {
                 required={isAda}
             />
             {isPhy &&
-                <UserContextAccountInput
-                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                <RegisteredContextAccountInput
+                    user={userToUpdate} registeredContexts={registeredContexts} setRegisteredContexts={setRegisteredContexts}
                     displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                     setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} required={true}
                 />

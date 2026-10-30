@@ -10,7 +10,7 @@ import {
     useAppSelector,
     useUpdateCurrentMutation
 } from "../../state";
-import {UserContextAccountInput} from "../elements/inputs/UserContextAccountInput";
+import {RegisteredContextAccountInput} from "../elements/inputs/RegisteredContextAccountInput";
 import {
     allRequiredInformationIsPresent,
     isAda,
@@ -46,8 +46,8 @@ export const RegistrationSetPreferences = () => {
     const initialEmailPreferencesValue =  {...userPreferences?.EMAIL_PREFERENCE};
     const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(initialEmailPreferencesValue);
 
-    const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
-    const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
+    const initialRegisteredContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
+    const [registeredContexts, setRegisteredContexts] = useState(initialRegisteredContexts.length ? initialRegisteredContexts : [{}]);
 
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
@@ -63,12 +63,12 @@ export const RegistrationSetPreferences = () => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
+        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, registeredContexts)) {
             await updateCurrentUser({
                 currentUser: user,
                 updatedUser: userToUpdate,
                 userPreferences: userPreferencesToUpdate,
-                registeredUserContexts: userContexts,
+                registeredUserContexts: registeredContexts,
                 passwordCurrent: null,
                 redirect: false
             });
@@ -77,7 +77,7 @@ export const RegistrationSetPreferences = () => {
         }
     }
 
-    const canSavePreferences = !isPhy || allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts);
+    const canSavePreferences = !isPhy || allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, registeredContexts);
 
     return <PageContainer
         pageTitle={
@@ -104,8 +104,8 @@ export const RegistrationSetPreferences = () => {
                             or change your answers at any time under My Account.
                         </p></>}
                     rightColumn = {<Form onSubmit={submit}>
-                        <UserContextAccountInput user={userToUpdate} userContexts={userContexts}
-                            setUserContexts={setUserContexts} setBooleanNotation={setBooleanNotation}
+                        <RegisteredContextAccountInput user={userToUpdate} registeredContexts={registeredContexts}
+                            setRegisteredContexts={setRegisteredContexts} setBooleanNotation={setBooleanNotation}
                             displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                             submissionAttempted={submissionAttempted} required={isPhy} />
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}

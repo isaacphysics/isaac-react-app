@@ -172,12 +172,12 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const otherPreferencesChanged = useMemo(() => !hashEqual(userPreferences ?? {}, myUserPreferences ?? {}, {excludeKeys: k => k === "EMAIL_PREFERENCE"}), [myUserPreferences, userPreferences]);
 
     // - User Contexts
-    const [userContextsToUpdate, setUserContextsToUpdate] =
+    const [registeredContextsToUpdate, setRegisteredContextsToUpdate] =
         useState<UserContext[]>(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
     useEffect(function keepUserContextsUpdated() {
-        setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
+        setRegisteredContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
     }, [userToUpdate?.registeredContexts]);
-    const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
+    const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], registeredContextsToUpdate, {unorderedArrays: true}), [registeredContextsToUpdate, userToUpdate]);
 
     const pageTitle = editingOtherUser ? "Edit user" : siteSpecific("My account", "Account");
 
@@ -188,7 +188,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         setUserToUpdate({...(editingOtherUser ? userToEdit : user), password: ""});
         setMyUserPreferences(userPreferences);
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
-        setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
+        setRegisteredContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
         setAttemptedAccountUpdate(false);
         setSaving(false);
         setCurrentPassword("");
@@ -352,7 +352,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
 
         if (userToUpdate.loggedIn &&
             (isUnder13(userToUpdate) || validateEmail(userToUpdate.email)) &&
-            allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
+            allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, registeredContextsToUpdate) &&
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isPhy && !isDefined(userToUpdate.dateOfBirth))) &&
             (!userToUpdate.password || isNewPasswordValid))
         {
@@ -369,7 +369,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                 currentUser: user,
                 updatedUser: userToUpdate,
                 userPreferences: editingOtherUser ? {} : newPreferences,
-                registeredUserContexts: contextsChanged ? userContextsToUpdate : undefined,
+                registeredUserContexts: contextsChanged ? registeredContextsToUpdate : undefined,
                 passwordCurrent: currentPassword,
                 redirect: true
             });
@@ -448,7 +448,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             >
                                 <UserProfile
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                    registeredContexts={registeredContextsToUpdate} setRegisteredContexts={setRegisteredContextsToUpdate}
                                     booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
                                     displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
@@ -463,7 +463,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                             >
                                 <UserContent
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                    registeredContexts={registeredContextsToUpdate} setRegisteredContexts={setRegisteredContextsToUpdate}
                                     programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
                                     booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
                                     displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}

@@ -22,48 +22,48 @@ import {StyledDropdown} from "./DropdownInput";
 import isUndefined from "lodash/isUndefined";
 import { WithLinkableSetting } from "../WithLinkableSetting";
 
-interface UserContextRowProps {
-    userContext: UserContext;
-    setUserContext: (ucs: UserContext) => void;
+interface RegisteredContextRowProps {
+    registeredContext: UserContext;
+    setRegisteredContext: (ucs: UserContext) => void;
     showNullStageOption: boolean;
     submissionAttempted: boolean;
-    existingUserContexts: UserContext[];
+    existingRegisteredContexts: UserContext[];
     setBooleanNotation: (bn: BooleanNotation) => void;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     tutorOrAbove: boolean;
-    userContexts: UserContext[];
-    setUserContexts: (ucs: UserContext[]) => void;
+    registeredContexts: UserContext[];
+    setRegisteredContexts: (ucs: UserContext[]) => void;
     index: number;
     required: boolean;
 }
 
-function UserContextRow({
-    userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
-    tutorOrAbove, userContexts, setUserContexts, index, required: _required
-}: UserContextRowProps) {
-    const onlyUCWithThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
+function RegisteredContextRow({
+    registeredContext, setRegisteredContext, showNullStageOption, submissionAttempted, existingRegisteredContexts, setBooleanNotation, setDisplaySettings,
+    tutorOrAbove, registeredContexts, setRegisteredContexts, index, required: _required
+}: RegisteredContextRowProps) {
+    const onlyUCWithThisStage = existingRegisteredContexts.length === 0 || existingRegisteredContexts.filter(uc => uc.stage === registeredContext.stage).length === 1;
 
     const onStageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
         const stage = e.target.value as STAGE;
         if (!isAda) {
-            setUserContext({...userContext, stage});
+            setRegisteredContext({...registeredContext, stage});
             return;
         }
         // Set exam board to something sensible (for CS)
-        const onlyOneAtThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
+        const onlyOneAtThisStage = existingRegisteredContexts.length === 0 || existingRegisteredContexts.filter(uc => uc.stage === e.target.value).length === 1;
         const possibleExamBoards = getFilteredExamBoardOptions(
-            {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
+            {byStages: [stage || STAGE.ALL], byUserContexts: existingRegisteredContexts, includeNullOptions: onlyOneAtThisStage
             });
         const examBoards = possibleExamBoards.map(e => e.value) || [EXAM_BOARD.ADA];
-        const examBoard = examBoards.includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
+        const examBoard = examBoards.includes(registeredContext.examBoard as EXAM_BOARD) && registeredContext.examBoard || possibleExamBoards[0].value;
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
-        setUserContext({...userContext, stage, examBoard});
+        setRegisteredContext({...registeredContext, stage, examBoard});
     };
 
     const onExamBoardUpdate = (e: ChangeEvent<HTMLInputElement>) => {
         const examBoard: EXAM_BOARD = e.target.value as EXAM_BOARD;
-        setUserContext({...userContext, examBoard: examBoard});
+        setRegisteredContext({...registeredContext, examBoard: examBoard});
         if (e.target.value) {
             setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
         }
@@ -71,13 +71,13 @@ function UserContextRow({
 
     useEffect(() => {
         // Deliberately set default user context on Ada for users who have no context
-        if (isAda && (isUndefined(userContext.stage) || isUndefined(userContext.examBoard))) {
-            const stage = userContext.stage ?? STAGE.ALL;
-            const examBoard = userContext.examBoard ?? EXAM_BOARD.ADA;
-            setUserContext({stage, examBoard});
+        if (isAda && (isUndefined(registeredContext.stage) || isUndefined(registeredContext.examBoard))) {
+            const stage = registeredContext.stage ?? STAGE.ALL;
+            const examBoard = registeredContext.examBoard ?? EXAM_BOARD.ADA;
+            setRegisteredContext({stage, examBoard});
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setUserContext]);
+    }, [setRegisteredContext]);
 
     return <React.Fragment>
         {/* Stage Selector */}
@@ -85,13 +85,13 @@ function UserContextRow({
             <StyledDropdown
                 className={classNames("account-dropdown", {"me-1" : isAda})}
                 aria-label="Stage"
-                invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
+                invalid={submissionAttempted && !Object.values(STAGE).includes(registeredContext.stage as STAGE)}
                 onChange={onStageUpdate}
-                value={userContext.stage}
+                value={registeredContext.stage}
             >
                 {isPhy && <option value="" className="d-none"/>}
                 {getFilteredStageOptions({
-                    byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard)),
+                    byUserContexts: existingRegisteredContexts.filter(uc => !(uc.stage === registeredContext.stage && uc.examBoard === registeredContext.examBoard)),
                     includeNullOptions: showNullStageOption, hideFurtherA: true
                 }).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
@@ -102,34 +102,34 @@ function UserContextRow({
             {isAda && <StyledDropdown
                 className="account-dropdown ms-1"
                 aria-label="Exam Board"
-                invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
+                invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(registeredContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
-                value={userContext.examBoard}
+                value={registeredContext.examBoard}
             >
                 {getFilteredExamBoardOptions({
-                    byStages: [userContext.stage as STAGE || STAGE.ALL],
+                    byStages: [registeredContext.stage as STAGE || STAGE.ALL],
                     includeNullOptions: onlyUCWithThisStage,
-                    byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard))
+                    byUserContexts: existingRegisteredContexts.filter(uc => !(uc.stage === registeredContext.stage && uc.examBoard === registeredContext.examBoard))
                 }).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
             </StyledDropdown>}
 
             <div className="remove-stage-container">
-                {tutorOrAbove && userContexts.length > 1 && <Button close
+                {tutorOrAbove && registeredContexts.length > 1 && <Button close
                     className="close float-none bg-white p-2" aria-label="clear stage row"
-                    disabled={userContexts.length <= 1}
-                    onClick={() => setUserContexts(userContexts.filter((_uc, i) => i !== index))}
+                    disabled={registeredContexts.length <= 1}
+                    onClick={() => setRegisteredContexts(registeredContexts.filter((_uc, i) => i !== index))}
                 />}
             </div>
         </div>
     </React.Fragment>;
 }
 
-interface UserContextAccountInputProps {
+interface RegisteredContextAccountInputProps {
     user: Immutable<ValidationUser>;
-    userContexts: UserContext[];
-    setUserContexts: (ucs: UserContext[]) => void;
+    registeredContexts: UserContext[];
+    setRegisteredContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
     displaySettings: Nullable<DisplaySettings>;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
@@ -137,13 +137,13 @@ interface UserContextAccountInputProps {
     required?: boolean;
     className?: string;
 }
-export function UserContextAccountInput({
-    user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted, required=true, className=""
-}: UserContextAccountInputProps) {
+export function RegisteredContextAccountInput({
+    user, registeredContexts, setRegisteredContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted, required=true, className=""
+}: RegisteredContextAccountInputProps) {
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const noMoreValidStages = !getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length;
-    const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL || noMoreValidStages;
+    const noMoreValidStages = !getFilteredStageOptions({byUserContexts: registeredContexts, hideFurtherA: true}).length;
+    const isAllStages = registeredContexts.length === 1 && registeredContexts[0].stage === STAGE.ALL || noMoreValidStages;
 
     return <WithLinkableSetting id={"account-context"} className={className}>
         <div className="mb-2">
@@ -172,22 +172,22 @@ export function UserContextAccountInput({
         
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
 
-            {userContexts.length ? userContexts.map((userContext, index) => {
+            {registeredContexts.length ? registeredContexts.map((registeredContext, index) => {
                 return <FormGroup key={index}>
-                    <UserContextRow
-                        userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
-                        setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
-                        existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
-                        tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
+                    <RegisteredContextRow
+                        registeredContext={registeredContext} showNullStageOption={registeredContexts.length <= 1} submissionAttempted={submissionAttempted}
+                        setRegisteredContext={newUc => setRegisteredContexts(registeredContexts.map((uc, i) => i === index ? newUc : uc))}
+                        existingRegisteredContexts={registeredContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
+                        tutorOrAbove={tutorOrAbove} registeredContexts={registeredContexts} setRegisteredContexts={setRegisteredContexts}
                         index={index} required={required}
                     />
                 </FormGroup>;
             }) : <FormGroup>
-                <UserContextRow
-                    userContext={{stage: STAGE.ALL, examBoard: siteSpecific(undefined, EXAM_BOARD.ALL)}} showNullStageOption={true} submissionAttempted={submissionAttempted}
-                    // this component is replaced as soon as the user selects a stage, so this alternative setUserContext function is okay here, even if setting multiple
-                    setUserContext={newUc => setUserContexts([newUc])} existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation}
-                    setDisplaySettings={setDisplaySettings} tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
+                <RegisteredContextRow
+                    registeredContext={{stage: STAGE.ALL, examBoard: siteSpecific(undefined, EXAM_BOARD.ALL)}} showNullStageOption={true} submissionAttempted={submissionAttempted}
+                    // this component is replaced as soon as the user selects a stage, so this alternative setRegisteredContext function is okay here, even if setting multiple
+                    setRegisteredContext={newUc => setRegisteredContexts([newUc])} existingRegisteredContexts={registeredContexts} setBooleanNotation={setBooleanNotation}
+                    setDisplaySettings={setDisplaySettings} tutorOrAbove={tutorOrAbove} registeredContexts={registeredContexts} setRegisteredContexts={setRegisteredContexts}
                     index={0} required={required}
                 />
             </FormGroup>
@@ -196,19 +196,19 @@ export function UserContextAccountInput({
                 <Col lg={6} className="p-0 pe-4 pe-lg-0">
                     <Button color="keyline" className="mb-3 px-2 w-100"
                         onClick={() => {
-                            const newStage = getFilteredStageOptions({byUserContexts: userContexts})[0]?.value as STAGE;
-                            const newExamBoard = getFilteredExamBoardOptions({byStages: [newStage || STAGE.ALL], byUserContexts: userContexts})[0]?.value as EXAM_BOARD;
-                            setUserContexts([...userContexts, {stage: newStage, examBoard: newExamBoard}]);
+                            const newStage = getFilteredStageOptions({byUserContexts: registeredContexts})[0]?.value as STAGE;
+                            const newExamBoard = getFilteredExamBoardOptions({byStages: [newStage || STAGE.ALL], byUserContexts: registeredContexts})[0]?.value as EXAM_BOARD;
+                            setRegisteredContexts([...registeredContexts, {stage: newStage, examBoard: newExamBoard}]);
                         }}
-                        disabled={!validateUserContexts(userContexts)}>
+                        disabled={!validateUserContexts(registeredContexts)}>
                         Add more content
                     </Button>
                 </Col>}
-            {isPhy && tutorOrAbove && validateUserContexts(userContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
+            {isPhy && tutorOrAbove && validateUserContexts(registeredContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
                     aria-label="Add stage"
                     className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-transparent`}
-                    onClick={() => setUserContexts([...userContexts, {}])}
+                    onClick={() => setRegisteredContexts([...registeredContexts, {}])}
                 />
             </div>}
         </div>
