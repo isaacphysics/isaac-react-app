@@ -95,7 +95,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
     useEffect(() => {
         const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents,  boardIdFromQueryParams: queryParams.board, questionIdFromPath: questionId };
-        const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo, displaySettings);
+        const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo);
         setContextProps(newContextProps);
     }, [transientUserContext, registeredContexts, displaySettings, id, contents, queryParams.board, questionId]);
 
@@ -103,7 +103,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
 }
 
 export const calculateNewUserContext = (transientUserContext: TransientUserContextState, registeredContexts: UserContext[] | undefined,
-    gameboardAndPathInfo: GameboardAndPathInfo | undefined, displaySettings: DisplaySettings | undefined) : ContextProperties => {
+    gameboardAndPathInfo: GameboardAndPathInfo | undefined) : ContextProperties => {
     
     const contexts: UserContext[] = [];
     let stage: STAGE = STAGE.ALL;
