@@ -10,7 +10,7 @@ import {
     withinLast50Minutes
 } from "../../services";
 import {Action} from "../../../IsaacAppTypes";
-import {AppDispatch, logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
+import {AppDispatch, logAction, needToUpdateRegisteredContextDetails, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {RegisteredContextReconfirmationModal} from "../../components/elements/modals/RegisteredContextReconfirmationModal";
@@ -35,9 +35,9 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
                 persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
                 await dispatch(openActiveModal(requiredAccountInformationModal));
             }
-            // User context re-confirmation modal - used to request a user to update their stage and/or exam board
+            // Registered context re-confirmation modal - used to request a user to update their stage and/or exam board
             // once every academic year.
-            else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
+            else if (needToUpdateRegisteredContextDetails(user.registeredContextsLastConfirmed) &&
                      !withinLast50Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
                 persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
                 await dispatch(openActiveModal(RegisteredContextReconfirmationModal));

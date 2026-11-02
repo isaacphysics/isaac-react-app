@@ -70,7 +70,7 @@ function RegisteredContextRow({
     };
 
     useEffect(() => {
-        // Deliberately set default user context on Ada for users who have no context
+        // Deliberately set default registered context on Ada for users who have no context
         if (isAda && (isUndefined(registeredContext.stage) || isUndefined(registeredContext.examBoard))) {
             const stage = registeredContext.stage ?? STAGE.ALL;
             const examBoard = registeredContext.examBoard ?? EXAM_BOARD.ADA;
@@ -147,7 +147,7 @@ export function RegisteredContextAccountInput({
 
     return <WithLinkableSetting id={"account-context"} className={className}>
         <div className="mb-2">
-            <Label htmlFor="user-context-selector" className={classNames("fw-bold mb-0", (required ? "form-required" : "form-optional"))}>
+            <Label htmlFor="registered-context-selector" className={classNames("fw-bold mb-0", (required ? "form-required" : "form-optional"))}>
                 {siteSpecific(
                     <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
                     <span>Show me content for...</span>
@@ -170,7 +170,7 @@ export function RegisteredContextAccountInput({
             </UncontrolledTooltip>
         </div>
         
-        <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
+        <div id="registered-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
 
             {registeredContexts.length ? registeredContexts.map((registeredContext, index) => {
                 return <FormGroup key={index}>

@@ -171,10 +171,10 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const emailPreferencesChanged = useMemo(() => !hashEqual(userPreferences?.EMAIL_PREFERENCE ?? {}, emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
     const otherPreferencesChanged = useMemo(() => !hashEqual(userPreferences ?? {}, myUserPreferences ?? {}, {excludeKeys: k => k === "EMAIL_PREFERENCE"}), [myUserPreferences, userPreferences]);
 
-    // - User Contexts
+    // - Registered Contexts
     const [registeredContextsToUpdate, setRegisteredContextsToUpdate] =
         useState<UserContext[]>(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
-    useEffect(function keepUserContextsUpdated() {
+    useEffect(function keepRegisteredContextsUpdated() {
         setRegisteredContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
     }, [userToUpdate?.registeredContexts]);
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], registeredContextsToUpdate, {unorderedArrays: true}), [registeredContextsToUpdate, userToUpdate]);

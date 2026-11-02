@@ -164,7 +164,7 @@ const RequiredAccountInfoBody = () => {
                         required
                     />
                 </Col>}
-                {!validity.userContexts && <Col xs={12} id="rai-missing-user-contexts">
+                {!validity.registeredContexts && <Col xs={12} id="rai-missing-user-contexts">
                     <RegisteredContextAccountInput
                         user={userToUpdate} registeredContexts={registeredContexts} setRegisteredContexts={setRegisteredContexts}
                         displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
