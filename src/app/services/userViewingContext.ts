@@ -38,7 +38,7 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../state";
-import {GameboardContext, PageContextState, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
+import {GameboardContext, PageContextState, PotentialUser, AudienceView} from "../../IsaacAppTypes";
 import {useContext, useEffect, useState} from "react";
 import {Immutable} from "immer";
 
@@ -94,7 +94,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
     const setFixedContext = (isFixedContext: boolean) => dispatch(transientUserContextSlice?.actions.setFixedContext(isFixedContext));
 
     useEffect(() => {
-        const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents,  boardIdFromQueryParams: queryParams.board, questionIdFromPath: questionId };
+        const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents, boardIdFromQueryParams: queryParams.board, questionIdFromPath: pageId2 };
         const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo);
         setContextProps(newContextProps);
     }, [transientUserContext, registeredContexts, displaySettings, id, contents, queryParams.board, questionId]);
@@ -274,14 +274,14 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
         ).sort((a, b) => filter?.nullFirst ? (-STAGE_NULL_OPTIONS.includes(a.value) + -STAGE_NULL_OPTIONS.includes(b.value)) : 0);
 }
 
-function produceAudienceViewingCombinations(audience: AudienceContext): ViewingContext[] {
+function produceAudienceViewingCombinations(audience: AudienceContext): AudienceView[] {
     const keys: (keyof AudienceContext)[] = ["stage", "examBoard", "difficulty"];
-    let audienceOptions: ViewingContext[] = [];
+    let audienceOptions: AudienceView[] = [];
     keys.forEach(key => {
         const values = audience[key];
         if (!values || values.length === 0) {return; /* early */}
 
-        const nextIterationOfAudienceOptions: ViewingContext[] = [];
+        const nextIterationOfAudienceOptions: AudienceView[] = [];
         values.forEach((value: string) => {
             (audienceOptions.length ? audienceOptions : [{}]).forEach(option => {
                 nextIterationOfAudienceOptions.push({...option, [key]: value});
@@ -303,7 +303,7 @@ function produceAudienceViewingCombinations(audience: AudienceContext): ViewingC
 // ],
 // then filter the list to the page context if given, or the user context if given otherwise
 // (if no audiences are left after filtering, instead show the closest applicable audience)
-export function determineAudienceViews(audience?: AudienceContext[], userContext?: readonly UserContext[], pageContext?: PageContextState): ViewingContext[] {
+export function determineAudienceViews(audience?: AudienceContext[], userContext?: readonly UserContext[], pageContext?: PageContextState): AudienceView[] {
     if (audience === undefined) {return [];}
 
     // Set all Ada audience contexts to the same difficulty level, if not already
@@ -312,7 +312,7 @@ export function determineAudienceViews(audience?: AudienceContext[], userContext
         audience = audience.map(audienceContext => { return {...audienceContext, difficulty: questionDifficulty}; });
     }
 
-    const allViews: ViewingContext[] = [];
+    const allViews: AudienceView[] = [];
 
     const hasPageStage = !!pageContext?.stage?.length;
     const hasUserStage = !!(userContext?.length && userContext.some(context => context.stage) && userContext.every(context => context.stage !== "all"));
@@ -356,13 +356,13 @@ export function determineAudienceViews(audience?: AudienceContext[], userContext
         comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
 }
 
-export const AUDIENCE_DISPLAY_FIELDS: (keyof ViewingContext)[] = siteSpecific(
+export const AUDIENCE_DISPLAY_FIELDS: (keyof AudienceView)[] = siteSpecific(
     ["stage", "difficulty"],
     ["stage"]
 );
 
-export function filterAudienceViewsByProperties(views: ViewingContext[], properties: (keyof ViewingContext)[]): ViewingContext[] {
-    const filteredViews: ViewingContext[] = [];
+export function filterAudienceViewsByProperties(views: AudienceView[], properties: (keyof AudienceView)[]): AudienceView[] {
+    const filteredViews: AudienceView[] = [];
     const viewed = new Set();
     views.forEach(v => {
         const displayedValue = properties.map(p => `${v[p]}`).join(" ");

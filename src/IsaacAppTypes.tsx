@@ -647,7 +647,7 @@ export interface ContentSummary extends ContentSummaryDTO {
     creationContext?: AudienceContext;
 }
 
-export interface ViewingContext extends UserContext {
+export interface AudienceView extends UserContext {
     difficulty?: Difficulty;
 }
 
