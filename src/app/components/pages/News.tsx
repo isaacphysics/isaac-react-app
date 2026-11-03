@@ -1,4 +1,4 @@
-import {Button, Col, Row} from "reactstrap";
+import {Button, Row} from "reactstrap";
 import {NewsCard} from "../elements/cards/NewsCard";
 import React, { useEffect } from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
