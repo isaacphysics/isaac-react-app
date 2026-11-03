@@ -25,7 +25,7 @@ export const TeacherMentoring = () => {
                 <strong><Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`}>Join the {MENTORING_GROUP_NAME} group</Link></strong>
                 {" "}to participate in the programme so that we can assign you the quizzes weekly.
             </span>
-            : <><Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`}>Log in or sign up</Link> to join the teacher mentoring group and participate in the programme.</>
+            : <><strong><Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`}>Log in or sign up</Link></strong> to join the teacher mentoring group and participate in the programme.</>
         }
         <p className="mt-2 mb-0">All of our resources are completely free. You can join (or leave) the programme at any time.</p>
     </Callout>;
