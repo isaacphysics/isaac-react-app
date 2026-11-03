@@ -39,23 +39,30 @@ const calloutStyle = siteSpecific({
     }
 });
 
-const DEFAULT_CALLOUT_STYLE = "regular" as const;
-export const IsaacCallout = ({doc}: {doc: ContentDTO}) => {
+export const Callout = ({className, children, style = "regular"}: {className?: string, children: React.ReactNode, style?: string}) => {
     const colourClass = typeof calloutStyle.colour === "string"
         ? calloutStyle.colour
-        : calloutStyle.colour[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as keyof typeof calloutStyle.colour];
+        : calloutStyle.colour[style as keyof typeof calloutStyle.src];
     const iconSrc = typeof calloutStyle.src === "string"
         ? calloutStyle.src
-        : calloutStyle.src[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as keyof typeof calloutStyle.src];
-    return <Row
-        className={classNames("isaac-callout", colourClass)}>
+        : calloutStyle.src[style as keyof typeof calloutStyle.src];
+
+    return <Row className={classNames("isaac-callout", colourClass, className)}>
         <Col>
             <img className={siteSpecific("float-start", "float-end ms-2")} style={calloutStyle.style}
                 width={calloutStyle.width} height={calloutStyle.height} src={iconSrc} alt=""
             />
-            <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
-                {doc.children}
-            </IsaacContentValueOrChildren>
+            <div>
+                {children}
+            </div>
         </Col>
     </Row>;
+};
+
+export const IsaacCallout = ({doc}: {doc: ContentDTO}) => {
+    return <Callout style={doc.subtitle}>
+        <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
+            {doc.children}
+        </IsaacContentValueOrChildren>
+    </Callout>;
 };

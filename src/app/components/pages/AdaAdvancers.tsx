@@ -5,6 +5,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { Link } from "react-router-dom";
 import { selectors, useAppSelector, useGetGroupMembershipsQuery } from "../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { Callout } from "../content/IsaacCallout";
 
 // these will change each year – everything else now ought to be the same
 const ADVANCERS_GROUP_ID = 6477;
@@ -17,8 +18,7 @@ export const AdaAdvancers = () => {
     const {data: groupMemberships} = useGetGroupMembershipsQuery(userId);
     const userInGroup = groupMemberships?.some(gm => gm.group.id == ADVANCERS_GROUP_ID);
 
-    const groupJoinPrompt = <div className="isaac-callout hi-cyan-25 p-4">
-        <img src="/assets/cs/icons/callout/regular-callout.svg" alt="" className="float-end p-0 wf-3 hf-3 mt-n3 me-n3" />
+    const groupJoinPrompt = <Callout className="pb-4" style="regular">
         {user?.loggedIn
             ? <span>
                 <strong><Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`}>Join the {ADVANCERS_GROUP_NAME} group</Link></strong>
@@ -27,7 +27,7 @@ export const AdaAdvancers = () => {
             : <><Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`}>Log in or sign up</Link> to join the Ada advancers group and participate in the programme.</>
         }
         <p className="mt-2 mb-0">All of our resources are completely free. You can leave the programme at any time.</p>
-    </div>;
+    </Callout>;
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Ada advancers programme"} />
