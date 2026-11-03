@@ -7,24 +7,24 @@ import { selectors, useAppSelector, useGetGroupMembershipsQuery } from "../../st
 import { skipToken } from "@reduxjs/toolkit/query";
 
 // these will change each year – everything else now ought to be the same
-const MENTORING_GROUP_ID = 6477;
-const MENTORING_GROUP_AUTH_TOKEN = "J9MJTZ";
-const MENTORING_GROUP_NAME = "Ada Advancers Jan 2027 - May 2028";
+const ADVANCERS_GROUP_ID = 6477;
+const ADVANCERS_GROUP_AUTH_TOKEN = "J9MJTZ";
+const ADVANCERS_GROUP_NAME = "Ada Advancers Jan 2027 - May 2028";
 
 export const AdaAdvancers = () => {
     const user = useAppSelector(selectors.user.orNull);
     const userId = (user && user.loggedIn) ? user.id : skipToken;
     const {data: groupMemberships} = useGetGroupMembershipsQuery(userId);
-    const userInGroup = groupMemberships?.some(gm => gm.group.id == MENTORING_GROUP_ID);
+    const userInGroup = groupMemberships?.some(gm => gm.group.id == ADVANCERS_GROUP_ID);
 
     const groupJoinPrompt = <div className="isaac-callout hi-cyan-25 p-4">
         <img src="/assets/cs/icons/callout/regular-callout.svg" alt="" className="float-end p-0 wf-3 hf-3 mt-n3 me-n3" />
         {user?.loggedIn
             ? <span>
-                <strong><Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`}>Join the {MENTORING_GROUP_NAME} group</Link></strong>
+                <strong><Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`}>Join the {ADVANCERS_GROUP_NAME} group</Link></strong>
                 {" "}to participate in the programme so that we can assign you the quizzes weekly.
             </span>
-            : <><Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`}>Log in or sign up</Link> to join the Ada advancers group and participate in the programme.</>
+            : <><Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`}>Log in or sign up</Link> to join the Ada advancers group and participate in the programme.</>
         }
         <p className="mt-2 mb-0">All of our resources are completely free. You can leave the programme at any time.</p>
     </div>;
