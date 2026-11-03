@@ -5,7 +5,6 @@ import { PageFragment } from "../elements/PageFragment";
 import { Link } from "react-router-dom";
 import { selectors, useAppSelector, useGetGroupMembershipsQuery } from "../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { isTeacherOrAbove } from "../../services";
 
 // these will change each year – everything else now ought to be the same
 const MENTORING_GROUP_ID = 6477;
@@ -27,7 +26,7 @@ export const AdaAdvancers = () => {
             </span>
             : <><Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`}>Log in or sign up</Link> to join the Ada advancers group and participate in the programme.</>
         }
-        <p className="mt-2 mb-0">All of our resources are completely free. You can join (or leave) the programme at any time.</p>
+        <p className="mt-2 mb-0">All of our resources are completely free. You can leave the programme at any time.</p>
     </div>;
 
     return <Container>
@@ -37,7 +36,7 @@ export const AdaAdvancers = () => {
                 <PageFragment fragmentId={"ada_advancers_intro"} />
                 {!userInGroup && groupJoinPrompt}
                 <PageFragment fragmentId={"ada_advancers_info"} />
-                {isTeacherOrAbove(user) ? <PageFragment fragmentId={"ada_advancers_tabs"} /> : <b>You must be signed in with a teacher account to view the weekly resources.</b>}
+                <PageFragment fragmentId={"ada_advancers_tabs"} />
             </Col>
         </Row>
     </Container>;
