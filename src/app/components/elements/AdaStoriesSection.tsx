@@ -2,13 +2,18 @@ import React from "react";
 import { Row } from "reactstrap";
 import { useDeviceSize } from "../../services";
 import { NewsCard } from "./cards/NewsCard";
-import { useGetNewsPodListQuery } from "../../state";
+import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
 import { Link } from "react-router";
 import { TextBlock } from "./layout/TextBlock";
+import { IconCard } from "./cards/IconCard";
+import { useLinkableSetting } from "../../services/linkableSetting";
 
-export const AdaStoriesSection = () => {
+export const AdaStoriesSection = ({isDashboard}: {isDashboard?: boolean}) => {
     const deviceSize = useDeviceSize();
     const {data: careersPods} = useGetNewsPodListQuery({subject: "cs_stories"});
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const showNewsletterPrompts = isDashboard && !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
+    const {setLinkedSetting} = useLinkableSetting();
 
     return (careersPods && careersPods.length > 0) && <>
         <TextBlock>
@@ -24,6 +29,21 @@ export const AdaStoriesSection = () => {
             </Link>
             <strong className="link-dark-pink">&gt;</strong>
         </div>
+        {showNewsletterPrompts &&
+            <Row xs={12} className={"mt-7"}>
+                <IconCard
+                    card={{
+                        title: "Stay updated",
+                        icon: {name: "icon-mail", color: "tertiary"},
+                        bodyText: "Get fresh teaching ideas, student study tips, and development news about our tools and resources delivered straight to your inbox.",
+                        clickUrl: "/account#notifications",
+                        buttonText: "Get tips and updates",
+                        onButtonClick: () => {setLinkedSetting("news-preference");},
+                        className: "px-0"
+                    }}
+                />
+            </Row>
+        }
     </>;
 };
     

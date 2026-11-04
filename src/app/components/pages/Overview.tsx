@@ -222,7 +222,7 @@ export const StudentOverview = () => {
         </section>
         
         <section id="stories" className="py-3">
-            <AdaStoriesSection />
+            <AdaStoriesSection isDashboard />
         </section>
     </PageContainer>;
 };
