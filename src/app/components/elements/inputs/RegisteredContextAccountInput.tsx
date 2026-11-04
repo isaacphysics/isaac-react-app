@@ -24,7 +24,7 @@ import { WithLinkableSetting } from "../WithLinkableSetting";
 
 interface RegisteredContextRowProps {
     registeredContext: UserContext;
-    setRegisteredContext: (ucs: UserContext) => void;
+    setRegisteredContext: (rcs: UserContext) => void;
     showNullStageOption: boolean;
     submissionAttempted: boolean;
     existingRegisteredContexts: UserContext[];
@@ -32,7 +32,7 @@ interface RegisteredContextRowProps {
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     tutorOrAbove: boolean;
     registeredContexts: UserContext[];
-    setRegisteredContexts: (ucs: UserContext[]) => void;
+    setRegisteredContexts: (rcs: UserContext[]) => void;
     index: number;
     required: boolean;
 }
@@ -129,7 +129,7 @@ function RegisteredContextRow({
 interface RegisteredContextAccountInputProps {
     user: Immutable<ValidationUser>;
     registeredContexts: UserContext[];
-    setRegisteredContexts: (ucs: UserContext[]) => void;
+    setRegisteredContexts: (rcs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
     displaySettings: Nullable<DisplaySettings>;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;

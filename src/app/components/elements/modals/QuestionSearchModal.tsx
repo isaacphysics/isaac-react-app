@@ -76,7 +76,7 @@ interface QuestionSearchModalProps {
 export const QuestionSearchModal = (
     {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
-    const userContext = useUserViewingContext();
+    const userViewingContext = useUserViewingContext();
     const sublistDelimiter = " >>> ";
 
     const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
@@ -89,10 +89,10 @@ export const QuestionSearchModal = (
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     useEffect(function populateExamBoardFromUserContext() {
-        const userExamBoard = userContext.contexts[0].examBoard as EXAM_BOARD;
-        if (userContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
+        const userExamBoard = userViewingContext.contexts[0].examBoard as EXAM_BOARD;
+        if (userViewingContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userContext.contexts[0].examBoard]);
+    }, [userViewingContext.contexts[0].examBoard]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;

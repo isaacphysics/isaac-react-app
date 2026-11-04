@@ -92,9 +92,9 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
 export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserViewingContext();
-    const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
-    const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userContext, user));
+    const userViewingContext = useUserViewingContext();
+    const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userViewingContext, user));
+    const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userViewingContext, user));
 
     const sortedContent = audienceFilteredContent.sort(sortByStringValue("title"));
 

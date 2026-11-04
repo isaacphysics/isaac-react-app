@@ -41,7 +41,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
     const {data: doc, isLoading} = conceptQuery;
     const navigation = useNavigation(doc ?? null);
     
-    const userContext = useUserViewingContext();
+    const userViewingContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const accessibilitySettings = useAccessibilitySettings();
 
@@ -55,12 +55,12 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
 
     useEffect(() => {
         if (pageContext) {
-            // the page context, if single stage, overrides the user context
+            // the page context, if single stage, overrides the user viewing context
             if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
                 const newStage = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]];
                 if (newStage) {
-                    userContext.setStage(newStage[0]);
-                    userContext.setFixedContext(true);
+                    userViewingContext.setStage(newStage[0]);
+                    userViewingContext.setFixedContext(true);
                 }
             }
             // all other cases use the default behaviour

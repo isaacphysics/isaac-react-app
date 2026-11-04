@@ -24,7 +24,6 @@ import {
 import {
     AudienceContext,
     ContentBaseDTO,
-    ContentDTO,
     UserRole,
     Stage,
     UserContext,
@@ -41,16 +40,6 @@ import {
 import {GameboardContext, PageContextState, PotentialUser, AudienceView} from "../../IsaacAppTypes";
 import {useContext, useEffect, useState} from "react";
 import {Immutable} from "immer";
-
-export interface UseUserContextReturnType {
-    contexts: UserContext[];
-    setStage: (stage: STAGE) => void;
-    setExamBoard: (stage: EXAM_BOARD) => void;
-    isFixedContext: boolean;
-    setFixedContext: (isFixedContext: boolean) => void;
-    explanation: {stage: CONTEXT_SOURCE, examBoard: CONTEXT_SOURCE};
-    hasDefaultPreferences: boolean;
-}
 
 export interface GameboardAndPathInfo {
     boardIdFromDTO?: string;
@@ -75,14 +64,20 @@ interface ContextProperties {
     explanation: { stage: CONTEXT_SOURCE, examBoard: CONTEXT_SOURCE };
 }
 
-export function useUserViewingContext(): UseUserContextReturnType {
+export interface UserViewingContext extends ContextProperties {
+    setStage: (stage: STAGE) => void;
+    setExamBoard: (stage: EXAM_BOARD) => void;
+    setFixedContext: (isFixedContext: boolean) => void;
+}
+
+export function useUserViewingContext(): UserViewingContext {
     const dispatch = useAppDispatch();
     const queryParams = useQueryParams(true);
     const [contextProps, setContextProps] = useState<ContextProperties>({ contexts: [{stage: STAGE.ALL, examBoard: EXAM_BOARD_DEFAULT_OPTION}], isFixedContext: false, hasDefaultPreferences: false, explanation: { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT } });
 
     const user = useAppSelector((state: AppState) => state && state.user);
     const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
-    const {questionId} = useParams<{ questionId: string}>();
+    const {questionId} = useParams<{ questionId: string }>();
 
     const registeredContexts = isLoggedIn(user) ? user.registeredContexts as UserContext[] : undefined;
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext);
@@ -94,7 +89,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
     const setFixedContext = (isFixedContext: boolean) => dispatch(transientUserContextSlice?.actions.setFixedContext(isFixedContext));
 
     useEffect(() => {
-        const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents, boardIdFromQueryParams: queryParams.board, questionIdFromPath: pageId2 };
+        const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents, boardIdFromQueryParams: queryParams.board, questionIdFromPath: questionId };
         const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo);
         setContextProps(newContextProps);
     }, [transientUserContext, registeredContexts, displaySettings, id, contents, queryParams.board, questionId]);
@@ -108,7 +103,7 @@ export const calculateNewUserContext = (transientUserContext: TransientUserConte
     const contexts: UserContext[] = [];
     let stage: STAGE = STAGE.ALL;
     let examBoard: EXAM_BOARD = EXAM_BOARD_DEFAULT_OPTION;
-    const explanation: UseUserContextReturnType["explanation"] = {stage: CONTEXT_SOURCE.DEFAULT, examBoard: siteSpecific(CONTEXT_SOURCE.NOT_IMPLEMENTED, CONTEXT_SOURCE.DEFAULT)};
+    const explanation: UserViewingContext["explanation"] = {stage: CONTEXT_SOURCE.DEFAULT, examBoard: siteSpecific(CONTEXT_SOURCE.NOT_IMPLEMENTED, CONTEXT_SOURCE.DEFAULT)};
 
     if (gameboardAndPathInfo?.questionIdFromPath && gameboardAndPathInfo?.boardIdFromQueryParams
         && gameboardAndPathInfo.boardIdFromDTO === gameboardAndPathInfo.boardIdFromQueryParams) {
@@ -301,9 +296,9 @@ function produceAudienceViewingCombinations(audience: AudienceContext): Audience
 //   {stage: "gcse", examBoard: "aqa", difficulty: "practice_1"},
 //   {stage: "gcse", examBoard: "ocr", difficulty: "practice_1"},
 // ],
-// then filter the list to the page context if given, or the user context if given otherwise
+// then filter the list to the page context if given, or the registered user context if given otherwise
 // (if no audiences are left after filtering, instead show the closest applicable audience)
-export function determineAudienceViews(audience?: AudienceContext[], userContext?: readonly UserContext[], pageContext?: PageContextState): AudienceView[] {
+export function determineAudienceViews(audience?: AudienceContext[], registeredContext?: readonly UserContext[], pageContext?: PageContextState): AudienceView[] {
     if (audience === undefined) {return [];}
 
     // Set all Ada audience contexts to the same difficulty level, if not already
@@ -315,27 +310,27 @@ export function determineAudienceViews(audience?: AudienceContext[], userContext
     const allViews: AudienceView[] = [];
 
     const hasPageStage = !!pageContext?.stage?.length;
-    const hasUserStage = !!(userContext?.length && userContext.some(context => context.stage) && userContext.every(context => context.stage !== "all"));
+    const hasRegisteredStage = !!(registeredContext?.length && registeredContext.some(context => context.stage) && registeredContext.every(context => context.stage !== "all"));
 
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
         allViews.push(...produceAudienceViewingCombinations(audienceContext));
     });
 
-    // Filter the list to the page context if given, or the user context if given otherwise.
+    // Filter the list to the page context if given, or the registered user context if given otherwise.
     let viewsFilteredByContext = allViews;
     if (hasPageStage) {
         viewsFilteredByContext = viewsFilteredByContext.filter(view => view.stage &&
             pageContext.stage?.some(stage => LEARNING_STAGE_TO_STAGES[stage].some(learningStage => learningStage === view.stage)));
-    } else if (hasUserStage) {
-        viewsFilteredByContext = viewsFilteredByContext.filter(view => userContext.some(context => context.stage === view.stage));
+    } else if (hasRegisteredStage) {
+        viewsFilteredByContext = viewsFilteredByContext.filter(view => registeredContext.some(context => context.stage === view.stage));
     }
 
     // If there are no matches, fall back to the closest available stage
-    if (viewsFilteredByContext.length === 0 && (hasPageStage || hasUserStage)) {
+    if (viewsFilteredByContext.length === 0 && (hasPageStage || hasRegisteredStage)) {
         const preferredStages = hasPageStage
             ? pageContext.stage?.flatMap(stage => LEARNING_STAGE_TO_STAGES[stage])
-            : userContext?.map(context => context.stage).filter((stage) => isDefined(stage));
+            : registeredContext?.map(context => context.stage).filter((stage) => isDefined(stage));
 
         const availableStages = [...new Set(allViews.map(view => view.stage).filter((stage) => isDefined(stage)))];
 
@@ -384,7 +379,7 @@ export function isRelevantToPageContext(intendedAudience: ContentBaseDTO['audien
     );
 }
 
-export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
+export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserViewingContext, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
     // if we are in a subject-stage-specific route, this is only relevant if there is some overlap between that route and the content object; we ignore the user entirely.
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
         return isRelevantToPageContext(intendedAudience, pageContext);
@@ -394,7 +389,7 @@ export function isRelevantPageContextOrIntendedAudience(intendedAudience: Conten
     return isIntendedAudience(intendedAudience, userContext, user);
 }
 
-export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
+export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userViewingContext: UserViewingContext, user: Immutable<PotentialUser> | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
         return true;
@@ -403,7 +398,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
     return intendedAudience.some(audienceClause => {
         // If stages are specified do we have any of them in our context
         if (audienceClause.stage) {
-            const userStages = userContext.contexts.map(c => c.stage);
+            const userStages = userViewingContext.contexts.map(c => c.stage);
             if (isPhy && userStages.includes(STAGE.A_LEVEL)) {
                 userStages.push(STAGE.FURTHER_A);
             }
@@ -415,7 +410,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
 
         // If exam boards are specified do we have any of them in our context
         if (audienceClause.examBoard) {
-            const userExamBoards = userContext.contexts.map(c => c.examBoard);
+            const userExamBoards = userViewingContext.contexts.map(c => c.examBoard);
             const satisfiesExamBoardCriteria =
                 userExamBoards.includes(EXAM_BOARD.ALL) || userExamBoards.some(b => b && audienceClause.examBoard?.includes(b));
             if (!satisfiesExamBoardCriteria) {
@@ -452,7 +447,7 @@ export function mergeDisplayOptions(source: ContentBaseDTO["display"], update: C
     return srcCopy;
 }
 
-export function notRelevantMessage(userContext: UseUserContextReturnType): string {
+export function notRelevantMessage(userContext: UserViewingContext): string {
     const message = [];
     if (userContext.contexts.length === 1) {
         const userStage = userContext.contexts[0].stage;
@@ -503,7 +498,7 @@ export function audienceStyle(audienceString: string): string {
     return uniqueLabels.size === 1 ? uniqueLabels.values().next().value as string : "stage-label-all";
 }
 
-export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean): string {
+export function stringifyAudience(audience: ContentBaseDTO["audience"], userContext: UserViewingContext, intendedAudience: boolean): string {
     let stagesSet: Set<Stage>;
     if (!audience) {
         stagesSet = new Set<Stage>([STAGE.ALL]);
@@ -566,7 +561,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
 }
 
-export function makeIntendedAudienceComparator(user: Immutable<PotentialUser> | null, userContext: UseUserContextReturnType) {
+export function makeIntendedAudienceComparator(user: Immutable<PotentialUser> | null, userContext: UserViewingContext) {
     // Make "relevant" sections appear first
     return function intendedAudienceComparator(sectionA: {audience?: ContentBaseDTO['audience']}, sectionB: {audience?: ContentBaseDTO['audience']}) {
         const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user);

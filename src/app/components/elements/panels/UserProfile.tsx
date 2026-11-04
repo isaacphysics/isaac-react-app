@@ -32,7 +32,7 @@ interface UserProfileProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     registeredContexts: UserContext[];
-    setRegisteredContexts: (uc: UserContext[]) => void;
+    setRegisteredContexts: (rcs: UserContext[]) => void;
     booleanNotation: Nullable<BooleanNotation>;
     setBooleanNotation: (bn: BooleanNotation) => void;
     displaySettings: Nullable<DisplaySettings>;

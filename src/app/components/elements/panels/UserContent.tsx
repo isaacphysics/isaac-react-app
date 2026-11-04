@@ -10,7 +10,7 @@ interface UserContentProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     registeredContexts: UserContext[];
-    setRegisteredContexts: (uc: UserContext[]) => void;
+    setRegisteredContexts: (rcs: UserContext[]) => void;
     programmingLanguage: Nullable<ProgrammingLanguage>;
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
     booleanNotation: Nullable<BooleanNotation>;
