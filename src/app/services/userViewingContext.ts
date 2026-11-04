@@ -561,11 +561,11 @@ export function stringifyAudience(audience: ContentBaseDTO["audience"], userCont
     return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
 }
 
-export function makeIntendedAudienceComparator(user: Immutable<PotentialUser> | null, userContext: UserViewingContext) {
+export function makeIntendedAudienceComparator(user: Immutable<PotentialUser> | null, userViewingContext: UserViewingContext) {
     // Make "relevant" sections appear first
     return function intendedAudienceComparator(sectionA: {audience?: ContentBaseDTO['audience']}, sectionB: {audience?: ContentBaseDTO['audience']}) {
-        const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user);
-        const isAudienceB = isIntendedAudience(sectionB.audience, userContext, user);
+        const isAudienceA = isIntendedAudience(sectionA.audience, userViewingContext, user);
+        const isAudienceB = isIntendedAudience(sectionB.audience, userViewingContext, user);
         return isAudienceA === isAudienceB ? 0 : isAudienceB ? 1 : -1;
     };
 }
