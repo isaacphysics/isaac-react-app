@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {useLocation, useParams} from "react-router-dom";
-import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
+import {selectors, transientUserContextSlice, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
 import {usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
@@ -40,6 +40,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
     const conceptQuery = useGetConceptQuery(conceptId);
     const {data: doc, isLoading} = conceptQuery;
     const navigation = useNavigation(doc ?? null);
+    const dispatch = useAppDispatch();
     
     const userViewingContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
@@ -59,13 +60,13 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
             if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
                 const newStage = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]];
                 if (newStage) {
-                    userViewingContext.setStage(newStage[0]);
-                    userViewingContext.setFixedContext(true);
+                    dispatch(transientUserContextSlice?.actions.setStage(newStage[0]));
+                    dispatch(transientUserContextSlice?.actions.setFixedContext(true));
                 }
             }
             // all other cases use the default behaviour
         }
-    }, [pageContext]);
+    }, [dispatch, pageContext]);
 
     return <ShowLoadingQuery
         query={conceptQuery}

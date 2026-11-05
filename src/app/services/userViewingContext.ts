@@ -32,9 +32,7 @@ import {
 import {useParams} from "react-router-dom";
 import {
     AppState,
-    transientUserContextSlice,
     TransientUserContextState,
-    useAppDispatch,
     useAppSelector
 } from "../state";
 import {GameboardContext, PageContextState, PotentialUser, AudienceView} from "../../IsaacAppTypes";
@@ -57,22 +55,15 @@ export enum CONTEXT_SOURCE {
     NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
 }
 
-interface ContextProperties {
+export interface UserViewingContext {
     contexts: UserContext[];
     isFixedContext: boolean;
     explanation: { stage: CONTEXT_SOURCE, examBoard: CONTEXT_SOURCE };
 }
 
-export interface UserViewingContext extends ContextProperties {
-    setStage: (stage: STAGE) => void;
-    setExamBoard: (stage: EXAM_BOARD) => void;
-    setFixedContext: (isFixedContext: boolean) => void;
-}
-
 export function useUserViewingContext(): UserViewingContext {
-    const dispatch = useAppDispatch();
     const queryParams = useQueryParams(true);
-    const [contextProps, setContextProps] = useState<ContextProperties>({ contexts: [{stage: STAGE.ALL, examBoard: EXAM_BOARD_DEFAULT_OPTION}], isFixedContext: false, explanation: { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT } });
+    const [contextProps, setContextProps] = useState<UserViewingContext>({ contexts: [{stage: STAGE.ALL, examBoard: EXAM_BOARD_DEFAULT_OPTION}], isFixedContext: false, explanation: { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT } });
 
     const user = useAppSelector((state: AppState) => state && state.user);
     const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
@@ -83,21 +74,17 @@ export function useUserViewingContext(): UserViewingContext {
 
     const { id, contents } = useContext(GameboardContext) || {};
 
-    const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
-    const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
-    const setFixedContext = (isFixedContext: boolean) => dispatch(transientUserContextSlice?.actions.setFixedContext(isFixedContext));
-
     useEffect(() => {
         const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents, boardIdFromQueryParams: queryParams.board, questionIdFromPath: questionId };
         const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo);
         setContextProps(newContextProps);
     }, [transientUserContext, registeredContexts, displaySettings, id, contents, queryParams.board, questionId]);
 
-    return { ...contextProps, setStage, setExamBoard, setFixedContext };
+    return contextProps;
 }
 
 export const calculateNewUserContext = (transientUserContext: TransientUserContextState, registeredContexts?: UserContext[],
-    gameboardAndPathInfo?: GameboardAndPathInfo) : ContextProperties => {
+    gameboardAndPathInfo?: GameboardAndPathInfo) : UserViewingContext => {
     
     const contexts: UserContext[] = [];
     let stage: STAGE = STAGE.ALL;
