@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Input, Label, UncontrolledTooltip} from "reactstrap";
-import { CONTEXT_SOURCE } from "../../../services/userViewingContext";
+import { CONTEXT_SOURCE, hasDefaultPreferences } from "../../../services/userViewingContext";
 import {
     EXAM_BOARD,
     examBoardLabelMap,
@@ -83,7 +83,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end align-items-center m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
-                    {!userViewingContext.hasDefaultPreferences && (userViewingContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userViewingContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
+                    {hasDefaultPreferences(userViewingContext.contexts) && (userViewingContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userViewingContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
                         <button className="icon-reset mb-1" aria-label={"Reset viewing context"} onClick={() => {
                             dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
                             dispatch(transientUserContextSlice.actions.setStage(undefined));
@@ -120,7 +120,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }}
                     >
                         {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                        {isPhy && isLoggedIn(user) && !userViewingContext.hasDefaultPreferences && currentStages.length > 1 &&
+                        {isPhy && isLoggedIn(user) && hasDefaultPreferences(userViewingContext.contexts) && currentStages.length > 1 &&
                             <option>{stagesString(currentStages)}</option>}
                     </Input>
                     {isAda &&
@@ -150,7 +150,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         You are seeing {stagesString(currentStages)}{isAda && userViewingContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userViewingContext.contexts[0].examBoard]}` : ""}
                         &nbsp;content.&nbsp;
                         {formatContextExplanation(userViewingContext.explanation.stage, userViewingContext.explanation.examBoard, currentStages.length > 1)}&nbsp;
-                        {isAda && !isLoggedIn(user) && !userViewingContext.hasDefaultPreferences ?
+                        {isAda && !isLoggedIn(user) && hasDefaultPreferences(userViewingContext.contexts) ?
                             "Log in or sign up to save your viewing preferences." : ""
                         }
                     </UncontrolledTooltip>

@@ -60,7 +60,6 @@ export enum CONTEXT_SOURCE {
 interface ContextProperties {
     contexts: UserContext[];
     isFixedContext: boolean;
-    hasDefaultPreferences: boolean;
     explanation: { stage: CONTEXT_SOURCE, examBoard: CONTEXT_SOURCE };
 }
 
@@ -73,7 +72,7 @@ export interface UserViewingContext extends ContextProperties {
 export function useUserViewingContext(): UserViewingContext {
     const dispatch = useAppDispatch();
     const queryParams = useQueryParams(true);
-    const [contextProps, setContextProps] = useState<ContextProperties>({ contexts: [{stage: STAGE.ALL, examBoard: EXAM_BOARD_DEFAULT_OPTION}], isFixedContext: false, hasDefaultPreferences: false, explanation: { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT } });
+    const [contextProps, setContextProps] = useState<ContextProperties>({ contexts: [{stage: STAGE.ALL, examBoard: EXAM_BOARD_DEFAULT_OPTION}], isFixedContext: false, explanation: { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT } });
 
     const user = useAppSelector((state: AppState) => state && state.user);
     const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
@@ -97,8 +96,8 @@ export function useUserViewingContext(): UserViewingContext {
     return { ...contextProps, setStage, setExamBoard, setFixedContext };
 }
 
-export const calculateNewUserContext = (transientUserContext: TransientUserContextState, registeredContexts: UserContext[] | undefined,
-    gameboardAndPathInfo: GameboardAndPathInfo | undefined) : ContextProperties => {
+export const calculateNewUserContext = (transientUserContext: TransientUserContextState, registeredContexts?: UserContext[],
+    gameboardAndPathInfo?: GameboardAndPathInfo) : ContextProperties => {
     
     const contexts: UserContext[] = [];
     let stage: STAGE = STAGE.ALL;
@@ -151,14 +150,17 @@ export const calculateNewUserContext = (transientUserContext: TransientUserConte
         contexts.push({stage, examBoard});
     }
 
-    const hasDefaultPreferences = isAda && contexts.length === 1 && contexts[0].stage === STAGE.ALL && contexts[0].examBoard === EXAM_BOARD.ADA;
     const isFixedContext = !!transientUserContext?.isFixedContext;
 
     if (isFixedContext) {
         explanation.stage = CONTEXT_SOURCE.PAGE_CONTEXT;
     }
 
-    return { contexts, isFixedContext, hasDefaultPreferences, explanation };
+    return { contexts, isFixedContext, explanation };
+};
+
+export const hasDefaultPreferences = (contexts: UserContext[]): boolean => {
+    return isAda && contexts.length === 1 && contexts[0].stage === STAGE.ALL && contexts[0].examBoard === EXAM_BOARD.ADA;
 };
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
@@ -522,7 +524,7 @@ export function stringifyAudience(audience: ContentBaseDTO["audience"], userCont
         const adaStages = [STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18];
         const adaAudienceStages = audienceStages.filter(s => adaStages.includes(s as STAGE));
 
-        stagesToView = userContext.hasDefaultPreferences || !intendedAudience
+        stagesToView = hasDefaultPreferences(userContext.contexts) || !intendedAudience
             ? adaAudienceStages
             : stagesFilteredByUserContext.length > 0
                 ? stagesFilteredByUserContext

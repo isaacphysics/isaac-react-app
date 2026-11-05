@@ -5,7 +5,8 @@ import {
     GameboardAndPathInfo,
     getFilteredStageOptions,
     isPhy,
-    STAGE
+    STAGE,
+    hasDefaultPreferences
 } from "../../app/services";
 import {TransientUserContextState} from "../../app/state";
 import {UserContext, Stage, ExamBoard} from "../../IsaacApiTypes";
@@ -42,7 +43,7 @@ describe("User context derivation", () => {
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
 
             // on Physics, hasDefaultPreferences is never true
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     } else {
         it("uses correct defaults on Ada", () => {
@@ -56,7 +57,7 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.ADA]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.DEFAULT);
 
-            expect(result.hasDefaultPreferences).toEqual(true);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(true);
         });
     }
 
@@ -108,7 +109,7 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.ALL]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
 
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     } else {
         it("prefers transient context over registered context on Ada", () => {
@@ -126,7 +127,7 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.AQA]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.TRANSIENT);
 
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     }
 
@@ -202,7 +203,7 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.SQA]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.GAMEBOARD);
 
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     }
 });
