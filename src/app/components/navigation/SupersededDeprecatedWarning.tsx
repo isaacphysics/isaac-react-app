@@ -97,7 +97,7 @@ export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SegueP
         </strong>}
         {doc.deprecated ? <div className="d-flex align-items-center">
             <span>
-                {t("common:navigation.supersededDeprecated.deprecatedWarning", { contentType })}
+                {t("common:navigation.supersededDeprecated.deprecatedWarning", { contentType })}{" "}
                 {supersededBy && <>
                     It has been replaced by {" "} <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
                         this question

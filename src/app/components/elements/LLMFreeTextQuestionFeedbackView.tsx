@@ -35,8 +35,8 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
     return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component", siteSpecific("p-xl-7 p-5", "p-md-7"))}>
         <span className="h4 mb-0">{t("common:freeTextBuilder.llmFeedback.title")}</span>
         <p className="mb-0">
-            {t("common:freeTextBuilder.llmFeedback.accuracyNote")} 
-            {isAda && <><Trans
+            {t("common:freeTextBuilder.llmFeedback.accuracyNote")}
+            {isAda && <>{" "}<Trans
                 i18nKey="ada:freeTextBuilder.llmFeedback.faqInfo"
                 components={{
                     faqLink: <Link to="/support/student/general" target="_blank" />,

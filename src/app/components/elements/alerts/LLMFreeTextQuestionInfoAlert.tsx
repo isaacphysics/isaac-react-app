@@ -139,8 +139,8 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
         <div className="h4">{t("common:freeTextBuilder.infoAlert.generalTitle")}</div>
         <p>
             {t("common:freeTextBuilder.infoAlert.generalAccuracy")}
-            {isAda && <><Trans
-                i18nKey="ada:freeTextBuilder.infoAlert.generalFaq"
+            {isAda && <>{" "}<Trans
+                i18nKey="ada:label.faqMoreInfo"
                 components={{
                     faqLink: <Link to={locationOfFAQEntry} target="_blank" />,
                 }}

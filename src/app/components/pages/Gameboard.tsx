@@ -69,7 +69,7 @@ export const Gameboard = () => {
             icon={{type: "icon", icon: "icon-error"}}
         />
         <div className="my-4 h3">
-            {t("site:gameboard.notFound.error")}<code>{gameboardId}</code>{"."}
+            {t("site:gameboard.notFound.error")}{" "}<code>{gameboardId}</code>{"."}
         </div>
     </>;
 
