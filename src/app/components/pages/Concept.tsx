@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import {useLocation, useParams} from "react-router-dom";
-import {selectors, transientUserContextSlice, useAppSelector, useGetGameboardByIdQuery} from "../../state";
+import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
-import {usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
+import {usePreviousPageContext, isAda, useNavigation, siteSpecific, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
 import {GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -42,7 +42,6 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
     const navigation = useNavigation(doc ?? null);
     const dispatch = useAppDispatch();
     
-    const userViewingContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const accessibilitySettings = useAccessibilitySettings();
 
