@@ -114,9 +114,9 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
     return <Form onSubmit={e => {e.preventDefault(); attemptAssign();}} className="py-2">
         <FormGroup>
             <Label data-testid="modal-groups-selector" className="w-100 pb-2">
-                <span className="form-required">{t("common:assignments.setModal.groupsLabel")}</span>
+                <span className="form-required">{t("common:label.groups")}</span>
                 <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
-                    <StyledSelect inputId="groups-to-assign" isMulti placeholder={t("common:assignments.setModal.groupsPlaceholder")}
+                    <StyledSelect inputId="groups-to-assign" isMulti placeholder={t("common:label.none")}
                         value={selectedGroups}
                         closeMenuOnSelect={false}
                         onChange={selectOnChange(setSelectedGroups, false)}
@@ -124,7 +124,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                     />
                 </div>
                 {(selectedGroups.length === 0 
-                    ? <FormFeedback>{t("common:assignments.setModal.groupsRequired")}</FormFeedback> 
+                    ? <FormFeedback>{t("common:error.selectGroup")}</FormFeedback> 
                     : <FormFeedback>
                         {`${siteSpecific(
                             `You cannot reassign a question deck to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
@@ -136,8 +136,8 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
         </FormGroup>
         <FormGroup>
             <Label data-testid="modal-start-date-selector" className="w-100 pb-2">
-                <span className="form-optional">{t("common:assignments.setModal.startDateLabel")}</span>
-                <DateInput value={scheduledStartDate} placeholder={t("common:assignments.setModal.startDatePlaceholder")}
+                <span className="form-optional">{t("common:label.startDateLabel")}</span>
+                <DateInput value={scheduledStartDate} placeholder={t("common:assignments.startDatePlaceholder")}
                     yearRange={yearRange} invalid={validationAttempted && startDateInvalid}
                     onChange={setScheduledStartDateAtSevenAM}/>
                 <FormFeedback>{startDateInvalid && t("common:assignments.setModal.startDateFuture")}</FormFeedback>
@@ -145,8 +145,8 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
         </FormGroup>
         <FormGroup>
             <Label data-testid="modal-due-date-selector" className="w-100 pb-2">
-                <span className="form-required">{t("common:assignments.setModal.dueDateLabel")}</span>
-                <DateInput value={dueDate} placeholder={t("common:assignments.setModal.dueDatePlaceholder")} yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
+                <span className="form-required">{t("common:label.dueDateLabel")}</span>
+                <DateInput value={dueDate} placeholder={t("common:assignments.dueDatePlaceholder")} yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
                     onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate ?? undefined);}}/>
                 <FormFeedback>{!dueDate && t("common:assignments.setModal.dueDateRequired")}</FormFeedback>
                 <FormFeedback>{dueDateInvalid && t("common:assignments.setModal.dueDateAfterStart")}</FormFeedback>
@@ -154,11 +154,11 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
         </FormGroup>
         <FormGroup>
             {isEventLeaderOrStaff(user) && <Label data-testid="modal-notes" className="w-100 pb-2">
-                <span>{t("common:assignments.setModal.notesLabel")}</span>
+                <span>{t("common:label.notes")}</span>
                 <Input type="textarea" spellCheck={true} rows={3} value={assignmentNotes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}/>
                 <p className="mt-1 mb-0"><small>{t("common:assignments.setModal.notesCharacterCount", { characterCount: (assignmentNotes || '').length })}</small></p>
-                <FormFeedback>{notesInvalid && t("common:assignments.setModal.notesMaxLength")}</FormFeedback>
+                <FormFeedback>{notesInvalid && t("common:assignments.notesMaxLengthError")}</FormFeedback>
             </Label>}
         </FormGroup>
         
@@ -199,7 +199,7 @@ const AssignmentDisplay = ({board, currentAssignees, setCurrentAssignees, unassi
                         <span className="flex-grow-1">{assignee.groupName}</span>
                         <button className="close bg-transparent invert-underline" aria-label={t("common:assignments.setModal.unassignGroup")} 
                             onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
-                            {t("common:assignments.setModal.unassignButton")}
+                            {t("common:button.unassign")}
                         </button>
                     </li>
                 )}</ul>
@@ -267,6 +267,6 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
         size: "md",
         title: i18next.t("common:assignments.setModal.title", { boardTitle: board?.title }),
         body: <SetAssignmentsModalContent {...props} />,
-        buttons: [<Button key={0} aria-label={i18next.t("common:assignments.setModal.closeAriaLabel")} color="keyline" className="w-100" onClick={toggle}>{i18next.t("common:assignments.setModal.closeButton")}</Button>]
+        buttons: [<Button key={0} aria-label={i18next.t("common:button.closeModal")} color="keyline" className="w-100" onClick={toggle}>{i18next.t("common:button.close")}</Button>]
     };
 };

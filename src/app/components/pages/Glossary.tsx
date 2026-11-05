@@ -354,7 +354,7 @@ export const Glossary = () => {
         <PageContainer data-bs-theme={pageContext?.subject}
             pageTitle={<>
                 <TitleAndBreadcrumb 
-                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? i18next.t("common:glossary.contextualTitle", { context: getHumanContext(pageContext) }) : i18next.t("common:glossary.title")}
+                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? i18next.t("common:glossary.contextualTitle", { context: getHumanContext(pageContext) }) : i18next.t("common:title.glossary")}
                     icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
                     intermediateCrumbs={crumb ? [crumb] : []}
                 />
@@ -369,7 +369,7 @@ export const Glossary = () => {
                 undefined
             )}
         >
-            <PageMetadata noTitle showSidebarButton sidebarButtonText={i18next.t("common:glossary.sidebar.button")}>
+            <PageMetadata noTitle showSidebarButton sidebarButtonText={i18next.t("common:title.searchGlossary")}>
                 <PageFragment fragmentId="help_toptext_glossary" />
             </PageMetadata>
             <Row>
@@ -381,7 +381,7 @@ export const Glossary = () => {
                                 <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
                             </Col>
                             <Col className="mt-3 mt-md-0">
-                                <Label for='topic-select' className='visually-hidden'>{i18next.t("common:glossary.filters.topicLabel")}</Label>
+                                <Label for='topic-select' className='visually-hidden'>{i18next.t("common:label.topic")}</Label>
                                 <StyledSelect inputId="topic-select"
                                     options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                     name="topic-select"

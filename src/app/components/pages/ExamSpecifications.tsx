@@ -119,7 +119,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSp
     }, [examBoardTab, stageTab]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={title ?? t("common:examSpecifications.pageTitle")} intermediateCrumbs={[{title: t("common:examSpecifications.breadcrumbLabel"), to: "/exam_specifications"}]} />
+        <TitleAndBreadcrumb currentPageTitle={title ?? t("common:examSpecifications.pageTitle")} intermediateCrumbs={[{title: t("ada:title.examSpecifications"), to: "/exam_specifications"}]} />
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>

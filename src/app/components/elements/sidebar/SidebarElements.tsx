@@ -26,9 +26,9 @@ export const CompletionKey = () => {
     return <div className="d-flex flex-column sidebar-key">
         {t("common:sidebar.completionKey.title")}
         <ul>
-            <KeyItem icon="not-started" text={t("common:sidebar.completionKey.notStarted")}/>
-            <KeyItem icon="in-progress" text={t("common:sidebar.completionKey.inProgress")}/>
-            <KeyItem icon="attempted" text={t("common:sidebar.completionKey.allAttempted")}/>
+            <KeyItem icon="not-started" text={t("common:status.notStarted")}/>
+            <KeyItem icon="in-progress" text={t("common:status.inProgress")}/>
+            <KeyItem icon="attempted" text={t("common:status.allAttemptedWithErrors")}/>
             <KeyItem icon="correct" text={t("common:sidebar.completionKey.allCorrect")}/>
         </ul>
     </div>;
@@ -96,7 +96,7 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
 
     return <StyledTabPicker
         id="all" checked={forceEnabled || !conceptFilters.length}
-        checkboxTitle={t("common:sidebar.filter.all")}
+        checkboxTitle={t("common:label.all")}
         className={className}
         count={tagCounts &&
             (baseTag

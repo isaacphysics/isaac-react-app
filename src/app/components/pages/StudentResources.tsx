@@ -43,10 +43,10 @@ export const StudentResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>{t("common:studentResources.curriculum.title")}</h2>
+                        <h2>{t("ada:title.curriculum")}</h2>
                         <p>{t("common:studentResources.curriculum.description")}</p>
                         <p>{t("common:studentResources.curriculum.note")}</p>
-                        <Button className="mt-3" tag={Link} to="/topics">{t("common:studentResources.curriculum.exploreButton")}</Button>
+                        <Button className="mt-3" tag={Link} to="/topics">{t("ada:button.exploreAllTopics")}</Button>
                     </TextBlock>
                 </ColumnSlice>
             </Container>
@@ -91,7 +91,7 @@ export const StudentResources = () => {
                     <TextBlock>
                         <h2>{t("common:studentResources.challenges.title")}</h2>
                         <p>{t("common:studentResources.challenges.description")}</p>
-                        <Button className="mt-3" tag={Link} to="/pages/student_challenges">{t("common:studentResources.challenges.learnMoreButton")}</Button>
+                        <Button className="mt-3" tag={Link} to="/pages/student_challenges">{t("common:button.findOutMore")}</Button>
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
                         title: featuredStudentChallengePod.title ?? "",
@@ -102,9 +102,9 @@ export const StudentResources = () => {
                         buttonText: t("common:button.readMore"),
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
-                        title: t("common:studentResources.challenges.emptyTitle"),
+                        title: t("ada:status.noActiveChallenges"),
                         icon: {name: "icon-lightbulb-empty", color: "secondary"},
-                        bodyText: t("common:studentResources.challenges.emptyBody"),
+                        bodyText: t("ada:status.checkBackSoon"),
                     }}/>}
                 </ColumnSlice>
             </Container>
@@ -153,7 +153,7 @@ export const StudentResources = () => {
                         <h2>{t("common:studentResources.isaacScience.title")}</h2>
                         <p>{t("common:studentResources.isaacScience.description")}</p>
                         <ExternalLink asButton href='https://isaacscience.org'>
-                            {t("common:studentResources.isaacScience.visitButton")}
+                            {t("ada:button.goToIsaacScience")}
                         </ExternalLink>
                     </TextBlock>
                 </ColumnSlice>
@@ -165,7 +165,7 @@ export const StudentResources = () => {
                     <div className="h2">
                         {t("common:studentResources.testimonial.quote")}
                     </div>
-                    <p>{t("common:studentResources.testimonial.attribution")}</p>
+                    <p>{t("ada:label.computerScienceStudentTestimonial")}</p>
                 </TextBlock>
             </Container>
         </section>
@@ -211,9 +211,9 @@ export const StudentResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-cyan-200" src="/assets/cs/decor/help-slice-cyan.svg" alt=""/>
                     <TextBlock className="py-3 text-center">
-                        <div className="h3">{t("common:studentResources.support.title")}</div>
+                        <div className="h3">{t("ada:title.needHelp")}</div>
                         <p>{t("common:studentResources.support.description")}</p>
-                        <Button to="/support/student/general" tag={Link}>{t("common:studentResources.support.button")}</Button>
+                        <Button to="/support/student/general" tag={Link}>{t("ada:title.studentSupport")}</Button>
                     </TextBlock>
                 </div>
             </Container>

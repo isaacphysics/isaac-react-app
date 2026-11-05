@@ -245,7 +245,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                             tooManySigFigsError ? t("common:questions.feedback.tooManySigFigs") :
                                 tooFewSigFigsError ? t("common:questions.feedback.tooFewSigFigs") :
                                     almost ? t("common:questions.feedback.partlyCorrect") :
-                                        t("common:questions.feedback.incorrect")
+                                        t("common:status.incorrect")
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">

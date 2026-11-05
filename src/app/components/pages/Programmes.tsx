@@ -93,7 +93,7 @@ export const Programmes = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:programmes.page.title")} icon={{type: "icon", icon: "icon-events"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("sci:title.programmes")} icon={{type: "icon", icon: "icon-events"}} />
         }
         sidebar={siteSpecific(
             <ProgrammesSidebar programmes={programmes} />,

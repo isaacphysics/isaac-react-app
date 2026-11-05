@@ -188,7 +188,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         rightColumn={<>
             <h3 className={classNames({"h4": isPhy})}>
                 <span>
-                    {t("common:connections.connect.codeHeading")}
+                    {t("common:label.teacherConnectionCode")}
                     <i id="teacher-connections-title" className={classNames("icon icon-info icon-inline-sm ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">

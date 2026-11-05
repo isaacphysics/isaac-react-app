@@ -36,7 +36,7 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     <LinkItem to="/coming_soon" aria-disabled="true">
         <span className="me-2 text-muted">{children}</span>
-        <Badge  color="light" className="border-theme border bg-white ms-auto me-1">{i18next.t("common:navigation.comingSoon.badge")}</Badge>
+        <Badge  color="light" className="border-theme border bg-white ms-auto me-1">{i18next.t("common:status.comingSoon")}</Badge>
     </LinkItem>
 );
 

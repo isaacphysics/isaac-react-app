@@ -86,7 +86,7 @@ function UserContextRow({
         <div className="d-flex flex-row justify-content-between">
             <StyledDropdown
                 className={classNames("account-dropdown", {"me-1" : isAda})}
-                aria-label={t("common:account.context.stageLabel")}
+                aria-label={t("common:label.stage")}
                 invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
                 onChange={onStageUpdate}
                 value={userContext.stage}
@@ -103,7 +103,7 @@ function UserContextRow({
             {/* Exam Board Selector */}
             {isAda && <StyledDropdown
                 className="account-dropdown ms-1"
-                aria-label={t("ada:account.context.examBoardLabel")}
+                aria-label={t("ada:label.examBoard")}
                 invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
                 value={userContext.examBoard}

@@ -53,7 +53,7 @@ export const TeachingOrders = () => {
     }, [stageTab]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:teachingOrders.pageTitle")} />
+        <TitleAndBreadcrumb currentPageTitle={t("ada:title.teachingOrder")} />
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>

@@ -48,10 +48,10 @@ export const IconCard = ({card, children, ...props}: IconCardProps) => {
                 {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4 pt-3"}>
                     {isAppLink(clickUrl) ? 
                         <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center": buttonStyle === "link"})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl} aria-describedby={includeTitleInAriaLabel ? `card-title-${uuid}` : undefined}>
-                            {buttonText || t("common:cards.seeMore")}
+                            {buttonText || t("common:button.seeMore")}
                         </Button> :
                         <ExternalLink asButton href={clickUrl} aria-describedby={includeTitleInAriaLabel ? `card-title-${uuid}` : undefined}>
-                            {buttonText || t("common:cards.seeMore")}
+                            {buttonText || t("common:button.seeMore")}
                         </ExternalLink>
                     }
                 </CardFooter>}

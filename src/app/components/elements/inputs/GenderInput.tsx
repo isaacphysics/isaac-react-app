@@ -19,7 +19,7 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
     const { t } = useTranslation();
     return <FormGroup className={className}>
         <Label htmlFor={`${idPrefix}-gender-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
-            {t("common:account.gender.label")}
+            {t("common:label.gender")}
         </Label>
         <p className="d-block input-description mb-2">
             We conduct academic research, including{" "}

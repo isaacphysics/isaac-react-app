@@ -19,9 +19,9 @@ export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLButtonElement
     return (user && user.loggedIn
         ? above["lg"](deviceSize) 
             ? <Nav navbar className="justify-content-end" id="login-logout-button">
-                <NavigationSection topLevelLink className="mx-n3" to="/logout" title={t("sci:auth.loginLogout.logout")}/> 
+                <NavigationSection topLevelLink className="mx-n3" to="/logout" title={t("common:button.logOut")}/> 
             </Nav>
-            : <Button tag={Link} to="/logout" color="link" {...props}>{t("sci:auth.loginLogout.logout")}</Button>
+            : <Button tag={Link} to="/logout" color="link" {...props}>{t("common:button.logOut")}</Button>
         : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>{t("sci:auth.loginLogout.signUpOrLogIn")}</Button>
     );
 };
@@ -48,7 +48,7 @@ export const HeaderPhy = () => {
                         </Link>
                     </div>
 
-                    <a href={`#${mainContentId}`} className="skip-main">{t("sci:navigation.header.skipToMainContent")}</a>
+                    <a href={`#${mainContentId}`} className="skip-main">{t("common:label.skipToContent")}</a>
 
                     {above["lg"](deviceSize) 
                         ? <>
@@ -66,7 +66,7 @@ export const HeaderPhy = () => {
                                     affix: "icon-menu", 
                                     position: "suffix", 
                                     type: "icon"
-                                }}>{t("sci:navigation.header.menuToggle")}</AffixButton>
+                                }}>{t("common:button.menu")}</AffixButton>
                             </div>
 
                             <MenuOpenContext.Provider value={{menuOpen, setMenuOpen}}>
@@ -78,7 +78,7 @@ export const HeaderPhy = () => {
                                                 affix: "icon-close", 
                                                 position: "suffix", 
                                                 type: "icon"
-                                            }}>{t("sci:navigation.header.menuToggle")}</AffixButton>
+                                            }}>{t("common:button.menu")}</AffixButton>
                                         </div>
                                     }>
                                         <Link to="/" onClick={toggleMenu}>

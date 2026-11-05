@@ -44,8 +44,8 @@ export const RegistrationVerifyEmail = () => {
         if (user?.loggedIn) {
             if (!user?.email) {
                 dispatch(showErrorToast(
-                    t("common:auth.verifyEmail.requestFailed"),
-                    t("common:auth.verifyEmail.requestFailedMessage")
+                    t("common:error.emailRequestFailed"),
+                    t("common:error.noEmailToVerify")
                 ));
             } else {
                 void sendVerificationEmail({email: user?.email});
@@ -97,7 +97,7 @@ export const RegistrationVerifyEmail = () => {
                                     <p>
                                         {verificationNotResent ?
                                             <Button onClick={requestNewVerificationEmail}>
-                                                {t("common:auth.verifyEmail.resendButton")}
+                                                {t("common:button.resendVerificationEmail")}
                                             </Button>
                                             :
                                             t("common:auth.verifyEmail.sentMessage", { emailAddress: (user && user.loggedIn && user.email) })

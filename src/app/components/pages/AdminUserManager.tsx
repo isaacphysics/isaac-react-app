@@ -148,7 +148,7 @@ export const AdminUserManager = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle={t("common:admin.userManager.title")} icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle={t("common:title.userManager")} icon={{type: "icon", icon: "icon-account"}}/>
 
         {/* Search */}
         <Card className="mt-7">
@@ -157,14 +157,14 @@ export const AdminUserManager = () => {
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="family-name-search">{t("common:admin.userManager.search.familyNameLabel")}</Label>
+                                <Label htmlFor="family-name-search">{t("common:label.findUserByFamilyName")}</Label>
                                 <Input
                                     id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder={t("common:admin.userManager.search.familyNamePlaceholder")}
                                     onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label htmlFor="email-search">{t("common:admin.userManager.search.emailLabel")}</Label>
+                                <Label htmlFor="email-search">{t("common:label.findUserByEmail")}</Label>
                                 <Input
                                     id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder={t("common:admin.userManager.search.emailPlaceholder")}
                                     onChange={e => setParamIfNotDefault("email", e.target.value, "")}
@@ -188,7 +188,7 @@ export const AdminUserManager = () => {
 
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="role-search">{t("common:admin.userManager.search.roleLabel")}</Label>
+                                <Label htmlFor="role-search">{t("common:label.findByUserRole")}</Label>
                                 <Input
                                     id="role-search" type="select" defaultValue={String(searchQuery.role)}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,12 +197,12 @@ export const AdminUserManager = () => {
                                     }}
                                 >
                                     <option value="null">{t("common:admin.userManager.search.roleAny")}</option>
-                                    <option value="STUDENT">{t("common:admin.userManager.search.roleStudent")}</option>
-                                    <option value="TEACHER">{t("common:admin.userManager.search.roleTeacher")}</option>
-                                    <option value="CONTENT_EDITOR">{t("common:admin.userManager.search.roleContentEditor")}</option>
+                                    <option value="STUDENT">{t("common:role.student")}</option>
+                                    <option value="TEACHER">{t("common:role.teacher")}</option>
+                                    <option value="CONTENT_EDITOR">{t("common:role.contentEditor")}</option>
                                     <option value="EVENT_LEADER">{t("common:admin.userManager.search.roleEventLeader")}</option>
                                     <option value="EVENT_MANAGER">{t("common:admin.userManager.search.roleEventManager")}</option>
-                                    <option value="ADMIN">{t("common:admin.userManager.search.roleAdmin")}</option>
+                                    <option value="ADMIN">{t("common:role.admin")}</option>
                                 </Input>
                             </FormGroup>
                             <FormGroup>
@@ -291,14 +291,14 @@ export const AdminUserManager = () => {
                                                 <th>
                                                     <Button onClick={selectAllToggle} color="link">{t("common:admin.userManager.results.table.select")}</Button>
                                                 </th>
-                                                <th>{t("common:admin.userManager.results.table.actions")}</th>
-                                                <th>{t("common:admin.userManager.results.table.name")}</th>
-                                                <th>{t("common:admin.userManager.results.table.email")}</th>
-                                                <th>{t("common:admin.userManager.results.table.role")}</th>
-                                                <th>{t("common:admin.userManager.results.table.school")}</th>
+                                                <th>{t("common:table.actions")}</th>
+                                                <th>{t("common:table.name")}</th>
+                                                <th>{t("common:table.email")}</th>
+                                                <th>{t("common:table.role")}</th>
+                                                <th>{t("common:label.school")}</th>
                                                 <th>{t("common:admin.userManager.results.table.verificationStatus")}</th>
-                                                <th>{t("common:admin.userManager.results.table.memberSince")}</th>
-                                                <th>{t("common:admin.userManager.results.table.lastSeen")}</th>
+                                                <th>{t("common:table.memberSince")}</th>
+                                                <th>{t("common:table.lastSeen")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -321,10 +321,10 @@ export const AdminUserManager = () => {
                                                             {t("common:admin.userManager.results.table.edit")}
                                                         </Button>
                                                         <Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
-                                                            {t("common:admin.userManager.results.table.delete")}
+                                                            {t("common:button.delete")}
                                                         </Button>
                                                         <Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
-                                                            {t("common:admin.userManager.results.table.resetPassword")}
+                                                            {t("common:button.resetPassword")}
                                                         </Button>
                                                     </td>
                                                     <td>{user.familyName}, {user.givenName}</td>
@@ -340,7 +340,7 @@ export const AdminUserManager = () => {
                                     </Table>
                                 </div>
                                 :
-                                <div data-testid="user-search-results-table" className="text-center"><em>{t("common:admin.userManager.results.emptyState")}</em></div>;
+                                <div data-testid="user-search-results-table" className="text-center"><em>{t("common:status.noResults")}</em></div>;
                         }
                         }/>
                 }

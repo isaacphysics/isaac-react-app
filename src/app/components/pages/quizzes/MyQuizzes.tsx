@@ -67,7 +67,7 @@ const QuizButton = ({quiz}: QuizAssignmentProps) => {
             {t("common:tests.button.continue")}
         </Button>}
         {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
-            {t("common:tests.status.overdue")}
+            {t("common:status.overdue")}
         </Button>}
         {quiz.status === QuizStatus.Complete && (
             <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
@@ -196,8 +196,8 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
             </colgroup>
             <thead className="my-quizzes-table-header">
                 <tr>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:tests.assignedTable.title")}</SortItemHeader>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:tests.assignedTable.setBy")}</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:table.title")}</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:label.setBy")}</SortItemHeader>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.dueDate} reverseOrder={QuizzesBoardOrder["-dueDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:tests.assignedTable.dueDate")}</SortItemHeader>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setDate} reverseOrder={QuizzesBoardOrder["-setDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:tests.assignedTable.setDate")}</SortItemHeader>
                     {/* extra th for chevrons */}
@@ -210,12 +210,12 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                         <td>
                             <div>
                                 {quiz.title || quiz.id}<br/>
-                                {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">{t("common:tests.status.overdue")}</span>}
+                                {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">{t("common:status.overdue")}</span>}
                                 {quiz.status === QuizStatus.Started && <span className="small text-muted mt-1">{t("common:tests.status.started")}</span>}
-                                {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">{t("common:tests.status.notStarted")}</span>}
+                                {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">{t("common:status.notStarted")}</span>}
                                 {quiz.status === QuizStatus.Complete && <>
                                     <span className="small text-muted mt-1">{t("common:tests.status.completed")} </span>
-                                    {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">{t("common:tests.status.noFeedback")}</span> 
+                                    {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">{t("common:status.noFeedback")}</span> 
                                         : <span className="small text-muted mt-1">{t("common:tests.status.feedbackAvailable")}</span>
                                     }
                                 </>}
@@ -248,7 +248,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
             </colgroup>
             <thead className="my-quizzes-table-header">
                 <tr>
-                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:tests.practiceTable.title")}</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:table.title")}</SortItemHeader>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">{t("common:tests.practiceTable.startDate")}</SortItemHeader>
                     {/* extra th for chevrons */}
                     <th/>
@@ -260,7 +260,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                         <td>
                             <div className="d-flex flex-column align-items-start">
                                 {quiz.title || quiz.id}
-                                {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">{t("common:tests.practiceTable.completed")}</span>}
+                                {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">{t("common:status.completed")}</span>}
                             </div>
                         </td>
                         <td>{formatDate(quiz.startDate)}</td>
@@ -298,7 +298,7 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
             </Col>
             <Col xs={6}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>{t("common:tests.filters.assigner")}</span>
+                    <span className={"text-nowrap"}>{t("common:label.filterByAssigner")}</span>
                     <Input type="text" data-testid="title-filter" onChange={(e) => setQuizCreatorFilter(e.target.value)} />
                 </Label>
             </Col>
@@ -306,7 +306,7 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
         <Row className="pb-3">
             <Col xs={12}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>{t("common:tests.filters.status")}</span>
+                    <span className={"text-nowrap"}>{t("common:label.filterByStatus")}</span>
                     <StyledSelect
                         isMulti
                         value={quizStatusFilter.map(status => ({value: status, label: status}))}
@@ -326,7 +326,7 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
 export const DisplayModeToggle = ({displayMode, setDisplayMode}: {displayMode: "table" | "cards", setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>}) => {
     const { t } = useTranslation();
     return <div className={classNames("d-flex flex-column align-items-start", {"pb-3 pe-3 col-8 col-sm-6 col-md-3": isAda})}>
-        {isAda && <span>{t("common:tests.displayMode.label")}</span>}
+        {isAda && <span>{t("common:label.displayIn")}</span>}
         <div className="d-flex flex-column align-items-center align-self-start w-max-content pb-3 pe-3">
             <StyledToggle
                 checked={displayMode === "cards"}
@@ -430,7 +430,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
     const filtersToggle = <Col xs={3} sm={2} md={1} className="pb-3 ms-3">
         <Label className="w-100 d-flex flex-column align-items-center mb-0">
             <span className="text-nowrap">
-                {t("common:tests.filters.toggle")}
+                {t("common:label.filters")}
                 {<FilterCount count={filterCount ?? 0} widthPx={20} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
             </span>
             <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown d-flex justify-content-center align-items-center", {"selected": showFilters})}

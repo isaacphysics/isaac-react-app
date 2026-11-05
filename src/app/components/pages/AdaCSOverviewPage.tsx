@@ -23,7 +23,7 @@ export const AdaCSOverviewPage = () => {
             }}
         />
         <div>
-            <PageMetadata title={t("common:csOverview.pageTitle")} />
+            <PageMetadata title={t("common:title.adaComputerScience")} />
             <p>
                 {t("common:csOverview.description")}
             </p>

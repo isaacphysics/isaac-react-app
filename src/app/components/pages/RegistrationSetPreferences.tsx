@@ -94,13 +94,13 @@ export const RegistrationSetPreferences = () => {
             <CardBody>
                 {updateCurrentUserError &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading fw-bold">{t("common:account.updateError.alertTitle")}</p>
+                        <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                         <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                     </ExigentAlert>
                 }
                 <SignupTab
                     leftColumn = {<>
-                        <h2 className={siteSpecific("h4", "h3")}>{t("common:account.preferences.sectionTitle")}</h2>
+                        <h2 className={siteSpecific("h4", "h3")}>{t("common:title.preferences")}</h2>
                         <p>
                             {t("common:account.preferences.description")}
                         </p></>}
@@ -118,8 +118,8 @@ export const RegistrationSetPreferences = () => {
                         </>}
 
                         {!isUnder13(user) && <>
-                            <Label className={"fw-bold"}>{t("common:account.preferences.emailLabel")}</Label>
-                            <p>{t("common:account.preferences.emailDescription", { siteTitle: SITE_TITLE })}</p>
+                            <Label className={"fw-bold"}>{t("common:title.emailPreferences")}</Label>
+                            <p>{t("common:label.emailPreferencesDescription", { siteTitle: SITE_TITLE })}</p>
                             <Trans i18nKey="site:account.preferences.emailFrequency" components={{ b: <b /> }} />
                             <div className="py-2"/>
                             <UserEmailPreferencesInput 

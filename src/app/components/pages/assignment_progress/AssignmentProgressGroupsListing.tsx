@@ -45,13 +45,13 @@ const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: Register
                 <Spacer/>
                 <strong>
                     <a className={classNames("d-flex align-items-center pe-4", {"text-brand": isPhy})} href={getGroupAssignmentProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                        {t('common:AssignmentProgressGroupsListing.download-assignments-csv')}
+                        {t('common:button.downloadAssignmentsCsv')}
                         <i className="icon icon-download ms-2"/>
                     </a>
                 </strong>
                 {isTeacherOrAbove(user) && <strong>
                     <a className={classNames("d-flex align-items-center", {"text-brand": isPhy})} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                        {t('common:AssignmentProgressGroupsListing.download-tests-csv')}
+                        {t('common:button.downloadTestsCsv')}
                         <i className="icon icon-download ms-2"/>
                     </a>
                 </strong>}
@@ -74,7 +74,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
         <PageContainer
             pageTitle={
                 <TitleAndBreadcrumb
-                    currentPageTitle={siteSpecific(t("sci:markbook.title"), t("ada:markbook.title"))}
+                    currentPageTitle={siteSpecific(t("sci:title.assignmentProgress"), t("ada:markbook.title"))}
                     icon={{type: "icon", icon: "icon-revision"}}
                 />
             }
@@ -96,7 +96,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                         </Col>
 
                         <Col xs={6} md={5} lg={{size: 3, offset: 5}} xl={{size: 2, offset: 7}} className="d-flex flex-column">
-                            <Label className="m-0">{t('common:AssignmentProgressGroupsListing.sort-by')}</Label>
+                            <Label className="m-0">{t('common:groups.progress.sortLabel')}</Label>
                             <StyledDropdown
                                 value={groupSortOrder}
                                 onChange={(e) => setGroupSortOrder?.(e.target.value as GroupSortOrder)}
@@ -133,7 +133,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                         { isGroupsEmptyState &&
                                             <strong>
                                                 <Link to={PATHS.MANAGE_GROUPS} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
-                                                    {t('common:AssignmentProgressGroupsListing.create-new-group')}
+                                                    {t('common:button.createNewGroup')}
                                                 </Link>
                                             </strong>
                                         }

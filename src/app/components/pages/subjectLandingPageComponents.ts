@@ -19,7 +19,7 @@ const getHumanContextWithFurtherMaths = (pageContext?: PageContextState): string
 };
 
 const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
-    title: i18next.t("common:questionFinder.cardTitle"),
+    title: i18next.t("common:title.questionFinder"),
     subtitle: i18next.t("common:questionFinder.cardSubtitle", { subjectContext: getHumanContextWithFurtherMaths(context) }),
     icon: {type: "icon", icon: "icon-finder"},
     subject: context.subject,
@@ -27,7 +27,7 @@ const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): C
 });
 
 const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
-    title: i18next.t("common:concepts.cardTitle"),
+    title: i18next.t("common:title.concepts"),
     subtitle: i18next.t("common:concepts.cardSubtitle", { subjectContext: getHumanContextWithFurtherMaths(context) }),
     icon: {type: "icon", icon: "icon-concept"},
     subject: context.subject,
@@ -35,7 +35,7 @@ const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): Card
 });
 
 const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
-    title: context.stage.includes("university") ? i18next.t("common:tests.admissions.title") : i18next.t("common:tests.cardTitle"),
+    title: context.stage.includes("university") ? i18next.t("common:tests.admissions.title") : i18next.t("common:title.tests"),
     subtitle: `Use tests to ${context.stage.includes("university") ? "prepare for university admissions tests" : "practise a range of topics"}. These tests are available for you to freely attempt.`,
     icon: {type: "icon", icon: "icon-tests"},
     subject: context.subject,
@@ -57,7 +57,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Ca
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
 const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
-    title: i18next.t("common:revision.cardTitle"),
+    title: i18next.t("common:title.revision"),
     subtitle: i18next.t("common:revision.cardSubtitle"),
     icon: {type: "icon", icon: "icon-revision"},
     subject: context.subject,
@@ -66,7 +66,7 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
 });
 
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): CardProps => ({
-    title: i18next.t("common:glossary.cardTitle"),
+    title: i18next.t("common:title.glossary"),
     subtitle: i18next.t("common:glossary.cardSubtitle", { subjectContext: getHumanContext(context) }),
     icon: {type: "icon", icon: "icon-tests"},
     subject: context.subject,
@@ -97,25 +97,25 @@ const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListVi
 const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): CardProps => {
     const subjectSpecificAnvilCard: {[subject in keyof typeof PHY_NAV_SUBJECTS]: Partial<{[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (CardProps)}>} = {
         "physics": {
-            "11_14": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.physics1114.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
-            "gcse": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.physicsGcse.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "11_14": ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.physics1114.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "gcse": ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.physicsGcse.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
         },
         "maths": {
             // "11_14": ArbitraryPageLinkCard("Core skills practice", `Keep training those maths skills with our algebra tools.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
-            "gcse": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.mathsGcse.subtitle"), [{tag: `Practise algebra`, url: extendUrl(context, "tools")}])(context),
-            "a_level": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.mathsALevel.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "gcse": ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.mathsGcse.subtitle"), [{tag: `Practise algebra`, url: extendUrl(context, "tools")}])(context),
+            "a_level": ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.mathsALevel.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
         },
         "chemistry": {
-            "gcse": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.chemGcse.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
-            "a_level": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.chemALevel.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
-            "university": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.chemUni.title"), i18next.t("common:skillsPractice.chemUni.subtitle"), [{tag: `Refine your chemistry skills`, url: extendUrl(context, "tools")}], AbstractListViewItemState.COMING_SOON)(context),
+            "gcse": ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.chemGcse.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "a_level": ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.chemALevel.subtitle"), [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "university": ArbitraryPageLinkCard(i18next.t("common:title.skillsPractice"), i18next.t("common:skillsPractice.chemUni.subtitle"), [{tag: `Refine your chemistry skills`, url: extendUrl(context, "tools")}], AbstractListViewItemState.COMING_SOON)(context),
         },
         "biology": {
-            "gcse": ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.bioGcse.subtitle"), [{tag: `Practise mental maths`, url: extendUrl(context, "tools")}])(context),
+            "gcse": ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.bioGcse.subtitle"), [{tag: `Practise mental maths`, url: extendUrl(context, "tools")}])(context),
         },
     };
 
-    return subjectSpecificAnvilCard[context.subject][context.stage[0] as keyof typeof subjectSpecificAnvilCard[typeof context.subject]] || ArbitraryPageLinkCard(i18next.t("common:skillsPractice.cardTitle"), i18next.t("common:skillsPractice.fallback.subtitle", { subject: context.subject }), [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}])(context);
+    return subjectSpecificAnvilCard[context.subject][context.stage[0] as keyof typeof subjectSpecificAnvilCard[typeof context.subject]] || ArbitraryPageLinkCard(i18next.t("common:title.coreSkillsPractice"), i18next.t("common:skillsPractice.fallback.subtitle", { subject: context.subject }), [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}])(context);
 };
 
 /*const SPCCard = (context: NonNullable<Required<PageContextState>>): CardProps => {

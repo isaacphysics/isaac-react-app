@@ -72,7 +72,7 @@ export const Events = () => {
 
         return <div className="my-4">
             <Form className="form-inline d-flex justify-content-end">
-                <Label>{t("common:events.filters.label")}
+                <Label>{t("common:label.filterBy")}
                     <Input id="event-status-filter" className="ms-3" type="select" value={statusFilter} onChange={e => {
                         const selectedFilter = e.target.value as EventStatusFilter;
                         query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
@@ -118,7 +118,7 @@ export const Events = () => {
         <PageContainer
             pageTitle={
                 <TitleAndBreadcrumb
-                    currentPageTitle={t("common:events.page.title")}
+                    currentPageTitle={t("common:title.events")}
                     help={pageHelp}
                     icon={{type: "icon", icon: "icon-events"}}
                 />

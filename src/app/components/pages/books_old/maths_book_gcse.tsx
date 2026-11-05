@@ -18,20 +18,20 @@ export const MathsBookGcse = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.gcseMaths.title")} help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/2021_maths_book_gcse.jpg" alt={t("sci:books.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/2021_maths_book_gcse.jpg" alt={t("sci:label.bookCoverAltText")}/>
                 <PageFragment fragmentId="maths_book_gcse_intro"/>
             </div>
             <div className="book-levels">
                 <Tabs style="tabs" tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2">
                     {{
                         'Boards for Class and Homework': <Col>
-                            <div className="h4">{t("common:books.chaptersHeading")}</div>
+                            <div className="h4">{t("sci:books.chaptersHeading")}</div>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_maths_ch1_boards'} chapterTitle={t("sci:books.gcseMaths.chapter1Title")} chapterSubHeading={t("sci:books.gcseMaths.chapter1Subheading")} chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch2_boards'} chapterTitle={t("sci:books.gcseMaths.chapter2Title")} chapterIcon={'2'} chapterSubHeading={t("sci:books.gcseMaths.chapter2Subheading")} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch2_boards'} chapterTitle={t("sci:books.chapters.skills")} chapterIcon={'2'} chapterSubHeading={t("sci:books.gcseMaths.chapter2Subheading")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                             </Row>
                             <Row>
@@ -44,7 +44,7 @@ export const MathsBookGcse = () => {
                             </Row>
                             <Row>
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch5_boards'} chapterTitle={t("sci:books.gcseMaths.chapter5Title")} chapterIcon={'5'} chapterSubHeading={t("sci:books.gcseMaths.chapter5Subheading")} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch5_boards'} chapterTitle={t("sci:books.gcseMaths.chapter5Title")} chapterIcon={'5'} chapterSubHeading={t("sci:books.chapters.sections26To30")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_maths_ch6_boards'} chapterTitle={t("sci:books.gcseMaths.chapter6Title")} chapterIcon={'6'} chapterSubHeading={t("sci:books.gcseMaths.chapter6Subheading")} chapterSubject={SUBJECTS.MATHS}/>
@@ -55,7 +55,7 @@ export const MathsBookGcse = () => {
                                     <BookChapter chapterId={'gcse_maths_ch7_boards'} chapterTitle={t("sci:books.gcseMaths.chapter7Title")} chapterIcon={'7'} chapterSubHeading={t("sci:books.gcseMaths.chapter7Subheading")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch8_boards'} chapterTitle={t("sci:books.gcseMaths.chapter8Title")} chapterIcon={'8'} chapterSubHeading={t("sci:books.gcseMaths.chapter8Subheading")} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch8_boards'} chapterTitle={t("sci:books.chapters.geometry")} chapterIcon={'8'} chapterSubHeading={t("sci:books.chapters.sections38To50")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                             </Row>
                             <Row className="mb-4">
@@ -65,13 +65,13 @@ export const MathsBookGcse = () => {
                             </Row>
                         </Col>,
                         'Boards Containing all Questions': <Col>
-                            <div className="h4">{t("common:books.chaptersHeading")}</div>
+                            <div className="h4">{t("sci:books.chaptersHeading")}</div>
                             <Row>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_maths_ch1_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter1Title")} chapterSubHeading={t("sci:books.gcseMaths.chapter1Subheading")} chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch2_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter2Title")} chapterIcon={'2'} chapterSubHeading={t("sci:books.gcseMaths.chapter2Subheading")} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch2_full_boards'} chapterTitle={t("sci:books.chapters.skills")} chapterIcon={'2'} chapterSubHeading={t("sci:books.gcseMaths.chapter2Subheading")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                             </Row>
                             <Row>
@@ -84,7 +84,7 @@ export const MathsBookGcse = () => {
                             </Row>
                             <Row>
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch5_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter5Title")} chapterIcon={'5'} chapterSubHeading={t("sci:books.gcseMaths.chapter5Subheading")} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch5_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter5Title")} chapterIcon={'5'} chapterSubHeading={t("sci:books.chapters.sections26To30")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                                 <Col md={6} className="p-2">
                                     <BookChapter chapterId={'gcse_maths_ch6_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter6Title")} chapterIcon={'6'} chapterSubHeading={t("sci:books.gcseMaths.chapter6Subheading")} chapterSubject={SUBJECTS.MATHS}/>
@@ -95,7 +95,7 @@ export const MathsBookGcse = () => {
                                     <BookChapter chapterId={'gcse_maths_ch7_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter7Title")} chapterIcon={'7'} chapterSubHeading={t("sci:books.gcseMaths.chapter7Subheading")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch8_full_boards'} chapterTitle={t("sci:books.gcseMaths.chapter8Title")} chapterIcon={'8'} chapterSubHeading={t("sci:books.gcseMaths.chapter8Subheading")} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch8_full_boards'} chapterTitle={t("sci:books.chapters.geometry")} chapterIcon={'8'} chapterSubHeading={t("sci:books.chapters.sections38To50")} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                             </Row>
                             <Row className="mb-4">

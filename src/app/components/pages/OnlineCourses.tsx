@@ -38,7 +38,7 @@ export const OnlineCourses = () => {
     const metaDescription = t("common:onlineCourses.metaDescription");
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:onlineCourses.title")} />
+        <TitleAndBreadcrumb currentPageTitle={t("ada:title.onlineCourses")} />
         <MetaDescription description={metaDescription} />
         <PageFragment fragmentId={"online_courses_help"} />
         {allCourses.length === 0 ?

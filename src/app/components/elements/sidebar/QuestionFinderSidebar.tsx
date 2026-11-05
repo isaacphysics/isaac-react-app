@@ -24,7 +24,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">{t("common:questionFinder.sidebar.searchTitle")}</h3>
+            <h3 className="h5">{t("common:title.searchQuestions")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-4"
                 type="search" value={internalSearchText || ""}

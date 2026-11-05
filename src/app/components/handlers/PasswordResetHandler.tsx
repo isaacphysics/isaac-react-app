@@ -60,7 +60,7 @@ export const ResetPasswordHandler = () => {
                         <SetPasswordInput
                             idPrefix={"reset"}
                             password={newPassword}
-                            label={t("common:auth.passwordReset.newPasswordLabel")}
+                            label={t("common:label.newPassword")}
                             onChange={setNewPassword}
                             onValidityChange={setPasswordValid}
                             submissionAttempted={submissionAttempted}
@@ -69,7 +69,7 @@ export const ResetPasswordHandler = () => {
                     </CardBody>
                     <CardFooter>
                         <Button disabled={!urlTokenValid} type={"submit"} color="secondary" className="mb-2" block id="change-password">
-                            {t("common:auth.passwordReset.submitButton")}
+                            {t("common:button.changePassword")}
                         </Button>
                     </CardFooter>
                 </Card>

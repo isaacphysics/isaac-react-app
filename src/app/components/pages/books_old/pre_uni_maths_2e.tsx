@@ -16,16 +16,16 @@ export const PreUniMaths2e = () => {
     return <Container className="maths">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.preUniMaths2e.title")} 
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:title.preUniversityMathematicsForSciences")} 
                     help={pageHelp} 
                     // modalId="help_modal_maths_book"
                 />
-                <img className="book-cover" src="/assets/phy/books/pre_uni_maths_2e.jpg" alt={t("common:books.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/pre_uni_maths_2e.jpg" alt={t("sci:label.bookCoverAltText")}/>
                 <PageFragment fragmentId="pre_uni_maths_intro_2e"/>
             </div>
             <div className="book-levels">
                 <Col>
-                    <div className="h4">{t("common:books.chaptersHeading")}</div>
+                    <div className="h4">{t("sci:books.chaptersHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'pre_uni_maths_2e_ch1_boards'} chapterTitle={t("sci:books.preUniMaths2e.chapter1Title")}
@@ -42,7 +42,7 @@ export const PreUniMaths2e = () => {
                     </Row>
                     <Row>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'pre_uni_maths_2e_ch3_boards'} chapterTitle={t("sci:books.preUniMaths2e.chapter3Title")}
+                            <BookChapter chapterId={'pre_uni_maths_2e_ch3_boards'} chapterTitle={t("sci:books.chapters.geometry")}
                                 chapterSubHeading={t("sci:books.preUniMaths2e.chapter3Subheading")}
                                 chapterIcon={'3'} chapterSubject={SUBJECTS.MATHS}
                             />

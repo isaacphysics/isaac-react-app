@@ -55,7 +55,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
             </>
         }
         <div className="section-divider"/>
-        <h3 className="h5">{t("common:sidebar.relatedContent.questionsTitle")}</h3>
+        <h3 className="h5">{t("common:title.relatedQuestions")}</h3>
         {relatedQuestions && relatedQuestions.length > 0
             ? <>
                 {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0

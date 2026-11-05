@@ -55,7 +55,7 @@ export const GetStartedWithAda = () => {
                             </CompletableTask>
 
                             <CompletableTask tag={"li"} complete={tasks.createGroup} inputId="create-group" disabled={!tasks.createAccount} action={{
-                                title: t("common:getStarted.tasks.manageGroupsTitle"),
+                                title: t("common:button.manageGroups"),
                                 to: "/groups",
                             }}>
                                 <label htmlFor="create-group" className="mb-0"><strong>{t("common:getStarted.tasks.createGroup")}</strong></label>

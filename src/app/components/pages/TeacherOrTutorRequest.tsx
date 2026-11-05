@@ -29,7 +29,7 @@ export const TeacherOrTutorRequest = ({user}: {user: RegisteredUserDTO}) => {
                         {isTutorOrAbove(user) && <Row>
                             <Col className="text-center pt-3">
                                 <span className="h3">
-                                    {isTeacherOrAbove(user) ? t("common:teacherFeatures.request.alreadyTeacher") : t("common:teacherFeatures.request.alreadyTutor")}
+                                    {isTeacherOrAbove(user) ? t("sci:status.alreadyHaveTeacherAccount") : t("common:teacherFeatures.request.alreadyTutor")}
                                 </span>
                                 <p className="mt-3">
                                    Go to the <Link to={isTeacherOrAbove(user) ? "/teachers" : "/tutor_features"}>{isTeacherOrAbove(user) ? "Teacher tools" : "Tutor features"} page</Link> to start using your
@@ -48,7 +48,7 @@ export const TeacherOrTutorRequest = ({user}: {user: RegisteredUserDTO}) => {
                             <Row className={"my-4"}>
                                 <Col className={"text-center"}>
                                     <Button tag={Link} to={TEACHER_REQUEST_ROUTE}>
-                                       {t("common:teacherFeatures.request.teacherButton")}
+                                       {t("common:button.iAmATeacher")}
                                     </Button>
                                 </Col>
                                 <Col className={"text-center"}>

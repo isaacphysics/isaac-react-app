@@ -182,12 +182,12 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <div className={classNames("d-flex align-items-center flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
                     {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${quizAssignment.groupId}#tests`} className="d-flex align-items-center">
                         <i className="icon icon-arrow-left me-2"/>
-                        {t("sci:tests.feedback.backToGroup")}
+                        {t("sci:button.backToGroup")}
                     </Link>}
                     {isPhy && <Spacer/>}
                     <div className="d-flex flex-column px-3 py-3 py-md-0 text-md-center justify-content-center">
                         <Label for="feedbackMode" className="pe-1 mb-0 small">
-                            {t("common:tests.feedback.modeLabel")}
+                            {t("common:label.feedbackMode")}
                         </Label>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={"sm"} disabled={isUpdatingQuiz}>

@@ -12,7 +12,7 @@ export const HelpButton = ({modalId} : {modalId: string}) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal());},
             size: "xl",
-            title: t("common:help.modalTitle"),
+            title: t("common:button.help"),
             body: <PageFragment fragmentId={modalId} />,
         }));
     }

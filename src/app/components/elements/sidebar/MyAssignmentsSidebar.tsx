@@ -37,7 +37,7 @@ const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, 
     return <StyledTabPicker
         {...rest}
         type="checkbox" to={undefined}
-        id="all" checkboxTitle={t("common:sidebar.filter.all")}
+        id="all" checkboxTitle={t("common:label.all")}
         onChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(statusFilter);
@@ -108,7 +108,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                         {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
                     </Input>
                     <div className="section-divider"/>
-                    <h3 className="mb-4 h5">{t("common:sidebar.filter.status")}</h3>
+                    <h3 className="mb-4 h5">{t("common:label.filterByStatus")}</h3>
                     <ul>
                         <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={totalAssignmentCount}/></li>
                         <div className="section-divider-small"/>
@@ -116,11 +116,11 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                             <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus[ASSIGNMENT_STATE_MAP[state]]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
                         </li>)}
                     </ul>
-                    <h3 className="mt-4 mb-3 h5">{t("common:assignments.sidebar.filterGroup")}</h3>
+                    <h3 className="mt-4 mb-3 h5">{t("common:label.filterByGroup")}</h3>
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
                     </Input>
-                    <h3 className="mt-4 mb-3 h5">{t("common:sidebar.filter.assigner")}</h3>
+                    <h3 className="mt-4 mb-3 h5">{t("common:label.filterByAssigner")}</h3>
                     <Input type="select" value={setByFilter} onChange={e => setSetByFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                     </Input>

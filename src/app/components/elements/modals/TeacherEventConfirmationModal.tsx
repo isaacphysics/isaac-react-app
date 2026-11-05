@@ -14,7 +14,7 @@ export const teacherEventConfirmationModal = (submitBooking: () => void, stopBoo
                 <Button onClick={() => {
                     submitBooking();
                     store.dispatch(closeActiveModal());
-                }}>{i18next.t("common:events.confirmation.confirmButton")}</Button>
+                }}>{i18next.t("common:button.iAmATeacher")}</Button>
             </Col>
             <Col className={"text-center"}>
                 <Button onClick={() => {

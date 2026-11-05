@@ -28,27 +28,27 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             <Table className="mb-0">
                 <thead>
                     <tr>
-                        <th>{t("common:account.emailPreferences.typeHeader")}</th>
+                        <th>{t("common:label.emailType")}</th>
                         <th className="d-none d-sm-table-cell">{t("common:account.emailPreferences.descriptionHeader")}</th>
                         <th className="text-center">{t("common:account.emailPreferences.preferenceHeader")}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="form-required">{t("common:account.emailPreferences.assignmentsLabel")}</td>
+                        <td className="form-required">{t("common:label.assignments")}</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.assignments}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}assignments`} stateObject={emailPreferences}
-                                propertyName="ASSIGNMENTS" accessibleName={t("common:account.emailPreferences.assignmentsLabel")}
+                                propertyName="ASSIGNMENTS" accessibleName={t("common:label.assignments")}
                                 setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
                     </tr>
                     <tr>
-                        <td className="form-required">{t("common:account.emailPreferences.newsLabel")}</td>
+                        <td className="form-required">{t("common:title.news")}</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.news}
                         </td>
@@ -61,14 +61,14 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         </td>
                     </tr>
                     {<tr>
-                        <td className="form-required">{t("common:account.emailPreferences.eventsLabel")}</td>
+                        <td className="form-required">{t("common:title.events")}</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.events}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}events`} stateObject={emailPreferences}
-                                propertyName="EVENTS" accessibleName={t("common:account.emailPreferences.eventsLabel")}
+                                propertyName="EVENTS" accessibleName={t("common:title.events")}
                                 setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
@@ -77,12 +77,12 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             </Table>
         </> : <>
             <WithLinkableSetting className={"email-preference"} id={"assignments-preference"}>
-                <h5>{t("common:account.emailPreferences.assignmentsLabel")}</h5>
+                <h5>{t("common:label.assignments")}</h5>
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
 
                 <TrueFalseRadioInput
                     id={`${idPrefix}assignments`} stateObject={emailPreferences}
-                    propertyName="ASSIGNMENTS" accessibleName={t("common:account.emailPreferences.assignmentsLabel")}
+                    propertyName="ASSIGNMENTS" accessibleName={t("common:label.assignments")}
                     setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                     className="d-flex gap-2"
                 />
@@ -101,12 +101,12 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             </WithLinkableSetting>
 
             <WithLinkableSetting className={"email-preference"} id={"events-preference"}>
-                <h5>{t("common:account.emailPreferences.eventsLabel")}</h5>
+                <h5>{t("common:title.events")}</h5>
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
 
                 <TrueFalseRadioInput
                     id={`${idPrefix}events`} stateObject={emailPreferences}
-                    propertyName="EVENTS" accessibleName={t("common:account.emailPreferences.eventsLabel")}
+                    propertyName="EVENTS" accessibleName={t("common:title.events")}
                     setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                     className="d-flex gap-2"
                 />

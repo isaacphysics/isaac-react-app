@@ -81,7 +81,7 @@ export const ViewQuizzes = () => {
     return <PageContainer { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={i18next.t("common:tests.view.title")}
+                currentPageTitle={i18next.t("common:button.viewTests")}
                 icon={{"type": "icon", "icon": "icon-tests"}}
                 intermediateCrumbs={crumb ? [crumb] : []}
             />

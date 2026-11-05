@@ -45,17 +45,17 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
                 </div>
             </Col>
             <Col className="d-flex flex-column mw-max-content" id="metadata-status">
-                <span>{t("common:questionMetadata.statusTitle")}</span>
+                <span>{t("common:label.status")}</span>
                 {allQuestionsCorrect
-                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> {t("common:questionMetadata.statusCorrect")}</div>
+                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> {t("common:status.correct")}</div>
                     : allQuestionsAttempted
                         // uncomment the lines below if reusing this logic elsewhere!
                         // ? isPhy
-                        ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> {t("common:questionMetadata.statusAllAttemptedWithErrors")}</div>
+                        ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> {t("common:status.allAttemptedWithErrors")}</div>
                         // : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
                         : anyQuestionAttempted
-                            ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> {t("common:questionMetadata.statusInProgress")}</div>
-                            : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> {t("common:questionMetadata.statusNotStarted")}</div>
+                            ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> {t("common:status.inProgress")}</div>
+                            : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> {t("common:status.notStarted")}</div>
                 }
             </Col>
             <Col className="d-flex flex-column mw-max-content" id="metadata-stage-difficulty">

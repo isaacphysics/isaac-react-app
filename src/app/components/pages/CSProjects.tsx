@@ -38,7 +38,7 @@ export const CSProjects = () => {
     const metaDescription = "Browse the list of projects available on Ada Computer Science.";
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:projects.title")} />
+        <TitleAndBreadcrumb currentPageTitle={t("ada:title.projects")} />
         <MetaDescription description={metaDescription} />
         <PageFragment fragmentId={"projects_help"} />
         {allProjects.length === 0 ?

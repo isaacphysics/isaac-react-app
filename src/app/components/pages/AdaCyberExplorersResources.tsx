@@ -41,8 +41,8 @@ export const AdaCyberExplorersResources = () => {
             </Container>
         </section>
         <div className="d-flex position-absolute mx-auto start-0 end-0 w-fit-content gap-4 py-4 px-5 bg-white rounded-4 translate-middle-y shadow-pink z-1">
-            <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt={t("common:cyberExplorers.fundingLogoAlt")} className='img-fluid' />
-            <img src="/assets/common/logos/techfirst-black.svg" alt={t("common:cyberExplorers.techFirstLogoAlt")} className='img-fluid' />
+            <img src="/assets/common/logos/funded-by-uk-govt-black.svg" alt={t("ada:label.fundedByUkGovernment")} className='img-fluid' />
+            <img src="/assets/common/logos/techfirst-black.svg" alt={t("ada:label.techFirstLogo")} className='img-fluid' />
         </div>
         <section id="cyber-explorers">
             <Container className="homepage-padding mw-1600 d-flex flex-column align-items-center" fluid>
@@ -52,7 +52,7 @@ export const AdaCyberExplorersResources = () => {
                 </div>
                 <ColumnSlice breakpoint="lg" reverseUnderBreakpoint className="row-gap-5">
                     <ImageBlock>
-                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt={t("common:cyberExplorers.welcome.imageAlt")}/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt={t("ada:cyberExplorers.welcome.imageAlt")}/>
                     </ImageBlock>
                     <TextBlock>
                         <Card>
@@ -82,7 +82,7 @@ export const AdaCyberExplorersResources = () => {
                         </Card>
                     </TextBlock>
                 </ColumnSlice>
-                <Button outline className="bg-white mt-5" href={"/pages/202609_techfirst"} target="_blank">{t("common:cyberExplorers.welcome.readMoreButton")}</Button>
+                <Button outline className="bg-white mt-5" href={"/pages/202609_techfirst"} target="_blank">{t("common:button.readMore")}</Button>
             </Container>
         </section>
         <section id="11-14-topics" className="bg-white">
@@ -91,7 +91,7 @@ export const AdaCyberExplorersResources = () => {
                     <h2 className="font-size-2 mb-3">{t("common:cyberExplorers.topics.title")}</h2>
                     <p className="font-size-1-25">{t("common:cyberExplorers.topics.description")}</p>
                     <p className="font-size-1-25">{t("common:cyberExplorers.topics.comingSoon")}</p>
-                    <Button tag={Link} to="/topics#11-14" className="mt-3">{t("common:cyberExplorers.topics.exploreAllButton")}</Button>
+                    <Button tag={Link} to="/topics#11-14" className="mt-3">{t("ada:button.exploreAllTopics")}</Button>
                 </div>
 
                 <Card className="bg-cyan-200">
@@ -158,7 +158,7 @@ export const AdaCyberExplorersResources = () => {
                         </ul>
                         <div className="d-flex flex-column flex-md-row gap-3">
                             <Button href="/">{t("common:cyberExplorers.about.discoverButton")}</Button>
-                            {!isLoggedIn(user) && <Button outline className="bg-white" href="/register">{t("common:cyberExplorers.about.registerButton")}</Button>}
+                            {!isLoggedIn(user) && <Button outline className="bg-white" href="/register">{t("common:button.createAccount")}</Button>}
                         </div>
                     </TextBlock>
                 </ColumnSlice>

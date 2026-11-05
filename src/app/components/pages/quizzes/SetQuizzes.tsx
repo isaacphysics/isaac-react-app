@@ -145,10 +145,10 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const subject = determineQuizSubject(assignment.quizSummary) || "physics";
 
     const innerTableHeaders : InnerTableHeader[] = [
-        {title: i18next.t("common:tests.assignment.header.groupName"), sort: compareGroupNames},
+        {title: i18next.t("common:label.groupName"), sort: compareGroupNames},
         above["md"](deviceSize) ? {title: i18next.t("common:tests.assignment.header.creationDate"), sort: compareCreationDates} : undefined,
-        above["sm"](deviceSize) ? {title: i18next.t("common:tests.assignment.header.startDate"), sort: compareStartDates} : undefined,
-        {title: i18next.t("common:tests.assignment.header.dueDate"), sort: compareDueDates}
+        above["sm"](deviceSize) ? {title: i18next.t("common:label.startDate"), sort: compareStartDates} : undefined,
+        {title: i18next.t("common:table.dueDate"), sort: compareDueDates}
     ].filter(isDefined);
 
     return <>
@@ -169,7 +169,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                     assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
                                     e.stopPropagation();}}>
-                                {i18next.t("common:tests.assignment.setTest")}
+                                {i18next.t("common:button.setTest")}
                             </AffixButton>
                             <div className="d-none d-md-block w-max-content text-center text-nowrap me-3">
                                 Assigned to
@@ -187,7 +187,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
                         <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
                         <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
-                            i18next.t("common:tests.assignment.noGroups")
+                            i18next.t("common:status.noGroupsAssigned")
                             : (i18next.t("common:tests.assignment.assignedTooltip", { groupNames: assignedGroups.map(g => g.group).join(", ") }))}
                         </UncontrolledTooltip>
                     </td>
@@ -199,7 +199,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                 e.stopPropagation();
                             }}
                         >
-                            {i18next.t("common:tests.assignment.setTest")}
+                            {i18next.t("common:button.setTest")}
                         </Button>
                     </td>
                     <td className="text-center align-middle">
@@ -227,7 +227,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     <ReverseSortButtons active={(selectedCol ?? "Creation date") === header.title && currentSort.name === header.sort.name} />
                                 </div>
                             </th>)}
-                            <th className={`px-1 py-1 text-center ${below["md"](deviceSize) ? "actions-header-sm" : ""}`} colSpan={2}>{i18next.t("common:tests.assignment.header.actions")}</th>
+                            <th className={`px-1 py-1 text-center ${below["md"](deviceSize) ? "actions-header-sm" : ""}`} colSpan={2}>{i18next.t("common:table.actions")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -321,7 +321,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <Input
             id="manage-quizzes-title-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-            placeholder={t("common:tests.filters.titlePlaceholder")} aria-label={t("common:tests.filters.titlePlaceholder")}
+            placeholder={t("common:label.filterByTitle")} aria-label={t("common:label.filterByTitle")}
         />
     </Row>;
 
@@ -329,7 +329,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <Input
             id="manage-quizzes-group-name-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-            placeholder={t("common:tests.filters.groupPlaceholder")} aria-label={t("common:tests.filters.groupPlaceholder")}
+            placeholder={t("common:label.filterByGroup")} aria-label={t("common:label.filterByGroup")}
         />
     </Row>;
 
@@ -337,34 +337,34 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <DropdownToggle className="p-0 m-1 bg-transparent" color="tertiary" caret>{dateFilterType}</DropdownToggle>
         <DropdownMenu>
             <DropdownItem onClick={() => setDateFilterType('after')}>
-                {t("common:tests.filters.after")}
+                {t("ada:tests.filters.after")}
             </DropdownItem>
             <DropdownItem onClick={() => setDateFilterType('before')}>
-                {t("common:tests.filters.before")}
+                {t("ada:tests.filters.before")}
             </DropdownItem>
             <DropdownItem onClick={() => setDateFilterType('on')}>
-                {t("common:tests.filters.on")}
+                {t("ada:tests.filters.on")}
             </DropdownItem>
         </DropdownMenu>
     </UncontrolledDropdown>;
 
     const setDateFilterInput = <div className="d-flex align-items-baseline">
-        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t("common:tests.filters.startingLabel")}</span>
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t("ada:tests.filters.startDateLabel")}</span>
         {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
         <Input
             id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
-            placeholder={t("common:tests.filters.setDatePlaceholder")} aria-label={t("common:tests.filters.setDatePlaceholder")}
+            placeholder={t("ada:tests.filters.filterBySetDate")} aria-label={t("ada:tests.filters.filterBySetDate")}
         />
     </div>;
 
     const dueDateFilterInput = <div className="d-flex align-items-baseline">
-        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t("common:tests.filters.dueLabel")}</span>
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t("ada:tests.filters.dueDateLabel")}</span>
         {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         <Input
             id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
-            placeholder={t("common:tests.filters.dueDatePlaceholder")} aria-label={t("common:tests.filters.dueDatePlaceholder")}
+            placeholder={t("ada:tests.filters.filterByDueDate")} aria-label={t("ada:tests.filters.filterByDueDate")}
         />
     </div>;
 
@@ -384,7 +384,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
             <MyAdaSidebar />        
         )}
     >
-        <PageMetadata noTitle showSidebarButton sidebarButtonText={t("common:tests.set.search")} helpModalId="help_modal_set_tests">
+        <PageMetadata noTitle showSidebarButton sidebarButtonText={t("common:title.searchTests")} helpModalId="help_modal_set_tests">
             <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         </PageMetadata>
         <Tabs style="tabs" className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>

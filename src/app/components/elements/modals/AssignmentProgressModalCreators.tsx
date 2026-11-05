@@ -14,7 +14,7 @@ export const downloadLinkModal = (link: string): ActiveModalProps => {
         body: <PageFragment fragmentId="csv_download_notice" />,
         buttons: [
             <Button key={0} block color="solid" tag="a"  href={link} target="_blank" onClick={() => {store.dispatch(closeActiveModal());}}>
-                {i18next.t("common:assignments.downloadCsvButton")}
+                {i18next.t("common:button.downloadCsv")}
             </Button>,
         ]
     };

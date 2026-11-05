@@ -105,13 +105,13 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) &&
                 <ExigentAlert color="warning">
-                    <p className="alert-heading fw-bold">{t("common:account.update.errorTitle")}</p>
+                    <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                     <p>{t("common:account.update.fillAllFields")}</p>
                 </ExigentAlert>
             }
             {updateCurrentUserError &&
                 <ExigentAlert color="warning">
-                    <p className="alert-heading fw-bold">{t("common:account.update.errorTitle")}</p>
+                    <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                     <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                 </ExigentAlert>
             }
@@ -192,7 +192,7 @@ const RequiredAccountInfoBody = () => {
                     <hr className="text-center" />
                 </CardBody>
                 <div>
-                    <p>{t("common:account.requiredInfo.emailPreferencesIntro", { siteTitle: SITE_TITLE })}</p>
+                    <p>{t("common:label.emailPreferencesDescription", { siteTitle: SITE_TITLE })}</p>
                     <UserEmailPreferencesInput
                         emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                         submissionAttempted={submissionAttempted} idPrefix="modal-"
@@ -209,7 +209,7 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             <Row className="text-center pb-3">
                 <Col md={{size: 6, offset: 3}}>
-                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? t("common:account.requiredInfo.updateButtonMobile") : t("common:account.requiredInfo.updateButtonDesktop")}</Button>
+                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? t("common:button.update") : t("common:account.requiredInfo.updateButtonDesktop")}</Button>
                 </Col>
             </Row>
         </CardBody>

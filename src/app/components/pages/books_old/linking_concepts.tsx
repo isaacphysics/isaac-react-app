@@ -17,12 +17,12 @@ export const LinkingConcepts = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.linkingConcepts.title")} help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/linking_concepts.png" alt={t("sci:books.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/linking_concepts.png" alt={t("sci:label.bookCoverAltText")}/>
                 <PageFragment fragmentId="phys_linking_concepts_intro"/>
             </div>
             <div className="book-levels">
                 <Col>
-                    <div className="h4">{t("common:books.chaptersHeading")}</div>
+                    <div className="h4">{t("sci:books.chaptersHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'linking_concepts_ch1_boards'} chapterTitle={t("sci:books.linkingConcepts.chapter1.title")} chapterSubHeading={t("sci:books.linkingConcepts.chapter1.subtitle")} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>
@@ -41,7 +41,7 @@ export const LinkingConcepts = () => {
                     </Row>
                     <Row className="mb-4">
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'linking_concepts_ch5_boards'} chapterTitle={t("sci:books.linkingConcepts.chapter5.title")} chapterSubHeading={t("sci:books.linkingConcepts.chapter5.subtitle")}  chapterIcon={'5'} chapterSubject={SUBJECTS.PHYSICS}/>
+                            <BookChapter chapterId={'linking_concepts_ch5_boards'} chapterTitle={t("sci:books.linkingConcepts.chapter5.title")} chapterSubHeading={t("sci:books.chapters.sections26To30")}  chapterIcon={'5'} chapterSubject={SUBJECTS.PHYSICS}/>
                         </Col>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'linking_concepts_ch6_boards'} chapterTitle={t("sci:books.linkingConcepts.chapter6.title")} chapterSubHeading={t("sci:books.linkingConcepts.chapter6.subtitle")}  chapterIcon={'6'} chapterSubject={SUBJECTS.PHYSICS}/>

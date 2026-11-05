@@ -40,18 +40,18 @@ export const StatusDisplay = (props: StatusDisplayProps) => {
         case CompletionState.IN_PROGRESS:
             return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
                 <i className="icon icon-raw icon-in-progress" />
-                {showText && t("common:listViews.status.inProgress")}
+                {showText && t("common:status.inProgress")}
             </span>;
         case CompletionState.ALL_CORRECT:
             return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
                 <i className="icon icon-raw icon-correct" />
-                {showText && t("common:listViews.status.correct")}
+                {showText && t("common:status.correct")}
             </span>;
         case CompletionState.ALL_INCORRECT:
         case CompletionState.ALL_ATTEMPTED:
             return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
                 <i className="icon icon-raw icon-attempted" />
-                {showText && t("common:listViews.status.attempted")}
+                {showText && t("common:status.attempted")}
             </span>;
         case CompletionState.NOT_ATTEMPTED:
             return;
@@ -84,7 +84,7 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUr
     const { previewQuizUrl, quizButton, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
         {previewQuizUrl && <Button to={previewQuizUrl} color={"keyline"} tag={Link} className="set-quiz-button-md h-100">
-            {previewQuizUrl.includes("/preview/") ? t("common:listViews.action.preview") : t("common:listViews.action.viewTest")}
+            {previewQuizUrl.includes("/preview/") ? t("common:button.preview") : t("common:listViews.action.viewTest")}
         </Button>}
         {quizButton}
     </span>;
@@ -114,7 +114,7 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
             })));
         }}
     >
-        {t("common:listViews.action.assign")}
+        {t("common:button.assign")}
     </Button>;
 };
 
@@ -297,7 +297,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             className={classNames("alvi-bookmark", {"saved": isBookmarked(contentId)})} 
                             onClick={() => bookmarkItem(contentId)}
                             type="button"
-                            aria-label={isBookmarked(contentId) ? t("common:listViews.bookmark.remove") : t("common:listViews.bookmark.add")}
+                            aria-label={isBookmarked(contentId) ? t("common:button.removeBookmark") : t("common:button.addBookmark")}
                         /> 
                     </div>
                     }

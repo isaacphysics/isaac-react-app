@@ -142,7 +142,7 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
         ]);
         dispatch(showToast({
             title: i18next.t("common:auth.unlinkAccount.successTitle"),
-            body: i18next.t("common:auth.unlinkAccount.successBody"),
+            body: i18next.t("common:status.accountUpdated"),
             color: "success",
             timeout: 5000,
             closable: false,
@@ -476,7 +476,7 @@ export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
-                color: "danger", title: i18next.t("common:questions.attempts.throttledTitle"), timeout: 10000,
+                color: "danger", title: i18next.t("common:error.tooManyAttempts"), timeout: 10000,
                 body: errorMessage
             }) as any);
             setTimeout( () => {
@@ -548,7 +548,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
                 }
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
-            dispatch(showToast({color: "success", title: i18next.t("common:tests.submission.successTitle"), body: i18next.t("common:tests.submission.successBody"), timeout: 3000}) as any);
+            dispatch(showToast({color: "success", title: i18next.t("common:tests.submission.successTitle"), body: i18next.t("common:status.testSubmitted"), timeout: 3000}) as any);
             void navigateComponentless(generatePostQuizUrl(quizId));
         }
     } catch (e) {

@@ -23,7 +23,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h2 className="panel-title">{t("common:dashboard.groups.title")}</h2>
+        <h2 className="panel-title">{t("common:button.viewGroupProgress")}</h2>
         {sortedGroups.length ?
             <>
                 <div>
@@ -34,7 +34,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
             </> :
             <>
                 <div className="text-center mt-lg-3">{t("common:dashboard.groups.emptyState")}</div>
-                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">{t("common:dashboard.groups.createButton")}</Button></div>
+                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">{t("common:button.createNewGroup")}</Button></div>
             </>}
     </div>;
 };
@@ -92,28 +92,28 @@ const MyIsaacPanel = () => {
             <div className="col">
                 {isTutor(user) 
                     ? <Link to="/tutor_features" className='d-block panel-my-isaac-link'>
-                        {t("common:dashboard.myIsaac.tutorFeaturesLink")}
+                        {t("sci:title.tutorFeatures")}
                     </Link>
                     : <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
-                        {t("common:dashboard.myIsaac.teacherFeaturesLink")}
+                        {t("sci:title.teacherFeatures")}
                     </Link>}
                 <Link to="/groups" className='d-block panel-my-isaac-link'>
-                    {t("common:dashboard.myIsaac.manageGroupsLink")}
+                    {t("common:button.manageGroups")}
                 </Link>
                 <Link to="/question_deck_builder" className='d-block panel-my-isaac-link'>
-                    {t("common:dashboard.myIsaac.createQuestionDeckLink")}
+                    {t("sci:button.createQuestionDeck")}
                 </Link>
                 <Link to="/assigned" className='d-block panel-my-isaac-link'>
-                    {t("common:dashboard.myIsaac.setManageWorkLink")}
+                    {t("sci:title.setManageWork")}
                 </Link>
                 <Link to="/assignment_progress" className='d-block panel-my-isaac-link'>
-                    {t("common:dashboard.myIsaac.assignmentProgressLink")}
+                    {t("sci:title.assignmentProgress")}
                 </Link>
             </div>
         </div>
         <div className="section-divider" />
         <Link to="/account" className="panel-my-isaac-link">
-            {t("common:dashboard.myIsaac.myAccountLink")}
+            {t("sci:title.myAccount")}
         </Link>
     </div>;
 };
@@ -140,10 +140,10 @@ const BooksPanel = () => {
             <Spacer/>
             <select className="books-select ms-2 mb-3" value={subject}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
-                <option value="all">{t("common:dashboard.books.filterAll")}</option>
-                <option value="physics">{t("common:dashboard.books.filterPhysics")}</option>
-                <option value="maths">{t("common:dashboard.books.filterMaths")}</option>
-                <option value="chemistry">{t("common:dashboard.books.filterChemistry")}</option>
+                <option value="all">{t("common:label.all")}</option>
+                <option value="physics">{t("sci:label.physics")}</option>
+                <option value="maths">{t("common:label.maths")}</option>
+                <option value="chemistry">{t("sci:label.chemistry")}</option>
                 {/* No biology books */}
             </select>
         </div>
@@ -185,8 +185,8 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
                 <div className="text-center">{t("common:dashboard.viewToggleLabel")}</div>
                 <StyledToggle
                     checked={dashboardView === "student"}
-                    falseLabel={isTutor(user) ? t("common:dashboard.viewToggleTutorOption") : t("common:dashboard.viewToggleTeacherOption")}
-                    trueLabel={t("common:dashboard.viewToggleStudentOption")}
+                    falseLabel={isTutor(user) ? t("common:role.tutor") : t("common:role.teacher")}
+                    trueLabel={t("common:role.student")}
                     onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}             
                 />
             </span>

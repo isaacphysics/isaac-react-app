@@ -28,7 +28,7 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: {email},
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:auth.emailVerification.requestErrorTitle"),
+                errorTitle: () => i18next.t("common:error.emailRequestFailed"),
                 successTitle: () => i18next.t("common:auth.emailVerification.requestSuccessTitle"),
                 successMessage: () => i18next.t("common:auth.emailVerification.requestSuccessMessage"),
             }),

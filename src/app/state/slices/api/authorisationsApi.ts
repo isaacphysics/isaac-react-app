@@ -36,7 +36,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 onQueryError: (args, error, {dispatch}) => {
                     if (error.status == 429) {
                         dispatch(showErrorToast(
-                            i18next.t("common:groups.authorisations.rateLimitTitle"),
+                            i18next.t("common:error.tooManyAttempts"),
                             i18next.t("common:groups.authorisations.rateLimitMessage")
                         ));
                     } else {

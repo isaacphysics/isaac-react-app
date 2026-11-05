@@ -78,7 +78,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
 
     return <ShowLoadingQuery 
         query={pageQuery}
-        defaultErrorTitle={t("common:generic.error.title")}
+        defaultErrorTitle={t("common:error.loadPage")}
         ifNotFound={<NotFound />}
         thenRender={doc => {
             const isNews = doc.tags?.includes("news") || false;
@@ -94,7 +94,7 @@ export const Generic = ({pageIdOverride}: GenericPageComponentProps) => {
                     <TitleAndBreadcrumb 
                         currentPageTitle={doc.title as string} 
                         subTitle={doc.subtitle}
-                        displayTitleOverride={isPhy && isNews ? t("common:generic.news.title") : undefined}
+                        displayTitleOverride={isPhy && isNews ? t("common:title.news") : undefined}
                         icon={{type: "icon", icon: isNews ? "icon-news" : "icon-generic"}}
                     /> 
                 }

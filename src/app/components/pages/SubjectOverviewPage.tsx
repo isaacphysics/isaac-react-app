@@ -47,7 +47,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             subject: context.subject,
         },
         {
-            title: t("common:overview.aLevel.title"),
+            title: t("common:label.aLevel"),
             subtitle: t("common:overview.aLevel.subtitle", { subject: humanSubject, subjectName: humanSubject }),
             icon: {
                 type: "img" as const,
@@ -58,7 +58,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             subject: context.subject,
         },
         {
-            title: t("common:overview.university.title"),
+            title: t("common:label.university"),
             subtitle: t("common:overview.university.subtitle", { subject: humanSubject }),
             icon: {
                 type: "img" as const,
@@ -152,11 +152,11 @@ export const SubjectOverviewPage = () => {
             <div className="d-flex flex-row w-100 justify-content-center">
                 <div className="d-flex flex-column me-3 align-items-center">
                     <DifficultyIcon difficultyCategory="P"/>
-                    <span>{t("common:overview.difficulty.practice")}</span>
+                    <span>{t("sci:label.practice")}</span>
                 </div>
                 <div className="d-flex flex-column align-items-center">
                     <DifficultyIcon difficultyCategory="C"/>
-                    <span>{t("common:overview.difficulty.challenge")}</span>
+                    <span>{t("sci:label.challenge")}</span>
                 </div>
             </div>
 

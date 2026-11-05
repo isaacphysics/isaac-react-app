@@ -44,8 +44,8 @@ export const NavigationSidebar = (props: SidebarProps) => {
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, children, ...rest } = props;
-    return <Col tag="aside" aria-label={t("common:sidebar.ariaLabel")} lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)}>
-        <h2 className="visually-hidden">{t("common:sidebar.navigationLabel")}</h2>
+    return <Col tag="aside" aria-label={t("common:label.sidebar")} lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", {"ps-lg-2 py-lg-4 pe-lg-5": isPhy}, className)}>
+        <h2 className="visually-hidden">{t("common:label.sidebar")}</h2>
         {children}
     </Col>;
 };
@@ -73,8 +73,8 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
 
     const { className, buttonTitle, hideButton, optionBar, children, ...rest } = props;
     return fullSidebarLayout
-        ? <Col tag="aside" data-testid="sidebar" aria-label={t("common:sidebar.ariaLabel")} lg={siteSpecific(4, undefined)} xl={siteSpecific(3, undefined)} {...rest} className={classNames("flex-column sidebar no-print order-0", {"d-none d-lg-flex ps-lg-3 py-lg-4 pe-lg-5": isPhy}, className)}>
-            <h2 className="visually-hidden">{t("common:sidebar.ariaLabel")}</h2>
+        ? <Col tag="aside" data-testid="sidebar" aria-label={t("common:label.sidebar")} lg={siteSpecific(4, undefined)} xl={siteSpecific(3, undefined)} {...rest} className={classNames("flex-column sidebar no-print order-0", {"d-none d-lg-flex ps-lg-3 py-lg-4 pe-lg-5": isPhy}, className)}>
+            <h2 className="visually-hidden">{t("common:label.sidebar")}</h2>
             {children}
         </Col>
         : siteSpecific(
@@ -91,14 +91,14 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                                 position: "prefix",
                                 type: "icon"
                             }}>
-                                {t("common:sidebar.closeButton")}
+                                {t("common:button.close")}
                             </AffixButton>
                         </div>
                     }/>
                     <OffcanvasBody>
                         <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
                             <Col {...rest} className={classNames("sidebar p-4 pt-0", className)}>
-                                <h2 className="visually-hidden">{t("common:sidebar.contentLabel")}</h2>
+                                <h2 className="visually-hidden">{t("common:label.sidebar")}</h2>
                                 {children}
                             </Col>
                         </ContentSidebarContext.Provider>
@@ -106,14 +106,14 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                 </Offcanvas>
             </>,
             !hideButton && <Container fluid className="w-100">
-                <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label={t("common:sidebar.ariaLabel")}>
+                <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label={t("common:label.sidebar")}>
                     <AccordionItem className="border">
                         <AccordionHeader targetId="myAda">
                             <span className="fw-bold">{buttonTitle}</span>
                         </AccordionHeader>
                         <AccordionBody accordionId="myAda" className="accordion-flush-body">
                             <Col {...rest} className={classNames("flex-column", className)}>
-                                <h2 className="visually-hidden">{t("common:sidebar.contentLabel")}</h2>
+                                <h2 className="visually-hidden">{t("common:label.sidebar")}</h2>
                                 {children}
                             </Col>
                         </AccordionBody>

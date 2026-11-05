@@ -54,10 +54,10 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
                         style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
                         close={
                             siteSpecific(
-                                <button aria-label={t("common:modal.closeAriaLabel")} data-testid={"active-modal-close"} className="text-nowrap close" onClick={activeModal.closeAction ?? toggle}>
-                                    {activeModal?.closeLabelOverride || t("common:modal.closeButton")}
+                                <button aria-label={t("common:button.closeModal")} data-testid={"active-modal-close"} className="text-nowrap close" onClick={activeModal.closeAction ?? toggle}>
+                                    {activeModal?.closeLabelOverride || t("common:button.close")}
                                 </button>,
-                                <CloseButton aria-label={t("common:modal.closeAriaLabel")} data-testid={"active-modal-close"} onClick={activeModal.closeAction ?? toggle}/>
+                                <CloseButton aria-label={t("common:button.closeModal")} data-testid={"active-modal-close"} onClick={activeModal.closeAction ?? toggle}/>
                             )
                         }
                     >
@@ -89,7 +89,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
                             }} 
                             aria-label={t("common:modal.nextPageAriaLabel")}
                         >
-                            {t("common:modal.nextPageButton")}
+                            {t("common:button.next")}
                         </Button>
                         : activeModal.buttons
                     }

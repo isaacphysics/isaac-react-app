@@ -49,21 +49,21 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
     return <>
         {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle={t("common:events.attendance.title")} disabled={event.isCancelled && t("common:events.attendance.cancelledEventNotice")}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
-                {t("common:events.attendance.leaderNotice")}
+                {t("common:label.eventLeaderRestriction")}
             </div>}
             <div className="overflow-auto">
                 <Table bordered className="mb-0 bg-white">
                     <thead>
                         <tr>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.actions")}
+                                {t("common:table.actions")}
                             </th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingStatus'); setReverse(!reverse);}}>
                                 {t("common:events.attendance.table.attendanceHeader")}
                             </Button></th>
                             <th className="align-middle">
                                 <Button color="link" onClick={() => {setSortPredicate('userBooked.familyName'); setReverse(!reverse);}}>
-                                    {t("common:events.bookingsTable.name")}
+                                    {t("common:table.name")}
                                 </Button>
                                 <Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder={t("common:events.attendance.table.surnameFilterPlaceholder")} />
                             </th>
@@ -71,13 +71,13 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                 {t("common:events.bookingsTable.jobYearGroup")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.school")}
+                                {t("common:label.school")}
                             </th>
                             <th className="align-middle">
                                 {t("common:events.bookingsTable.accountType")}
                             </th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('userBooked.email'); setReverse(!reverse);}}>
-                                {t("common:events.bookingsTable.email")}
+                                {t("common:table.email")}
                             </Button></th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDate'); setReverse(!reverse);}}>
                                 {t("common:events.bookingsTable.bookingCreated")}
@@ -86,7 +86,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                 {t("common:events.bookingsTable.bookingUpdated")}
                             </Button></th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.accessibility")}
+                                {t("common:label.accessibilityRequirements")}
                             </th>
                             <th className="align-middle">
                                 {t("common:events.attendance.table.medicalRequirementsHeader")}

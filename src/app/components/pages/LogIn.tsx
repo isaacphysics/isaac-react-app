@@ -77,7 +77,7 @@ export const LogIn = () => {
                                                 id="rememberMe"
                                                 checked={rememberMe}
                                                 onChange={e => setRememberMe(e.target.checked)}
-                                                label={<p>{t("common:auth.page.rememberMe")}</p>} className='mb-4'
+                                                label={<p>{t("common:label.rememberMe")}</p>} className='mb-4'
                                             />
                                         </div>
                                         <PasswordResetButton email={email} isValidEmail={isValidEmail}
@@ -88,7 +88,7 @@ export const LogIn = () => {
                                         <Col sm={6}>
                                             <Button
                                                 id="log-in"
-                                                tag="input" value={t("common:auth.login.button")}
+                                                tag="input" value={t("common:button.logIn")}
                                                 color="solid"
                                                 type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
@@ -97,7 +97,7 @@ export const LogIn = () => {
                                         </Col>
                                         <Col sm={6}>
                                             <Button id="sign-up" color="keyline" className="mb-2" onClick={signUp} block>
-                                                {t("common:auth.page.signUpButton")}
+                                                {t("common:button.signUp")}
                                             </Button>
                                         </Col>
                                     </Row>

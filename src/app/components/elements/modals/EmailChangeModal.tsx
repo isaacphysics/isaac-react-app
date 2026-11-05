@@ -42,14 +42,14 @@ export const EmailChangeModal = (props: EmailChangeModalProps) => {
                 color={"keyline"}
                 onClick={cancel}
             >
-                {t("common:account.emailChange.cancelButton")}
+                {t("common:button.cancel")}
             </Button>
             <Button
                 className={"float-end mb-4"}
                 color={"solid"}
                 onClick={proceed}
             >
-                {t("common:account.emailChange.okButton")}
+                {t("common:button.ok")}
             </Button>
         </div>
     </div>;

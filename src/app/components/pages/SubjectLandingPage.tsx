@@ -73,7 +73,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         </div>
         <ShowLoadingQuery
             query={searchQuestionsQuery}
-            defaultErrorTitle={t("common:subjectLanding.randomQuestion.errorTitle")}
+            defaultErrorTitle={t("common:error.loadQuestion")}
             placeholder={loadingPlaceholder}
             thenRender={({ results: questions }) => {
                 const question = questions?.[0];

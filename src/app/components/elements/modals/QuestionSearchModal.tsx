@@ -258,7 +258,7 @@ export const QuestionSearchModal = (
     return <>
         <Row>
             <Col xs={siteSpecific(9, 12)}>
-                <Label htmlFor="question-search-title">{t("common:questionFinder.search.label")}</Label>
+                <Label htmlFor="question-search-title">{t("common:title.search")}</Label>
                 <Input id="question-search-title" className="mb-3"
                     type="text"
                     placeholder={t("site:questionFinder.search.placeholder")}
@@ -269,10 +269,10 @@ export const QuestionSearchModal = (
             </Col>
             {isPhy && <Col xs={3}>
                 <div className="mb-2">
-                    <Label htmlFor="question-search-book">{t("sci:questionFinder.search.bookLabel")}</Label>
+                    <Label htmlFor="question-search-book">{t("sci:label.book")}</Label>
                     <StyledSelect
                         value={selectedBook ? {value: selectedBook.tag, label: selectedBook.shortTitle} : null}
-                        inputId="question-search-book" isClearable placeholder={t("sci:questionFinder.search.bookPlaceholder")} {...selectStyle}
+                        inputId="question-search-book" isClearable placeholder={t("common:label.none")} {...selectStyle}
                         onChange={selectOnChange(setSearchBook, true)}
                         options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                     />
@@ -282,25 +282,25 @@ export const QuestionSearchModal = (
 
         <Row>
             <Col xs={6} lg={siteSpecific(6, 4)} className={classNames("mb-2")}>
-                <Label htmlFor="question-search-stage">{t("common:questionFinder.search.stageLabel")}</Label>
+                <Label htmlFor="question-search-stage">{t("common:label.stage")}</Label>
                 <StyledSelect
                     value={searchStages.map(s => itemise(s, stageLabelMap[s]))}
-                    inputId="question-search-stage" isClearable isMulti placeholder={t("common:questionFinder.search.stagePlaceholder")} {...selectStyle}
+                    inputId="question-search-stage" isClearable isMulti placeholder={t("common:label.any")} {...selectStyle}
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </Col>
             <Col xs={6} lg={siteSpecific(6, 4)} className={classNames("mb-2")}>
-                <Label htmlFor="question-search-difficulty">{t("common:questionFinder.search.difficultyLabel")}</Label>
+                <Label htmlFor="question-search-difficulty">{t("common:label.difficulty")}</Label>
                 <StyledSelect
                     value={searchDifficulties.map(d => itemise(d, difficultyLabelMap[d]))}
-                    inputId="question-search-difficulty" isClearable isMulti placeholder={t("common:questionFinder.search.difficultyPlaceholder")} {...selectStyle}
+                    inputId="question-search-difficulty" isClearable isMulti placeholder={t("common:label.any")} {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </Col>
             {isAda && <Col xs={12} lg={4} className={classNames("mb-2")}>
-                <Label htmlFor="question-search-exam-board">{t("ada:questionFinder.search.examBoardLabel")}</Label>
+                <Label htmlFor="question-search-exam-board">{t("ada:label.examBoard")}</Label>
                 <StyledSelect
-                    inputId="question-search-exam-board" isClearable isMulti placeholder={t("ada:questionFinder.search.examBoardPlaceholder")} {...selectStyle}
+                    inputId="question-search-exam-board" isClearable isMulti placeholder={t("common:label.any")} {...selectStyle}
                     value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
                     onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
@@ -343,7 +343,7 @@ export const QuestionSearchModal = (
                     ))}
                 </ul>}
                 {isPhy && <div className="mb-2">
-                    {t("sci:questionFinder.search.topicLabel")}
+                    {t("common:label.topic")}
                     <HierarchyFilterTreeList root {...{
                         tier: 0, index: TAG_LEVEL.subject,
                         choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
@@ -373,9 +373,9 @@ export const QuestionSearchModal = (
                                     currentOrder={questionsSort['title']}
                                     alignment="start"
                                 >{t("common:questionFinder.results.titleColumn")}</SortItemHeader>
-                                <th className={siteSpecific("w-25", "w-20")}>{t("common:questionFinder.results.topicColumn")}</th>
-                                <th className="w-15">{t("common:questionFinder.results.stageColumn")}</th>
-                                <th className="w-15">{t("common:questionFinder.results.difficultyColumn")}</th>
+                                <th className={siteSpecific("w-25", "w-20")}>{t("common:label.topic")}</th>
+                                <th className="w-15">{t("common:label.stage")}</th>
+                                <th className="w-15">{t("common:label.difficulty")}</th>
                                 {isAda && <th className="w-15">{t("ada:questionFinder.results.examBoardColumn")}</th>}
                             </tr>
                         </thead>

@@ -34,7 +34,7 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     let presetPlaceholder = "";
 
     if (urlQuery?.preset === "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
-        presetSubject = i18next.t("common:contact.preset.teacherAccountSubject");
+        presetSubject = i18next.t("common:label.teacherAccountRequestSubject");
         presetMessage = i18next.t("common:contact.preset.teacherAccountMessage", { siteTitle: SITE_TITLE }) + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset === 'accountDeletion' && user?.loggedIn) {
         presetSubject = i18next.t("common:contact.preset.accountDeletionSubject");
@@ -101,7 +101,7 @@ export const Contact = () => {
 
     return <Container id="contact-page" className="pb-7">
         <TitleAndBreadcrumb 
-            currentPageTitle={t("common:contact.title")} 
+            currentPageTitle={t("common:title.contactUs")} 
             icon={{type: "icon", "icon": "icon-contact"}}
         />
         <MetaDescription description={metaDescription}/>
@@ -119,7 +119,7 @@ export const Contact = () => {
                         /></p>
                     </div>
                     {isPhy && <>
-                        <div className="h3">{t("sci:contact.events.heading")}</div>
+                        <div className="h3">{t("sci:title.upcomingEvents")}</div>
                         <p><Trans
                             i18nKey="sci:contact.events.text"
                             components={{
@@ -135,7 +135,7 @@ export const Contact = () => {
                         }}
                         values={{ webmasterEmail: WEBMASTER_EMAIL }}
                     /></p>
-                    <div className="h3">{t("common:contact.social.heading")}</div>
+                    <div className="h3">{t("common:label.followUs")}</div>
                     <p>{t("common:contact.social.text")}</p>
                     {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
                 </Col>
@@ -161,7 +161,7 @@ export const Contact = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">{t("common:form.firstNameLabel")}</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:label.firstName")}</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user && user.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -169,7 +169,7 @@ export const Contact = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">{t("common:form.lastNameLabel")}</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:label.lastName")}</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user && user.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -179,14 +179,14 @@ export const Contact = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">{t("common:form.emailLabel")}</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:label.emailAddress")}</Label>
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user && user.loggedIn ? user.email : ""}
                                                     onChange={e => setEmail(e.target.value)}
                                                     aria-describedby="emailValidationMessage" required/>
                                                 <FormFeedback id="emailValidationMessage">
-                                                    {!isValidEmail && t("common:form.emailValidationError")}
+                                                    {!isValidEmail && t("common:error.invalidEmailAddress")}
                                                 </FormFeedback>
                                             </FormGroup>
                                         </Col>

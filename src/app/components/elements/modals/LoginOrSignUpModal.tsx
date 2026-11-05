@@ -87,7 +87,7 @@ const LoginOrSignUpBody = () => {
                                     id="rememberMe" 
                                     checked={rememberMe} 
                                     onChange={e => setRememberMe(e.target.checked)}
-                                    label={<p>{t("common:auth.rememberMe")}</p>} className='mb-4'
+                                    label={<p>{t("common:label.rememberMe")}</p>} className='mb-4'
                                 />
                             </div>
                             <PasswordResetButton 
@@ -98,7 +98,7 @@ const LoginOrSignUpBody = () => {
 
                         <Button
                             id="log-in"
-                            tag="input" value={t("common:auth.login.button")}
+                            tag="input" value={t("common:button.logIn")}
                             color="solid" type="submit" block
                             className="mb-2"
                             onClick={attemptLogIn}
@@ -108,7 +108,7 @@ const LoginOrSignUpBody = () => {
                         <Button id="sign-up" color="keyline" onClick={(e) => {
                             closeModal(); signUp(e);
                         }} block>
-                            {t("common:auth.signUpButton")}
+                            {t("common:button.signUp")}
                         </Button>
 
                         {siteSpecific(<div className="section-divider"/>, <hr className="text-center hr-or"/>)}

@@ -37,9 +37,8 @@
       "emailFrequencyNote": "<strong>Frequency</strong>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher."
     },
     "review": {
+      "intro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.",
       "requiredLabel": "Required",
-      "studentIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.",
-      "teacherIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.",
       "tutorIntro": "So that {{siteTitle}} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year."
     },
     "school": {
@@ -76,7 +75,6 @@
       "pendingTitle": "Pending assignments:"
     },
     "emptyBoardsAlert": "You have no question decks to assign. Use one of the options above to find one.",
-    "emptyGroupsAlert": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
     "emptyState": "There are no assignments to display for the selected filters.",
     "filter": {
       "byName": "Filter question decks by name"
@@ -91,7 +89,6 @@
       "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered assignments."
     },
     "progress": {
-      "backToGroup": "Back to group assignments and tests",
       "groupTab": {
         "overview": "Overview: {{boardTitle}}"
       },
@@ -114,7 +111,6 @@
     },
     "closeButton": "CLOSE",
     "loginLogout": {
-      "logout": "Log out",
       "signUpOrLogIn": "Sign up / log in"
     },
     "logoAlt": "Isaac Science Logo",
@@ -160,6 +156,25 @@
     }
   },
   "books": {
+    "chapters": {
+      "calculationPractice": "Calculation Practice",
+      "electricity": "Electricity",
+      "energyAndBalance": "Energy and Balance",
+      "extraQuestions": "Extra Questions",
+      "forceAndMotion": "Force and Motion",
+      "geometry": "Geometry",
+      "materialsAndForces": "Materials and Forces",
+      "mechanics": "Mechanics",
+      "sections16To23": "(Sections 16-23)",
+      "sections1To15": "(Sections 1-15)",
+      "sections24To29": "(Sections 24-29)",
+      "sections26To30": "(Sections 26-30)",
+      "sections30To34": "(Sections 30-34)",
+      "sections38To50": "(Sections 38-50)",
+      "skills": "Skills",
+      "waves": "Waves"
+    },
+    "chaptersHeading": "Chapters:",
     "chemistry16": {
       "chapterA": "Formulae & Equations",
       "chapterB": "Amount of Substance",
@@ -177,17 +192,12 @@
       "helpText": "The Isaac Physics Mastering Essential Pre-University Chemistry book",
       "title": "Mastering Essential Pre-University Chemistry"
     },
-    "coverAltText": "Cover of the book.",
     "gcse": {
       "ch1Subtitle": "(Sections 1-7)",
-      "ch1Title": "Skills",
       "ch2Subtitle": "(Sections 8-21)",
-      "ch2Title": "Mechanics",
       "ch3Subtitle": "(Sections 22-29)",
-      "ch3Title": "Electricity",
       "ch4Subtitle": "(Sections 30-37)",
       "ch4Title": "Energy",
-      "ch5Subtitle": "(Sections 38-50)",
       "ch5Title": "Waves and Optics",
       "ch6Subtitle": "(Sections 51-58)",
       "ch6Title": "Nuclear",
@@ -200,19 +210,15 @@
       "chapter1Subheading": "(Section 1)",
       "chapter1Title": "Solving Maths Problems",
       "chapter2Subheading": "(Sections 2-11)",
-      "chapter2Title": "Skills",
       "chapter3Subheading": "(Sections 12-22)",
       "chapter3Title": "Algebra",
       "chapter4Subheading": "(Sections 23-25)",
       "chapter4Title": "Linear Functions",
-      "chapter5Subheading": "(Sections 26-30)",
       "chapter5Title": "Quadratic Functions",
       "chapter6Subheading": "(Sections 31-32)",
       "chapter6Title": "Inequalities",
       "chapter7Subheading": "(Sections 33-37)",
       "chapter7Title": "Graphs",
-      "chapter8Subheading": "(Sections 38-50)",
-      "chapter8Title": "Geometry",
       "chapter9Subheading": "(Sections 51-57)",
       "chapter9Title": "Probability and Statistics",
       "pageHelp": "The Isaac Physics GCSE Mathematics book",
@@ -236,7 +242,6 @@
         "title": "Energy and Fields"
       },
       "chapter5": {
-        "subtitle": "(Sections 26-30)",
         "title": "Vectors, Forces and Fields"
       },
       "chapter6": {
@@ -258,12 +263,9 @@
       "chapterFields": "Fields",
       "chapterGases": "Gases",
       "chapterGeneralQuestions": "General Questions",
-      "chapterMechanicsA2": "Mechanics",
-      "chapterMechanicsAs": "Mechanics",
       "chapterModellingUniverse": "Modelling the Universe",
       "chapterNuclearPhysics": "Nuclear Physics",
       "chapterUncertainties": "Uncertainties",
-      "chapterWaves": "Waves",
       "helpText": "The Isaac Physics Mastering Essential Pre-University Physics book 3rd edition",
       "title": "Mastering Essential Pre-University Physics"
     },
@@ -273,33 +275,27 @@
       "chapter2Subheading": "(Sections E-F)",
       "chapter2Title": "Functions",
       "chapter3Subheading": "(Sections G-I)",
-      "chapter3Title": "Geometry",
       "chapter4Subheading": "(Sections J-L)",
       "chapter4Title": "Calculus",
       "chapter5Subheading": "(Sections M-T)",
       "chapter5Title": "Applications to Sciences",
-      "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book, 2nd edition.",
-      "title": "Pre-University Mathematics for Sciences"
+      "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book, 2nd edition."
     },
     "stepUpPhys": {
-      "chapter1SubHeading": "(Sections 1-15)",
-      "chapter1Title": "Force and Motion",
-      "chapter2SubHeading": "(Sections 16-23)",
-      "chapter2Title": "Electricity",
-      "chapter3SubHeading": "(Sections 24-29)",
-      "chapter3Title": "Energy and Balance",
-      "chapter4SubHeading": "(Sections 30-34)",
-      "chapter4Title": "Materials and Forces",
       "chapter5SubHeading": "(Sections 35-37)",
-      "chapter5Title": "Waves",
       "chapter6SubHeading": "(Sections 38-41)",
-      "chapter6Title": "Calculation Practice",
       "chapter7SubHeading": "(Sections 42-48)",
-      "chapter7Title": "Extra Questions",
-      "chaptersLabel": "Chapters:",
       "pageHelp": "The Isaac Physics Step Up to GCSE Physics book",
       "title": "Step Up to GCSE Physics"
     }
+  },
+  "button": {
+    "backToGroup": "Back to group assignments and tests",
+    "collapseSchedule": "Collapse schedule",
+    "createQuestionDeck": "Create a question deck",
+    "setNewAssignment": "Set a new assignment",
+    "upgradeAccount": "Upgrade my account",
+    "viewAllBooks": "View all books"
   },
   "clientError": {
     "notFound": {
@@ -319,27 +315,25 @@
   },
   "contact": {
     "events": {
-      "heading": "Upcoming events",
       "text": "If you'd like to find out more about our upcoming events, visit our <eventsLink>Events Page</eventsLink>"
     },
     "metaDescription": "Contact the Isaac team with questions, comments or feedback about our resources."
+  },
+  "error": {
+    "loadAssignments": "Error loading assignments and/or question decks",
+    "noGroupsToAssign": "You have not created any groups to assign work to. Please <createGroupLink>create a group here first.</createGroupLink>",
+    "verifyEmail": "Couldn't verify email address"
   },
   "events": {
     "book": {
       "bookEvent": "Book event"
     },
     "details": {
-      "availability": "Availability:",
-      "bookingDeadline": "Booking deadline:",
-      "breadcrumbTitle": "Event details",
-      "location": "Location:",
-      "pageTitle": "Events",
-      "when": "When:"
+      "availability": "Availability:"
     }
   },
   "footer": {
     "accessibilityLink": "Accessibility statement",
-    "cambridgeLogoAlt": "University of Cambridge website",
     "cookieLink": "Cookie policy",
     "licenseText": "All materials on this site are licensed under the  <creativeCommonsLink><u>Creative Commons license</u></creativeCommonsLink> unless stated otherwise.",
     "privacyLink": "Privacy policy",
@@ -460,9 +454,7 @@
     },
     "events": {
       "empty": "No events available. Check back soon!",
-      "error": "There was an error loading the events list. Please try again later!",
-      "moreLink": "More events",
-      "title": "Upcoming events"
+      "error": "There was an error loading the events list. Please try again later!"
     },
     "hero": {
       "description": "From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.",
@@ -487,14 +479,21 @@
       "title": "Explore and learn!"
     }
   },
-  "listViews": {
-    "footer": {
-      "exploreBySubject": "Explore by subject",
-      "socialLinks": "Follow us"
-    }
-  },
-  "markbook": {
-    "title": "Assignment progress"
+  "label": {
+    "assignedDate": "Assigned <strong>{{assignedDate}}</strong>",
+    "book": "Book",
+    "bookCoverAltText": "Cover of the book.",
+    "challenge": "Challenge",
+    "chemistry": "Chemistry",
+    "createGroupDescription": "Create and manage class groups, and share them with colleagues.",
+    "exploreBySubject": "Explore by subject",
+    "faqDescription": "Answers to your questions and how-to guides.",
+    "parts": "Parts",
+    "physics": "Physics",
+    "practice": "Practice",
+    "questionDecksDescription": "A selection of our questions organised by topic.",
+    "skillsMasteryBooksDescription": "Buy one of our Skills Mastery books at cost.",
+    "subject": "Subject"
   },
   "meta": {
     "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.",
@@ -505,64 +504,31 @@
     "admin": {
       "contentErrors": "Content Errors",
       "eventAdmin": "Event Admin",
-      "featureFlags": "Feature flags",
-      "staging": "Staging",
       "statistics": "Site Statistics",
-      "title": "Admin",
-      "tools": "Admin Tools",
-      "userManager": "User Manager"
+      "tools": "Admin Tools"
     },
     "books": "Books",
-    "concepts": "Concepts",
-    "events": {
-      "all": "Events",
-      "programmes": "Programmes",
-      "title": "Events"
-    },
     "explore": {
-      "stageTitle": "Explore by learning stage",
-      "subjectTitle": "Explore by subject"
+      "stageTitle": "Explore by learning stage"
     },
     "header": {
       "logoAlt": "The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text.",
-      "menuToggle": "Menu",
-      "skipToMainContent": "Skip to main content"
     },
     "help": {
       "contact": "Contact Us",
-      "glossary": "Glossary",
       "problemSolving": "Problem-solving guide",
-      "studentFaq": "Student FAQ",
-      "teacherFaq": "Teacher FAQ",
-      "title": "Help",
-      "tutorFaq": "Tutor FAQ"
+      "studentFaq": "Student FAQ"
     },
-    "home": "Home",
-    "news": "News",
     "profile": {
       "accountHeading": "ACCOUNT",
       "ariaTitle": "My Isaac ({{taskCount}} tasks to do)",
-      "assignmentProgress": "Assignment progress",
-      "bookmarks": "My bookmarks",
-      "createQuestionDeck": "Create a question deck",
-      "manageGroups": "Manage groups",
-      "myAccount": "My account",
-      "myAssignments": "My assignments",
-      "myProgress": "My progress",
-      "myTests": "My tests",
       "notLoggedIn": "You're not currently logged in. Log in or sign up for free below!",
-      "savedDecks": "My saved decks",
-      "setManageWork": "Set / manage work",
       "studentHeading": "STUDENT",
-      "teacherFeatures": "Teacher features",
-      "title": "My Isaac",
-      "tutorFeatures": "Tutor features"
+      "title": "My Isaac"
     },
-    "questionFinder": "Question finder",
     "quickSwitch": {
       "label": "Quick switch to"
-    },
-    "tests": "Tests"
+    }
   },
   "news": {
     "loadMoreButton": "Load older news",
@@ -576,17 +542,12 @@
     "bookQuestionLabel": "{{bookTitle}} questions",
     "charts": {
       "byDifficultyTitle": "By difficulty",
-      "noData": "No data",
-      "stageColumnHeader": "Stage",
-      "stageFilterLabel": "questions",
-      "subjectColumnHeader": "Subject",
       "subjectHeader": "Questions by {{subject}}"
     },
     "isaacBooksDescription": "Questions completed correctly, against questions attempted for each of our <booksLink>books</booksLink>.",
     "isaacBooksTitle": "Isaac Books",
     "pageTitle": "My progress",
     "partBreakdown": {
-      "partsWord": "Parts",
       "totalAttemptedLabel": "Total attempted",
       "totalCorrectLabel": "Total correct",
       "totalSubtitle": "(total)"
@@ -598,11 +559,6 @@
     },
     "streak": {
       "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/>Answer at least <strong>ten question parts</strong> correctly per week to fill up your daily progress bar and increase your streak!"
-    },
-    "table": {
-      "partsWord": "Parts",
-      "questionsWord": "Questions",
-      "totalSubtitle": "(total)"
     }
   },
   "questionFinder": {
@@ -619,26 +575,16 @@
     "filters": {
       "difficultyHelp": "Learn more about difficulty levels",
       "header": "Filter questions by",
-      "statusAllAttempted": "All attempted",
-      "statusAllAttemptedIcon": "All attempted",
-      "statusFullyCorrect": "Fully correct",
-      "statusFullyCorrectIcon": "Fully correct",
-      "statusInProgress": "In progress",
-      "statusInProgressIcon": "In Progress",
-      "statusNotStarted": "Not started",
-      "statusNotStartedIcon": "Not started"
+      "statusInProgressIcon": "In Progress"
     },
     "intro": "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
     "metaDescription": "Find physics, maths, chemistry and biology questions by topic and difficulty.",
     "pageHelp": "You can find a question by selecting the areas of interest, stage and difficulties.<br/>You can select more than one entry in each area.",
     "search": {
       "addSelectionsButton": "Add selections to question deck",
-      "bookLabel": "Book",
-      "bookPlaceholder": "None",
       "placeholder": "e.g. Man vs. Horse",
       "showBookmarked": "Show bookmarked only",
-      "showFastTrack": "Show FastTrack only",
-      "topicLabel": "Topic"
+      "showFastTrack": "Show FastTrack only"
     },
     "title": "Question finder"
   },
@@ -658,6 +604,12 @@
       }
     }
   },
+  "status": {
+    "allAttempted": "All attempted",
+    "alreadyHaveTeacherAccount": "You already have a teacher account",
+    "datePassed": "(passed)",
+    "fullyCorrect": "Fully correct"
+  },
   "support": {
     "student": {
       "metaDescription": "Find answers to your questions about Isaac Science in our FAQ for students."
@@ -668,12 +620,28 @@
   },
   "tests": {
     "feedback": {
-      "backToGroup": "Back to group assignments and tests",
       "overviewTitle": "Overview: {{quizTitle}}"
     },
     "pageTitle": "My tests",
     "set": {
       "title": "Set / manage tests"
     }
+  },
+  "title": {
+    "assignmentProgress": "Assignment progress",
+    "createGroup": "1. Create a group",
+    "myAccount": "My account",
+    "myAssignments": "My assignments",
+    "myBookmarks": "My bookmarks",
+    "mySavedDecks": "My saved decks",
+    "practiceTests": "Practice tests",
+    "preUniversityMathematicsForSciences": "Pre-University Mathematics for Sciences",
+    "programmes": "Programmes",
+    "setManageWork": "Set / manage work",
+    "teacherFaq": "Teacher FAQ",
+    "teacherFeatures": "Teacher features",
+    "tutorFaq": "Tutor FAQ",
+    "tutorFeatures": "Tutor features",
+    "upcomingEvents": "Upcoming events"
   }
 }

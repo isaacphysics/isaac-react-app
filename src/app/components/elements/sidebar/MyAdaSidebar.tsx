@@ -88,7 +88,7 @@ const AdaSidebarCollapser = ({collapsed, toggleSidebar, ...rest}: AdaSidebarColl
         className={classNames("bg-transparent d-flex justify-content-between align-items-center w-100 px-3 my-ada-tab", rest.className)}
         onClick={toggleSidebar}
     >
-        <b>{t("common:navigation.sidebar.brand")}</b>
+        <b>{t("common:title.myAda")}</b>
         <Spacer />
         <i className={classNames("icon icon-md", collapsed ? "icon-chevron-right" : "icon-chevron-left")} aria-hidden="true" />
     </button>;
@@ -107,7 +107,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const isOpen = useAppSelector(selectors.sidebar.open);
     const toggleSidebar = () => dispatch(sidebarSlice.actions.toggle());
 
-    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle={t("common:navigation.sidebar.brand")}>
+    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle={t("common:title.myAda")}>
         <div className="background-white" />
         <div className="sticky-top overflow-x-hidden">
             {fullSidebarLayout && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}

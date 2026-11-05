@@ -16,7 +16,7 @@ export const StudentChallenges = () => {
     const {isError} = useGetPageFragmentQuery(liveChallengeId);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:challenges.pageTitle")} />
+        <TitleAndBreadcrumb currentPageTitle={t("ada:title.studentChallenges")} />
         <Row>
             <Col lg={{size: 8, offset: 2}}>
                 <PageFragment fragmentId={"student_challenges_intro"} />
@@ -27,7 +27,7 @@ export const StudentChallenges = () => {
                         {userPreferences?.EMAIL_PREFERENCE?.EVENTS ?
                             <IconCard
                                 card={{
-                                    title: t("common:challenges.emptyState.subscribedTitle"),
+                                    title: t("ada:title.nextChallenge"),
                                     icon: {name: "icon-events", color: "tertiary"},
                                     bodyText: t("common:challenges.emptyState.subscribedMessage"),
                                 }}
@@ -36,7 +36,7 @@ export const StudentChallenges = () => {
                             :
                             <IconCard
                                 card={{
-                                    title: t("common:challenges.emptyState.unsubscribedTitle"),
+                                    title: t("ada:title.nextChallenge"),
                                     icon: {name: "icon-events", color: "tertiary"},
                                     bodyText: t("common:challenges.emptyState.unsubscribedMessage"),
                                     clickUrl: "/account#notifications",

@@ -58,7 +58,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="admin-page">
         <TitleAndBreadcrumb
-            currentPageTitle={t("common:admin.title", { siteTitle: SITE_TITLE_SHORT })} breadcrumbTitleOverride={t("common:admin.breadcrumbTitle")}
+            currentPageTitle={t("common:admin.title", { siteTitle: SITE_TITLE_SHORT })} breadcrumbTitleOverride={t("common:title.adminTools")}
             icon={{"type": "icon", "icon": "icon-account"}}
         />
 
@@ -70,10 +70,10 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                 <CardTitle tag="h2">{t("common:admin.usefulLinks.title")}</CardTitle>
                 <ListGroup className="flex-row border-0">
                     <ListGroupItem className="w-auto border-0"><Link to="/admin/usermanager">{t("common:admin.usefulLinks.userManager")}</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto border-0"><Link to="/admin/emails">{t("common:admin.usefulLinks.adminEmails")}</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/admin/emails">{t("common:title.adminEmails")}</Link></ListGroupItem>
                     <ListGroupItem className="w-auto border-0"><Link to="/equality">{t("common:admin.usefulLinks.equationBuilder")}</Link></ListGroupItem>
                     <ListGroupItem className="w-auto border-0"><Link to="/free_text">{t("common:admin.usefulLinks.freeTextBuilder")}</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto border-0"><Link to="/markdown">{t("common:admin.usefulLinks.markdownBuilder")}</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/markdown">{t("common:title.markdownBuilder")}</Link></ListGroupItem>
                 </ListGroup>
             </Card>
 

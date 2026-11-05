@@ -14,9 +14,9 @@ export const RaspberryPiSignInButton = ({isSignup, knownRole, concise}: {isSignu
         <img className="authenticator-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={t("common:auth.raspberryPi.logoAlt")}/>
         {
             concise ?
-                <div className={"d-inline"}>{t("common:auth.raspberryPi.conciseLabel")}</div> :
+                <div className={"d-inline"}>{t("common:label.raspberryPi")}</div> :
                 <div className={"d-inline"}>
-                    <div className={"d-inline d-md-none"}>{t("common:auth.raspberryPi.fullLabelMobile")}</div>
+                    <div className={"d-inline d-md-none"}>{t("common:label.raspberryPi")}</div>
                     <div className={"d-none d-md-inline"}>{t("common:auth.raspberryPi.fullLabelDesktop")}</div>
                 </div>
         }

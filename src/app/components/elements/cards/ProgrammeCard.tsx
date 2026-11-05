@@ -60,7 +60,7 @@ export const ProgrammeCard = ({ programme, ...rest}: ProgrammeCardProps) => {
             <Spacer/>
             <CardText>
                 <Link aria-label={t("common:cards.readMoreAria", { title })} className="focus-target btn btn-keyline" to={`${url}`}>
-                    {t("common:cards.readMore")}
+                    {t("common:button.readMore")}
                 </Link>
             </CardText>
         </CardBody>

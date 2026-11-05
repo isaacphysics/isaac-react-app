@@ -21,7 +21,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
     return <>
         <IconButton 
             id="bookmark-button"
-            aria-label={isBookmarked(doc.id) ? t("common:bookmarks.removeAriaLabel") : t("common:bookmarks.addAriaLabel")}
+            aria-label={isBookmarked(doc.id) ? t("common:button.removeBookmark") : t("common:button.addBookmark")}
             icon={classNames("icon-bookmark", "icon-color-black-hoverable", {"fill": isQuestionBookmarked})} 
             color="tint"
             data-bs-theme="neutral"

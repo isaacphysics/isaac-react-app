@@ -14,10 +14,10 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
     const { titleFilter, setTitleFilter, ...rest } = props;
     const deviceSize = useDeviceSize();
 
-    return <ContentSidebar buttonTitle={t("common:tests.search.title")} {...rest}>
+    return <ContentSidebar buttonTitle={t("common:title.searchTests")} {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h3 className="h5">{t("common:tests.search.title")}</h3>
+            <h3 className="h5">{t("common:title.searchTests")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 id="available-quizzes-title-filter" type="search"

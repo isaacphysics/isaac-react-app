@@ -509,7 +509,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onClick={close}
             onKeyUp={close}
         >
-            {t("common:inequality.confirmButton")}
+            {t("common:button.ok")}
         </div>
         <Markup encoding={"latex"} className={classNames("d-block inequality-ui katex-preview", previewTexString === "" ? "empty" : "")}>
             {previewTexString ? "$" + previewTexString + "$" : undefined}
@@ -536,13 +536,13 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onClick={showHelpModal}
             onKeyUp={showHelpModal}
         >
-            {t("common:inequality.helpButton")}
+            {t("common:button.help")}
         </div>
 
         <div id="inequality-reset" className="inequality-ui reset button"
             role="button" tabIndex={-1} onClick={resetToInitialState} onKeyUp={resetToInitialState}
         >
-            {t("common:inequality.resetButton")}
+            {t("common:button.reset")}
         </div>
         <div id="inequality-trash" className={"inequality-ui trash button trash-with-reset"}>{t("common:inequality.trashButton")}</div>
 

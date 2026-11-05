@@ -107,7 +107,7 @@ const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgr
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
             {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
                 <i className="icon icon-arrow-left me-2"/>
-                {t("sci:assignments.progress.backToGroup")}
+                {t("sci:button.backToGroup")}
             </Link>}
             {isPhy && <Spacer/>}
             <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentProgressCSVDownloadLink(assignment.id))))}>

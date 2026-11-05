@@ -33,53 +33,53 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         <DropdownToggle className="bg-transparent border-0 px-2" color="dropdown" caret>{dateFilterType}</DropdownToggle>
         <DropdownMenu>
             <DropdownItem onClick={() => setDateFilterType('after')}>
-                {t("common:tests.filters.dateAfter")}
+                {t("ada:tests.filters.after")}
             </DropdownItem>
             <DropdownItem onClick={() => setDateFilterType('before')}>
-                {t("common:tests.filters.dateBefore")}
+                {t("ada:tests.filters.before")}
             </DropdownItem>
             <DropdownItem onClick={() => setDateFilterType('on')}>
-                {t("common:tests.filters.dateOn")}
+                {t("ada:tests.filters.on")}
             </DropdownItem>
         </DropdownMenu>
     </UncontrolledDropdown>;
 
-    return <ContentSidebar buttonTitle={t("common:tests.sidebar.title")} {...rest}>
+    return <ContentSidebar buttonTitle={t("common:button.searchAndFilter")} {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h3 className="h5">{t("common:tests.filters.searchTitleLabel")}</h3>
+            <h3 className="h5">{t("common:title.searchTests")}</h3>
             <SearchInputWithIcon
                 outerClassName="mt-3 mb-4"
                 id="manage-quizzes-title-filter" type="search"
                 value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-                placeholder={t("common:tests.search.placeholder")} aria-label={t("common:tests.filters.searchTitleAriaLabel")}
+                placeholder={t("common:tests.search.placeholder")} aria-label={t("common:label.searchByTitle")}
             />
             <h3 className="h5">{t("common:tests.filters.searchGroupLabel")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 id="manage-quizzes-group-name-filter" type="search"
                 value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-                placeholder={t("common:tests.filters.searchGroupPlaceholder")}  aria-label={t("common:tests.filters.searchGroupLabel")}
+                placeholder={t("common:label.groupName")}  aria-label={t("common:tests.filters.searchGroupLabel")}
             />
             <div className="section-divider"/>
             <h3 className="h5">{t("common:tests.filters.dateSectionTitle")}</h3>
             <div className="d-flex align-items-center">
-                <span className="quiz-filter-date-span">{t("common:tests.filters.startDateLabel")}</span>
+                <span className="quiz-filter-date-span">{t("ada:tests.filters.startDateLabel")}</span>
                 {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
             </div>
             <Input
                 id="manage-quizzes-set-date-filter" type="date" className="quiz-filter-date-input"
                 value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
-                placeholder={t("common:tests.filters.startDateFilter")} aria-label={t("common:tests.filters.startDateFilter")}
+                placeholder={t("ada:tests.filters.filterBySetDate")} aria-label={t("ada:tests.filters.filterBySetDate")}
             />
             <div className="d-flex align-items-center mt-2">
-                <span className="quiz-filter-date-span">{t("common:tests.filters.dueDateLabel")}</span>
+                <span className="quiz-filter-date-span">{t("ada:tests.filters.dueDateLabel")}</span>
                 {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
             </div>
             <Input
                 id="manage-quizzes-due-date-filter" type="date" className="quiz-filter-date-input"
                 value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
-                placeholder={t("common:tests.filters.dueDateFilter")} aria-label={t("common:tests.filters.dueDateFilter")}
+                placeholder={t("ada:tests.filters.filterByDueDate")} aria-label={t("ada:tests.filters.filterByDueDate")}
             />
         </search>
     </ContentSidebar>;

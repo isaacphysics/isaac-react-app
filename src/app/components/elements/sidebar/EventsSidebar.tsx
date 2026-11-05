@@ -49,7 +49,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">{t("common:events.sidebar.groupsLabel")}</h3>
+            <h3 className="mb-3 h5">{t("common:table.groups")}</h3>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li key={typeValue}>

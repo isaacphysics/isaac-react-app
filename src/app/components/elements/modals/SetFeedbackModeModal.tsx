@@ -38,7 +38,7 @@ const SetFeedbackModeModalBody = ({quiz}: SetFeedbackModeModalProps) => {
             {t("common:assignments.feedbackMode.description")}
         </p>
         <Label for="feedbackMode" className="me-2">
-            {t("common:assignments.feedbackMode.label")}
+            {t("common:label.feedbackMode")}
         </Label>
         <UncontrolledButtonDropdown size="sm">
             <DropdownToggle color={"tint"} caret size={"sm"} disabled={isUpdatingQuiz}>

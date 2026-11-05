@@ -33,7 +33,7 @@ export const numericInputValidator = (input: string) => {
     const usedBadChars = [...input.matchAll(badCharacters)];
     const uniqueBadChars = [...new Set(usedBadChars.map(match => match[0] === ' ' ? 'space' : match[0]))].join(" ");
     if (usedBadChars.length > 0) {
-        errors.push(i18next.t("common:questions.numeric.invalidCharacters", { badCharacters: uniqueBadChars }));
+        errors.push(i18next.t("common:error.invalidCharacters", { badCharacters: uniqueBadChars }));
     }
     if (missingExponentSymbol.test(input)) {
         errors.push(i18next.t("common:questions.numeric.exponentSymbol"));
@@ -118,7 +118,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
             <Row className="no-print">
                 <Col xs={12} className="d-flex flex-column flex-md-row">
                     <div className="d-flex flex-column numeric-value w-100 w-md-50 mb-2">
-                        {t("common:questions.numeric.valueLabel")}
+                        {t("common:label.value")}
                         <InputGroup className={"feedback-zone nq-feedback separate-input-group flex-grow-1 align-items-center"}>
                             <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                 onChange={e => {
@@ -134,7 +134,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         </InputGroup>
                     </div>
                     {(doc.requireUnits || doc.displayUnit) && <div className="d-flex flex-column unit-selection ps-md-7 w-100 w-md-50 mb-2">
-                        {t("common:questions.numeric.unitLabel")}
+                        {t("common:label.unit")}
                         <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                             <DropdownToggle
                                 disabled={readonly || !noDisplayUnit}

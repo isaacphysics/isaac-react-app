@@ -147,7 +147,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, {eventId}) => [{type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.selfBooking.book.errorTitle"),
+                errorTitle: () => i18next.t("common:error.eventBookingFailed"),
                 successTitle: () => i18next.t("common:events.selfBooking.book.successTitle"),
                 successMessage: () => i18next.t("common:events.selfBooking.book.successMessage"),
             })
@@ -164,12 +164,12 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, {eventId}) => [{type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.selfBooking.waitingList.errorTitle"),
+                errorTitle: () => i18next.t("common:error.eventBookingFailed"),
                 successTitle: ({waitingListOnly}) => waitingListOnly
                     ? i18next.t("common:events.selfBooking.waitingList.requestReceivedTitle")
                     : i18next.t("common:events.selfBooking.waitingList.confirmedTitle"),
                 successMessage: ({waitingListOnly}) => waitingListOnly
-                    ? i18next.t("common:events.selfBooking.waitingList.requestReceivedMessage")
+                    ? i18next.t("common:status.requestedPlace")
                     : i18next.t("common:events.selfBooking.waitingList.confirmedMessage"),
             })
         }),

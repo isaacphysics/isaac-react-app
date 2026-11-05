@@ -32,14 +32,14 @@ export const HomepageCS = () => {
 
                         <div className="logo-grid mx-3">
                             <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                <img src="/assets/common/logos/university_of_cambridge.svg" alt={t("ada:homepage.hero.cambridgeAlt")} className='img-fluid footer-org-logo' data-site="uoc" />
+                                <img src="/assets/common/logos/university_of_cambridge.svg" alt={t("common:label.cambridgeUniversity")} className='img-fluid footer-org-logo' data-site="uoc" />
                             </a>
                             <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt={t("ada:homepage.hero.raspberryPiAlt")} className='img-fluid footer-org-logo' data-site="rpf" />
+                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt={t("ada:label.raspberryPiWebsite")} className='img-fluid footer-org-logo' data-site="rpf" />
                             </a>
                             <span>{t("ada:homepage.hero.collaborationLabel")}</span>
-                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:homepage.hero.ukGovAltText")} className='img-fluid' data-site="ukgovt" />
-                            <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:homepage.hero.techFirstAltText")} className='img-fluid' data-site="techfirst" />
+                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:label.fundedByUkGovernment")} className='img-fluid' data-site="ukgovt" />
+                            <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:label.techFirstLogo")} className='img-fluid' data-site="techfirst" />
                         </div>
                         <div>
                             {isLoggedIn(user) && isTeacherOrAbove(user) &&
@@ -130,7 +130,7 @@ export const HomepageCS = () => {
                             <h2 className={"font-size-1-75"}>
                                 {t("ada:homepage.testimonials.studentQuote")}
                             </h2>
-                            <span>{t("ada:homepage.testimonials.studentAttribution")}</span>
+                            <span>{t("ada:label.computerScienceStudentTestimonial")}</span>
                         </TextBlock>
                     </ColumnSlice>
                 </Container>
@@ -184,7 +184,7 @@ export const HomepageCS = () => {
                                 <p>{t("ada:homepage.account.benefits")}</p>
                                 <p>{t("ada:homepage.account.free")}</p>
                             </div>
-                            <Button className={"mt-3"} color={"primary"} tag={Link} to={"/register"}>{t("ada:homepage.account.createButton")}</Button>
+                            <Button className={"mt-3"} color={"primary"} tag={Link} to={"/register"}>{t("common:button.createAccount")}</Button>
                         </TextBlock>
                         <ImageBlock>
                             <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/tools-slice.svg" alt=""/>
@@ -203,19 +203,19 @@ export const HomepageCS = () => {
                 <Container className="homepage-padding mw-1600" fluid>
                     <ColumnSlice breakpoint="lg" reverseUnderBreakpoint>
                         <ImageBlock>
-                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt={t("ada:homepage.techfirst.cyberCityAltText")}/>
+                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/cyber-explorers.svg" alt={t("ada:cyberExplorers.welcome.imageAlt")}/>
                         </ImageBlock>
                         <TextBlock className="text-white">
                             <h2 className={"font-size-2"}>{t("ada:homepage.techfirst.title")}</h2>
                             <p>{t("ada:homepage.techfirst.partnershipDescription")}</p>
                             <p>{t("ada:homepage.techfirst.contentDescription")}</p>
                             <div className="d-flex column-gap-3 flex-column flex-md-row">
-                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/techfirst"}>{t("ada:homepage.techfirst.readMoreButton")}</Button>
+                                <Button className={"mt-3"} color={"dark-primary"} tag={Link} to={"/techfirst"}>{t("common:button.readMore")}</Button>
                                 <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>{t("ada:homepage.techfirst.exploreTopicsButton")}</Button>
                             </div>
                             <div className="d-flex gap-4 mt-4 mb-6 mt-lg-6 mb-lg-0">
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:homepage.hero.ukGovAltText")} className='img-fluid' />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:homepage.hero.techFirstAltText")} className='img-fluid' />
+                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:label.fundedByUkGovernment")} className='img-fluid' />
+                                <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:label.techFirstLogo")} className='img-fluid' />
                             </div>
                         </TextBlock>
                     </ColumnSlice>

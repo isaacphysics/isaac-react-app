@@ -66,7 +66,7 @@ const FindDeckButtons = () => {
                     void dispatch(closeActiveModal());
                     void dispatch(openIsaacBooksModal());
                 }} block color="keyline" className="px-3">
-                    {t("common:assignments.manage.findOurBooks")}
+                    {t("common:button.ourBooks")}
                 </Button>
             </Col>
             <Col>
@@ -110,7 +110,7 @@ const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: numbe
         <div 
             tabIndex={0} 
             role={"button"} 
-            aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.manage.timeline.listForGroup", { groupName })} 
+            aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.manage.timeline.listForGroup", { groupName })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -175,7 +175,7 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
 
     return <>
         <div 
-            tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForDay", { date })} 
+            tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.timeline.listForDay", { date })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -236,7 +236,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
             className={"month-label w-100 text-end d-flex"} data-testid="month-label" onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -434,13 +434,13 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
     const dispatch = useAppDispatch();
 
     const setNewAssignmentModal = () : ActiveModalProps => ({
-        title: i18next.t("common:assignments.manage.modalTitle"),
+        title: i18next.t("sci:button.setNewAssignment"),
         body: <FindDeckButtons />
     });
 
     return <PageContainer className="mb-7"
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={i18next.t("common:assignments.manage.pageTitle")} icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
+            <TitleAndBreadcrumb currentPageTitle={i18next.t("sci:title.setManageWork")} icon={{type: "icon", icon: "icon-events"}} help={pageHelp}/>
         }
         sidebar={
             <ManageAssignmentsSidebar
@@ -464,7 +464,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
             <PageFragment fragmentId={"help_toptext_manage_assignments"} ifNotFound={RenderNothing} />
         </PageMetadata>
         <ShowLoadingQuery
-            defaultErrorTitle={i18next.t("common:assignments.manage.errorLoading")}
+            defaultErrorTitle={i18next.t("sci:error.loadAssignments")}
             query={isTeacherOrAbove(user) 
                 ? combineQueries(assignmentsSetByMeQuery, testsSetByMeQuery, () => []) 
                 : assignmentsSetByMeQuery
@@ -477,7 +477,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                         <CardBody>
                             <Row className={classNames("row-cols-1", { "row-cols-md-2": isTeacherOrAbove(user) })}>
                                 <Col>
-                                    <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><div className="mb-0 h5">{i18next.t("common:assignments.manage.setNewButton")}</div></Button>
+                                    <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><div className="mb-0 h5">{i18next.t("sci:button.setNewAssignment")}</div></Button>
                                 </Col>
                                 {isTeacherOrAbove(user) && <Col>
                                     <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><div className="mb-0 h5">{i18next.t("common:assignments.manage.setNewTestButton")}</div></Button>
@@ -487,7 +487,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
 
                             {/* Groups-related alerts */}
                             {groups && groups.length === 0 && <div className="mt-1">
-                                <Trans i18nKey="common:assignments.manage.noGroups" components={{ createGroupLink: <Link to="/groups" /> }} />
+                                <Trans i18nKey="sci:error.noGroupsToAssign" components={{ createGroupLink: <Link to="/groups" /> }} />
                             </div>}
                             {groups && groups.length > 0 && someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
                                 {i18next.t("common:assignments.manage.noMatchingWork")}

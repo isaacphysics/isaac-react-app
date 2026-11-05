@@ -17,7 +17,7 @@ interface NameInputProps {
 export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
     const { t } = useTranslation();
     return <FormGroup className={`form-group ${className}`}>
-        <Label htmlFor="family-name-input" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t("common:form.lastNameLabel")}</Label>
+        <Label htmlFor="family-name-input" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t("common:label.lastName")}</Label>
         <Input
             id="family-name-input"
             type="text"
@@ -30,7 +30,7 @@ export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameV
             aria-describedby="familyNameValidationMessage"
         />
         <FormFeedback id="familyNameValidationMessage">
-            {t("common:account.nameInput.invalidNameMessage")}
+            {t("common:error.validName")}
         </FormFeedback>
     </FormGroup>;
 };
@@ -39,7 +39,7 @@ export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameVa
     const { t } = useTranslation();
     return <FormGroup className={`form-group ${className}`}>
         <Label className={classNames("fw-bold", (required ? "form-required" : "form-optional"))} htmlFor="given-name-input">
-            {t("common:form.firstNameLabel")}
+            {t("common:label.firstName")}
         </Label>
         <Input
             id="given-name-input"
@@ -53,7 +53,7 @@ export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameVa
             aria-describedby="givenNameValidationMessage"
         />
         <FormFeedback id="givenNameValidationMessage">
-            {t("common:account.nameInput.invalidNameMessage")}
+            {t("common:error.validName")}
         </FormFeedback>
     </FormGroup>;
 };

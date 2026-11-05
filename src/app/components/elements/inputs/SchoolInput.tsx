@@ -112,7 +112,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <FormGroup className={`school mb-4 ${className} `}>
-        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t("common:account.school.label")}</Label>
+        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t("common:label.school")}</Label>
         <p className="d-block input-description">
             {t("site:account.school.description")}
         </p>

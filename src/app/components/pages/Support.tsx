@@ -160,7 +160,7 @@ export const Support = () => {
         {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
         {siteSpecific(
             <>
-                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText={t("common:support.selectTopicButton")}/>
+                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText={t("common:button.selectTopic")}/>
                 <TabContent activeTab={categoryIndex}>
                     {Object.values(section.categories).map((category, index) => 
                         <TabPane key={index} tabId={index}>

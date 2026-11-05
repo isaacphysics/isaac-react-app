@@ -28,8 +28,8 @@ const GroupJoinPanel = () => {
     }
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">{t("common:dashboard.groupJoin.title")}</h2>
-        {t("common:dashboard.groupJoin.description")}
+        <h2 className="panel-title">{t("common:button.joinGroup")}</h2>
+        {t("common:connections.connect.codeInstruction")}
         <InputGroup className="my-4 separate-input-group">
             <Input
                 type="text" placeholder={t("common:dashboard.groupJoin.placeholder")}
@@ -39,7 +39,7 @@ const GroupJoinPanel = () => {
                 }}}
             />
             <Button onClick={processToken} color="solid">
-                {t("common:dashboard.groupJoin.connectButton")}
+                {t("common:button.connect")}
             </Button>
         </InputGroup>
         <Spacer/>
@@ -140,7 +140,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             </div>
             <Spacer/>
             <div className="d-flex text-nowrap">
-                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">{t("common:dashboard.currentWork.overdue")}</span> : <span className="me-3">{t("common:dashboard.currentWork.dueDate", { dueLabel: getFriendlyDaysUntil(dueDate) })}</span>)}
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">{t("common:status.overdue")}</span> : <span className="me-3">{t("common:dashboard.currentWork.dueDate", { dueLabel: getFriendlyDaysUntil(dueDate) })}</span>)}
                 <span className="group-name">{groupName}</span>
             </div>
         </Card>
@@ -201,22 +201,22 @@ const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
         <h2 className="panel-title">{t("common:dashboard.myIsaac.title")}</h2>
         <div className="d-flex flex-column">
             <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
-                {t("common:dashboard.myIsaac.savedDecks")}
+                {t("sci:title.mySavedDecks")}
             </Link>
             <Link to="/assignments" className="panel-my-isaac-link">
-                {t("common:dashboard.myIsaac.assignments")}
+                {t("sci:title.myAssignments")}
                 {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
             </Link>
             <Link to="/progress" className="panel-my-isaac-link">
-                {t("common:dashboard.myIsaac.progress")}
+                {t("common:title.myProgress")}
             </Link>
             <Link to="/tests" className="panel-my-isaac-link">
-                {t("common:dashboard.myIsaac.tests")}
+                {t("common:title.myTests")}
                 {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
             </Link>
             <div className="section-divider"/>
             <Link to="/account" className="panel-my-isaac-link">
-                {t("common:dashboard.myIsaac.account")}
+                {t("sci:title.myAccount")}
             </Link>
         </div>
     </div>; 

@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 export const BooksOverviewSidebar = (props: ContentSidebarProps) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    return <ContentSidebar buttonTitle={t("common:books.overview.viewAll")} {...props}>
+    return <ContentSidebar buttonTitle={t("sci:button.viewAllBooks")} {...props}>
         <div className="section-divider"/>
         <h3 className="h5">{t("common:books.overview.title")}</h3>
         <ul>

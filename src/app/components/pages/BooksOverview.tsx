@@ -39,7 +39,7 @@ export const BooksOverview = () => {
             undefined
         )}
     >
-        <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText={t("common:books.overview.sidebarButton")}/>
+        <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText={t("sci:button.viewAllBooks")}/>
         <PageFragment fragmentId="books_overview_fragment" />
 
         <h3>{t("common:books.overview.exploreTitle")}</h3>

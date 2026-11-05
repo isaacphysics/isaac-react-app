@@ -95,7 +95,7 @@ export const Search = () => {
 
     return (
         <Container id="search-page">
-            <TitleAndBreadcrumb currentPageTitle={t("common:search.page.title")} icon={{type: "icon", icon: "icon-finder"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:title.search")} icon={{type: "icon", icon: "icon-finder"}} />
             <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={decodeURIComponent(urlQuery ?? "")} onSearch={setQueryState} />
             <Card className="my-4">
                 <CardHeader className="search-header p-3">
@@ -135,7 +135,7 @@ export const Search = () => {
                             const shortcutAndFilteredSearchResults = shortcutAndFilterResults(results);
                             return shortcutAndFilteredSearchResults.length > 0
                                 ? <ListView type="item" items={shortcutAndFilteredSearchResults} hasCaret={isAda}/>
-                                : <div className={classNames({"p-4": isAda})}><em>{t("common:search.results.empty")}</em></div>;
+                                : <div className={classNames({"p-4": isAda})}><em>{t("common:status.noResults")}</em></div>;
                         }}
                     />
                 </CardBody>}

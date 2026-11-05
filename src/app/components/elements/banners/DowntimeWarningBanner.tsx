@@ -12,7 +12,7 @@ const DowntimeWarningBannerBody = () => {
         <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
             <div className="d-flex align-items-center justify-content-center gap-2">
                 <i className="icon icon-warning icon-sm icon-color-black" aria-hidden="true" />
-                <span id="research-heading" className="d-inline-block d-sm-none h3">{t("common:banners.downtime.heading")}</span>
+                <span id="research-heading" className="d-inline-block d-sm-none h3">{t("common:title.research")}</span>
             </div>
         </Col>
         <Col xs={12} sm={siteSpecific(10, 11)} md={11}>

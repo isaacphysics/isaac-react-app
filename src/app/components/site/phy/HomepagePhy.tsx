@@ -211,8 +211,8 @@ export const HomepagePhy = () => {
                     <Row className="mt-7 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h2>{t("sci:homepage.events.title")}</h2>
-                                <Link to="/events" className="news-events-link">{t("sci:homepage.events.moreLink")}</Link>
+                                <h2>{t("sci:title.upcomingEvents")}</h2>
+                                <Link to="/events" className="news-events-link">{t("common:button.seeMoreEvents")}</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>
                             <ShowLoadingQuery

@@ -106,7 +106,7 @@ export const TutorRequest = () => {
                                         {t("common:account.tutorRequest.submittedThanks")}
                                     </p>
                                     <p>
-                                        {t("common:account.tutorRequest.submittedNote")}
+                                        {t("common:label.accountVerificationNote")}
                                     </p>
                                 </Col>
                             </Row>
@@ -123,7 +123,7 @@ export const TutorRequest = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">{t("common:form.firstNameLabel")}</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:label.firstName")}</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user?.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -131,7 +131,7 @@ export const TutorRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">{t("common:form.lastNameLabel")}</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:label.lastName")}</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user?.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -141,7 +141,7 @@ export const TutorRequest = () => {
                                     <Row>
                                         <Col size={12} md={isPhy ? 6 : undefined}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">{t("common:form.emailLabel")}</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:label.emailAddress")}</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user?.loggedIn ? user.email : ""}
@@ -151,10 +151,10 @@ export const TutorRequest = () => {
                                         </Col>
                                         {isPhy && <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="subject-input">{t("common:account.tutorRequest.subjectsLabel")}</Label>
+                                                <Label htmlFor="subject-input">{t("common:label.subjects")}</Label>
                                                 <StyledSelect
                                                     inputId="subject-input"
-                                                    placeholder={t("common:account.tutorRequest.subjectsPlaceholder")}
+                                                    placeholder={t("common:label.all")}
                                                     isClearable
                                                     isMulti
                                                     onChange={selectOnChange(setSubjects, true)}

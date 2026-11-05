@@ -73,7 +73,7 @@ export const formatAvailabilityMessage = (event: AugmentedEvent) => {
 
 export const formatWaitingListBookingStatusMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {
-        return i18next.t("common:events.status.requestedPlace");
+        return i18next.t("common:status.requestedPlace");
     }
     return i18next.t("common:events.status.onWaitingList");
 };
@@ -89,7 +89,7 @@ export const formatMakeBookingButtonMessage = (event: AugmentedEvent) => {
         return i18next.t("common:events.book.joinWaitingList");
     }
     if (isAda) {
-        return i18next.t("ada:events.book.bookPlace");
+        return i18next.t("common:button.bookPlace");
     }
     return i18next.t("sci:events.book.bookEvent");
 };
@@ -116,7 +116,7 @@ export const formatManageBookingActionButtonMessage = (event: AugmentedEvent) =>
     if (zeroOrLess(event.placesAvailable)) {
         return i18next.t("common:events.manage.addToWaitingList");
     }
-    return i18next.t("common:events.manage.bookPlace");
+    return i18next.t("common:button.bookPlace");
 };
 
 export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanMakeEventBooking?: boolean) => {

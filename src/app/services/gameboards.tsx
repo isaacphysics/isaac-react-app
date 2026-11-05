@@ -37,7 +37,7 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (user && (user.id == board.ownerUserId)) {
         return "Me";
     }
-    return i18next.t("common:gameboard.owner.other");
+    return i18next.t("common:label.someoneElse");
 }
 
 export function boardCompletionSelection(board: GameboardDTO, boardCompletion: BoardCompletions) {

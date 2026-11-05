@@ -75,7 +75,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     />
                     <p id="llm-helptext"> 
                         {t("common:account.betaFeatures.openAiHelp")}
-                        {isAda && <><Trans i18nKey="ada:account.betaFeatures.openAiFaq" components={{ faqLink: <Link to="/support/student/general#llm_questions" target="_blank" /> }} /></>}
+                        {isAda && <>{" "}<Trans i18nKey="ada:label.faqMoreInfo" components={{ faqLink: <Link to="/support/student/general#llm_questions" target="_blank" /> }} /></>}
                     </p>
                 </WithLinkableSetting>
             </>}

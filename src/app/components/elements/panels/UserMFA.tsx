@@ -98,7 +98,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
                                         <FormGroup className="form-group">
                                             <p><Trans i18nKey="common:account.mfa.stepTwo" components={{ strong: <strong /> }} /></p>
-                                            <Label htmlFor="setup-verification-code">{t("common:account.mfa.verificationCodeLabel")}</Label>
+                                            <Label htmlFor="setup-verification-code">{t("common:label.verificationCode")}</Label>
                                             <Input
                                                 id="setup-verification-code" type="text" name="setup-verification-code"
                                                 value={mfaVerificationCode || ""}

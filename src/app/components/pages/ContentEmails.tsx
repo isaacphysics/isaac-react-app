@@ -48,9 +48,9 @@ const ContentEmails = () => {
         <TitleAndBreadcrumb currentPageTitle={t("common:admin.contentEmails.title")} icon={{type: "icon", icon: "icon-mail"}} />
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.contentEmails.userSelection.title")}</CardTitle>
+            <CardTitle tag="h2">{t("common:title.userSelection")}</CardTitle>
             <CardBody>
-                <Label>{t("common:admin.contentEmails.userSelection.label")}</Label>
+                <Label>{t("common:label.userSelectionDescription")}</Label>
                 <Input
                     id="email-user-ids-input"
                     type = "textarea"
@@ -63,9 +63,9 @@ const ContentEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.contentEmails.subject.title")}</CardTitle>
+            <CardTitle tag="h2">{t("common:label.emailSubject")}</CardTitle>
             <CardBody>
-                <Label>{t("common:admin.contentEmails.subject.label")}</Label>
+                <Label>{t("common:label.emailSubject")}</Label>
                 <Input
                     id="email-subject-input" type="text" value={emailSubject}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,21 +107,21 @@ const ContentEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.contentEmails.type.title")}</CardTitle>
+            <CardTitle tag="h2">{t("common:label.emailType")}</CardTitle>
             <CardBody>
-                <Label>{t("common:admin.contentEmails.type.label")}</Label>
-                <p>{t("common:admin.contentEmails.type.optOutNote")}</p>
+                <Label>{t("common:label.emailTypeDescription")}</Label>
+                <p>{t("common:label.emailOptOutNote")}</p>
                 <Input
                     id="email-type-input" type="select" value={emailType}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEmailType(e.target.value);
                     }}
                 >
-                    <option value="null">{t("common:admin.contentEmails.type.selectPlaceholder")}</option>
-                    <option value="ASSIGNMENTS">{t("common:admin.contentEmails.type.assignments")}</option>
-                    <option value="NEWS_AND_UPDATES">{t("common:admin.contentEmails.type.newsUpdates")}</option>
-                    <option value="EVENTS">{t("common:admin.contentEmails.type.events")}</option>
-                    <option value="ADMIN">{t("common:admin.contentEmails.type.adminUrgent")}</option>
+                    <option value="null">{t("common:label.makeSelection")}</option>
+                    <option value="ASSIGNMENTS">{t("common:label.assignments")}</option>
+                    <option value="NEWS_AND_UPDATES">{t("common:label.emailTypeNewsUpdates")}</option>
+                    <option value="EVENTS">{t("common:title.events")}</option>
+                    <option value="ADMIN">{t("common:label.emailTypeAdminUrgent")}</option>
                 </Input>
             </CardBody>
         </Card>
@@ -159,10 +159,10 @@ const ContentEmails = () => {
                                         void sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
                                     }
                                 }}
-                            >{t("common:admin.contentEmails.sendButton")}</Button>
+                            >{t("common:button.sendEmails")}</Button>
                         </React.Fragment>
                         :
-                        <React.Fragment>{t("common:admin.contentEmails.sentMessage")}</React.Fragment>
+                        <React.Fragment>{t("common:status.emailRequestMade")}</React.Fragment>
                     }
                 </div>
             </CardBody>

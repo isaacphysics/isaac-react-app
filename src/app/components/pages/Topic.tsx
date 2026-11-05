@@ -62,7 +62,7 @@ export const Topic = () => {
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
-                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>{t("common:topics.gameboards.previewLink")}</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>{t("common:topics.gameboards.assignLink")}</Link>
+                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>{t("common:button.preview")}</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>{t("common:button.assign")}</Link>
                                     </li>
                                 }
                                 {(!user?.loggedIn || user?.role === "STUDENT") &&

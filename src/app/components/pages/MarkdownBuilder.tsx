@@ -10,7 +10,7 @@ export const MarkdownBuilder = () => {
     const [markdownToTest, setMarkdownToTest] = useState("");
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:markdownBuilder.title")} icon={{type: "icon", icon: "icon-concept"}} />
+        <TitleAndBreadcrumb currentPageTitle={t("common:title.markdownBuilder")} icon={{type: "icon", icon: "icon-concept"}} />
         <Card className="mt-4 mb-7">
             <CardBody>
                 <InputGroup>

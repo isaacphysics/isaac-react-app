@@ -45,7 +45,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
             function makeUserBooking(formEvent: React.FormEvent) {
                 if (formEvent) {formEvent.preventDefault();}
                 if (additionalInformation.authorisation === undefined || (additionalInformation.authorisation === "OTHER" && additionalInformation.authorisationOther === undefined)) {
-                    dispatch(showErrorToast(t("common:events.userBooking.errorTitle"), t("common:events.userBooking.errorMessage")));
+                    dispatch(showErrorToast(t("common:error.eventBookingFailed"), t("common:events.userBooking.errorMessage")));
                     return;
                 }
                 bookUserOnEvent({eventId: selectedEvent.id as string, userId: selectedUser.id as number, additionalInformation})

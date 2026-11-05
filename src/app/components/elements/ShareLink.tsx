@@ -64,7 +64,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         </div>
         {showShareLink && showDuplicateAndEdit && <div className="duplicate-and-edit" style={{width: linkWidth}}>
             <a href={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
-                {t("common:gameboard.share.duplicateEditLink")}
+                {t("common:button.duplicateAndEdit")}
             </a>
         </div>}
         <IconButton

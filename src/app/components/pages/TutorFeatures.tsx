@@ -17,10 +17,10 @@ export const TutorFeatures = () => {
     const isDisabled = !isLoggedIn(user) || !isTutorOrAbove(user);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:teacherFeatures.tutor.title")} icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("sci:title.tutorFeatures")} icon={{type: "icon", icon: "icon-account"}}/>
         <PageMetadata noTitle>
             {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"} className="float-end">
-                {isLoggedIn(user) ? t("common:teacherFeatures.tutor.upgradeButton") : t("common:teacherFeatures.tutor.getButton")}
+                {isLoggedIn(user) ? t("sci:button.upgradeAccount") : t("common:teacherFeatures.tutor.getButton")}
             </Button>}
             {t("common:teacherFeatures.tutor.description")}
         </PageMetadata>
@@ -32,8 +32,8 @@ export const TutorFeatures = () => {
                 <TeacherFeatureCard
                     url = "/groups"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#groups"
-                    title = {t("common:teacherFeatures.tutor.groupsTitle")}
-                    subtitle = {t("common:teacherFeatures.tutor.groupsSubtitle")}
+                    title = {t("sci:title.createGroup")}
+                    subtitle = {t("sci:label.createGroupDescription")}
                     disabled = {isDisabled}
                 />
             </Col>
@@ -64,8 +64,8 @@ export const TutorFeatures = () => {
                 <TeacherFeatureCard               
                     url = "/support/tutor/general"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"
-                    title = {t("common:teacherFeatures.tutor.faqTitle")}
-                    subtitle = {t("common:teacherFeatures.tutor.faqSubtitle")}
+                    title = {t("sci:title.tutorFaq")}
+                    subtitle = {t("sci:label.faqDescription")}
                 />
             </Col>
             <Col sm={6} md={4}>
@@ -73,7 +73,7 @@ export const TutorFeatures = () => {
                     url = "/pages/order_books"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
                     title = {t("common:teacherFeatures.tutor.booksTitle")}
-                    subtitle = {t("common:teacherFeatures.tutor.booksSubtitle")}
+                    subtitle = {t("sci:label.skillsMasteryBooksDescription")}
                 />
             </Col>
             <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
@@ -81,7 +81,7 @@ export const TutorFeatures = () => {
                     url = "/physics/a_level/question_decks"
                     imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
                     title = {t("common:teacherFeatures.tutor.decksTitle")}
-                    subtitle = {t("common:teacherFeatures.tutor.decksSubtitle")}
+                    subtitle = {t("sci:label.questionDecksDescription")}
                 />
             </Col>
         </Row>

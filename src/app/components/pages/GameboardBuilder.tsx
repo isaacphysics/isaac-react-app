@@ -335,7 +335,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 <Form onSubmit={submit}>
                     <Row>
                         <Col>
-                            <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">{t("common:gameboard.builder.titleLabel")}</Label>
+                            <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">{t("common:table.title")}</Label>
                             <p className="d-block input-description mb-2">
                                 {t("common:gameboard.builder.titleHelp")}
                             </p>
@@ -370,7 +370,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     ])}
                                     name="colors"
                                     value={gameboardTags}
-                                    placeholder={t("common:gameboard.builder.tagPlaceholder")}
+                                    placeholder={t("common:label.none")}
                                     onChange={selectOnChange(setGameboardTags, false)}
                                 />
                             </FormGroup>
@@ -413,7 +413,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
                     <div className={"d-flex flex-row justify-content-between align-items-center mb-2"}>
                         <div>
-                            <span className="fw-bold form-required">{t("common:gameboard.builder.questionsHeading")}</span>
+                            <span className="fw-bold form-required">{t("common:title.questions")}</span>
                             <p className="d-none d-sm-block input-description mb-0">
                                 {t("common:gameboard.builder.questionsLimit", { maxQuestions: QUESTIONS_PER_GAMEBOARD })}
                             </p>
@@ -470,9 +470,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         closeAction: () => {
                                             dispatch(closeActiveModal());
                                         },
-                                        closeLabelOverride: t("common:gameboard.builder.cancelButton"),
+                                        closeLabelOverride: t("common:button.cancel"),
                                         size: "xl",
-                                        title: t("common:gameboard.builder.searchTitle"),
+                                        title: t("common:title.searchQuestions"),
                                         body: <QuestionSearchModal
                                             currentQuestions={currentQuestions}
                                             undoStack={undoStack}

@@ -80,7 +80,7 @@ export const Assignment = () => {
                 pageTitle={
                     <TitleAndBreadcrumb
                         currentPageTitle={gameboard && gameboard.title || t("site:assignment.fallbackTitle")} icon={{type: "icon", icon: "icon-question-deck"}}
-                        intermediateCrumbs={isPhy ? [{title: t("common:assignments.breadcrumb.label"), to: "/assignments"}] : []}
+                        intermediateCrumbs={isPhy ? [{title: t("common:label.assignments"), to: "/assignments"}] : []}
                     />
                 }
                 sidebar={siteSpecific(
@@ -88,7 +88,7 @@ export const Assignment = () => {
                     undefined
                 )}
             >
-                <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText={t("common:assignment.sidebar.button")}/>
+                <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText={t("common:button.details")}/>
                 <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                 
                 <GameboardContents gameboard={gameboard} />

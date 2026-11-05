@@ -69,7 +69,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
                 onClick={setValidDueDate}
                 role={"button"}
                 disabled={isUpdatingQuiz && dueDate && (dueDate < currDueDate)}>
-                {t("common:assignments.extendDueDate.submitButton")}
+                {t("common:button.extendDueDate")}
             </Button>
         </div>
     </>;
@@ -77,7 +77,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
 
 export const extendDueDateModal = (props: ExtendDueDateModalProps) : ActiveModalProps => {
     return {
-        title: i18next.t("common:assignments.extendDueDate.modalTitle"),
+        title: i18next.t("common:button.extendDueDate"),
         body: <ExtendDueDateModalBody {...props} />
     };
 };

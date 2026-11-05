@@ -71,7 +71,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
 
     return <ShowLoadingQuery
         query={conceptQuery}
-        defaultErrorTitle={t("common:concepts.loadErrorTitle")}
+        defaultErrorTitle={t("common:error.loadConcept")}
         ifNotFound={<NotFound />}
         thenRender={doc => {
             return <GameboardContext.Provider value={navigation.currentGameboard}>

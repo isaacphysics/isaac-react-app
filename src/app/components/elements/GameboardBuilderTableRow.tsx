@@ -48,7 +48,7 @@ const GameboardBuilderTableRow = (
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
                     {isAda && isDnd
-                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label={t("ada:gameboard.builder.delete")} title={t("ada:gameboard.builder.delete")} onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}/>
+                        ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label={t("ada:button.deleteQuiz")} title={t("ada:button.deleteQuiz")} onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}/>
                         : <StyledCheckbox
                             id={`${isDnd ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                             aria-label={!isSelected ? t("common:gameboard.builder.select") : t("common:gameboard.builder.deselect")}
@@ -61,7 +61,7 @@ const GameboardBuilderTableRow = (
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
                 <div className="d-flex">
-                    {isDnd && <i aria-label={t("common:gameboard.builder.dragLabel")} className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
+                    {isDnd && <i aria-label={t("common:label.dragToReorder")} className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
                     <div>
                         <div className="d-flex">
                             <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={t("common:gameboard.builder.previewTooltip", { questionId: question.id })}>

@@ -23,7 +23,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
 
                 {event.location && event.location.address && event.location.address.addressLine1 &&
                     <>
-                        <strong>{t("common:events.selectedDetails.locationLabel")} </strong>
+                        <strong>{t("common:label.eventLocation")} </strong>
                         {event.location.address.addressLine1}{", "}
                         {event.location.address.town}{", "}
                         {event.location.address.postalCode}
@@ -39,7 +39,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                 <DateString>{event.date}</DateString> - <DateString>{event.endDate}</DateString>
                 <br />
 
-                <strong>{t("common:events.selectedDetails.bookingDeadlineLabel")} </strong>
+                <strong>{t("common:label.bookingDeadlineLabel")} </strong>
                 <DateString>{event.bookingDeadline}</DateString>
                 <br />
 

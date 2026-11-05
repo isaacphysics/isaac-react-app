@@ -74,7 +74,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
 
     return <Accordion id="manage-current-bookings" trustedTitle={t("common:events.manageBookings.title")}>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
-            {t("common:events.manageBookings.leaderRestriction")}
+            {t("common:label.eventLeaderRestriction")}
         </div>}
 
         {eventBookings && atLeastOne(eventBookings.length) && <div>
@@ -83,16 +83,16 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                     <thead>
                         <tr>
                             <th className="align-middle text-center">
-                                {t("common:events.bookingsTable.actions")}
+                                {t("common:table.actions")}
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('userBooked.familyName')}>
-                                    {t("common:events.bookingsTable.name")}
+                                    {t("common:table.name")}
                                 </Button>
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('userBooked.email')}>
-                                    {t("common:events.bookingsTable.email")}
+                                    {t("common:table.email")}
                                 </Button>
                             </th>
                             <th className="align-middle">
@@ -102,7 +102,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('schoolName')}>
-                                    {t("common:events.bookingsTable.school")}
+                                    {t("common:label.school")}
                                 </Button>
                             </th>
                             <th className="align-middle">
@@ -110,7 +110,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('bookingStatus')}>
-                                    {t("common:events.manageBookings.table.bookingStatus")}
+                                    {t("common:table.bookingStatus")}
                                 </Button>
                             </th>
                             <th className="align-middle">
@@ -124,10 +124,10 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                 </Button>
                             </th>
                             <th className="align-middle">
-                                {t("common:events.manageBookings.table.stage")}
+                                {t("common:label.stage")}
                             </th>
                             {isAda && <th className="align-middle">
-                                {t("ada:events.manageBookings.table.examBoard")}
+                                {t("ada:table.examBoard")}
                             </th>}
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
@@ -135,10 +135,10 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                 </Button>
                             </th>
                             <th className="align-middle">
-                                {t("common:events.manageBookings.table.teachingExperience")}
+                                {t("common:events.booking.teachingExperience")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.accessibility")}
+                                {t("common:label.accessibilityRequirements")}
                             </th>
                             <th className="align-middle">
                                 {t("common:events.manageBookings.table.medicalDietary")}
@@ -174,7 +174,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                                     () => cancelUserBooking({eventId, userId})
                                                 )
                                             }>
-                                                {t("common:events.manageBookings.actions.cancel")}
+                                                {t("common:button.cancel")}
                                             </Button>
                                         }
                                         {isAdmin(user) &&
@@ -184,7 +184,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                                     () => deleteUserBooking({eventId, userId})
                                                 )
                                             }>
-                                                {t("common:events.manageBookings.actions.delete")}
+                                                {t("common:button.delete")}
                                             </Button>
                                         }
                                         <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
@@ -231,7 +231,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
             <div className="mt-3 text-end">
                 <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle caret color="keyline" className="me-3 mt-1">
-                        {t("common:events.manageBookings.emailDropdown.toggle")}
+                        {t("common:button.emailUsers")}
                     </DropdownToggle>
                     <DropdownMenu>
                         {Object.keys(bookingStatusMap).map((key, index)  => {

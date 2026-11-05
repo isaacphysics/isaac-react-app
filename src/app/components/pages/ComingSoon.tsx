@@ -5,7 +5,7 @@ import {PageFragment} from "../elements/PageFragment";
 import i18next from "i18next";
 
 export const ComingSoon = () => <Container>
-    <TitleAndBreadcrumb currentPageTitle={i18next.t("common:comingSoon.pageTitle")} />
+    <TitleAndBreadcrumb currentPageTitle={i18next.t("common:status.comingSoon")} />
     <div className="mt-4"/>
     <PageFragment fragmentId="coming_soon"/>
 </Container>;

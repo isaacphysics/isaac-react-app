@@ -16,8 +16,8 @@ interface TrueFalseRadioProps {
 }
 export function TrueFalseRadioInput({id, className, stateObject, propertyName, accessibleName, setStateFunction, submissionAttempted, trueLabel, falseLabel}: TrueFalseRadioProps) {
     const { t } = useTranslation();
-    const yesLabel = trueLabel ?? t("common:form.elements.yes");
-    const noLabel = falseLabel ?? t("common:form.elements.no");
+    const yesLabel = trueLabel ?? t("common:status.yes");
+    const noLabel = falseLabel ?? t("common:status.no");
     const invalid = submissionAttempted && (typeof stateObject?.[propertyName] !== "boolean");
 
     return <FormGroup>

@@ -84,7 +84,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
     const { t } = useTranslation();
     const {gameboard, assignments, linkedBookSection, ...rest} = props;
 
-    return <ContentSidebar buttonTitle={t("common:gameboard.sidebar.toggleTitle")} {...rest}>
+    return <ContentSidebar buttonTitle={t("common:button.details")} {...rest}>
         {linkedBookSection && linkedBookSection[0] && linkedBookSection[1] && <BackToBookButton linkedBookSection={linkedBookSection} />}
         <GameboardDetails gameboard={gameboard} />
         <AllAssignmentDetails assignments={assignments} />

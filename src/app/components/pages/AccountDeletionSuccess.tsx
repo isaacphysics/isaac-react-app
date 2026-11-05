@@ -31,7 +31,7 @@ export const AccountDeletionSuccess = () => {
                 </Row>
                 <Row className="justify-content-center">
                     <Col xs={12} sm={6} lg={4}>
-                        <Button className={"my-2 w-100"} color="solid" onClick={returnToHomepage}>{t("common:navigation.homeButton")}</Button>
+                        <Button className={"my-2 w-100"} color="solid" onClick={returnToHomepage}>{t("common:button.home")}</Button>
                     </Col>
                 </Row>
             </CardBody>

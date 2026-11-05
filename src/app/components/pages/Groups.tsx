@@ -177,12 +177,12 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
             {["xs", "sm"].includes(deviceSize)? <>
                 <UncontrolledButtonDropdown size="sm">
                     <DropdownToggle caret className="text-nowrap" color="link" size="sm">
-                        {t("common:groups.member.manageButton")}
+                        {t("common:button.manage")}
                     </DropdownToggle>
                     <DropdownMenu>
                         {isTeacherOrAbove(user) &&
                             <DropdownItem onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
-                                {!passwordRequestSent ? t("common:groups.member.passwordReset.button") : t("common:groups.member.passwordReset.sentLabel")}
+                                {!passwordRequestSent ? t("common:button.resetPassword") : t("common:groups.member.passwordReset.sentLabel")}
                             </DropdownItem>
                         }
                         {userHasAdditionalGroupPrivileges &&
@@ -196,7 +196,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                         <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
                             disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}
                         >
-                            {!passwordRequestSent ? t("common:groups.member.passwordReset.button") : t("common:groups.member.passwordReset.sentLabel")}
+                            {!passwordRequestSent ? t("common:button.resetPassword") : t("common:groups.member.passwordReset.sentLabel")}
                         </Button>
                     </Tooltip>
                 </>}
@@ -315,13 +315,13 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 <div>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <Label htmlFor="groupName" className={"form-required fw-bold"}>
-                            {isUserGroupOwner || group.additionalManagerPrivileges ? t("common:groups.editor.renameLabel") : t("common:groups.editor.nameLabel") }
+                            {isUserGroupOwner || group.additionalManagerPrivileges ? t("common:groups.editor.renameLabel") : t("common:label.groupName") }
                         </Label>
                         <InputGroup className="flex-column flex-md-row align-items-center gap-2 stackable-input-group w-100">
                             <Input
                                 id="groupName"
                                 length={50}
-                                placeholder={t("common:groups.editor.namePlaceholder")} value={newGroupName}
+                                placeholder={t("common:label.groupName")} value={newGroupName}
                                 onChange={editGroupName} aria-label={t("common:groups.editor.nameAriaLabel")} disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
                                 invalid={isGroupNameInvalid}
                                 valid={isGroupNameValid}
@@ -334,7 +334,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 className="w-100 w-md-auto" disabled={!isGroupNameValid}
                                 onClick={saveUpdatedGroup}
                             >
-                                {t("common:groups.editor.updateButton")}
+                                {t("common:button.update")}
                             </Button>}
                             <FormFeedback id={"groupNameFeedback"}>
                                 {newGroupName.trim().length === 0 && t("common:groups.editor.nameEmpty")}
@@ -393,7 +393,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                         color="solid"
                                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                                     >
-                                        {t("common:groups.editor.inviteButton")}
+                                        {t("common:button.inviteUsers")}
                                     </Button>
                                     {canEmailUsers && usersInGroup.length > 0 &&
                                         <Button
@@ -418,7 +418,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 {t("common:groups.editor.memberCount", { count: group.members.length })}
                                 {bigGroup && !isExpanded &&
                                     <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
-                                        <DropdownToggle caret>{t("common:groups.editor.showButton")}</DropdownToggle>
+                                        <DropdownToggle caret>{t("common:button.show")}</DropdownToggle>
                                     </ButtonDropdown>
                                 }
                             </div>
@@ -447,7 +447,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                         </Button>
                         {group.archived && <Button className={classNames("w-100 w-md-auto ms-md-2 mb-2", {"mt-md-n3": isPhy})} color="solid"
                             onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, group);}}>
-                            {t("common:groups.editor.deleteButton")}
+                            {t("common:button.deleteGroup")}
                         </Button>}
                     </div>
                 </>}
@@ -518,7 +518,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
             }
 
             <div className={classNames("text-start", {"mt-3": showCreateGroup})}>
-                <strong className="me-2">{t("common:groups.selector.label")}</strong>
+                <strong className="me-2">{t("common:label.groups")}</strong>
                 <UncontrolledButtonDropdown size="sm">
                     <DropdownToggle color="secondary" caret size={"sm"}>
                         {sortOrder}
@@ -550,7 +550,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 <StyledTabPicker
                                     id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
                                     onChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
-                                    suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: t("common:groups.selector.deleteInfo")} : undefined}
+                                    suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: t("common:button.deleteGroup")} : undefined}
                                 />
                             </li>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
@@ -560,8 +560,8 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                     </Button>
                                     {showArchived && (isPhy ?
                                         <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}}
-                                            aria-label={t("common:groups.editor.deleteButton")} className="ms-1 icon-close" title={t("common:groups.editor.deleteButton")}/> :
-                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label={t("common:groups.editor.deleteButton")} title={t("common:groups.editor.deleteButton")} onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
+                                            aria-label={t("common:button.deleteGroup")} className="ms-1 icon-close" title={t("common:button.deleteGroup")}/> :
+                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label={t("common:button.deleteGroup")} title={t("common:button.deleteGroup")} onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
                                     }
                                 </div>
                                 {isAda && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
@@ -619,7 +619,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     const GroupsPhy = <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:groups.page.title")} icon={{type: "icon", icon: "icon-group"}}/>
+            <TitleAndBreadcrumb currentPageTitle={t("common:button.manageGroups")} icon={{type: "icon", icon: "icon-group"}}/>
         }
         sidebar={siteSpecific(
             <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
@@ -629,8 +629,8 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
             undefined
         )}
     >
-        <ShowLoadingQuery query={groupQuery} defaultErrorTitle={t("common:groups.page.errorTitle")}>
-            <PageMetadata noTitle showSidebarButton sidebarButtonText={t("common:groups.page.sidebarButton")} helpModalId="help_modal_groups">
+        <ShowLoadingQuery query={groupQuery} defaultErrorTitle={t("common:error.fetchGroups")}>
+            <PageMetadata noTitle showSidebarButton sidebarButtonText={t("common:label.selectOrCreateGroup")} helpModalId="help_modal_groups">
                 <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
             </PageMetadata>
             {selectedGroup &&
@@ -643,10 +643,10 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     </PageContainer>;
 
     const GroupsAda = <PageContainer
-        pageTitle={<TitleAndBreadcrumb currentPageTitle={t("common:groups.page.title")} className="mb-4" help={pageHelp} />}
+        pageTitle={<TitleAndBreadcrumb currentPageTitle={t("common:button.manageGroups")} className="mb-4" help={pageHelp} />}
         sidebar={<MyAdaSidebar />}
     >
-        <ShowLoadingQuery query={groupQuery} defaultErrorTitle={t("common:groups.page.errorTitle")}>
+        <ShowLoadingQuery query={groupQuery} defaultErrorTitle={t("common:error.fetchGroups")}>
             {!isEmptyState ?
                 <>
                     <p className={"mw-75"}>{t("common:groups.page.addTeachersInfo")}</p>
@@ -666,7 +666,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                         <Trans i18nKey="common:groups.page.emptyState" components={{ br: <br /> }} values={{ siteTitle: SITE_TITLE_SHORT }} />
                     </p>
                     <Button onClick={() => void dispatch(showCreateGroupModal({user}))}>
-                        {t("common:groups.page.createButton")}
+                        {t("common:button.createGroup")}
                     </Button>
                 </div>
             }

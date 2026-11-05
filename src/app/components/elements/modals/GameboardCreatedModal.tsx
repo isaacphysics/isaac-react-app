@@ -28,7 +28,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100" tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
             >
-                {t("common:gameboard.created.setAsAssignment")}
+                {t("common:button.setAsAssignment")}
             </Button>
         </Col>
         <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">

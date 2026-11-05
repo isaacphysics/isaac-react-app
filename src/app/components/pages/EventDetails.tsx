@@ -102,7 +102,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                 <Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
                         {siteSpecific(
-                            <b>{t("sci:events.details.when")}</b>, 
+                            <b>{t("common:events.label.when")}</b>, 
                             <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-upcoming me-2" color="secondary"/><b>{t("ada:events.details.when")}</b></span>
                         )}
                     </Col>
@@ -116,14 +116,14 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                 {<Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
                         {siteSpecific(
-                            <b>{t("sci:events.details.location")}</b>, 
-                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-location me-2" color="secondary"/><b>{t("ada:events.details.location")}</b></span>
+                            <b>{t("common:label.eventLocation")}</b>, 
+                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-location me-2" color="secondary"/><b>{t("common:label.location")}</b></span>
                         )}
                     </Col>
                     {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <Col>
                         {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
                     </Col>}
-                    {isVirtual && <Col>{t("common:events.details.online")}</Col>}
+                    {isVirtual && <Col>{t("common:status.online")}</Col>}
                 </Row>}
                 {event.isNotClosed && !event.hasExpired &&
                     <Row>
@@ -157,8 +157,8 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                     <Row>
                         <Col className={classNames(firstColumnWidths, "align-items-start")}>
                             {siteSpecific(
-                                <b>{t("sci:events.details.bookingDeadline")}</b>, 
-                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-complete me-2" color="secondary"/><b>{t("ada:events.details.bookingDeadline")}</b></span>
+                                <b>{t("common:label.bookingDeadlineLabel")}</b>, 
+                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-complete me-2" color="secondary"/><b>{t("common:label.bookingDeadline")}</b></span>
                             )}
                         </Col>
                         <Col className="d-md-flex flex-wrap">
@@ -370,12 +370,12 @@ const EventDetails = () => {
             return <Container className="events mb-5">
                 {isPhy ?
                     <TitleAndBreadcrumb
-                        currentPageTitle={t("sci:events.details.pageTitle")} icon={{type: "icon", icon: "icon-events"}}
-                        breadcrumbTitleOverride={t("sci:events.details.breadcrumbTitle")} intermediateCrumbs={[EVENTS_CRUMB]}
+                        currentPageTitle={t("common:title.events")} icon={{type: "icon", icon: "icon-events"}}
+                        breadcrumbTitleOverride={t("common:title.eventDetails")} intermediateCrumbs={[EVENTS_CRUMB]}
                     /> :
                     <TitleAndBreadcrumb
                         currentPageTitle={event.title as string} subTitle={event.subtitle}
-                        breadcrumbTitleOverride={t("ada:events.details.breadcrumbTitle")} intermediateCrumbs={[EVENTS_CRUMB]}
+                        breadcrumbTitleOverride={t("common:title.eventDetails")} intermediateCrumbs={[EVENTS_CRUMB]}
                     />
                 }
                 <PageMetadata 
@@ -385,10 +385,10 @@ const EventDetails = () => {
                             {isTeacherEvent ? t("common:events.details.teacherBadge") : t("common:events.details.studentBadge")}
                         </Badge>
                         {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
-                            {t("common:events.details.expiredBadge")}
+                            {t("common:events.status.expired")}
                         </Badge>}
                         {bookingDeadlineSoon && <span className="fs-6 warning-tag">
-                            {t("common:events.details.deadlineSoon")}
+                            {t("common:events.status.bookingDeadlineSoon")}
                         </span>}
                     </>}
                 >
@@ -405,7 +405,7 @@ const EventDetails = () => {
                     </div>
                 </div>
                 <Button tag={Link} to="/events" color="keyline" className="float-end my-4">
-                    {t("common:events.details.moreEvents")}
+                    {t("common:button.seeMoreEvents")}
                 </Button>
             </Container>;
         }}/>;

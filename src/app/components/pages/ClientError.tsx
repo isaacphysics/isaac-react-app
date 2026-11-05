@@ -32,15 +32,15 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     }, [error]);
 
     const usefulInformation = {
-        userId: user?.loggedIn && user.id || t("common:clientError.userInfo.notLoggedIn"),
+        userId: user?.loggedIn && user.id || t("common:status.notLoggedIn"),
         location: window.location.href,
         userAgent: window.navigator.userAgent,
         errorMessage: "\n" + (error?.message || ""),
     };
     const usefulInformationLabels: {[k in keyof typeof usefulInformation]: string} = {
-        userId: t("common:clientError.userInfo.userId"),
-        location: t("common:clientError.userInfo.locationLabel"),
-        userAgent: t("common:clientError.userInfo.userAgent"),
+        userId: t("common:label.userId"),
+        location: t("common:label.location"),
+        userAgent: t("common:label.userAgent"),
         errorMessage: t("common:clientError.userInfo.errorDetails"),
     };
 
@@ -54,7 +54,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
 
     return <Container>
         <div>
-            <TitleAndBreadcrumb currentPageTitle={t("common:clientError.title")} icon={{type: "icon", icon: "icon-error"}}/>
+            <TitleAndBreadcrumb currentPageTitle={t("common:title.error")} icon={{type: "icon", icon: "icon-error"}}/>
             <h2 className="my-4 h3">{t("common:clientError.heading", { siteName: SITE_TITLE_SHORT })}</h2>
             <p>
                 <Trans

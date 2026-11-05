@@ -100,7 +100,7 @@ export const RegistrationTeacherConnect = () => {
                     )}
                     <Col xs={12} lg={6}>
                         <FormGroup className="form-group">
-                            <Label className={"fw-bold"} htmlFor="connect-code-input">{t("common:auth.teacherConnect.codeLabel")}</Label>
+                            <Label className={"fw-bold"} htmlFor="connect-code-input">{t("common:label.teacherConnectionCode")}</Label>
                             {isAda && <p className={"input-description"}>{t("ada:auth.teacherConnect.codeHelp")}</p>}
                             <InputGroup className={"separate-input-group mb-4 d-flex flex-row align-items-center"}>
                                 <Input

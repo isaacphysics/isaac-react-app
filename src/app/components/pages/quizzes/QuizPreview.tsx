@@ -19,7 +19,7 @@ const QuizFooter = (props: QuizProps & FullQuizInfo) => {
     return isDefined(page)
         ? <QuizPagination {...props} finalLabel={t("common:tests.preview.backToContents")} />
         : <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
-            {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>{t("common:tests.preview.setTest")}</Button>}
+            {isTeacherOrAbove(user) && <Button color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz})))}>{t("common:button.setTest")}</Button>}
             <Spacer/>
             <Button color="keyline" tag={Link} to={pageLink(1).replace("/preview/", "/attempt/")}>{"Attempt quiz yourself"}</Button>
             <Button color="solid" tag={Link} to={pageLink(1)}>{t("common:tests.preview.previewQuestions")}</Button>

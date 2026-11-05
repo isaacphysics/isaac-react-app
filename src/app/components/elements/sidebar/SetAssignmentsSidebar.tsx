@@ -61,14 +61,14 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>
-            <h3 className="my-3 h5">{t("common:assignments.sidebar.sortByTitle")}</h3>
+            <h3 className="my-3 h5">{t("common:label.sortBy")}</h3>
             <Input type="select" className="mb-3" aria-label={t("common:assignments.sidebar.sortOrderLabel")} value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
                 {Object.values(AssignmentBoardOrder).filter(
                     order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)
                 ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
             </Input>
             {sortDisabled && <div className="small text-muted mt-2">
-                {t("common:assignments.sidebar.sortDisabledMessage")}
+                {t("common:status.sortDisabled")}
             </div>}
         </search>
     </ContentSidebar>;

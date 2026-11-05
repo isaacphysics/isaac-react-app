@@ -27,7 +27,7 @@ const AssignmentProgressSettings = () => {
         {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
             <span>{t("sci:progress.settings.colourBlindLabel")}</span>
             <Spacer />
-            <StyledToggle falseLabel={t("common:progress.settings.offOption")} trueLabel={t("common:progress.settings.onOption")}
+            <StyledToggle falseLabel={t("common:status.off")} trueLabel={t("common:status.on")}
                 checked={assignmentProgressContext?.colourBlind}
                 onChange={(e) => assignmentProgressContext?.setColourBlind?.(e.currentTarget.checked)}
             />
@@ -36,7 +36,7 @@ const AssignmentProgressSettings = () => {
         {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
             <span>{t("sci:progress.settings.completionModeLabel")}</span>
             <Spacer />
-            <StyledToggle trueLabel={t("common:progress.legend.correct")} falseLabel={t("common:progress.settings.attemptedOption")}
+            <StyledToggle trueLabel={t("common:status.correct")} falseLabel={t("common:status.attempted")}
                 checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"}
                 onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
             />
@@ -65,7 +65,7 @@ const AssignmentProgressLegend = () => {
                     <LegendKey cellClass="passed" description={t("common:progress.legend.passedCorrect", { passPercentage: passMark * 100 })}/>
                     <LegendKey cellClass="in-progress" description={t("common:progress.legend.inProgressCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
                     <LegendKey cellClass="failed" description={t("common:progress.legend.failedCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
-                    <LegendKey cellClass="" description={t("common:progress.legend.notAttempted")}/>
+                    <LegendKey cellClass="" description={t("common:status.notAttempted")}/>
                 </ul>
                 : <ul id={key} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-4 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
                     <LegendKey cellClass="fully-attempted" description={t("common:progress.legend.fullAttempted")}/>
@@ -90,23 +90,23 @@ const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment?: boolean}) => {
     );
 
     return <div className={classNames("d-flex flex-column column-gap-4 row-gap-2", isAssignment ? "flex-md-row align-items-md-center" : "flex-sm-row align-items-sm-center")}>
-        <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">{t("common:progress.key.label")}</span>
+        <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">{t("common:label.key")}</span>
         {context?.attemptedOrCorrect === "CORRECT"
             ? <>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
-                    <KeyItem icon={ICON.correct} label={t("common:progress.legend.correct")} />
+                    <KeyItem icon={ICON.correct} label={t("common:status.correct")} />
                     {isAssignment && <KeyItem icon={ICON.partial} label={t("common:progress.legend.partiallyCorrect")} />}
                 </div>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
-                    <KeyItem icon={ICON.incorrect} label={t("common:progress.legend.incorrect")} />
-                    <KeyItem icon={ICON.notAttempted} label={t("common:progress.legend.notAttempted")} />
+                    <KeyItem icon={ICON.incorrect} label={t("common:status.incorrect")} />
+                    <KeyItem icon={ICON.notAttempted} label={t("common:status.notAttempted")} />
                 </div>
             </>
             : <>
                 <div className="d-flex flex-column flex-md-row column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.correct} label={t("common:progress.legend.fullyAttempted")} />
                     {isAssignment && <KeyItem icon={ICON.partial} label={t("common:progress.legend.partiallyAttempted")} />}
-                    <KeyItem icon={ICON.notAttempted} label={t("common:progress.legend.notAttempted")} />
+                    <KeyItem icon={ICON.notAttempted} label={t("common:status.notAttempted")} />
                 </div>
             </>
         }

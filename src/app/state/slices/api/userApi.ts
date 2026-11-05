@@ -177,7 +177,7 @@ export const userApi = isaacApi.injectEndpoints({
                         } else if (!editingOtherUser) {
                             dispatch(showToast({
                                 title: i18next.t("common:account.update.successTitle"),
-                                body: i18next.t("common:account.update.ownSuccessMessage"),
+                                body: i18next.t("common:status.accountUpdated"),
                                 color: "success",
                                 timeout: 5000,
                                 closable: false,

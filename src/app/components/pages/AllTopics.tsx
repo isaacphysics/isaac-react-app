@@ -166,7 +166,7 @@ export const AllTopics = () => {
     const metaDescription = t("common:topics.meta.description");
 
     return <PageContainer id={"topics"}>
-        <TitleAndBreadcrumb currentPageTitle={t("common:topics.page.title")} />
+        <TitleAndBreadcrumb currentPageTitle={t("ada:title.topics")} />
         <MetaDescription description={metaDescription} />
         <Row>
             <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">

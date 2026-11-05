@@ -148,11 +148,11 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             {isDefined(group?.id) && <>
                 {isPhy && above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupAssignmentProgressCSVDownloadLink(group.id as number))))}>
-                    {t("common:groups.progress.downloadAssignmentsCsv")}
+                    {t("common:button.downloadAssignmentsCsv")}
                     <i className="icon icon-download ms-2" color="white"/>
                 </Button>
                 {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
-                    {t("common:groups.progress.downloadTestsCsv")}
+                    {t("common:button.downloadTestsCsv")}
                     <i className="icon icon-download ms-2" color="white"/>
                 </Button>}
             </>}

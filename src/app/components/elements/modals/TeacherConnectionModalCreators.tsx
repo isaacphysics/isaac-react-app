@@ -54,13 +54,13 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                {i18next.t("common:account.sharingData.cancelButton")}
+                {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authToken))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                {i18next.t("common:account.sharingData.confirmButton")}
+                {i18next.t("common:button.confirm")}
             </Button>,
         ]
     };
@@ -77,13 +77,13 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                {i18next.t("common:account.revokeAccess.cancelButton")}
+                {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userToRevoke.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                {i18next.t("common:account.revokeAccess.confirmButton")}
+                {i18next.t("common:button.confirm")}
             </Button>,
         ]
     };
@@ -100,13 +100,13 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                {i18next.t("common:account.releaseAccess.cancelButton")}
+                {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(otherUser.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                {i18next.t("common:account.releaseAccess.confirmButton")}
+                {i18next.t("common:button.confirm")}
             </Button>,
         ]
     };
@@ -123,13 +123,13 @@ export const releaseAllConfirmationModal = () => {
         </React.Fragment>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                {i18next.t("common:account.releaseAll.cancelButton")}
+                {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAllAuthorisations.initiate())
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
-                {i18next.t("common:account.releaseAll.confirmButton")}
+                {i18next.t("common:button.confirm")}
             </Button>,
         ]
     };
@@ -138,7 +138,7 @@ export const releaseAllConfirmationModal = () => {
 export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
-        title: i18next.t("common:account.leaveGroup.title"),
+        title: i18next.t("common:button.leaveGroup"),
         body: <>
             <p>
                 This group has enabled student self-removal. This means you can remove yourself from the group at any time, without requiring permission from 
@@ -152,14 +152,14 @@ export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
         </>,
         buttons: [
             <Button key={1} color="keyline" onClick={() => store.dispatch(closeActiveModal())}>
-                {i18next.t("common:account.leaveGroup.cancelButton")}
+                {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} color="solid" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.deleteGroupMember.initiate({groupId, userId})).then(() => {
                     store.dispatch(closeActiveModal());
                 });
             }}>
-                {i18next.t("common:account.leaveGroup.confirmButton")}
+                {i18next.t("common:button.leaveGroup")}
             </Button>,
         ]
     };

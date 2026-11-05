@@ -43,14 +43,14 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <Col md={6}>
                         {/* Should be impossible to not have a first name */}
                         <Label htmlFor="account-firstname" className="form-required">
-                            {t("common:events.booking.firstName")}
+                            {t("common:label.firstName")}
                         </Label>
                         <Input id="account-firstname" name="firstname" type="text" disabled value={targetUser.givenName  || ""} />
                     </Col>
                     <Col md={6}>
                         {/* Should be impossible to not have a last name */}
                         <Label htmlFor="account-lastname" className="form-required">
-                            {t("common:events.booking.lastName")}
+                            {t("common:label.lastName")}
                         </Label>
                         <Input id="account-lastname" name="secondname" type="text" disabled value={targetUser.familyName || ""} />
                     </Col>
@@ -60,7 +60,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <Row>
                         <Col md={6}>
                             <Label htmlFor="account-email" className="form-required">
-                                {t("common:events.booking.email")}
+                                {t("common:label.emailAddress")}
                             </Label>
                             <Input id="account-email" name="email" type="email" disabled value={targetUser.email || ""} invalid={targetUser.emailVerificationStatus != 'VERIFIED'} />
                             <FormFeedback>
@@ -73,7 +73,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         {isAda && <Col md={6} className="d-none d-md-block" />}
                         <Col md={6}>
                             <Label htmlFor="account-stages" className="form-required">
-                                {t("common:events.booking.stage")}
+                                {t("common:label.stage")}
                             </Label>
                             <Input id="account-stages" type="text" disabled value={
                                 Array.from(new Set(targetUser.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ") || ""
@@ -81,7 +81,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </Col>
                         {isAda && <Col md={6}>
                             <Label htmlFor="account-examboard" className="form-required">
-                                {t("ada:events.booking.examBoard")}
+                                {t("ada:table.examBoard")}
                             </Label>
                             <Input id="account-examboard" type="text" disabled value={
                                 Array.from(new Set(targetUser.registeredContexts?.map(rc => examBoardLabelMap[rc.examBoard!]))).join(", ") || ""
@@ -127,7 +127,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             id="job-title" name="job-title" type="text" value={additionalInformation.jobTitle  || ""}
                             onChange={event => updateAdditionalInformation({jobTitle: event.target.value})}
                         />
-                        <Label htmlFor="experience-level">{t("common:events.booking.experience")}</Label>
+                        <Label htmlFor="experience-level">{t("common:events.booking.teachingExperience")}</Label>
                         <Input
                             id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
                             onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
@@ -136,7 +136,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     {targetUser.role == 'STUDENT' && <React.Fragment>
                         <Label htmlFor="year-group" className="form-required">
                             {/* Based on the options, if only teacher roles are avalable use "Role" */}
-                            { !event.isStudentOnly && !event.isAStudentEvent ? t("common:events.booking.role") : t("common:events.booking.yearGroup") }
+                            { !event.isStudentOnly && !event.isAStudentEvent ? t("common:label.role") : t("common:events.booking.yearGroup") }
                         </Label>
                         <Input
                             type="select" id="year-group" name="year-group" value={additionalInformation.yearGroup || ""}
@@ -183,7 +183,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <div>
                         <Label htmlFor="access-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
-                                {t("common:events.booking.accessibility")}
+                                {t("common:label.accessibilityRequirements")}
                                 <i id="access-reqs-help" aria-haspopup="true" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
                             </span>
                             <UncontrolledTooltip placement="bottom" target="access-reqs-help">
@@ -202,7 +202,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-name" className="form-required">
-                                {t("common:events.booking.emergencyName")}
+                                {t("common:label.contactName")}
                             </Label>
                             <Input
                                 id="emergency-name" name="emergency-name" type="text" value={additionalInformation.emergencyName || ""}

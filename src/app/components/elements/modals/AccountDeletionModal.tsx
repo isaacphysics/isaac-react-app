@@ -11,7 +11,7 @@ export const ConfirmAccountDeletionRequestModal = (confirmAccountDeletionRequest
         body: <PageFragment fragmentId="account_deletion_email_confirmation_notice" />,
         buttons: [
             <Button key={1} block color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                {i18next.t("common:account.deletion.cancelButton")}
+                {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} block color="solid" onClick={() => {confirmAccountDeletionRequest();}}>
                 {i18next.t("common:account.deletion.confirmButton")}

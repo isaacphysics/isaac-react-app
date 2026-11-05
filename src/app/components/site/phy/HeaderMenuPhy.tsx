@@ -27,37 +27,37 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
             <NavigationMenuPhy toggleMenu={toggleMenu}/>
             <div className="my-3"/>
         </>}
-        {isOffcanvas && <NavigationSection topLevelLink to="/" title={t("sci:navigation.home")}/>}
+        {isOffcanvas && <NavigationSection topLevelLink to="/" title={t("common:button.home")}/>}
         {(isOffcanvas || above["xl"](deviceSize)) && <NavigationSection topLevelLink to="/about" title={t("sci:navigation.about")}/>}
-        <NavigationSection topLevelLink to="/questions" title={t("sci:navigation.questionFinder")}/>
-        <NavigationSection topLevelLink to="/concepts" title={t("sci:navigation.concepts")}/>
-        <NavigationSection topLevelLink to="/view_tests" title={t("sci:navigation.tests")}/>
-        <NavigationSection topLevelLink to="/news" title={t("sci:navigation.news")}/>
-        <NavigationSection to="/events" title={t("sci:navigation.events.title")}>
-            <LinkItem to="/events">{t("sci:navigation.events.all")}</LinkItem>
-            <LinkItem to="/programmes">{t("sci:navigation.events.programmes")}</LinkItem>
+        <NavigationSection topLevelLink to="/questions" title={t("common:title.questionFinder")}/>
+        <NavigationSection topLevelLink to="/concepts" title={t("common:title.concepts")}/>
+        <NavigationSection topLevelLink to="/view_tests" title={t("common:title.tests")}/>
+        <NavigationSection topLevelLink to="/news" title={t("common:title.news")}/>
+        <NavigationSection to="/events" title={t("common:title.events")}>
+            <LinkItem to="/events">{t("common:title.events")}</LinkItem>
+            <LinkItem to="/programmes">{t("sci:title.programmes")}</LinkItem>
         </NavigationSection>
         <NavigationSection topLevelLink to="/books" title={t("sci:navigation.books")}/>
-        <NavigationSection title={t("sci:navigation.help.title")} className={classNames({"border-end" : !isOffcanvas})}>
+        <NavigationSection title={t("common:button.help")} className={classNames({"border-end" : !isOffcanvas})}>
             {/* <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem> -- bring back when updated content created! */}
             <LinkItem to="/solving_problems">{t("sci:navigation.help.problemSolving")}</LinkItem>
             <LinkItem to="/support/student">{t("sci:navigation.help.studentFaq")}</LinkItem>
             {isTutor(user)
-                ? <LinkItem to="/support/tutor">{t("sci:navigation.help.tutorFaq")}</LinkItem>
-                : <LinkItem to="/support/teacher">{t("sci:navigation.help.teacherFaq")}</LinkItem>}
-            <LinkItem to="/glossary">{t("sci:navigation.help.glossary")}</LinkItem>
+                ? <LinkItem to="/support/tutor">{t("sci:title.tutorFaq")}</LinkItem>
+                : <LinkItem to="/support/teacher">{t("sci:title.teacherFaq")}</LinkItem>}
+            <LinkItem to="/glossary">{t("common:title.glossary")}</LinkItem>
             <LinkItem to="/contact">{t("sci:navigation.help.contact")}</LinkItem>
         </NavigationSection>
 
         {isAdminTabVisible && <NavigationSection 
             title={isOffcanvas 
-                ? (isStaff(user) || isEventLeader(user)) ? t("sci:navigation.admin.title") : t("sci:navigation.admin.staging")
-                : <i className="icon icon-cog icon-color-black no-print align-text-bottom" aria-label={t("sci:navigation.admin.title")}/>
+                ? (isStaff(user) || isEventLeader(user)) ? t("common:title.admin") : t("common:title.staging")
+                : <i className="icon icon-cog icon-color-black no-print align-text-bottom" aria-label={t("common:title.admin")}/>
             } 
             className={classNames({"align-content-center" : !isOffcanvas})}
         >
             {isStaff(user) && <LinkItem to="/admin">{t("sci:navigation.admin.tools")}</LinkItem>}
-            {isAdmin(user) && <LinkItem to="/admin/usermanager">{t("sci:navigation.admin.userManager")}</LinkItem>}
+            {isAdmin(user) && <LinkItem to="/admin/usermanager">{t("common:admin.usefulLinks.userManager")}</LinkItem>}
             {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">{t("sci:navigation.admin.eventAdmin")}</LinkItem>}
             {isStaff(user) && <LinkItem to="/admin/stats">{t("sci:navigation.admin.statistics")}</LinkItem>}
             {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">{t("sci:navigation.admin.contentErrors")}</LinkItem>}
@@ -66,7 +66,7 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
                 <LinkItemButton onClick={() => {
                     dispatch(openActiveModal(FeatureFlagModal));
                 }}>
-                    {t("sci:navigation.admin.featureFlags")}
+                    {t("common:title.featureFlags")}
                     {hasActiveFeatureFlagOverrides() && <span className="ms-3 bg-primary active-dot" />}
                 </LinkItemButton>
             </>}

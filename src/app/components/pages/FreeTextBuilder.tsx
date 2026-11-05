@@ -165,7 +165,7 @@ export const FreeTextBuilder = () => {
                                     {questionChoices.map(choice => <tr key={choice.choiceNumber}>
                                         <td>
                                             <Label className="mb-3 w-100">
-                                                {t("common:freeTextBuilder.matchingRules.table.valueLabel")}
+                                                {t("common:label.value")}
                                                 <div className="d-flex align-items-center">
                                                     <Input
                                                         className="w-100" type="text" value={choice.value}
@@ -242,7 +242,7 @@ export const FreeTextBuilder = () => {
                                         </td>
                                         <td>
                                             <button
-                                                type="button" className="close" aria-label={t("common:freeTextBuilder.matchingRules.table.deleteButton")}
+                                                type="button" className="close" aria-label={t("common:button.deleteMatchingRule")}
                                                 onClick={() => setQuestionChoices(questionChoices.filter(choiceInState => choice !== choiceInState))}
                                             >×</button>
                                         </td>
@@ -252,7 +252,7 @@ export const FreeTextBuilder = () => {
                                     <tr>
                                         <td colSpan={4} className="text-center pb-3">
                                             <Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
-                                                <img src="/assets/common/icons/add_circle_outline.svg" alt={t("common:freeTextBuilder.matchingRules.table.addButton")} />
+                                                <img src="/assets/common/icons/add_circle_outline.svg" alt={t("common:button.addMatchingRule")} />
                                             </Button>
                                         </td>
                                     </tr>
@@ -296,7 +296,7 @@ export const FreeTextBuilder = () => {
                                 <thead>
                                     <tr>
                                         <th className="w-10 text-center">{t("common:freeTextBuilder.testCases.table.expectedColumn")}</th>
-                                        <th>{t("common:freeTextBuilder.testCases.table.valueColumn")}</th>
+                                        <th>{t("common:label.value")}</th>
                                         <th className="bg-light w-10 text-center">{t("common:freeTextBuilder.testCases.table.actualColumn")}</th>
                                         <th className="bg-light w-20">{t("common:freeTextBuilder.testCases.table.feedbackColumn")}</th>
                                         <th className="bg-light w-10 text-center">{t("common:freeTextBuilder.testCases.table.matchColumn")}</th>
@@ -335,7 +335,7 @@ export const FreeTextBuilder = () => {
                                             </td>
                                             <td className={`${matchFailure ? "alert-danger" : "bg-light"}`}>
                                                 <button
-                                                    type="button" className="close" aria-label={t("common:freeTextBuilder.testCases.table.deleteButton")}
+                                                    type="button" className="close" aria-label={t("common:button.deleteMatchingRule")}
                                                     onClick={() => setTestCases(testCases.filter(testCaseInState => testCase !== testCaseInState))}
                                                 >×</button>
                                             </td>
@@ -346,7 +346,7 @@ export const FreeTextBuilder = () => {
                                     <tr>
                                         <td colSpan={6} className="text-center pb-3">
                                             <Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
-                                                <img src="/assets/common/icons/add_circle_outline.svg" alt={t("common:freeTextBuilder.testCases.table.addButton")} />
+                                                <img src="/assets/common/icons/add_circle_outline.svg" alt={t("common:button.addMatchingRule")} />
                                             </Button>
                                         </td>
                                     </tr>

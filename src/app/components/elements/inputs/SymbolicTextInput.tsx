@@ -114,7 +114,7 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
                 }
             }
         }
-        errors.push(i18next.t("common:inequality.validation.badCharacters", { badCharacters: usedBadChars.join(" ") }));
+        errors.push(i18next.t("common:error.invalidCharacters", { badCharacters: usedBadChars.join(" ") }));
     }
 
     const openRoundBracketsCount = input.split("(").length - 1;

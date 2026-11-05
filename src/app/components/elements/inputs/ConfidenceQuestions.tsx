@@ -63,9 +63,9 @@ const getConfidenceOptions = (t: TFunction): {[option in ConfidenceType]: Confid
             followUp: {
                 question: t("common:confidence.quickQuestion.followUp.question"),
                 options: [
-                    {label: t("common:confidence.options.no"), color:"negative"},
+                    {label: t("common:status.no"), color:"negative"},
                     {label: t("common:confidence.options.partly"), color: "neutral"},
-                    {label: t("common:confidence.options.yes"), color: "secondary"}
+                    {label: t("common:status.yes"), color: "secondary"}
                 ]
             }
         }

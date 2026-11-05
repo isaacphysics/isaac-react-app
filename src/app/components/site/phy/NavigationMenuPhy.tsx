@@ -304,7 +304,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             <div className="nav-list-title mt-2">{t("sci:navigation.profile.accountHeading")}</div>
                             <ul className="plain-list">
                                 <NavigationItemClose href="/account">
-                                    {t("sci:navigation.profile.myAccount")}
+                                    {t("sci:title.myAccount")}
                                 </NavigationItemClose>
                             </ul>
                             <div className="section-divider" />
@@ -313,21 +313,21 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                         {isTutorOrAbove(user) && <div className="nav-list-title pt-2 pt-sm-0">{t("sci:navigation.profile.studentHeading")}</div>}
                         <ul className="plain-list flex-grow-1">
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
-                                {t("sci:navigation.profile.savedDecks")}
+                                {t("sci:title.mySavedDecks")}
                             </NavigationItemClose>
                             <NavigationItemClose href={PATHS.BOOKMARKS}>
-                                {t("sci:navigation.profile.bookmarks")}
+                                {t("sci:title.myBookmarks")}
                             </NavigationItemClose>
                             <NavigationItemClose href="/assignments" className="d-flex align-items-center">
-                                {t("sci:navigation.profile.myAssignments")}
+                                {t("sci:title.myAssignments")}
                                 {workCounts.assignments > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.assignments > 99 ? "99+" : workCounts.assignments}</span>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/tests" className="d-flex align-items-center">
-                                {t("sci:navigation.profile.myTests")}
+                                {t("common:title.myTests")}
                                 {workCounts.tests > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{workCounts.tests > 99 ? "99+" : workCounts.tests}</span>}
                             </NavigationItemClose>
                             <NavigationItemClose href="/progress">
-                                {t("sci:navigation.profile.myProgress")}
+                                {t("common:title.myProgress")}
                             </NavigationItemClose>
                         </ul>
 
@@ -342,7 +342,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             }
                             <ul className="plain-list">
                                 <NavigationItemClose href="/account">
-                                    {t("sci:navigation.profile.myAccount")}
+                                    {t("sci:title.myAccount")}
                                 </NavigationItemClose>
                             </ul>
                         </>}
@@ -355,22 +355,22 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             <ul className="plain-list">
                                 {isTutor(user)
                                     ? <NavigationItemClose href="/tutor_features">
-                                        {t("sci:navigation.profile.tutorFeatures")}
+                                        {t("sci:title.tutorFeatures")}
                                     </NavigationItemClose>
                                     : <NavigationItemClose href="/teacher_features">
-                                        {t("sci:navigation.profile.teacherFeatures")}
+                                        {t("sci:title.teacherFeatures")}
                                     </NavigationItemClose>}
                                 <NavigationItemClose href="/groups">
-                                    {t("sci:navigation.profile.manageGroups")}
+                                    {t("common:button.manageGroups")}
                                 </NavigationItemClose>
                                 <NavigationItemClose href="/question_deck_builder">
-                                    {t("sci:navigation.profile.createQuestionDeck")}
+                                    {t("sci:button.createQuestionDeck")}
                                 </NavigationItemClose>
                                 <NavigationItemClose href="/assigned">
-                                    {t("sci:navigation.profile.setManageWork")}
+                                    {t("sci:title.setManageWork")}
                                 </NavigationItemClose>
                                 <NavigationItemClose href="/assignment_progress">
-                                    {t("sci:navigation.profile.assignmentProgress")}
+                                    {t("sci:title.assignmentProgress")}
                                 </NavigationItemClose>
                             </ul>
                         </div>
@@ -490,7 +490,7 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
 
         <ContentNavProfile toggleMenu={toggleMenu}/>
         <ContentNavSection title={t("sci:navigation.explore.stageTitle")} categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
-        <ContentNavSection title={t("sci:navigation.explore.subjectTitle")} categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
+        <ContentNavSection title={t("sci:label.exploreBySubject")} categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
 
         {above["md"](deviceSize) && <>
             <Spacer />

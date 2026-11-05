@@ -53,7 +53,7 @@ const adaModalText = (isTeacher: boolean) => {
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
-        intro: <span>{i18next.t("sci:account.review.teacherIntro", { siteTitle: SITE_TITLE })}</span>,
+        intro: <span>{i18next.t("sci:account.review.intro", { siteTitle: SITE_TITLE })}</span>,
         connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
         privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
     },
@@ -63,7 +63,7 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
         privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
     },
     student: {
-        intro: <span>{i18next.t("sci:account.review.studentIntro", { siteTitle: SITE_TITLE })}</span>,
+        intro: <span>{i18next.t("sci:account.review.intro", { siteTitle: SITE_TITLE })}</span>,
         connections: <span>If you have changed school or have a different teacher, you might also want to {buildConnectionsLink("review your teacher connections")}.</span>,
         privacyPolicy: <span>Updating this information helps us continue to show you relevant content throughout your educational journey. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
     }
@@ -153,13 +153,13 @@ const UserContextReconfirmationModalBody = () => {
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         {submissionAttempted && !allFieldsAreValid &&
             <ExigentAlert color="warning">
-                <p className="alert-heading fw-bold">{t("common:account.update.errorTitle")}</p>
+                <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                 <p>{t("common:account.update.fillAllFields")}</p>
             </ExigentAlert>
         }
         {updateCurrentUserError &&
             <ExigentAlert color="warning">
-                <p className="alert-heading fw-bold">{t("common:account.update.errorTitle")}</p>
+                <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                 <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
             </ExigentAlert>
         }

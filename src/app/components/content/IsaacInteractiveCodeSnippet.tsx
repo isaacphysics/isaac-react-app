@@ -17,15 +17,15 @@ const InteractiveCodeSnippetTimeoutError = ({doc}: {doc: InteractiveCodeSnippetD
     const faqLink = doc.language === "sql" ? "/support/student/code#sql-editor" : "/support/student/code#code-editor";
 
     const usefulInformation = useMemo(() => ({
-        userId: user?.loggedIn && user.id || i18next.t("common:codeEditor.timeout.notLoggedIn"),
+        userId: user?.loggedIn && user.id || i18next.t("common:status.notLoggedIn"),
         location: window.location.href,
         userAgent: window.navigator.userAgent,
     }), [user]);
 
     const usefulInformationLabels: {[k in keyof typeof usefulInformation]: string} = {
-        userId: t("common:codeEditor.timeout.userIdLabel"),
-        location: t("common:codeEditor.timeout.locationLabel"),
-        userAgent: t("common:codeEditor.timeout.userAgentLabel"),
+        userId: t("common:label.userId"),
+        location: t("common:label.location"),
+        userAgent: t("common:label.userAgent"),
     };
 
     const plainTextUsefulInformation = "\n\n---- Useful Error Information ----\n\n" + Object.entries(usefulInformation)

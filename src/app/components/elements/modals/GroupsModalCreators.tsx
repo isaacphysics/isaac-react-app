@@ -61,7 +61,7 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
                 <Button block color="keyline" onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
-                    {i18next.t("common:groups.managers.removeSelf.cancel")}
+                    {i18next.t("common:button.cancel")}
                 </Button>
             </Col>
             <Col>
@@ -71,7 +71,7 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
                     }
                     store.dispatch(closeActiveModal());
                 }}>
-                    {i18next.t("common:groups.managers.removeSelf.confirm")}
+                    {i18next.t("common:button.confirm")}
                 </Button>
             </Col>
         </Row>
@@ -155,7 +155,7 @@ const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boole
 
 export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean, backToCreateGroup?: () => void) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: firstTime ? i18next.t("common:groups.invite.createdTitle") : i18next.t("common:groups.invite.inviteTitle"),
+    title: firstTime ? i18next.t("common:groups.invite.createdTitle") : i18next.t("common:button.inviteUsers"),
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
         <GroupInvitationModalButtons key={0} firstTime={firstTime} group={group} user={user} />
@@ -281,7 +281,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                         <i className="icon icon-my-isaac me-2" />,
                         <span className="icon-group-table-person" />
                     )}
-                    <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>{t("common:groups.managers.youLabel")}</span>} ({manager.email})</span>
+                    <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>{t("common:groups.editor.youLabel")}</span>} ({manager.email})</span>
                     <Spacer />
                     {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={"keyline"} onClick={() => promoteManager(manager)}>
                         {t("common:groups.managers.makeOwner")}
@@ -290,16 +290,16 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                         <Button className="d-inline ms-2" size="sm" color={"solid"}
                             onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
                         >
-                            {t("common:groups.managers.remove")}
+                            {t("common:button.remove")}
                         </Button>}
 
                     {userIsOwner && <UncontrolledDropdown className="d-inline d-lg-none ms-2">
                         <DropdownToggle caret className="d-flex align-items-center">
-                            {t("common:groups.managers.actionsDropdown")}
+                            {t("common:table.actions")}
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => promoteManager(manager)}>{t("common:groups.managers.makeOwner")}</DropdownItem>
-                            <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>{t("common:groups.managers.remove")}</DropdownItem>
+                            <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>{t("common:button.remove")}</DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>}
                 </li>
@@ -380,7 +380,7 @@ const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
 };
 export const groupEmailModal = (users?: number[]) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: i18next.t("common:groups.email.title"),
+    title: i18next.t("common:button.emailUsers"),
     body: <CurrentGroupEmailModal users={users} />
 });
 
@@ -426,7 +426,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
                 {isAda && <p className="d-block input-description mb-2">{t("ada:groups.create.nameDescription")}</p>}
                 <Input invalid={submissionAttempted && !validateGroupName()} id={"group-name-input"} onChange={event => setNewGroupName(event.target.value)} data-testid={"group-name-input"} />
                 <FormFeedback id="givenNameValidationMessage">
-                    {t("common:groups.create.nameError")}
+                    {t("common:error.validName")}
                 </FormFeedback>
             </FormGroup>
             <Button block type={"submit"} className={"mt-4"}>
@@ -438,7 +438,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
 
 export const groupCreateModal = (user: RegisteredUserDTO): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: i18next.t("common:groups.create.title"),
+    title: i18next.t("common:button.createGroup"),
     body: <GroupCreateModal user={user}/>,
     size: "md",
     centered: true
@@ -453,7 +453,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
         <p>{t("common:groups.archive.unarchiveHint")}</p>
         <div className="text-end">
             <Button color="keyline" className="me-2" onClick={() => dispatch(closeActiveModal())}>
-                {t("common:groups.archive.cancelButton")}
+                {t("common:button.cancel")}
             </Button>
             <Button color="solid" onClick={() => {
                 toggleArchived();

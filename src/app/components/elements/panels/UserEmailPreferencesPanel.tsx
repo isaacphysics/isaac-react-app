@@ -27,14 +27,14 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
     return <>
         {error?.type == "generalError" &&
             <ExigentAlert color="warning">
-                <p className="alert-heading fw-bold">{t("common:account.updateError.alertTitle")}</p>
+                <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                 <p>{error.generalError}</p>
             </ExigentAlert>
         }
         <MyAccountTab
             leftColumn={<>
-                <h2 className="h3">{t("common:account.emailPreferences.title")}</h2>
-                <p>{t("common:account.emailPreferences.description", { siteTitle: SITE_TITLE })}</p>
+                <h2 className="h3">{t("common:title.emailPreferences")}</h2>
+                <p>{t("common:label.emailPreferencesDescription", { siteTitle: SITE_TITLE })}</p>
                 <Trans i18nKey="site:account.emailPreferences.frequencyNote" components={{ strong: <b /> }} />
             </>}
             rightColumn={

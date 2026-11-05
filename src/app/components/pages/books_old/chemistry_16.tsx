@@ -17,12 +17,12 @@ export const Chemistry16 = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.chemistry16.title")} help={pageHelp} /> {/* modalId="help_modal_chemistry_book"/> */}
-                <img className="book-cover" src="/assets/phy/books/chemistry_16.jpg" alt={t("common:books.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/chemistry_16.jpg" alt={t("sci:label.bookCoverAltText")}/>
                 <PageFragment fragmentId="chemistry_16_intro"/>
             </div>
             <div className="book-levels">
                 <Col>
-                    <div className="h4">{t("common:books.chaptersHeading")}</div>
+                    <div className="h4">{t("sci:books.chaptersHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'chem_16_a_boards'} chapterTitle={t("sci:books.chemistry16.chapterA")} chapterIcon={'A'} chapterSubject={SUBJECTS.CHEMISTRY}/>

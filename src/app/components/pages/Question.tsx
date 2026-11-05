@@ -86,7 +86,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
     return <ShowLoadingQuery
         query={questionQuery}
-        defaultErrorTitle={t("common:questions.loadError")}
+        defaultErrorTitle={t("common:error.loadQuestion")}
         ifNotFound={<NotFound />}
         thenRender={doc => {
             const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;

@@ -36,7 +36,7 @@ export const TeacherResources = () => {
                         </>) || isTeacherOrAbove(user) && <>
                             <Button color="keyline" className="bg-white" to="/dashboard" tag={Link}>{t("common:teacherResources.header.dashboardButton")}</Button>
                         </> || <>
-                            <Button color="keyline" className="bg-white" to="/teacher_account_request" tag={Link}>{t("common:teacherResources.header.upgradeButton")}</Button>    
+                            <Button color="keyline" className="bg-white" to="/teacher_account_request" tag={Link}>{t("ada:button.upgradeToTeacherAccount")}</Button>    
                         </>}
                     </TextBlock>
                     <ImageBlock>
@@ -52,10 +52,10 @@ export const TeacherResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>{t("common:teacherResources.curriculum.title")}</h2>
+                        <h2>{t("ada:title.curriculum")}</h2>
                         <p>{t("common:teacherResources.curriculum.description")}</p>
                         <p>{t("common:teacherResources.curriculum.descriptionTwo")}</p>
-                        <Button tag={Link} to={"/topics"}>{t("common:teacherResources.curriculum.exploreButton")}</Button>
+                        <Button tag={Link} to={"/topics"}>{t("ada:button.exploreAllTopics")}</Button>
                     </TextBlock>
                 </ColumnSlice>
             </Container>
@@ -73,7 +73,7 @@ export const TeacherResources = () => {
                         </>) || (isTeacherOrAbove(user) && <>
                             <Button to={"/dashboard"} tag={Link}>{t("common:teacherResources.tools.dashboardButton")}</Button>
                         </>) || <>
-                            <Button to={"/teacher_account_request"} tag={Link}>{t("common:teacherResources.tools.upgradeButton")}</Button>
+                            <Button to={"/teacher_account_request"} tag={Link}>{t("ada:button.upgradeToTeacherAccount")}</Button>
                         </>}
                     </div>
                 </TextBlock>
@@ -83,7 +83,7 @@ export const TeacherResources = () => {
                         icon: {name: "icon-tune", color: "secondary"},
                         bodyText: t("common:teacherResources.tools.preferencesCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/account" : undefined,
-                        buttonText: t("common:teacherResources.tools.preferencesCard.button"),
+                        buttonText: t("common:title.preferences"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
@@ -91,7 +91,7 @@ export const TeacherResources = () => {
                         icon: {name: "icon-group", color: "secondary"},
                         bodyText: t("common:teacherResources.tools.groupsCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/groups" : undefined,
-                        buttonText: t("common:teacherResources.tools.groupsCard.button"),
+                        buttonText: t("common:button.createGroup"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
@@ -103,11 +103,11 @@ export const TeacherResources = () => {
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
-                        title: t("common:teacherResources.tools.markbookCard.title"),
+                        title: t("ada:title.reviewYourMarkbook"),
                         icon: {name: "icon-search", color: "secondary"},
                         bodyText: t("common:teacherResources.tools.markbookCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/my_markbook" : undefined,
-                        buttonText: t("common:teacherResources.tools.markbookCard.button"),
+                        buttonText: t("ada:button.viewMarkbook"),
                         buttonStyle: "link",
                     }}/>
                 </ColumnSlice>
@@ -139,7 +139,7 @@ export const TeacherResources = () => {
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: t("common:teacherResources.cpd.mentoringCard.title"),
+                        title: t("ada:title.teacherMentoring"),
                         image: {src: "/assets/cs/decor/teacher-3.png"},
                         bodyText: t("common:teacherResources.cpd.mentoringCard.description"),
                         clickUrl: "/teacher_mentoring",
@@ -154,9 +154,9 @@ export const TeacherResources = () => {
                 <img className="full-background-img" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
-                        <h2>{t("common:teacherResources.challenges.title")}</h2>
+                        <h2>{t("ada:title.studentChallenges")}</h2>
                         <p>{t("common:teacherResources.challenges.description")}</p>
-                        <Button tag={Link} to={"/pages/student_challenges"}>{t("common:teacherResources.challenges.exploreButton")}</Button>
+                        <Button tag={Link} to={"/pages/student_challenges"}>{t("common:button.findOutMore")}</Button>
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
                         title: featuredStudentChallengePod.title ?? "",
@@ -167,9 +167,9 @@ export const TeacherResources = () => {
                         buttonText: t("common:button.readMore"),
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
-                        title: t("common:teacherResources.challenges.emptyState.title"),
+                        title: t("ada:status.noActiveChallenges"),
                         icon: {name: "icon-lightbulb-empty", color: "secondary"},
-                        bodyText: t("common:teacherResources.challenges.emptyState.description"),
+                        bodyText: t("ada:status.checkBackSoon"),
                     }}/>}
                 </ColumnSlice>
             </Container>
@@ -218,7 +218,7 @@ export const TeacherResources = () => {
                         <h2>{t("common:teacherResources.tryIsaac.title")}</h2>
                         <p>{t("common:teacherResources.tryIsaac.description")}</p>
                         <ExternalLink asButton href='https://isaacscience.org'>
-                            {t("common:teacherResources.tryIsaac.visitButton")}
+                            {t("ada:button.goToIsaacScience")}
                         </ExternalLink>
                     </TextBlock>
                 </ColumnSlice>
@@ -229,9 +229,9 @@ export const TeacherResources = () => {
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
-                        <div className="h3">{t("common:teacherResources.help.title")}</div>
+                        <div className="h3">{t("ada:title.needHelp")}</div>
                         <p>{t("common:teacherResources.help.description")}</p>
-                        <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>{t("common:teacherResources.help.supportButton")}</Button>
+                        <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>{t("common:title.teacherSupport")}</Button>
                     </TextBlock>
                 </div>
             </Container>

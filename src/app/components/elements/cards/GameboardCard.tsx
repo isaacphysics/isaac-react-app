@@ -59,11 +59,11 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
         {usageDisplay?.type === "correctness" && <>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
-                {t("common:gameboard.card.attempted")}
+                {t("common:status.attempted")}
             </Label>
             <Label className="d-block w-max-content text-center text-nowrap pt-3">
                 {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
-                {t("common:gameboard.card.correct")}
+                {t("common:status.correct")}
             </Label> 
         </>}
         {usageDisplay?.type === "group" && <>
@@ -87,7 +87,7 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
                     </span>
                 </div>
                 : <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/${usageDisplay.assignment.id}`} target="_blank" className="d-flex align-items-center gap-2">
-                    <b>{t("common:gameboard.usageInfo.viewProgress")}</b>
+                    <b>{t("common:button.viewGroupProgress")}</b>
                     <span className={"visually-hidden"}>{t("common:cards.opensNewTab")}</span>
                     <i className="icon icon-arrow-right icon-color-white" aria-hidden="true" />
                 </Link>
@@ -191,15 +191,15 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 {allowManaging
                     ? isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); unassign?.();}}>
-                            {t("common:cards.unassign")}
+                            {t("common:button.unassign")}
                         </Button>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            {t("common:cards.setAgain")}
+                            {t("common:button.setAgain")}
                         </Button>
                     </>
                     : isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            {t("common:cards.assign")}
+                            {t("common:button.assign")}
                         </Button>
                     </>
                 }

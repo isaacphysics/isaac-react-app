@@ -13,7 +13,7 @@ export const SessionExpired = () => {
 
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride={t("common:clientError.sessionExpired.breadcrumbTitle")} currentPageTitle={t("common:clientError.sessionExpired.title")} icon={{type: "icon", icon: "icon-error"}}/>
+            <TitleAndBreadcrumb breadcrumbTitleOverride={t("common:clientError.sessionExpired.breadcrumbTitle")} currentPageTitle={t("common:title.sessionExpired")} icon={{type: "icon", icon: "icon-error"}}/>
 
             <div className="my-4 h3">{t("common:clientError.sessionExpired.heading")}</div>
 

@@ -99,7 +99,7 @@ export const TitleMetadata = ({audienceViews, help}: TitleMetadataProps) => {
     return <>
         {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
         {isAda && help && <>
-            <div id="title-help" className="title-help">{t("common:pageTitle.helpLabel")}</div>
+            <div id="title-help" className="title-help">{t("common:button.help")}</div>
             <UncontrolledTooltip target="title-help" placement="bottom">{help}</UncontrolledTooltip>
         </>}
     </>;

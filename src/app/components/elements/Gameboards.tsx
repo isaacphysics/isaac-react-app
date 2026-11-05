@@ -62,10 +62,10 @@ const CSTable = (props: GameboardsTableProps) => {
             {t("site:gameboard.table.nameHeader")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
-            {t("common:gameboard.table.stagesHeader")} <i id={`difficulties-help`} className={classNames("icon icon-info icon-inline mx-1", siteSpecific("icon-color-grey position-relative", "icon-color-black"))} />
+            {t("common:table.stagesAndDifficulties")} <i id={`difficulties-help`} className={classNames("icon icon-info icon-inline mx-1", siteSpecific("icon-color-grey position-relative", "icon-color-black"))} />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 <Trans
-                    i18nKey="common:gameboard.table.difficultiesTooltip"
+                    i18nKey="common:label.difficultiesTooltip"
                     components={{
                         br: <br />,
                     }}
@@ -73,24 +73,24 @@ const CSTable = (props: GameboardsTableProps) => {
                 />
             </UncontrolledTooltip>
         </th>
-        {isAda && <th>{t("common:gameboard.table.creatorHeader")}</th>}
+        {isAda && <th>{t("common:table.creator")}</th>}
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.created} reverseOrder={AssignmentBoardOrder["-created"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            {t("common:gameboard.table.createdHeader")}
+            {t("common:label.created")}
         </SortItemHeader>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.attempted} reverseOrder={AssignmentBoardOrder["-attempted"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            {t("common:gameboard.table.attemptedHeader")}
+            {t("common:status.attempted")}
         </SortItemHeader>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.correct} reverseOrder={AssignmentBoardOrder["-correct"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
-            {t("common:gameboard.table.correctHeader")}
+            {t("common:status.correct")}
         </SortItemHeader>
         {siteSpecific(
             <>
                 <th className="text-center align-middle">
-                    {boardView === BoardViews.card ? t("common:gameboard.table.unsaveButton") : t("common:gameboard.table.manageButton")}
+                    {boardView === BoardViews.card ? t("common:button.unsave") : t("common:button.manage")}
                 </th>
             </>,
             <>
-                <th>{t("common:gameboard.table.shareHeader")}</th>
+                <th>{t("common:table.share")}</th>
                 <th>
                     {selectedBoards.length
                         ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
@@ -180,7 +180,7 @@ const Cards = (props: GameboardsCardsProps) => {
             {boards.boards.length < boards.totalResults && <Button 
                 onClick={viewMore} disabled={loading}
             >
-                {loading ? <Spinner /> : boards.boards.length === filteredBoards.length ? t("common:gameboard.cards.viewMoreButton") : t("common:gameboard.cards.loadMoreButton")}
+                {loading ? <Spinner /> : boards.boards.length === filteredBoards.length ? t("common:button.viewMore") : t("common:button.loadMore")}
             </Button>}
         </div>
     </>;

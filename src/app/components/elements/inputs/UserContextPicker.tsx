@@ -84,7 +84,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
             <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-md-2": isAda})}>
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end align-items-center m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
-                    {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">{t("common:contextPicker.stageLabel")}</Label>}
+                    {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">{t("common:label.stage")}</Label>}
                     {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
                         <button className="icon-reset mb-1" aria-label={t("common:contextPicker.resetButton")} onClick={() => {
                             dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
@@ -94,7 +94,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     <Input
                         className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"me-1": isAda})}
                         type="select" id="uc-stage-select"
-                        aria-label={hideLabels ? t("common:contextPicker.stageLabel") : undefined}
+                        aria-label={hideLabels ? t("common:label.stage") : undefined}
                         value={currentStages.length === 1 ? currentStages : stagesString(currentStages)}
                         disabled={userContext.isFixedContext}
                         onChange={e => {
@@ -128,11 +128,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     {isAda &&
                         <>
                             {/* Exam Board Selector */}
-                            {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">{t("ada:contextPicker.examBoardLabel")}</Label>}
+                            {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">{t("ada:label.examBoard")}</Label>}
                             <Input
                                 className={`flex-grow-1 d-inline-block ps-2 pe-0 ms-2`}
                                 type="select" id="uc-exam-board-select"
-                                aria-label={hideLabels ? t("ada:contextPicker.examBoardLabel") : undefined}
+                                aria-label={hideLabels ? t("ada:label.examBoard") : undefined}
                                 value={userContext.contexts[0].examBoard}
                                 onChange={e => {
                                     dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));

@@ -102,7 +102,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, index, correct
                 <div className="feedback-wrapper d-flex">
                     <div className={classNames("d-flex align-items-center align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                         <Markup encoding={"latex"}>
-                            {isDefined(unit) ? wrapUnitForSelect(unit) : t("common:questions.numeric.unitPlaceholder")}
+                            {isDefined(unit) ? wrapUnitForSelect(unit) : t("common:label.unit")}
                         </Markup>
                     </div>
                 </div>

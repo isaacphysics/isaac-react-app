@@ -30,7 +30,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
         void markQuizAttemptAsComplete(attempt.id as number)
             .then((result) => {
                 if (mutationSucceeded(result)) {
-                    dispatch(showSuccessToast(t("common:tests.attempt.submitToastTitle"), t("common:tests.attempt.submitToastBody")));
+                    dispatch(showSuccessToast(t("common:status.testSubmitted"), t("common:tests.attempt.submitToastBody")));
                     void navigate(props.feedbackLink);
                 }
             });
@@ -75,12 +75,12 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
                     <Spacer/>
                     {t("common:tests.attempt.sectionsComplete", { completedCount: totalCompleted, totalCount: sectionCount })}<br/>
                     <Spacer/>
-                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>{t("common:tests.attempt.continue")}</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>{t("common:button.continue")}</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>{t("common:tests.attempt.continue")}</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>{t("common:button.continue")}</Button>
                 </>;
             }
         }

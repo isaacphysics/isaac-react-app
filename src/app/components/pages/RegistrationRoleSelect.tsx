@@ -38,7 +38,7 @@ export const RegistrationRoleSelect = () => {
                         <Card className="h-100 border-1">
                             <CardBody className="d-flex flex-column">
                                 <CardTitle>
-                                    <h3>{t("common:auth.roleSelect.student.title")}</h3>
+                                    <h3>{t("common:role.student")}</h3>
                                 </CardTitle>
                                 <CardText>
                                     <p>{t("common:auth.roleSelect.student.intro")}</p>
@@ -56,7 +56,7 @@ export const RegistrationRoleSelect = () => {
                         <Card className="h-100 border-1">
                             <CardBody className="d-flex flex-column">
                                 <CardTitle>
-                                    <h3>{t("common:auth.roleSelect.teacher.title")}</h3>
+                                    <h3>{t("common:role.teacher")}</h3>
                                 </CardTitle>
                                 <CardText>
                                     <p>{t("common:auth.roleSelect.teacher.intro")}</p>
@@ -74,7 +74,7 @@ export const RegistrationRoleSelect = () => {
                                         />
                                     </p>
                                 </CardText>
-                                <Button block className="align-self-end mt-auto" onClick={teacherSignUp}>{t("common:auth.roleSelect.teacher.button")}</Button>
+                                <Button block className="align-self-end mt-auto" onClick={teacherSignUp}>{t("common:button.iAmATeacher")}</Button>
                             </CardBody>
                         </Card>
                     </Col>

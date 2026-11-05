@@ -114,7 +114,7 @@ const FeatureFlagModalBody = () => {
         <div className="d-flex w-100 justify-content-around mt-5">
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-cross" />
-                {t("common:featureFlags.modal.toggleOff")}
+                {t("common:status.off")}
             </div>
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-dash" />
@@ -122,7 +122,7 @@ const FeatureFlagModalBody = () => {
             </div>
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-tick" />
-                {t("common:featureFlags.modal.toggleOn")}
+                {t("common:status.on")}
             </div>
         </div>
 

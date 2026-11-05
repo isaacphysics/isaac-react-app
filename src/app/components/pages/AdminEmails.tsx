@@ -36,14 +36,14 @@ export const AdminEmails = () => {
 
     return <Container id="admin-emails-page">
         <TitleAndBreadcrumb 
-            currentPageTitle={t("common:admin.emails.title")} 
+            currentPageTitle={t("common:title.adminEmails")} 
             icon={{type: "icon", icon: "icon-contact"}}
         />
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.emails.userSelection.title")}</CardTitle>
+            <CardTitle tag="h2">{t("common:title.userSelection")}</CardTitle>
             <CardBody>
-                <Label>{t("common:admin.emails.userSelection.label")}</Label>
+                <Label>{t("common:label.userSelectionDescription")}</Label>
                 <Input
                     id="email-user-ids-input"
                     type = "textarea"
@@ -56,10 +56,10 @@ export const AdminEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.emails.emailType.title")}</CardTitle>
+            <CardTitle tag="h2">{t("common:label.emailType")}</CardTitle>
             <CardBody>
-                <Label>{t("common:admin.emails.emailType.label")}</Label>
-                <p>{t("common:admin.emails.emailType.optOutInfo")}</p>
+                <Label>{t("common:label.emailTypeDescription")}</Label>
+                <p>{t("common:label.emailOptOutNote")}</p>
                 <Input
                     id="email-type-input" type="select" value={emailType}
                     disabled={isEventManager(user)}
@@ -67,11 +67,11 @@ export const AdminEmails = () => {
                         setEmailType(e.target.value);
                     }}
                 >
-                    <option value="null">{t("common:admin.emails.emailType.placeholder")}</option>
-                    <option value="ASSIGNMENTS">{t("common:admin.emails.emailType.optionAssignments")}</option>
-                    <option value="NEWS_AND_UPDATES">{t("common:admin.emails.emailType.optionNews")}</option>
-                    <option value="EVENTS">{t("common:admin.emails.emailType.optionEvents")}</option>
-                    <option value="ADMIN">{t("common:admin.emails.emailType.optionAdmin")}</option>
+                    <option value="null">{t("common:label.makeSelection")}</option>
+                    <option value="ASSIGNMENTS">{t("common:label.assignments")}</option>
+                    <option value="NEWS_AND_UPDATES">{t("common:label.emailTypeNewsUpdates")}</option>
+                    <option value="EVENTS">{t("common:title.events")}</option>
+                    <option value="ADMIN">{t("common:label.emailTypeAdminUrgent")}</option>
                 </Input>
             </CardBody>
         </Card>
@@ -101,14 +101,14 @@ export const AdminEmails = () => {
 
         {emailTemplate && <>
             <Card className="p-3 my-3">
-                <CardTitle tag="h2">{t("common:admin.emails.details.title")}</CardTitle>
+                <CardTitle tag="h2">{t("common:button.details")}</CardTitle>
                 <CardBody>
                     <ul>
                         <li><b>{t("common:admin.emails.details.subjectLabel")}</b> {emailTemplate.subject || t("common:admin.emails.details.noSubject")}</li>
                         {emailTemplate.from && <li><b>{t("common:admin.emails.details.fromLabel")}</b> {emailTemplate.fromName || ""} &lt;{emailTemplate.from}&gt;</li>}
                         {emailTemplate.replyTo && <li><b>{t("common:admin.emails.details.replyToLabel")}</b> {emailTemplate.replyToName || ""} &lt;{emailTemplate.replyTo}&gt;</li>}
                         <li><b>{t("common:admin.emails.details.sentViaLabel")}</b>&nbsp;
-                            {emailTemplate.sender?.includes("@mail.isaac") ? "MailGun" : t("common:admin.emails.details.senderUniversity")}
+                            {emailTemplate.sender?.includes("@mail.isaac") ? "MailGun" : t("common:label.university")}
                         </li>
                     </ul>
                 </CardBody>
@@ -116,7 +116,7 @@ export const AdminEmails = () => {
 
             <Card className="p-3 my-3">
                 <CardTitle tag="h2">{t("common:admin.emails.htmlPreview.title")}</CardTitle>
-                <Label>{t("common:admin.emails.htmlPreview.label")}</Label>
+                <Label>{t("common:label.emailPreviewNote")}</Label>
                 <CardBody>
                     {emailTemplate.html &&
                         <iframe title={t("common:admin.emails.htmlPreview.frameTitle")} className="email-preview-frame" srcDoc={emailTemplate.html}/>
@@ -126,7 +126,7 @@ export const AdminEmails = () => {
 
             <Card className="p-3 my-3">
                 <CardTitle tag="h2">{t("common:admin.emails.plainTextPreview.title")}</CardTitle>
-                <Label>{t("common:admin.emails.plainTextPreview.label")}</Label>
+                <Label>{t("common:label.emailPreviewNote")}</Label>
                 <CardBody>
                     <pre>{emailTemplate.plainText}</pre>
                 </CardBody>
@@ -148,11 +148,11 @@ export const AdminEmails = () => {
                                         sendAdminEmailWithIds({contentId: contentObjectID, emailType, ids: csvIDs});
                                     }
                                 }}>
-                                {t("common:admin.emails.send.sendButton")}
+                                {t("common:button.sendEmails")}
                             </Button>
                         </React.Fragment>
                         :
-                        <React.Fragment>{t("common:admin.emails.send.requestMade")}</React.Fragment>
+                        <React.Fragment>{t("common:status.emailRequestMade")}</React.Fragment>
                     }
                 </div>
             </CardBody>

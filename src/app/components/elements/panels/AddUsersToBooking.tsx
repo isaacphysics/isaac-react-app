@@ -51,7 +51,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
             <Row>
                 <Col md={6}>
                     <div className="mb-3">
-                        <Label htmlFor="user-search-familyName">{t("common:events.addUsers.searchFamilyNameLabel")}</Label>
+                        <Label htmlFor="user-search-familyName">{t("common:label.findUserByFamilyName")}</Label>
                         <Input
                             id="user-search-familyName" type="text" placeholder={t("common:events.addUsers.searchFamilyNamePlaceholder")} value={queryParams.familyName || ""}
                             onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
@@ -60,7 +60,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                 </Col>
                 <Col md={6}>
                     <div className="mb-3">
-                        <Label htmlFor="user-search-email">{t("common:events.addUsers.searchEmailLabel")}</Label>
+                        <Label htmlFor="user-search-email">{t("common:label.findUserByEmail")}</Label>
                         <Input
                             id="user-search-email" type="text" placeholder={t("common:events.addUsers.searchEmailPlaceholder")} value={queryParams.email || ""}
                             onChange={e => setParamIfNotDefault("email", e.target.value, "")}
@@ -69,16 +69,16 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                 </Col>
                 <Col md={6}>
                     <div className="mb-3">
-                        <Label htmlFor="user-search-role">{t("common:events.addUsers.searchRoleLabel")}</Label>
+                        <Label htmlFor="user-search-role">{t("common:label.findByUserRole")}</Label>
                         <Input
                             type="select" id="user-search-role" value={queryParams.role || "NO_ROLE"}
                             onChange={e => setParamIfNotDefault("role", e.target.value, "NO_ROLE")}
                         >
                             <option value="NO_ROLE">{t("common:events.addUsers.roleAny")}</option>
-                            <option value="TUTOR">{t("common:events.addUsers.roleTutor")}</option>
-                            <option value="TEACHER">{t("common:events.addUsers.roleTeacher")}</option>
-                            <option value="CONTENT_EDITOR">{t("common:events.addUsers.roleContentEditor")}</option>
-                            <option value="ADMIN">{t("common:events.addUsers.roleAdmin")}</option>
+                            <option value="TUTOR">{t("common:role.tutor")}</option>
+                            <option value="TEACHER">{t("common:role.teacher")}</option>
+                            <option value="CONTENT_EDITOR">{t("common:role.contentEditor")}</option>
+                            <option value="ADMIN">{t("common:role.admin")}</option>
                         </Input>
                     </div>
                 </Col>
@@ -96,13 +96,13 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
             <Table bordered className="mb-0 bg-white" data-testid="user-search-table">
                 <thead>
                     <tr>
-                        <th className="align-middle">{t("common:events.addUsers.tableHeaderActions")}</th>
-                        <th className="align-middle">{t("common:events.addUsers.tableHeaderName")}</th>
-                        <th className="align-middle">{t("common:events.addUsers.tableHeaderEmail")}</th>
-                        <th className="align-middle">{t("common:events.addUsers.tableHeaderRole")}</th>
+                        <th className="align-middle">{t("common:table.actions")}</th>
+                        <th className="align-middle">{t("common:table.name")}</th>
+                        <th className="align-middle">{t("common:table.email")}</th>
+                        <th className="align-middle">{t("common:table.role")}</th>
                         <th className="align-middle">{t("common:events.addUsers.tableHeaderSchoolSet")}</th>
-                        <th className="align-middle">{t("common:events.addUsers.tableHeaderMemberSince")}</th>
-                        <th className="align-middle">{t("common:events.addUsers.tableHeaderLastSeen")}</th>
+                        <th className="align-middle">{t("common:table.memberSince")}</th>
+                        <th className="align-middle">{t("common:table.lastSeen")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -118,7 +118,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                         <td className="align-middle">{result.familyName}, {result.givenName}</td>
                         <td className="align-middle">{result.email}</td>
                         <td className="align-middle">{result.role}</td>
-                        <td className="align-middle">{result.schoolId != null ? t("common:events.addUsers.schoolSetYes") : result.schoolOther != null ? t("common:events.addUsers.schoolSetOther") : t("common:events.addUsers.schoolSetNone")}</td>
+                        <td className="align-middle">{result.schoolId != null ? t("common:status.yes") : result.schoolOther != null ? t("common:events.addUsers.schoolSetOther") : t("common:events.addUsers.schoolSetNone")}</td>
                         <td className="align-middle"><DateString>{result.registrationDate}</DateString></td>
                         <td className="align-middle"><DateString>{result.lastSeen}</DateString></td>
                     </tr>)}

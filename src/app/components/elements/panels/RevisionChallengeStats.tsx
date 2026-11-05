@@ -47,7 +47,7 @@ export const RevisionChallengeStats = ({userProgress}: {userProgress?: UserProgr
             </ProgressBar>
             : <ProgressBar percentage={100 * (completedQuestionsInChallenge / (displayedChallenge?.target ?? 1))} className="mb-5 mt-2">
                 {displayedChallenge.active 
-                    ? completedQuestionsInChallenge == null ? t("ada:revision.challenge.noData") : t("ada:revision.challenge.progress", { correctCount: completedQuestionsInChallenge, remainingCount: displayedChallenge?.target - completedQuestionsInChallenge })
+                    ? completedQuestionsInChallenge == null ? t("common:status.noData") : t("ada:revision.challenge.progress", { correctCount: completedQuestionsInChallenge, remainingCount: displayedChallenge?.target - completedQuestionsInChallenge })
                     : t("ada:revision.challenge.ended")
                 }
             </ProgressBar>

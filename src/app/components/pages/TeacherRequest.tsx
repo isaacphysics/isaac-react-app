@@ -67,7 +67,7 @@ export const TeacherRequest = () => {
     const allowedDomain = isAda || !nonSchoolDomains.some(domain => emailAddress.toLowerCase().includes(domain));
 
     const urn = user?.loggedIn && user.schoolId || "";
-    const subject = t("common:auth.teacherRequest.emailSubject");
+    const subject = t("common:label.teacherAccountRequestSubject");
     const teacherVerificationMethodMessage = siteSpecific(
         t("sci:auth.teacherRequest.emailVerificationLine", { verificationDetails }),
         ""
@@ -122,7 +122,7 @@ export const TeacherRequest = () => {
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3">
-                                        {t("common:auth.teacherRequest.alreadyTeacher")}
+                                        {t("sci:status.alreadyHaveTeacherAccount")}
                                     </span>
                                     <p className="mt-3">
                                         <Trans i18nKey="common:auth.teacherRequest.teacherFaq" components={{ faqLink: <Link to="/support/teacher/general" /> }} />
@@ -137,7 +137,7 @@ export const TeacherRequest = () => {
                                         {t("common:auth.teacherRequest.submitted")}
                                     </p>
                                     <p>
-                                        {t("common:auth.teacherRequest.pending")}
+                                        {t("common:label.accountVerificationNote")}
                                     </p>
                                 </Col>
                             </Row>
@@ -162,7 +162,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="first-name-input" className="form-required">{t("common:form.firstNameLabel")}</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">{t("common:label.firstName")}</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user?.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
@@ -170,7 +170,7 @@ export const TeacherRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="last-name-input" className="form-required">{t("common:form.lastNameLabel")}</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">{t("common:label.lastName")}</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user?.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
@@ -180,7 +180,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="email-input" className="form-required">{t("common:form.emailLabel")}</Label>
+                                                <Label htmlFor="email-input" className="form-required">{t("common:label.emailAddress")}</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified || !allowedDomain} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user?.loggedIn ? user.email : ""}
@@ -190,7 +190,7 @@ export const TeacherRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="school-input" className={siteSpecific("form-required", "")}>{t("common:auth.teacherRequest.school")}</Label>
+                                                <Label htmlFor="school-input" className={siteSpecific("form-required", "")}>{t("common:label.school")}</Label>
                                                 <Input disabled id="school-input" type="text" name="school"
                                                     defaultValue={school} invalid={isPhy && typeof school == "undefined"}
                                                     onChange={e => setSchool(e.target.value)} required/>

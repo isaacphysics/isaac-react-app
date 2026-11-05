@@ -89,7 +89,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
 
     const tableHeader = <tr>
-        <th className="text-center align-middle"><span className="ps-2 pe-2">{t("common:assignments.table.groups")}</span></th>
+        <th className="text-center align-middle"><span className="ps-2 pe-2">{t("common:table.groups")}</span></th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
@@ -97,11 +97,11 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
-                {t("common:assignments.table.stagesAndDifficulties")}
+                {t("common:table.stagesAndDifficulties")}
                 <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                <Trans i18nKey="common:assignments.table.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
+                <Trans i18nKey="common:label.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
             </UncontrolledTooltip>
         </th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
@@ -109,7 +109,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             setOrder={setBoardOrder}>
             {t("common:assignments.table.lastViewed")}
         </SortItemHeader>
-        <th className="text-center align-middle">{t("common:assignments.table.manage")}</th>
+        <th className="text-center align-middle">{t("common:button.manage")}</th>
     </tr>;
 
     return <Card className="mt-2 mb-7">
@@ -146,34 +146,34 @@ const CSTable = (props: SetAssignmentsTableProps) => {
     } = props;
 
     const tableHeader = <tr>
-        <th>{t("common:assignments.table.groups")}</th>
+        <th>{t("common:table.groups")}</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
             {t("common:assignments.table.quizName")}
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            {t("common:assignments.table.stagesAndDifficulties")} <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" />
+            {t("common:table.stagesAndDifficulties")} <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                <Trans i18nKey="common:assignments.table.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
+                <Trans i18nKey="common:label.difficultiesTooltip" components={{ br: <br /> }} values={{ practiceLevels: difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", "), challengeLevels: difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ") }} />
             </UncontrolledTooltip>
         </th>
-        <th>{t("common:assignments.table.creator")}</th>
+        <th>{t("common:table.creator")}</th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
             reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder}
             setOrder={setBoardOrder}>
             {t("common:assignments.table.lastViewed")}
         </SortItemHeader>
-        <th>{t("common:assignments.table.manage")}</th>
-        <th>{t("common:assignments.table.share")}</th>
-        <th>{t("common:assignments.table.unsave")}</th>
+        <th>{t("common:button.manage")}</th>
+        <th>{t("common:table.share")}</th>
+        <th>{t("common:button.unsave")}</th>
     </tr>;
 
     return <div className={"mb-7 mt-4"}>
         <Row>
             <Col xs={6} md={4} lg={3} xl={3}>
                 <Label className="w-100">
-                    {t("common:assignments.filter.displayIn")} <Input type="select" value={boardView} onChange={switchView}>
+                    {t("common:label.displayIn")} <Input type="select" value={boardView} onChange={switchView}>
                         {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                     </Input>
                 </Label>
@@ -188,7 +188,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </Col>
             <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>{t("common:assignments.filter.byCreator")}</span><Input type="select" value={boardCreator}
+                    <span className={"text-nowrap"}>{t("common:label.filterByCreator")}</span><Input type="select" value={boardCreator}
                         onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                         {Object.values(BoardCreators).map(creator => <option key={creator}
                             value={creator}>{creator}</option>)}
@@ -234,7 +234,7 @@ const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { cla
                     setAssignBoardPath(redirectBackTo);
                     void dispatch(openIsaacBooksModal());
                 }} color="keyline" block className="px-3">
-                    {t("common:assignments.add.booksButton")}
+                    {t("common:button.ourBooks")}
                 </Button>
             </Col>
             <Col md={6} lg={4} className="pt-1">
@@ -379,7 +379,7 @@ export const SetAssignments = () => {
             <>
                 <PhyAddGameboardButtonsSetAssignments className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
                 {isGroupsEmptyState && <Alert color="warning">
-                    <Trans i18nKey="sci:assignments.emptyGroupsAlert" components={{ createGroupLink: <Link to="/groups" /> }} />
+                    <Trans i18nKey="sci:error.noGroupsToAssign" components={{ createGroupLink: <Link to="/groups" /> }} />
                 </Alert>}
                 {isBoardsEmptyState ?
                     <Alert color="warning">
@@ -406,7 +406,7 @@ export const SetAssignments = () => {
                         color: "yellow",
                         buttons: {
                             primary: {
-                                text: t("common:assignments.emptyGroupsButton"),
+                                text: t("common:button.createGroup"),
                                 clickUrl: "/groups",
                                 style: "outline"
                             }
@@ -439,7 +439,7 @@ export const SetAssignments = () => {
                 <Row>
                     {boardView === BoardViews.card && <Col sm={6} lg={3}>
                         <Label className="w-100">
-                            {t("ada:assignments.filter.displayIn")} <Input type="select" value={boardView} onChange={switchView}>
+                            {t("common:label.displayIn")} <Input type="select" value={boardView} onChange={switchView}>
                                 {Object.values(BoardViews).map(view => <option key={view}
                                     value={view}>{view}</option>)}
                             </Input>
@@ -448,7 +448,7 @@ export const SetAssignments = () => {
                     {boardView === BoardViews.card && <>
                         <Col xs={6} lg={{size: 2, offset: 3}}>
                             <Label className="w-100">
-                                {t("ada:assignments.filter.show")} <Input disabled={forceAllBoards} type="select" value={boardLimit}
+                                {t("common:button.show")} <Input disabled={forceAllBoards} type="select" value={boardLimit}
                                     onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit}
                                         value={limit}>{limit}</option>)}
@@ -457,7 +457,7 @@ export const SetAssignments = () => {
                         </Col>
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
-                                {t("ada:assignments.filter.sortBy")} 
+                                {t("common:label.sortBy")} 
                                 <div className="d-flex gap-2 align-items-center">
                                     <Input type="select" value={boardOrder} disabled={sortDisabled}
                                         onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}
@@ -469,7 +469,7 @@ export const SetAssignments = () => {
                                     {sortDisabled && <>
                                         <i id="sortHelpTooltip" className="icon icon-info icon-color-grey ms-2"/>
                                         <UncontrolledTooltip placement="auto" autohide target="sortHelpTooltip">
-                                            {t("ada:assignments.filter.sortDisabledTooltip")}
+                                            {t("common:status.sortDisabled")}
                                         </UncontrolledTooltip>
                                     </>}
                                 </div>
@@ -500,7 +500,7 @@ export const SetAssignments = () => {
                                 </p>
                                 {boards.boards.length < boards.totalResults &&
                                     <Button onClick={viewMore} disabled={loading}>{loading ?
-                                        <Spinner/> : t("common:assignments.pagination.viewMore")}</Button>}
+                                        <Spinner/> : t("common:button.viewMore")}</Button>}
                             </div>
                         </>
                         :

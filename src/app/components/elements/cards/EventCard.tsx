@@ -33,7 +33,7 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
             : event.userBookingStatus === "RESERVED"
                 ? <IconText icon="icon-tick">{t("common:events.card.reservedStatus")}</IconText>
                 : event.userBookingStatus === "WAITING_LIST"
-                    ? <IconText icon="icon-tick">{t("common:events.card.waitingListStatus")}</IconText>
+                    ? <IconText icon="icon-tick">{t("common:events.status.onWaitingList")}</IconText>
                     : event.hasExpired 
                         ? <IconText icon="icon-cross">{t("common:events.card.expired")}</IconText> 
                         : event.isWithinBookingDeadline 
@@ -65,12 +65,12 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                     }
                     {hasExpired &&
                         <span className="expired-badge">
-                            <Badge className="badge rounded-pill" color="failed">{t("common:events.card.expiredBadge")}</Badge>
+                            <Badge className="badge rounded-pill" color="failed">{t("common:events.status.expired")}</Badge>
                         </span>}
                     {bookingDeadlineSoon &&
                         <span>
                             <span className="warning-tag px-2 fw-semibold">
-                                {t("common:events.card.bookingDeadlineSoon")}
+                                {t("common:events.status.bookingDeadlineSoon")}
                             </span>
                         </span>}
                 </span>
@@ -133,16 +133,16 @@ const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolea
         {subtitle && <CardText className='m-0 my-auto card-date-time'>{subtitle}</CardText>}
         <CardText className="m-0 my-auto card-date-time">
             <span className="d-block my-2">
-                <span className="fw-bold">{t("common:events.card.whenLabel")}</span>
+                <span className="fw-bold">{t("common:events.label.when")}</span>
                 <span className="d-block">
                     {formatEventCardDate(event, pod)}
                 </span>
             </span>
             {location && location.address && <span className='d-block my-2'>
-                <span className="fw-bold">{t("common:events.card.locationLabel")}</span> {" "}
+                <span className="fw-bold">{t("common:label.eventLocation")}</span> {" "}
                 {!event.isVirtual ?
                     <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
-                    <span>{t("common:events.card.online")}</span>
+                    <span>{t("common:status.online")}</span>
                 }
             </span>}
         </CardText>

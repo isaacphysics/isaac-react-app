@@ -87,7 +87,7 @@ export const AdminContentErrors = () => {
         <Row>
             <Col>
                 <TitleAndBreadcrumb
-                    currentPageTitle={t("common:admin.contentErrors.title")}
+                    currentPageTitle={t("common:title.contentErrors")}
                     icon={{type: "icon", icon: "icon-tests"}}
                 />
             </Col>
@@ -127,7 +127,7 @@ export const AdminContentErrors = () => {
                             <StyledSelect
                                 inputId="critical-filter-select"
                                 isMulti
-                                placeholder={t("common:admin.contentErrors.filters.nonePlaceholder")}
+                                placeholder={t("common:label.none")}
                                 value={criticalFilter.map(x => ({value: x, label: x}))}
                                 options={[
                                     {value: CRITICAL_FILTER.CRITICAL, label: CRITICAL_FILTER.CRITICAL},
@@ -141,7 +141,7 @@ export const AdminContentErrors = () => {
                             <StyledSelect
                                 inputId="published-filter-select"
                                 isMulti
-                                placeholder={t("common:admin.contentErrors.filters.nonePlaceholder")}
+                                placeholder={t("common:label.none")}
                                 value={publishedFilter.map(x => ({value: x, label: x}))}
                                 options={[
                                     {value: PUBLISHED_FILTER.PUBLISHED, label: PUBLISHED_FILTER.PUBLISHED},

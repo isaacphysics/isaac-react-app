@@ -111,7 +111,7 @@ const CoordinateInput = (props: CoordinateInputProps) => {
                 {(i < numberOfDimensions - 1) && <Markup encoding="latex" className="coordinate-input-separator">{separator}</Markup>}
             </span>)}
         {useBrackets ? ")" : ""}
-        {remove && <Button className="ms-3" size="sm" onClick={remove}>{t("common:questions.coordinate.deleteButton")}</Button>}
+        {remove && <Button className="ms-3" size="sm" onClick={remove}>{t("common:button.delete")}</Button>}
     </div>;
 };
 

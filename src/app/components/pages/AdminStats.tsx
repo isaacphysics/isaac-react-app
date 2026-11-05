@@ -61,7 +61,7 @@ export const AdminStats = () => {
                                         </li>
                                         <li><Trans i18nKey="common:admin.stats.users.total" components={{ strong: <strong /> }} values={{ totalUsers: (adminStatsWithTotals.userGenders.TOTAL || 0).toLocaleString() }} /></li>
                                         <li className="mt-3">
-                                            <strong>{t("common:admin.stats.users.genderTitle")}</strong>
+                                            <strong>{t("common:label.gender")}</strong>
                                             <ul className="list-unstyled">
                                                 <li>{t("common:admin.stats.users.gender.male", { count: (adminStatsWithTotals.userGenders.MALE || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.MALE, adminStatsWithTotals.userGenders.TOTAL) })}
                                                 </li>
@@ -76,7 +76,7 @@ export const AdminStats = () => {
                                             </ul>
                                         </li>
                                         <li className="mt-3">
-                                            <strong>{t("common:admin.stats.users.roleTitle")}</strong>
+                                            <strong>{t("common:label.role")}</strong>
                                             <ul className="list-unstyled">
                                                 <li>{t("common:admin.stats.users.role.student", { count: (adminStatsWithTotals.userRoles.STUDENT || 0).toLocaleString() })}</li>
                                                 <li>{t("common:admin.stats.users.role.tutor", { count: (adminStatsWithTotals.userRoles.TUTOR || 0).toLocaleString() })}</li>

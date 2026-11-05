@@ -29,21 +29,21 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
             </thead>
             <tbody>
                 <tr>
-                    <th scope="row"><span className="d-none d-lg-block d-md-block">{t("common:subjectInterests.physics")}</span>
+                    <th scope="row"><span className="d-none d-lg-block d-md-block">{t("sci:label.physics")}</span>
                         <span className="d-block d-md-none">{t("common:subjectInterests.physicsShort")}</span></th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row"><span className="d-none d-lg-block d-md-block">{t("common:subjectInterests.chemistry")}</span>
+                    <th scope="row"><span className="d-none d-lg-block d-md-block">{t("sci:label.chemistry")}</span>
                         <span className="d-block d-md-none">{t("common:subjectInterests.chemistryShort")}</span></th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row">{t("common:subjectInterests.maths")}</th>
+                    <th scope="row">{t("common:label.maths")}</th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_UNI"} setStateFunction={setStateFunction}/></td>

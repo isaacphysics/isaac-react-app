@@ -137,7 +137,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0
                     ? <>
                         <Label className={"w-100"}>{t("common:assignments.schedule.filterByGroup")}
-                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder={t("common:assignments.schedule.allPlaceholder")}
+                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder={t("common:label.all")}
                                 value={groupsToInclude}
                                 closeMenuOnSelect={!isStaff(user)}
                                 onChange={selectOnChange(setGroupsToInclude, false)}
@@ -150,7 +150,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                                 headerScrollerSentinel.current?.scrollIntoView();
                             }
                         }}>
-                            {t("common:assignments.schedule.collapseButton")}
+                            {t("sci:button.collapseSchedule")}
                         </Button>
                     </>
                     : <div className={"mt-2"}>{t("common:assignments.schedule.emptyState")}</div>
@@ -234,10 +234,10 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             <a className="h4" target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a>
             <div className={"ms-auto text-end"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
-                    {t("common:assignments.schedule.setAgain")}
+                    {t("common:button.setAgain")}
                 </Button>
                 {(assignmentOwnedByMe || assignment.additionalManagerPrivileges) && <Button color="link" size="sm" onClick={deleteAssignment}>
-                    {t("common:assignments.schedule.unassignButton")}
+                    {t("common:button.unassign")}
                 </Button>}
             </div>
         </CardHeader>
@@ -312,7 +312,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForDay", { date })} onKeyPress={(e) => {
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.timeline.listForDay", { date })} onKeyPress={(e) => {
             if (e.key === "Enter") {
                 setOpen(o => !o);
                 setCollapsed(false);
@@ -359,7 +359,7 @@ const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, 
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:assignments.timeline.expand")) + t("common:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
             className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -500,7 +500,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             Set new assignment{assignmentToCopy ? " (from existing)" : ""}
         </h2>
         <Label className="w-100 pb-2">Group(s):
-            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder={t("common:assignments.modal.groupPlaceholder")}
+            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder={t("common:label.none")}
                 value={selectedGroups}
                 closeMenuOnSelect={false}
                 onChange={selectOnChange(setSelectedGroups, false)}
@@ -508,7 +508,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             />
         </Label>
         <Label className="w-100 pb-2">{t("common:assignments.modal.gameboardLabel")}
-            <StyledSelect inputId="gameboard-to-assign" isClearable placeholder={t("common:assignments.modal.gameboardPlaceholder")}
+            <StyledSelect inputId="gameboard-to-assign" isClearable placeholder={t("common:label.none")}
                 value={selectedGameboard}
                 onChange={selectOnChange(setSelectedGameboard, false)}
                 options={gameboards.map(g => itemise(g.id ?? "", g.title ?? t("site:assignments.modal.unknownGameboard")))}
@@ -519,12 +519,12 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             {gameboardToPreview && <GameboardPreviewCard showGameboardPreview={showGameboardPreview} toggleGameboardPreview={() => setShowGameboardPreview(p => !p)} gameboardToPreview={gameboardToPreview} />} 
         </Label>
         <Label className="w-100 pb-2"><Trans i18nKey="common:assignments.modal.startDateLabel" components={{ muted: <span className="text-muted" /> }} />
-            <DateInput value={scheduledStartDate} placeholder={t("common:assignments.modal.startDatePlaceholder")} yearRange={yearRange}
+            <DateInput value={scheduledStartDate} placeholder={t("common:assignments.startDatePlaceholder")} yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)}
             />
         </Label>
         <Label className="w-100 pb-2">{t("common:assignments.modal.dueDateLabel")}
-            <DateInput value={dueDate} placeholder={t("common:assignments.modal.dueDatePlaceholder")} yearRange={yearRange}
+            <DateInput value={dueDate} placeholder={t("common:assignments.dueDatePlaceholder")} yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}
             />
             {!dueDate && <small className={"pt-2 text-danger"}>{t("common:assignments.modal.dueDateRequiredNotice")}</small>}
@@ -539,7 +539,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             />
             <p className="mt-1 mb-0"><small>{t("common:assignments.modal.notesCharCount", { charCount: (assignmentNotes || '').length })}</small></p>
             {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
-                <p className="mt-0 mb-0 text-danger"><small>{t("common:assignments.modal.notesExceededError")}</small></p>
+                <p className="mt-0 mb-0 text-danger"><small>{t("common:assignments.notesMaxLengthError")}</small></p>
             }
         </Label>}
         <Row className={"mt-3"}>
@@ -693,7 +693,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         {/*</div>*/}
         {/*<PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>*/}
         <ShowLoadingQuery
-            defaultErrorTitle={t("common:assignments.schedule.loadError")}
+            defaultErrorTitle={t("sci:error.loadAssignments")}
             query={assignmentsSetByMeQuery}
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
@@ -712,7 +712,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                             </p>
                             {/* Groups-related alerts */}
                             {groups && groups.length === 0 && <div className="mt-3">
-                                <Trans i18nKey="common:assignments.schedule.noGroupsEmptyState" components={{ createGroupLink: <Link to="/groups" /> }} />
+                                <Trans i18nKey="sci:error.noGroupsToAssign" components={{ createGroupLink: <Link to="/groups" /> }} />
                             </div>}
                             {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <div className="mt-3">
                                 {t("common:assignments.schedule.noAssignmentsForGroups", { groupNames: groupsToInclude.map(g => g.label).join(", "), count: groupsToInclude.length })}

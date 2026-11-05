@@ -134,7 +134,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 <span className="form-required">Set test to the following group(s):</span>
                 <ShowLoadingQuery
                     query={groupsQuery}
-                    defaultErrorTitle={t("common:tests.setQuiz.groupsError")}
+                    defaultErrorTitle={t("common:error.fetchGroups")}
                     thenRender={groups => {
                         const groupOptions = groups
                             .map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; })
@@ -151,7 +151,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                     }}
                 />
                 {(selectedGroups.length === 0 
-                    ? <FormFeedback>{t("common:tests.setQuiz.groupRequired")}</FormFeedback> 
+                    ? <FormFeedback>{t("common:error.selectGroup")}</FormFeedback> 
                     : <FormFeedback>
                         {`${siteSpecific(
                             `You cannot reassign a test to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
@@ -184,7 +184,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
         <FormGroup>
             <Label className="w-100">
                 <div className={siteSpecific("d-flex align-items-center", "")}>
-                    <span className="form-optional">{t("common:tests.setQuiz.startDateLabel")}</span>
+                    <span className="form-optional">{t("common:label.startDateLabel")}</span>
                     <i id={scheduledQuizHelpTooltipId} className={classNames("icon icon-info icon-inline ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </div>
                 <DateInput 
@@ -202,7 +202,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">{t("common:tests.setQuiz.dueDateLabel")}</span>
+                <span className="form-required">{t("common:label.dueDateLabel")}</span>
                 <DateInput 
                     invalid={validationAttempted && dueDateInvalid} 
                     value={dueDate} 
@@ -234,14 +234,14 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 disabled={isAssigning}
                 onClick={() => dispatch(closeActiveModal())}
             >
-                {t("common:modal.closeButton")}
+                {t("common:button.close")}
             </Button>
             <Button
                 className={"float-end w-100 w-sm-auto"}
                 color="solid"
                 disabled={isAssigning}
             >
-                {isAssigning ? <IsaacSpinner size={"sm"} /> : t("common:tests.setQuiz.submitButton")}
+                {isAssigning ? <IsaacSpinner size={"sm"} /> : t("common:button.setTest")}
             </Button>
         </div>
     </Form>;

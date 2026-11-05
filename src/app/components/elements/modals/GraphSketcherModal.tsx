@@ -156,10 +156,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
             <div title={t("common:graphSketcher.controls.undoTooltip")} role="button" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">{t("common:graphSketcher.controls.undoButton")}</div>
             <div title={t("common:graphSketcher.controls.bezierTooltip")} role="button" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">{t("common:graphSketcher.controls.bezierButton")}</div>
             <div title={t("common:graphSketcher.controls.linearTooltip")} role="button" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">{t("common:graphSketcher.controls.linearButton")}</div>
-            <div title={t("common:graphSketcher.controls.deleteSelectedTooltip")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">{t("common:graphSketcher.controls.deleteSelectedButton")}</div>
-            <div title={t("common:graphSketcher.controls.deleteAllTooltip")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">{t("common:graphSketcher.controls.deleteAllButton")}</div>
-            <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">{t("common:graphSketcher.controls.submitButton")}</div>
-            <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">{t("common:graphSketcher.controls.helpButton")}</div>
+            <div title={t("common:button.deleteSelectedCurve")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">{t("common:button.deleteSelectedCurve")}</div>
+            <div title={t("common:button.deleteAllCurves")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">{t("common:button.deleteAllCurves")}</div>
+            <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">{t("common:button.submit")}</div>
+            <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">{t("common:button.help")}</div>
             {isStaff(user) && <div className="button" role="button" onClick={toggleDebugMode} onKeyUp={toggleDebugMode} tabIndex={0} id="graph-sketcher-ui-debug-button">Debug</div>}
 
             {!showQuestionReminder && <div

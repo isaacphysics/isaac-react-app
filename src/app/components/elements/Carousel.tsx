@@ -84,9 +84,9 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
         <div ref={carouselContainer}>
             <Carousel
                 activeIndex={activeIndex} className="pb-7" interval={false} keyboard={false}
-                previous={previous} previousLabel={t("common:carousel.previous")} next={next} nextLabel={t("common:carousel.next")}
+                previous={previous} previousLabel={t("common:button.previous")} next={next} nextLabel={t("common:button.next")}
             >
-                <CarouselControl direction="prev" directionText={t("common:carousel.previous")} onClickHandler={previous} />
+                <CarouselControl direction="prev" directionText={t("common:button.previous")} onClickHandler={previous} />
                 {props.children.map((child: ReactNode, index: number) => (
                     <CarouselItem key={index} onEntered={onEntered as any} onExiting={onExiting} onExited={onExited}>
                         <div className="no-horizontal">
@@ -96,7 +96,7 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
                         </div>
                     </CarouselItem>
                 ))}
-                <CarouselControl direction="next" directionText={t("common:carousel.next")} onClickHandler={() => {
+                <CarouselControl direction="next" directionText={t("common:button.next")} onClickHandler={() => {
                     setUsingKeyboard(false);
                     next();
                 }} />

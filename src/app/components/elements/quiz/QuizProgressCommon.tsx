@@ -185,10 +185,10 @@ export function ResultsTable<Q extends QuestionType>({
             body: t("common:progress.returnAttempt.body"),
             buttons: [
                 <Button key={1} color="keyline" target="_blank" onClick={() => dispatch(closeActiveModal())}>
-                    {t("common:progress.returnAttempt.cancel")}
+                    {t("common:button.cancel")}
                 </Button>,
                 <Button key={0} color="solid" target="_blank" onClick={confirm}>
-                    {t("common:progress.returnAttempt.confirm")}
+                    {t("common:button.confirm")}
                 </Button>,
             ]
         }));
@@ -258,10 +258,10 @@ export function ResultsTable<Q extends QuestionType>({
             reverseOrder={"name"}
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
             onClick={() => setSelectedQuestionIndex(undefined)}
-            label={t("common:progress.table.nameColumn")}
+            label={t("common:table.name")}
             alignment={"start"}
         >
-            {t("common:progress.table.nameColumn")}
+            {t("common:table.name")}
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
@@ -274,8 +274,8 @@ export function ResultsTable<Q extends QuestionType>({
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
-                        <span>{t("sci:progress.table.questionsWord")}</span>
-                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
+                        <span>{t("common:title.questions")}</span>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                     </div>,
                     "Correct"
                 )}
@@ -290,8 +290,8 @@ export function ResultsTable<Q extends QuestionType>({
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
-                        <span>{t("sci:progress.table.questionsWord")}</span>
-                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
+                        <span>{t("common:title.questions")}</span>
+                        <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                     </div>,
                     "Attempted"
                 )}
@@ -309,8 +309,8 @@ export function ResultsTable<Q extends QuestionType>({
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
-                            <span>{t("sci:progress.table.partsWord")}</span>
-                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
+                            <span>{t("sci:label.parts")}</span>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                         </div>,
                         "Correct"
                     )}
@@ -325,8 +325,8 @@ export function ResultsTable<Q extends QuestionType>({
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
-                            <span>{t("sci:progress.table.partsWord")}</span>
-                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.table.totalSubtitle")}</span>
+                            <span>{t("sci:label.parts")}</span>
+                            <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                         </div>,
                         "Attempted"
                     )}
@@ -341,7 +341,7 @@ export function ResultsTable<Q extends QuestionType>({
                 reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(index)}
                 className={classNames({"selected": index === selectedQuestionIndex})}
-                label={t("common:progress.table.questionColumn", { questionNumber: index + 1 })}
+                label={t("common:label.questionNumber", { questionNumber: index + 1 })}
                 key={index}
             >
                 <span>{index + 1}</span>
@@ -424,7 +424,7 @@ export function ResultsTable<Q extends QuestionType>({
                                                             <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
                                                         </div>
                                                         <div className="quiz-student-menu-icon">
-                                                            {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt={t("common:progress.table.menuAlt")} />}
+                                                            {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt={t("common:button.menu")} />}
                                                         </div>
                                                     </Button>
                                                     {!returningQuizToStudent && dropdownOpen?.[index] && <>
@@ -594,7 +594,7 @@ export function ResultsTablePartBreakdown({
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                             alignment={"start"}
                         >
-                            {t("common:progress.partBreakdown.nameColumn")}
+                            {t("common:table.name")}
                         </SortItemHeader>
                         {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                             ? <SortItemHeader<ProgressSortOrder>
@@ -606,7 +606,7 @@ export function ResultsTablePartBreakdown({
                             >
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
-                                        <span>{t("sci:progress.partBreakdown.partsWord")}</span>
+                                        <span>{t("sci:label.parts")}</span>
                                         <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                                     </div>,
                                     "Correct"
@@ -621,7 +621,7 @@ export function ResultsTablePartBreakdown({
                             >
                                 {siteSpecific(
                                     <div className="d-flex flex-column ps-3">
-                                        <span>{t("sci:progress.partBreakdown.partsWord")}</span>
+                                        <span>{t("sci:label.parts")}</span>
                                         <span className={classNames("text-muted fw-normal", above["md"](deviceSize) ? "small" : "mt-n1")}>{t("sci:progress.partBreakdown.totalSubtitle")}</span>
                                     </div>,
                                     "Attempted"

@@ -12,7 +12,7 @@ export const AnvilAppsListingSidebar = (props: ContentSidebarProps) => {
     const context = useAppSelector(selectors.pageContext.context);
     return <ContentSidebar buttonTitle={t("common:tools.listing.seeAllButton")} {...props}>
         <div className="section-divider"/>
-        <h3 className="h5">{t("common:tools.listing.selectStageTitle")}</h3>
+        <h3 className="h5">{t("common:label.selectStage")}</h3>
         <ul>
             {isFullyDefinedContext(context) && Object.keys(VALID_APPS_CONTEXTS[context.subject] ?? {}).map((stage, index) => <li key={index}>
                 <StyledTabPicker

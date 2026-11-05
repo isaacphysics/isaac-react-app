@@ -22,7 +22,7 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
                 <Markup trusted-markup-encoding={"html"}>{navigation.nextItem.title}</Markup>
             </div>
             <div className="d-flex align-items-center gap-2 justify-content-end float-end">
-                {t("common:navigation.nextButton")}
+                {t("common:button.next")}
                 <i className="icon icon-arrow-right" aria-hidden="true"/>
             </div>
         </Link>
@@ -35,7 +35,7 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
             </div>
             <div className="d-flex align-items-center gap-2 float-start">
                 <i className="icon icon-arrow-left" aria-hidden="true"/>
-                {t("common:navigation.previousButton")}
+                {t("common:button.previous")}
             </div>
         </Link>
     </div>;

@@ -49,12 +49,12 @@ export const EmailAlterHandler = () => {
                             <>
                                 <div className="mb-4 h3">{successMessage}</div>
                                 <Button tag={Link} to="/" color="secondary" block>
-                                    {t("common:auth.emailVerification.continueButton")}
+                                    {t("common:button.continue")}
                                 </Button>
                             </>}
                         {emailVerificationFailed &&
                             <>
-                                <div className="mb-4 h3">{t("common:auth.emailVerification.failedTitle")}</div>
+                                <div className="mb-4 h3">{t("sci:error.verifyEmail")}</div>
                                 <p>{getRTKQueryErrorMessage(emailVerificationError).message}</p>
                                 {idsMatch
                                     ? <p>
@@ -62,14 +62,14 @@ export const EmailAlterHandler = () => {
                                             <Button onClick={() => {
                                                 if (!user.email) {
                                                     dispatch(showErrorToast(
-                                                        t("common:auth.emailVerification.errorToastTitle"),
-                                                        t("common:auth.emailVerification.errorToastMessage")
+                                                        t("common:error.emailRequestFailed"),
+                                                        t("common:error.noEmailToVerify")
                                                     ));
                                                 } else {
                                                     void sendVerificationEmail({email: user.email});
                                                 }
                                             }}>
-                                                {t("common:auth.emailVerification.resendButton")}
+                                                {t("common:button.resendVerificationEmail")}
                                             </Button>
                                             :
                                             t("common:auth.emailVerification.sentTo", { email: (user && user.loggedIn && user.email) })
@@ -85,7 +85,7 @@ export const EmailAlterHandler = () => {
                             </>
                         }
                         {emailVerificationNotInitiated && <>
-                            <div className="mb-4 h3">{t("common:auth.emailVerification.badParamsTitle")}</div>
+                            <div className="mb-4 h3">{t("sci:error.verifyEmail")}</div>
                             <p>{t("common:auth.emailVerification.badParamsMessage")}</p>
                         </>}
                     </CardBody>

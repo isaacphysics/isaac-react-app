@@ -146,7 +146,7 @@ export const Concepts = () => {
     return (
         <PageContainer id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}
             pageTitle={<TitleAndBreadcrumb 
-                currentPageTitle={i18next.t("common:concepts.title")} 
+                currentPageTitle={i18next.t("common:title.concepts")} 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
                 icon={{type: "icon", icon: "icon-concept"}}
             />}
@@ -183,7 +183,7 @@ export const Concepts = () => {
 
                             {shortcutAndFilteredSearchResults.length
                                 ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
-                                : <em>{i18next.t("common:concepts.noResults")}</em>
+                                : <em>{i18next.t("common:status.noResults")}</em>
                             }
                         </>;
                     }}

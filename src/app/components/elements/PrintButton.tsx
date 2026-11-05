@@ -75,8 +75,8 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
             <IconButton
                 icon={{name: "icon-print icon-color-black-hoverable", color: "white"}}
                 className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
-                aria-label={t("common:printButton.ariaLabel")}
-                title={t("common:printButton.title")}
+                aria-label={t("common:button.printPage")}
+                title={t("common:button.printPage")}
                 color={siteSpecific("tint", "primary")}
                 data-bs-theme="neutral"
                 onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
@@ -86,8 +86,8 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
         <IconButton
             icon={{name: "icon-print icon-color-black-hoverable", color: "white"}}
             className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
-            aria-label={t("common:printButton.ariaLabel")}
-            title={t("common:printButton.title")}
+            aria-label={t("common:button.printPage")}
+            title={t("common:button.printPage")}
             color={siteSpecific("tint", "primary")}
             data-bs-theme="neutral"
             onClick={() => printWithHintsAndLoadedFonts(dispatch, false)}

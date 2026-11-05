@@ -57,7 +57,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h3 className="h5">{t("common:tests.view.filterSubjectTopicTitle")}</h3>
+                <h3 className="h5">{t("common:label.filterBySubjectAndTopic")}</h3>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -87,7 +87,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h3 className="h5">{t("common:tests.view.filterTopicTitle")}</h3>
+                <h3 className="h5">{t("common:label.filterByTopic")}</h3>
                 <ul className="ps-2">
                     <li>
                         <AllFiltersCheckbox
@@ -107,7 +107,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h3 className="h5">{t("common:tests.view.filterStageTitle")}</h3>
+                <h3 className="h5">{t("common:label.filterByStage")}</h3>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
                         <li key={i}>
@@ -128,7 +128,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
                 position: "suffix",
                 type: "icon"
             }}>
-                {t("common:tests.view.myTestsButton")}
+                {t("common:title.myTests")}
             </AffixButton>
         </div>
     </ContentSidebar>;

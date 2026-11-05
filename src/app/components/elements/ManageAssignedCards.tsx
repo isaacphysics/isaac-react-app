@@ -44,7 +44,7 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
                 {isDefined(assignmentStartDate) && 
                     <p className="mb-0" data-testid={"gameboard-assigned-date"}>
                         <Trans
-                            i18nKey="common:assignments.manage.assignedDate"
+                            i18nKey="sci:label.assignedDate"
                             components={{
                                 strong: <strong />,
                             }}
@@ -54,18 +54,18 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
                 }
                 {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && <p className="mb-0">
                     <Trans
-                        i18nKey="common:assignments.manage.dueDate"
+                        i18nKey="common:label.dueDate"
                         components={{
                             strong: <strong />,
                         }}
                         values={{ dueDate: getFriendlyDaysUntil(assignment.dueDate) }}
                     />
-                    {isOverdue(assignment) && <span className="overdue ms-1">{t("common:assignments.manage.overdueLabel")}</span>}
+                    {isOverdue(assignment) && <span className="overdue ms-1">{t("sci:status.datePassed")}</span>}
                 </p>}
             </Col>
         </Row>
         
-        {assignment.notes && <p className="mb-0"><strong>{t("common:assignments.manage.notesLabel")}</strong> {assignment.notes}</p>}
+        {assignment.notes && <p className="mb-0"><strong>{t("common:label.notes")}</strong> {assignment.notes}</p>}
     </GameboardCard>;
 };
 
@@ -94,7 +94,7 @@ export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignment
                 {isDefined(quizAssignment?.scheduledStartDate) || isDefined(quizAssignment?.creationDate) &&
                     <p className="mb-0" data-testid={"gameboard-assigned"}>
                         <Trans
-                            i18nKey="common:tests.manage.assignedDate"
+                            i18nKey="sci:label.assignedDate"
                             components={{
                                 strong: <strong />,
                             }}
@@ -104,13 +104,13 @@ export const ManageTestCard = ({quizAssignment}: {quizAssignment: QuizAssignment
                 }
                 {isDefined(quizAssignment?.dueDate) && <p className="mb-0">
                     <Trans
-                        i18nKey="common:tests.manage.dueDate"
+                        i18nKey="common:label.dueDate"
                         components={{
                             strong: <strong />,
                         }}
                         values={{ dueDate: getFriendlyDaysUntil(quizAssignment.dueDate) }}
                     />
-                    {isOverdue(quizAssignment) && <span className="overdue ms-1">{t("common:tests.manage.overdueLabel")}</span>}
+                    {isOverdue(quizAssignment) && <span className="overdue ms-1">{t("sci:status.datePassed")}</span>}
                 </p>}
             </Col>
         </Row>

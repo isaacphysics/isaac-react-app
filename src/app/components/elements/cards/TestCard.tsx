@@ -131,21 +131,21 @@ export const TestCard = (props: TestCardProps) => {
                     ? isTutorOrAbove(user) && <>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle caret className="text-nowrap" color="keyline" size="md">
-                                {i18next.t("common:tests.card.manage.toggle")}
+                                {i18next.t("common:button.manage")}
                             </DropdownToggle>
                             <DropdownMenu container={"root"}>
-                                <DropdownItem onClick={cancel}>{i18next.t("common:cards.unassign")}</DropdownItem>
+                                <DropdownItem onClick={cancel}>{i18next.t("common:button.unassign")}</DropdownItem>
                                 <DropdownItem onClick={openSetFeedbackModeModal}>{i18next.t("common:tests.card.manage.changeFeedbackType")}</DropdownItem>
-                                <DropdownItem onClick={extendDueDate}>{i18next.t("common:tests.card.manage.extendDueDate")}</DropdownItem>
+                                <DropdownItem onClick={extendDueDate}>{i18next.t("common:button.extendDueDate")}</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            {i18next.t("common:cards.setAgain")}
+                            {i18next.t("common:button.setAgain")}
                         </Button>
                     </>
                     : isTutorOrAbove(user) && <>
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); openAssignModal?.();}}>
-                            {i18next.t("common:cards.assign")}
+                            {i18next.t("common:button.assign")}
                         </Button>
                     </>
                 }

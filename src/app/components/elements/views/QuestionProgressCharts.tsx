@@ -104,7 +104,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 type: donut()
             },
             donut: {
-                title: isAllZero(topicColumns) ? i18next.t("common:progress.charts.noData") : i18next.t("common:progress.charts.byTopicTitle"),
+                title: isAllZero(topicColumns) ? i18next.t("common:status.noData") : i18next.t("common:progress.charts.byTopicTitle"),
                 label: {format: (value) => `${value}`}
             },
             bindto: `#${subId}-topicChart`,
@@ -120,7 +120,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     order: null
                 },
                 donut: {
-                    title: isAllZero(difficultyColumns) ? i18next.t("sci:progress.charts.noData") : i18next.t("sci:progress.charts.byDifficultyTitle"),
+                    title: isAllZero(difficultyColumns) ? i18next.t("common:status.noData") : i18next.t("sci:progress.charts.byDifficultyTitle"),
                     label: {format: (value) => `${value}`}
                 },
                 bindto: `#${subId}-stageChart`,
@@ -155,16 +155,16 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-categoryChart`} className="text-center-width doughnut-binding align-self-center">
-                    <strong>{isAllZero(categoryColumns) ? i18next.t("sci:progress.charts.noData") : ""}</strong>
+                    <strong>{isAllZero(categoryColumns) ? i18next.t("common:status.noData") : ""}</strong>
                 </div>
                 {isAllZero(categoryColumns) ?
                     <span className={"visually-hidden"}>
-                        {i18next.t("sci:progress.charts.noData")}
+                        {i18next.t("common:status.noData")}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>{i18next.t("sci:progress.charts.subjectColumnHeader")}</th>
+                                <th>{i18next.t("sci:label.subject")}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>
@@ -193,20 +193,20 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                     />
                 </div>
-                <span className={siteSpecific("ms-2", "d-inline-block ms-2")}>{i18next.t("common:progress.charts.topicFilterLabel")}</span>
+                <span className={siteSpecific("ms-2", "d-inline-block ms-2")}>{i18next.t("common:label.questions")}</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(topicColumns) ? i18next.t("common:progress.charts.noData") : ""}</strong>
+                    <strong>{isAllZero(topicColumns) ? i18next.t("common:status.noData") : ""}</strong>
                 </div>
                 {isAllZero(topicColumns) ?
                     <span className={"visually-hidden"}>
-                        {i18next.t("common:progress.charts.noData")}
+                        {i18next.t("common:status.noData")}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>{i18next.t("common:progress.charts.topicColumnHeader")}</th>
+                                <th>{i18next.t("common:label.topic")}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>
@@ -235,20 +235,20 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         onChange={selectOnChange(setStageChoices, false)}
                     />  
                 </div>
-                <span className="ms-2">{i18next.t("sci:progress.charts.stageFilterLabel")}</span>
+                <span className="ms-2">{i18next.t("common:label.questions")}</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(difficultyColumns) ? i18next.t("sci:progress.charts.noData") : ""}</strong>
+                    <strong>{isAllZero(difficultyColumns) ? i18next.t("common:status.noData") : ""}</strong>
                 </div>
                 {isAllZero(difficultyColumns) ?
                     <span className={"visually-hidden"}>
-                        {i18next.t("sci:progress.charts.noData")}
+                        {i18next.t("common:status.noData")}
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
                             <tr>
-                                <th>{i18next.t("sci:progress.charts.stageColumnHeader")}</th>
+                                <th>{i18next.t("common:label.stage")}</th>
                                 <th>{subId}</th>
                             </tr>
                         </thead>

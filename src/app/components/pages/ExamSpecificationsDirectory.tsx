@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export const ExamSpecificationsDirectory = () => {
     const { t } = useTranslation();
     return <Container className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={t("common:examSpecifications.directory.title")}/>
+        <TitleAndBreadcrumb currentPageTitle={t("ada:title.examSpecifications")}/>
         <MetaDescription description={t("common:examSpecifications.directory.metaDescription")}/>
         <Row className={"justify-content-center d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-xl-4 my-3"}>
             <Col className={"my-3"}>
@@ -40,8 +40,8 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>{t("common:examSpecifications.directory.england.gcses")}</li>
-                                <li>{t("common:examSpecifications.directory.england.aLevel")}</li>
+                                <li>{t("ada:examSpecifications.gcses")}</li>
+                                <li>{t("common:label.aLevel")}</li>
                             </ul>
                         </CardText>
                     </CardBody>
@@ -82,8 +82,8 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>{t("common:examSpecifications.directory.wales.gcses")}</li>
-                                <li>{t("common:examSpecifications.directory.wales.aLevel")}</li>
+                                <li>{t("ada:examSpecifications.gcses")}</li>
+                                <li>{t("common:label.aLevel")}</li>
                             </ul>
                         </CardText>
                     </CardBody>

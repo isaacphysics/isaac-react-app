@@ -84,22 +84,22 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                             <thead>
                                 <tr>
                                     <th className="align-middle text-center">
-                                        {t("common:events.tableActionsHeader")}
+                                        {t("common:table.actions")}
                                     </th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('title'); setReverse(!reverse);}}>
-                                        {t("common:events.tableTitleHeader")}
+                                        {t("common:table.title")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('date'); setReverse(!reverse);}}>
                                         {t("common:events.tableDateHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDeadline'); setReverse(!reverse);}}>
-                                        {t("common:events.tableDeadlineHeader")}
+                                        {t("common:label.bookingDeadline")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('location.address.town'); setReverse(!reverse);}}>
-                                        {t("common:events.tableLocationHeader")}
+                                        {t("common:label.location")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('eventStatus'); setReverse(!reverse);}}>
-                                        {t("common:events.tableStatusHeader")}
+                                        {t("common:label.status")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberOfConfirmedBookings'); setReverse(!reverse);}}>
                                         {t("common:events.tableConfirmedHeader")}
@@ -116,7 +116,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                                 {orderBy(eventOverviews, [sortPredicate], [reverse ? "desc" : "asc"])
                                     .map((event) => <tr key={event.id} data-testid="event-manager-row">
                                         <td className="align-middle"><Button color="keyline" className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
-                                            {t("common:events.manageButton")}
+                                            {t("common:button.manage")}
                                         </Button></td>
                                         <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
                                         <td className="align-middle"><DateString>{event.date}</DateString></td>

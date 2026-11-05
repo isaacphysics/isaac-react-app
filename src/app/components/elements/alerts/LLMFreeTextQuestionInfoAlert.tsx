@@ -44,10 +44,10 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
         <Row className="align-items-center mt-4">
             <Col div className="col-12 col-sm-auto me-auto">
                 <Link to="/login" onClick={setAfterAuthPath} className="btn btn-solid me-2 w-100 w-sm-auto">
-                    {t("common:freeTextBuilder.infoAlert.loginButton")}
+                    {t("common:button.logIn")}
                 </Link>
                 <Link to="/register" onClick={setAfterAuthPath} className="btn btn-keyline bg-white w-100 w-sm-auto mt-2 mt-sm-0">
-                    {t("common:freeTextBuilder.infoAlert.signupButton")}
+                    {t("common:button.signUp")}
                 </Link>
             </Col>
             {navigation.nextItem && <Col className="col-auto mt-4 mt-md-0">

@@ -82,7 +82,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
             case "image": selectedComponent = <IsaacImage {...props} key={props.doc.id} />; break;
             case "video": selectedComponent = <IsaacVideo {...props} key={props.doc.id} />; break;
             // IsaacCodeSnippet is lazy loaded, so wrap it in Suspense to prevent reload errors
-            case "codeSnippet": selectedComponent = <Suspense fallback={<div>{t("common:content.loadingIndicator")}</div>}> <IsaacCodeSnippet {...props} key={props.doc.id} /> </Suspense>; break;
+            case "codeSnippet": selectedComponent = <Suspense fallback={<div>{t("common:status.loading")}</div>}> <IsaacCodeSnippet {...props} key={props.doc.id} /> </Suspense>; break;
             case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...props} key={props.doc.id} />; break;
             case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} key={props.doc.id} />; break;
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} key={props.doc.id} />; break;

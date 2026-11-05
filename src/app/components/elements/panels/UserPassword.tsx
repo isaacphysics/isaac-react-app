@@ -98,7 +98,7 @@ export const UserPassword = (
             <p>{t("common:account.security.description")}</p>
         </>}
         rightColumn={<>
-            <h3 className="h4">{t("common:account.security.passwordTitle")}</h3>
+            <h3 className="h4">{t("common:label.password")}</h3>
             {userAuthSettings && userAuthSettings.hasSegueAccount ? 
                 <>  
                     {(isPhy || (isAda && showPasswordFields)) && 
@@ -114,7 +114,7 @@ export const UserPassword = (
                             />
                         </FormGroup>}
                         <FormGroup className="form-group pb-2">
-                            <Label htmlFor="new-password">{t("common:account.security.newPasswordLabel")}</Label>
+                            <Label htmlFor="new-password">{t("common:label.newPassword")}</Label>
                             <TogglablePasswordInput
                                 invalid={submissionAttempted && !isNewPasswordValid}
                                 id="new-password" type="password" name="new-password"
@@ -127,19 +127,19 @@ export const UserPassword = (
                                     passwordDebounce(e.target.value, setPasswordFeedback);
                                 }}
                                 onFocus={loadZxcvbnIfNotPresent}
-                                feedbackText={t("common:account.security.minLengthFeedback", { minLength: MINIMUM_PASSWORD_LENGTH })}
+                                feedbackText={t("common:label.passwordMinLength", { minLength: MINIMUM_PASSWORD_LENGTH })}
                                 aria-describedby="passwordValidationMessage"
                                 disabled={!editingOtherUser && currentPassword == ""}
                             />
                             {passwordFeedback && <span className='float-end small'>
-                                <strong>{t("common:account.security.strengthLabel")} </strong>
+                                <strong>{t("common:label.passwordStrength")} </strong>
                                 <span id="password-strength-feedback">
                                     {passwordFeedback.feedbackText}
                                 </span>
                             </span>}
                         </FormGroup>
                     </>}
-                    {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" color="keyline" onClick={() => setShowPasswordFields(true)}>{t("common:account.security.changePasswordButton")}</Button>}
+                    {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" color="keyline" onClick={() => setShowPasswordFields(true)}>{t("common:button.changePassword")}</Button>}
                 </>
                 : !passwordResetRequested ?
                     <React.Fragment>
@@ -169,7 +169,7 @@ export const UserPassword = (
                     <React.Fragment>
                         <p>
                             <strong className="d-block">{t("common:account.security.resetProcessing")}</strong>
-                            <strong className="d-block">{t("common:account.security.checkInbox")}</strong>
+                            <strong className="d-block">{t("common:status.checkInbox")}</strong>
                         </p>
                     </React.Fragment>
             }

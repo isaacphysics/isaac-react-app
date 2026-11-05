@@ -48,13 +48,13 @@ export const FooterCS = () => (
                         <Col xs={{size: 12}} md={{size: 6, order: 1}} lg={{size: 6}} xl={{size: 6}} className="col-xxl-2">
                             <div className="logo-grid">
                                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt={i18next.t("ada:meta.footer.cambridgeAlt")} className='img-fluid footer-org-logo' data-site="uoc" />
+                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt={i18next.t("common:label.cambridgeUniversity")} className='img-fluid footer-org-logo' data-site="uoc" />
                                 </a>
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt={i18next.t("ada:meta.footer.raspberryPiAlt")} className='img-fluid footer-org-logo' data-site="rpf" />
+                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt={i18next.t("ada:label.raspberryPiWebsite")} className='img-fluid footer-org-logo' data-site="rpf" />
                                 </a>
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={i18next.t("ada:meta.footer.fundedByAlt")} className='img-fluid' data-site="ukgovt" />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt={i18next.t("ada:meta.footer.techFirstAlt")} className='img-fluid' data-site="techfirst" />
+                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={i18next.t("ada:label.fundedByUkGovernment")} className='img-fluid' data-site="ukgovt" />
+                                <img src="/assets/common/logos/techfirst-white.svg" alt={i18next.t("ada:label.techFirstLogo")} className='img-fluid' data-site="techfirst" />
                             </div>
                         </Col>
                         

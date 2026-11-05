@@ -80,7 +80,7 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
     const { t } = useTranslation();
     if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
-            <div className="h4">{t("common:tests.details.noFeedback")}</div>
+            <div className="h4">{t("common:status.noFeedback")}</div>
             : attempt.feedbackMode === "OVERALL_MARK" ?
                 <div className="h4">{t("common:tests.details.overallMark", { correct: attempt.quiz?.individualFeedback?.overallMark?.correct, total: attempt.quiz?.total })}</div>
                 :
@@ -122,7 +122,7 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
                     return <li key={k}>
                         <Link to={pageLink(index + 1)}>{section.title}</Link>
                         {" "}
-                        <small className="text-muted">{completed ? t("common:tests.details.completed") : anyStarted ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
+                        <small className="text-muted">{completed ? t("common:status.completed") : anyStarted ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
                     </li>;
                 })}
             </ul>
@@ -154,7 +154,7 @@ function QuizHeader(quizProps: QuizProps) {
                     {t("common:tests.header.setBy", { teacherName: extractTeacherName(assignment.assignerSummary ?? null) })}
                     {isDefined(attempt.completedDate) && <><br />{t("common:tests.header.completedDate", { date: formatDate(attempt.completedDate) })}</>}
                 </span>
-                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? t("common:tests.header.wasDue") : t("common:tests.header.due")}&nbsp;{formatDate(assignment.dueDate)}</>}
+                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? t("common:tests.header.wasDue") : t("common:label.due")}&nbsp;{formatDate(assignment.dueDate)}</>}
             </p>
             {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && !isDefined(attempt.completedDate) && <Alert color={siteSpecific("info", "warning")}>
                 {siteSpecific(<>
@@ -325,9 +325,9 @@ export function QuizPagination({page, quizContents: {sections, pageLink}, finalL
     const nextLink = pageLink(!finalSection ? page + 1 : undefined);
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
-        <Button color="keyline" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>{t("common:tests.pagination.back")}</Button>
+        <Button color="keyline" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>{t("common:button.back")}</Button>
         <div className="d-none d-md-block">{t("common:tests.pagination.position", { page, sectionCount })}</div>
-        <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : t("common:tests.pagination.next")}</Button>
+        <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : t("common:button.next")}</Button>
     </div>;
 }
 

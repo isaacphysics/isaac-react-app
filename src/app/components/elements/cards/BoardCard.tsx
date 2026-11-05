@@ -68,7 +68,7 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
                 group{(!assignees || assignees.length != 1) && "s"}
                 {isDefined(assignees) &&
                 <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
-                    i18next.t("common:gameboard.assignments.noGroupsAssigned")
+                    i18next.t("common:status.noGroupsAssigned")
                     : (`${siteSpecific("Question deck", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
                 </UncontrolledTooltip>}
             </span>
@@ -221,7 +221,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <div className="d-flex gap-2 align-items-center">
                         {isPhy && <SaveBoardButton board={board} color="keyline" size="sm" />}
                         <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
-                            {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:cards.assign")}
+                            {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:button.assign")}
                         </Button>
                     </div>
                 </td>
@@ -273,7 +273,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                             <div className="d-flex gap-2">
                                 <SaveBoardButton board={board} color="keyline" size="sm" />
                                 <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
-                                    {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:cards.assign")}
+                                    {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:button.assign")}
                                 </Button>
                             </div>
                         </td>,
@@ -286,7 +286,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                                 checked={board && selectedBoards?.some(e => e.id === board.id)}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                                     board && updateBoardSelection(board, event.target.checked)
-                                } aria-label={t("ada:gameboard.assignments.deleteQuiz")}
+                                } aria-label={t("ada:button.deleteQuiz")}
                             />
                         </td>
                     )}
@@ -330,7 +330,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         <Col xs={8} sm={7} md={8}>
                             <Link className={"d-inline-block w-100 h4"} to={boardLink}>{board.title}</Link>
                             <span data-testid={"owner"}><b>{t("common:gameboard.card.byLabel")}</b>: {formatBoardOwner(user, board)}</span><br/>
-                            <span data-testid={"created-date"}><b>{t("common:gameboard.card.createdLabel")}</b>: {formatDate(board.creationDate)}</span><br/>
+                            <span data-testid={"created-date"}><b>{t("common:label.created")}</b>: {formatDate(board.creationDate)}</span><br/>
                             <span data-testid={"last-visited"}><b>{t("common:gameboard.card.lastVisitedLabel")}</b>: {formatDate(board.lastVisited)}</span><br/>
                         </Col>
                         {isSetAssignments ? (
@@ -341,24 +341,24 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         ) : (
                             deviceSize === "sm" ? <Col sm={5} className="ps-0 d-flex flex-sm-row">
                                 <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
-                                    <span>{t("common:gameboard.card.attempted")}</span>
+                                    <span>{t("common:status.attempted")}</span>
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                                 </Col>
                                 <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
-                                    <span className="p-0">{t("common:gameboard.card.correct")}</span>
+                                    <span className="p-0">{t("common:status.correct")}</span>
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                                 </Col>
                             </Col> :
                                 <Col xs={4} className="ps-0 d-flex flex-column justify-content-start">
                                     <Row className="p-0 align-items-center">
                                         <Col className="d-flex flex-column align-items-center">
-                                            <span>{t("common:gameboard.card.attempted")}</span>
+                                            <span>{t("common:status.attempted")}</span>
                                             <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                                         </Col>
                                     </Row>
                                     <Row className="p-0 align-items-center">
                                         <Col className="d-flex flex-column align-items-center">
-                                            <span className="pt-2">{t("common:gameboard.card.correct")}</span>
+                                            <span className="pt-2">{t("common:status.correct")}</span>
                                             <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                                         </Col>
                                     </Row>

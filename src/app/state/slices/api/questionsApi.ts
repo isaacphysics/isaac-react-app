@@ -63,7 +63,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 url: `/pages/questions/${encodeURIComponent(id)}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:questions.load.errorTitle"),
+                errorTitle: () => i18next.t("common:error.loadQuestion"),
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                 },

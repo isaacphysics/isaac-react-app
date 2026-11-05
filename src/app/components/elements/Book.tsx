@@ -46,7 +46,7 @@ export const Book = () => {
     return <PageContainer data-bs-theme={pageContext?.subject ?? "neutral"}
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={pageId === undefined ? t("common:books.title") : book?.title ?? t("common:books.title")}
+                currentPageTitle={pageId === undefined ? t("sci:label.book") : book?.title ?? t("sci:label.book")}
                 icon={{type: "icon", icon: "icon-book"}}
                 intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
             />

@@ -47,7 +47,7 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
         <Row className="pt-2">
             <Col md={4} lg={2}>
                 <Label className="w-100">
-                    {t("common:assignments.filter.statusLabel")}
+                    {t("common:label.status")}
                     <Input type="select" data-testid="assignment-type-filter" value={statusFilter[0]} onChange={e => setStatusFilter([e.target.value as AssignmentState])}>
                         {Object.values(AssignmentState).map(state => <option key={state} value={state}>{state}</option>)}
                     </Input>
@@ -56,7 +56,7 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
             <Col md={8} lg={5}>
                 <Label className="w-100">
                     {t("common:assignments.filter.nameLabel")} 
-                    <Input type="text" onChange={(e) => setTitleFilter(e.target.value)} placeholder={t("common:assignments.filter.searchPlaceholder")}/>
+                    <Input type="text" onChange={(e) => setTitleFilter(e.target.value)} placeholder={t("common:title.search")}/>
                 </Label>
             </Col>
             <Col sm={6} lg={{size: 2, offset: 1}}>
@@ -69,7 +69,7 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
             </Col>
             <Col sm={6} lg={2}>
                 <Label className="w-100">
-                    {t("common:assignments.filter.setterLabel")}
+                    {t("common:label.setBy")}
                     <Input type="select" value={setByFilter} onChange={e => setSetByFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                     </Input>

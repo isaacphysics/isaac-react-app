@@ -16,7 +16,7 @@ export const PhysicsSkills19 = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("sci:books.physicsSkills19.title")} help={pageHelp} /> {/* modalId="help_modal_physics_skills_19" /> */}
-                <img className="book-cover" src="/assets/phy/books/physics_skills_19.jpg" alt={t("common:books.coverAltText")}/>
+                <img className="book-cover" src="/assets/phy/books/physics_skills_19.jpg" alt={t("sci:label.bookCoverAltText")}/>
                 <PageFragment fragmentId="physics_skills_19_intro"/>
             </div>
             <div className="book-levels">
@@ -27,7 +27,7 @@ export const PhysicsSkills19 = () => {
                             <BookChapter chapterId={'phys19_a_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterGeneralQuestions")} chapterIcon={'A'}/>
                         </Col>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'phys19_b_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterMechanicsAs")} chapterIcon={'B'}/>
+                            <BookChapter chapterId={'phys19_b_boards'} chapterTitle={t("sci:books.chapters.mechanics")} chapterIcon={'B'}/>
                         </Col>
                     </Row>
                     <Row>
@@ -35,7 +35,7 @@ export const PhysicsSkills19 = () => {
                             <BookChapter chapterId={'phys19_c_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterElectricCircuits")} chapterIcon={'C'}/>
                         </Col>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'phys19_d_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterWaves")} chapterIcon={'D'}/>
+                            <BookChapter chapterId={'phys19_d_boards'} chapterTitle={t("sci:books.chapters.waves")} chapterIcon={'D'}/>
                         </Col>
                     </Row>
                     <Row className="mb-4">
@@ -46,7 +46,7 @@ export const PhysicsSkills19 = () => {
                     <div className="h4">{t("sci:books.physicsSkills19.a2LevelHeading")}</div>
                     <Row>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'phys19_f_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterMechanicsA2")} chapterIcon={'F'}/>
+                            <BookChapter chapterId={'phys19_f_boards'} chapterTitle={t("sci:books.chapters.mechanics")} chapterIcon={'F'}/>
                         </Col>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'phys19_g_boards'} chapterTitle={t("sci:books.physicsSkills19.chapterGases")} chapterIcon={'G'}/>

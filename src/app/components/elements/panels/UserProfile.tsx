@@ -59,7 +59,7 @@ export const UserProfile = (props: UserProfileProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h2 className="h3">{t("common:account.profile.title")}</h2>
+            <h2 className="h3">{t("common:title.accountDetails")}</h2>
             <p>{t("common:account.profile.description", { siteTitle: SITE_TITLE })}</p>
             <p>
                 <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage={userToUpdate.emailVerificationStatus === "AGE_RESTRICTED"} />

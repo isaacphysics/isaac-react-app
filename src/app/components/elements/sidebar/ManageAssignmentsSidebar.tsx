@@ -39,21 +39,21 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
                     color={viewBy === "startDate" ? "solid" : "keyline"}
                     onClick={() => setViewBy("startDate")}
                 >
-                    {i18next.t("common:assignments.manageSidebar.startDateOption")}
+                    {i18next.t("common:label.startDate")}
                 </Button>
                 <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
                     color={viewBy === "dueDate" ? "solid" : "keyline"}
                     onClick={() => setViewBy("dueDate")}
                 >
-                    {i18next.t("common:assignments.manageSidebar.dueDateOption")}
+                    {i18next.t("common:table.dueDate")}
                 </Button>
             </ButtonGroup>
         </>}
 
         <div className="section-divider" />
 
-        <h3 className="h5">{i18next.t("common:assignments.sidebar.filterGroup")}</h3>
-        <StyledSelect inputId="groups-filter" isMulti isClearable placeholder={i18next.t("common:sidebar.filter.all")}
+        <h3 className="h5">{i18next.t("common:label.filterByGroup")}</h3>
+        <StyledSelect inputId="groups-filter" isMulti isClearable placeholder={i18next.t("common:label.all")}
             value={groupsToInclude}
             onChange={selectOnChange(setGroupsToInclude, false)}
             options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
@@ -62,7 +62,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
 
         {isTeacherOrAbove(user) && <>
             <h3 className="mt-3 h5">{i18next.t("common:assignments.manageSidebar.filterByWorkTypeLabel")}</h3>
-            <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder={i18next.t("common:sidebar.filter.all")}
+            <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder={i18next.t("common:label.all")}
                 value={workTypesToInclude}
                 onChange={selectOnChange(setWorkTypesToInclude, false)}
                 options={["assignment", "test"].map(t => itemise(t, t.charAt(0).toUpperCase() + t.slice(1)))}
@@ -70,8 +70,8 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
             />
         </>}
 
-        <h3 className="mt-3 h5">{i18next.t("common:assignments.manageSidebar.filterByTitleLabel")}</h3>
-        <Input type="text" placeholder={i18next.t("common:assignments.manageSidebar.searchTitlePlaceholder")} value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
+        <h3 className="mt-3 h5">{i18next.t("common:label.filterByTitle")}</h3>
+        <Input type="text" placeholder={i18next.t("common:label.searchByTitle")} value={workTitleToInclude} onChange={e => setWorkTitleToInclude(e.target.value)} />
         {/* TODO swap the above title filter with the below filters pair, once subject information is available for assignments */}
         {/* <details>
             <summary className="mt-3">More filters</summary>
@@ -92,7 +92,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         <div className="section-divider" />
 
         <Button onClick={collapse}>
-            {i18next.t("common:assignments.manageSidebar.collapseButton")}
+            {i18next.t("sci:button.collapseSchedule")}
         </Button>
     </ContentSidebar>;
 };

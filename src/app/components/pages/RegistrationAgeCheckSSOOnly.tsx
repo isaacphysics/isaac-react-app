@@ -58,7 +58,7 @@ export const RegistrationAgeCheckSSOOnly = () => {
                 </div>
                 <Row className="justify-content-end">
                     <Col sm={4} lg={3} className="d-flex justify-content-end">
-                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>{t("common:auth.registration.ageCheck.backButton")}</Button>
+                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>{t("common:button.back")}</Button>
                     </Col>
                     <Col sm={6} lg={4}>
                         <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{t("site:auth.register.homeButton")}</Button>

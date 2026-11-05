@@ -44,10 +44,10 @@ export const AdaCard = ({card, ...props}: AdaCardProps) => {
                             outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} 
                             tag={Link} to={clickUrl} aria-label={buttonAltText}
                         >
-                            {buttonText || t("common:cards.seeMore")}
+                            {buttonText || t("common:button.seeMore")}
                         </Button> :
                         <ExternalLink asButton href={clickUrl}>
-                            {buttonText || t("common:cards.seeMore")}
+                            {buttonText || t("common:button.seeMore")}
                         </ExternalLink>
                     }
                 </CardFooter>}

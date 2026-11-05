@@ -21,9 +21,9 @@ const EventMisuseTable = ({topMisuses}: {topMisuses: MisuseStatisticDTO[]}) => {
         <tbody>
             {topMisuses.map((m, i) => <tr key={i}>
                 <td>{m.agentIdentifier}</td>
-                <td>{m.currentCounter}{" "}{m.currentCounter > 0 && <Button className={"float-end"} size={"sm"} onClick={() => resetMisuseMonitor({eventLabel: m.eventType, agentIdentifier: m.agentIdentifier})}>{t("common:admin.misuse.resetButton")}</Button>}</td>
-                <td>{m.lastEventTimestamp ? (new Date(m.lastEventTimestamp)).toString() : t("common:admin.misuse.noEvent")}</td>
-                <td>{m.isMisused ? <span className={"text-danger fw-bold"}>{t("common:admin.misuse.statusYes")}</span> : (m.isOverSoftThreshold ? <span className={"text-warning fw-bold"}>{t("common:admin.misuse.statusAlmost")}</span> : "No")}</td>
+                <td>{m.currentCounter}{" "}{m.currentCounter > 0 && <Button className={"float-end"} size={"sm"} onClick={() => resetMisuseMonitor({eventLabel: m.eventType, agentIdentifier: m.agentIdentifier})}>{t("common:button.reset")}</Button>}</td>
+                <td>{m.lastEventTimestamp ? (new Date(m.lastEventTimestamp)).toString() : t("common:label.none")}</td>
+                <td>{m.isMisused ? <span className={"text-danger fw-bold"}>{t("common:status.yes")}</span> : (m.isOverSoftThreshold ? <span className={"text-warning fw-bold"}>{t("common:admin.misuse.statusAlmost")}</span> : "No")}</td>
             </tr>)}
         </tbody>
     </Table>;

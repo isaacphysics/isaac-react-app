@@ -38,9 +38,9 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
 
     const SidebarContents = () => {
         const { t } = useTranslation();
-        return <ContentSidebar buttonTitle={hasSections ? t("common:tests.sidebar.sectionsButton") : t("common:tests.sidebar.detailsButton")}>
+        return <ContentSidebar buttonTitle={hasSections ? t("common:tests.sidebar.sectionsButton") : t("common:button.details")}>
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">{t("common:tests.sidebar.testTitle")}</h3>
+            <h3 className="mb-3 h5">{t("common:title.test")}</h3>
             <div className="mb-2">
                 Subject{subjects?.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
@@ -55,7 +55,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                 <h3 className="mb-3 h5">Section(s)</h3>
                 <ul>
                     <li>
-                        <StyledTabPicker type="link" checkboxTitle={t("common:tests.sidebar.overviewTab")} checked={!isDefined(currentSection)} to={rubricPath} />
+                        <StyledTabPicker type="link" checkboxTitle={t("common:title.overview")} checked={!isDefined(currentSection)} to={rubricPath} />
                     </li>
                     {Array.from({length: totalSections}, (_, i) => i).map(section =>
                         <li key={section}>
@@ -70,7 +70,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                 <div className="section-divider"/>
 
                 <div className="d-flex flex-column sidebar-key">
-                    {t("common:tests.sidebar.legendTitle")}
+                    {t("common:label.key")}
                     <ul>
                         <KeyItem icon="not-started" text={t("common:tests.sidebar.statusNotStarted")}/>
                         <KeyItem icon="in-progress" text={t("common:tests.sidebar.statusInProgress")}/>

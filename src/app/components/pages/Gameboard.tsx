@@ -86,7 +86,7 @@ export const Gameboard = () => {
                     pageTitle={
                         <TitleAndBreadcrumb
                             currentPageTitle={gameboard && gameboard.title || t("site:gameboard.title.fallback")} icon={{type: "icon", icon: "icon-question-deck"}}
-                            intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: t("common:gameboard.breadcrumb.assignments"), to: "/assignments"}] : []}
+                            intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: t("common:label.assignments"), to: "/assignments"}] : []}
                         />
                     }
                     sidebar={siteSpecific(
@@ -94,7 +94,7 @@ export const Gameboard = () => {
                         undefined
                     )}
                 >
-                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText={t("common:gameboard.sidebar.details")}
+                    <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText={t("common:button.details")}
                         additionalActionButtons={
                             // hide for Ada students, who have no *accessible* page to see saved quizzes
                             !(isAda && isStudent(user)) && <SaveBoardButton 
@@ -148,12 +148,12 @@ export const GameboardContents = ({gameboard, linkedBookSectionUrlParams}: Gameb
             ? <Row>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
                     <Button onClick={openAssignModal} color="keyline" block>
-                        {t("common:gameboard.actions.setAssignment")}
+                        {t("common:button.setAsAssignment")}
                     </Button>
                 </Col>
                 <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
                     <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboard.id}`}} color="keyline" block>
-                        {t("common:gameboard.actions.duplicateEdit")}
+                        {t("common:button.duplicateAndEdit")}
                     </Button>
                 </Col>
             </Row>

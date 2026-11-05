@@ -268,7 +268,7 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
                     return <ActivityGraph
                         id="skills-attempts"
                         answeredQuestionsByDate={data ? data.mental_maths_overall : {}} 
-                        caption={t("common:progress.mentalMathsCaption")} 
+                        caption={t("common:label.mentalMaths")} 
                         emptyText={<span>
                             <br/>
                             <Trans
@@ -285,11 +285,11 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
         </Col>
         <Col md={3} id="legend" className={above['md'](deviceSize) ? "border-start" : ""}>
             <div className='mb-md-2'>
-                <strong>{t("common:progress.legendSubjects")}</strong> 
+                <strong>{t("common:label.subjects")}</strong> 
                 <i className="icon icon-chevron-right icon-inline icon-color-black" />
-                <strong>{t("common:progress.legendMaths")}</strong>
+                <strong>{t("common:label.maths")}</strong>
             </div>
-            <div className='legend-item'>{t("common:progress.legendMentalMaths")}</div>
+            <div className='legend-item'>{t("common:label.mentalMaths")}</div>
         </Col>
     </Row>;
 };

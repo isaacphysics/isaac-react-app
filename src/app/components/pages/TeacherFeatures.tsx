@@ -35,10 +35,10 @@ export const TeacherFeatures = () => {
     const isDisabled = !isLoggedIn(user) || !isTeacherOrAbove(user);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:teacherFeatures.pageTitle")} icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("sci:title.teacherFeatures")} icon={{type: "icon", icon: "icon-account"}}/>
         <PageMetadata noTitle>
             {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"} className="float-end">
-                {isLoggedIn(user) ? t("common:teacherFeatures.cta.upgradeAccount") : t("common:teacherFeatures.cta.getTeacherAccount")}
+                {isLoggedIn(user) ? t("sci:button.upgradeAccount") : t("common:button.getTeacherAccount")}
             </Button>}
             Isaac provides you with a huge range of resources to support your teaching of science subjects – all for free.
         </PageMetadata>
@@ -50,8 +50,8 @@ export const TeacherFeatures = () => {
                 <TeacherFeatureCard
                     url = "/groups"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#groups"
-                    title = {t("common:teacherFeatures.workflow.createGroupTitle")}
-                    subtitle = {t("common:teacherFeatures.workflow.createGroupSubtitle")}
+                    title = {t("sci:title.createGroup")}
+                    subtitle = {t("sci:label.createGroupDescription")}
                     disabled = {isDisabled}
                 />
             </Col>
@@ -75,15 +75,15 @@ export const TeacherFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <h2 className="h4">{t("common:teacherFeatures.support.title")}</h2>
+            <h2 className="h4">{t("common:title.teacherSupport")}</h2>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
                 <TeacherFeatureCard               
                     url = "/support/teacher/general"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"
-                    title = {t("common:teacherFeatures.support.faqTitle")}
-                    subtitle = {t("common:teacherFeatures.support.faqSubtitle")}
+                    title = {t("sci:title.teacherFaq")}
+                    subtitle = {t("sci:label.faqDescription")}
                 />
             </Col>
             <Col md={6} lg={4}>
@@ -113,7 +113,7 @@ export const TeacherFeatures = () => {
                     url = "/pages/order_books"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
                     title = "Isaac books"
-                    subtitle = {t("common:teacherFeatures.resources.booksSubtitle")}
+                    subtitle = {t("sci:label.skillsMasteryBooksDescription")}
                 />
             </Col>
             <Col md={6} lg={4}>
@@ -121,14 +121,14 @@ export const TeacherFeatures = () => {
                     url = "/physics/a_level/question_decks"
                     imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
                     title = "Decks by topic"
-                    subtitle = {t("common:teacherFeatures.resources.decksSubtitle")}
+                    subtitle = {t("sci:label.questionDecksDescription")}
                 />
             </Col>
             <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
                 <TeacherFeatureCard
                     url = "/events?types=student"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#calendar"
-                    title = {t("common:teacherFeatures.resources.eventsTitle")}
+                    title = {t("common:title.events")}
                     subtitle = "Browse free events for your KS4 and KS5 students."
                 />
             </Col>
@@ -136,7 +136,7 @@ export const TeacherFeatures = () => {
 
         {isDisabled && <div className="d-flex w-100 justify-content-center my-5">
             <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
-                {isLoggedIn(user) ? t("common:teacherFeatures.cta.upgradeAccount") : t("common:teacherFeatures.cta.getTeacherAccount")}
+                {isLoggedIn(user) ? t("sci:button.upgradeAccount") : t("common:button.getTeacherAccount")}
             </Button>
         </div>}
     </Container>;

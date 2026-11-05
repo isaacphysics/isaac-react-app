@@ -52,9 +52,9 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     </p>
                 }
                 {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && assignment.gameboard.percentageAttempted !== 100
-                    ? <p className="mb-0"><strong className="overdue">{t("common:assignments.card.overdue")}</strong> <span className="small text-muted">{t("common:assignments.card.dueDate", { dueDate: formatDate(assignment.dueDate) })}</span></p>
+                    ? <p className="mb-0"><strong className="overdue">{t("common:status.overdue")}</strong> <span className="small text-muted">{t("common:assignments.card.dueDate", { dueDate: formatDate(assignment.dueDate) })}</span></p>
                     : <>{assignment.dueDate && <p className="mb-0"><Trans
-                        i18nKey="common:assignments.card.due"
+                        i18nKey="common:label.dueDate"
                         components={{
                             strong: <strong />,
                         }}
@@ -72,7 +72,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             </Col>
         </Row>
         
-        {assignment.notes && <p className="mb-0"><strong>{t("common:assignments.card.notesLabel")}</strong> {assignment.notes}</p>}
+        {assignment.notes && <p className="mb-0"><strong>{t("common:label.notes")}</strong> {assignment.notes}</p>}
     </GameboardCard>;
 };
 
@@ -87,19 +87,19 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>{t("common:assignments.card.assignedLabel")}</strong> {formatDate(assignmentStartDate)}</p>}
             {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && assignment.gameboard.percentageAttempted !== 100
                 ? <p className="mb-0"><strong className="overdue">{t("common:assignments.card.overdueLabel")}</strong> {formatDate(assignment.dueDate)}</p>
-                : <>{assignment.dueDate && <p className="mb-0"><strong>{t("common:assignments.card.dueLabel")}</strong> {formatDate(assignment.dueDate)}</p>}</>
+                : <>{assignment.dueDate && <p className="mb-0"><strong>{t("common:label.due")}</strong> {formatDate(assignment.dueDate)}</p>}</>
             }
             {isDefined(assignment.groupName) && <p className="mb-0"><strong>{t("common:assignments.card.groupLabel")}</strong> {assignment.groupName}</p>}
             {isDefined(assignment.assignerSummary) && <p><strong>{t("common:assignments.card.assignerLabel")}</strong> {extractTeacherName(assignment.assignerSummary)}</p>}
-            {isDefined(assignment.notes) && <p><strong>{t("common:assignments.card.notesLabel")}</strong> {assignment.notes}</p>}
+            {isDefined(assignment.notes) && <p><strong>{t("common:label.notes")}</strong> {assignment.notes}</p>}
         </Col>
         <Col xs={4} sm={3} md={5} lg={4} >
             <Row className="justify-content-end">
                 <Col md="auto" className={"text-center px-3"}>
-                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label={t("common:assignments.card.attempted")}/>}
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label={t("common:status.attempted")}/>}
                 </Col>
                 <Col md="auto" className={"text-center px-3"}>
-                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCorrect} label={t("common:assignments.card.correct")}/>}
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCorrect} label={t("common:status.correct")}/>}
                 </Col>
             </Row>
         </Col>

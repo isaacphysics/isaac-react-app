@@ -268,13 +268,13 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                     checked={checkAllCancelReservationsCheckbox || false}
                                                     onChange={() => toggleAllCancelReservationCheckboxes()}
                                                 />
-                                                <Label for="check_all_reserved" className="ms-2">{t("common:events.reservations.selectAll")}</Label>
+                                                <Label for="check_all_reserved" className="ms-2">{t("common:label.all")}</Label>
                                             </th>
                                             <th className="align-middle student-name">
-                                                {t("common:events.reservations.studentColumn")}
+                                                {t("common:role.student")}
                                             </th>
                                             <th className="align-middle booking-status">
-                                                {t("common:events.reservations.bookingStatus")}
+                                                {t("common:table.bookingStatus")}
                                             </th>
                                             <th className="align-middle reserved-by">
                                                 {t("common:events.reservations.reservedBy")}
@@ -301,7 +301,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                     {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">{t("common:events.reservations.emailNotVerified")}</div>}
                                                 </td>
                                                 <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                                <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? t("common:events.reservations.reservedByYou") : t("common:events.reservations.reservedByOther"))}</td>
+                                                <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? t("common:events.reservations.reservedByYou") : t("common:label.someoneElse"))}</td>
                                             </tr>);
                                         })}
                                         {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>{t("common:events.reservations.noBookings")}</td></tr>}
@@ -330,10 +330,10 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 onChange={() => toggleAllUnbooked()}
                                                 disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                             />
-                                            <Label for="check_all_unbooked" className="ms-2">{t("common:events.reservations.selectAll")}</Label>
+                                            <Label for="check_all_unbooked" className="ms-2">{t("common:label.all")}</Label>
                                         </th>
                                         <th className="w-100 align-middle student-name">
-                                            {t("common:events.reservations.studentColumn")}
+                                            {t("common:role.student")}
                                         </th>
                                     </tr>
                                 </thead>
@@ -367,7 +367,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                 <Row>
                                     <Col md={6}>
                                         <Label htmlFor="contact-name" className="form-required">
-                                            {t("common:events.reservations.contactName")}
+                                            {t("common:label.contactName")}
                                         </Label>
                                         <Input
                                             id="contact-name" name="contact-name" type="text" value={groupSupervisorContactName}

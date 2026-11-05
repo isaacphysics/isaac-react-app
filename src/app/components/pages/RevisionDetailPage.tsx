@@ -23,7 +23,7 @@ export const RevisionPage = () => {
     return <PageContainer data-bs-theme={getThemeFromTags(revisionPageQuery.data?.tags)}
         pageTitle={
             <TitleAndBreadcrumb 
-                currentPageTitle={t("common:revision.page.title")}
+                currentPageTitle={t("common:title.revision")}
                 icon={{
                     type: "icon", 
                     icon: "icon-revision"
@@ -61,8 +61,8 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
 
         <MetadataContainer className="d-flex flex-column gap-2">
             {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title={t("common:revision.sections.introTitle")} />}
-            <MetadataContainerLink id="revision" title={t("common:revision.sections.contentTitle")} />
-            {!!relevantTests.length && <MetadataContainerLink id="tests" title={t("common:revision.sections.testsTitle")} />}
+            <MetadataContainerLink id="revision" title={t("common:title.revision")} />
+            {!!relevantTests.length && <MetadataContainerLink id="tests" title={t("sci:title.practiceTests")} />}
         </MetadataContainer>
 
         {!!page.gameboards?.length && <>
@@ -76,13 +76,13 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
             </div>
         </>}
 
-        <h3 className="mb-3 h4" id="revision">{t("common:revision.sections.contentTitle")}</h3>
+        <h3 className="mb-3 h4" id="revision">{t("common:title.revision")}</h3>
         <IsaacContentValueOrChildren value={page.value} encoding={page.encoding}>
             {page.children}
         </IsaacContentValueOrChildren>
 
         {!!relevantTests.length && <>
-            <h3 className="mt-4 mb-3 h4" id="tests">{t("common:revision.sections.testsTitle")}</h3>
+            <h3 className="mt-4 mb-3 h4" id="tests">{t("sci:title.practiceTests")}</h3>
             <span>{t("common:revision.sections.testsDescription")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView

@@ -51,7 +51,7 @@ export const RegistrationAgeCheck = () => {
 
     const goBack = () => {
         confirmThen(
-            t("common:auth.registration.ageCheck.goBackConfirm"),
+            t("common:auth.registration.goBackConfirm"),
             () => navigate("/register"));
     };
 

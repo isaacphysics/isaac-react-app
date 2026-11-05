@@ -50,7 +50,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <div className="h4">{t("common:concepts.sidebar.filterTopicTitle")}</div>
+                <div className="h4">{t("common:label.filterByTopic")}</div>
                 <ul>
                     <li>
                         <AllFiltersCheckbox
@@ -117,7 +117,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
             <div className="section-divider"/>
 
             <div className="d-flex flex-column">
-                <h3 className="h5">{t("common:concepts.sidebar.filterSubjectTopicTitle")}</h3>
+                <h3 className="h5">{t("common:label.filterBySubjectAndTopic")}</h3>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -145,7 +145,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
                     })}
                 </ul>
                 <div className="section-divider"/>
-                <h3 className="h5">{t("common:concepts.sidebar.filterStageTitle")}</h3>
+                <h3 className="h5">{t("common:label.filterByStage")}</h3>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.value] > 0 || searchStages.includes(s.value)).map((stage) =>
                         <li key={stage.value}>

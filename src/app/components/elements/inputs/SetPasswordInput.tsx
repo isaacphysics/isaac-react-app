@@ -48,13 +48,13 @@ export const SetPasswordInput = ({
 
     return <div className={className}>
         <FormGroup className="form-group">
-            <Label htmlFor={`${idPrefix}-password-set`} className={"fw-bold form-required"}>{label ?? t("common:form.passwordLabel")}</Label>
+            <Label htmlFor={`${idPrefix}-password-set`} className={"fw-bold form-required"}>{label ?? t("common:label.password")}</Label>
             <p className="d-block input-description">{t("common:auth.password.minLengthHint", { minLength: MINIMUM_PASSWORD_LENGTH })}</p>
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
                 data-testid={`${idPrefix}-password-set`}
                 aria-describedby="invalidPassword"
-                feedbackText={t("common:auth.password.minLengthError", { minLength: MINIMUM_PASSWORD_LENGTH })}
+                feedbackText={t("common:label.passwordMinLength", { minLength: MINIMUM_PASSWORD_LENGTH })}
                 value={password as string | undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     onChange(e.target.value);
@@ -65,7 +65,7 @@ export const SetPasswordInput = ({
             />
             {strengthFeedback &&
                 <span className='float-end small mt-1'>
-                    <strong>{t("common:auth.password.strengthLabel")} </strong>
+                    <strong>{t("common:label.passwordStrength")} </strong>
                     <span id="password-strength-feedback">
                         {strengthFeedback.feedbackText}
                     </span>

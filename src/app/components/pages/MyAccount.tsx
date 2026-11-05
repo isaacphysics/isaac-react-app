@@ -420,13 +420,13 @@ export const MyAccount = ({user}: AccountPageProps) => {
         {isAda && <p className="d-md-none text-center m-3">
             <small>
                 <span className='text-muted'>{t("ada:account.mobileHint")} </span>
-                <Link to="/logout" className="text-theme">{t("common:account.mobileLogOut")}</Link>
+                <Link to="/logout" className="text-theme">{t("common:button.logOut")}</Link>
             </small>
         </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <div className={siteSpecific("w-lg-75", "card")}>
-                    {isAda && <Nav tabs role="tablist" aria-label={i18next.t("ada:account.nav.ariaLabel")} className="my-4 flex-wrap mx-4" data-testid="account-nav">
+                    {isAda && <Nav tabs role="tablist" aria-label={i18next.t("common:title.accountSettings")} className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS
                             .filter(tab => !tab.isHidden?.(user, editingOtherUser))
                             .map(({tab, title, titleShort}) =>
@@ -453,7 +453,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                     <Form id="my-account" name="my-account" onSubmit={updateAccount}>
                         {updateCurrentUserError &&
                                 <ExigentAlert color="warning">
-                                    <p className="alert-heading fw-bold">{t("common:account.updateError.alertTitle")}</p>
+                                    <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                                     <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                                 </ExigentAlert>
                         }

@@ -47,28 +47,28 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
     return <Row>
         <Col xs={6} md={3}>
             <Label className="w-100">
-                {t("common:gameboards.display.view")} <Input type="select" data-testid={"display-select"} value={boardView} onChange={switchViewAndClearSelected}>
+                {t("common:label.displayIn")} <Input type="select" data-testid={"display-select"} value={boardView} onChange={switchViewAndClearSelected}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
             </Label>
         </Col>
         <Col xs={6} md={2}>
             <Label className="w-100">
-                {t("common:gameboards.display.show")} <Input type="select" data-testid={"limit-select"} value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                {t("common:button.show")} <Input type="select" data-testid={"limit-select"} value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </Label>
         </Col>
         <Col xs={9} md={5} lg={{size: 4, offset: 2}}>
             <Label className="w-100">
-                {t("common:gameboards.display.sort")} <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                {t("common:label.sortBy")} <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
                     {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                 </Input>
             </Label>
         </Col>
         <Col xs={3} sm={{size: 2, offset: 1}} md={{size: 2, offset: 0}} lg={1}>
             <Label className="w-100 d-flex flex-column">
-                {t("common:gameboards.display.filters")}
+                {t("common:label.filters")}
                 <Button color="secondary" className={classNames("gameboards-filter-dropdown d-flex justify-content-center align-items-center")}
                     onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"
                 >
@@ -100,7 +100,7 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
             </Col>
             <Col xs={6} lg={2}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>{t("common:gameboards.filters.creator")}</span>
+                    <span className={"text-nowrap"}>{t("common:label.filterByCreator")}</span>
                     <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                         {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                     </Input>

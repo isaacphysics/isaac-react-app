@@ -1,11 +1,9 @@
 {
   "account": {
     "betaFeatures": {
-      "hideAttemptsHelp": "This feature lets you answer questions again, even if you've answered them before. It's useful if you are reviewing a topic before a test or exam.",
-      "openAiFaq": "For more information, read our <faqLink>FAQs</faqLink>."
+      "hideAttemptsHelp": "This feature lets you answer questions again, even if you've answered them before. It's useful if you are reviewing a topic before a test or exam."
     },
     "context": {
-      "examBoardLabel": "Exam Board",
       "showContentLabel": "Show me content for...",
       "tooltipStudent": "Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.",
       "tooltipTutor": "Add a stage and examination board for each qualification you are teaching.<br/>On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching."
@@ -26,9 +24,6 @@
       "title": "Linked accounts"
     },
     "mobileHint": "Update your Ada Computer Science account, or",
-    "nav": {
-      "ariaLabel": "Account settings"
-    },
     "preferences": {
       "emailFrequency": "<b>Frequency</b>: expect one email per term for News. Assignment notifications will be sent as needed by your teacher."
     },
@@ -74,11 +69,7 @@
     "emptyGroupsTitle": "You need a student group before you can assign a quiz to students.",
     "emptyState": "There are no quizzes to display for the selected filters.",
     "filter": {
-      "byName": "Filter quizzes by name",
-      "displayIn": "Display in",
-      "show": "Show",
-      "sortBy": "Sort by",
-      "sortDisabledTooltip": "Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks."
+      "byName": "Filter quizzes by name"
     },
     "modal": {
       "unknownDeck": "Unknown quiz",
@@ -150,6 +141,13 @@
       "body": "We record your use of this site and the information you enter to support research into online learning at the University of Cambridge and the Raspberry Pi Foundation. Full details are in the <privacyLink>privacy policy</privacyLink>."
     }
   },
+  "button": {
+    "deleteQuiz": "Delete quiz",
+    "exploreAllTopics": "Explore all topics",
+    "goToIsaacScience": "Go to Isaac Science",
+    "upgradeToTeacherAccount": "Upgrade to a teacher account",
+    "viewMarkbook": "View markbook"
+  },
   "clientError": {
     "notFound": {
       "breadcrumbTitle": "404"
@@ -169,28 +167,21 @@
   },
   "contextPicker": {
     "differentSourceExplanation": "The stage was specified by {{stageSource}} and the exam board by \n            {{examBoardSource}}.",
-    "examBoardLabel": "Exam Board",
     "sameSourceExplanation": "The stage and exam board were specified by {{stageSource}}."
   },
+  "cyberExplorers": {
+    "welcome": {
+      "imageAlt": "A cartoon sketch of Cyber City"
+    }
+  },
   "events": {
-    "book": {
-      "bookPlace": "Book a place"
-    },
-    "booking": {
-      "examBoard": "Exam board"
-    },
     "details": {
       "availability": "Availability",
-      "bookingDeadline": "Booking deadline",
-      "breadcrumbTitle": "Event details",
-      "location": "Location",
       "when": "When"
-    },
-    "manageBookings": {
-      "table": {
-        "examBoard": "Exam board"
-      }
     }
+  },
+  "examSpecifications": {
+    "gcses": "GCSE"
   },
   "freeTextBuilder": {
     "attempts": {
@@ -198,7 +189,6 @@
     },
     "infoAlert": {
       "consentFaq": "See our <faqLink>FAQs</faqLink> for more information.",
-      "generalFaq": "For more information, read our <faqLink>FAQs</faqLink>.",
       "loggedOutFaq": "You can read more in our <faqLink>FAQs</faqLink>."
     },
     "llmFeedback": {
@@ -220,12 +210,8 @@
       "savedTitle": "Quiz assigned",
       "someGroupsSaved": "The quiz was assigned to some groups successfully."
     },
-    "assignments": {
-      "deleteQuiz": "Delete quiz"
-    },
     "builder": {
       "createError": "Unable to create quiz",
-      "delete": "Delete quiz",
       "helpText": "You can create custom question sets to assign to your groups. Search by question title or topic and add up to ten questions to a quiz.<br/>You cannot modify a quiz after it has been created. You'll find a link underneath any existing quiz to duplicate and edit it.",
       "idLabel": "Quiz ID",
       "pageTitle": "Quiz builder",
@@ -315,7 +301,6 @@
   "homepage": {
     "account": {
       "benefits": "An Ada CS account gets you access to lots of useful tools. Organise students into groups, set self-marking assignments, and track progress to identify learning opportunities.",
-      "createButton": "Create an account",
       "free": "It’s totally free to use Ada CS, with or without an account.",
       "noAccount": "You can use any of our learning resources wherever you are, without an Ada CS account.",
       "title": "Manage workload and track progress with an Ada CS account"
@@ -349,13 +334,9 @@
       "resources": "Free computer science resources for students aged 11 to 19"
     },
     "hero": {
-      "cambridgeAlt": "University of Cambridge website",
       "collaborationLabel": "in collaboration with",
       "dashboardButton": "Go to My Ada Overview",
-      "raspberryPiAlt": "Raspberry Pi website",
-      "techFirstAltText": "The TechFirst logo",
-      "title": "The free learning platform for computing teachers and students",
-      "ukGovAltText": "Funded by the UK Government"
+      "title": "The free learning platform for computing teachers and students"
     },
     "metaDescription": "Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!",
     "resources": {
@@ -370,14 +351,11 @@
     },
     "techfirst": {
       "contentDescription": "This includes new content on artificial intelligence, cybersecurity, quantum computing, engineering biology, semiconductors, and advanced connectivity technologies, designed specifically for learners aged 11–14.",
-      "cyberCityAltText": "A cartoon sketch of Cyber City",
       "exploreTopicsButton": "Explore the new topics",
       "partnershipDescription": "Ada Computer Science has partnered with the Department for Digital, Culture, Media and Sport to expand our content and features.",
-      "readMoreButton": "Read more",
       "title": "Ada CS is the new TechFirst learning platform"
     },
     "testimonials": {
-      "studentAttribution": "– Computer science student",
       "studentQuote": "“ I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding. ”",
       "teacherAttribution": "– Computer science teacher",
       "teacherQuote": "”Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it’s free!”"
@@ -389,6 +367,14 @@
       "studentProgress": "Students see their own progress over time and discover where to improve",
       "title": "Tools to aid learning"
     }
+  },
+  "label": {
+    "computerScienceStudentTestimonial": "– Computer science student",
+    "examBoard": "Exam Board",
+    "faqMoreInfo": "For more information, read our <faqLink>FAQs</faqLink>.",
+    "fundedByUkGovernment": "Funded by the UK Government",
+    "raspberryPiWebsite": "Raspberry Pi website",
+    "techFirstLogo": "The TechFirst logo"
   },
   "listViews": {
     "footer": {
@@ -404,57 +390,28 @@
   "meta": {
     "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.",
     "footer": {
-      "cambridgeAlt": "University of Cambridge website",
-      "fundedByAlt": "Funded by the UK Government",
       "licenseText": "All teaching materials on this site are available under a <licenseLink>CC BY-NC-SA 4.0</licenseLink> license, except where otherwise stated.",
-      "logoAlt": "Ada Computer Science homepage",
-      "raspberryPiAlt": "Raspberry Pi website",
-      "techFirstAlt": "The TechFirst logo"
+      "logoAlt": "Ada Computer Science homepage"
     },
     "title": "Ada Computer Science"
   },
   "navigation": {
     "admin": {
-      "contentErrors": "Content errors",
       "events": "Event admin",
-      "featureFlags": "Feature flags",
-      "siteStatistics": "Site statistics",
-      "title": "Admin",
-      "tools": "Admin tools",
-      "userManager": "User manager"
+      "siteStatistics": "Site statistics"
     },
-    "contactUs": "Contact us",
-    "dashboard": "My Ada",
-    "home": "Home",
-    "logIn": "Log in",
-    "logoAlt": "Ada Computer Science",
-    "logout": "Log out",
     "resources": {
-      "glossary": "Glossary",
-      "projects": "Projects",
-      "questions": "Questions",
-      "specifications": "Specifications",
-      "title": "Resources",
-      "topics": "Topics"
-    },
-    "signUp": "Sign up",
-    "skipToContent": "Skip to main content",
-    "staging": {
-      "title": "Staging"
+      "specifications": "Specifications"
     },
     "students": {
       "challenges": "Challenges",
       "landingPage": "Ada CS for students",
       "stemSmart": "STEM SMART",
-      "support": "Support",
       "title": "Students"
     },
     "teachers": {
       "landingPage": "Ada CS for teachers",
       "mentoring": "Mentoring programme",
-      "onlineCourses": "Online courses",
-      "support": "Support",
-      "teachingOrder": "Suggested teaching order",
       "title": "Teachers"
     },
     "toggleSearch": "Toggle search bar"
@@ -486,10 +443,7 @@
       "clearAll": "Clear all",
       "difficultyHelp": "What do the difficulty levels mean?",
       "filterIconAlt": "Filter",
-      "header": "Filter by",
       "statusAllIncorrect": "All incorrect",
-      "statusCompleted": "Completed",
-      "statusNotAttempted": "Not attempted",
       "statusTryAgain": "Try again"
     },
     "metaDescription": "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.",
@@ -499,8 +453,6 @@
     },
     "search": {
       "addSelectionsButton": "Add selections to quiz",
-      "examBoardLabel": "Exam Board",
-      "examBoardPlaceholder": "Any",
       "placeholder": "e.g. Creating an AST"
     },
     "searchLabel": "Search for a question",
@@ -516,9 +468,12 @@
     "challenge": {
       "complete": "Challenge complete!",
       "ended": "Challenge over!",
-      "noData": "No data",
       "progress": "{{correctCount}} correct, {{remainingCount}} to go!"
     }
+  },
+  "status": {
+    "checkBackSoon": "Check back soon!",
+    "noActiveChallenges": "There are no active challenges at the moment."
   },
   "support": {
     "student": {
@@ -528,9 +483,21 @@
       "metaDescription": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!"
     }
   },
+  "table": {
+    "examBoard": "Exam board"
+  },
   "tests": {
     "feedback": {
       "groupResultsTitle": "Group results"
+    },
+    "filters": {
+      "after": "after",
+      "before": "before",
+      "dueDateLabel": "Due",
+      "filterByDueDate": "Filter by due date",
+      "filterBySetDate": "Filter by set date",
+      "on": "on",
+      "startDateLabel": "Starting"
     },
     "pageTitle": "Tests",
     "set": {
@@ -539,5 +506,20 @@
     "view": {
       "filterPlaceholder": "Filter tests by name..."
     }
+  },
+  "title": {
+    "curriculum": "A full curriculum of topics",
+    "examSpecifications": "Exam specifications",
+    "needHelp": "Need help?",
+    "nextChallenge": "The next challenge",
+    "onlineCourses": "Online courses",
+    "projects": "Projects",
+    "reviewYourMarkbook": "Review your markbook",
+    "studentChallenges": "Student challenges",
+    "studentSupport": "Student support",
+    "support": "Support",
+    "teacherMentoring": "Teacher mentoring",
+    "teachingOrder": "Suggested teaching order",
+    "topics": "Topics"
   }
 }

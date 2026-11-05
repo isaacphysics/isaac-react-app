@@ -35,7 +35,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
         <h2 className="h3" ref={ref} tabIndex={-1}>{t("common:auth.tfa.title")}</h2>
         <p>{t("common:auth.tfa.description")}</p>
         <FormGroup className="form-group">
-            <Label htmlFor="verification-code">{t("common:auth.tfa.codeLabel")}</Label>
+            <Label htmlFor="verification-code">{t("common:label.verificationCode")}</Label>
             <Input
                 id="verification-code" type="text" name="verification-code" placeholder={t("common:auth.tfa.codePlaceholder")}
                 innerRef={inputRef}
@@ -93,7 +93,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
                 Your password reset request is being processed.{small && " Please check your inbox."}
             </strong>
             {!small && <strong>
-                {t("common:auth.password.resetInbox")}
+                {t("common:status.checkInbox")}
             </strong>}
         </p>;
 };
@@ -117,23 +117,23 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
     const { t } = useTranslation();
     return <>
         <div className="form-group">
-            {displayLabels && <Label htmlFor="email-input">{t("common:auth.login.emailLabel")}</Label>}
+            {displayLabels && <Label htmlFor="email-input">{t("common:label.emailAddress")}</Label>}
             <Input
-                id="email-input" type="email" name="email" placeholder={t("common:auth.login.emailPlaceholder")}
+                id="email-input" type="email" name="email" placeholder={t("common:label.emailAddress")}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
                 invalid={!!errorMessage || (!validEmail && (logInAttempted || passwordResetAttempted))}
                 aria-describedby="emailValidationMessage"
                 required
             />
             <FormFeedback id="emailValidationMessage">
-                {!validEmail && t("common:auth.login.emailInvalid")}
+                {!validEmail && t("common:error.invalidEmailAddress")}
             </FormFeedback>
         </div>
 
         <div className="form-group mb-0">
-            {displayLabels && <Label htmlFor="password-input">{t("common:auth.login.passwordLabel")}</Label>}
+            {displayLabels && <Label htmlFor="password-input">{t("common:label.password")}</Label>}
             <Input
-                id="password-input" type="password" name="password" placeholder={t("common:auth.login.passwordPlaceholder")}
+                id="password-input" type="password" name="password" placeholder={t("common:label.password")}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
                 invalid={!!errorMessage || (!validPassword && (logInAttempted))}
                 aria-describedby="passwordValidationMessage"

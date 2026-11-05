@@ -108,7 +108,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-    const icon: TitleIconProps = {type: "icon", label: i18next.t("common:listViews.topic.label"), icon: {name: "icon-topic", size: "lg", altText: "Topic summary page icon", color: "tertiary"}};
+    const icon: TitleIconProps = {type: "icon", label: i18next.t("common:label.topic"), icon: {name: "icon-topic", size: "lg", altText: "Topic summary page icon", color: "tertiary"}};
 
     return <AbstractListViewItem
         icon={icon}
@@ -160,7 +160,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ?
         <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
-            {t("common:listViews.action.setTest")}
+            {t("common:button.setTest")}
         </AffixButton> :
         <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon", affixClassName: "ms-2 icon-color-white" }}>
             {t("common:listViews.action.takeTest")}
@@ -247,7 +247,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProp
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
         status={item.state}
-        quizTag={t("common:listViews.quickQuiz.levelTag") /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */}
+        quizTag={t("common:label.level1") /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */}
         url={url}
         audienceViews={audienceViews}
         {...rest}
@@ -392,7 +392,7 @@ export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
                 <button type="button" title={i18next.t("common:listViews.moveUp")} className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", -1)} disabled={index === 0}>
                     <i className={classNames("icon icon-chevron-up", index === 0 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>
-                <i aria-label={i18next.t("common:listViews.dragToReorder")} className="mx-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black" />
+                <i aria-label={i18next.t("common:label.dragToReorder")} className="mx-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black" />
                 <button type="button" title={i18next.t("common:listViews.moveDown")} className="btn btn-blank p-0 m-0 border-0" onClick={() => onMove?.(item.id ?? "", 1)} disabled={!!(totalItems && index === totalItems - 1)}>
                     <i className={classNames("icon icon-chevron-down", totalItems && index === totalItems - 1 ? "icon-color-disabled" : "icon-color-muted-hoverable icon-color-theme-on-hover" )} />
                 </button>

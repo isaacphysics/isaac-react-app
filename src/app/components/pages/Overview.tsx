@@ -43,7 +43,7 @@ export const TeacherOverview = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:overview.page.title")} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:title.overview")} />
         }
         sidebar={siteSpecific(
             undefined,
@@ -65,7 +65,7 @@ export const TeacherOverview = () => {
                     icon: {name: "icon-group", color: "secondary"},
                     bodyText: t("common:overview.teacher.groups.description"),
                     clickUrl: "/groups",
-                    buttonText: t("common:overview.teacher.groups.buttonLabel"),
+                    buttonText: t("common:button.manageGroups"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
@@ -77,7 +77,7 @@ export const TeacherOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.tests.title"),
+                    title: t("common:title.tests"),
                     icon: {name: "icon-school", color:"secondary"},
                     bodyText: t("common:overview.teacher.tests.description"),
                     clickUrl: "/set_tests",
@@ -85,11 +85,11 @@ export const TeacherOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.markbook.title"),
+                    title: t("ada:title.reviewYourMarkbook"),
                     icon: {name: "icon-done-all", color: "secondary"},
                     bodyText: t("common:overview.teacher.markbook.description"),
                     clickUrl: "/my_markbook",
-                    buttonText: t("common:overview.teacher.markbook.buttonLabel"),
+                    buttonText: t("ada:button.viewMarkbook"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
@@ -106,11 +106,11 @@ export const TeacherOverview = () => {
                     icon: {name: "icon-settings", color: "secondary"},
                     bodyText: t("common:overview.teacher.account.description"),
                     clickUrl: "/account",
-                    buttonText: t("common:overview.teacher.account.buttonLabel"),
+                    buttonText: t("common:title.accountSettings"),
                     buttonStyle: "link"
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.mentoring.title"),
+                    title: t("ada:title.teacherMentoring"),
                     icon: {name: "icon-group", color: "secondary"},
                     bodyText: t("common:overview.teacher.mentoring.description"),
                     clickUrl: "/teacher_mentoring",
@@ -118,11 +118,11 @@ export const TeacherOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.support.title"),
+                    title: t("ada:title.needHelp"),
                     icon: {name: "icon-help", color: "secondary"},
                     bodyText: t("common:overview.teacher.support.description"),
                     clickUrl: "/support/teacher/general",
-                    buttonText: t("common:overview.teacher.support.buttonLabel"),
+                    buttonText: t("common:title.teacherSupport"),
                     buttonStyle: "link",
                 }}/>
             </ColumnSlice>
@@ -140,7 +140,7 @@ export const StudentOverview = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:overview.page.title")} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:title.overview")} />
         }
         sidebar={siteSpecific(
             undefined,
@@ -164,16 +164,16 @@ export const StudentOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.tests.title"),
+                    title: t("common:title.tests"),
                     icon: {name: "icon-school", color:"secondary"},
                     tag: workCounts.tests > 0 ? `${workCounts.tests} to do` : undefined,
                     bodyText: t("common:overview.student.tests.description"),
                     clickUrl: "/tests",
-                    buttonText: t("common:overview.student.tests.buttonLabel"),
+                    buttonText: t("common:button.viewTests"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.student.progress.title"),
+                    title: t("common:title.myProgress"),
                     icon: {name: "icon-done-all", color: "secondary"},
                     bodyText: t("common:overview.student.progress.description"),
                     clickUrl: "/progress",
@@ -185,12 +185,12 @@ export const StudentOverview = () => {
                     icon: {name: "icon-settings", color: "secondary"},
                     bodyText: t("common:overview.teacher.account.description"),
                     clickUrl: "/account",
-                    buttonText: t("common:overview.teacher.account.buttonLabel"),
+                    buttonText: t("common:title.accountSettings"),
                     buttonStyle: "link"
                 }}/>
                 {/* --- end of sidebar options --- */}
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.student.topics.title"),
+                    title: t("ada:title.topics"),
                     icon: {name: "icon-lightbulb-empty", color: "secondary"},
                     bodyText: t("common:overview.student.topics.description"),
                     clickUrl: "/topics",
@@ -198,7 +198,7 @@ export const StudentOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.student.questions.title"),
+                    title: t("common:title.questions"),
                     icon: {name: "icon-search", color: "secondary"},
                     bodyText: t("common:overview.student.questions.description"),
                     clickUrl: "/questions",
@@ -206,7 +206,7 @@ export const StudentOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.student.projects.title"),
+                    title: t("ada:title.projects"),
                     icon: {name: "icon-globe", color: "secondary"},
                     bodyText: t("common:overview.student.projects.description"),
                     clickUrl: "/projects",
@@ -214,11 +214,11 @@ export const StudentOverview = () => {
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.support.title"),
+                    title: t("ada:title.needHelp"),
                     icon: {name: "icon-help", color: "secondary"},
                     bodyText: t("common:overview.student.support.description"),
                     clickUrl: "/support/student/general",
-                    buttonText: t("common:overview.student.support.buttonLabel"),
+                    buttonText: t("ada:title.studentSupport"),
                     buttonStyle: "link",
                 }}/>
             </ColumnSlice>

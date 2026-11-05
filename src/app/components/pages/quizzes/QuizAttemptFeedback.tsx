@@ -24,7 +24,7 @@ function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
         prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>
-            <Button tag={Link} to={pageLink(1)}>{t("common:tests.feedback.footer.nextButton")}</Button>
+            <Button tag={Link} to={pageLink(1)}>{t("common:button.next")}</Button>
         </>;
     } else {
         controls = <QuizPagination {...props} page={page} finalLabel={t("common:tests.feedback.footer.finalLabel")} />;

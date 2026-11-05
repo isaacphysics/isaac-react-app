@@ -51,10 +51,10 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         }
     }, [filterSubject, searchText, setFilterStages, stageCounts]);
 
-    return <ContentSidebar buttonTitle={t("common:glossary.sidebar.searchTitle")} optionBar={optionBar} {...rest}>
+    return <ContentSidebar buttonTitle={t("common:title.searchGlossary")} optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">{t("common:glossary.sidebar.searchTitle")}</h3>
+            <h3 className="h5">{t("common:title.searchGlossary")}</h3>
             <GlossarySearch searchText={searchText} setSearchText={setSearchText} />
             <div className="section-divider"/>
 
@@ -72,10 +72,10 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             {!pageContext?.subject && !pageContext?.stage?.length && <div className="section-divider"/>}
 
             {!pageContext?.stage?.length && <>
-                <h3 className="mt-4 h5">{t("common:glossary.sidebar.selectStageTitle")}</h3>
+                <h3 className="mt-4 h5">{t("common:label.selectStage")}</h3>
                 <ul>
                     <li>
-                        <StyledTabPicker checkboxTitle={t("common:sidebar.filter.all")} data-bs-theme={filterSubject?.id}
+                        <StyledTabPicker checkboxTitle={t("common:label.all")} data-bs-theme={filterSubject?.id}
                             checked={!filterStages} count={stageCounts["all"]} onChange={() => setFilterStages(undefined)}/>
                     </li>
                     <div className="section-divider-small"/>

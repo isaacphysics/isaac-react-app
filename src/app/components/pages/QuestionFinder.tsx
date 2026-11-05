@@ -161,7 +161,7 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
     return <div className="d-flex flex-wrap mt-2">
         {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
             {t.label}
-            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label={i18next.t("common:questionFinder.filter.closeButton")}/>
+            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label={i18next.t("common:button.close")}/>
         </div>)}
         {filterTags.length > 0 && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
             {i18next.t("common:questionFinder.filter.clearAll")}
@@ -632,7 +632,7 @@ export const QuestionFinder = () => {
                                             disabled={!moreResultsAvailable || isStale}
                                             color={"keyline"}
                                         >
-                                            {i18next.t("common:questionFinder.loadMore")}
+                                            {i18next.t("common:button.loadMore")}
                                         </Button>
                                     </Col>
                                 </Row>

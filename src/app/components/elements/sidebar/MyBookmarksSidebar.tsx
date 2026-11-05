@@ -68,7 +68,7 @@ export const MyBookmarksSidebar = (props: MyBookmarksSidebarProps) => {
 
             <div className="d-flex flex-column my-4">
                 <CollapsibleList
-                    title={t("common:bookmarks.sidebar.subjectFilter")} expanded={subjectExpanded}
+                    title={t("sci:label.subject")} expanded={subjectExpanded}
                     toggle={() => toggleSubjectExpanded(e => !e)}
                     numberSelected={searchSubjects.length}
                     className="ps-0"
