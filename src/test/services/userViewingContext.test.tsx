@@ -8,7 +8,6 @@ import {
     STAGE,
     hasDefaultPreferences
 } from "../../app/services";
-import {TransientUserContextState} from "../../app/state";
 import {UserContext, Stage, ExamBoard} from "../../IsaacApiTypes";
 
 
@@ -16,7 +15,7 @@ describe("User context derivation", () => {
     if (isPhy){
         it("ignores exam board settings on Isaac", () => {
             // Arrange
-            const transient: TransientUserContextState = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
+            const transient: UserContext = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE}];
 
             // Act
@@ -97,7 +96,7 @@ describe("User context derivation", () => {
         it("prefers transient context over registered context on Isaac", () => {
             // Arrange
             const registered: UserContext[] = [{stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {stage: STAGE.GCSE};
+            const transient: UserContext = {stage: STAGE.GCSE};
 
             // Act
             const result = calculateNewUserContext(transient, registered, undefined);
@@ -115,7 +114,7 @@ describe("User context derivation", () => {
         it("prefers transient context over registered context on Ada", () => {
             // Arrange
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.CIE, stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
+            const transient: UserContext = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
 
             // Act
             const result = calculateNewUserContext(transient, registered, undefined);
@@ -135,7 +134,7 @@ describe("User context derivation", () => {
         it("prefers gameboard-derived context over transient context on Isaac", () => {
             // Arrange
             const registered: UserContext[] = [{stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {stage: STAGE.GCSE};
+            const transient: UserContext = {stage: STAGE.GCSE};
             const gameboardInfo: GameboardAndPathInfo = {
                 boardIdFromDTO: "some-board-id",
                 contentsFromDTO: [
@@ -171,7 +170,7 @@ describe("User context derivation", () => {
         it("prefers gameboard-derived context over transient context on Ada", () => {
             // Arrange
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.CIE, stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
+            const transient: UserContext = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
             const gameboardInfo: GameboardAndPathInfo = {
                 boardIdFromDTO: "some-board-id",
                 contentsFromDTO: [

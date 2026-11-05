@@ -1,6 +1,7 @@
 import {
     comparatorFromOrderedValues,
     CS_EXAM_BOARDS_BY_STAGE,
+    DOCUMENT_TYPE,
     EXAM_BOARD,
     EXAM_BOARD_DEFAULT_OPTION,
     EXAM_BOARD_NULL_OPTIONS,
@@ -32,7 +33,7 @@ import {
 import {useParams} from "react-router-dom";
 import {
     AppState,
-    TransientUserContextState,
+    selectors,
     useAppSelector
 } from "../state";
 import {GameboardContext, PageContextState, PotentialUser, AudienceView} from "../../IsaacAppTypes";
@@ -68,30 +69,46 @@ export function useUserViewingContext(): UserViewingContext {
     const user = useAppSelector((state: AppState) => state && state.user);
     const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
     const {questionId} = useParams<{ questionId: string }>();
+    const page = useAppSelector(selectors.doc.get);
 
     const registeredContexts = isLoggedIn(user) ? user.registeredContexts as UserContext[] : undefined;
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext);
+
+    const isConceptPage = page && page !== 404 && page.type === DOCUMENT_TYPE.CONCEPT;
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    let stageOverride: STAGE | undefined;
+    if (isConceptPage && pageContext) {
+        if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+            stageOverride = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]][0];
+        }
+    }
 
     const { id, contents } = useContext(GameboardContext) || {};
 
     useEffect(() => {
         const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents, boardIdFromQueryParams: queryParams.board, questionIdFromPath: questionId };
-        const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo);
+        const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo, stageOverride);
         setContextProps(newContextProps);
-    }, [transientUserContext, registeredContexts, displaySettings, id, contents, queryParams.board, questionId]);
+    }, [transientUserContext, registeredContexts, displaySettings, id, contents, queryParams.board, questionId, stageOverride]);
 
     return contextProps;
 }
 
-export const calculateNewUserContext = (transientUserContext: TransientUserContextState, registeredContexts?: UserContext[],
-    gameboardAndPathInfo?: GameboardAndPathInfo) : UserViewingContext => {
+export const calculateNewUserContext = (transientUserContext: UserContext, registeredContexts?: UserContext[],
+    gameboardAndPathInfo?: GameboardAndPathInfo, stageOverride?: STAGE): UserViewingContext => {
     
     const contexts: UserContext[] = [];
     let stage: STAGE = STAGE.ALL;
     let examBoard: EXAM_BOARD = EXAM_BOARD_DEFAULT_OPTION;
+    let isFixedContext: boolean = false;
     const explanation: UserViewingContext["explanation"] = {stage: CONTEXT_SOURCE.DEFAULT, examBoard: siteSpecific(CONTEXT_SOURCE.NOT_IMPLEMENTED, CONTEXT_SOURCE.DEFAULT)};
 
-    if (gameboardAndPathInfo?.questionIdFromPath && gameboardAndPathInfo?.boardIdFromQueryParams
+    if (stageOverride) {
+        isFixedContext = true;
+        explanation.stage = CONTEXT_SOURCE.PAGE_CONTEXT;
+        contexts.push({stage: stageOverride, examBoard});
+    } else if (gameboardAndPathInfo?.questionIdFromPath && gameboardAndPathInfo?.boardIdFromQueryParams
         && gameboardAndPathInfo.boardIdFromDTO === gameboardAndPathInfo.boardIdFromQueryParams) {
         // Gameboard context is active
         const gameboardItem = gameboardAndPathInfo.contentsFromDTO?.filter(c => c.id === gameboardAndPathInfo.questionIdFromPath)[0];
@@ -114,11 +131,11 @@ export const calculateNewUserContext = (transientUserContext: TransientUserConte
     } else if (transientUserContext && (transientUserContext.stage || transientUserContext.examBoard)) {
         // Transient context is active
         if (transientUserContext.stage) {
-            stage = transientUserContext.stage;
+            stage = transientUserContext.stage as STAGE;
             explanation.stage = CONTEXT_SOURCE.TRANSIENT;
         }
         if (isAda && transientUserContext.examBoard) {
-            examBoard = transientUserContext.examBoard;
+            examBoard = transientUserContext.examBoard as EXAM_BOARD;
             explanation.examBoard = CONTEXT_SOURCE.TRANSIENT;
         }
         contexts.push({stage, examBoard});
@@ -135,12 +152,6 @@ export const calculateNewUserContext = (transientUserContext: TransientUserConte
     } else {
         // Use default context
         contexts.push({stage, examBoard});
-    }
-
-    const isFixedContext = !!transientUserContext?.isFixedContext;
-
-    if (isFixedContext) {
-        explanation.stage = CONTEXT_SOURCE.PAGE_CONTEXT;
     }
 
     return { contexts, isFixedContext, explanation };

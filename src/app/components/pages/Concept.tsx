@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {useLocation, useParams} from "react-router-dom";
-import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector, useGetGameboardByIdQuery} from "../../state";
+import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
-import {usePreviousPageContext, isAda, useNavigation, siteSpecific, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined, showWildcard} from "../../services";
+import {usePreviousPageContext, isAda, useNavigation, siteSpecific, isDefined, showWildcard} from "../../services";
 import {GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -40,7 +40,6 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
     const conceptQuery = useGetConceptQuery(conceptId);
     const {data: doc, isLoading} = conceptQuery;
     const navigation = useNavigation(doc ?? null);
-    const dispatch = useAppDispatch();
     
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const accessibilitySettings = useAccessibilitySettings();
@@ -52,20 +51,6 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
 
     const urlParams = new URLSearchParams(location.search);
     const linkedBookSection = [urlParams.get("book") ?? "", urlParams.get("section") ?? ""];
-
-    useEffect(() => {
-        if (pageContext) {
-            // the page context, if single stage, overrides the user viewing context
-            if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
-                const newStage = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]];
-                if (newStage) {
-                    dispatch(transientUserContextSlice?.actions.setStage(newStage[0]));
-                    dispatch(transientUserContextSlice?.actions.setFixedContext(true));
-                }
-            }
-            // all other cases use the default behaviour
-        }
-    }, [dispatch, pageContext]);
 
     return <ShowLoadingQuery
         query={conceptQuery}
