@@ -2,7 +2,6 @@ import React from "react";
 import queryString from "query-string";
 import {selectors, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery, useGetTopicQuery} from "../state";
 import {
-    determineCurrentCreationContext,
     determineGameboardHistory,
     determineNextGameboardItem,
     determineNextTopicContentLink,
@@ -113,7 +112,6 @@ export const determinePageNavigation = (
                 nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
                 previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
                 search,
-                creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
                 currentGameboard
             };
         }
