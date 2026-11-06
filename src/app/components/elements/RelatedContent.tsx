@@ -66,9 +66,9 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="simple-card flex-fill my-3 p-3 text-wrap">
-                <Row className="related-questions related-title">
+                <Row className="related-questions">
                     <Col xs={12} sm={"auto"}>
-                        <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
+                        <i className="icon icon-raw icon-not-started icon-lg mb-n2 ms-2 me-3" />
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
                 </Row>
