@@ -1,11 +1,10 @@
-import React, {ReactNode} from "react";
+import React from "react";
 import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
     DOCUMENT_TYPE,
     documentTypePathPrefix,
-    isAda,
     isIntendedAudience,
     sortByStringValue,
     useUserViewingContext
@@ -22,65 +21,37 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-    const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
-    const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userContext, user));
 
-    const sortedContent = audienceFilteredContent.sort(sortByStringValue("title"));
+    const filteredandSortedContent = content.filter(contentSummary => 
+        [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].includes(contentSummary.type as DOCUMENT_TYPE)
+    ).sort(sortByStringValue("title"));
 
-    const sortedRemainder: ContentSummaryDTO[] = remainingContent.sort(sortByStringValue("title"));
+    const audienceQuestions = filteredandSortedContent.filter(c => isIntendedAudience(c.audience, userContext, user));
+    const remainingQuestions: ContentSummaryDTO[] = filteredandSortedContent.filter(c => !isIntendedAudience(c.audience, userContext, user));
 
-    const audienceQuestions = sortedContent
-        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
-    const remainingQuestions = sortedRemainder
-        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
-
-    function getURLForContent(content: ContentSummaryDTO) {
-        return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
-    };
-
-    function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {
-        const eventDetails: {
-            type?: string,
-            relatedConceptId?: string, relatedQuestionId?: string, relatedPageId?: string,
-            conceptId?: string, questionId?: string, pageId?: string
-        } = {};
-
-        // Where are we linking to?
-        switch (contentSummary.type as DOCUMENT_TYPE) {
-            case DOCUMENT_TYPE.CONCEPT:
-                eventDetails.type = "VIEW_RELATED_CONCEPT";
-                eventDetails.relatedConceptId = contentSummary.id;
-                break;
-            case DOCUMENT_TYPE.QUESTION:
-            case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
-                eventDetails.type = "VIEW_RELATED_QUESTION";
-                eventDetails.relatedQuestionId = contentSummary.id;
-                break;
-            case DOCUMENT_TYPE.GENERIC:
-                eventDetails.type = "VIEW_RELATED_PAGE";
-                eventDetails.relatedPageId = contentSummary.id;
-        }
-        // Where have we linked from?
+    function getParentPageDetails(parentPage: ContentDTO) {
         switch (parentPage.type as DOCUMENT_TYPE) {
             case DOCUMENT_TYPE.CONCEPT:
-                eventDetails.conceptId = parentPage.id;
-                break;
+                return {conceptId: parentPage.id};
+            case DOCUMENT_TYPE.GENERIC:
+                return {pageId: parentPage.id};
             case DOCUMENT_TYPE.QUESTION:
             case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
-                eventDetails.questionId = parentPage.id;
-                break;
-            case DOCUMENT_TYPE.GENERIC:
-                eventDetails.pageId = parentPage.id;
+            default:
+                return {questionId: parentPage.id};
         }
-        return eventDetails;
-    }
+    };
 
     const renderItem = (contentSummary: ContentSummaryDTO) => {
-        return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 me-lg-3">
+        return <ListGroupItem key={contentSummary.id} className="w-100 me-lg-3">
             <Link
                 className="btn-link btn text-start"
-                to={getURLForContent(contentSummary)}
-                onClick={async () => await dispatch(logAction(getEventDetails(contentSummary, parentPage)))}
+                to={`/${documentTypePathPrefix[contentSummary.type as DOCUMENT_TYPE]}/${contentSummary.id}`}
+                onClick={async () => await dispatch(logAction({
+                    type: "VIEW_RELATED_QUESTIONS",
+                    relatedQuestionId: contentSummary.id,
+                    ...getParentPageDetails(parentPage)
+                }))}
             >
                 <span className="font-size-1 fw-regular">
                     {contentSummary.title}
@@ -118,5 +89,4 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
             </div>
         </div>
     </div>;
-}
 }
