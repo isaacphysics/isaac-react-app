@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
+import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
