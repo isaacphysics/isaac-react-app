@@ -5,7 +5,6 @@ import {Link} from "react-router-dom";
 import {
     DOCUMENT_TYPE,
     documentTypePathPrefix,
-    isAda,
     isIntendedAudience,
     sortByStringValue,
     useUserViewingContext
@@ -21,7 +20,11 @@ interface RelatedContentProps {
 type RenderItemFunction = (contentSummary: ContentSummaryDTO) => ReactNode;
 
 function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {
-    const eventDetails: any = {};
+    const eventDetails: {
+        type?: string,
+        relatedConceptId?: string, relatedQuestionId?: string, relatedPageId?: string,
+        conceptId?: string, questionId?: string, pageId?: string
+    } = {};
 
     // Where are we linking to?
     switch (contentSummary.type as DOCUMENT_TYPE) {
@@ -119,5 +122,5 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
         </ListGroupItem>;
     };
 
-    return isAda ? renderQuestions(questions, remainingQuestions, makeListGroupItem) : null;
+    return renderQuestions(questions, remainingQuestions, makeListGroupItem);
 }
