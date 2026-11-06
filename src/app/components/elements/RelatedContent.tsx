@@ -4,7 +4,6 @@ import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
     DOCUMENT_TYPE,
-    documentTypePathPrefix,
     isIntendedAudience,
     sortByStringValue,
     useUserViewingContext
@@ -12,22 +11,9 @@ import {
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import classNames from "classnames";
 
-interface RelatedContentProps {
-    content: ContentSummaryDTO[];
-    parentPage: ContentDTO;
-}
 
-export function RelatedContent({content, parentPage}: RelatedContentProps) {
+const RelatedQuestion = ({question, parentPage}: {question: ContentSummaryDTO, parentPage: ContentDTO}) => {
     const dispatch = useAppDispatch();
-    const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserViewingContext();
-
-    const filteredandSortedContent = content.filter(contentSummary => 
-        [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].includes(contentSummary.type as DOCUMENT_TYPE)
-    ).sort(sortByStringValue("title"));
-
-    const audienceQuestions = filteredandSortedContent.filter(c => isIntendedAudience(c.audience, userContext, user));
-    const remainingQuestions: ContentSummaryDTO[] = filteredandSortedContent.filter(c => !isIntendedAudience(c.audience, userContext, user));
 
     function getParentPageDetails(parentPage: ContentDTO) {
         switch (parentPage.type as DOCUMENT_TYPE) {
@@ -42,23 +28,38 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
         }
     };
 
-    const renderItem = (contentSummary: ContentSummaryDTO) => {
-        return <ListGroupItem key={contentSummary.id} className="w-100 me-lg-3">
-            <Link
-                className="btn-link btn text-start"
-                to={`/${documentTypePathPrefix[contentSummary.type as DOCUMENT_TYPE]}/${contentSummary.id}`}
-                onClick={async () => await dispatch(logAction({
-                    type: "VIEW_RELATED_QUESTIONS",
-                    relatedQuestionId: contentSummary.id,
-                    ...getParentPageDetails(parentPage)
-                }))}
-            >
-                <span className="font-size-1 fw-regular">
-                    {contentSummary.title}
-                </span>
-            </Link>
-        </ListGroupItem>;
-    };
+    return <ListGroupItem className="w-100 me-lg-3">
+        <Link
+            className="btn-link btn text-start"
+            to={`/questions/${question.id}`}
+            onClick={async () => await dispatch(logAction({
+                type: "VIEW_RELATED_QUESTIONS",
+                relatedQuestionId: question.id,
+                ...getParentPageDetails(parentPage)
+            }))}
+        >
+            <span className="font-size-1 fw-regular">
+                {question.title}
+            </span>
+        </Link>
+    </ListGroupItem>;
+};
+
+interface RelatedContentProps {
+    content: ContentSummaryDTO[];
+    parentPage: ContentDTO;
+}
+
+export function RelatedContent({content, parentPage}: RelatedContentProps) {
+    const user = useAppSelector(selectors.user.orNull);
+    const userContext = useUserViewingContext();
+
+    const filteredandSortedContent = content.filter(contentSummary => 
+        [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].includes(contentSummary.type as DOCUMENT_TYPE)
+    ).sort(sortByStringValue("title"));
+
+    const audienceQuestions = filteredandSortedContent.filter(c => isIntendedAudience(c.audience, userContext, user));
+    const remainingQuestions: ContentSummaryDTO[] = filteredandSortedContent.filter(c => !isIntendedAudience(c.audience, userContext, user));
 
     if (audienceQuestions.length + remainingQuestions.length == 0) return null;
 
@@ -76,13 +77,17 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
                     {audienceQuestions.length > 0 && <div className={classNames({"w-lg-50": remainingQuestions.length > 0})}>
                         <div className="ps-3 h4">On your specification:</div>
                         <ListGroup>
-                            {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
+                            {audienceQuestions.map((contentSummary, i) => 
+                                <RelatedQuestion key={`audience-question-${i}`} question={contentSummary} parentPage={parentPage} />
+                            )}
                         </ListGroup>
                     </div>}
                     {remainingQuestions.length > 0 && <div className={classNames("mt-4 mt-lg-0", {"w-lg-50": audienceQuestions.length > 0})}>
                         <div className="ps-3 h4">Outside your specification:</div>
                         <ListGroup>
-                            {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
+                            {remainingQuestions.map((contentSummary, i) => 
+                                <RelatedQuestion key={`remaining-question-${i}`} question={contentSummary} parentPage={parentPage} />
+                            )}
                         </ListGroup>
                     </div>}
                 </div>
