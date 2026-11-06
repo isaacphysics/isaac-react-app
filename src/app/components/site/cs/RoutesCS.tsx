@@ -39,6 +39,7 @@ import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { AdaCyberExplorersResources } from "../../pages/AdaCyberExplorersResources";
 import { RegistrationAgeCheckSSOOnly } from "../../pages/RegistrationAgeCheckSSOOnly";
+import { AdaAdvancers } from "../../pages/AdaAdvancers";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -128,5 +129,6 @@ export const RoutesCS = [
     <Route key={key++} path={"/pages/student_challenges"} element={<Navigate to={"/student_challenges"} replace />} />,
 
     <Route key={key++} path="/teacher_mentoring" element={<TeacherMentoring />} />,
+    <Route key={key++} path="/ada_advancers" element={<AdaAdvancers />} />,
     <Route key={key++} path={"/pages/teacher_mentoring_2025"} element={<Navigate to={"/teacher_mentoring"} replace />} />,
 ];
