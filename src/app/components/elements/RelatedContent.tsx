@@ -66,15 +66,13 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="simple-card flex-fill my-3 p-3 text-wrap">
-                <Row className="related-questions">
-                    <Col xs={12} sm={"auto"}>
-                        <i className="icon icon-raw icon-not-started icon-lg mb-n2 ms-2 me-3" />
-                        <h3 className="d-inline-block mt-2">Related questions</h3>
-                    </Col>
-                </Row>
+                <div className="related-questions">
+                    <i className="icon icon-raw icon-not-started icon-lg mb-n2 ms-2 me-3" />
+                    <h3 className="d-inline-block mt-2">Related questions</h3>
+                </div>
                 <hr/>
-                <div className="d-lg-flex text-start">
-                    {audienceQuestions.length > 0 && <div className={classNames({"w-lg-50": remainingQuestions.length > 0})}>
+                <div className="d-md-flex text-start">
+                    {audienceQuestions.length > 0 && <div className={classNames({"w-md-50": remainingQuestions.length > 0})}>
                         <div className="ps-3 h4">On your specification:</div>
                         <ListGroup>
                             {audienceQuestions.map((contentSummary, i) => 
@@ -82,7 +80,7 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
                             )}
                         </ListGroup>
                     </div>}
-                    {remainingQuestions.length > 0 && <div className={classNames("mt-4 mt-lg-0", {"w-lg-50": audienceQuestions.length > 0})}>
+                    {remainingQuestions.length > 0 && <div className={classNames("mt-4 mt-md-0", {"w-md-50": audienceQuestions.length > 0})}>
                         <div className="ps-3 h4">Outside your specification:</div>
                         <ListGroup>
                             {remainingQuestions.map((contentSummary, i) => 
