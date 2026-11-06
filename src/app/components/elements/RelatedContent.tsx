@@ -18,48 +18,79 @@ interface RelatedContentProps {
     parentPage: ContentDTO;
 }
 
-type RenderItemFunction = (contentSummary: ContentSummaryDTO) => ReactNode;
+export function RelatedContent({content, parentPage}: RelatedContentProps) {
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const userContext = useUserViewingContext();
+    const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
+    const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userContext, user));
 
-function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {
-    const eventDetails: any = {};
+    const sortedContent = audienceFilteredContent.sort(sortByStringValue("title"));
 
-    // Where are we linking to?
-    switch (contentSummary.type as DOCUMENT_TYPE) {
-        case DOCUMENT_TYPE.CONCEPT:
-            eventDetails.type = "VIEW_RELATED_CONCEPT";
-            eventDetails.relatedConceptId = contentSummary.id;
-            break;
-        case DOCUMENT_TYPE.QUESTION:
-        case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
-            eventDetails.type = "VIEW_RELATED_QUESTION";
-            eventDetails.relatedQuestionId = contentSummary.id;
-            break;
-        case DOCUMENT_TYPE.GENERIC:
-            eventDetails.type = "VIEW_RELATED_PAGE";
-            eventDetails.relatedPageId = contentSummary.id;
+    const sortedRemainder: ContentSummaryDTO[] = remainingContent.sort(sortByStringValue("title"));
+
+    const audienceQuestions = sortedContent
+        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
+    const remainingQuestions = sortedRemainder
+        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
+
+    function getURLForContent(content: ContentSummaryDTO) {
+        return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
+    };
+
+    function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {
+        const eventDetails: {
+            type?: string,
+            relatedConceptId?: string, relatedQuestionId?: string, relatedPageId?: string,
+            conceptId?: string, questionId?: string, pageId?: string
+        } = {};
+
+        // Where are we linking to?
+        switch (contentSummary.type as DOCUMENT_TYPE) {
+            case DOCUMENT_TYPE.CONCEPT:
+                eventDetails.type = "VIEW_RELATED_CONCEPT";
+                eventDetails.relatedConceptId = contentSummary.id;
+                break;
+            case DOCUMENT_TYPE.QUESTION:
+            case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
+                eventDetails.type = "VIEW_RELATED_QUESTION";
+                eventDetails.relatedQuestionId = contentSummary.id;
+                break;
+            case DOCUMENT_TYPE.GENERIC:
+                eventDetails.type = "VIEW_RELATED_PAGE";
+                eventDetails.relatedPageId = contentSummary.id;
+        }
+        // Where have we linked from?
+        switch (parentPage.type as DOCUMENT_TYPE) {
+            case DOCUMENT_TYPE.CONCEPT:
+                eventDetails.conceptId = parentPage.id;
+                break;
+            case DOCUMENT_TYPE.QUESTION:
+            case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
+                eventDetails.questionId = parentPage.id;
+                break;
+            case DOCUMENT_TYPE.GENERIC:
+                eventDetails.pageId = parentPage.id;
+        }
+        return eventDetails;
     }
-    // Where have we linked from?
-    switch (parentPage.type as DOCUMENT_TYPE) {
-        case DOCUMENT_TYPE.CONCEPT:
-            eventDetails.conceptId = parentPage.id;
-            break;
-        case DOCUMENT_TYPE.QUESTION:
-        case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
-            eventDetails.questionId = parentPage.id;
-            break;
-        case DOCUMENT_TYPE.GENERIC:
-            eventDetails.pageId = parentPage.id;
-    }
-    return eventDetails;
-}
 
-function getURLForContent(content: ContentSummaryDTO) {
-    return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
-}
-
-function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
+    const renderItem = (contentSummary: ContentSummaryDTO) => {
+        return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 me-lg-3">
+            <Link
+                className="btn-link btn text-start"
+                to={getURLForContent(contentSummary)}
+                onClick={async () => await dispatch(logAction(getEventDetails(contentSummary, parentPage)))}
+            >
+                <span className="font-size-1 fw-regular">
+                    {contentSummary.title}
+                </span>
+            </Link>
+        </ListGroupItem>;
+    };
 
     if (audienceQuestions.length + remainingQuestions.length == 0) return null;
+
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="simple-card flex-fill my-3 p-3 text-wrap">
@@ -88,36 +119,4 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
         </div>
     </div>;
 }
-
-export function RelatedContent({content, parentPage}: RelatedContentProps) {
-    const dispatch = useAppDispatch();
-    const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserViewingContext();
-    const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
-    const remainingContent: ContentSummaryDTO[] = content.filter(c => !isIntendedAudience(c.audience, userContext, user));
-
-    const sortedContent = audienceFilteredContent.sort(sortByStringValue("title"));
-
-    const sortedRemainder: ContentSummaryDTO[] = remainingContent.sort(sortByStringValue("title"));
-
-    const questions = sortedContent
-        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
-    const remainingQuestions = sortedRemainder
-        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
-
-    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
-        return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 me-lg-3">
-            <Link
-                className="btn-link btn text-start"
-                to={getURLForContent(contentSummary)}
-                onClick={async () => await dispatch(logAction(getEventDetails(contentSummary, parentPage)))}
-            >
-                <span className="font-size-1 fw-regular">
-                    {contentSummary.title}
-                </span>
-            </Link>
-        </ListGroupItem>;
-    };
-
-    return isAda ? renderQuestions(questions, remainingQuestions, makeListGroupItem) : null;
 }
