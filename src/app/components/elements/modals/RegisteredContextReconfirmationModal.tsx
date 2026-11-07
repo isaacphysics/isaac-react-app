@@ -17,7 +17,7 @@ import {
     validateUserContexts,
     validateUserSchool
 } from "../../../services";
-import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
+import {RegisteredContextAccountInput} from "../inputs/RegisteredContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {ActiveModalProps, BooleanNotation, DisplaySettings, PotentialUser, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
@@ -61,7 +61,7 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
     }
 });
 
-const UserContextReconfirmationModalBody = () => {
+const RegisteredContextReconfirmationModalBody = () => {
     const dispatch = useDispatch();
     const user: Immutable<PotentialUser> | null = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
@@ -72,7 +72,7 @@ const UserContextReconfirmationModalBody = () => {
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
-    const [userContexts, setUserContexts] = useState<UserContext[]>([{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]);
+    const [registeredContexts, setRegisteredContexts] = useState<UserContext[]>([{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]);
 
     const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
@@ -80,14 +80,14 @@ const UserContextReconfirmationModalBody = () => {
         // on first load `user` is undefined and so userToUpdate is incomplete, so wait for the `user` selector to return a value then update
         if (user?.loggedIn && !userToUpdate?.id) {
             setUserToUpdate({...user, password: null});
-            setUserContexts((user.registeredContexts ?? [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]) as UserContext[]);
+            setRegisteredContexts((user.registeredContexts ?? [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]) as UserContext[]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     const allFieldsAreValid = useMemo(() =>
-        validateUserContexts(userContexts) && (isPhy || validateUserSchool(userToUpdate))
-    , [userContexts, userToUpdate]);
+        validateUserContexts(registeredContexts) && (isPhy || validateUserSchool(userToUpdate))
+    , [registeredContexts, userToUpdate]);
 
     const logReviewTeacherConnections = () =>
         dispatch(logAction({
@@ -130,7 +130,7 @@ const UserContextReconfirmationModalBody = () => {
                 currentUser: user,
                 updatedUser: userToUpdate,
                 userPreferences: userPreferencesToUpdate,
-                registeredUserContexts: userContexts,
+                registeredUserContexts: registeredContexts,
                 passwordCurrent: null,
                 redirect: false
             }).unwrap()
@@ -139,7 +139,7 @@ const UserContextReconfirmationModalBody = () => {
                 // Otherwise do nothing, as the component will re-render with the relevant error anyway.
                 .catch(() => {});
         }
-    }, [dispatch, updateCurrentUser, setSubmissionAttempted, userToUpdate, allFieldsAreValid, userContexts, booleanNotation, displaySettings, user]);
+    }, [dispatch, updateCurrentUser, setSubmissionAttempted, userToUpdate, allFieldsAreValid, registeredContexts, booleanNotation, displaySettings, user]);
 
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         {submissionAttempted && !allFieldsAreValid &&
@@ -183,11 +183,11 @@ const UserContextReconfirmationModalBody = () => {
                 />
             </Row>
             <Row className={classNames({"pt-3": isAda})}>
-                <UserContextAccountInput
+                <RegisteredContextAccountInput
                     className={below["md"](deviceSize) ? "w-100" : "w-75"}
                     user={userToUpdate} 
-                    userContexts={userContexts} 
-                    setUserContexts={setUserContexts}
+                    registeredContexts={registeredContexts} 
+                    setRegisteredContexts={setRegisteredContexts}
                     displaySettings={displaySettings} 
                     setDisplaySettings={setDisplaySettings}
                     setBooleanNotation={setBooleanNotation} 
@@ -213,7 +213,7 @@ const UserContextReconfirmationModalBody = () => {
     </Form>;
 };
 
-export const userContextReconfirmationModal: ActiveModalProps = {
+export const RegisteredContextReconfirmationModal: ActiveModalProps = {
     title: "Review your details",
-    body: <UserContextReconfirmationModalBody />,
+    body: <RegisteredContextReconfirmationModalBody />,
 };

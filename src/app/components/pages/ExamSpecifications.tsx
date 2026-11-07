@@ -45,20 +45,20 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSp
     const FILTERED_EXAM_BOARDS_BY_STAGE = getFilteredExamBoardsByStage(STAGES, EXAM_BOARDS);
 
     const user = useSelector(selectors.user.orNull);
-    const userContexts = user?.loggedIn ? user.registeredContexts : null;
+    const registeredContexts = user?.loggedIn ? user.registeredContexts : null;
     
     let defaultStage = getStageFromURL(STAGES) as typeof STAGES_CS[number];
     let defaultExamBoard = getExamBoardFromURL(EXAM_BOARDS);
 
-    if (userContexts) {
-        for (const userContext of userContexts) {
-            const userContextStage = userContext.stage as typeof STAGES_CS[number];
-            const userContextExamBoard = userContext.examBoard;
-            if (userContextStage && STAGES.includes(userContextStage)) {
-                defaultStage  = userContextStage;
+    if (registeredContexts) {
+        for (const registeredContext of registeredContexts) {
+            const registeredContextStage = registeredContext.stage as typeof STAGES_CS[number];
+            const registeredContextExamBoard = registeredContext.examBoard;
+            if (registeredContextStage && STAGES.includes(registeredContextStage)) {
+                defaultStage  = registeredContextStage;
             }
-            if (userContextExamBoard && FILTERED_EXAM_BOARDS_BY_STAGE[defaultStage].includes(userContextExamBoard)) {
-                defaultExamBoard = userContextExamBoard;
+            if (registeredContextExamBoard && FILTERED_EXAM_BOARDS_BY_STAGE[defaultStage].includes(registeredContextExamBoard)) {
+                defaultExamBoard = registeredContextExamBoard;
             }
         }
     }

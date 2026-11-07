@@ -131,12 +131,6 @@ export const determineGameboardSubjects = (board?: GameboardDTO) => {
         .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a];});
 };
 
-export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
-    if (isFound(currentGameboard) && currentGameboard.contents) {
-        return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
-    }
-};
-
 
 export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
     return function comparator(a?: T, b?: T) {
@@ -151,7 +145,7 @@ export function determineGameboardStagesAndDifficulties(gameboard: GameboardDTO 
     const stageDifficultiesMap: {[stage in Stage]?: Difficulty[]} = {};
     if (gameboard) {
         gameboard.contents?.forEach(gameboardItem => {
-            determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext).forEach(v => {
+            determineAudienceViews(gameboardItem.audience).forEach(v => {
                 if (v.stage && v.difficulty) {
                     if (!stageDifficultiesMap[v.stage]) {
                         stageDifficultiesMap[v.stage] = [];

@@ -40,7 +40,7 @@ import {
     examBoardLabelMap
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
-import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";
@@ -77,7 +77,7 @@ interface QuestionSearchModalProps {
 export const QuestionSearchModal = (
     {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
-    const userContext = useUserViewingContext();
+    const userViewingContext = useUserViewingContext();
     const sublistDelimiter = " >>> ";
 
     const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
@@ -90,19 +90,13 @@ export const QuestionSearchModal = (
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     useEffect(function populateExamBoardFromUserContext() {
-        const userExamBoard = userContext.contexts[0].examBoard as EXAM_BOARD;
-        if (userContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
+        const userExamBoard = userViewingContext.contexts[0].examBoard as EXAM_BOARD;
+        if (userViewingContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userContext.contexts[0].examBoard]);
+    }, [userViewingContext.contexts[0].examBoard]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
-
-    const creationContext: AudienceContext = useMemo(() => !isBookSearch ? {
-        stage: searchStages.length > 0 ? searchStages : undefined,
-        difficulty: searchDifficulties.length > 0 ? searchDifficulties : undefined,
-        examBoard: searchExamBoards.length > 0 ? searchExamBoards : undefined,
-    } : {}, [isBookSearch, searchStages, searchDifficulties, searchExamBoards]);
 
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
     const [searchBookmarks, setSearchBookmarks] = useState<boolean>(false);
@@ -160,7 +154,7 @@ export const QuestionSearchModal = (
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0, searchBookmarks);
     },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, searchBookmarks]);
 
-    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions({...questionsSort, ...(isBookSearch ? {book: SortOrder.ASC} : {})}, creationContext)(
+    const sortAndFilterBySearch = (questions: ContentSummaryDTO[]) => questions && sortQuestions({...questionsSort, ...(isBookSearch ? {book: SortOrder.ASC} : {})})(
         questions.filter(question => {
             const qIsPublic = searchResultIsPublic(question, user);
             if (isBookSearch) return qIsPublic;
@@ -395,7 +389,6 @@ export const QuestionSearchModal = (
                                             currentQuestions={modalQuestions}
                                             undoStack={undoStack}
                                             redoStack={redoStack}
-                                            creationContext={creationContext}
                                         />
                                     );
                                 }}

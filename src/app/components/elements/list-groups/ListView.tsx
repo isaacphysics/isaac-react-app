@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewProps } from "./AbstractListViewItem";
-import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
+import { ShortcutResponse, AudienceView } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isEventLeaderOrStaff, isPhy, isTeacherOrAbove, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
 import { Button, ListGroup } from "reactstrap";
@@ -36,7 +36,7 @@ type QuestionListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const { item, hideIconLabel, linkedBoardId, linkedBookSection, ...rest } = props;
     const breadcrumb = (isPhy || rest.hasCaret) ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
-    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const audienceViews: AudienceView[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
@@ -231,7 +231,7 @@ type QuickQuizListViewItemProps = ListViewItemBaseProps<"item", "list" | "card">
 
 export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProps) => {
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
-    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const audienceViews: AudienceView[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
@@ -255,7 +255,7 @@ type GenericListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> &
 
 export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) => {
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
-    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const audienceViews: AudienceView[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
     const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-info", size: "lg"}};
@@ -290,7 +290,7 @@ type ShortcutListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> 
 
 export const ShortcutListViewItem = ({item, linkedBoardId, linkedBookSection, ...rest}: ShortcutListViewItemProps) => {
     const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
-    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const audienceViews: AudienceView[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const boardUrlParams = linkedBoardId ? `?board=${linkedBoardId}` : "";
     const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";
@@ -362,7 +362,7 @@ type BuilderListViewItemProps = ListViewItemBaseProps<"builder", "list" | "card"
 
 export const BuilderListViewItem = (props: BuilderListViewItemProps) => {
     const { item, index, onDelete, onMove, totalItems, ...rest } = props;
-    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const audienceViews: AudienceView[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;

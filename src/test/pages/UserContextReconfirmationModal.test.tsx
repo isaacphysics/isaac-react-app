@@ -4,7 +4,7 @@ import produce from "immer";
 import {renderTestEnvironment} from "../testUtils";
 import { RegisteredUserDTO } from "../../IsaacApiTypes";
 
-describe("UserContextReconfirmationModal", () => {
+describe("RegisteredContextReconfirmationModal", () => {
 
     it('should not show if the user has recently updated their audience context information', async () => {
         await renderTestEnvironment();

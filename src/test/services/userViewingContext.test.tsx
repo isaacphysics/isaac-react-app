@@ -5,9 +5,9 @@ import {
     GameboardAndPathInfo,
     getFilteredStageOptions,
     isPhy,
-    STAGE
+    STAGE,
+    hasDefaultPreferences
 } from "../../app/services";
-import {TransientUserContextState} from "../../app/state";
 import {UserContext, Stage, ExamBoard} from "../../IsaacApiTypes";
 
 
@@ -15,11 +15,11 @@ describe("User context derivation", () => {
     if (isPhy){
         it("ignores exam board settings on Isaac", () => {
             // Arrange
-            const transient: TransientUserContextState = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
+            const transient: UserContext = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE}];
 
             // Act
-            const result = calculateNewUserContext(transient, registered, undefined, undefined);
+            const result = calculateNewUserContext(transient, registered, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.GCSE]);
@@ -32,7 +32,7 @@ describe("User context derivation", () => {
     if (isPhy){
         it("uses correct defaults on Isaac", () => {
             // Act
-            const result = calculateNewUserContext({}, undefined, undefined, undefined);
+            const result = calculateNewUserContext({}, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.ALL]);
@@ -42,12 +42,12 @@ describe("User context derivation", () => {
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
 
             // on Physics, hasDefaultPreferences is never true
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     } else {
         it("uses correct defaults on Ada", () => {
             // Act
-            const result = calculateNewUserContext({}, undefined, undefined, undefined);
+            const result = calculateNewUserContext({}, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.ALL]);
@@ -56,7 +56,7 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.ADA]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.DEFAULT);
 
-            expect(result.hasDefaultPreferences).toEqual(true);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(true);
         });
     }
 
@@ -66,7 +66,7 @@ describe("User context derivation", () => {
             const registered: UserContext[] = [{stage: STAGE.A_LEVEL}];
 
             // Act
-            const result = calculateNewUserContext({}, registered, undefined, undefined);
+            const result = calculateNewUserContext({}, registered, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.A_LEVEL]);
@@ -81,7 +81,7 @@ describe("User context derivation", () => {
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.CIE, stage: STAGE.A_LEVEL}];
 
             // Act
-            const result = calculateNewUserContext({}, registered, undefined, undefined);
+            const result = calculateNewUserContext({}, registered, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.A_LEVEL]);
@@ -96,10 +96,10 @@ describe("User context derivation", () => {
         it("prefers transient context over registered context on Isaac", () => {
             // Arrange
             const registered: UserContext[] = [{stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {stage: STAGE.GCSE};
+            const transient: UserContext = {stage: STAGE.GCSE};
 
             // Act
-            const result = calculateNewUserContext(transient, registered, undefined, undefined);
+            const result = calculateNewUserContext(transient, registered, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.GCSE]);
@@ -108,16 +108,16 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.ALL]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
 
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     } else {
         it("prefers transient context over registered context on Ada", () => {
             // Arrange
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.CIE, stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
+            const transient: UserContext = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
 
             // Act
-            const result = calculateNewUserContext(transient, registered, undefined, undefined);
+            const result = calculateNewUserContext(transient, registered, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.GCSE]);
@@ -126,7 +126,7 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.AQA]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.TRANSIENT);
 
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     }
 
@@ -134,7 +134,7 @@ describe("User context derivation", () => {
         it("prefers gameboard-derived context over transient context on Isaac", () => {
             // Arrange
             const registered: UserContext[] = [{stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {stage: STAGE.GCSE};
+            const transient: UserContext = {stage: STAGE.GCSE};
             const gameboardInfo: GameboardAndPathInfo = {
                 boardIdFromDTO: "some-board-id",
                 contentsFromDTO: [
@@ -157,7 +157,7 @@ describe("User context derivation", () => {
             };
 
             // Act
-            const result = calculateNewUserContext(transient, registered, gameboardInfo, undefined);
+            const result = calculateNewUserContext(transient, registered, gameboardInfo);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.FURTHER_A]);
@@ -170,7 +170,7 @@ describe("User context derivation", () => {
         it("prefers gameboard-derived context over transient context on Ada", () => {
             // Arrange
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.CIE, stage: STAGE.A_LEVEL}];
-            const transient: TransientUserContextState = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
+            const transient: UserContext = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
             const gameboardInfo: GameboardAndPathInfo = {
                 boardIdFromDTO: "some-board-id",
                 contentsFromDTO: [
@@ -193,7 +193,7 @@ describe("User context derivation", () => {
             };
 
             // Act
-            const result = calculateNewUserContext(transient, registered, gameboardInfo, undefined);
+            const result = calculateNewUserContext(transient, registered, gameboardInfo);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.SCOTLAND_HIGHER]);
@@ -202,7 +202,7 @@ describe("User context derivation", () => {
             expect(result.contexts.map(c => c.examBoard)).toEqual([EXAM_BOARD.SQA]);
             expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.GAMEBOARD);
 
-            expect(result.hasDefaultPreferences).toEqual(false);
+            expect(hasDefaultPreferences(result.contexts)).toEqual(false);
         });
     }
 });

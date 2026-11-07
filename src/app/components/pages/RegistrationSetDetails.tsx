@@ -135,7 +135,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                 await createNewUser({
                     newUser: registrationUser,
                     newUserPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
-                    newUserContexts: undefined,
+                    newRegisteredContexts: undefined,
                     passwordCurrent: null
                 });
             }

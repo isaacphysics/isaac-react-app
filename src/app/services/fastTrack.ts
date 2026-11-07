@@ -1,5 +1,5 @@
 import {getRelatedConcepts} from "./topics";
-import {DOCUMENT_TYPE, PATHS, useUserViewingContext, UseUserContextReturnType, navigateComponentless} from "./";
+import {DOCUMENT_TYPE, PATHS, useUserViewingContext, UserViewingContext, navigateComponentless} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../state";
@@ -121,7 +121,7 @@ export interface FastTrackPageProperties {
     pageCompleted: boolean;
     questionHistory: string[];
     board: string | undefined;
-    userContext: UseUserContextReturnType;
+    userViewingContext: UserViewingContext;
     user: Immutable<PotentialUser> | null;
     canSubmit: boolean;
 }
@@ -136,10 +136,10 @@ export function useFastTrackInformation(
     const page = useAppSelector(selectors.doc.getWithout404);
     const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
     const pageCompleted = useAppSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
-    const userContext = useUserViewingContext();
+    const userViewingContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
 
-    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userContext, user, canSubmit};
+    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userViewingContext, user, canSubmit};
 }
 
 export function determineFastTrackPrimaryAction(questionPart: FastTrackPageProperties) {

@@ -9,6 +9,6 @@ export const MOST_RECENT_AUGUST = () => {
     return date;
 };
 
-export const needToUpdateUserContextDetails = (lastConfirmedDate: Date | undefined): boolean => {
+export const needToUpdateRegisteredContextDetails = (lastConfirmedDate: Date | undefined): boolean => {
     return !!lastConfirmedDate && lastConfirmedDate <= MOST_RECENT_AUGUST();
 };

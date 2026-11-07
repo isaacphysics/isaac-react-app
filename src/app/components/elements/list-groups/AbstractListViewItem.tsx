@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { ViewingContext} from "../../../../IsaacAppTypes";
+import { AudienceView} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
@@ -124,7 +124,7 @@ type ALVIType = {
     alviType: "item";
     deprecated?: boolean;
     supersededByPath?: string; // –– must contain the prefix as well as the id, e.g. "/questions/{foo}" or "/concepts/{bar}"
-    audienceViews?: ViewingContext[];
+    audienceViews?: AudienceView[];
     status?: CompletionState;
     quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
     hasCaret?: boolean;
@@ -136,7 +136,7 @@ type ALVIType = {
     alviType: "quiz";
     previewQuizUrl?: string;
     quizButton?: JSX.Element;
-    audienceViews?: ViewingContext[];
+    audienceViews?: AudienceView[];
     status?: CompletionState;
 } | {
     // gameboards – have exclusive "assign" and "save to my decks" buttons
@@ -147,7 +147,7 @@ type ALVIType = {
     alviType: "builder";
     deprecated?: boolean;
     supersededByPath?: string;
-    audienceViews?: ViewingContext[];
+    audienceViews?: AudienceView[];
     allowBookmarking?: boolean; // as in item type
     disableRedirect?: boolean; // as in item type
     questionPreviewId?: string; // shows a preview button next to the title; preview opens in modal

@@ -1,7 +1,7 @@
 import React from "react";
 import { Col } from "reactstrap";
 import { IsaacQuestionPageDTO } from "../../../IsaacApiTypes";
-import { ViewingContext } from "../../../IsaacAppTypes";
+import { AudienceView } from "../../../IsaacAppTypes";
 import { stageLabelMap, difficultyShortLabelMap, isPhy, TAG_ID, tags } from "../../services";
 import { MetadataContainer } from "./panels/MetadataContainer";
 import { StageAndDifficultySummaryIcons } from "./StageAndDifficultySummaryIcons";
@@ -19,7 +19,7 @@ function getTags(docTags?: string[]) {
 
 interface QuestionMetaDataProps {
     doc: IsaacQuestionPageDTO;
-    audienceViews: ViewingContext[];
+    audienceViews: AudienceView[];
     allQuestionsCorrect: boolean;
     allQuestionsAttempted: boolean;
     anyQuestionAttempted: boolean;
