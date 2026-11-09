@@ -1,0 +1,707 @@
+<style>
+    /* Sizes, colours and container */
+    .advent {
+        --w: clamp(34px, 11vw, 54px);
+        --h: calc(var(--w) * 1.3);
+        --g: 6px;
+        --step: calc(var(--w) + var(--g));
+        --pad: calc(var(--step) * 0.6);
+        --arch: 42% 42% 4px 4px / 30% 30% 4px 4px;
+        --swing: perspective(calc(var(--w) * 6));
+        --hexagon: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        --pine: #0f3a28;
+        --snow: #eef6f8;
+        --gold: #fea100;
+        --wood: #5d4037;
+        --chase: 0px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 5.5rem;
+    }
+
+    /* Tree layout and wooden tub */
+    .tree {
+        position: relative;
+    }
+    .doors {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        grid-template-columns: repeat(6, var(--w));
+        grid-template-rows:
+            calc(var(--w) * 1.5)
+            repeat(7, calc(var(--h) * 1.1));
+        gap: var(--g);
+        width: fit-content;
+        margin: 0 auto;
+        padding: 0 0 10px;
+    }
+    .doors::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        bottom: 0;
+        left: 16.66%;
+        width: 66.68%;
+        height: calc(var(--h) + 20px);
+        background:
+            linear-gradient(#795548, #795548)
+                top center / 100% 8px no-repeat,
+            var(--wood);
+        clip-path: polygon(
+            0 0,
+            100% 0,
+            90% 100%,
+            10% 100%
+        );
+    }
+
+    /* Branches and snow decoration */
+    .tree-shapes {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(6, var(--w));
+        grid-template-rows:
+            calc(var(--w) * 1.5)
+            repeat(7, calc(var(--h) * 1.1));
+        gap: var(--g);
+        z-index: 0;
+        pointer-events: none;
+    }
+    .tree-shapes .branch {
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent calc(100% - 4px),
+                var(--snow) calc(100% - 4px),
+                var(--snow) 100%
+            ),
+            var(--pine);
+            grid-column: 1 / 7;
+    }
+    .branch-1 {
+        grid-row: 2;
+        clip-path: polygon(42.5% 0, 57.5% 0, 62.5% 100%, 37.5% 100%);
+    }
+    .branch-2 {
+        grid-row: 3;
+        clip-path: polygon(35% 0, 65% 0, 70% 100%, 30% 100%);
+    }
+    .branch-3 {
+        grid-row: 4;
+        clip-path: polygon(27.5% 0, 72.5% 0, 77.5% 100%, 22.5% 100%);
+    }
+    .branch-4 {
+        grid-row: 5;
+        clip-path: polygon(20% 0, 80% 0, 85% 100%, 15% 100%);
+    }
+    .branch-5 {
+        grid-row: 6;
+        clip-path: polygon(12.5% 0, 87.5% 0, 92.5% 100%, 7.5% 100%);
+    }
+    .branch-6 {
+        grid-row: 7;
+        clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
+    }
+
+    /* Doors and interaction states */
+    .day {
+        display: grid;
+        width: var(--w);
+        height: var(--h);
+        padding: 2px;
+        border-radius: var(--arch);
+        background: rgba(0, 0, 0, 0.45);
+        color: inherit;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+        > span {
+            grid-area: 1 / 1;
+            border-radius: var(--arch);
+        }
+    }
+    .inside {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding-top: 10%;
+        background:
+            radial-gradient(circle at 50% 70%, rgba(254, 161, 0, 0.5), rgba(254, 161, 0, 0) 70%),
+            #1f1407;
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7);
+        color: var(--gold);
+        font-weight: bold;
+        font-size: calc(var(--w) * 0.28);
+        line-height: 1;
+        &::after {
+            content: '';
+            width: 38%;
+            aspect-ratio: 0.866;
+            background:
+                linear-gradient(var(--gold), var(--gold)) center / 20% 100% no-repeat,
+                linear-gradient(var(--gold), var(--gold)) center / 100% 18% no-repeat,
+                var(--day-color, #2ecc71);
+            clip-path: var(--hexagon);
+        }
+    }
+    .door {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        padding-bottom: 6%;
+        background:
+            linear-gradient(100deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.14)),
+            var(--day-color, #2ecc71);
+        outline: 1px solid rgba(255, 255, 255, 0.2);
+        outline-offset: -4px;
+        color: white;
+        font-weight: bold;
+        font-size: calc(var(--w) * 0.36);
+        line-height: 1;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+        transform: var(--swing) rotateY(0deg);
+        transform-origin: left center;
+        transition: transform 0.55s cubic-bezier(0.3, 0.8, 0.3, 1), filter 0.55s;
+        /* Hexagonal knob */
+        &::before {
+            content: '';
+            position: absolute;
+            top: 66%;
+            right: 12%;
+            width: 6px;
+            height: 7px;
+            background: linear-gradient(160deg, #ffd27a, var(--gold) 55%, #c77d00);
+            clip-path: var(--hexagon);
+        }
+        /* Faint hexagon plaque behind the number */
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0 0 calc(var(--w) * 0.06) 0;
+            z-index: -1;
+            width: calc(var(--w) * 0.6);
+            height: calc(var(--w) * 0.6 * 1.1547);
+            margin: auto;
+            background: linear-gradient(170deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+            clip-path: var(--hexagon);
+        }
+    }
+    .day {
+        &:hover,
+        &:focus-visible {
+            z-index: 2;
+        }
+        &.active:hover .door,
+        &.active:focus-visible .door {
+            transform: var(--swing) rotateY(-70deg);
+            filter: brightness(0.8);
+        }
+        &:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 3px;
+        }
+        /* Locked: any door that is neither active nor opened */
+        &:not(.active):not(.opened) {
+            pointer-events: none;
+        }
+        &:not(.active):not(.opened) .door {
+            filter: grayscale(1) brightness(0.5);
+        }
+        &:not(.active):not(.opened) .door::after {
+            opacity: 0.5;
+        }
+        /* Opened days keep their door open */
+        &.opened .door {
+            transform: var(--swing) rotateY(-80deg);
+            filter: brightness(0.65);
+        }
+    }
+    .doors > .day {
+        position: relative;
+        z-index: 1;
+        grid-row: var(--grid-row);
+        grid-column: var(--grid-column);
+    }
+    .doors > .day:is(
+        [data-row="1"],
+        [data-row="3"],
+        [data-row="5"],
+        [data-row="base"]
+    ) {
+        translate: calc(var(--step) / 2) 0;
+    }
+    .doors > .day:is(
+        [data-row="star"]
+    ) {
+        translate: calc(var(--step) / 2 - 13.5px) 0;
+    }
+
+    /* Christmas Day star */
+    .star {
+        width: calc(var(--w) * 1.5);
+        height: calc(var(--w) * 1.5);
+        padding: 0;
+        border-radius: 50%;
+        background: none;
+        place-items: center;
+        > span {
+            border-radius: 0;
+        }
+        .glow {
+            width: 180%;
+            height: 180%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(254, 161, 0, 0.45), rgba(254, 161, 0, 0) 65%);
+            opacity: 0.8;
+            pointer-events: none;
+            transition: opacity 0.6s;
+        }
+        .shape {
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            transition: transform 0.7s cubic-bezier(0.3, 0.8, 0.3, 1);
+        }
+        .num {
+            z-index: 2;
+            margin-top: 12%;
+            color: white;
+            font-weight: bold;
+            font-size: calc(var(--w) * 0.4);
+            line-height: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+        }
+        &.active:hover .shape,
+        &.active:focus-visible .shape {
+            transform: rotate(72deg) scale(1.08);
+        }
+        &.active:hover .glow,
+        &.active:focus-visible .glow {
+            opacity: 1;
+        }
+        &:not(.active):not(.opened) .shape {
+            filter: saturate(0.4) brightness(0.75);
+        }
+        &:not(.active):not(.opened) .glow {
+            opacity: 0.25;
+        }
+    }
+
+    /* Door title tag */
+    .tag {
+        position: absolute;
+        bottom: 1.25rem;
+        left: 50%;
+        width: max-content;
+        max-width: calc(100% - 2rem);
+        padding: 0.5rem 1rem 0.5rem 1.9rem;
+        background: radial-gradient(circle at 0.95rem 50%, transparent 0.2rem, var(--gold) 0.24rem);
+        clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0.75rem 100%, 0 50%);
+        color: #3b2300;
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 1.3;
+        text-align: center;
+        text-shadow: none;
+        transform: translateX(-50%) rotate(-2deg);
+        pointer-events: none;
+    }
+    .tag {
+        z-index: 1;
+    }
+
+    /* Snow switch, trunk and snowfall */
+    .trunk {
+        display: block;
+        width: calc(var(--w) * 1.1);
+        height: calc(var(--h) * 0.4);
+        background:
+            linear-gradient(90deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.25)),
+            var(--wood);
+        cursor: pointer;
+        transition: filter 0.2s;
+        &:hover {
+            filter: brightness(1.15);
+        }
+    }
+    .snow-toggle {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+        &:focus-visible ~ .tree .trunk {
+            outline: 2px solid var(--gold);
+            outline-offset: 3px;
+        }
+    }
+    .snowfall {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        overflow: hidden;
+        pointer-events: none;
+    }
+    .snow-toggle:checked ~ .snowfall {
+        display: block;
+    }
+    .flake {
+        position: absolute;
+        top: -5%;
+        left: var(--x, 50%);
+        width: var(--s, 8px);
+        height: var(--s, 8px);
+        background: radial-gradient(circle, #fff 30%, #cfe8f3 100%);
+        clip-path: var(--hexagon, polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%));
+        animation: drift var(--d, 8s) linear var(--delay, 0s) infinite backwards;
+    }
+    @keyframes drift {
+        0% { transform: translate(0, -10vh) rotate(0deg); opacity: 0; }
+        10% { opacity: var(--o, 0.8); }
+        30% { transform: translate(18px, 25vh) rotate(60deg); }
+        60% { transform: translate(-14px, 60vh) rotate(120deg); }
+        100% { transform: translate(10px, 110vh) rotate(200deg); opacity: var(--o, 0.8); }
+    }
+    .tree > .trunk {
+        position: absolute;
+        z-index: 2;
+        top: calc(
+            var(--w) * 1.5 +
+            6 * var(--h) +
+            6 * var(--g)
+        );
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Fairy lights switch, bauble and animations */
+    .lights-toggle {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+    .bauble {
+        position: relative;
+        width: 0;
+        margin-left: calc(-1 * var(--g));
+        cursor: pointer;
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            left: calc(var(--pad) * 0.55);
+            transform-origin: 50% 0;
+        }
+        &::before {
+            top: calc(100% + 6px);
+            width: 1px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.45);
+        }
+        &::after {
+            top: calc(100% + 21px);
+            width: 14px;
+            height: 16px;
+            margin-left: -6.5px;
+            background: radial-gradient(circle at 35% 30%, #fff3d1, var(--gold) 45%, #b86f00);
+            clip-path: var(--hexagon);
+            transform-origin: 50% -15px;
+        }
+        &:hover::before,
+        &:hover::after {
+            animation: swing 1.2s ease-in-out;
+        }
+    }
+    @keyframes swing {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(14deg); }
+        60% { transform: rotate(-9deg); }
+        85% { transform: rotate(4deg); }
+    }
+    .lights-toggle:focus-visible ~ .tree .bauble::before {
+        width: 2px;
+        background: var(--gold);
+    }
+    .lights-toggle:focus-visible ~ .tree .bauble::after {
+        background: radial-gradient(circle at 35% 30%, #fff, #ffd27a 45%, var(--gold));
+    }
+    .lights-toggle:checked ~ .tree .lights {
+        background:
+            radial-gradient(circle, #fff4d6 0 2px, rgba(254, 161, 0, 0.6) 3px, rgba(254, 161, 0, 0) 7px) var(--chase) 100% / 70px 14px repeat-x,
+            radial-gradient(circle, #e0f6ff 0 2px, rgba(64, 190, 240, 0.6) 3px, rgba(64, 190, 240, 0) 7px) calc(var(--chase) + 14px) 100% / 70px 14px repeat-x,
+            radial-gradient(circle, #ffe0ef 0 2px, rgba(240, 80, 150, 0.6) 3px, rgba(240, 80, 150, 0) 7px) calc(var(--chase) + 28px) 100% / 70px 14px repeat-x,
+            radial-gradient(circle, #e5ffe0 0 2px, rgba(90, 220, 110, 0.6) 3px, rgba(90, 220, 110, 0) 7px) calc(var(--chase) + 42px) 100% / 70px 14px repeat-x,
+            radial-gradient(circle, #f3e6ff 0 2px, rgba(185, 120, 240, 0.6) 3px, rgba(185, 120, 240, 0) 7px) calc(var(--chase) + 56px) 100% / 70px 14px repeat-x;
+        animation: chase 2.5s steps(5) infinite;
+    }
+    @keyframes chase {
+        from { --chase: 0px; }
+        to { --chase: 70px; }
+    }
+    .lights-toggle:checked ~ .tree .star .glow {
+        animation: pulse 1.6s ease-in-out infinite alternate;
+    }
+    @keyframes pulse {
+        from { opacity: 0.6; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1.15); }
+    }
+    .tree > .bauble {
+        position: absolute;
+        z-index: 3;
+        right: 0;
+        bottom: calc(2 * var(--h) + 3 * var(--g));
+    }
+    .lights {
+        grid-column: 1/7;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        .door,
+        .star .shape,
+        .star .glow {
+            transition: none;
+        }
+        .flake {
+            animation-duration: calc(var(--d, 8s) * 3);
+        }
+        .lights-toggle:checked ~ .tree .lights,
+        .lights-toggle:checked ~ .tree .star .glow,
+        .bauble:hover::before,
+        .bauble:hover::after {
+            animation: none;
+        }
+    }
+</style>
+
+<body>
+<div class="advent">
+    <input type="checkbox" id="advent-snow" class="snow-toggle">
+    <input type="checkbox" id="advent-lights" class="lights-toggle">
+    <div class="tree">
+    <div class="doors">
+        <div class="tree-shapes" aria-hidden="true">
+            <span class="branch branch-1"></span>
+            <span class="lights branch-1"></span>
+            <span class="branch branch-2"></span>
+            <span class="lights branch-2"></span>
+            <span class="branch branch-3"></span>
+            <span class="lights branch-3"></span>
+            <span class="branch branch-4"></span>
+            <span class="lights branch-4"></span>
+            <span class="branch branch-5"></span>
+            <span class="lights branch-5"></span>
+            <span class="branch branch-6"></span>
+            <span class="lights branch-6"></span>
+        </div>
+        <!-- Day 1 -->
+        <a href="/questions/resistor_shopping" class="day active" data-row="3" style="--day-color:#944cbe; --grid-row:4; --grid-column:3;" data-hover="Resistor Shopping (GCSE Physics)" aria-label="Day 1: Resistor Shopping (GCSE Physics)">
+            <span class="inside" aria-hidden="true">1</span><span class="door" aria-hidden="true">1</span>
+        </a>
+        <!-- Day 2 -->
+        <a href="/questions/bitter_chemicals" class="day active" data-row="5" style="--day-color:#b7236d; --grid-row:6; --grid-column:2;" data-hover="Bitter Chemicals (GCSE Chemistry)" aria-label="Day 2: Bitter Chemicals (GCSE Chemistry)">
+            <span class="inside" aria-hidden="true">2</span><span class="door" aria-hidden="true">2</span>
+        </a>
+        <!-- Day 3 -->
+        <a href="/questions/woodland_survey" class="day active" data-row="2" style="--day-color:#00759c; --grid-row:3; --grid-column:3;" data-hover="Woodland Survey (Maths)" aria-label="Day 3: Woodland Survey (Maths)">
+            <span class="inside" aria-hidden="true">3</span><span class="door" aria-hidden="true">3</span>
+        </a>
+        <!-- Day 4 -->
+        <a href="/questions/merry_moments" class="day active" data-row="6" style="--day-color:#944cbe; --grid-row:7; --grid-column:4;" data-hover="Merry Moments (GCSE Physics)" aria-label="Day 4: Merry Moments (GCSE Physics)">
+            <span class="inside" aria-hidden="true">4</span><span class="door" aria-hidden="true">4</span>
+        </a>
+        <!-- Day 5 -->
+        <a href="/questions/bitter_brussels_sprouts" class="day active" data-row="4" style="--day-color:#127025; --grid-row:5; --grid-column:2;" data-hover="Bitter Brussels Sprouts (Biology)" aria-label="Day 5: Bitter Brussels Sprouts (Biology)">
+            <span class="inside" aria-hidden="true">5</span><span class="door" aria-hidden="true">5</span>
+        </a>
+        <!-- Day 6 -->
+        <a href="/questions/number_of_snowflakes" class="day active" data-row="5" style="--day-color:#00759c; --grid-row:6; --grid-column:5;" data-hover="How Many Snowflakes (GCSE Maths)" aria-label="Day 6: How Many Snowflakes (GCSE Maths)">
+            <span class="inside" aria-hidden="true">6</span><span class="door" aria-hidden="true">6</span>
+        </a>
+        <!-- Day 7 -->
+        <a href="/questions/christmas_crackers" class="day active" data-row="4" style="--day-color:#b7236d; --grid-row:5; --grid-column:5;" data-hover="Christmas Crackers (Chemistry)" aria-label="Day 7: Christmas Crackers (Chemistry)">
+            <span class="inside" aria-hidden="true">7</span><span class="door" aria-hidden="true">7</span>
+        </a>
+        <!-- Day 8 -->
+        <a href="/questions/christmas_classification" class="day active" data-row="3" style="--day-color:#127025; --grid-row:4; --grid-column:2;" data-hover="Christmas Classification (GCSE Biology)" aria-label="Day 8: Christmas Classification (GCSE Biology)">
+            <span class="inside" aria-hidden="true">8</span><span class="door" aria-hidden="true">8</span>
+        </a>
+        <!-- Day 9 -->
+        <a href="/questions/santas_delivery" class="day active" data-row="base" style="--day-color:#944cbe; --grid-row:8; --grid-column:3;" data-hover="Santa's Delivery (Physics)" aria-label="Day 9: Santa's Delivery (Physics)">
+            <span class="inside" aria-hidden="true">9</span><span class="door" aria-hidden="true">9</span>
+        </a>
+        <!-- Day 10 -->
+        <a href="/questions/let_it_snow" class="day active" data-row="6" style="--day-color:#b7236d; --grid-row:7; --grid-column:1;" data-hover="Let It Snow (GCSE Chemistry)" aria-label="Day 10: Let It Snow (GCSE Chemistry)">
+            <span class="inside" aria-hidden="true">10</span><span class="door" aria-hidden="true">10</span>
+        </a>
+        <!-- Day 11 -->
+        <a href="/questions/arranging_cards" class="day active" data-row="4" style="--day-color:#00759c; --grid-row:5; --grid-column:4;" data-hover="Arranging Cards (Maths)" aria-label="Day 11: Arranging Cards (Maths)">
+            <span class="inside" aria-hidden="true">11</span><span class="door" aria-hidden="true">11</span>
+        </a>
+        <!-- Day 12 -->
+        <a href="/questions/watt_if" class="day active" data-row="6" style="--day-color:#944cbe; --grid-row:7; --grid-column:6;" data-hover="Watt if? (GCSE Physics)" aria-label="Day 12: Watt if? (GCSE Physics)">
+            <span class="inside" aria-hidden="true">12</span><span class="door" aria-hidden="true">12</span>
+        </a>
+        <!-- Day 13 -->
+        <a href="/questions/yuletide_peptide" class="day active" data-row="5" style="--day-color:#127025; --grid-row:6; --grid-column:3;" data-hover="Yuletide Peptide (Biology)" aria-label="Day 13: Yuletide Peptide (Biology)">
+            <span class="inside" aria-hidden="true">13</span><span class="door" aria-hidden="true">13</span>
+        </a>
+        <!-- Day 14 -->
+        <a href="/questions/prob_marzipan_mints" class="day active" data-row="1" style="--day-color:#00759c; --grid-row:2; --grid-column:3 / 5;" data-hover="Marzipan and Mint (GCSE Maths)" aria-label="Day 14: Marzipan and Mint (GCSE Maths)">
+            <span class="inside" aria-hidden="true">14</span><span class="door" aria-hidden="true">14</span>
+        </a>
+        <!-- Day 15 -->
+        <a href="/questions/ginger_transformation" class="day active" data-row="6" style="--day-color:#b7236d; --grid-row:7; --grid-column:2;" data-hover="Oven Heat Turns Ginger Sweet (Chemistry)" aria-label="Day 15: Oven Heat Turns Ginger Sweet (Chemistry)">
+            <span class="inside" aria-hidden="true">15</span><span class="door" aria-hidden="true">15</span>
+        </a>
+        <!-- Day 16 -->
+        <a href="/questions/flying_reindeer_genetics" class="day active" data-row="6" style="--day-color:#127025; --grid-row:7; --grid-column:5;" data-hover="Flying Reindeer Genetics (GCSE Biology)" aria-label="Day 16: Flying Reindeer Genetics (GCSE Biology)">
+            <span class="inside" aria-hidden="true">16</span><span class="door" aria-hidden="true">16</span>
+        </a>
+        <!-- Day 17 -->
+        <a href="/questions/star_prism" class="day active" data-row="base" style="--day-color:#944cbe; --grid-row:8; --grid-column:4;" data-hover="Star Prism (Physics)" aria-label="Day 17: Star Prism (Physics)">
+            <span class="inside" aria-hidden="true">17</span><span class="door" aria-hidden="true">17</span>
+        </a>
+        <!-- Day 18 -->
+        <a href="/questions/hand_warmers" class="day active" data-row="5" style="--day-color:#b7236d; --grid-row:6; --grid-column:1;" data-hover="Hand Warmers (GCSE Chemistry)" aria-label="Day 18: Hand Warmers (GCSE Chemistry)">
+            <span class="inside" aria-hidden="true">18</span><span class="door" aria-hidden="true">18</span>
+        </a>
+        <!-- Day 19 -->
+        <a href="/questions/santa_flying_stunt" class="day active" data-row="3" style="--day-color:#00759c; --grid-row:4; --grid-column:4;" data-hover="Santa Flying Stunt (Maths)" aria-label="Day 19: Santa Flying Stunt (Maths)">
+            <span class="inside" aria-hidden="true">19</span><span class="door" aria-hidden="true">19</span>
+        </a>
+        <!-- Day 20 -->
+        <a href="/questions/hot_chocolate" class="day active" data-row="5" style="--day-color:#944cbe; --grid-row:6; --grid-column:4;" data-hover="Hot Chocolate (GCSE Physics)" aria-label="Day 20: Hot Chocolate (GCSE Physics)">
+            <span class="inside" aria-hidden="true">20</span><span class="door" aria-hidden="true">20</span>
+        </a>
+        <!-- Day 21 -->
+        <a href="/questions/hibernating_santa" class="day active" data-row="base" style="--day-color:#127025; --grid-row:8; --grid-column:2;" data-hover="Hibernating Santa (Biology)" aria-label="Day 21: Hibernating Santa (Biology)">
+            <span class="inside" aria-hidden="true">21</span><span class="door" aria-hidden="true">21</span>
+        </a>
+        <!-- Day 22 -->
+        <a href="/questions/frequency_winter_market" class="day active" data-row="2" style="--day-color:#00759c; --grid-row:3; --grid-column:4;" data-hover="Sales at a Winter Market (GCSE Maths)" aria-label="Day 22: Sales at a Winter Market (GCSE Maths)">
+            <span class="inside" aria-hidden="true">22</span><span class="door" aria-hidden="true">22</span>
+        </a>
+        <!-- Day 23 -->
+        <a href="/questions/watts_in_a_flame" class="day active" data-row="6" style="--day-color:#b7236d; --grid-row:7; --grid-column:3;" data-hover="Watts in a Flame (Chemistry)" aria-label="Day 23: Watts in a Flame (Chemistry)">
+            <span class="inside" aria-hidden="true">23</span><span class="door" aria-hidden="true">23</span>
+        </a>
+        <!-- Day 24 -->
+        <a href="/questions/marvellous_mistletoe" class="day" data-row="4" style="--day-color:#127025; --grid-row:5; --grid-column:3;" data-hover="Marvellous Mistletoe (GCSE Biology)" aria-label="Day 24: Marvellous Mistletoe (GCSE Biology)">
+            <span class="inside" aria-hidden="true">24</span><span class="door" aria-hidden="true">24</span>
+        </a>
+        <!-- Day 25 -->
+        <a href="/questions/present_delivery" class="day star" data-row="star" style="--grid-row:1; --grid-column:3;" data-hover="Christmas Day: Present Delivery!" aria-label="Day 25: Present Delivery">
+            <span class="glow" aria-hidden="true"></span>
+            <span class="shape" aria-hidden="true"></span>
+            <span class="num" aria-hidden="true">25</span>
+        </a>
+    </div>
+    <label for="advent-snow" class="trunk">
+        <span class="visually-hidden">Toggle snow</span>
+    </label>
+    <label for="advent-lights" class="bauble">
+        <span class="visually-hidden">Toggle fairy lights</span>
+    </label>
+</div>
+    <div id="door-label" class="tag" aria-hidden="true">Pick a door</div>
+    <div class="snowfall" aria-hidden="true">
+        <div class="flake" style="--x: 1.5%; --s: 7px; --o: 0.65; --d: 6.3s; --delay: 4.9s;"></div>
+        <div class="flake" style="--x: 5.0%; --s: 5px; --o: 0.9; --d: 7.3s; --delay: 0.5s;"></div>
+        <div class="flake" style="--x: 11.0%; --s: 8px; --o: 0.5; --d: 8.5s; --delay: 5.0s;"></div>
+        <div class="flake" style="--x: 14.2%; --s: 8px; --o: 0.77; --d: 9.5s; --delay: 0.4s;"></div>
+        <div class="flake" style="--x: 20.8%; --s: 5px; --o: 0.94; --d: 6.3s; --delay: 5.2s;"></div>
+        <div class="flake" style="--x: 24.0%; --s: 7px; --o: 0.72; --d: 9.4s; --delay: 3.4s;"></div>
+        <div class="flake" style="--x: 30.4%; --s: 6px; --o: 0.74; --d: 9.8s; --delay: 2.2s;"></div>
+        <div class="flake" style="--x: 34.3%; --s: 6px; --o: 0.73; --d: 9.7s; --delay: 3.0s;"></div>
+        <div class="flake" style="--x: 38.8%; --s: 10px; --o: 0.68; --d: 11.5s; --delay: 2.2s;"></div>
+        <div class="flake" style="--x: 42.0%; --s: 7px; --o: 0.8; --d: 7.5s; --delay: 3.4s;"></div>
+        <div class="flake" style="--x: 47.8%; --s: 10px; --o: 0.81; --d: 7.7s; --delay: 5.9s;"></div>
+        <div class="flake" style="--x: 50.5%; --s: 12px; --o: 0.53; --d: 8.1s; --delay: 5.6s;"></div>
+        <div class="flake" style="--x: 56.5%; --s: 6px; --o: 0.83; --d: 9.4s; --delay: 5.3s;"></div>
+        <div class="flake" style="--x: 60.5%; --s: 10px; --o: 0.75; --d: 9.5s; --delay: 2.7s;"></div>
+        <div class="flake" style="--x: 67.5%; --s: 9px; --o: 0.69; --d: 10.0s; --delay: 0.4s;"></div>
+        <div class="flake" style="--x: 71.4%; --s: 14px; --o: 0.59; --d: 8.3s; --delay: 4.0s;"></div>
+        <div class="flake" style="--x: 72.8%; --s: 14px; --o: 0.63; --d: 9.7s; --delay: 3.0s;"></div>
+        <div class="flake" style="--x: 78.3%; --s: 9px; --o: 0.51; --d: 7.5s; --delay: 2.3s;"></div>
+        <div class="flake" style="--x: 85.8%; --s: 6px; --o: 0.53; --d: 8.4s; --delay: 1.7s;"></div>
+        <div class="flake" style="--x: 87.0%; --s: 12px; --o: 0.88; --d: 7.7s; --delay: 2.5s;"></div>
+        <div class="flake" style="--x: 92.5%; --s: 12px; --o: 0.93; --d: 6.9s; --delay: 1.1s;"></div>
+        <div class="flake" style="--x: 96.5%; --s: 8px; --o: 0.46; --d: 11.0s; --delay: 1.1s;"></div>
+    </div>
+</div>
+<script>
+const doorLabel = document.querySelector('#door-label');
+const doors = document.querySelectorAll('.doors > a.day');
+
+let hoveredDoor = null;
+let focusedDoor = null;
+
+function updateDoorLabel() {
+    const door = focusedDoor || hoveredDoor;
+
+    if (!door) {
+        doorLabel.textContent = 'Pick a door';
+        return;
+    }
+
+    const title = door.getAttribute('data-hover');
+
+    if (!title) {
+        console.warn('No data-hover found on:', door);
+        return;
+    }
+
+    doorLabel.replaceChildren();
+
+    doorLabel.append(document.createTextNode(title));
+
+    if (door.dataset.visualAccess === 'true') {
+        const icon = document.createElement('i');
+        icon.className = 'icon icon-access-visual';
+        icon.setAttribute('aria-hidden', 'true');
+
+        const warning = document.createElement('span');
+        warning.className = 'visually-hidden';
+        warning.textContent =
+            ' Warning: This question may not be visually accessible to all users.';
+
+        doorLabel.append(' ', icon, warning);
+    }
+}
+
+doors.forEach(door => {
+    door.addEventListener('pointerenter', () => {
+        hoveredDoor = door;
+        updateDoorLabel();
+    });
+
+    door.addEventListener('pointerleave', () => {
+        hoveredDoor = null;
+        updateDoorLabel();
+    });
+
+    door.addEventListener('focus', () => {
+        focusedDoor = door;
+        updateDoorLabel();
+    });
+
+    door.addEventListener('blur', () => {
+        focusedDoor = null;
+        updateDoorLabel();
+    });
+});
+</script>
+</body>
