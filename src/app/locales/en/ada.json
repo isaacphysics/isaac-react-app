@@ -159,14 +159,14 @@
       "inactiveInfo": "Setting your membership inactive means you won’t receive any assignments from the teachers in that group. You can set yourself as active again at any time."
     },
     "students": {
-      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the  <groupsLink>Manage groups</groupsLink> page."
+      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the <groupsLink>Manage groups</groupsLink> page."
     }
   },
   "contact": {
     "metaDescription": "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!"
   },
   "contextPicker": {
-    "differentSourceExplanation": "The stage was specified by {{stageSource}} and the exam board by \n            {{examBoardSource}}.",
+    "differentSourceExplanation": "The stage was specified by {{stageSource}} and the exam board by {{examBoardSource}}.",
     "sameSourceExplanation": "The stage and exam board were specified by {{stageSource}}."
   },
   "cyberExplorers": {
@@ -185,7 +185,7 @@
   },
   "freeTextBuilder": {
     "attempts": {
-      "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.\n            To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool.\n            This is in line with our mission to make computer science accessible to all."
+      "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget. To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool. This is in line with our mission to make computer science accessible to all."
     },
     "infoAlert": {
       "consentFaq": "See our <faqLink>FAQs</faqLink> for more information.",

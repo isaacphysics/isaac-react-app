@@ -310,7 +310,7 @@
       "rejoinTooltip": "If you rejoin a group you will see all the assignments set since the group was created."
     },
     "students": {
-      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the  <groupsLink>group management page</groupsLink>."
+      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the <groupsLink>group management page</groupsLink>."
     }
   },
   "contact": {
@@ -335,14 +335,14 @@
   "footer": {
     "accessibilityLink": "Accessibility statement",
     "cookieLink": "Cookie policy",
-    "licenseText": "All materials on this site are licensed under the  <creativeCommonsLink><u>Creative Commons license</u></creativeCommonsLink> unless stated otherwise.",
+    "licenseText": "All materials on this site are licensed under the <creativeCommonsLink><u>Creative Commons license</u></creativeCommonsLink> unless stated otherwise.",
     "privacyLink": "Privacy policy",
-    "supportText": "Supported by the   <cambridgeLink><u1>University of Cambridge</u1></cambridgeLink> and <ogdenTrustLink><u2>The Ogden Trust</u2>.</ogdenTrustLink><br/>Founded in collaboration with the   <dfeLink><u3>Department for Education England</u3></dfeLink>.",
+    "supportText": "Supported by the <cambridgeLink><u1>University of Cambridge</u1></cambridgeLink> and <ogdenTrustLink><u2>The Ogden Trust</u2>.</ogdenTrustLink><br/>Founded in collaboration with the <dfeLink><u3>Department for Education England</u3></dfeLink>.",
     "termsLink": "Terms of use"
   },
   "freeTextBuilder": {
     "attempts": {
-      "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.\n            To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool.\n            This is in line with our mission to make science accessible to all."
+      "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget. To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool. This is in line with our mission to make science accessible to all."
     }
   },
   "gameboard": {

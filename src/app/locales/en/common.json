@@ -193,7 +193,7 @@
     },
     "sharingData": {
       "confirmBody": "Are you sure you would like to give the following {{siteName}} users access to your data?",
-      "privacyNote": "For more details about what information is shared, see our  <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
+      "privacyNote": "For more details about what information is shared, see our <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
       "rememberNote": "<strong>Remember</strong>: you can always revoke access to your data from the Teacher Connections tab of My Account.",
       "title": "Sharing your data"
     },
@@ -1797,7 +1797,7 @@
     "userBooking": {
       "authorisationLabel": "Booking/personal data sharing authorised by",
       "bookingTitle": "Create a booking for {{givenName}} {{familyName}}",
-      "dataWarning": "Warning, by booking a user on this event, it may eventually lead to their personal  information being shared with a third party. You must therefore confirm how this booking  has been authorised. The data owner is always the {{siteTitle}} user being booked on to the event.",
+      "dataWarning": "Warning, by booking a user on this event, it may eventually lead to their personal information being shared with a third party. You must therefore confirm how this booking has been authorised. The data owner is always the {{siteTitle}} user being booked on to the event.",
       "errorMessage": "You must provide an authorisation reason to complete this request.",
       "optionEmailOwner": "Verified email - Data Owner",
       "optionOther": "Other - Please specify",
@@ -3361,7 +3361,7 @@
     },
     "attempt": {
       "allComplete": "All sections complete",
-      "assignedErrorBody": "Your teacher has set this test to you.  You may not practise it in advance.<br/>If you are ready to take the test, click on it in your <assignedTestsLink>assigned tests</assignedTestsLink> page.",
+      "assignedErrorBody": "Your teacher has set this test to you. You may not practise it in advance.<br/>If you are ready to take the test, click on it in your <assignedTestsLink>assigned tests</assignedTestsLink> page.",
       "assignedErrorTitle": "You have been set this test",
       "finish": "Finish",
       "loadErrorTitle": "Error loading test!",
@@ -3589,7 +3589,7 @@
     },
     "metaDescription": "Discover our free computer science topics and questions. Learn or revise for your exams with us today.",
     "page": {
-      "backButton": "<responsivePrefix>Back to</responsivePrefix>   All topics"
+      "backButton": "<responsivePrefix>Back to</responsivePrefix> All topics"
     },
     "questionFinder": {
       "description": "Using the question finder you can select topics and concepts and we’ll generate a random selection of questions for you to use. You can also specify your level and exam board.",
