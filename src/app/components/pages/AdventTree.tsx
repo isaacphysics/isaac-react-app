@@ -3,10 +3,10 @@ import {UncontrolledTooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ACCESSIBILITY_TAGS, ACCESSIBILITY_WARNINGS, useAccessibilitySettings} from "../../services/accessibility";
 import {v4 as uuid_v4} from "uuid";
-import "../../../scss/common/advent.scss";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageFragment } from "../elements/PageFragment";
+import "../../../scss/common/advent.scss";
 
 type AdventStyle = CSSProperties & {[key: `--${string}`]: string};
 interface DoorLabel {
@@ -80,6 +80,44 @@ export const AdventTree = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const container = treeRef.current;
+        if (!container) {
+            return;
+        }
+
+        const updateActiveDays = () => {
+            const today = new Date(); //"2026-12-25");
+            // November for testing purposes. Will update to December later
+            const unlockedDay = today.getMonth() < 10 ? 0 : today.getMonth() > 10 ? 25 : today.getDate();
+
+            container.querySelectorAll<HTMLAnchorElement>("a.day").forEach(door => {
+                const dayClass = Array.from(door.classList).find(name => /^day-([1-9]|1[0-9]|2[0-5])$/.test(name));
+                if (!dayClass) {
+                    return;
+                }
+
+                const active = Number(dayClass.slice(4)) <= unlockedDay;
+                door.classList.toggle("active", active);
+                door.tabIndex = active ? 0 : -1;
+                if (active) {
+                    door.removeAttribute("aria-disabled");
+                } else {
+                    door.setAttribute("aria-disabled", "true");
+                }
+            });
+        };
+
+        // The fragment arrives asynchronously, so also update newly inserted doors.
+        const observer = new MutationObserver(updateActiveDays);
+        observer.observe(container, {childList: true, subtree: true});
+        updateActiveDays();
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+
     return <PageContainer className="advent-page"
         pageTitle={<TitleAndBreadcrumb
             currentPageTitle="Advent calendar" 
@@ -92,18 +130,11 @@ export const AdventTree = () => {
             <input type="checkbox" id="advent-lights" className="lights-toggle" />
             <div className="tree" ref={treeRef}>
                 <div className="tree-shapes">
-                    <span className="branch branch-1" aria-hidden="true" />
-                    <span className="lights branch-1" aria-hidden="true" />
-                    <span className="branch branch-2" aria-hidden="true" />
-                    <span className="lights branch-2" aria-hidden="true" />
-                    <span className="branch branch-3" aria-hidden="true" />
-                    <span className="lights branch-3" aria-hidden="true" />
-                    <span className="branch branch-4" aria-hidden="true" />
-                    <span className="lights branch-4" aria-hidden="true" />
-                    <span className="branch branch-5" aria-hidden="true" />
-                    <span className="lights branch-5" aria-hidden="true" />
-                    <span className="branch branch-6" aria-hidden="true" />
-                    <span className="lights branch-6" aria-hidden="true" />
+                    {Array.from({length: 6}, (_, i) => <>
+                        <span className={`branch branch-${i+1}`} aria-hidden="true" />
+                        <span className={`lights branch-${i+1}`} aria-hidden="true" />
+                    </>
+                    )}
                     <label htmlFor="advent-snow" className="trunk">
                         <span className="visually-hidden">Toggle snow</span>
                     </label>
