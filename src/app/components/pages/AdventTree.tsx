@@ -15,6 +15,13 @@ interface DoorLabel {
 }
 
 export const AdventTree = () => {
+    const [snowflakes] = useState<AdventStyle[]>(() => Array.from({length: 22}, (_, i) => ({
+        "--x": `${(i + Math.random()) * 100 / 22}%`,
+        "--s": `${5 + Math.random() * 9}px`,
+        "--o": String(0.45 + Math.random() * 0.5),
+        "--d": `${6 + Math.random() * 6}s`,
+        "--delay": `${Math.random() * 6}s`,
+    })));
     const [selectedDoor, setSelectedDoor] = useState<DoorLabel | null>(null);
     const doorsRef = useRef<HTMLDivElement>(null);
     const accessibilitySettings = useAccessibilitySettings();
@@ -274,28 +281,7 @@ export const AdventTree = () => {
                 })}
             </div>
             <div className="snowfall" aria-hidden="true">
-                <div className="flake" style={{"--x": "1.5%", "--s": "7px", "--o": "0.65", "--d": "6.3s", "--delay": "4.9s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "5.0%", "--s": "5px", "--o": "0.9", "--d": "7.3s", "--delay": "0.5s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "11.0%", "--s": "8px", "--o": "0.5", "--d": "8.5s", "--delay": "5.0s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "14.2%", "--s": "8px", "--o": "0.77", "--d": "9.5s", "--delay": "0.4s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "20.8%", "--s": "5px", "--o": "0.94", "--d": "6.3s", "--delay": "5.2s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "24.0%", "--s": "7px", "--o": "0.72", "--d": "9.4s", "--delay": "3.4s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "30.4%", "--s": "6px", "--o": "0.74", "--d": "9.8s", "--delay": "2.2s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "34.3%", "--s": "6px", "--o": "0.73", "--d": "9.7s", "--delay": "3.0s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "38.8%", "--s": "10px", "--o": "0.68", "--d": "11.5s", "--delay": "2.2s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "42.0%", "--s": "7px", "--o": "0.8", "--d": "7.5s", "--delay": "3.4s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "47.8%", "--s": "10px", "--o": "0.81", "--d": "7.7s", "--delay": "5.9s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "50.5%", "--s": "12px", "--o": "0.53", "--d": "8.1s", "--delay": "5.6s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "56.5%", "--s": "6px", "--o": "0.83", "--d": "9.4s", "--delay": "5.3s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "60.5%", "--s": "10px", "--o": "0.75", "--d": "9.5s", "--delay": "2.7s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "67.5%", "--s": "9px", "--o": "0.69", "--d": "10.0s", "--delay": "0.4s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "71.4%", "--s": "14px", "--o": "0.59", "--d": "8.3s", "--delay": "4.0s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "72.8%", "--s": "14px", "--o": "0.63", "--d": "9.7s", "--delay": "3.0s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "78.3%", "--s": "9px", "--o": "0.51", "--d": "7.5s", "--delay": "2.3s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "85.8%", "--s": "6px", "--o": "0.53", "--d": "8.4s", "--delay": "1.7s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "87.0%", "--s": "12px", "--o": "0.88", "--d": "7.7s", "--delay": "2.5s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "92.5%", "--s": "12px", "--o": "0.93", "--d": "6.9s", "--delay": "1.1s"} as AdventStyle} />
-                <div className="flake" style={{"--x": "96.5%", "--s": "8px", "--o": "0.46", "--d": "11.0s", "--delay": "1.1s"} as AdventStyle} />
+                {snowflakes.map((style, index) => <div key={index} className="flake" style={style} />)}
             </div>
         </div>
     </PageContainer>;

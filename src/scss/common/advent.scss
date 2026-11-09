@@ -365,7 +365,10 @@
     }
 
     .snow-toggle {
-        position: absolute;
+        position: fixed;
+        top: 0;
+        left: 0;
+
         width: 1px;
         height: 1px;
         opacity: 0;
@@ -375,10 +378,13 @@
             outline: 2px solid var(--gold);
             outline-offset: 3px;
         }
+
+        &:checked ~ .snowfall {
+            display: block;
+        }
     }
 
     .snowfall {
-        display: block;
         position: fixed;
         inset: 0;
         z-index: 100;
@@ -401,7 +407,10 @@
 
     /* Fairy lights switch, bauble and animations */
     .lights-toggle {
-        position: absolute;
+        position: fixed;
+        top: 0;
+        left: 0;
+
         width: 1px;
         height: 1px;
         opacity: 0;
