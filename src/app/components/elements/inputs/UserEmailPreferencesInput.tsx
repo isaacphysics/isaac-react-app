@@ -55,7 +55,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}news`} stateObject={emailPreferences}
-                                propertyName="NEWS_AND_UPDATES" accessibleName={t("common:account.emailPreferences.tipsLabel")}
+                                propertyName="NEWS_AND_UPDATES" accessibleName={t("common:account.emailPreferences.newsLabel")}
                                 setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>

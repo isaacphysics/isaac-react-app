@@ -104,6 +104,7 @@
       "descriptionHeader": "Description",
       "preferenceHeader": "Preference",
       "tipsLabel": "Tips and updates",
+      "newsLabel": "News and updates",
       "validationError": "Please specify all email preferences"
     },
     "gender": {
