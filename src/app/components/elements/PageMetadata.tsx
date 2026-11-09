@@ -9,7 +9,7 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, SKILLS_BOOKS, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
@@ -88,9 +88,11 @@ interface MetadataTitleProps {
     title: ReactNode;
     subtitle?: string;
     badges?: ReactNode;
+    isQuestion?: boolean;
 }
 
-const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
+const MetadataTitle = ({doc, title, subtitle, badges, isQuestion}: MetadataTitleProps) => {
+    const isSkillsBookQuestion = isPhy && isQuestion && doc?.tags?.some(tag => SKILLS_BOOKS.some(book => book === tag));
     return <div>
         {(title || doc?.title || badges) && <h2 className="text-theme-dark d-xl-flex align-items-center gap-3 h3">
             {title
@@ -105,7 +107,10 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
                 {badges}
             </div>}
         </h2>}
-        {(subtitle || doc?.subtitle) && <Markup className="h5" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>}
+        {(subtitle || doc?.subtitle) && <div className="d-flex align-items-center">
+            {isSkillsBookQuestion && <i className="icon icon-book me-1"/>}
+            <Markup className="h5 mb-0" encoding="latex">{subtitle ?? doc?.subtitle}</Markup>
+        </div>}
     </div>;
 };
 
@@ -125,7 +130,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
 
             {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
                 {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className="float-end ms-3 mb-2"/>}
-                {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
+                {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges} isQuestion={isQuestion}/>}
                 {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} additionalActionButtons={additionalActionButtons} className={classNames("ms-auto", {"mb-auto": !noTitle && badges})}/>}
             </div>}
 

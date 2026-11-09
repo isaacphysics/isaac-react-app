@@ -2,10 +2,10 @@
   :focus {
     outline: none !important;
     polygon {
-      stroke: black;
+      stroke: var(--color-neutral-900);
     }
     text {
-      fill: black;
+      fill: var(--color-neutral-900);
       font-weight: bolder;
     }
   }

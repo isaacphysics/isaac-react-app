@@ -118,7 +118,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     </p>;
 
     const tooFewSigFigsFeedback = <p className="fs-5">
-        <b>more</b>&nbsp;
+        your answer needs <b>more</b>&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 

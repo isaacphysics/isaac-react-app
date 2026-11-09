@@ -12,6 +12,7 @@ import { selectors, useAppSelector } from "../../state";
 import { AdaNotification } from "../elements/Notification";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 import { useTranslation } from "react-i18next";
+import { AdaStoriesSection } from "../elements/AdaStoriesSection";
 
 export const Overview = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -224,8 +225,8 @@ export const StudentOverview = () => {
             </ColumnSlice>
         </section>
         
-        <section id="news" className="py-3">
-            <AdaNewsSection />
+        <section id="stories" className="py-3">
+            <AdaStoriesSection isDashboard />
         </section>
     </PageContainer>;
 };

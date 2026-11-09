@@ -112,7 +112,9 @@ export const HeaderCS = () => {
 
                         {isLoggedIn(user)
                             ? <>
-                                <NavigationSection className={"navbar-separator"} topLevelLink to="/dashboard" title={<>{t("common:title.myAda")} {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />}</>} />
+                                <NavigationSection className={"navbar-separator"} topLevelLink to="/dashboard" title={
+                                    <> {t("common:title.myAda")} {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />} </>
+                                } />
                                 <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/logout" title={t("common:button.logOut")}/>
                             </>
                             : <>

@@ -7,6 +7,13 @@ import { Trans } from "react-i18next";
 import i18next from "i18next";
 import { TransAnchor } from "../../elements/TransAnchor";
 
+export const WhitePrintableLogo = ({logo, alt, dataSite}: {logo: string, alt: string, dataSite: string}) => {
+    return <>
+        <img src={`/assets/common/logos/${logo}_white.svg`} alt={alt} className="no-print img-fluid footer-org-logo" data-site={dataSite} />
+        <img src={`/assets/common/logos/${logo}_black.svg`} alt={alt} className="only-print img-fluid footer-org-logo" data-site={dataSite} />
+    </>;
+};
+
 export const FooterCS = () => (
     <footer>
         <div className="footer-top d-print-none">
@@ -48,13 +55,13 @@ export const FooterCS = () => (
                         <Col xs={{size: 12}} md={{size: 6, order: 1}} lg={{size: 6}} xl={{size: 6}} className="col-xxl-2">
                             <div className="logo-grid">
                                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt={i18next.t("common:label.cambridgeUniversity")} className='img-fluid footer-org-logo' data-site="uoc" />
+                                    <WhitePrintableLogo logo="university_of_cambridge" alt={i18next.t("common:label.cambridgeUniversity")} dataSite="uoc" />
                                 </a>
                                 <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt={i18next.t("ada:label.raspberryPiWebsite")} className='img-fluid footer-org-logo' data-site="rpf" />
+                                    <WhitePrintableLogo logo="rpf" alt={i18next.t("ada:label.raspberryPiWebsite")} dataSite="rpf" />
                                 </a>
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={i18next.t("ada:label.fundedByUkGovernment")} className='img-fluid' data-site="ukgovt" />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt={i18next.t("ada:label.techFirstLogo")} className='img-fluid' data-site="techfirst" />
+                                <WhitePrintableLogo logo="funded_by_uk_govt" alt={i18next.t("ada:label.fundedByUkGovernment")} dataSite="ukgovt" />
+                                <WhitePrintableLogo logo="techfirst" alt={i18next.t("ada:label.techFirstLogo")} dataSite="techfirst" /> 
                             </div>
                         </Col>
                         

@@ -11,7 +11,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledSidebar";
 import { useParams } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
-import { siteSpecific } from "../../services";
+import { isTeacherOrAbove, siteSpecific } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 import { useTranslation } from "react-i18next";
 
@@ -88,6 +88,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
                 <ListView
                     type="quiz"
                     items={relevantTests}
+                    useViewQuizLink={!isTeacherOrAbove(user)}
                 />
             </div>
         </>}

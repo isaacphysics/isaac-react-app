@@ -54,3 +54,16 @@
     }
   }
 }
+
+.filter-tag {
+  @include pill-tag($cs-black, $cs-light-gray, $cs-dark-silver);
+  border-width: 2px;
+
+  &:focus-within {
+    @include focus-outline;
+  }
+
+  .icon {
+    margin-left: 0.25rem;
+  }
+}

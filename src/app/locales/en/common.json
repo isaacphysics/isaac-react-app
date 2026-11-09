@@ -940,7 +940,7 @@
   "banners": {
     "downtime": {
       "dismissButton": "Dismiss<screenReaderText> downtime notification</screenReaderText>",
-      "message": "{{siteTitle}} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance."
+      "message": "{{siteTitle}} will be unavailable on Saturday 24 October from 8pm BST for a few hours for essential server maintenance."
     },
     "emailVerification": {
       "dismissButton": "Snooze",
@@ -2810,7 +2810,7 @@
     "feedback": {
       "correct": "Correct!",
       "partlyCorrect": "Partly correct...",
-      "tooFewSigFigs": "Your answer needs...",
+      "tooFewSigFigs": "Right or wrong...",
       "tooManySigFigs": "Looks right, but..."
     },
     "freeText": {
@@ -3220,7 +3220,7 @@
     "join": {
       "freeNote": "All of our resources are completely free. You can join (or leave) the programme at any time.",
       "loggedIn": "<strong><joinLink>Join the {{groupName}} group</joinLink></strong> to participate in the programme so that we can assign you the quizzes weekly.",
-      "notLoggedIn": "<authLink>Log in or sign up</authLink> to join the teacher mentoring group and participate in the programme."
+      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the teacher mentoring group and participate in the programme."
     },
     "page": {
       "teacherNotice": "You must be signed in with a teacher account to view the weekly resources.",

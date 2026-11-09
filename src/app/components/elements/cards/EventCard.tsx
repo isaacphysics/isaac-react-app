@@ -58,21 +58,9 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
             <Link className={classNames("pod-img event-pod-img position-relative d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`}/>
                 <span className="event-pod-badges align-self-end">
-                    {isVirtualEvent &&
-                        <span>
-                            <Badge className="badge rounded-pill" color="primary">{t("common:events.card.onlineBadge")}</Badge>
-                        </span>
-                    }
-                    {hasExpired &&
-                        <span className="expired-badge">
-                            <Badge className="badge rounded-pill" color="failed">{t("common:events.status.expired")}</Badge>
-                        </span>}
-                    {bookingDeadlineSoon &&
-                        <span>
-                            <span className="warning-tag px-2 fw-semibold">
-                                {t("common:events.status.bookingDeadlineSoon")}
-                            </span>
-                        </span>}
+                    {isVirtualEvent && <Badge className="rounded-pill" color="primary">{t("common:events.card.onlineBadge")}</Badge>}
+                    {hasExpired && <Badge className="rounded-pill expired-badge" color="failed">{t("common:events.status.expired")}</Badge>}
+                    {bookingDeadlineSoon && <Badge className="rounded-pill fw-semibold" color="alert">{t("common:events.status.bookingDeadlineSoon")}</Badge>}
                 </span>
                 {isTeacherEvent &&
                     <div className="event-pod-hex">

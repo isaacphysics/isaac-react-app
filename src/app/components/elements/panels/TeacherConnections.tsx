@@ -112,7 +112,7 @@ export const authenticateWithTokenAfterPrompt = async (userId: number, token: st
         dispatch(showErrorToast(i18next.t("common:connections.connect.noCodeTitle"), i18next.t("common:connections.connect.noCodeMessage")));
         return;
     }
-    else if (!(sanitisedToken && sanitisedToken.length >= 6 && sanitisedToken.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(sanitisedToken))) {
+    else if (!(sanitisedToken && /^([ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6,8}|IPPC[0-9]{2})$/.test(sanitisedToken))) {
         dispatch(showErrorToast(i18next.t("common:connections.connect.invalidCodeTitle"), i18next.t("common:connections.connect.invalidCodeMessage")));
         return;
     }

@@ -6,6 +6,7 @@ import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterP
 import { pruneTreeNode } from "../../../services/questionHierarchy";
 import { selectors, useAppSelector } from "../../../state";
 import { useTranslation } from "react-i18next";
+import { Badge } from "reactstrap";
 
 export type TierID = "subjects" | "fields" | "topics";
 export interface Tier {id: TierID; name: string; for: string}
@@ -79,7 +80,7 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
                             {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
                                 <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, choices, selections, questionFinderFilter, setSelections}}/>
                             }
-                            {isComingSoon && <span className="badge bg-theme ms-2 h-min-content align-self-center">{t("common:svgFilter.comingSoon")}</span>}
+                            {isComingSoon && <Badge className="ms-2 h-min-content align-self-center" color="theme">{t("common:svgFilter.comingSoon")}</Badge>}
                         </CheckboxWrapper>
                     </li>
                 </React.Fragment>;

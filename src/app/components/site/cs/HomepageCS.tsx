@@ -11,6 +11,7 @@ import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaNewsSection } from "../../elements/AdaNewsSection";
 import classNames from "classnames";
 import { Trans, useTranslation } from "react-i18next";
+import { WhitePrintableLogo } from "./FooterCS";
 
 export const HomepageCS = () => {
     const { t } = useTranslation();
@@ -32,14 +33,14 @@ export const HomepageCS = () => {
 
                         <div className="logo-grid mx-3">
                             <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                <img src="/assets/common/logos/university_of_cambridge.svg" alt={t("common:label.cambridgeUniversity")} className='img-fluid footer-org-logo' data-site="uoc" />
+                                <WhitePrintableLogo logo="university_of_cambridge" alt={t("common:label.cambridgeUniversity")} dataSite="uoc" />
                             </a>
                             <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                <img src="/assets/common/logos/ada_rpf_icon.svg" alt={t("ada:label.raspberryPiWebsite")} className='img-fluid footer-org-logo' data-site="rpf" />
+                                <WhitePrintableLogo logo="rpf" alt={t("ada:label.raspberryPiWebsite")} dataSite="rpf" />
                             </a>
                             <span>{t("ada:homepage.hero.collaborationLabel")}</span>
-                            <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:label.fundedByUkGovernment")} className='img-fluid' data-site="ukgovt" />
-                            <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:label.techFirstLogo")} className='img-fluid' data-site="techfirst" />
+                            <WhitePrintableLogo logo="funded_by_uk_govt" alt={t("ada:label.fundedByUkGovernment")} dataSite="ukgovt" />
+                            <WhitePrintableLogo logo="techfirst" alt={t("ada:label.techFirstLogo")} dataSite="techfirst" />
                         </div>
                         <div>
                             {isLoggedIn(user) && isTeacherOrAbove(user) &&
@@ -214,8 +215,8 @@ export const HomepageCS = () => {
                                 <Button className={"mt-3 bg-white"} color={"keyline"} tag={Link} to={"/topics#11-14"}>{t("ada:homepage.techfirst.exploreTopicsButton")}</Button>
                             </div>
                             <div className="d-flex gap-4 mt-4 mb-6 mt-lg-6 mb-lg-0">
-                                <img src="/assets/common/logos/funded-by-uk-govt-white.svg" alt={t("ada:label.fundedByUkGovernment")} className='img-fluid' />
-                                <img src="/assets/common/logos/techfirst-white.svg" alt={t("ada:label.techFirstLogo")} className='img-fluid' />
+                                <WhitePrintableLogo logo="funded_by_uk_govt" alt={t("ada:label.fundedByUkGovernment")} dataSite="ukgovt" />
+                                <WhitePrintableLogo logo="techfirst" alt={t("ada:label.techFirstLogo")} dataSite="techfirst" />
                             </div>
                         </TextBlock>
                     </ColumnSlice>

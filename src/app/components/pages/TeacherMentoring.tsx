@@ -7,6 +7,7 @@ import { selectors, useAppSelector, useGetGroupMembershipsQuery } from "../../st
 import { skipToken } from "@reduxjs/toolkit/query";
 import { isTeacherOrAbove } from "../../services";
 import { Trans, useTranslation } from "react-i18next";
+import { Callout } from "../content/IsaacCallout";
 
 // these will change each year – everything else now ought to be the same
 const MENTORING_GROUP_ID = 5558;
@@ -20,16 +21,15 @@ export const TeacherMentoring = () => {
     const {data: groupMemberships} = useGetGroupMembershipsQuery(userId);
     const userInGroup = groupMemberships?.some(gm => gm.group.id == MENTORING_GROUP_ID);
 
-    const groupJoinPrompt = <div className="isaac-callout hi-cyan-25 p-4">
-        <img src="/assets/cs/icons/callout/regular-callout.svg" alt="" className="float-end p-0 wf-3 hf-3 mt-n3 me-n3" />
+    const groupJoinPrompt = <Callout className="pb-4" style="regular">
         {user?.loggedIn
             ? <span>
                 <Trans i18nKey="common:teacherMentoring.join.loggedIn" components={{ strong: <strong />, joinLink: <Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`} /> }} values={{ groupName: MENTORING_GROUP_NAME }} />
             </span>
-            : <><Trans i18nKey="common:teacherMentoring.join.notLoggedIn" components={{ authLink: <Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`} /> }} /></>
+            : <><Trans i18nKey="common:teacherMentoring.join.notLoggedIn" components={{ strong: <strong/>, authLink: <Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`} /> }} /></>
         }
         <p className="mt-2 mb-0">{t("common:teacherMentoring.join.freeNote")}</p>
-    </div>;
+    </Callout>;
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={t("common:teacherMentoring.page.title")} />

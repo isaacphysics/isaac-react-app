@@ -11,6 +11,7 @@ import { isLoggedIn, SITE_TITLE } from "../../services";
 import { ExternalLink } from "../elements/ExternalLink";
 import { Trans, useTranslation } from "react-i18next";
 import i18next from "i18next";
+import { AdaStoriesSection } from "../elements/AdaStoriesSection";
 
 export const StudentResources = () => {
     const { t } = useTranslation();
@@ -171,39 +172,7 @@ export const StudentResources = () => {
         </section>
         <section id="careers">
             <Container className="homepage-padding mw-1600" fluid>
-                <TextBlock>
-                    <h2>{t("common:studentResources.careers.title")}</h2>
-                    <p>{t("common:studentResources.careers.description")}</p> 
-                </TextBlock>
-                <ColumnSlice className="row-gap-5">
-                    <AdaCard card={{
-                        title: t("common:studentResources.careers.maxFordhamTitle"),
-                        image: {src: "/assets/cs/decor/stories/max-fordham.png"},
-                        bodyText: t("common:studentResources.careers.maxFordhamBody"),
-                        buttonText: t("common:button.readMore"),
-                        clickUrl: "/pages/20240730_max_fordham"
-                    }}/>
-                    <AdaCard card={{
-                        title: t("common:studentResources.careers.meghnaAsthanaTitle"),
-                        image: {src: "/assets/cs/decor/stories/meghna-asthana.png"},
-                        bodyText: t("common:studentResources.careers.meghnaAsthanaBody"),
-                        buttonText: t("common:button.readMore"),
-                        clickUrl: "/pages/20240313_meghna_asthana"
-                    }}/>
-                    <AdaCard card={{
-                        title: t("common:studentResources.careers.lellaHalloumTitle"),
-                        image: {src: "/assets/cs/decor/stories/lella-halloum.png"},
-                        bodyText: t("common:studentResources.careers.lellaHalloumBody"),
-                        buttonText: t("common:button.readMore"),
-                        clickUrl: "/pages/20240215_lella_halloum"
-                    }}/>
-                </ColumnSlice>
-                <div className="d-flex justify-content-center mt-6">
-                    <Link to="/pages/computer_science_stories" target="_blank">
-                        <strong className="link-dark-pink">{t("common:studentResources.careers.viewMoreButton")}</strong>
-                    </Link>
-                    <strong className="link-dark-pink">&gt;</strong>
-                </div>
+                <AdaStoriesSection />
             </Container>
         </section>
         <section id="help-and-support" className="bg-white">

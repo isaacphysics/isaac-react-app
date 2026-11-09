@@ -1,5 +1,5 @@
 import React from 'react';
-import {SITE_TITLE, siteSpecific} from "../../../services";
+import {isAda, SITE_TITLE, siteSpecific} from "../../../services";
 import { Col, Row } from 'reactstrap';
 import { DismissibleCookieBanner } from './DismissibleBanner';
 import { Trans, useTranslation } from "react-i18next";
@@ -9,20 +9,14 @@ const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 const DowntimeWarningBannerBody = () => {
     const { t } = useTranslation();
     return <Row className="align-items-center">
-        <Col xs={12} sm={siteSpecific(2, 1)} md={1}>
-            <div className="d-flex align-items-center justify-content-center gap-2">
-                <i className="icon icon-warning icon-sm icon-color-black" aria-hidden="true" />
-                <span id="research-heading" className="d-inline-block d-sm-none h3">{t("common:title.research")}</span>
-            </div>
-        </Col>
-        <Col xs={12} sm={siteSpecific(10, 11)} md={11}>
+        <Col xs={12}>
             {t("common:banners.downtime.message", { siteTitle: SITE_TITLE })}
         </Col>
     </Row>;
 };
 
 export const DowntimeWarningBanner = () => {
-    return <DismissibleCookieBanner
+    return !!isAda && <DismissibleCookieBanner
         cookieName={DOWNTIME_COOKIE}
         theme={siteSpecific("danger", "warning")}
         dismissText={<>
