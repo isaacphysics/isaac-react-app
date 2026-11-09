@@ -566,3 +566,12 @@
         }
     }
 }
+
+.advent-page .advent-text-list {
+    list-style: none;
+    padding: 0;
+
+    li {
+        margin-bottom: 0.75rem;
+    }
+}

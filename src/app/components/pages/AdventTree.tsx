@@ -1,4 +1,6 @@
 import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import StyledToggle from "../elements/inputs/StyledToggle";
+import {Link} from "react-router-dom";
 import {UncontrolledTooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ACCESSIBILITY_TAGS, ACCESSIBILITY_WARNINGS, useAccessibilitySettings} from "../../services/accessibility";
@@ -15,7 +17,15 @@ interface DoorLabel {
     classes: string[];
 }
 
+interface TextDoor extends DoorLabel {
+    day: number;
+    href: string;
+    active: boolean;
+}
+
 export const AdventTree = () => {
+    const [textOnly, setTextOnly] = useState(false);
+    const [textDoors, setTextDoors] = useState<TextDoor[]>([]);
     const [snowflakes] = useState<AdventStyle[]>(() => Array.from({length: 22}, (_, i) => ({
         "--x": `${(i + Math.random()) * 100 / 22}%`,
         "--s": `${5 + Math.random() * 9}px`,
@@ -92,6 +102,7 @@ export const AdventTree = () => {
             // November for testing purposes. Will update to December later
             const unlockedDay = today.getMonth() < 10 ? 0 : today.getMonth() > 10 ? 25 : today.getDate();
 
+            const questions: TextDoor[] = [];
             container.querySelectorAll<HTMLAnchorElement>("a.day").forEach(door => {
                 const dayClass = Array.from(door.classList).find(name => /^day-([1-9]|1[0-9]|2[0-5])$/.test(name));
                 if (!dayClass) {
@@ -101,12 +112,21 @@ export const AdventTree = () => {
                 const active = Number(dayClass.slice(4)) <= unlockedDay;
                 door.classList.toggle("active", active);
                 door.tabIndex = active ? 0 : -1;
+                questions.push({
+                    day: Number(dayClass.slice(4)),
+                    title: door.dataset.hover || door.getAttribute("aria-label") || "",
+                    href: door.getAttribute("href") || "",
+                    classes: Array.from(door.classList),
+                    active,
+                });
                 if (active) {
                     door.removeAttribute("aria-disabled");
                 } else {
                     door.setAttribute("aria-disabled", "true");
                 }
             });
+            questions.sort((a, b) => a.day - b.day);
+            setTextDoors(previous => JSON.stringify(previous) === JSON.stringify(questions) ? previous : questions);
         };
 
         // The fragment arrives asynchronously, so also update newly inserted doors.
@@ -127,7 +147,27 @@ export const AdventTree = () => {
         sidebar={<GenericPageSidebar/>}
     >
         <PageMetadata/>
-        <div className="advent mt-2">
+        <div className="d-flex justify-content-end mb-3">
+            <StyledToggle falseLabel="Tree" trueLabel="Text only" aria-label="Text-only mode"
+                checked={textOnly} onChange={event => setTextOnly(event.currentTarget.checked)} />
+        </div>
+        {textOnly && <ol className="advent-text-list">
+            {textDoors.map(door => <li key={door.day} className={door.active ? undefined : "text-muted"}>
+                <span>Day {door.day}: </span>
+                {door.active
+                    ? <Link to={door.href}>{door.title}</Link>
+                    : <span aria-disabled="true">{door.title}</span>}
+                {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && ACCESSIBILITY_TAGS
+                    .filter(tag => door.classes.includes(tag) || door.classes.includes(tag.replace(":", "-")))
+                    .map(tag => <React.Fragment key={tag}>
+                        {" "}
+                        <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-color-black`}
+                            title={ACCESSIBILITY_WARNINGS[tag].description} aria-hidden="true" />
+                        <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
+                    </React.Fragment>)}
+            </li>)}
+        </ol>}
+        <div className="advent mt-2" style={{display: textOnly ? "none" : undefined}}>
             <input type="checkbox" id="advent-snow" className="snow-toggle" />
             <input type="checkbox" id="advent-lights" className="lights-toggle" />
             <div className="tree" ref={treeRef}>
@@ -135,8 +175,7 @@ export const AdventTree = () => {
                     {Array.from({length: 6}, (_, i) => <>
                         <span className={`branch branch-${i+1}`} aria-hidden="true" />
                         <span className={`lights branch-${i+1}`} aria-hidden="true" />
-                    </>
-                    )}
+                    </>)}
                     <label htmlFor="advent-snow" className="trunk">
                         <span className="visually-hidden">Toggle snow</span>
                     </label>
