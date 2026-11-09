@@ -1,5 +1,4 @@
 import React, {CSSProperties, useEffect, useRef, useState} from "react";
-import {Link} from "react-router-dom";
 import {UncontrolledTooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ACCESSIBILITY_TAGS, ACCESSIBILITY_WARNINGS, useAccessibilitySettings} from "../../services/accessibility";
@@ -7,6 +6,7 @@ import {v4 as uuid_v4} from "uuid";
 import "../../../scss/common/advent.scss";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
+import { PageFragment } from "../elements/PageFragment";
 
 type AdventStyle = CSSProperties & {[key: `--${string}`]: string};
 interface DoorLabel {
@@ -23,11 +23,11 @@ export const AdventTree = () => {
         "--delay": `${Math.random() * 6}s`,
     })));
     const [selectedDoor, setSelectedDoor] = useState<DoorLabel | null>(null);
-    const doorsRef = useRef<HTMLDivElement>(null);
+    const treeRef = useRef<HTMLDivElement>(null);
     const accessibilitySettings = useAccessibilitySettings();
 
     useEffect(() => {
-        const container = doorsRef.current;
+        const container = treeRef.current;
         if (!container) {
             return;
         }
@@ -90,185 +90,33 @@ export const AdventTree = () => {
         <div className="advent mt-2">
             <input type="checkbox" id="advent-snow" className="snow-toggle" />
             <input type="checkbox" id="advent-lights" className="lights-toggle" />
-            <div className="tree">
-                <div className="doors" ref={doorsRef}>
-                    <div className="tree-shapes" aria-hidden="true">
-                        <span className="branch branch-1" />
-                        <span className="lights branch-1" />
-                        <span className="branch branch-2" />
-                        <span className="lights branch-2" />
-                        <span className="branch branch-3" />
-                        <span className="lights branch-3" />
-                        <span className="branch branch-4" />
-                        <span className="lights branch-4" />
-                        <span className="branch branch-5" />
-                        <span className="lights branch-5" />
-                        <span className="branch branch-6" />
-                        <span className="lights branch-6" />
-                    </div>
-                    {/* Day 1 */}
-                    <Link to="/questions/resistor_shopping" className="day active access-visual"
-                        data-row="3" style={{"--day-color": "#944cbe", "--grid-row": "4", "--grid-column": "3"} as AdventStyle}
-                        data-hover="Resistor Shopping (GCSE Physics)" aria-label="Day 1: Resistor Shopping (GCSE Physics)">
-                        <span className="inside" aria-hidden="true">1</span><span className="door" aria-hidden="true">1</span>
-                    </Link>
-                    {/* Day 2 */}
-                    <Link to="/questions/bitter_chemicals" className="day active"
-                        data-row="5" style={{"--day-color": "#b7236d", "--grid-row": "6", "--grid-column": "2"} as AdventStyle}
-                        data-hover="Bitter Chemicals (GCSE Chemistry)" aria-label="Day 2: Bitter Chemicals (GCSE Chemistry)">
-                        <span className="inside" aria-hidden="true">2</span><span className="door" aria-hidden="true">2</span>
-                    </Link>
-                    {/* Day 3 */}
-                    <Link to="/questions/woodland_survey" className="day active"
-                        data-row="2" style={{"--day-color": "#00759c", "--grid-row": "3", "--grid-column": "3"} as AdventStyle}
-                        data-hover="Woodland Survey (Maths)" aria-label="Day 3: Woodland Survey (Maths)">
-                        <span className="inside" aria-hidden="true">3</span><span className="door" aria-hidden="true">3</span>
-                    </Link>
-                    {/* Day 4 */}
-                    <Link to="/questions/merry_moments" className="day active"
-                        data-row="6" style={{"--day-color": "#944cbe", "--grid-row": "7", "--grid-column": "4"} as AdventStyle}
-                        data-hover="Merry Moments (GCSE Physics)" aria-label="Day 4: Merry Moments (GCSE Physics)">
-                        <span className="inside" aria-hidden="true">4</span><span className="door" aria-hidden="true">4</span>
-                    </Link>
-                    {/* Day 5 */}
-                    <Link to="/questions/bitter_brussels_sprouts" className="day active"
-                        data-row="4" style={{"--day-color": "#127025", "--grid-row": "5", "--grid-column": "2"} as AdventStyle}
-                        data-hover="Bitter Brussels Sprouts (Biology)" aria-label="Day 5: Bitter Brussels Sprouts (Biology)">
-                        <span className="inside" aria-hidden="true">5</span><span className="door" aria-hidden="true">5</span>
-                    </Link>
-                    {/* Day 6 */}
-                    <Link to="/questions/number_of_snowflakes" className="day active"
-                        data-row="5" style={{"--day-color": "#00759c", "--grid-row": "6", "--grid-column": "5"} as AdventStyle}
-                        data-hover="How Many Snowflakes (GCSE Maths)" aria-label="Day 6: How Many Snowflakes (GCSE Maths)">
-                        <span className="inside" aria-hidden="true">6</span><span className="door" aria-hidden="true">6</span>
-                    </Link>
-                    {/* Day 7 */}
-                    <Link to="/questions/christmas_crackers" className="day active"
-                        data-row="4" style={{"--day-color": "#b7236d", "--grid-row": "5", "--grid-column": "5"} as AdventStyle}
-                        data-hover="Christmas Crackers (Chemistry)" aria-label="Day 7: Christmas Crackers (Chemistry)">
-                        <span className="inside" aria-hidden="true">7</span><span className="door" aria-hidden="true">7</span>
-                    </Link>
-                    {/* Day 8 */}
-                    <Link to="/questions/christmas_classification" className="day active"
-                        data-row="3" style={{"--day-color": "#127025", "--grid-row": "4", "--grid-column": "2"} as AdventStyle}
-                        data-hover="Christmas Classification (GCSE Biology)" aria-label="Day 8: Christmas Classification (GCSE Biology)">
-                        <span className="inside" aria-hidden="true">8</span><span className="door" aria-hidden="true">8</span>
-                    </Link>
-                    {/* Day 9 */}
-                    <Link to="/questions/santas_delivery" className="day active"
-                        data-row="base" style={{"--day-color": "#944cbe", "--grid-row": "8", "--grid-column": "3"} as AdventStyle}
-                        data-hover="Santa's Delivery (Physics)" aria-label="Day 9: Santa's Delivery (Physics)">
-                        <span className="inside" aria-hidden="true">9</span><span className="door" aria-hidden="true">9</span>
-                    </Link>
-                    {/* Day 10 */}
-                    <Link to="/questions/let_it_snow" className="day active"
-                        data-row="6" style={{"--day-color": "#b7236d", "--grid-row": "7", "--grid-column": "1"} as AdventStyle}
-                        data-hover="Let It Snow (GCSE Chemistry)" aria-label="Day 10: Let It Snow (GCSE Chemistry)">
-                        <span className="inside" aria-hidden="true">10</span><span className="door" aria-hidden="true">10</span>
-                    </Link>
-                    {/* Day 11 */}
-                    <Link to="/questions/arranging_cards" className="day active"
-                        data-row="4" style={{"--day-color": "#00759c", "--grid-row": "5", "--grid-column": "4"} as AdventStyle}
-                        data-hover="Arranging Cards (Maths)" aria-label="Day 11: Arranging Cards (Maths)">
-                        <span className="inside" aria-hidden="true">11</span><span className="door" aria-hidden="true">11</span>
-                    </Link>
-                    {/* Day 12 */}
-                    <Link to="/questions/watt_if" className="day active"
-                        data-row="6" style={{"--day-color": "#944cbe", "--grid-row": "7", "--grid-column": "6"} as AdventStyle}
-                        data-hover="Watt if? (GCSE Physics)" aria-label="Day 12: Watt if? (GCSE Physics)">
-                        <span className="inside" aria-hidden="true">12</span><span className="door" aria-hidden="true">12</span>
-                    </Link>
-                    {/* Day 13 */}
-                    <Link to="/questions/yuletide_peptide" className="day active"
-                        data-row="5" style={{"--day-color": "#127025", "--grid-row": "6", "--grid-column": "3"} as AdventStyle}
-                        data-hover="Yuletide Peptide (Biology)" aria-label="Day 13: Yuletide Peptide (Biology)">
-                        <span className="inside" aria-hidden="true">13</span><span className="door" aria-hidden="true">13</span>
-                    </Link>
-                    {/* Day 14 */}
-                    <Link to="/questions/prob_marzipan_mints" className="day active"
-                        data-row="1" style={{"--day-color": "#00759c", "--grid-row": "2", "--grid-column": "3 / 5"} as AdventStyle}
-                        data-hover="Marzipan and Mint (GCSE Maths)" aria-label="Day 14: Marzipan and Mint (GCSE Maths)">
-                        <span className="inside" aria-hidden="true">14</span><span className="door" aria-hidden="true">14</span>
-                    </Link>
-                    {/* Day 15 */}
-                    <Link to="/questions/ginger_transformation" className="day active"
-                        data-row="6" style={{"--day-color": "#b7236d", "--grid-row": "7", "--grid-column": "2"} as AdventStyle}
-                        data-hover="Oven Heat Turns Ginger Sweet (Chemistry)" aria-label="Day 15: Oven Heat Turns Ginger Sweet (Chemistry)">
-                        <span className="inside" aria-hidden="true">15</span><span className="door" aria-hidden="true">15</span>
-                    </Link>
-                    {/* Day 16 */}
-                    <Link to="/questions/flying_reindeer_genetics" className="day active"
-                        data-row="6" style={{"--day-color": "#127025", "--grid-row": "7", "--grid-column": "5"} as AdventStyle}
-                        data-hover="Flying Reindeer Genetics (GCSE Biology)" aria-label="Day 16: Flying Reindeer Genetics (GCSE Biology)">
-                        <span className="inside" aria-hidden="true">16</span><span className="door" aria-hidden="true">16</span>
-                    </Link>
-                    {/* Day 17 */}
-                    <Link to="/questions/star_prism" className="day active"
-                        data-row="base" style={{"--day-color": "#944cbe", "--grid-row": "8", "--grid-column": "4"} as AdventStyle}
-                        data-hover="Star Prism (Physics)" aria-label="Day 17: Star Prism (Physics)">
-                        <span className="inside" aria-hidden="true">17</span><span className="door" aria-hidden="true">17</span>
-                    </Link>
-                    {/* Day 18 */}
-                    <Link to="/questions/hand_warmers" className="day active"
-                        data-row="5" style={{"--day-color": "#b7236d", "--grid-row": "6", "--grid-column": "1"} as AdventStyle}
-                        data-hover="Hand Warmers (GCSE Chemistry)" aria-label="Day 18: Hand Warmers (GCSE Chemistry)">
-                        <span className="inside" aria-hidden="true">18</span><span className="door" aria-hidden="true">18</span>
-                    </Link>
-                    {/* Day 19 */}
-                    <Link to="/questions/santa_flying_stunt" className="day active"
-                        data-row="3" style={{"--day-color": "#00759c", "--grid-row": "4", "--grid-column": "4"} as AdventStyle}
-                        data-hover="Santa Flying Stunt (Maths)" aria-label="Day 19: Santa Flying Stunt (Maths)">
-                        <span className="inside" aria-hidden="true">19</span><span className="door" aria-hidden="true">19</span>
-                    </Link>
-                    {/* Day 20 */}
-                    <Link to="/questions/hot_chocolate" className="day active"
-                        data-row="5" style={{"--day-color": "#944cbe", "--grid-row": "6", "--grid-column": "4"} as AdventStyle}
-                        data-hover="Hot Chocolate (GCSE Physics)" aria-label="Day 20: Hot Chocolate (GCSE Physics)">
-                        <span className="inside" aria-hidden="true">20</span><span className="door" aria-hidden="true">20</span>
-                    </Link>
-                    {/* Day 21 */}
-                    <Link to="/questions/hibernating_santa" className="day active"
-                        data-row="base" style={{"--day-color": "#127025", "--grid-row": "8", "--grid-column": "2"} as AdventStyle}
-                        data-hover="Hibernating Santa (Biology)" aria-label="Day 21: Hibernating Santa (Biology)">
-                        <span className="inside" aria-hidden="true">21</span><span className="door" aria-hidden="true">21</span>
-                    </Link>
-                    {/* Day 22 */}
-                    <Link to="/questions/frequency_winter_market" className="day active"
-                        data-row="2" style={{"--day-color": "#00759c", "--grid-row": "3", "--grid-column": "4"} as AdventStyle}
-                        data-hover="Sales at a Winter Market (GCSE Maths)" aria-label="Day 22: Sales at a Winter Market (GCSE Maths)">
-                        <span className="inside" aria-hidden="true">22</span><span className="door" aria-hidden="true">22</span>
-                    </Link>
-                    {/* Day 23 */}
-                    <Link to="/questions/watts_in_a_flame" className="day active"
-                        data-row="6" style={{"--day-color": "#b7236d", "--grid-row": "7", "--grid-column": "3"} as AdventStyle}
-                        data-hover="Watts in a Flame (Chemistry)" aria-label="Day 23: Watts in a Flame (Chemistry)">
-                        <span className="inside" aria-hidden="true">23</span><span className="door" aria-hidden="true">23</span>
-                    </Link>
-                    {/* Day 24 */}
-                    <Link to="/questions/marvellous_mistletoe" className="day"
-                        data-row="4" style={{"--day-color": "#127025", "--grid-row": "5", "--grid-column": "3"} as AdventStyle}
-                        data-hover="Marvellous Mistletoe (GCSE Biology)" aria-label="Day 24: Marvellous Mistletoe (GCSE Biology)">
-                        <span className="inside" aria-hidden="true">24</span><span className="door" aria-hidden="true">24</span>
-                    </Link>
-                    {/* Day 25 */}
-                    <Link to="/questions/present_delivery" className="day star"
-                        data-row="star" style={{"--grid-row": "1", "--grid-column": "3"} as AdventStyle}
-                        data-hover="Christmas Day: Present Delivery!" aria-label="Day 25: Present Delivery">
-                        <span className="glow" aria-hidden="true" />
-                        <span className="shape" aria-hidden="true" />
-                        <span className="num" aria-hidden="true">25</span>
-                    </Link>
+            <div className="tree" ref={treeRef}>
+                <div className="tree-shapes">
+                    <span className="branch branch-1" aria-hidden="true" />
+                    <span className="lights branch-1" aria-hidden="true" />
+                    <span className="branch branch-2" aria-hidden="true" />
+                    <span className="lights branch-2" aria-hidden="true" />
+                    <span className="branch branch-3" aria-hidden="true" />
+                    <span className="lights branch-3" aria-hidden="true" />
+                    <span className="branch branch-4" aria-hidden="true" />
+                    <span className="lights branch-4" aria-hidden="true" />
+                    <span className="branch branch-5" aria-hidden="true" />
+                    <span className="lights branch-5" aria-hidden="true" />
+                    <span className="branch branch-6" aria-hidden="true" />
+                    <span className="lights branch-6" aria-hidden="true" />
+                    <label htmlFor="advent-snow" className="trunk">
+                        <span className="visually-hidden">Toggle snow</span>
+                    </label>
+                    <span className="pot" aria-hidden="true" />
                 </div>
-                <label htmlFor="advent-snow" className="trunk">
-                    <span className="visually-hidden">Toggle snow</span>
-                </label>
+                <PageFragment fragmentId={"tree_days"}/>
                 <label htmlFor="advent-lights" className="bauble">
                     <span className="visually-hidden">Toggle fairy lights</span>
                 </label>
             </div>
             <div className="tag">
                 {selectedDoor?.title || "Pick a door"}
-                {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && ACCESSIBILITY_TAGS.filter(tag => selectedDoor?.classes.includes(tag.replace(":", "-"))).map(tag => {
+                {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && ACCESSIBILITY_TAGS.filter(tag => selectedDoor?.classes.includes(tag)).map(tag => {
                     const id = `access-warn-${uuid_v4()}`;
                     return <React.Fragment key={tag}>
                         {" "}
