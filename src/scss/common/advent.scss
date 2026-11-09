@@ -32,6 +32,8 @@
     .advent {
         --w: clamp(34px, 11vw, 54px);
         --h: calc(var(--w) * 1.3);
+        --branch-height: calc(var(--h) * 1.1);
+        --trunk-height: calc(var(--h) * 0.4);
         --g: 6px;
         --step: calc(var(--w) + var(--g));
         --pad: calc(var(--step) * 0.6);
@@ -46,12 +48,14 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-bottom: 5.5rem;
+        gap: 2rem;
+        padding-bottom: 1rem;
     }
 
     /* Tree layout */
     .tree {
         position: relative;
+        flex: 0 0 auto;
 
         > .not-mobile.no-print {
             position: absolute;
@@ -66,7 +70,10 @@
         isolation: isolate;
         display: grid;
         grid-template-columns: repeat(6, var(--w));
-        grid-template-rows: calc(var(--w) * 1.5) repeat(7, calc(var(--h) * 1.1));
+        grid-template-rows:
+            calc(var(--w) * 1.5)
+            repeat(6, var(--branch-height))
+            calc(var(--h) + var(--trunk-height) + 10px - var(--g));
         gap: var(--g);
         width: fit-content;
         margin: 0 auto;
@@ -80,7 +87,10 @@
         inset: 0;
         display: grid;
         grid-template-columns: repeat(6, var(--w));
-        grid-template-rows: calc(var(--w) * 1.5) repeat(7, calc(var(--h) * 1.1));
+        grid-template-rows:
+            calc(var(--w) * 1.5)
+            repeat(6, var(--branch-height))
+            calc(var(--h) + var(--trunk-height) + 10px - var(--g));
         gap: var(--g);
         pointer-events: none;
 
@@ -100,18 +110,14 @@
 
     .trunk {
         pointer-events: auto;
-        //display: block;
-        //position: absolute;
+        display: block;
+        position: absolute;
         width: calc(var(--w) * 1.1);
-        height: calc(var(--h) * 0.4);
-
-        top: calc(var(--w) * 1.5 + (6 * var(--h)) + (6 * var(--g)));
+        height: var(--trunk-height);
+        // Begin at the bottom of branch 6; the base row reserves space down to the pot.
+        top: calc(var(--w) * 1.5 + 6 * var(--branch-height) + 6 * var(--g));
         left: 50%;
         transform: translateX(-50%);
-
-        display: grid;
-        grid-row: 8;
-        grid-column: 4;
 
         background:
             linear-gradient(90deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.25)),
@@ -285,6 +291,10 @@
         }
     }
 
+    .day[data-row="base"] {
+        align-self: end;
+    }
+
     /* Christmas Day star */
     .star {
         width: calc(var(--w) * 1.5);
@@ -348,13 +358,13 @@
 
     /* Door title tag */
     .tag {
-        position: absolute;
+        position: sticky;
+        bottom: 1rem;
+        flex: 0 0 auto;
         width: max-content;
         max-width: calc(100% - 2rem);
-
-        bottom: 1.25rem;
-        left: 50%;
-        transform: translateX(-50%) rotate(-2deg);
+        overflow-wrap: anywhere;
+        transform: rotate(-2deg);
         padding: 0.5rem 1rem 0.5rem 1.9rem;
 
         background: radial-gradient(circle at 0.95rem 50%, transparent 0.2rem, var(--gold) 0.24rem);
@@ -370,7 +380,7 @@
         pointer-events: auto;
         user-select: text;
         cursor: text;
-        z-index: 1;
+        z-index: 2;
     }
 
     /* Snow switch and snowfall */
