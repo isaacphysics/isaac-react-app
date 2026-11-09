@@ -7,6 +7,7 @@ import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageFragment } from "../elements/PageFragment";
 import "../../../scss/common/advent.scss";
+import { PageMetadata } from "../elements/PageMetadata";
 
 type AdventStyle = CSSProperties & {[key: `--${string}`]: string};
 interface DoorLabel {
@@ -120,11 +121,12 @@ export const AdventTree = () => {
 
     return <PageContainer className="advent-page"
         pageTitle={<TitleAndBreadcrumb
-            currentPageTitle="Advent calendar" 
+            currentPageTitle="Tree" 
             icon={{type: "icon", icon: "icon-generic"}}
         />}
         sidebar={<GenericPageSidebar/>}
     >
+        <PageMetadata/>
         <div className="advent mt-2">
             <input type="checkbox" id="advent-snow" className="snow-toggle" />
             <input type="checkbox" id="advent-lights" className="lights-toggle" />
