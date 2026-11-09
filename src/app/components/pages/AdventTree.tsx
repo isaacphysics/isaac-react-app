@@ -1,6 +1,6 @@
 import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
-import {Container, UncontrolledTooltip} from "reactstrap";
+import {UncontrolledTooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ACCESSIBILITY_TAGS, ACCESSIBILITY_WARNINGS, useAccessibilitySettings} from "../../services/accessibility";
 import {v4 as uuid_v4} from "uuid";
@@ -265,7 +265,7 @@ export const AdventTree = () => {
                     const id = `access-warn-${uuid_v4()}`;
                     return <React.Fragment key={tag}>
                         {" "}
-                        <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-color-black mb-n2`} id={id}/>
+                        <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-color-black ms-1 mb-n2`} id={id}/>
                         <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
                         <UncontrolledTooltip target={id} placement="top">
                             {ACCESSIBILITY_WARNINGS[tag].description}
