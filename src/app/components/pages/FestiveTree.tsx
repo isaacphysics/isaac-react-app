@@ -27,10 +27,8 @@ export const FestiveTree = () => {
     const [textOnly, setTextOnly] = useState(false);
     const [textDoors, setTextDoors] = useState<TextDoor[]>([]);
     const [snowflakes] = useState<FestiveStyle[]>(() => Array.from({length: 22}, (_, i) => ({
-        "--x": `${(i + Math.random()) * 100 / 22}%`,
-        "--s": `${5 + Math.random() * 9}px`,
-        "--o": String(0.45 + Math.random() * 0.5),
-        "--d": `${6 + Math.random() * 6}s`,
+        "--x": `${(i + Math.random()) * 100 / 22}%`, "--s": `${5 + Math.random() * 9}px`,
+        "--o": String(0.45 + Math.random() * 0.5), "--d": `${6 + Math.random() * 6}s`,
         "--delay": `${Math.random() * 6}s`,
     })));
     const [selectedDoor, setSelectedDoor] = useState<DoorLabel | null>(null);
@@ -168,8 +166,10 @@ export const FestiveTree = () => {
             </li>)}
         </ol>}
         <div className="festive mt-2" style={{display: textOnly ? "none" : undefined}}>
-            <input type="checkbox" id="festive-snow" className="snow-toggle" />
-            <input type="checkbox" id="festive-lights" className="lights-toggle" />
+            <input type="checkbox" id="festive-snow" className="snow-toggle"
+                onFocus={event => event.currentTarget.labels?.item(0)?.scrollIntoView({block: "center", inline: "nearest"})} />
+            <input type="checkbox" id="festive-lights" className="lights-toggle"
+                onFocus={event => event.currentTarget.labels?.item(0)?.scrollIntoView({block: "center", inline: "nearest"})} />
             <div className="tree" ref={treeRef}>
                 <div className="tree-shapes">
                     {Array.from({length: 6}, (_, i) => <>

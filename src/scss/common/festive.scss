@@ -49,7 +49,7 @@
         --step: calc(var(--w) + var(--g));
         --pad: calc(var(--step) * 0.6);
         --arch: 42% 42% 4px 4px / 30% 30% 4px 4px;
-        --festive-swing: perspective(calc(var(--w) * 6));
+        --door-swing: perspective(calc(var(--w) * 6));
         --hexagon: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         --pine: #0f3a28;
         --snow: #eef6f8;
@@ -194,6 +194,8 @@
 
     /* Doors and interaction states */
     .day {
+        --focus-outline-color: #eee;
+        --focus-outline-width: 3px;
         display: grid;
         width: var(--w);
         height: var(--h);
@@ -252,7 +254,7 @@
             font-size: calc(var(--w) * 0.36);
             line-height: 1;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
-            transform: var(--festive-swing) rotateY(0deg);
+            transform: var(--door-swing) rotateY(0deg);
             transform-origin: left center;
             transition: transform 0.55s cubic-bezier(0.3, 0.8, 0.3, 1), filter 0.55s;
             /* Hexagonal knob */
@@ -284,14 +286,9 @@
             z-index: 2;
 
             &.active .door{
-                transform: var(--festive-swing) rotateY(-70deg);
+                transform: var(--door-swing) rotateY(-70deg);
                 filter: brightness(0.8);
             }
-        }
-
-        &:focus-visible {
-            outline: 2px solid var(--gold);
-            outline-offset: 3px;
         }
 
         /* Locked: any door that is neither active nor opened */
@@ -307,7 +304,7 @@
 
         /* Opened days keep their door open */
         &.opened .door {
-            transform: var(--festive-swing) rotateY(-80deg);
+            transform: var(--door-swing) rotateY(-80deg);
             filter: brightness(0.65);
         }
 
@@ -416,6 +413,14 @@
 
     /* Door title tag */
     .tag {
+        // The gold tag keeps a fixed background in both colour modes.
+        .icon-color-black {
+            @supports (mask-position: center) {
+                --icon-foreground: #000 !important;
+                --icon-background: #000 !important;
+            }
+        }
+
         position: sticky;
         bottom: 1rem;
         flex: 0 0 auto;
@@ -453,8 +458,8 @@
         pointer-events: none;
 
         &:focus-visible ~ .tree .trunk {
-            outline: 2px solid var(--gold);
-            outline-offset: 3px;
+            box-shadow: 0 0 0 var(--focus-outline-width) var(--focus-outline-color);
+            outline: var(--focus-outline-width) solid transparent;
         }
 
         &:checked {
@@ -517,8 +522,14 @@
 
         &:focus-visible ~ .tree .bauble {
             &::before {
-                width: 2px;
-                background: var(--gold);
+                top: -3px;
+                left: -12px;
+                width: 24px;
+                height: 37px;
+                border-radius: 12px;
+                background: transparent;
+                box-shadow: 0 0 0 var(--focus-outline-width) var(--focus-outline-color);
+                outline: var(--focus-outline-width) solid transparent;
             }
             &::after {
                 background: radial-gradient(circle at 35% 30%, #fff, #ffd27a 45%, var(--gold));
@@ -532,7 +543,6 @@
         height: 0;
         z-index: 3;
         right: calc(12px - var(--pad));
-        // Inset the attachment 12px from the right edge and bottom of branch 6.
         top: calc(var(--w) * 1.5 + 6 * var(--branch-height) + 7 * var(--g) - 12px);
         cursor: pointer;
         transform-origin: 0 0;
