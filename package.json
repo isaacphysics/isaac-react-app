@@ -101,7 +101,7 @@
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^10.0.1",
-    "@frsource/cypress-plugin-visual-regression-diff": "^4.2.1",
+    "@pixsame/cypress-plugin-visual-regression-diff": "^1.0.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "~6.9.1",
