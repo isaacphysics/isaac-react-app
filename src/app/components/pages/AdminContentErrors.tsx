@@ -59,7 +59,7 @@ export const AdminContentErrors = () => {
     const params = useQueryParams(true);
 
     const [pathFilter, setPathFilter] = useState<string>(params.path || "");
-    const [excludePathFilter, setExcludePathFilter] = useState<string>("");
+    const [excludePathFilter, setExcludePathFilter] = useState<string>(params.exclude || "");
     const [errorFilter, setErrorFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
@@ -118,7 +118,7 @@ export const AdminContentErrors = () => {
                             <Label htmlFor="exclude-file-path-filter" className="w-100">
                                 Exclude by file path
                             </Label>
-                            <Input id="exclude-file-path-filter" type="text" onChange={(e) => setExcludePathFilter(e.target.value)} placeholder="Exclude errors by file path"/>
+                            <Input id="exclude-file-path-filter" type="text" defaultValue={excludePathFilter} onChange={(e) => setExcludePathFilter(e.target.value)} placeholder="Exclude errors by file path"/>
                         </Col>
                         <Col lg={12} className="mb-2">
                             <Label htmlFor="error-message-filter" className="w-100">
