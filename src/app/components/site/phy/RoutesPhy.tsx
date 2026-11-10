@@ -46,7 +46,7 @@ import { Generic } from "../../pages/Generic";
 import { NavigateWithSlug } from "../../navigation/NavigateWithSlug";
 import { MyBookmarks } from "../../pages/MyBookmarks";
 import { ManageAssignments } from "../../pages/ManageAssignments";
-import { AdventTree } from "../../pages/AdventTree";
+import { FestiveTree } from "../../pages/FestiveTree";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -189,7 +189,7 @@ export const RoutesPhy = [
     <Route key={key++} path="/programmes" element={<Programmes />} />,
     <Route key={key++} path="/news" element={<News />} />,
     <Route key={key++} path="/isaac_11" element={<IsaacStats />} />,
-    <Route key={key++} path="/advent" element={<AdventTree />} />,
+    <Route key={key++} path="/festive" element={<FestiveTree />} />,
 
     // Legacy Routes
     <Route key={key++} path="/mission" element={<Navigate to="/about" replace />} />,

@@ -8,10 +8,10 @@ import {v4 as uuid_v4} from "uuid";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageFragment } from "../elements/PageFragment";
-import "../../../scss/common/advent.scss";
+import "../../../scss/common/festive.scss";
 import { PageMetadata } from "../elements/PageMetadata";
 
-type AdventStyle = CSSProperties & {[key: `--${string}`]: string};
+type FestiveStyle = CSSProperties & {[key: `--${string}`]: string};
 interface DoorLabel {
     title: string;
     classes: string[];
@@ -23,10 +23,10 @@ interface TextDoor extends DoorLabel {
     active: boolean;
 }
 
-export const AdventTree = () => {
+export const FestiveTree = () => {
     const [textOnly, setTextOnly] = useState(false);
     const [textDoors, setTextDoors] = useState<TextDoor[]>([]);
-    const [snowflakes] = useState<AdventStyle[]>(() => Array.from({length: 22}, (_, i) => ({
+    const [snowflakes] = useState<FestiveStyle[]>(() => Array.from({length: 22}, (_, i) => ({
         "--x": `${(i + Math.random()) * 100 / 22}%`,
         "--s": `${5 + Math.random() * 9}px`,
         "--o": String(0.45 + Math.random() * 0.5),
@@ -139,7 +139,7 @@ export const AdventTree = () => {
         };
     }, []);
 
-    return <PageContainer className="advent-page"
+    return <PageContainer className="festive-page"
         pageTitle={<TitleAndBreadcrumb
             currentPageTitle="Tree" 
             icon={{type: "icon", icon: "icon-generic"}}
@@ -151,7 +151,7 @@ export const AdventTree = () => {
             <StyledToggle falseLabel="Tree" trueLabel="Text only" aria-label="Text-only mode"
                 checked={textOnly} onChange={event => setTextOnly(event.currentTarget.checked)} />
         </div>
-        {textOnly && <ol className="advent-text-list">
+        {textOnly && <ol className="festive-text-list">
             {textDoors.map(door => <li key={door.day} className={door.active ? undefined : "text-muted"}>
                 <span>Day {door.day}: </span>
                 {door.active
@@ -161,28 +161,28 @@ export const AdventTree = () => {
                     .filter(tag => door.classes.includes(tag) || door.classes.includes(tag.replace(":", "-")))
                     .map(tag => <React.Fragment key={tag}>
                         {" "}
-                        <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-color-black`}
+                        <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-color-black mb-n1`}
                             title={ACCESSIBILITY_WARNINGS[tag].description} aria-hidden="true" />
                         <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
                     </React.Fragment>)}
             </li>)}
         </ol>}
-        <div className="advent mt-2" style={{display: textOnly ? "none" : undefined}}>
-            <input type="checkbox" id="advent-snow" className="snow-toggle" />
-            <input type="checkbox" id="advent-lights" className="lights-toggle" />
+        <div className="festive mt-2" style={{display: textOnly ? "none" : undefined}}>
+            <input type="checkbox" id="festive-snow" className="snow-toggle" />
+            <input type="checkbox" id="festive-lights" className="lights-toggle" />
             <div className="tree" ref={treeRef}>
                 <div className="tree-shapes">
                     {Array.from({length: 6}, (_, i) => <>
                         <span className={`branch branch-${i+1}`} aria-hidden="true" />
                         <span className={`lights branch-${i+1}`} aria-hidden="true" />
                     </>)}
-                    <label htmlFor="advent-snow" className="trunk">
+                    <label htmlFor="festive-snow" className="trunk">
                         <span className="visually-hidden">Toggle snow</span>
                     </label>
                     <span className="pot" aria-hidden="true" />
                 </div>
                 <PageFragment fragmentId={"tree_days"}/>
-                <label htmlFor="advent-lights" className="bauble">
+                <label htmlFor="festive-lights" className="bauble">
                     <span className="visually-hidden">Toggle fairy lights</span>
                 </label>
             </div>
