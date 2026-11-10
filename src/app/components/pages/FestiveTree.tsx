@@ -1,15 +1,13 @@
 import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import {Link} from "react-router-dom";
-import {UncontrolledTooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ACCESSIBILITY_TAGS, ACCESSIBILITY_WARNINGS, useAccessibilitySettings} from "../../services/accessibility";
-import {v4 as uuid_v4} from "uuid";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageFragment } from "../elements/PageFragment";
 import "../../../scss/common/festive.scss";
 import { PageMetadata } from "../elements/PageMetadata";
+import { AccessibilityTags } from "../elements/ContentPropertyTags";
 
 type FestiveStyle = CSSProperties & {[key: `--${string}`]: string};
 interface DoorLabel {
@@ -33,7 +31,6 @@ export const FestiveTree = () => {
     })));
     const [selectedDoor, setSelectedDoor] = useState<DoorLabel | null>(null);
     const treeRef = useRef<HTMLDivElement>(null);
-    const accessibilitySettings = useAccessibilitySettings();
 
     useEffect(() => {
         const container = treeRef.current;
@@ -155,14 +152,7 @@ export const FestiveTree = () => {
                 {door.active
                     ? <Link to={door.href}>{door.title}</Link>
                     : <span aria-disabled="true">{door.title}</span>}
-                {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && ACCESSIBILITY_TAGS
-                    .filter(tag => door.classes.includes(tag) || door.classes.includes(tag.replace(":", "-")))
-                    .map(tag => <React.Fragment key={tag}>
-                        {" "}
-                        <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-color-black mb-n1`}
-                            title={ACCESSIBILITY_WARNINGS[tag].description} aria-hidden="true" />
-                        <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
-                    </React.Fragment>)}
+                <AccessibilityTags tags={door.classes} tagClassName="ms-1 mb-n1" />
             </li>)}
         </ol>}
         <div className="festive mt-2" style={{display: textOnly ? "none" : undefined}}>
@@ -188,17 +178,7 @@ export const FestiveTree = () => {
             </div>
             <div className="tag">
                 {selectedDoor?.title || "Pick a door"}
-                {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && ACCESSIBILITY_TAGS.filter(tag => selectedDoor?.classes.includes(tag)).map(tag => {
-                    const id = `access-warn-${uuid_v4()}`;
-                    return <React.Fragment key={tag}>
-                        {" "}
-                        <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-color-black ms-1 mb-n2`} id={id}/>
-                        <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
-                        <UncontrolledTooltip target={id} placement="top">
-                            {ACCESSIBILITY_WARNINGS[tag].description}
-                        </UncontrolledTooltip>
-                    </React.Fragment>;
-                })}
+                <AccessibilityTags tags={selectedDoor?.classes} tagClassName="ms-1 mb-n2" />
             </div>
             <div className="snowfall" aria-hidden="true">
                 {snowflakes.map((style, index) => <div key={index} className="flake" style={style} />)}
