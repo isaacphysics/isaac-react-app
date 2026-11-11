@@ -590,8 +590,7 @@
     "notesMaxLengthError": "Avètz despassat la longor maximala.",
     "pagination": {
       "showMore": "Mostrar mai",
-      "showingCount": "xxxxxShowing <strongShown>{{shownCount}}</strongShown> of <strongTotal>{{totalCount}}</strongTotal>",
-      "showingInfo": "xxxxxShowing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes."
+      "showingCount": "xxxxxShowing <strongShown>{{shownCount}}</strongShown> of <strongTotal>{{totalCount}}</strongTotal>"
     },
     "progress": {
       "detailedTab": {
@@ -697,11 +696,6 @@
       "link": "contactatz-nos"
     },
     "continueGuest": "Contunhar sens compte",
-    "credentials": {
-      "emailPlaceholder": "Adreça de corrièl",
-      "passwordLengthError": "Los senhals devon aver al mens {{minLength}} caractèrs",
-      "passwordPlaceholder": "Senhal"
-    },
     "dob": {
       "invalidDate": "Picatz una data de naissença valida.",
       "label": "Data de naissença"
@@ -710,7 +704,6 @@
       "validationError": "Picatz una adreça electronica valida."
     },
     "emailVerification": {
-      "badParameters": "Aquesta pagina a recebut de marrits paramètres.",
       "badParamsMessage": "Aquesta pagina a recebut de marrits paramètres. Mercés de vos assegurar qu'utilizatz lo ligam coma provesit dins lo corrièl.",
       "loginToResend": "Mercés de vos connectar a vòstre compte <accountLink></accountLink> per tornar mandar lo corrièl de verificacion.",
       "requestSuccessMessage": "Mercés de seguir lo ligam de verificacion donat dins lo corrièl mandat a vòstra adreça.",
@@ -790,12 +783,10 @@
     },
     "passwordReset": {
       "breadcrumbTitle": "Reïnicializar lo senhal",
-      "checkInbox": "Mercés de verificar vòstra bóstia d'entrada.",
       "completedTitle": "Reïnicializacion de senhal capitada",
       "errorTitle": "Impossible de reïnicializar vòstre senhal",
       "failedTitle": "Fracàs al reïnicializar lo senhal",
       "failureMessage": "La reïnicializacion del senhal a fracassat",
-      "forgottenLink": "Avètz oblidat vòstre senhal?",
       "noTokenMessage": "Mercés de vos assegurar qu'avètz clicat sul ligam provesit dins vòstre corrièl de reïnicializacion de senhal.",
       "noTokenTitle": "Cap de geton de reïnicializacion provesit",
       "successBody": "S'existís un compte amb l'adreça electronica {{email}}, vos avèm mandat un corrièl de reïnicializacion del senhal. Se recebètz pas un corrièl, es possible qu'ajatz pas un compte amb aquesta adreça de corrièl.",
@@ -812,12 +803,8 @@
       "logoAlt": "Logotip de Raspberry Pi"
     },
     "register": {
-      "continueWithEmail": "Contunhar amb lo corrièl",
-      "description": "Aicí, podètz crear un compte {{siteTitle}} , o vos connectar a un compte existent.",
-      "emailHeading": "Creatz un compte novèl amb vòstre corrièl :",
       "existingAccount": "Avètz ja un compte?",
-      "pageTitle": "Crear un compte {{siteName}}",
-      "ssoHeading": "O connectatz-vos amb :"
+      "pageTitle": "Crear un compte {{siteName}}"
     },
     "registration": {
       "ageCheck": {
@@ -827,7 +814,6 @@
         "optionBetween": "{{minAge}} - {{maxAgeWithConsent}} ans",
         "optionOver": "{{minAgeWithConsent}} e mai",
         "optionUnder": "{{maxAge}} o jos",
-        "overLabel": "13 e mai",
         "selectionRequired": "Fasètz una seleccion.",
         "terms": "Podèm pas que crear de comptes pels utilizaires {{minAge}} ans o mai.",
         "tryOtherProvider": "Ensajatz tornarmai, en utilizant siá {{authProviders}}."
@@ -852,8 +838,6 @@
       "termsRequired": "Vos cal acceptar las condicions per contunhar."
     },
     "registrationSuccess": {
-      "accountButton": "Vòstre compte",
-      "homeButton": "Ostal",
       "title": "Compte creat!"
     },
     "roleSelect": {
@@ -911,9 +895,7 @@
     "tfa": {
       "codeInvalid": "Picatz un còde de verificacion valid",
       "codePlaceholder": "Còdi de verificacion",
-      "codeValidationError": "Picatz un còde de verificacion valid",
       "description": "L'autentificacion a dos factors es estada activada per aqueste compte.",
-      "enabled": "L'autentificacion a dos factors es estada activada per aqueste compte.",
       "title": "Autentificacion en dos factors",
       "verifyButton": "Verificar"
     },
@@ -2305,20 +2287,6 @@
       "reportTaggingIssue": "xxxxxxIf you think that the page is incorrectly tagged, please <strong><contactLink>contact us</contactLink></strong>."
     }
   },
-  "katexA11y": {
-    "a11y": {
-      "clickableDropZone": "zòna de desplaçament clicable",
-      "cubeRootEnd": "raïtz cubica de fin",
-      "cubeRootStart": "raïtz cubica de",
-      "endColor": "color de fin {{color}}",
-      "endFormattedText": "fin {{modifier}} tèxte",
-      "squareRootEnd": "raïtz carrada finala",
-      "squareRootStart": "raïtz carrada de",
-      "startColor": "color de començament {{color}}",
-      "startFormattedText": "començar {{modifier}} tèxte",
-      "toThePower": "a la poténcia {{power}} "
-    }
-  },
   "label": {
     "aLevel": "Nivèl A",
     "accessibilityRequirements": "Requisits d'accessibilitat",
@@ -2541,12 +2509,6 @@
     },
     "notFound": "Pas cap de subjècte trobat.",
     "pageTitle": "Presentant Isaac {{subject}}",
-    "sampleQuestions": {
-      "biology": "Mostra de questions de biologia",
-      "chemistry": "Preguntas de quimia de mòstra",
-      "maths": "Exemple de questions de matematicas",
-      "physics": "Exemple de questions de fisica"
-    },
     "stage1114": {
       "subtitle": "Nòstras ressorsas 11–14 {{subject}} introduson de concèptes segondaris {{subjectName}} als escolans e bastisson lors competéncias de numeracion a travèrs de questions e una seleccion d'experiéncias."
     },
@@ -2900,6 +2862,7 @@
       "piiDetected": "<strong>PII possibla detectada :</strong><br/>Sembla que vòstra responsa conten d'informacions personalas, coma un nom, un corrièl o una adreça de carrièra. Enviar aquestas donadas a OpenAI es contra lor politica d'utilizacion.",
       "sigFigs": "Chifras significativas",
       "stdFormSyntax": "Al moment d'escriure la forma estandard, cal inclure <caretCode>^</caretCode> o <doubleAsteriskCode>**</doubleAsteriskCode> entre lo 10 e l'exponent.",
+      "tooFewSigFigs": "your answer needs <b>more</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
       "tooManySigFigs": "xxxxxxyour answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
       "wordLimitExceeded": "Limit de mots despassat ({{currentCount}}/{{limit}})"
     }
@@ -3069,12 +3032,6 @@
   "studentResources": {
     "careers": {
       "description": "Legissètz d'istòrias de diplòmats a las primièras estapas de lor carrièra dins lo desvolopament de logicials, lo dessenh de jòcs, la recèrca, e fòrça mai.",
-      "lellaHalloumBody": "Coneissètz Lella, una jove cambiaira numerica qu'utiliza la tecnologia per inspirar, engatjar e melhorar la generacion seguenta de talent.",
-      "lellaHalloumTitle": "Lella Halloum",
-      "maxFordhamBody": "Explora cossí la passion de Max per l'informatica lo menèt a venir un engenhaire de logicials a travèrs un aprendissatge de solucions de tecnologia numerica.",
-      "maxFordhamTitle": "Max Fordham",
-      "meghnaAsthanaBody": "Descobrissètz cossí Meghna transformèt sa passion pel codatge en una carrièra dins la vision informatica, ont trabalha ara sus de projèctes innovadors que s'ocupan dels desfís environamentals.",
-      "meghnaAsthanaTitle": "Meghna Asthana",
       "title": "Explora una carrièra en informatica",
       "viewMoreButton": "Veire mai d'istòrias"
     },
@@ -3141,8 +3098,7 @@
       "viewMore": "Veire mai de libres"
     },
     "events": {
-      "heading": "Eveniments <theme>({{eventCount}})</theme>",
-      "title": "Eveniments <emphasis>({{eventCount}})</emphasis>"
+      "heading": "Eveniments <theme>({{eventCount}})</theme>"
     },
     "footer": {
       "emptyState": "Cap de libre o novèla disponibla per aqueste subjècte. Tornatz lèu!"
@@ -3455,6 +3411,7 @@
       "startDate": "Data de començament"
     },
     "preview": {
+      "attemptYourself": "Attempt test yourself",
       "backToContents": "Tornar al contengut",
       "previewQuestions": "Questions d'apercebut"
     },
@@ -3588,21 +3545,16 @@
     "meta": {
       "description": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica. Aprenètz o revisatz per vòstres examens amb nosautres uèi."
     },
-    "metaDescription": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica. Aprenètz o revisatz per vòstres examens amb nosautres uèi.",
     "page": {
       "backButton": "<responsivePrefix>Back to</responsivePrefix> All topics"
     },
     "questionFinder": {
       "description": "En utilizant lo cercaire de questions podètz seleccionar de tèmas e de concèptes e generarem una seleccion aleatòria de questions per vos utilizar. Podètz tanben especificar vòstre nivèl e vòstre tablèu d'examen.",
-      "heading": "Verificatz vòstra compreneson",
       "students": "<bold>Los escolans</bold> poirián voler ensajar nòstre cercaire de questions per revisar e obténer de retroaccion sus las errors.",
-      "studentsInfo": "<b>Los escolans</b> poirián voler ensajar nòstre cercaire de questions per revisar e obténer de retroaccion sus las errors.",
       "teachers": "<bold>Los ensenhaires</bold> poirián voler ensajar nòstre cercaire de questions per crear de quiz e los assignar als escolans.",
-      "teachersInfo": "<b>Los ensenhaires</b> poirián voler ensajar nòstre cercaire de questions per crear de quiz e los assignar als escolans.",
       "title": "Verificatz vòstra compreneson",
       "tryButton": "Ensajatz nòstre cercaire de questions"
-    },
-    "title": "Tèmas"
+    }
   },
   "video": {
     "embed": {
