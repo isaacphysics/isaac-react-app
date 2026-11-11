@@ -105,7 +105,6 @@
   },
   "auth": {
     "ageCheckFailed": {
-      "ageRestriction": "crwdns2413104:0crwdne2413104:0",
       "freeAccessNote": "crwdns2413106:0crwdne2413106:0 crwdns2413108:0crwdne2413108:0",
       "returnButton": "crwdns2413110:0crwdne2413110:0"
     },
@@ -125,18 +124,7 @@
     "register": {
       "greetingDescription": "crwdns2413128:0{{siteTitle}}crwdne2413128:0",
       "greetingTitle": "crwdns2413130:0crwdne2413130:0",
-      "heading": "crwdns2413132:0crwdne2413132:0",
       "homeButton": "crwdns2413134:0crwdne2413134:0"
-    },
-    "registration": {
-      "ageCheck": {
-        "ageRequirement": "crwdns2413136:0crwdne2413136:0",
-        "middleLabel": "crwdns2413138:0crwdne2413138:0",
-        "underLabel": "crwdns2413140:0crwdne2413140:0"
-      }
-    },
-    "registrationSuccess": {
-      "nextButton": "crwdns2413142:0crwdne2413142:0"
     },
     "sso": {
       "ariaLabel": "crwdns2413144:0crwdne2413144:0"
