@@ -1,0 +1,647 @@
+{
+  "accordion": {
+    "untitledFallback": "Sens títol"
+  },
+  "account": {
+    "betaFeatures": {
+      "hideAttemptsHelp": "Aquesta foncionalitat vos permet de respondre a de questions qu'avètz respondudas abans, sens veire vòstra anciana responsa. Es util se revisatz un tèma abans un tèst o un examen."
+    },
+    "context": {
+      "interestedLabel": "M'interèssa...",
+      "teachingLabel": "Ensenhi...",
+      "tooltipContent": "Causissètz una estapa aicí per preseleccionar lo material que siá mai pertinent per vòstres interèsses.<br1/>Poiretz modificar aquesta preferéncia sus las paginas pertinentas.<br2/>Se preferissètz de veire tot lo contengut per defaut, seleccionatz « Totas las estapas »."
+    },
+    "country": {
+      "description": "Lo país ont vas a l'escòla. Aquò nos ajuda a mesurar nòstra portada e nòstre impacte."
+    },
+    "deletion": {
+      "title": "Suprimir lo compte"
+    },
+    "emailPreferences": {
+      "assignmentsDescription": "Siáu notificat quand vòstre professor dona a vòstre grop una novèla mission.",
+      "eventsDescription": "Informacions sus d'eveniments novèls en linha o en persona.",
+      "frequencyNote": "<strong>Frequéncia</strong>: esperatz un corrièl per trimèstre per las novèlas e un bulletin mensual pels eveniments. Las notificacions de dever seràn mandadas segon lo besonh per vòstre professor.",
+      "newsDescription": "De novèlas mesas a jorn de contengut e de foncionalitats del sit web, e tanben de novèlas interessantas sus Isaac."
+    },
+    "linkedAccounts": {
+      "title": "Comptes ligats"
+    },
+    "preferences": {
+      "emailFrequency": "<b>Frequéncia</b>: esperatz un corrièl per trimèstre per las novèlas e un bulletin mensual pels eveniments. Las notificacions de dever seràn mandadas segon lo besonh per vòstre professor."
+    },
+    "profile": {
+      "countryDescription": "Lo país ont vas a l'escòla. Aquò nos ajuda a mesurar nòstra portada e nòstre impacte. Se seleccionètz pas un país quand vos sètz inscrich, ne avèm benlèu suggerit un dempuèi vòstra escòla o l'adreça de corrièl de l'escòla."
+    },
+    "requiredInfo": {
+      "countryCodeNote": "Aquò's ara una informacion requerida per nos ajudar melhor a mesurar nòstra portada e nòstre impacte.",
+      "emailFrequencyNote": "<strong>Frequéncia</strong>: esperatz un corrièl per trimèstre per las novèlas e un bulletin mensual pels eveniments. Las notificacions de dever seràn mandadas segon lo besonh per vòstre professor."
+    },
+    "review": {
+      "intro": "Per que {{siteTitle}} pòsca contunhar de vos mostrar de contengut pertinent, vos demandam de revisar la qualificacion e los detalhs escolars associats a vòstre compte al començament de cada annada academica.",
+      "requiredLabel": "Exigit",
+      "tutorIntro": "Per que {{siteTitle}} pòsca contunhar de vos mostrar de contengut pertinent, vos demandam de revisar los detalhs associats a vòstre compte al començament de cada annada academica."
+    },
+    "school": {
+      "description": "Aquò nos ajuda a promòure d'eveniments pròches de vos.",
+      "notAssociated": "Pas associat a una escòla"
+    },
+    "title": "Mon compte",
+    "tutorRequest": {
+      "tutorFeaturesLink": "Anatz a la <tutorFeaturesLink>pagina de foncionalitats del tutor</tutorFeaturesLink> per començar a utilizar las foncionalitats de vòstre compte novèl."
+    }
+  },
+  "assignment": {
+    "fallbackTitle": "Deck de questions",
+    "fetchError": {
+      "title": "Error al moment de la recuperacion del jòc de questions amb id : {{gameboardId}}"
+    },
+    "notFound": {
+      "breadcrumbTitle": "Deck de questions",
+      "title": "Lo quasèrn de questions pas trobat"
+    }
+  },
+  "assignments": {
+    "add": {
+      "fromTitle": "Ajustar un jòc de questions dempuèi ..."
+    },
+    "delete": {
+      "errorTitle": "La supression de l'assignacion a fracassat",
+      "successMessage": "Aquesta assignacion es estada desdefinida amb succès.",
+      "successTitle": "Assignacion suprimida"
+    },
+    "display": {
+      "currentlyAssigned": "Depaus de questions actualament assignat a:",
+      "pendingDescription": "Aquestas missions son previstas per començar a una data futura. Lo matin de la data prevista, los escolans poiràn veire lo dever, e recebràn un corrièl de notificacion.",
+      "pendingTitle": "Devers en cors:"
+    },
+    "emptyBoardsAlert": "Avètz pas de jòcs de questions a assignar. Utilizatz una de las opcions çai-sus per ne trobar una.",
+    "emptyState": "I a pas d'assignacions a afichar pels filtres seleccionats.",
+    "filter": {
+      "byName": "Filtrar los jòcs de questions per nom"
+    },
+    "modal": {
+      "unknownDeck": "Deck de questions desconeguts",
+      "unknownGameboard": "Deck de questions desconegut (pòt aparténer a un autre utilizaire)"
+    },
+    "pageHelp": "Utilizatz aquesta pagina per definir de prètzfaches a vòstres grops. Podètz assignar quin jòc que siá qu'avètz enregistrat a vòstre compte.<br/>Los escolans del grop seràn mandats per corrièl quand definiretz una novèla mission.",
+    "pageTitle": "Mas deversas",
+    "pagination": {
+      "showingInfo": "xxxxxShowing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered assignments."
+    },
+    "progress": {
+      "groupTab": {
+        "overview": "Apercebut: {{boardTitle}}"
+      },
+      "pageTitle": "Progrès de l'assignacion"
+    },
+    "schedule": {
+      "preview": {
+        "hideButton": "Amagar l'apercebut del jòc de questions"
+      },
+      "unknownDeck": "Deck de questions desconegut (pòt aparténer a un autre utilizaire)"
+    },
+    "scheduleInfo": "Utilizatz la pagina <scheduleLink>calendièr de prètzfaches</scheduleLink> per visualizar las prètzfaches per data de començament e data de venciment.",
+    "title": "Definir las assignacions"
+  },
+  "auth": {
+    "ageCheckFailed": {
+      "ageRestriction": "Malastrosament, sèm pas capables d'ofrir de comptes als escolans de mens de 10 ans.",
+      "freeAccessNote": "<b>Mas podètz totjorn accedir al sit entièr gratuitament !</b> Podràs pas seguir ton progrès.",
+      "returnButton": "Prenètz-me enrè"
+    },
+    "closeButton": "BARRAR",
+    "loginLogout": {
+      "signUpOrLogIn": "Inscriure / connectar"
+    },
+    "logoAlt": "Logotip de la sciéncia d'Isaac",
+    "metaDescription": "Connectatz-vos a Isaac per aprene e seguir vòstre progrès.",
+    "notLinked": {
+      "enableSignIn": "S'avètz pas encara activat la connexion amb {{provider}}, connectatz-vos d'en primièr amb un autre metòde (per exemple corrièl e senhal). Puèi, sus <accountLink>Mon compte</accountLink>, sus « Seguretat », a costat de «{{providerSetting}}», clicatz sus « Ligam »."
+    },
+    "password": {
+      "confirmLabel": "Tornatz picar lo senhal",
+      "matchError": "Mercés de vos assegurar que vòstres senhals correspondon."
+    },
+    "register": {
+      "greetingDescription": "Aicí, podètz crear un compte {{siteTitle}} , o vos connectar a un compte existent.",
+      "greetingTitle": "Adieu!",
+      "heading": "Adieu!",
+      "homeButton": "Prenètz-me enrè"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageRequirement": "Podèm crear de comptes que pels utilizaires de 10 ans o mai.",
+        "middleLabel": "10 - 12 ans",
+        "underLabel": "Mens de 10 ans"
+      }
+    },
+    "registrationSuccess": {
+      "nextButton": "Preferéncias"
+    },
+    "sso": {
+      "ariaLabel": "Ligam cap a la documentacion de la connexion unica"
+    },
+    "teacherConnect": {
+      "groupInfo": "Se vòstres ensenhaires vos an donat un còde de grop, picatz-lo çai-jos. Aquò permet a vòstres ensenhaires de vos metre a trabalhar e de veire vòstre progrès. <learnMoreLink>Ne saber mai</learnMoreLink>.",
+      "skipNote": "Podètz sautar aquò. Avètz pas besonh de vos jonher a un grop per utilizar Isaac, e o podètz totjorn far mai tard dempuèi la pagina Mon compte."
+    },
+    "teacherRequest": {
+      "emailVerificationLine": "Un ligam cap al sit web de mon escòla amb una lista del personal que mòstra mon nom e mon corrièl (o un numèro de telefòn per contactar l'escòla) es : {{verificationDetails}}",
+      "verificationUrl": "URL d'una pagina sul sit web de vòstra escòla que mòstra vòstre nom e adreça de corrièl, o vòstre numèro de telefòn d'escòla"
+    }
+  },
+  "banners": {
+    "research": {
+      "body": "Enregistram vòstre usatge d'aqueste sit e las informacions qu'introdusissètz per sosténer la recèrca sus l'aprendissatge en linha a l'Universitat de Cambridge. Los detalhs complets son dins la <privacyLink>politica de confidencialitat</privacyLink>."
+    }
+  },
+  "books": {
+    "chapters": {
+      "calculationPractice": "Practica de calcul",
+      "electricity": "Electricitat",
+      "energyAndBalance": "Energia e Equilibri",
+      "extraQuestions": "De questions suplementàrias",
+      "forceAndMotion": "Fòrça e Movement",
+      "geometry": "Geometria",
+      "materialsAndForces": "Materiaus e fòrças",
+      "mechanics": "Mecanica",
+      "sections16To23": "(Seccions 16-23)",
+      "sections1To15": "(Seccions 1-15)",
+      "sections24To29": "(Seccions 24-29)",
+      "sections26To30": "(Seccions 26-30)",
+      "sections30To34": "(Seccions 30-34)",
+      "sections38To50": "(Seccions 38-50)",
+      "skills": "Competéncias",
+      "waves": "Ondas"
+    },
+    "chaptersHeading": "Capítols:",
+    "chemistry16": {
+      "chapterA": "Formulas e Equacions",
+      "chapterB": "Quantitat de substància",
+      "chapterC": "Leis de gas",
+      "chapterD": "Estructura atomica",
+      "chapterE": "Espectroscopia electronica",
+      "chapterF": "Cambiaments d'entalpia",
+      "chapterG": "Entropia",
+      "chapterH": "Energia liura",
+      "chapterI": "Equilibri",
+      "chapterJ": "Acids e Bases",
+      "chapterK": "Redox",
+      "chapterL": "Electroquimia",
+      "chapterM": "Leis de taus, grafics e mièja vida",
+      "helpText": "Lo libre de quimia preuniversitària essenciala de mestrejar la fisica d'Isaac",
+      "title": "Mestrejar la quimia preuniversitària essenciala"
+    },
+    "gcse": {
+      "ch1Subtitle": "(Seccions 1-7)",
+      "ch2Subtitle": "(Seccions 8-21)",
+      "ch3Subtitle": "(Seccions 22-29)",
+      "ch4Subtitle": "(Seccions 30-37)",
+      "ch4Title": "Energia",
+      "ch5Title": "Ondas e Optica",
+      "ch6Subtitle": "(Seccions 51-58)",
+      "ch6Title": "Nuclear",
+      "ch7Subtitle": "(Seccions 59-62)",
+      "ch7Title": "Gas",
+      "title": "Mestrejar la fisica essenciala del GCSE",
+      "titleHelp": "Lo libre de Fisica Essencial de Mestrejament de la Fisica Isaac"
+    },
+    "gcseMaths": {
+      "chapter1Subheading": "(Seccion 1)",
+      "chapter1Title": "Resolver de problèmas de matematicas",
+      "chapter2Subheading": "(Seccions 2-11)",
+      "chapter3Subheading": "(Seccions 12-22)",
+      "chapter3Title": "Algèbra",
+      "chapter4Subheading": "(Seccions 23-25)",
+      "chapter4Title": "Foncions linearas",
+      "chapter5Title": "Foncions quadraticas",
+      "chapter6Subheading": "(Seccions 31-32)",
+      "chapter6Title": "Inegalitats",
+      "chapter7Subheading": "(Seccions 33-37)",
+      "chapter7Title": "Grafics",
+      "chapter9Subheading": "(Seccions 51-57)",
+      "chapter9Title": "Probabilitat e Estatisticas",
+      "pageHelp": "Lo libre de matematicas GCSE de fisica Isaac",
+      "title": "Utilizar las matematicas essencialas del GCSE"
+    },
+    "linkingConcepts": {
+      "chapter1": {
+        "subtitle": "(Seccions 1-6)",
+        "title": "Mecanica I"
+      },
+      "chapter2": {
+        "subtitle": "(Seccions 7-16)",
+        "title": "Electricitat e ondas"
+      },
+      "chapter3": {
+        "subtitle": "(Seccions 17-20)",
+        "title": "Mecanica II"
+      },
+      "chapter4": {
+        "subtitle": "(Seccions 21-25)",
+        "title": "Energia e camps"
+      },
+      "chapter5": {
+        "title": "Vectors, fòrças e camps"
+      },
+      "chapter6": {
+        "subtitle": "(Seccions 31-35)",
+        "title": "Gases e exponencials"
+      },
+      "helpText": "Lo libre de concèptes de ligam de fisica d'Isaac",
+      "title": "Ligam de concèptes en fisica preuniversitària"
+    },
+    "modal": {
+      "title": "Libres de competéncias d'Isaac"
+    },
+    "physicsSkills19": {
+      "a2LevelHeading": "Nivèl A2 (o equivalent)",
+      "asLevelHeading": "Nivèl AS (o equivalent)",
+      "chapterCapacitors": "Condensators",
+      "chapterElectricCircuits": "Circuits electrics",
+      "chapterFactSheets": "Fichas d'informacions",
+      "chapterFields": "Camps",
+      "chapterGases": "Gases",
+      "chapterGeneralQuestions": "Questions generalas",
+      "chapterModellingUniverse": "Modelar l'Univèrs",
+      "chapterNuclearPhysics": "Fisica nucleara",
+      "chapterUncertainties": "Incertituds",
+      "helpText": "Lo libre de fisica preuniversitària essencial de mestrejar la fisica Isaac 3ena edicion",
+      "title": "Mestrejar la fisica preuniversitària essenciala"
+    },
+    "preUniMaths2e": {
+      "chapter1Subheading": "(Seccions AD)",
+      "chapter1Title": "Algèbra e Nombre",
+      "chapter2Subheading": "(Seccions EF)",
+      "chapter2Title": "Foncions",
+      "chapter3Subheading": "(Seccions GI)",
+      "chapter4Subheading": "(Seccions JL)",
+      "chapter4Title": "Calcul",
+      "chapter5Subheading": "(Seccions MT)",
+      "chapter5Title": "Aplicacions a las Sciéncias",
+      "helpText": "Lo libre de Matematicas preuniversitàrias de Fisica Isaac per las Sciéncias, 2a edicion."
+    },
+    "stepUpPhys": {
+      "chapter5SubHeading": "(Seccions 35-37)",
+      "chapter6SubHeading": "(Seccions 38-41)",
+      "chapter7SubHeading": "(Seccions 42-48)",
+      "pageHelp": "Lo libre de fisica d'Isaac fins al GCSE",
+      "title": "Pas cap a la GCSE de fisica"
+    }
+  },
+  "button": {
+    "backToGroup": "Tornar a las missions de grop e als tèsts",
+    "collapseSchedule": "Calendari d'esfondrament",
+    "createQuestionDeck": "Crear un jòc de questions",
+    "setNewAssignment": "Definir una mission novèla",
+    "upgradeAccount": "Metètz a jorn mon compte",
+    "viewAllBooks": "Veire totes los libres"
+  },
+  "clientError": {
+    "notFound": {
+      "breadcrumbTitle": "Pagina desconeguda"
+    }
+  },
+  "connections": {
+    "groups": {
+      "activeInfo": "Las adesions activas al grop significan que recebretz de prètzfaches definits a aquel grop pels ensenhaires que i a.",
+      "inactiveInfo": "Definir vòstre abonament inactiu significa que recebretz pas cap de mission definida a aquel grop. Podètz vos tornar definir coma actiu a quin moment que siá.",
+      "leaveTooltip": "Se daissatz un grop recebretz pas mai de notificacions de novèlas assignacions.",
+      "rejoinTooltip": "Se tornatz rejónher un grop veiretz totas las assignacions definidas dempuèi la creacion del grop."
+    },
+    "students": {
+      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the <groupsLink>group management page</groupsLink>."
+    }
+  },
+  "contact": {
+    "events": {
+      "text": "Se volètz ne saber mai sus nòstres eveniments a venir, visitatz nòstra <eventsLink>Pagina d'Eveniments</eventsLink>"
+    },
+    "metaDescription": "Contactatz l'equipa Isaac amb de questions, comentaris o comentaris sus nòstras ressorsas."
+  },
+  "error": {
+    "loadAssignments": "Error al moment de cargar de prètzfaches e/o de jòcs de questions",
+    "noGroupsToAssign": "Avètz pas creat cap de grop per assignar de trabalh. Mercés de <createGroupLink>crear un grop aicí d'en primièr.</createGroupLink>",
+    "verifyEmail": "Poguèt pas verificar l'adreça de corrièl"
+  },
+  "events": {
+    "book": {
+      "bookEvent": "Eveniment de libre"
+    },
+    "details": {
+      "availability": "Disponibilitat:"
+    }
+  },
+  "footer": {
+    "accessibilityLink": "Declaracion d'accessibilitat",
+    "cookieLink": "Politica de cookies",
+    "licenseText": "All materials on this site are licensed under the <creativeCommonsLink><u>Creative Commons license</u></creativeCommonsLink> unless stated otherwise.",
+    "privacyLink": "Politica de confidencialitat",
+    "supportText": "Supported by the <cambridgeLink><u1>University of Cambridge</u1></cambridgeLink> and <ogdenTrustLink><u2>The Ogden Trust</u2>.</ogdenTrustLink><br/>Founded in collaboration with the <dfeLink><u3>Department for Education England</u3></dfeLink>.",
+    "termsLink": "Condicions d'utilizacion"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "explanation": "Utilizar un grand modèl de lenga (LLM) per marcar de questions de tèxte liure còsta d'argent, e avèm un budgèt mensual fix. Per gardar las causas justas, fixam un limit jornalièr per utilizaire per que cadun qu'utiliza la plataforma aja una escasença egala d'utilizar aqueste esturment. Aquò es en linha amb nòstra mission de rendre la sciéncia accessibla a totes."
+    }
+  },
+  "gameboard": {
+    "actions": {
+      "save": "Enregistrar aqueste deck",
+      "saveLogin": "Connectatz-vos per enregistrar aqueste deck"
+    },
+    "add": {
+      "loading": "Apondent de questions..."
+    },
+    "assign": {
+      "allSaved": "Totas las missions son estadas enregistradas amb succès.",
+      "failedTitle": "L'assignacion del jòc de questions a fracassat",
+      "groupFailed": "L'assignacion del jòc de questions a {{groupName}} a fracassat",
+      "savedTitle_one": "Assignacion enregistrada",
+      "savedTitle_other": "Devers enregistrats",
+      "singleGroupSaved": "L'assignacion a {{groupName}} es estada enregistrada amb succès.",
+      "singleSaved": "Aquesta assignacion es estada enregistrada amb succès.",
+      "someSaved": "Qualques missions foguèron enregistradas amb succès."
+    },
+    "builder": {
+      "createError": "Impossible de crear un jòc de questions",
+      "helpText": "Podètz crear d'ensembles de questions personalizats per los assignar a vòstres grops. Cercatz per títol de question o tèma e apondètz fins a dètz questions a un jòc de questions.<br/>Podètz pas modificar un jòc de questions après qu'es estat creat. Trobaretz un ligam jos quin jòc de questions que siá existent per lo duplicar e lo modificar.",
+      "idLabel": "ID del deck de questions",
+      "pageTitle": "Constructor de barras de questions",
+      "saveButton": "Enregistrar lo jòc de questions",
+      "tagCreatedIsaac": "Creat per Isaac",
+      "titlePlaceholder": "per ex. Dinamica de l'annada 12"
+    },
+    "create": {
+      "errorTitle": "Error al moment de la creacion del deck"
+    },
+    "created": {
+      "createAnother": "Crear un autre jòc de questions",
+      "failed": "Vòstre jòc de questions es pas estat creat amb succès.<br/>{{errorMessage}}",
+      "success": "Vòstre jòc de questions es estat creat. Podètz ara lo definir coma una mission, crear un autre jòc de questions o visualizar totes vòstres jòcs de questions.",
+      "viewAll": "Veire totes vòstres jòcs de questions"
+    },
+    "delete": {
+      "failedTitle": "La supression del jòc de questions a fracassat",
+      "fetchFailed": "Impossible de recuperar de prètzfaches per determinar se la supression de la barra de questions es segura.",
+      "idMissing": "L'ID del deck de questions manca : contactatz-nos a prepaus d'aquesta error."
+    },
+    "error": {
+      "fetchError": "Error al moment de la recuperacion del jòc de questions amb id : {{boardId}}"
+    },
+    "link": {
+      "errorTitle": "Lo ligam del deck a vòstre compte a fracassat"
+    },
+    "load": {
+      "errorTitle": "Lo cargament dels jòcs de questions a fracassat"
+    },
+    "notFound": {
+      "breadcrumb": "Deck de questions",
+      "error": "O planhèm, foguèrem pas capables de trobar un jòc de questions amb l'id",
+      "title": "Lo quasèrn de questions pas trobat"
+    },
+    "save": {
+      "error": "Error al moment de l'enregistrament del jòc de questions",
+      "saveLabel": "Enregistrar lo deck",
+      "unsaveLabel": "Desenregistrar lo deck",
+      "unsaveOwnerConfirm": "Sètz segur que volètz desregistrar vòstre deck '{{boardTitle}}' de vòstre compte ? Lo poiretz tornar trobar sonque se l'avètz definit coma mission."
+    },
+    "table": {
+      "nameHeader": "Nom del deck de questions"
+    },
+    "title": {
+      "fallback": "Deck de questions"
+    },
+    "unlink": {
+      "errorTitle": "La supression del pont a fracassat",
+      "successMessage": "Lo deck es estat suprimit de vòstres decks enregistrats.",
+      "successTitle": "Deck suprimit"
+    }
+  },
+  "gameboards": {
+    "page": {
+      "emptyState": "Avètz pas de jòcs de questions a visualizar.",
+      "help": "Un resumit de vòstres jòcs de questions",
+      "summary": "xxxxxShowing <strongTotal>{{totalCount}}</strongTotal> question decks, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
+      "title": "Mos decks salvats"
+    }
+  },
+  "glossary": {
+    "metaDescription": "Un glossari de mots e locucions importants utilizats en matematicas, fisica, quimia e biologia."
+  },
+  "groups": {
+    "editor": {
+      "title": "Gerir lo grop"
+    },
+    "managers": {
+      "permissions": {
+        "note": "Los gestionaris suplementaris veiràn pas automaticament de donadas de nòtas detalhadas levat se los escolans lor donan accès."
+      },
+      "remove": {
+        "confirm": "Sètz segur que volètz suprimir aqueste professor del grop ?\n\nPòdon encara aver accès a las donadas dels escolans fins que los escolans revoquen la connexion dempuèi lor pagina \"Mon compte\"."
+      }
+    },
+    "progress": {
+      "backLink": "Tornar a l'avançament de l'assignacion",
+      "breadcrumbTitle": "Progrès de l'assignacion",
+      "manageAssignmentsLink": "Gerir las missions",
+      "manageTestsLink": "Gerir los tèsts"
+    }
+  },
+  "homepage": {
+    "dashboard": {
+      "ariaLabel": "Tablèu de bòrd"
+    },
+    "events": {
+      "empty": "Cap d'eveniment disponible. Tornatz lèu!",
+      "error": "I a agut una error al moment del cargament de la lista dels eveniments. Ensajatz tornar mai tard!"
+    },
+    "hero": {
+      "description": "De l’escòla a l’universitat – <b>Isaac</b> es una plataforma gratuita pels ensenhaires e los escolans per l’utilizar dins la classa, pels devers e per la revision.",
+      "headline": "<highlight>Master de matèrias de sciéncias</highlight> en resòlvent de problèmas",
+      "studentContent": "Abordar de questions interactivas, explorar de nivèls de dificultat variables, e afortir las competéncias de resolucion de problèmas amb de guidas de concèptes, de leiçons vidèo e d'eveniments.",
+      "studentLabel": "ESTUDIANTS",
+      "studentTag": "etiqueta de carta d'estudiant",
+      "studentTitle": "Bastir la confiéncia dins la sciéncia a travèrs la practica",
+      "teacherContent": "Assignar, seguir e gerir lo progrès dels escolans amb aisança – ideal pels trabalhs de classa, los devers o la revision. Fisat per mai de 3500 ensenhaires.",
+      "teacherLabel": "PROFESORS",
+      "teacherTag": "etiqueta de carta de professor",
+      "teacherTitle": "Sosténer los escolans a desvolopar de competéncias e a obténer de resultats mai nauts"
+    },
+    "news": {
+      "empty": "Pas de novèlas disponiblas. Tornatz lèu!",
+      "error": "I a agut una error al moment del cargament de la lista d'informacions. Ensajatz tornar mai tard!",
+      "moreLink": "Mai de novèlas",
+      "title": "Actualitats e foncionalitats"
+    },
+    "subjects": {
+      "ariaLabel": "Explorar {{stage}} {{subject}}",
+      "title": "Explora e aprene!"
+    }
+  },
+  "label": {
+    "assignedDate": "Assignat <strong>{{assignedDate}}</strong>",
+    "book": "Libre",
+    "bookCoverAltText": "Portada del libre.",
+    "challenge": "Desfís",
+    "chemistry": "Quimia",
+    "createGroupDescription": "Creatz e geritz de grops de classa, e partejatz-los amb los collègas.",
+    "exploreBySubject": "Explorar per subjècte",
+    "faqDescription": "Responsas a vòstras questions e guidas de cossí far.",
+    "parts": "Pèças",
+    "physics": "Fisica",
+    "practice": "Practica",
+    "questionDecksDescription": "Una seleccion de nòstras questions organizadas per tèma.",
+    "skillsMasteryBooksDescription": "Crompatz un de nòstres libres de Mestresa de las Competéncias al prètz.",
+    "subject": "Subjècte"
+  },
+  "meta": {
+    "description": "Join Isaac Science - ressorsas d'aprendissatge gratuitas de fisica, quimia, biologia e matematicas pels ans 7 a 13 concebuts per d'especialistas de matèrias de l'Universitat de Cambridge.",
+    "title": "Isaac Fisica"
+  },
+  "navigation": {
+    "about": "A prepaus d'Isaac",
+    "admin": {
+      "contentErrors": "Errors de contengut",
+      "eventAdmin": "Administrator d'eveniments",
+      "statistics": "Estatisticas del sit",
+      "tools": "Aisinas d'administracion"
+    },
+    "books": "Libres",
+    "explore": {
+      "stageTitle": "Explorar per l'estadi d'aprendissatge"
+    },
+    "header": {
+      "logoAlt": "The Isaac Science logo; a green hexagon with the word 'Isaac' overlaid in white text."
+    },
+    "help": {
+      "contact": "Contactatz-nos",
+      "problemSolving": "Guida de resolucion de problèmas",
+      "studentFaq": "FAQ dels escolans"
+    },
+    "profile": {
+      "accountHeading": "COMPTE",
+      "ariaTitle": "Mon Isaac ({{taskCount}} prètzfaches a far)",
+      "notLoggedIn": "Sètz pas actualament connectat. Connectatz-vos o inscrivètz-vos gratuitament çai-jos!",
+      "studentHeading": "ESTUDIANT",
+      "title": "Mon Isaac"
+    },
+    "quickSwitch": {
+      "label": "Passatge rapid a"
+    }
+  },
+  "news": {
+    "loadMoreButton": "Cargar de novèlas mai ancianas",
+    "metaDescription": "Obtenètz totas las darrièras novèlas sus Isaac Science.",
+    "title": "Nòvas"
+  },
+  "progress": {
+    "bookAttemptedOutOf": "{{attempted}} ensajat de sortir de {{total}}",
+    "bookCorrectOfTotal": "{{correct}} de {{total}}",
+    "bookCorrectOutOf": "{{correct}} corrècte sus {{total}}",
+    "bookQuestionLabel": "{{bookTitle}} preguntas",
+    "charts": {
+      "byDifficultyTitle": "Per dificultat",
+      "subjectHeader": "Preguntas de {{subject}}"
+    },
+    "isaacBooksDescription": "De questions completadas corrèctament, contra de questions ensajadas per cadun de nòstres <booksLink>libres</booksLink>.",
+    "isaacBooksTitle": "Los libres d'Isaac",
+    "pageTitle": "Mon progrès",
+    "partBreakdown": {
+      "totalAttemptedLabel": "Total d'ensags",
+      "totalCorrectLabel": "Corrècte total",
+      "totalSubtitle": "(total)"
+    },
+    "questionAttemptsCaption": "Ensags de questions",
+    "settings": {
+      "colourBlindLabel": "Mòde òrb de colors",
+      "completionModeLabel": "Mòde d'afichatge de terminason"
+    },
+    "streak": {
+      "tooltip": "La seguida setmanièra indica lo nombre de setmanas consecutivas que sètz estat actiu sus Isaac.<br/>Respondètz al mens <strong>dètz partidas de question</strong> corrèctament per setmana per emplenar vòstra barra de progrès quotidian e aumentar vòstra rasca!"
+    }
+  },
+  "questionFinder": {
+    "difficulty": {
+      "challengeC1": "C1 pòt èsser ensajat prèp del començament de vòstre cors",
+      "challengeC3": "C3 demanda mai de creativitat e poiriá èsser ensajat mai tard dins un cors.",
+      "challengeIntro": "Las questions de desfís son resoludas en combinant de concèptes multiples e de creativitat.",
+      "practiceIntro": "Las questions d'entraïnament vos permeton d'aplicar dirèctament una idèa.",
+      "practiceP1": "P1 cobrís la revision d'una estapa precedenta o de tèmas prèp del començament d'un cors",
+      "practiceP3": "P3 cobrís de subjèctes seguents.",
+      "title": "Nivèls de dificultat"
+    },
+    "filteredIntro": "Las questions mostradas sus aquesta pagina son estadas filtradas per afichar sonque las que son pertinentas per {{contextLabel}}. Podètz consultar totas las questions <allQuestionsLink>aicí</allQuestionsLink>.",
+    "filters": {
+      "difficultyHelp": "Ne saber mai suls nivèls de dificultat",
+      "header": "Filtrar las questions per",
+      "statusInProgressIcon": "En cors"
+    },
+    "intro": "Utilizatz nòstre cercaire de questions per trobar de questions per ensajar sus de subjèctes de fisica, matematicas, quimia e biologia. Utilizatz nòstras questions d'entraïnament per venir fluent dins los tèmas e puèi menatz vòstra compreneson e vòstras competéncias de resolucion de problèmas al nivèl seguent amb nòstras questions de desfís.",
+    "metaDescription": "Trobar de questions de fisica, matematicas, quimia e biologia per tèma e dificultat.",
+    "pageHelp": "Podètz trobar una question en seleccionant los domenis d'interès, l'estadi e las dificultats.<br/>Podètz seleccionar mai d'una dintrada dins cada zòna.",
+    "search": {
+      "addSelectionsButton": "Apondre de seleccions al jòc de questions",
+      "placeholder": "p. ex. Òme vs. Caval",
+      "showBookmarked": "Afichar sonque marcat",
+      "showFastTrack": "Afichar FastTrack solament"
+    },
+    "title": "Cercaire de questions"
+  },
+  "questions": {
+    "validation": {
+      "numericGuide": "Per ajuda, consultatz nòstre <numericGuideLink>guida per respondre a las questions numericas</numericGuideLink>."
+    }
+  },
+  "search": {
+    "shortcuts": {
+      "decksByTopic": {
+        "summary": "De questions preparats per l'utilizar dins la classa o los devers.",
+        "title": "{{stage}} {{subject}} decks de questions per tèma"
+      },
+      "subjectDecks": {
+        "title": "{{subject}} questions per tèma"
+      }
+    }
+  },
+  "status": {
+    "allAttempted": "Tot ensag",
+    "alreadyHaveTeacherAccount": "Avètz ja un compte de professor",
+    "datePassed": "(passat)",
+    "fullyCorrect": "Totalament corrècte"
+  },
+  "support": {
+    "student": {
+      "metaDescription": "Trobatz de responsas a vòstras questions sus Isaac Science dins nòstras FAQ pels escolans."
+    },
+    "teacher": {
+      "metaDescription": "Trobatz de responsas a vòstras questions sus Isaac Science dins nòstras FAQ pels ensenhaires."
+    }
+  },
+  "tests": {
+    "feedback": {
+      "overviewTitle": "Apercebut: {{quizTitle}}"
+    },
+    "pageTitle": "Mos tèsts",
+    "set": {
+      "title": "Definir / gerir los tèsts"
+    }
+  },
+  "title": {
+    "assignmentProgress": "Progrès de l'assignacion",
+    "createGroup": "1. Crear un grop",
+    "myAccount": "Mon compte",
+    "myAssignments": "Mas deversas",
+    "myBookmarks": "Mos marcapaginas",
+    "mySavedDecks": "Mos decks salvats",
+    "practiceTests": "Espròvas de practica",
+    "preUniversityMathematicsForSciences": "Matematicas preuniversitàrias per las sciéncias",
+    "programmes": "Programas",
+    "setManageWork": "Definir / gerir lo trabalh",
+    "teacherFaq": "FAQ del professor",
+    "teacherFeatures": "Caracteristicas del professor",
+    "tutorFaq": "FAQ del tutor",
+    "tutorFeatures": "Caracteristicas del tutor",
+    "upcomingEvents": "Eveniments a venir"
+  }
+}
