@@ -1,1 +1,525 @@
-{}
+{
+  "account": {
+    "betaFeatures": {
+      "hideAttemptsHelp": "This feature lets you answer questions again, even if you've answered them before. It's useful if you are reviewing a topic before a test or exam."
+    },
+    "context": {
+      "showContentLabel": "Show me content for...",
+      "tooltipStudent": "Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.",
+      "tooltipTutor": "Add a stage and examination board for each qualification you are teaching.<br/>On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching."
+    },
+    "country": {
+      "description": "The country you go to school in. This helps us personalise the platform for you."
+    },
+    "deletion": {
+      "title": "Delete account"
+    },
+    "emailPreferences": {
+      "assignmentsDescription": "Receive notifications when your teacher sets you work. These are sent as needed by your teacher.",
+      "eventsDescription": "Find out about upcoming events designed to support your learning and professional development.",
+      "frequencyNote": "<strong>Frequency</strong>: expect one email per term for News. Assignment notifications will be sent as needed by your teacher.",
+      "newsDescription": "Be the first to hear about new features, challenges, topics, and improvements on the platform. Plus, get helpful tips on making the most of new tools."
+    },
+    "linkedAccounts": {
+      "title": "Linked accounts"
+    },
+    "mobileHint": "Update your Ada Computer Science account, or",
+    "preferences": {
+      "emailFrequency": "<b>Frequency</b>: expect one email per term for News. Assignment notifications will be sent as needed by your teacher."
+    },
+    "requiredInfo": {
+      "emailFrequencyNote": "<strong>Frequency</strong>: expect one email per term for News. Assignment notifications will be sent as needed by your teacher."
+    },
+    "review": {
+      "intro": "We use this information to show you relevant content. We recommend checking your details occasionally and updating them if anything has changed.",
+      "privacyPolicy": "Updating this information helps us continue to show you relevant content. Full details on how we use your personal information can be found in our <privacyPolicyLink>privacy policy</privacyPolicyLink>."
+    },
+    "school": {
+      "description": "This helps us measure our reach and impact.",
+      "notAssociated": "Not associated with a UK school"
+    },
+    "title": "Account"
+  },
+  "assignment": {
+    "fallbackTitle": "Filter Generated Quiz",
+    "fetchError": {
+      "title": "Error fetching quiz with id: {{gameboardId}}"
+    },
+    "notFound": {
+      "breadcrumbTitle": "Quiz",
+      "title": "Quiz not found"
+    }
+  },
+  "assignments": {
+    "add": {
+      "fromTitle": "Add a quiz from ..."
+    },
+    "createQuizButton": "Create a quiz",
+    "delete": {
+      "errorTitle": "Quiz unassignment failed",
+      "successMessage": "You have successfully unassigned the quiz",
+      "successTitle": "Quiz unassigned"
+    },
+    "display": {
+      "currentlyAssigned": "Quiz currently assigned to:",
+      "pendingDescription": "These quizzes are scheduled to begin at a future date. On the morning of the scheduled date, students will be able to see the quiz, and will receive a notification email.",
+      "pendingTitle": "Pending quiz assignments:"
+    },
+    "emptyBoardsAlert": "You have no quizzes to assign. Use one of the options above to find one.",
+    "emptyGroupsTitle": "You need a student group before you can assign a quiz to students.",
+    "emptyState": "There are no quizzes to display for the selected filters.",
+    "filter": {
+      "byName": "Filter quizzes by name"
+    },
+    "modal": {
+      "unknownDeck": "Unknown quiz",
+      "unknownGameboard": "Unknown quiz (may belong to another user)"
+    },
+    "pageHelp": "Use this page to set quizzes to your groups. You can set any quiz you have saved to your account.<br/>Students in the group will be emailed when you set a new quiz.",
+    "pageTitle": "Assigned to me",
+    "pagination": {
+      "showingInfo": "Showing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes."
+    },
+    "progress": {
+      "groupTab": {
+        "overview": "Group assignment overview"
+      },
+      "pageTitle": "Markbook"
+    },
+    "schedule": {
+      "preview": {
+        "hideButton": "Hide quiz preview"
+      },
+      "unknownDeck": "Unknown quiz (may belong to another user)"
+    },
+    "title": "Quizzes",
+    "viewPremadeQuizzes": "View pre-made quizzes",
+    "yourQuizzes": "Your quizzes"
+  },
+  "auth": {
+    "ageCheckFailed": {
+      "ageRestriction": "Unfortunately, we aren't able to offer accounts to students under 13 years old.",
+      "freeAccessNote": "<b>However, you can still access the whole site for free!</b> However you will not be able to track your progress.",
+      "returnButton": "Go home"
+    },
+    "closeButton": "Close",
+    "dob": {
+      "helpText": "We ask for your month and year of birth so we can give you the right experience for your age. Some features work differently for younger users."
+    },
+    "emailInput": {
+      "studentHint": "This will be the email address you use to log in.",
+      "teacherHint": "This will be visible to your students. We recommend using your school email address."
+    },
+    "logoAlt": "Ada Computer Science Logo",
+    "metaDescription": "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.",
+    "notLinked": {
+      "enableSignIn": "If you've not yet enabled sign-in with {{provider}}, first log in with another method (e.g. email and password). Then, on <accountLink>your Account page</accountLink>, on \"Security\", next to \"{{providerSetting}}\", click \"Link\"."
+    },
+    "register": {
+      "heading": "How would you like to sign up?",
+      "homeButton": "Go home",
+      "signupChoiceDescription": "You will have access to the same content no matter how you sign up.",
+      "signupChoiceTitle": "How would you like to sign up?"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageRequirement": "We can only create accounts for people over 13 years old.",
+        "underLabel": "Under 13"
+      }
+    },
+    "registrationSuccess": {
+      "nextButton": "Continue"
+    },
+    "teacherConnect": {
+      "codeHelp": "Enter the code given by your teacher to join a group",
+      "groupInfo": "This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <learnMoreLink>Learn more</learnMoreLink>",
+      "skipNote": "You can always skip this now and connect to your teacher later."
+    }
+  },
+  "banners": {
+    "research": {
+      "body": "We record your use of this site and the information you enter to support research into online learning at the University of Cambridge and the Raspberry Pi Foundation. Full details are in the <privacyLink>privacy policy</privacyLink>."
+    }
+  },
+  "button": {
+    "deleteQuiz": "Delete quiz",
+    "exploreAllTopics": "Explore all topics",
+    "goToIsaacScience": "Go to Isaac Science",
+    "upgradeToTeacherAccount": "Upgrade to a teacher account",
+    "viewMarkbook": "View markbook"
+  },
+  "clientError": {
+    "notFound": {
+      "breadcrumbTitle": "404"
+    }
+  },
+  "connections": {
+    "groups": {
+      "activeInfo": "Active group memberships mean you can receive assignments from the teachers in that group.",
+      "inactiveInfo": "Setting your membership inactive means you won’t receive any assignments from the teachers in that group. You can set yourself as active again at any time."
+    },
+    "students": {
+      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the <groupsLink>Manage groups</groupsLink> page."
+    }
+  },
+  "contact": {
+    "metaDescription": "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!"
+  },
+  "contextPicker": {
+    "differentSourceExplanation": "The stage was specified by {{stageSource}} and the exam board by {{examBoardSource}}.",
+    "sameSourceExplanation": "The stage and exam board were specified by {{stageSource}}."
+  },
+  "cyberExplorers": {
+    "welcome": {
+      "imageAlt": "A cartoon sketch of Cyber City"
+    }
+  },
+  "events": {
+    "details": {
+      "availability": "Availability",
+      "when": "When"
+    }
+  },
+  "examSpecifications": {
+    "gcses": "GCSE"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "explanation": "Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget. To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool. This is in line with our mission to make computer science accessible to all."
+    },
+    "infoAlert": {
+      "consentFaq": "See our <faqLink>FAQs</faqLink> for more information.",
+      "loggedOutFaq": "You can read more in our <faqLink>FAQs</faqLink>."
+    },
+    "llmFeedback": {
+      "faqInfo": "Find out more in our <faqLink>FAQs</faqLink>."
+    }
+  },
+  "gameboard": {
+    "actions": {
+      "save": "Save to My quizzes",
+      "saveLogin": "Log in to save to My quizzes"
+    },
+    "add": {
+      "loading": "Adding quiz..."
+    },
+    "assign": {
+      "failedTitle": "Quiz assignment failed",
+      "groupFailed": "Quiz assignment to {{groupName}} failed",
+      "savedMessage": "Quiz assigned successfully.",
+      "savedTitle": "Quiz assigned",
+      "someGroupsSaved": "The quiz was assigned to some groups successfully."
+    },
+    "builder": {
+      "createError": "Unable to create quiz",
+      "helpText": "You can create custom question sets to assign to your groups. Search by question title or topic and add up to ten questions to a quiz.<br/>You cannot modify a quiz after it has been created. You'll find a link underneath any existing quiz to duplicate and edit it.",
+      "idLabel": "Quiz ID",
+      "pageTitle": "Quiz builder",
+      "saveButton": "Save quiz",
+      "tagConfidenceResearch": "Confidence research board",
+      "tagCreatedAda": "Created by Ada",
+      "titlePlaceholder": "e.g. Year 12 Network components"
+    },
+    "create": {
+      "errorTitle": "Error creating quiz"
+    },
+    "created": {
+      "createAnother": "Create another quiz",
+      "failed": "Your quiz was not successfully created.<br/>{{errorMessage}}",
+      "success": "Your quiz has been created. You can now set it as an assignment, create another quiz or view all of your quizzes.",
+      "viewAll": "View all of your quizzes"
+    },
+    "delete": {
+      "failedTitle": "Quiz deletion failed",
+      "fetchFailed": "Could not fetch assignments to determine if the quiz deletion is safe.",
+      "idMissing": "Quiz ID is missing: please contact us about this error."
+    },
+    "error": {
+      "fetchError": "Error fetching quiz with id: {{boardId}}"
+    },
+    "link": {
+      "errorTitle": "Linking the quiz to your account failed"
+    },
+    "load": {
+      "errorTitle": "Loading quizzes failed"
+    },
+    "notFound": {
+      "breadcrumb": "Quiz",
+      "error": "We're sorry, we were not able to find a quiz with the id",
+      "title": "Quiz not found"
+    },
+    "save": {
+      "error": "Error saving quiz",
+      "saveLabel": "Save quiz",
+      "unsaveLabel": "Unsave quiz",
+      "unsaveOwnerConfirm": "Are you sure you want to unsave your quiz '{{boardTitle}}' from your account? You'll only be able to find it again if you've set it as an assignment."
+    },
+    "table": {
+      "nameHeader": "Quiz name"
+    },
+    "title": {
+      "fallback": "Filter Generated Quiz"
+    },
+    "unlink": {
+      "errorTitle": "Quiz removal failed",
+      "successMessage": "You have successfully unlinked your account from this quiz.",
+      "successTitle": "Quiz removed"
+    }
+  },
+  "gameboards": {
+    "page": {
+      "emptyState": "You have no quizzes to view.",
+      "help": "A summary of your quizzes",
+      "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> quizzes, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
+      "title": "My quizzes"
+    }
+  },
+  "glossary": {
+    "metaDescription": "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!"
+  },
+  "groups": {
+    "create": {
+      "nameDescription": "Students will see this group name when they are invited to join."
+    },
+    "editor": {
+      "title": "Group details"
+    },
+    "managers": {
+      "permissions": {
+        "note": "Additional teachers will not automatically see detailed mark data unless students give them access."
+      },
+      "remove": {
+        "confirm": "Are you sure you want to remove this teacher from the group?\n\nThey may still have access to student data until students revoke the connection from their \"My account\" page."
+      }
+    },
+    "progress": {
+      "breadcrumbTitle": "Markbook",
+      "manageAssignmentsLink": "Quizzes",
+      "manageTestsLink": "Tests"
+    }
+  },
+  "homepage": {
+    "account": {
+      "benefits": "An Ada CS account gets you access to lots of useful tools. Organise students into groups, set self-marking assignments, and track progress to identify learning opportunities.",
+      "free": "It’s totally free to use Ada CS, with or without an account.",
+      "noAccount": "You can use any of our learning resources wherever you are, without an Ada CS account.",
+      "title": "Manage workload and track progress with an Ada CS account"
+    },
+    "examBoards": {
+      "description": "We've organised our learning resources so they can be easily used, wherever you are.",
+      "internationalAdvanced": "<b>Advanced:</b> Aimed at students aged 16 to 19, expands on concepts learned in the Core curriculum.",
+      "internationalCore": "<b>Core:</b> Aimed at students aged 14 to 16, with no previous knowledge needed.",
+      "internationalDescription": "Learning resources tailored to prior knowledge and learning age groups:",
+      "internationalTitle": "Teaching outside the UK",
+      "seeCurriculum": "See the Ada CS curriculum",
+      "seeMore": "See more",
+      "seeUkSpecifications": "See UK specifications",
+      "title": "Exam board alignment",
+      "ukDescription": "Find resources tailored to the specific learning levels and exam boards in the UK:",
+      "ukEngland": "<b>England:</b> GCSE and A Level",
+      "ukScotland": "<b>Scotland:</b> National 5, Higher, and Advanced Higher",
+      "ukTitle": "In the UK",
+      "ukWales": "<b>Wales:</b> GCSE and A Level"
+    },
+    "explore": {
+      "studentsButton": "Explore Ada CS for students",
+      "teachersButton": "Explore Ada CS for teachers"
+    },
+    "features": {
+      "examAlignment": "Specific exam alignment for the UK and adaptable to use worldwide",
+      "feedback": "Instant feedback with self-marking quizzes",
+      "freeResources": "Free computer science resources for students aged 14 to 19",
+      "instantFeedback": "Instant feedback with self-marking quizzes",
+      "markbook": "Track progress in your personal markbook",
+      "resources": "Free computer science resources for students aged 11 to 19"
+    },
+    "hero": {
+      "collaborationLabel": "in collaboration with",
+      "dashboardButton": "Go to My Ada Overview",
+      "title": "The free learning platform for computing teachers and students"
+    },
+    "metaDescription": "Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!",
+    "resources": {
+      "challenges": "Termly student challenges to test skills and win prizes",
+      "collaboration": "Created in collaboration with the University of Cambridge",
+      "conceptPages": "Clear concept pages for every key topic",
+      "title": "Resources you can trust",
+      "topics": "More than 50 curriculum-aligned topics covering the breadth of computer science"
+    },
+    "teachLearn": {
+      "title": "Teach and learn about computer science with confidence"
+    },
+    "techfirst": {
+      "contentDescription": "This includes new content on artificial intelligence, cybersecurity, quantum computing, engineering biology, semiconductors, and advanced connectivity technologies, designed specifically for learners aged 11–14.",
+      "exploreTopicsButton": "Explore the new topics",
+      "partnershipDescription": "Ada Computer Science has partnered with the Department for Digital, Culture, Media and Sport to expand our content and features.",
+      "title": "Ada CS is the new TechFirst learning platform"
+    },
+    "testimonials": {
+      "studentQuote": "“ I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding. ”",
+      "teacherAttribution": "– Computer science teacher",
+      "teacherQuote": "”Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it’s free!”"
+    },
+    "tools": {
+      "insights": "Identify knowledge gaps and tailor teaching with class and student progress insights",
+      "questions": "Over 1000 questions that provide instant feedback to students",
+      "selfMarking": "Self-marking assessments that save time and support independent learning and revision",
+      "studentProgress": "Students see their own progress over time and discover where to improve",
+      "title": "Tools to aid learning"
+    }
+  },
+  "label": {
+    "computerScienceStudentTestimonial": "– Computer science student",
+    "examBoard": "Exam Board",
+    "faqMoreInfo": "For more information, read our <faqLink>FAQs</faqLink>.",
+    "fundedByUkGovernment": "Funded by the UK Government",
+    "raspberryPiWebsite": "Raspberry Pi website",
+    "techFirstLogo": "The TechFirst logo"
+  },
+  "listViews": {
+    "footer": {
+      "socialLinks": "Get social"
+    },
+    "shortcut": {
+      "label": "Shortcut"
+    }
+  },
+  "markbook": {
+    "title": "Markbook"
+  },
+  "meta": {
+    "description": "Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions.",
+    "footer": {
+      "licenseText": "All teaching materials on this site are available under a <licenseLink>CC BY-NC-SA 4.0</licenseLink> license, except where otherwise stated.",
+      "logoAlt": "Ada Computer Science homepage"
+    },
+    "title": "Ada Computer Science"
+  },
+  "navigation": {
+    "admin": {
+      "events": "Event admin",
+      "siteStatistics": "Site statistics"
+    },
+    "resources": {
+      "specifications": "Specifications"
+    },
+    "students": {
+      "challenges": "Challenges",
+      "landingPage": "Ada CS for students",
+      "stemSmart": "STEM SMART",
+      "title": "Students"
+    },
+    "teachers": {
+      "landingPage": "Ada CS for teachers",
+      "mentoring": "Mentoring programme",
+      "title": "Teachers"
+    },
+    "toggleSearch": "Toggle search bar"
+  },
+  "news": {
+    "loadMoreButton": "Load more",
+    "metaDescription": "Get all the latest news about Ada Computer Science, and read the stories of recent graduates who now have exciting careers in computer science.",
+    "title": "Tips, tools & support"
+  },
+  "progress": {
+    "pageTitle": "Progress",
+    "questionAttemptsCaption": "activity",
+    "questionAttemptsOverTime": "Question attempts over time",
+    "settings": {
+      "showPercentagesLabel": "Show mark as percentages"
+    }
+  },
+  "questionFinder": {
+    "difficulty": {
+      "categoriesIntro": "We split our questions into two categories:",
+      "challengeCategory": "Challenge questions combine multiple concepts",
+      "practiceCategory": "Practice questions focus on one concept",
+      "title": "What do the difficulty levels mean?"
+    },
+    "emptyState": "Please select and apply filters.",
+    "filterNoResults": "Could not load any results matching the requested filters.",
+    "filters": {
+      "applyButton": "Apply filters",
+      "clearAll": "Clear all",
+      "difficultyHelp": "What do the difficulty levels mean?",
+      "filterIconAlt": "Filter",
+      "statusAllIncorrect": "All incorrect",
+      "statusTryAgain": "Try again"
+    },
+    "metaDescription": "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.",
+    "noMatchingResults": "No results match the requested filters.",
+    "results": {
+      "examBoardColumn": "Exam boards"
+    },
+    "search": {
+      "addSelectionsButton": "Add selections to quiz",
+      "placeholder": "e.g. Creating an AST"
+    },
+    "searchLabel": "Search for a question",
+    "searchPlaceholder": "e.g. Creating an AST",
+    "title": "Questions"
+  },
+  "questions": {
+    "quickQuestion": {
+      "title": "Try it yourself!"
+    }
+  },
+  "revision": {
+    "challenge": {
+      "complete": "Challenge complete!",
+      "ended": "Challenge over!",
+      "progress": "{{correctCount}} correct, {{remainingCount}} to go!"
+    }
+  },
+  "status": {
+    "checkBackSoon": "Check back soon!",
+    "noActiveChallenges": "There are no active challenges at the moment."
+  },
+  "support": {
+    "student": {
+      "metaDescription": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!"
+    },
+    "teacher": {
+      "metaDescription": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!"
+    }
+  },
+  "table": {
+    "examBoard": "Exam board"
+  },
+  "tests": {
+    "feedback": {
+      "groupResultsTitle": "Group results"
+    },
+    "filters": {
+      "after": "after",
+      "before": "before",
+      "dueDateLabel": "Due",
+      "filterByDueDate": "Filter by due date",
+      "filterBySetDate": "Filter by set date",
+      "on": "on",
+      "startDateLabel": "Starting"
+    },
+    "pageTitle": "Tests",
+    "set": {
+      "title": "Tests"
+    },
+    "view": {
+      "filterPlaceholder": "Filter tests by name..."
+    }
+  },
+  "title": {
+    "curriculum": "A full curriculum of topics",
+    "examSpecifications": "Exam specifications",
+    "needHelp": "Need help?",
+    "nextChallenge": "The next challenge",
+    "onlineCourses": "Online courses",
+    "projects": "Projects",
+    "reviewYourMarkbook": "Review your markbook",
+    "studentChallenges": "Student challenges",
+    "studentSupport": "Student support",
+    "support": "Support",
+    "teacherMentoring": "Teacher mentoring",
+    "teachingOrder": "Suggested teaching order",
+    "topics": "Topics"
+  }
+}
