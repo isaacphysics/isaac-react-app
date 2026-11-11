@@ -40,6 +40,16 @@
     },
     "title": "Account"
   },
+  "advancers": {
+    "join": {
+      "freeNote": "All of our resources are completely free. You can leave the programme at any time.",
+      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the Ada advancers group and participate in the programme.",
+      "loggedIn": "<strong><joinLink>Join the {{groupName}} group</joinLink></strong> to participate in the programme so that we can assign you the quizzes weekly."
+    },
+    "page": {
+      "title": "Ada advancers programme"
+    }
+  },
   "assignment": {
     "fallbackTitle": "Filter Generated Quiz",
     "fetchError": {
@@ -98,7 +108,6 @@
   },
   "auth": {
     "ageCheckFailed": {
-      "ageRestriction": "Unfortunately, we aren't able to offer accounts to students under 13 years old.",
       "freeAccessNote": "<b>However, you can still access the whole site for free!</b> However you will not be able to track your progress.",
       "returnButton": "Go home"
     },
@@ -116,19 +125,9 @@
       "enableSignIn": "If you've not yet enabled sign-in with {{provider}}, first log in with another method (e.g. email and password). Then, on <accountLink>your Account page</accountLink>, on \"Security\", next to \"{{providerSetting}}\", click \"Link\"."
     },
     "register": {
-      "heading": "How would you like to sign up?",
       "homeButton": "Go home",
       "signupChoiceDescription": "You will have access to the same content no matter how you sign up.",
       "signupChoiceTitle": "How would you like to sign up?"
-    },
-    "registration": {
-      "ageCheck": {
-        "ageRequirement": "We can only create accounts for people over 13 years old.",
-        "underLabel": "Under 13"
-      }
-    },
-    "registrationSuccess": {
-      "nextButton": "Continue"
     },
     "teacherConnect": {
       "codeHelp": "Enter the code given by your teacher to join a group",
@@ -312,7 +311,6 @@
       "internationalDescription": "Learning resources tailored to prior knowledge and learning age groups:",
       "internationalTitle": "Teaching outside the UK",
       "seeCurriculum": "See the Ada CS curriculum",
-      "seeMore": "See more",
       "seeUkSpecifications": "See UK specifications",
       "title": "Exam board alignment",
       "ukDescription": "Find resources tailored to the specific learning levels and exam boards in the UK:",
@@ -328,8 +326,6 @@
     "features": {
       "examAlignment": "Specific exam alignment for the UK and adaptable to use worldwide",
       "feedback": "Instant feedback with self-marking quizzes",
-      "freeResources": "Free computer science resources for students aged 14 to 19",
-      "instantFeedback": "Instant feedback with self-marking quizzes",
       "markbook": "Track progress in your personal markbook",
       "resources": "Free computer science resources for students aged 11 to 19"
     },
