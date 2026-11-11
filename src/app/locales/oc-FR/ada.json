@@ -40,6 +40,16 @@
     },
     "title": "Compte"
   },
+  "advancers": {
+    "join": {
+      "freeNote": "Totas nòstras ressorsas son completament gratuitas. You can leave the programme at any time.",
+      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the Ada advancers group and participate in the programme.",
+      "loggedIn": "<strong><joinLink>Inscrivitz-vos al {{groupName}} grop</joinLink></strong> per participar al programa per que poscam signar rapidament la setmana."
+    },
+    "page": {
+      "title": "Ada advancers programme"
+    }
+  },
   "assignment": {
     "fallbackTitle": "Quiz generat pel filtre",
     "fetchError": {
@@ -98,7 +108,6 @@
   },
   "auth": {
     "ageCheckFailed": {
-      "ageRestriction": "Malastrosament, sèm pas capables d'ofrir de comptes als escolans de mens de 13 ans.",
       "freeAccessNote": "<b>Pasmens, podètz totjorn accedir al sit entièr gratuitament !</b> Pasmens, poiretz pas seguir vòstre progrès.",
       "returnButton": "Anatz a l'ostal"
     },
@@ -116,19 +125,9 @@
       "enableSignIn": "S'avètz pas encara activat la connexion amb {{provider}}, connectatz-vos d'en primièr amb un autre metòde (per exemple corrièl e senhal). Puèi, sus <accountLink>vòstra pagina de compte</accountLink>, sus « Seguretat », a costat de «{{providerSetting}}», clicatz sus « Ligam »."
     },
     "register": {
-      "heading": "Cossí voldriás t'inscriure?",
       "homeButton": "Anatz a l'ostal",
       "signupChoiceDescription": "Aurètz accès al meteis contengut quina que siá la manièra que vos inscrivètz.",
       "signupChoiceTitle": "Cossí voldriás t'inscriure?"
-    },
-    "registration": {
-      "ageCheck": {
-        "ageRequirement": "Podèm crear de comptes que per de personas de mai de 13 ans.",
-        "underLabel": "Mens de 13 ans"
-      }
-    },
-    "registrationSuccess": {
-      "nextButton": "Contunhar"
     },
     "teacherConnect": {
       "codeHelp": "Picatz lo còde donat per vòstre professor per rejónher un grop",
@@ -312,7 +311,6 @@
       "internationalDescription": "Ressorsas d'aprendissatge adaptadas a de coneissenças prealablas e de grops d'edat d'aprendissatge:",
       "internationalTitle": "Ensenhar en defòra del Reialme Unit",
       "seeCurriculum": "Veire lo plan d'estudis Ada CS",
-      "seeMore": "Veire mai",
       "seeUkSpecifications": "Veire las especificacions del Reialme Unit",
       "title": "Alinhament del tablèu d'examen",
       "ukDescription": "Trobatz de ressorsas adaptadas als nivèls d'aprendissatge e als conselhs d'examens especifics al Reialme Unit:",
@@ -328,8 +326,6 @@
     "features": {
       "examAlignment": "Alinhament d'examen especific pel Reialme Unit e adaptable a l'utilizacion dins lo mond entièr",
       "feedback": "Retroaccion instantanèa amb de quizs d'automarcatge",
-      "freeResources": "Ressorsas gratuitas d'informatica pels escolans d'edats de 14 a 19 ans",
-      "instantFeedback": "Retroaccion instantanèa amb de quizs d'automarcatge",
       "markbook": "Seguissètz lo progrès dins vòstre quasèrn personal",
       "resources": "Ressorsas gratuitas d'informatica pels escolans d'edats de 11 a 19 ans"
     },
