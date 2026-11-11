@@ -1,0 +1,3612 @@
+{
+  "AssignmentProgressGroupsListing": {
+    "no-groups-match-your-criteria": "Cap de grop correspond pas a vòstres critèris.",
+    "search-for-a-group": "Cercar un grop :",
+    "you-have-no-teaching-groups-yet": "Avètz pas encara de grops d'ensenhament."
+  },
+  "accessibility": {
+    "dragAndDropLabel": "Arrossegar e daissar tombar",
+    "dropdownLabel": "Menú desenrotlant",
+    "inputModeTitle": "Mòde d'entrada de la question"
+  },
+  "accordion": {
+    "additionalStagesDescription": "Podètz tanben èsser interessat a explorar de material suplementari pertinent per d'autras estapas d'aprendissatge:",
+    "additionalStagesTitle": "Etapas d'aprendissatge suplementàrias",
+    "completion": {
+      "allCorrect": "Totas las questions d'aquesta partida son corrèctament respondudas.",
+      "allIncorrect": "Totas las questions d'aquesta partida son respondudas incorrèctament.",
+      "notAttempted": "Cap de question dins aquesta partida es pas estada responduda.",
+      "someIncorrect": "Qualques questions dins aquesta partida son respondudas incorrèctament."
+    },
+    "partLabel": "Partida {{partLetter}}"
+  },
+  "account": {
+    "accessibility": {
+      "description": "Aquí podètz gerir divèrsas foncionalitats d'accessibilitat dins lo sit.",
+      "inaccessibleWarning": {
+        "helpText": "L'activacion d'aquò aficharà d'avertiments sus certans contenguts que pòdon èsser inaccessibles per las tecnologias d'assisténcia.",
+        "label": "Avertir a prepaus de contengut inaccessible"
+      },
+      "mathml": {
+        "helpText": "Amb aqueste paramètre podètz bascular entre utilizar de tèxte alternatiu o MathML per d'equacions matematicas.",
+        "label": "Utilizar MathML per las matematicas accessiblas"
+      },
+      "nonDraggingInputs": {
+        "helpText": "L'activacion vos permetrà d'utilizar de metòdes d'entrada alternatius que necessitan pas d'arrossegar per certans tipes de questions (per exemple, arrossegar e daissar tombar).",
+        "label": "Activar las entradas alternativas sens arrossegament"
+      },
+      "reducedMotion": {
+        "helpText": "Activar aquò reduirà los efièches de movement sus la plataforma. La preferéncia del navigador aurà la prioritat sus aqueste paramètre.",
+        "label": "Preferissètz lo movement redusit"
+      },
+      "title": "Paramètres d'accessibilitat"
+    },
+    "betaFeatures": {
+      "chemEntryHelp": "Aquesta foncionalitat vos permet d'introduire de responsas basadas sus de tèxte per de questions de quimia, coma alternativa a l'editor grafic. Vejatz nòstra <guidanceLink>orientacion sus l'utilizacion d'aquesta foncionalitat</guidanceLink>.",
+      "chemEntryLabel": "Activar l'entrada de tèxte per las questions de quimia",
+      "description": "Aquí podètz vos inscriure a las foncionalitats beta de la plataforma {{siteTitle}}.",
+      "hideAttemptsLabel": "Amagar los ensags de question precedents",
+      "openAiConsentLabel": "Consentiment a l'enviament de responsas en tèxte liure a OpenAI per marcar",
+      "openAiHelp": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure sul sit. Mandam pas que vòstra responsa a OpenAI, mandam pas cap de donadas personalas.",
+      "title": "Foncionalitats beta"
+    },
+    "changeSchools": {
+      "checkConnections": "xxxxxxxCheck your <strong><connectionsLink>connections</connectionsLink></strong>. Suprimir totas las connexions amb los ancians collègas e escolans.",
+      "checkGroups": "Verificatz vòstres <strong><groupsLink>grops</groupsLink></strong>. Suprimir tot grop qu'ensenharetz pas pus.",
+      "faqReference": "Aquesta informacion se pòt trobar dins la <faqLink>FAQ dels ensenhaires</faqLink> per una referéncia futura.",
+      "intro": "Se cambiatz d'escòla, vos recomandam de prene las etapas seguentas:",
+      "title": "Cambiar d'escòlas?"
+    },
+    "context": {
+      "addContentButton": "Apondre mai de contengut",
+      "addStageLabel": "Apondre l'estadi",
+      "removeRow": "netejar la linha d'estadi"
+    },
+    "country": {
+      "label": "País",
+      "validationError": "Seleccionatz vòstre país."
+    },
+    "customise": {
+      "description": "Respondre a aquelas questions nos ajudarà a personalizar la plataforma per vos. Podètz sautar aquò o cambiar vòstras responsas a quin moment que siá.",
+      "title": "Personalizatz lo contengut que vesètz"
+    },
+    "deletion": {
+      "confirmButton": "Confirmatz per corrièl",
+      "confirmWarning": "Compreni que la supression de mon compte es permanenta e pòt pas èsser anullada.",
+      "deleteButton": "Suprimir lo compte",
+      "errorTitle": "La demanda de supression del compte a fracassat.",
+      "failedTitle": "La supression del compte a fracassat.",
+      "noToken": "Vos cal aver un geton valid per suprimir vòstre compte. Visitatz vòstra pagina de compte <accountLink></accountLink> per generar un corrièl novèl amb un geton.",
+      "notLoggedIn": "Vos cal èsser connectat per suprimir vòstre compte.",
+      "reasonAccidental": "Ai fach un compte per error.",
+      "reasonMultiple": "Ai de comptes multiples e ne demanda pas qu'un.",
+      "reasonNewAccount": "Vòli crear un compte novèl amb aquesta adreça de corrièl.",
+      "reasonNoLongerNeed": "Ai pas pus besonh de mon compte.",
+      "reasonOther": "Una autra rason / preferissi pas dire.",
+      "selectReason": "Seleccionatz la rason que volètz suprimir vòstre compte :",
+      "successMessage": "Un corrièl vos es estat mandat amb d'instruccions sus cossí confirmar la supression de vòstre compte.",
+      "successTitle": "Demanda de supression del compte mandada.",
+      "title": "Supression del compte",
+      "tutorRestriction": "Sonque los comptes d'escolans pòdon èsser suprimits automaticament. Mercés de <contactLink>nos contactar</contactLink> per demandar la supression del compte."
+    },
+    "deletionSuccess": {
+      "title": "Compte suprimit!"
+    },
+    "editUser": {
+      "title": "Modificar l'utilizaire"
+    },
+    "emailChange": {
+      "confirmQuestion": "Volètz contunhar?",
+      "explanation": "Avètz cambiat l'adreça electronica de vòstre compte. Aquesta novèla adreça de corrièl serà pas utilizada fins que quichatz pas sul ligam de verificacion que li mandètz. Fins alara, utilizarem l'anciana adreça de corrièl e vos caldrà encara l'utilizar al moment de vos connectar per corrièl e senhal.",
+      "title": "Modificacion de vòstra adreça de corrièl"
+    },
+    "emailPreferences": {
+      "descriptionHeader": "Descripcion",
+      "preferenceHeader": "Preferéncia",
+      "tipsLabel": "Conselhs e mesas a jorn",
+      "newsLabel": "Actualitats e mesas a jorn",
+      "validationError": "Especificatz totas las preferéncias de corrièl"
+    },
+    "gender": {
+      "options": {
+        "female": "Femna",
+        "male": "Mascle",
+        "other": "Autra identitat de genre",
+        "preferNotToSay": "Preferissi pas dire"
+      }
+    },
+    "linkedAccounts": {
+      "link": "Ligam",
+      "otherTitle": "Ligar d'autres comptes",
+      "unlink": "Desligar"
+    },
+    "logOut": {
+      "description": "Aqueste boton vos desconnectarà sus totes los periferics, aqueste tanben. O podètz far se avètz oblidat de vos desconnectar sus un periferic partejat coma un ordenador escolar.",
+      "title": "Desconnectar"
+    },
+    "mfa": {
+      "changeDeviceButton": "Cambiar lo periferic 2FA",
+      "configureTitle": "Configurar l'autentificacion en dos factors (2FA)",
+      "disableForUserButton": "Desactivar 2FA per l'utilizaire",
+      "enableButton": "Activar 2FA",
+      "qrAltText": "Seguissètz aquesta URL per configurar 2FA : {{authenticatorUrl}}",
+      "statusDisabled": "Desactivat",
+      "statusEnabled": "Activat",
+      "statusLabel": "Estatut 2FA:",
+      "stepOne": "<strong>Etapa 1:</strong> Escanejatz lo còde QR çai-jos sus vòstre telefòn",
+      "stepTwo": "<strong>Etapa 2:</strong> Picatz lo còde provesit per vòstra aplicacion",
+      "title": "Autentificacion en dos factors (2FA)"
+    },
+    "preferences": {
+      "booleanNotationLabel": "Notacion logica preferida",
+      "description": "Respondre a aquelas questions nos ajudarà a personalizar la plataforma per vos. Podètz sautar aquò o cambiar vòstras responsas a quin moment que siá jos Mon compte.",
+      "preferredLanguageLabel": "Lenga de programacion preferida",
+      "saveButton": "Enregistrar las preferéncias",
+      "skipButton": "O farai mai tard",
+      "title": "Personalizatz vòstre compte"
+    },
+    "profile": {
+      "description": "Aquí podètz veire e gerir los detalhs de vòstre compte per {{siteTitle}}.",
+      "disableWarnings": "Desactivar los avertiments",
+      "disableWarningsWarning": "Se vòstre departament informatic es pas en mesura d'assistir, podètz desactivar los avertiments de pancartas sul sit per aqueste navigador. Recomandam fòrtament de pas aquò. Las adreças de corrièl non verificadas pòdon menar a de problèmas amb la recuperacion del compte e podètz mancar de notificacions de seguretat importantas dempuèi {{siteTitle}}.",
+      "emailBlockedInfo": "Dins qualques situacions, las escòlas o los departaments blocan lo corrièl de sites extèrnes coma lo nòstre, çò que pòt vos empachar de recebre de corrièls de verificacion. S'es lo cas, contactatz vòstre departament informatic per veire se pòdon autorizar los corrièls de {{siteTitle}}. Avèm una <emailHelpLink>pagina d'ajuda</emailHelpLink> a prepaus de nòstra configuracion de corrièl que pòt èsser d'utilitat.",
+      "emailSent": "Corrièl de verificacion mandat!",
+      "emailUnverified": "Vòstra adreça electronica es pas verificada. Aquò pòt afectar vòstra capacitat de recebre de notificacions importantas, e seretz pas elegible per participar a d'eveniments e de concorses.",
+      "optionReversible": "Podètz cambiar aquesta opcion a tot moment.",
+      "otherOptions": "D'autras opcions",
+      "requestVerification": "Clicatz aicí per demandar un novèl corrièl de verificacion.",
+      "restoreWarnings": "Restablir los avertiments",
+      "success": "Succès!",
+      "warningsDisabledMessage": "Los avertiments de verificacion per corrièr electronic son estats desactivats per aqueste navigador.",
+      "warningsDisabledTitle": "Avertiments desactivats",
+      "warningsRestoredMessage": "Los avertiments de verificacion per corrièr electronic son estats restablits.",
+      "warningsRestoredTitle": "Los avertiments restablits"
+    },
+    "releaseAccess": {
+      "confirmBody": "Sètz segur que volètz metre fin a vòstre accès a las donadas <strong>{{firstName}} {{lastName}}</strong>?<br/>Vos caldrà lor demandar de tornar donar l'accès dins l'avenir se cambiatz d'idèa.",
+      "title": "Suprimir l'accès a las donadas dels escolans"
+    },
+    "releaseAll": {
+      "confirmBody": "Sètz segur que volètz metre fin a vòstre accès a totas las donadas dels escolans ?<br/>Vos caldrà lor demandar de tornar donar l'accès dins l'avenir se cambiatz d'idèa.",
+      "title": "Suprimir l'accès a totas las donadas dels escolans"
+    },
+    "requiredInfo": {
+      "privacyNote": "Fornir qualques informacions suplementàrias nos ajuda a comprene l'utilizacion de {{siteTitle}} dins lo Reialme Unit e mai enlà. Los detalhs complets sus cossí utilizam vòstras informacions personalas se pòdon trobar dins nòstra <privacyPolicyLink>Politica de confidencialitat</privacyPolicyLink>.",
+      "updateButtonDesktop": "Metre a jorn lo compte"
+    },
+    "revokeAccess": {
+      "confirmBody": "L'utilizaire <strong>{{teacherName}}</strong> poirà pas mai accedir a vòstras donadas.<br/>Sètz segur que volètz revocar l'accès per aqueste utilizaire ?",
+      "title": "Revocar l'accès a vòstras donadas"
+    },
+    "roleMessage": "Avètz {{article}} <strong>{{role}}</strong> compte.",
+    "saveButton": "Salvar",
+    "school": {
+      "placeholder": "Picatz lo nom de vòstra escòla",
+      "useAsName": "Utilizatz \"{{schoolName}}\" coma nom de vòstra escòla",
+      "validationError": "Especificatz vòstra associacion escolara."
+    },
+    "security": {
+      "addPasswordButton": "Clicatz aicí per apondre un senhal",
+      "currentPasswordLabel": "Senhal actual",
+      "description": "Aquí podètz cambiar vòstre senhal, ligar o desligar un compte tèrç qu'utilizatz per vos connectar, e vos desconnectar de totes los periferics.",
+      "resetProcessing": "Vòstra demanda de reïnicializacion de senhal es en cors de tractament.",
+      "title": "Seguretat del compte"
+    },
+    "sharingData": {
+      "confirmBody": "Sètz segur que volètz donar l'accès a vòstras donadas als utilizaires {{siteName}} seguents ?",
+      "privacyNote": "For more details about what information is shared, see our <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
+      "rememberNote": "<strong>Remembratz-vos</strong>: podètz totjorn revocar l'accès a vòstras donadas dempuèi l'onglet Connexions del professor de Mon compte.",
+      "title": "Partatjament de vòstras donadas"
+    },
+    "theme": {
+      "darkModeWarning": "Notatz que lo mòde escur es una foncionalitat novèla e extensiva e, coma tal, certanas zònas del sit pòdon pas encara èsser entièrament optimizadas per aqueste tèma. Podèm pas tanpauc garantir, per exemple, la conformitat amb l'accessibilitat AA pel mòde escur a l'ora d'ara.<lineBreak1/><lineBreak2/>Se rencontratz de problèmas, particularament a prepaus de la legibilitat, mercés de nos los raportar via lo formulari de contacte <contactLink></contactLink> per una recèrca mai prigonda. Mercés d'inclure un ligam cap a la pagina que conten lo problèma se possible.",
+      "description": "Podètz seleccionar aicí vòstre tèma de site preferit.",
+      "title": "Tèma"
+    },
+    "tutorRequest": {
+      "alreadyTutor": "Avètz ja un compte de tutor o d'ensenhaire",
+      "errorContact": "{{errorMessage}} Nos podètz contactar a <emailLink>{{emailAddress}}</emailLink>",
+      "formInstruction": "Per demandar un compte tutor sus {{siteTitle}}, emplenatz aqueste formulari. ",
+      "formIntro": "{{siteTitle}}Devètz aver verificat l'adreça electronica de vòstre compte. Se qualqu'una de las informacions es incorrècta o manca, la podètz modificar sus vòstra pagina <accountLink>Mon compte</accountLink>.",
+      "reasonLabel": "Mercés de nos dire perqué volètz demandar un compte de tutor",
+      "submittedThanks": "Mercés de mandar una demanda de compte de tutor.",
+      "title": "Demanda de compte de tutor"
+    },
+    "unsavedChanges": {
+      "leaveConfirm": "Se daissatz aquesta pagina sens l'enregistrar, las modificacions de vòstre compte seràn perdudas. Sètz segur que voldriatz partir?",
+      "tabSwitchConfirm": "Avètz de modificacions pas enregistradas sus aquesta pagina. Sètz segur que volètz partir sens salvar?"
+    },
+    "update": {
+      "fillAllFields": "Emplenatz totes los camps obligatòris.",
+      "incompleteFields": "Totes los camps obligatòris son pas estats corrèctament emplenats.",
+      "notUpdatedTitle": "Los paramètres del compte pas meses a jorn",
+      "otherSuccessMessage": "Los paramètres del compte de l'utilizaire son estats meses a jorn amb succès.",
+      "submitButton": "Detalhs de mesa a jorn",
+      "successTitle": "Los paramètres del compte mesas a jorn"
+    },
+    "updateError": {
+      "genericToastMessage": "Quicòm s'es marrit. Asseguratz-vos que totes los camps obligatòris son estats emplenats e ensajatz tornarmai.",
+      "toastMessage": "Mercés de vos assegurar que totes los camps obligatòris dins l'onglet \"Perfil\" son estats emplenats.",
+      "toastTitle": "La mesa a jorn del compte a fracassat"
+    },
+    "upgrade": {
+      "errorTitle": "Fracàs de metre a jorn lo compte",
+      "successMessage": "Avètz mes a jorn cap a un compte professor!",
+      "successTitle": "Compte mes a jorn"
+    }
+  },
+  "admin": {
+    "anonymisation": {
+      "groupsLabel": "Desguisar los detalhs de l'utilizaire e del grop dins las aisinas del professor",
+      "usersOnlyLabel": "Desguisar sonque los noms d'utilizaire e los corrièls electronics dins las aisinas dels ensenhaires"
+    },
+    "console": {
+      "apiVersionLabel": "Version API:",
+      "title": "Consola d'administracion"
+    },
+    "content": {
+      "errorLoading": "Error al moment de cargar la version de contengut",
+      "errorMessage": "Error : la version del contengut a pas pogut èsser modificada.",
+      "inputAriaLabel": "Engatjament de contengut en dirècte SHA",
+      "inputPlaceholder": "Picatz lo commit SHA",
+      "liveVersionLabel": "Version de contengut en dirècte",
+      "previewButton": "Apercebut los cambiaments",
+      "setVersionButton": "Definir la version",
+      "successMessage": "La version del contengut modificada amb succès.",
+      "title": "Gerir lo contengut del sit",
+      "updatingMessage": "Remplaçant la version {{currentVersion}} per {{newVersion}}",
+      "updatingTitle": "Mesa a jorn..."
+    },
+    "contentEmails": {
+      "recipientWarning": "<warningLabel>Atencion:</warningLabel> I a actualament <countEmphasis>{{recipientCount}}</countEmphasis> destinataris seleccionats.",
+      "sendConfirm_one": "Sètz segur que volètz mandar un corrièl {{emailType}} a {{count}} utilizaire ?",
+      "sendConfirm_other": "Sètz segur que volètz mandar un corrièl {{emailType}} als utilizaires {{count}} ?",
+      "sendVia": {
+        "isaac": "Isaac",
+        "label": "Lo metòde d'enviament del corrièl",
+        "mailgun": "Mailgun",
+        "title": "Enviar via"
+      },
+      "template": {
+        "htmlLabel": "HTML de corrièl",
+        "iframeTitle": "previsualizacion html",
+        "plaintextLabel": "Tèxte simple de corrièl",
+        "previewLabel": "Apercebut HTML (sens formatat)",
+        "title": "Modèl de corrièl"
+      },
+      "title": "Enviament de corrièl de contengut"
+    },
+    "contentErrors": {
+      "errorTitle": "Error de cargament de contengut fracassat",
+      "filters": {
+        "errorMessageLabel": "Filtrar per messatge d'error",
+        "errorMessagePlaceholder": "Filtrar las errors per messatge d'error",
+        "filePathLabel": "Filtre per camin de fichièr",
+        "filePathPlaceholder": "Filtrar las errors per camin de fichièr",
+        "publishedStatusLabel": "Filtrar per estatut publicat",
+        "severityLabel": "Filtrar per severitat"
+      },
+      "loadingError": "Error al moment de cargament d'errors de contengut",
+      "row": {
+        "tooltipContentId": "ID de contengut : {{contentId}}"
+      },
+      "stats": {
+        "contentVersionLabel": "Version de contengut:",
+        "criticalErrorsLabel": "D'errors criticas :",
+        "filesWithErrorsLabel": "Fichièrs amb d'errors :",
+        "totalErrorsLabel": "Total d'errors:"
+      },
+      "table": {
+        "criticalErrorHeader": "Error critica",
+        "errorMessagesHeader": "Lista dels messatges d'error",
+        "fileHeader": "Fichièr",
+        "publishedHeader": "Publicat",
+        "publishedTooltip": "Aqueste fichièr es publicat ?"
+      }
+    },
+    "demonstration": {
+      "title": "Mòde de demostracion"
+    },
+    "email": {
+      "sendErrorTitle": "Lo mandadís de corrièl a fracassat",
+      "sendSuccessMessage": "Corrièl mandat als utilizaires amb succès",
+      "sendSuccessTitle": "Corrièl mandat",
+      "sendWithIdsErrorTitle": "Lo mandadís de corrièl amb d'ids a fracassat",
+      "templateErrorTitle": "Fracàs a obténer lo modèl de corrièl"
+    },
+    "emails": {
+      "contentObject": {
+        "loadButton": "Cargar lo modèl",
+        "placeholder": "Picatz l'identificant de l'objècte de contengut de corrièl",
+        "title": "Objècte de contengut"
+      },
+      "details": {
+        "fromLabel": "De:",
+        "noSubject": "pas de subjècte",
+        "replyToLabel": "Respondre a:",
+        "sentViaLabel": "Mandat via:",
+        "subjectLabel": "Subjècte:"
+      },
+      "htmlPreview": {
+        "frameTitle": "Apercebut del contengut del corrièl",
+        "title": "Apercebut HTML"
+      },
+      "plainTextPreview": {
+        "title": "Apercebut de tèxte simple"
+      },
+      "send": {
+        "confirm_one": "Sètz segur que volètz mandar un corrièl {{emailType}} ({{contentObjectId}}) a {{count}} utilizaire ?",
+        "confirm_other": "Sètz segur que volètz mandar un corrièl {{emailType}} ({{contentObjectId}}) a {{count}} utilizaires ?",
+        "recipientsWarning": "<warning>Atencion:</warning> I a actualament <count>{{recipientCount}}</count> destinataris seleccionats."
+      }
+    },
+    "greeting": "Adieu, {{givenName}}!",
+    "groups": {
+      "resetPassword": {
+        "failureMessage": "Fracàs al mandar de reïnicializacion del senhal"
+      }
+    },
+    "misuse": {
+      "emptyState": "Pas d'estatisticas d'utilizacion indeguda per aqueste tipe d'eveniment! 🎉",
+      "selectEventLabel": "Seleccionatz un tipe d'eveniment d'utilizacion indeguda :",
+      "statusAlmost": "Gaireben",
+      "tableHeader": {
+        "agentIdentifier": "Identificant d'agent",
+        "currentCounter": "Comptador d'eveniments actuals",
+        "lastEvent": "Darrièr eveniment enregistrat",
+        "status": "Mal utilizat?"
+      },
+      "title": "Estatisticas d'utilizacion indeguda"
+    },
+    "misuseMonitor": {
+      "resetErrorTitle": "Fracàs al moment de reïnicializar lo monitor d'utilizacion indeguda per l'utilizaire",
+      "resetSuccessMessage": "{{eventLabel}} mal usatge del compte d'eveniments de reïnicializacion per l'utilizaire",
+      "resetSuccessTitle": "Reïnicializar amb succès"
+    },
+    "misuseStatistics": {
+      "errorTitle": "Fracàs d'obténer d'estatisticas d'utilizacion indeguda per l'utilizaire"
+    },
+    "siteStatistics": {
+      "errorTitle": "Lo cargament de las estatisticas del sit a fracassat"
+    },
+    "stats": {
+      "answering": {
+        "heading": "Respondre a las questions"
+      },
+      "breadcrumb": "Estatisticas d'administracion",
+      "content": {
+        "conceptPageViews": "Afichatges de la pagina de concèpte: {{count}}",
+        "heading": "Estatisticas de contengut",
+        "questionAttempts": "Total d'ensags de questions: {{count}}",
+        "questionPageViews": "Vistas de la pagina de questions: {{count}}"
+      },
+      "counts": {
+        "all": "Totes: {{count}}",
+        "students": "Escolans: {{count}}",
+        "teachers": "Professors: {{count}}"
+      },
+      "lastSeen": {
+        "heading": "Darrièr vist"
+      },
+      "overview": "Una vista generala de naut nivèl dels utilizaires e de l'activitat sus la plataforma :",
+      "period": {
+        "ninetyDays": "90 jorns precedents:",
+        "sevenDays": "7 jorns precedents:",
+        "thirtyDays": "30 jorns precedents:"
+      },
+      "title": "{{siteTitle}} estatisticas",
+      "users": {
+        "gender": {
+          "female": "Femna: {{count}} ({{percentage}}%)",
+          "male": "Mascle: {{count}} ({{percentage}}%)",
+          "missing": "Donadas mancantas: {{count}} ({{percentage}}%)",
+          "other": "Autres : {{count}} ({{percentage}}%)",
+          "preferNotToSay": "Preferissi pas dire: {{count}} ({{percentage}}%)"
+        },
+        "heading": "Utilizaires:",
+        "profileCompletion": {
+          "noSchool": "Pas d'escòla provesida : {{count}}",
+          "otherSchool": "Autra escòla provesida : {{count}}",
+          "ukIeSchool": "Escòla UK/IE provesida: {{count}}"
+        },
+        "profileCompletionTitle": "Finalizacion del perfil",
+        "role": {
+          "admin": "Admin: {{count}}",
+          "contentEditor": "Editor de contengut: {{count}}",
+          "eventLeader": "Cap d'eveniment: {{count}}",
+          "eventManager": "Gestionari d'eveniments: {{count}}",
+          "student": "Estudiant: {{count}}",
+          "teacher": "Professor: {{count}}",
+          "tutor": "Tutor: {{count}}"
+        },
+        "sixMonths": "Los 6 darrièrs meses :<strong>{{activeUsersSixMonths}}</strong>",
+        "total": "Total (excl. archivat): <strong>{{totalUsers}}</strong>",
+        "twoYears": "Los 2 darrièrs ans:<strong>{{activeUsersTwoYears}}</strong>"
+      }
+    },
+    "title": "{{siteTitle}} administracion",
+    "tools": {
+      "title": "Aisinas administrativas"
+    },
+    "usefulLinks": {
+      "equationBuilder": "Constructor d'equacions",
+      "freeTextBuilder": "Constructor de tèxte liure",
+      "title": "Ligams utils",
+      "userManager": "Gestionari d'utilizaires"
+    },
+    "userManager": {
+      "actions": {
+        "email": "Corrièl",
+        "emailStatus": "Estat del corrièl",
+        "emailStatusHeader": "Cambiar l'estat de verificacion del corrièl pels utilizaires a :",
+        "modifyRole": "Modificar lo ròtle",
+        "promoteDemoteHeader": "Promòure o degradar los utilizaires seleccionats per :"
+      },
+      "delete": {
+        "confirm": "Sètz segur que volètz suprimir aqueste utilizaire ?"
+      },
+      "merge": {
+        "button": "Fusionar",
+        "confirm": "Sètz segur que volètz fusionar l'utilizaire {{sourceId}} dins l'utilizaire {{targetId}} ? Aquò suprimirà l'utilizaire {{deletedId}}.",
+        "deletePlaceholder": "ID d'utilizaire a suprimir",
+        "keepPlaceholder": "ID d'utilizaire de gardar",
+        "title": "Fusionar los comptes d'utilizaire"
+      },
+      "results": {
+        "table": {
+          "edit": "Modificar",
+          "select": "Causir",
+          "verificationStatus": "Estat de verificacion",
+          "view": "Vista"
+        },
+        "title": "Gerir los utilizaires ({{resultCount}})<br/>Seleccionat ({{selectedCount}})"
+      },
+      "search": {
+        "button": "Cercar",
+        "emailPlaceholder": "p. ex. professor@escòla.org",
+        "familyNamePlaceholder": "p. ex. Wilkes",
+        "roleAny": "Tot ròtle",
+        "roleEventLeader": "Cap d'eveniment",
+        "roleEventManager": "Gestionari d'eveniments",
+        "schoolOtherLabel": "Trobar per l'escòla introducha manualament :",
+        "schoolUrnLabel": "Trobar un utilizaire amb l'URN de l'escòla :",
+        "validation": "Al mens un filtre de recèrca deu èsser definit.",
+        "verificationStatusAny": "Tot estatut de verificacion",
+        "verificationStatusDeliveryFailed": "La liurason a fracassat",
+        "verificationStatusLabel": "Trobar per corrièl l'estat de verificacion :",
+        "verificationStatusNotVerified": "Pas verificat",
+        "verificationStatusVerified": "Verificat"
+      }
+    },
+    "users": {
+      "deleteErrorTitle": "La supression de l'utilizaire a fracassat",
+      "deleteSuccessMessage": "L'utilizaire seleccionat es estat suprimit amb succès",
+      "deleteSuccessTitle": "Utilizaire suprimit",
+      "getSchoolLookupErrorTitle": "Fracàs al cargament dels detalhs de recèrca de l'escòla de l'utilizaire",
+      "getUserErrorTitle": "Fracàs a obténer l'utilizaire",
+      "mergeErrorTitle": "La fusion dels utilizaires a fracassat",
+      "mergeSuccessMessage": "Utilizaire amb id: {{sourceId}} foguèt fusionat dins l'utilizaire amb id: {{targetId}}",
+      "mergeSuccessTitle": "Utilizaires fusionats",
+      "modifyEmailVerificationErrorTitle": "La modificacion de l'estat de verificacion del corrièl a fracassat",
+      "modifyRoleErrorTitle": "La modificacion del ròtle d'utilizaire a fracassat",
+      "searchErrorTitle": "La recèrca d'utilizaire a fracassat"
+    }
+  },
+  "anvilApps": {
+    "emptyMessage": "Las aisinas son pas disponiblas per {{context}}.",
+    "emptyTitle": "Aisinas"
+  },
+  "assignments": {
+    "add": {
+      "createDeckButton": "crear un jòc de questions",
+      "topicDecksButton": "nòstres jòcs de questions de tèma"
+    },
+    "assign": {
+      "errorTitle": "L'assignacion de tèst a {{groupName}} a fracassat",
+      "savedTitle_one": "Pròva enregistrat",
+      "savedTitle_other": "Los tèsts enregistrats",
+      "successTitle_one": "Pròva assignada",
+      "successTitle_other": "Pròvas assignadas"
+    },
+    "cancel": {
+      "confirmMessage": "Sètz segur que volètz anullar « {{quizTitle}} ?\r\n\r\nLos escolans poiràn pas pus far l'espròva o veire cap de retroaccion, e totes los ensags dels escolans a aqueste tèst seràn perduts."
+    },
+    "card": {
+      "assigned": "Assignat <strong>{{startDate}}</strong>",
+      "assignedLabel": "Assignat:",
+      "assignerLabel": "Per:",
+      "dueDate": "(degut {{dueDate}})",
+      "groupLabel": "Grop:",
+      "overdueLabel": "En retard:"
+    },
+    "counts": {
+      "assignments_one": "{{count}} assignacion",
+      "assignments_other": "{{count}} assignacions",
+      "tests_one": "{{count}} tèst",
+      "tests_other": "{{count}} tèsts"
+    },
+    "downloadPrivacyTitle": "Avís de confidencialitat",
+    "dueDatePlaceholder": "Seleccionatz vòstra data de venciment...",
+    "error": {
+      "fetchError": "Error al moment de la recuperacion de vòstras missions",
+      "loadAttemptFailed": "Lo cargament de l'ensag de quiz assignat a fracassat",
+      "loadQuizFailed": "Lo cargament del quiz a fracassat",
+      "saveFailed": "Fracàs al salvament"
+    },
+    "extendDueDate": {
+      "confirmationText": "Sètz segur que volètz cambiar la data d'escasença ? Aquò prolongarà la data d'escasença per totes los utilizaires que aqueste tèst es assignat.",
+      "inputLabel": "Alargar la data de venciment:",
+      "successToastMessage": "Aqueste tèst es ara degut per {{dueDate}}.",
+      "successToastTitle": "La data d'escasença prolongada amb succès",
+      "validationError": "Podètz pas definir la data d'escasença per èsser mai lèu que la data d'escasença actuala o uèi."
+    },
+    "feedbackMode": {
+      "description": "Podètz ajustar lo tipe de retroaccion donada als escolans après qu'an completat aqueste tèst. Los cambiaments a aqueste paramètre son aplicats immediatament e afectaràn totes los escolans, quina que siá l'estatut d'acabament.",
+      "title": "Definir lo mòde de retroaccion",
+      "updateSuccess": "Lo mòde de retroaccion mes a jorn amb succès."
+    },
+    "filter": {
+      "groupLabel": "Grop",
+      "nameLabel": "Filtrar los quizs per nom"
+    },
+    "help": {
+      "overdueExplanation": "Totes los questionaris qu'avètz definits apareisseràn aicí.<br/>xxxxxOverdue quizzes which have not been fully attempted will be treated as quizzes <statusTodo>To do</statusTodo> until they are due, after which they are considered <statusOlder>Older</statusOlder> quizzes."
+    },
+    "manage": {
+      "findDeckFrom": "Trobar un deck de...",
+      "findNewDeck": "un novèl jòc de questions",
+      "findSavedDecks": "vòstres jòcs enregistrats",
+      "findTopicDecks": "nòstres jòcs de questions de tèma",
+      "noMatchingWork": "I a pas cap de trabalh correspondent a vòstres filtres.",
+      "noWorkSet": "Avètz pas encara definit cap de trabalh. Utilizatz los botons çai-sus per definir una mission o un tèst novèl.",
+      "noWorkSetTutor": "Avètz pas encara definit cap de trabalh. Utilizatz lo boton çai-sus per definir una novèla assignacion.",
+      "pageHelp": "Utilizatz aquesta pagina per definir e gerir lo trabalh assignat per vòstres grops, e visualizar lo trabalh definit coma una linha de temps. Podètz desasignar de trabalhs, e assignar de trabalhs existents a d'autres grops.",
+      "setGroup": "Definir a <strong>{{groupName}}</strong>",
+      "setNewTestButton": "Definir un tèst novèl",
+      "showEarlierWork": "Mostrar lo trabalh abans {{date}}",
+      "timeline": {
+        "listForGroup": " lista pel grop {{groupName}}",
+        "unknownGroup": "Grop desconegut"
+      }
+    },
+    "manageSidebar": {
+      "dateShownLabel": "Data mostrada",
+      "filterByWorkTypeLabel": "Filtre per tipe de trabalh",
+      "title": "Filtrar e triar"
+    },
+    "modal": {
+      "assignButton_one": "Assignar al grop",
+      "assignButton_other": "Assignar als grops",
+      "backToSchedule": "Tornar a l'oraris",
+      "belongsToOther": " (perten a un autre utilizaire)",
+      "dueDateAfterStartError": "La data de venciment deu èsser a la data de començament o après.",
+      "dueDateLabel": "Rapèl de data d'escasença",
+      "dueDateRequiredNotice": "Dempuèi genièr de 2025, las datas de venciment son requeridas per las missions.",
+      "gameboardLabel": "Tablèu de jòc:",
+      "notesCharCount": "{{charCount}}/500 caractèrs",
+      "notesLabel": "Nòtas (opcionalas):",
+      "startDateLabel": "Programar una data de començament de l'assignacion <muted> (facultatiu)</muted>"
+    },
+    "notesMaxLengthError": "Avètz despassat la longor maximala.",
+    "pagination": {
+      "showMore": "Mostrar mai",
+      "showingCount": "xxxxxShowing <strongShown>{{shownCount}}</strongShown> of <strongTotal>{{totalCount}}</strongTotal>",
+      "showingInfo": "xxxxxShowing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes."
+    },
+    "progress": {
+      "detailedTab": {
+        "title": "Rendiment sus las questions"
+      },
+      "dueDate": "Venciment: {{dueDate}}",
+      "errorFetching": "Error al moment de recuperar lo progrès de l'assignacion",
+      "fullMarks": "{{completedCount}} de {{totalCount}} obtenguèt las nòtas completas",
+      "groupTab": {
+        "description": "Vejatz qual a ensajat l'assignacion e amb quinas questions an agut de dificultats."
+      },
+      "loadErrorTitle": "Lo progrès de l'assignacion de cargament a fracassat",
+      "questionCard": {
+        "attemptedBadge": "{{attemptedCount}} de {{totalCount}} ensajat"
+      },
+      "questionLink": {
+        "ariaLabel": "Dobrir la question dins un onglet novèl"
+      }
+    },
+    "schedule": {
+      "assignedBy": "Assignat per: <strong>{{assigner}}</strong>",
+      "assignedTo": "Assignat a: <strong>{{groupName}}</strong>",
+      "byDueDate": "A la data de venciment",
+      "byStartDate": "Per data de començament",
+      "dueDate": "Data de venciment: <strong>{{date}}</strong>",
+      "emptyState": "Avètz pas de prètzfaches",
+      "filterByGroup": "Filtre per grop :",
+      "noAssignmentsForGroups_one": "I a pas d'assignacions definidas al grop : {{groupNames}}",
+      "noAssignmentsForGroups_other": "I a pas d'assignacions definidas a de grops : {{groupNames}}",
+      "notStarted": "(pas començat)",
+      "notes": "Nòtas",
+      "pageHelp": "Utilizatz aquesta pagina per gerir las missions per vòstres grops, e las veire coma una linha de temps. Podètz desasignar de trabalhs, e assignar de missions existentas a d'autres grops.",
+      "setAssignmentsLink": "Utilizatz la pagina <setAssignmentsLink>definir de prètzfaches</setAssignmentsLink> per programar de prètzfaches novèls a vòstres grops.",
+      "showEarlierAssignments": "Afichar las missions abans {{date}}",
+      "stage_one": "Scèna",
+      "stage_other": "Etapas",
+      "startDate": "Data de començament: <strong>{{date}}</strong>",
+      "title": "Calendari de prètzfach",
+      "unassignConfirm": "Sètz segur que volètz desasignar {{deckName}} de {{groupLabel}} ?"
+    },
+    "setModal": {
+      "dueDateAfterStart": "La data de venciment deu èsser a la data de començament o après e dins l'avenir.",
+      "dueDateRequired": "Las datas de venciment son requeridas per las missions.",
+      "noGroups": "Pas de grops.",
+      "notesCharacterCount": "{{characterCount}}/500 caractèrs",
+      "schedulingInfo": "Los devers programats apareisson als escolans lo matin del jorn causit, autrament los devers apareisson immediatament. Los prètzfaches son deguts a la fin de la jornada indicada.",
+      "startDateFuture": "La data de començament deu èsser dins l'avenir.",
+      "title": "Assignar \"{{boardTitle}}\"",
+      "unassignGroup": "Desassignar lo grop"
+    },
+    "sidebar": {
+      "searchTitle": "Cercar de prètzfaches",
+      "sortAttemptedHighest": "Ensajat (lo mai naut primièr)",
+      "sortAttemptedLowest": "Ensajat (lo mai bas primièr)",
+      "sortCorrectnessHighest": "Correccion (lo mai naut primièr)",
+      "sortCorrectnessLowest": "Correccion (lo mai bas primièr)",
+      "sortDueDateLatest": "Data d'escasença (lo darrièr primièr)",
+      "sortDueDateSoonest": "Data d'escasença (lo mai lèu)",
+      "sortOrderLabel": "Definir l'òrdre de classament",
+      "sortStartDateNewest": "Data de començament (primièr recent)",
+      "sortStartDateOldest": "Data de començament (lo mai ancian primièr)",
+      "sortTitle": "Mena",
+      "subjectFilterTitle": "Filtre per subjècte"
+    },
+    "startDatePlaceholder": "Seleccionatz vòstra data de començament programada...",
+    "table": {
+      "deckName": "Nom del deck",
+      "lastViewed": "Darrièra vista",
+      "quizName": "Nom del quiz"
+    },
+    "timeline": {
+      "collapse": "S'estavanir",
+      "listForDay": " lista pel jorn {{date}}",
+      "listForMonth": " lista per {{monthName}}"
+    },
+    "warning": {
+      "assignmentDetail": "xxxxxx<assignmentLink><strong>{{assignmentTitle}}</strong></assignmentLink> (set to <bold>{{groupName}}</bold> by {{teacherName}})",
+      "outsideAssignment": "Aquesta question vos es estada pausada dins l'encastre d'una mission activa. Respondre aicí comptarà <strong>pas</strong> per l'assignacion."
+    }
+  },
+  "attempt": {
+    "assignmentError": "Error al moment de cargament de l'assignacion !"
+  },
+  "auth": {
+    "accountLink": {
+      "ariaLabel": "Ligam de mon compte"
+    },
+    "ageCheckFailed": {
+      "heading": "Impossible de crear un compte",
+      "restrictionMessage": "Malastrosament, sèm pas capables d'ofrir de comptes als escolans de mens de {{minAge}} ans."
+    },
+    "callback": {
+      "signingIn": "Connexion..."
+    },
+    "consent": {
+      "explanation": "Se volètz utilizar vòstre compte Microsoft per vos connectar a {{siteTitle}}, vos cal nos daissar legir vòstre nom e vòstra adreça de corrièl dempuèi vòstre compte Microsoft.",
+      "readMore": "Legir mai sus la connexion amb Microsoft.",
+      "schoolNote": "Se utilizatz un compte escolar e sètz la primièra persona qu'utiliza {{siteName}} de vòstra escòla, vòstre departament informatic deurà benlèu preaprovar {{approvedSiteName}} abans de poder consentir.",
+      "title": "Avèm besonh de vòstre consentiment"
+    },
+    "contact": {
+      "ariaLabel": "Ligam cap al formulari de contacte",
+      "link": "contactatz-nos"
+    },
+    "continueGuest": "Contunhar sens compte",
+    "credentials": {
+      "emailPlaceholder": "Adreça de corrièl",
+      "passwordLengthError": "Los senhals devon aver al mens {{minLength}} caractèrs",
+      "passwordPlaceholder": "Senhal"
+    },
+    "dob": {
+      "invalidDate": "Picatz una data de naissença valida.",
+      "label": "Data de naissença"
+    },
+    "emailInput": {
+      "validationError": "Picatz una adreça electronica valida."
+    },
+    "emailVerification": {
+      "badParameters": "Aquesta pagina a recebut de marrits paramètres.",
+      "badParamsMessage": "Aquesta pagina a recebut de marrits paramètres. Mercés de vos assegurar qu'utilizatz lo ligam coma provesit dins lo corrièl.",
+      "loginToResend": "Mercés de vos connectar a vòstre compte <accountLink></accountLink> per tornar mandar lo corrièl de verificacion.",
+      "requestSuccessMessage": "Mercés de seguir lo ligam de verificacion donat dins lo corrièl mandat a vòstra adreça.",
+      "requestSuccessTitle": "La demanda de verificacion per corrièl a capitada.",
+      "sentTo": "Corrièl de verificacion mandat a {{email}}",
+      "successMessage": "L'adreça de corrièl es estada verificada",
+      "successTitle": "Adreça de corrièl verificada",
+      "title": "Verificacion per corrièl",
+      "userMismatch": "Sètz connectat coma un utilizaire diferent de l'utilizaire amb lo corrièl que venètz de verificar.",
+      "verified": "Adreça de corrièl verificada."
+    },
+    "formIntro": "Per <emphasis>contunhar amb un compte</emphasis>, o fasètz çai-jos",
+    "google": {
+      "logoAlt": "Logotip de Google"
+    },
+    "linkAccount": {
+      "failureMessage": "Fracàs al ligam del compte"
+    },
+    "login": {
+      "heading": "Connectatz-vos o inscrivètz-vos :",
+      "passwordLength": "Los senhals devon aver al mens {{minLength}} caractèrs"
+    },
+    "loginFailure": {
+      "toastMessage": "Connexion fracassat"
+    },
+    "loginRedirect": {
+      "failureMessage": "La redireccion de connexion a fracassat"
+    },
+    "logout": {
+      "failureMessage": "La desconnexion a fracassat",
+      "loggingOut": "Se desconnectar..."
+    },
+    "logoutEverywhere": {
+      "failureMessage": "Lo desconnexion pertot a fracassat"
+    },
+    "mfa": {
+      "disableErrorTitle": "Fracàs al desactivar 2FA sul compte.",
+      "disableSuccessMessage": "Avètz desactivat 2FA sus aqueste compte !",
+      "disableSuccessTitle": "2FA desactivat",
+      "errorWithVerificationCode": "Error amb lo còde de verificacion.",
+      "secretErrorTitle": "Fracàs a obténer lo secret 2FA",
+      "setupErrorTitle": "Fracàs al moment de la configuracion de 2FA sul compte.",
+      "setupSuccessMessage": "Avètz activat 2FA sus vòstre compte!",
+      "setupSuccessTitle": "2FA configurat"
+    },
+    "microsoft": {
+      "buttonLabel": "Microsoft",
+      "logoAlt": "Logotip de Microsoft"
+    },
+    "modalBody": "Vos cal èsser connectat a vòstre compte per <saveProgress>enregistrar vòstras responsas e progressar</saveProgress>. Se avètz pas de compte, podètz <signUpFree>vos inscriure uèi gratuitament</signUpFree>.",
+    "modalTitle": "Connectatz-vos o inscrivètz-vos",
+    "notLinked": {
+      "explanation": "Avèm trobat un compte {{siteName}} amb l'adreça electronica d'aqueste compte {{provider}}. Pasmens, lo compte {{siteAccountName}} es pas configurat per permetre l'accès a aqueste compte {{providerAccount}}. Avètz pas activat la connexion amb {{signInProvider}} sus vòstre compte {{siteAccount}} , siá avètz utilizat un compte {{alternateProvider}} diferent per vos connectar.",
+      "readMore": "Legir mai sus la connexion amb {{provider}}.",
+      "switchAccount": "xxxxxxIf you'd like to switch which {{provider}} account you log in with, follow the same instructions, but on the <accountLink>My Account</accountLink> page, click \"Unlink\" on any old {{linkedProvider}} account first.",
+      "title": "Utilizatz pas aqueste compte {{provider}} per vos connectar"
+    },
+    "orSection": "Alternativament, podètz",
+    "page": {
+      "ariaLabel": "Error d'autentificacion",
+      "ssoHeading": "Connectatz-vos amb :"
+    },
+    "pageTitle": "Connexion – {{siteName}}",
+    "parentalConsent": {
+      "checkboxLabel": "Marcatz la caseta per confirmar qu'avètz legit e comprés aqueste messatge.",
+      "permissionIntro": "Abans de vos inscriure a quin programa o sit web en linha que siá, deuriátz demandar la permission a un parent o a un cuidaire per que pòscan verificar qu'es apropriat per vos d'utilizar.",
+      "privacyNote": "Sovent los sites web emmagazinan d'informacions sus vos per vos donar la melhora experiéncia possibla sul sit mas deuriatz totjorn verificar quinas donadas son conservadas per aquò far – podètz legir cossí utilizam vòstras donadas per provesir nòstre servici <privacyLink>aicí</privacyLink>.",
+      "title": "Informacion suplementària"
+    },
+    "password": {
+      "forgotten": "Avètz oblidat vòstre senhal?",
+      "minLengthHint": "Vòstre senhal deu aver al mens {{minLength}} caractèrs de long."
+    },
+    "passwordInput": {
+      "hideButton": "Amagar",
+      "invalidFeedback": "Picatz un senhal valid."
+    },
+    "passwordReset": {
+      "breadcrumbTitle": "Reïnicializar lo senhal",
+      "checkInbox": "Mercés de verificar vòstra bóstia d'entrada.",
+      "completedTitle": "Reïnicializacion de senhal capitada",
+      "errorTitle": "Impossible de reïnicializar vòstre senhal",
+      "failedTitle": "Fracàs al reïnicializar lo senhal",
+      "failureMessage": "La reïnicializacion del senhal a fracassat",
+      "forgottenLink": "Avètz oblidat vòstre senhal?",
+      "noTokenMessage": "Mercés de vos assegurar qu'avètz clicat sul ligam provesit dins vòstre corrièl de reïnicializacion de senhal.",
+      "noTokenTitle": "Cap de geton de reïnicializacion provesit",
+      "successBody": "S'existís un compte amb l'adreça electronica {{email}}, vos avèm mandat un corrièl de reïnicializacion del senhal. Se recebètz pas un corrièl, es possible qu'ajatz pas un compte amb aquesta adreça de corrièl.",
+      "successMessage": "Vòstre senhal es estat mes a jorn amb succès.",
+      "successTitle": "Corrièl de reïnicializacion de senhal mandat",
+      "title": "Reïnicializar vòstre senhal",
+      "verifyingToken": "Verificacion del geton de reïnicializacion..."
+    },
+    "passwordStrength": {
+      "breachedFeedback": "Inutil"
+    },
+    "raspberryPi": {
+      "fullLabelDesktop": "Fondacion Raspberry Pi",
+      "logoAlt": "Logotip de Raspberry Pi"
+    },
+    "register": {
+      "continueWithEmail": "Contunhar amb lo corrièl",
+      "description": "Aicí, podètz crear un compte {{siteTitle}} , o vos connectar a un compte existent.",
+      "emailHeading": "Creatz un compte novèl amb vòstre corrièl :",
+      "existingAccount": "Avètz ja un compte?",
+      "pageTitle": "Crear un compte {{siteName}}",
+      "ssoHeading": "O connectatz-vos amb :"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageQuestion": "Quin temps as?",
+        "heading": "Impossible d'utilizar lo corrièl",
+        "message": "Coma avètz entre {{minAge}}-{{maxAge}} ans, vos cal <strong>vos inscriure en utilizant un provesidor tèrç</strong>.",
+        "optionBetween": "{{minAge}} - {{maxAgeWithConsent}} ans",
+        "optionOver": "{{minAgeWithConsent}} e mai",
+        "optionUnder": "{{maxAge}} o jos",
+        "overLabel": "13 e mai",
+        "selectionRequired": "Fasètz una seleccion.",
+        "terms": "Podèm pas que crear de comptes pels utilizaires {{minAge}} ans o mai.",
+        "tryOtherProvider": "Ensajatz tornarmai, en utilizant siá {{authProviders}}."
+      },
+      "emailSection": {
+        "button": "Inscrivètz-vos amb un corrièl",
+        "title": "O utilizatz un corrièl :"
+      },
+      "errorHeading": "Impossible de crear vòstre compte",
+      "goBackConfirm": "Sètz segur que volètz tornar? Tota informacion qu'avètz picada serà perduda.",
+      "pageTitle": "Crear un compte {{siteTitle}}",
+      "socialSignIn": {
+        "title": "Contunhar amb:"
+      },
+      "ssoVerified": "Vòstra edat es ja estada verificada per vòstre provesidor SSO.",
+      "success": {
+        "continue": "Anem!",
+        "viewAccount": "Verificatz mon compte",
+        "welcome": "Sètz tot preparat. Benvengut!"
+      },
+      "termsAccept": "Accepti las condicions d'utilizacion <termsLink></termsLink>.",
+      "termsRequired": "Vos cal acceptar las condicions per contunhar."
+    },
+    "registrationSuccess": {
+      "accountButton": "Vòstre compte",
+      "homeButton": "Ostal",
+      "title": "Compte creat!"
+    },
+    "roleSelect": {
+      "description": "Saber s'ètz un escolans o un professor significa que podèm nos assegurar qu'avètz accès a las foncionalitats justas.",
+      "heading": "Sètz un escolans o un professor?",
+      "student": {
+        "button": "Soi un estudiant",
+        "featurePreferences": "Definissètz vòstras preferéncias per que vejatz de contengut pertinent per vos",
+        "featureProgress": "Seguissètz vòstre progrès, inclusent quantas questions avètz respondudas per tèma",
+        "intro": "Amb un compte estudiant podètz:"
+      },
+      "teacher": {
+        "featureGroups": "Creatz de grops e convidatz los escolans a los rejónher",
+        "featureProgress": "Veire lo progrès dels escolans dins vòstres grops",
+        "featureQuizzes": "Creatz de quiz a partir de las questions disponiblas, e las assignatz a vòstres grops",
+        "intro": "Amb un compte de professor podètz:",
+        "noAccessNote": "Los comptes dels ensenhaires vos donan pas accès a las responsas. <learnMoreLink>Ne saber mai</learnMoreLink>"
+      }
+    },
+    "sessionError": {
+      "breadcrumbTitle": "Error de coeréncia de l'utilizaire",
+      "message": "Sètz desconnectat dins un autre onglet o fenèstra de navigador, doncas vos avèm desconnectat aicí. Utilizatz lo boton çai-jos per contunhar ont avètz quitat.",
+      "tip": "xxxxxx<strong>Tip:</strong> If you want to be logged in to two accounts at the same time, you can use your browser's <privacyLink>private browsing</privacyLink> feature.",
+      "title": "Vòstra sesilha {{siteTitle}} a cambiat"
+    },
+    "sessionExpired": {
+      "message": "Vòstra sesilha {{siteTitle}} a expirat, doncas vos avèm desconnectat. Utilizatz lo boton çai-jos per contunhar ont avètz quitat.",
+      "title": "Vòstra sesilha es expirada"
+    },
+    "sidebar": {
+      "tabAge": "Verificacion d'edat",
+      "tabMethod": "Metòde d'inscripcion",
+      "tabPreferences": "Preferéncias"
+    },
+    "sso": {
+      "learnMore": "Ne saber mai sus la connexion unica"
+    },
+    "teacherConnect": {
+      "codeError": "Picatz un còde valid.",
+      "connectedTeachers": "Ensenhaires connectats:",
+      "heading": "Connectatz vòstre compte a vòstre professor",
+      "skipButton": "Sautar"
+    },
+    "teacherRequest": {
+      "emailBody": "xxxxxxHello,\n\n{{requestLine}}\n\nMy school is: {{school}}\n{{verificationMessage}}\n\n\nAny other information: {{otherInformation}}\n\nThanks, \n\n{{firstName}} {{lastName}}",
+      "noSchool": "Se avètz pas una escòla associada, emplenatz nòstre formulari <contactFormLink>Contactatz-nos</contactFormLink>. Se sètz un tutor privat o un parent, podètz <tutorAccountLink>demandar un {{siteTitle}} compte Tutor</tutorAccountLink>.",
+      "noSchoolError": "Avètz pas provesit vòstra escòla – mercés d'apondre vòstra escòla sus vòstra pagina <accountLink>Mon compte</accountLink>. Se sètz un tutor privat o un parent, podètz <tutorAccountLink>demandar un {{siteTitle}} compte Tutor</tutorAccountLink>.",
+      "otherInfo": "Tota autra informacion",
+      "submitError": "{{errorMessage}} Nos podètz contactar a <webmasterContact>{{webmasterEmail}}</webmasterContact>",
+      "submitted": "Mercé d'aver sometut una demanda de compte de professor.",
+      "teacherFaq": "Anatz a la pagina <faqLink>FAQ del professor</faqLink> per aprene las foncionalitats de vòstre compte novèl.",
+      "title": "Demanda de compte de professor",
+      "wrongEmailError": "Avètz pas utilizat vòstra adreça de corrièl escolar – mercés de cambiar vòstra adreça de corrièl sus vòstra pagina <accountLink>Mon compte</accountLink>."
+    },
+    "tfa": {
+      "codeInvalid": "Picatz un còde de verificacion valid",
+      "codePlaceholder": "Còdi de verificacion",
+      "codeValidationError": "Picatz un còde de verificacion valid",
+      "description": "L'autentificacion a dos factors es estada activada per aqueste compte.",
+      "enabled": "L'autentificacion a dos factors es estada activada per aqueste compte.",
+      "title": "Autentificacion en dos factors",
+      "verifyButton": "Verificar"
+    },
+    "unauthorised": {
+      "breadcrumbTitle": "Non autorizat",
+      "message": "Avètz pas l'autorizacion per accedir a la pagina :",
+      "title": "Accès refusat"
+    },
+    "unlinkAccount": {
+      "failureMessage": "Fracàs al desligar del compte",
+      "successTitle": "Compte desligat"
+    },
+    "verifyEmail": {
+      "continueLoginMessage": "Mercés de vos connectar <loginLink></loginLink> per contunhar.",
+      "failedTitle": "Impossible de verificar vòstra adreça de corrièl",
+      "loginFirstMessage": "S'avètz besonh d'un corrièl de verificacion novèl, vos plai <loginLink>connectatz-vos</loginLink> d'en primièr.",
+      "resendPrompt": "Avètz pas recebut lo corrièl?",
+      "sentMessage": "Corrièl de verificacion mandat a {{emailAddress}}",
+      "title": "Verificatz vòstra adreça de corrièl",
+      "unverifiedMessage": "Clicatz sul ligam dins lo corrièl qu'avèm mandat per acabar la configuracion de vòstre compte.",
+      "verifiedMessage": "Avètz verificat vòstra adreça electronica e acabat de crear vòstre compte."
+    }
+  },
+  "banners": {
+    "downtime": {
+      "dismissButton": "Descartar<screenReaderText> notificacion d'arrèst</screenReaderText>",
+      "message": "{{siteTitle}} will be unavailable on Saturday 24 October from 8pm BST for a few hours for essential server maintenance."
+    },
+    "emailVerification": {
+      "dismissButton": "Snooze",
+      "heading": "Verificacion de corrièl"
+    },
+    "research": {
+      "dismissButton": "Ai comprés"
+    }
+  },
+  "biologyExtension": {
+    "cardSubtitle": "Estiratz vòstra compreneson de la biologia amb nòstras questions d'extension que vos fan pensar en defòra de la bóstia.",
+    "cardTitle": "Extension de la biologia"
+  },
+  "birthdayStats": {
+    "community": {
+      "assignments": "total de missions ensemble",
+      "schools": "escòlas utilizant Isaac",
+      "teachers": "los ensenhaires que fixan de prètzfaches"
+    },
+    "hard": {
+      "heading": "Most <emphasis>difficult</emphasis> question"
+    },
+    "highlights": {
+      "hintViews": "visualizacions d'entresenhas totalas",
+      "longestStreak": "mai longa tièra d'escolans",
+      "streakUnit": "setmanas"
+    },
+    "overview": {
+      "accounts": "Comptes",
+      "conceptsViewed": "Concèptes vistes",
+      "questionAttempts": "Ensags de questions"
+    },
+    "page": {
+      "closing": "Mercés d'èsser una partida d'Isaac!",
+      "intro": "Lo 1èr de setembre de 2025 marquèt l'11n anniversari dels primièrs ensags de questions sus la plataforma Isaac Physics. Per festejar, tornam agachar las estatisticas d'Isaac pendent aqueste temps.",
+      "metaTitle": "Feliç <emphasis>11è</emphasis> aniversari a Isaac Science!",
+      "title": "Las estatisticas del 11n anniversari d'Isaac"
+    },
+    "popular": {
+      "conceptHeading": "Concèpte mai popular",
+      "questionHeading": "La question mai populara"
+    }
+  },
+  "bookmarks": {
+    "emptyState": {
+      "message": "Avètz pas encara de marcapaginas."
+    },
+    "loadError": {
+      "message": "Impossible de cargar vòstres marcapaginas. Ensajatz tornar mai tard."
+    },
+    "saveConfirmation": "Enregistrat!",
+    "sidebar": {
+      "filterTitle": "Filtrar los signets per...",
+      "searchTitle": "Cercar los marcapaginas",
+      "sortTitle": "Triar los signets per...",
+      "stageFilter": "Etapa d'aprendissatge"
+    }
+  },
+  "books": {
+    "detail": {
+      "loadError": "Impossible de cargar la pagina del libre"
+    },
+    "error": {
+      "fetchContents": "Impossible de recuperar lo contengut del libre.",
+      "fetchPage": "Impossible de recuperar la pagina del libre."
+    },
+    "index": {
+      "loadError": "Impossible de cargar lo contengut del libre"
+    },
+    "overview": {
+      "exploreDescription": "Clicatz sus una imatge de libre çai-jos per anar a la pagina d'acuèlh de cada libre e explorar mai luènh.",
+      "exploreTitle": "Exploratz nòstres libres en linha",
+      "title": "Nòstres libres"
+    },
+    "page": {
+      "emptyState": "I a pas de material per aquesta pagina.",
+      "extensionIntroText": "Espandissètz vòstras limitas en ensajar aquelas questions d'extension suplementàrias.",
+      "extensionTitle": "Trabalh d'extension"
+    },
+    "preUniMaths": {
+      "helpText": "Lo libre de Matematicas preuniversitàrias de Fisica Isaac per las Sciéncias",
+      "level2Title": "Nivèl 2",
+      "level3Title": "Nivèl 3",
+      "level4Title": "Nivèl 4",
+      "level5Title": "Nivèl 5",
+      "level6Title": "Nivèl 6",
+      "level7Title": "Nivèl 7"
+    },
+    "solvingPhysProblems": {
+      "title": "Cossí resòlvre de problèmas de fisica"
+    },
+    "yr9": {
+      "chapter5Subheading": "(Seccions 35-38)",
+      "chapter6Subheading": "(Seccions 39-48)",
+      "helpText": "Lo libre de fisica d'Isaac fins al GCSE",
+      "title": "Passatz cap a GCSE de fisica"
+    }
+  },
+  "button": {
+    "addBookmark": "Apondre un marcapagina",
+    "addMatchingRule": "Apondre una règla de correspondéncia",
+    "assign": "Assignar",
+    "back": "Arrièr",
+    "bookPlace": "Reservatz una plaça",
+    "cancel": "Anullar",
+    "changePassword": "Cambiar lo senhal",
+    "close": "Barrar",
+    "closeModal": "Barrar lo modal",
+    "confirm": "Confirmar",
+    "connect": "Connectar",
+    "continue": "Contunhar",
+    "createAccount": "Crear un compte",
+    "createGroup": "Crear un grop",
+    "createNewGroup": "Crear un grop novèl",
+    "delete": "Escafar",
+    "deleteAllCurves": "Suprimir totas las corbas",
+    "deleteGroup": "Suprimir lo grop",
+    "deleteMatchingRule": "Suprimir la règla de correspondéncia",
+    "deleteSelectedCurve": "Suprimir la corba seleccionada",
+    "details": "Detalhs",
+    "downloadAssignmentsCsv": "Telecargar las missions CSV",
+    "downloadCsv": "Telecargar CSV",
+    "downloadTestsCsv": "Telecargar los tèsts CSV",
+    "duplicateAndEdit": "Duplicar e modificar",
+    "emailUsers": "Utilizaires de corrièl",
+    "expand": "S'espandir",
+    "extendDueDate": "Prolongar la data de venciment",
+    "findOutMore": "Ne saber mai",
+    "getTeacherAccount": "Obténer un compte de professor",
+    "help": "Ajudar",
+    "home": "Ostal",
+    "iAmATeacher": "Soi un professor",
+    "inviteUsers": "Convidar los utilizaires",
+    "joinGroup": "Inscrivètz-vos a un grop",
+    "learnMore": "Ne saber mai",
+    "leaveGroup": "Quitar lo grop",
+    "loadMore": "Cargar mai",
+    "logIn": "Connectatz-vos",
+    "logOut": "Desconnectar",
+    "manage": "Reüssir",
+    "manageGroups": "Gerir los grops",
+    "menu": "Menú",
+    "next": "Venent",
+    "ok": "ÒC BEN",
+    "ourBooks": "nòstres libres",
+    "preview": "Apercebut",
+    "previous": "Precedent",
+    "printPage": "Imprimir la pagina",
+    "readMore": "Legir mai",
+    "remove": "Levar",
+    "removeBookmark": "Suprimir lo marcapagina",
+    "resendVerificationEmail": "Tornatz mandar un corrièl de verificacion",
+    "reset": "Reïnicializar",
+    "resetPassword": "Reïnicializar lo senhal",
+    "searchAndFilter": "Cercar e filtrar",
+    "seeMore": "Veire mai",
+    "seeMoreEvents": "Mai d'eveniments",
+    "selectTopic": "Seleccionar un tèma",
+    "sendEmails": "Mandar de corrièls",
+    "setAgain": "Tornatz fixar",
+    "setAsAssignment": "Definir coma assignacion",
+    "setTest": "Ensemble de tèst",
+    "show": "Mostrar",
+    "signUp": "Inscrivètz-vos",
+    "submit": "Sometre",
+    "unassign": "Desassignar",
+    "unsave": "Desenregistrar",
+    "update": "Metre al jorn",
+    "viewGroupProgress": "Veire lo progrès del grop",
+    "viewMore": "Veire mai",
+    "viewTests": "Veire los tèsts"
+  },
+  "cards": {
+    "imageAlt": "Illustracion per {{title}}",
+    "opensNewTab": "(se dobrís dins un novèl onglet)",
+    "readMoreAria": "{{title}} legir mai"
+  },
+  "challenges": {
+    "emptyState": {
+      "notifyButton": "Avisatz-me",
+      "subscribedMessage": "I a pas de desfís en cors pel moment, mas sètz abonat a nòstra lista de difusion e seretz lo primièr a saber lo seguent!",
+      "unsubscribedMessage": "I a pas de desfís en cors pel moment. Actualizatz vòstras preferéncias de comunicacion per èsser lo primièr a saber lo desfís seguent."
+    }
+  },
+  "clientError": {
+    "concepts": {
+      "loadError": "Impossible de cargar de concèptes"
+    },
+    "contentNotFound": "Contengut pas trobat",
+    "defaultTitle": "Error al moment de la recuperacion de donadas del servidor",
+    "fragmentNotFound": "O planhèm, fragment de pagina pas trobat :<code>{{fragmentId}}</code>",
+    "heading": "O planhèm, mas una error s'es producha dins l'aplicacion {{siteName}}!",
+    "notFound": {
+      "message": "O planhèm, pagina pas trobada : <code>{{pathname}}</code>",
+      "offlineMessage": "Sembla que sètz fòra linha. Benlèu volètz verificar vòstra connexion a internet, puèi actualizar aquesta pagina per ensajar tornarmai.<br/>Se avètz encara de problèmas, mercés de <webmasterEmail>nos dire</webmasterEmail>.",
+      "offlineTitle": "Pas d'internet",
+      "reportPrompt": "Espèras de trobar quicòm aicí?<contactAction>Fasètz-nos saber<srOnly> a prepaus d'aquesta pagina mancanta</srOnly></contactAction>.",
+      "title": "Pagina pas trobada"
+    },
+    "offlineMessage": "Sembla que sètz fòra linha. Benlèu volètz verificar vòstra connexion a internet, puèi actualizar aquesta pagina per ensajar tornarmai.<br/>Se avètz encara de problèmas, mercés de <contactLink>nos dire</contactLink>.",
+    "offlineWarning": "Semblatz èsser fòra linha.",
+    "recoveryOptions": "You may want to <refreshLink>refresh this page and try again</refreshLink>, <homeLink>return to our homepage</homeLink>, or <contactLink>contact</contactLink> or <emailLink>email</emailLink> us if this keeps happening.",
+    "sessionExpired": {
+      "breadcrumbTitle": "Error de sesilha expirada",
+      "contactSupport": "Mercés de mandar un corrièl a <mailtoLink>{{webmasterEmail}}</mailtoLink> se aquò contunha de se produire.",
+      "heading": "O planhèm, mas vòstra sesilha es expirada !",
+      "retryInstructions": "You should <refresh>refresh this page and try again</refresh>, or try refreshing whilst <bypassCache>bypassing your browser's cache</bypassCache>, which may have saved an outdated version of Isaac."
+    },
+    "skills": {
+      "loadError": "Impossible de cargar de questions de competéncias",
+      "saveError": "Poguèt pas salvar la responsa."
+    },
+    "statusCode": "Còde d'estat : {{statusCode}}",
+    "userInfo": {
+      "errorDetails": "Detalhs de l'error",
+      "sectionTitle": "Informacions utilas d'inclure dins vòstre corrièl"
+    }
+  },
+  "clipboard": {
+    "copiedTooltip": "Copiat dins lo quichapapièrs!",
+    "copyAriaLabel": "Còpiar dins lo portapapèls",
+    "copyButton": "Còpia"
+  },
+  "clozeQuestion": {
+    "accessibility": {
+      "dragEndDropZone": "L'element arrossegable {{itemText}} foguèt daissat tombar dins lo numèro de zòna de daissament {{dropZoneIndex}}",
+      "dragEndSwapped": "L'element arrossegable {{activeItemText}} foguèt escambiat per {{hoveredItemText}}.",
+      "dragOverDropZone": "L'element arrossegable es al dessús del numèro de zòna de desplaçament {{dropZoneIndex}}",
+      "dragOverSwap": "Escambiar l'element arrossegable {{activeItemText}} amb l'element {{hoveredItemText}}."
+    }
+  },
+  "codeEditor": {
+    "feedback": {
+      "correct": "Vòstre còde es corrècte!",
+      "incorrect": "Vòstre còde es incorrècte !",
+      "ranCorrectly": "Vòstre còde foncionava corrèctament !"
+    },
+    "iframeTitle": "Sandbox de còde",
+    "timeout": {
+      "infoHeading": "Informacions utilas d'inclure dins vòstre corrièl :"
+    }
+  },
+  "concepts": {
+    "cardSubtitle": "Revisatz los concèptes claus per {{subjectContext}}.",
+    "errorFetching": "Error al moment de la recuperacion de concèptes",
+    "filteredIntro": "Los concèptes mostrats sus aquesta pagina son estats filtrats per afichar sonque los que son pertinents per {{contextDescription}}. Podètz consultar totes los concèptes <allConceptsLink>aicí</allConceptsLink>.",
+    "genericIntro": "Utilizatz nòstre cercaire de concèptes per explorar totes los concèptes sus la plataforma Isaac.",
+    "resultsCount": "Afichar los resultats <b>{{count}}</b>",
+    "sidebar": {
+      "searchTitle": "Cercar de concèptes"
+    }
+  },
+  "confidence": {
+    "infoModal": {
+      "body": "Revisam e metèm a jorn regularament lo contengut de la plataforma {{siteName}} e volèm vòstra contribucion per priorizar lo contengut e avalorar l'impacte de las mesas a jorn. Las donadas capturadas amb aqueles botons nos ajudaràn a identificar las zònas prioritàrias.",
+      "title": "Informacion"
+    },
+    "options": {
+      "high": "Naut",
+      "low": "Bas",
+      "medium": "Mejan",
+      "partly": "En partida"
+    },
+    "question": {
+      "followUp": {
+        "question": "Après aver legit lo retorn, quin es vòstre nivèl de confiéncia per respondre corrèctament a aquela question ara?"
+      },
+      "initial": {
+        "question": "Quin es vòstre nivèl de confiéncia que vòstra responsa siá corrècta?"
+      },
+      "title": "Clicatz sus un boton per verificar vòstra responsa"
+    },
+    "quickQuestion": {
+      "followUp": {
+        "question": "Vòstra pròpria responsa es corrècta?"
+      },
+      "initial": {
+        "question": "Quin es vòstre nivèl de fisança que vòstra pròpria responsa siá corrècta?"
+      },
+      "title": "Clicatz sus un boton per mostrar la responsa"
+    }
+  },
+  "connections": {
+    "connect": {
+      "codeInstruction": "Picatz lo còde donat per vòstre professor per crear una connexion professora e rejónher un grop.",
+      "codePlaceholder": "Picatz vòstre còde aicí",
+      "codeTooltip": "Los ensenhaires que sètz connectats pòdon visualizar vòstre progrès de prètzfach {{siteTitle}}.",
+      "invalidCodeMessage": "Lo còde de grop qu'avètz picat es pas valid. Los còdes de grop son de 6-8 caractèrs de long e contenon pas que de letras e de chifras.",
+      "invalidCodeTitle": "Còde de grop invalid",
+      "noCodeMessage": "Cal picar un còde de grop!",
+      "noCodeTitle": "Cap de còde de grop provesit",
+      "title": "Connectatz-vos a vòstre professor"
+    },
+    "groups": {
+      "emptyState": "Sètz pas membre de cap de grop.",
+      "fallbackName": "Grop {{groupId}}",
+      "heading": "Vòstres adesions al grop",
+      "headingTooltip": "Aquestes son los grops que sètz actualament membre. Los grops sus {{siteTitle}} permeton als ensenhaires de fixar de prètzfaches a maites escolans en un còp.",
+      "inactiveLabel": "inactiu",
+      "leaveButton": "Se n'anar",
+      "leaveInfo": "Se volètz daissar definitivament un grop, demandatz a vòstre professor de vos suprimir.",
+      "listTitle": "Adesions al grop",
+      "rejoinButton": "Tornatz rejónher",
+      "searchPlaceholder": "Grops de recèrca"
+    },
+    "students": {
+      "emptyState": "Avètz pas de connexions estudiantas activas.",
+      "heading": "Vòstras connexions estudiantas",
+      "headingTooltip": "Aquestes son los escolans qu'an partejat lors donadas {{siteTitle}} amb vos. Aquestes escolans pòdon tanben visualizar vòstre nom e adreça de corrièl sus lor pagina de connexions pel professor.",
+      "listTitle": "Connexions dels escolans",
+      "removeAllButton": "Suprimir tot",
+      "searchPlaceholder": "Cercar d'escolans",
+      "studentTooltip": "Avètz accès a las donadas d'aqueste utilizaire e pòdon veire vòstre nom e vòstra adreça de corrièl. Per suprimir aqueste accès, clicatz sus « Suprimir »."
+    },
+    "teachers": {
+      "emptyState": "Avètz pas de connexions activas pel professor.",
+      "heading": "Connexions dels ensenhaires",
+      "revokeButton": "Revocar",
+      "searchPlaceholder": "Cercar los ensenhaires",
+      "tooltip": "Aqueste utilizaire ({{teacherEmail}}) a accès a vòstras donadas. Per suprimir aqueste accès, clicatz sus « Revocar »."
+    }
+  },
+  "contact": {
+    "faq": {
+      "heading": "Question frequentament pausada?",
+      "text": "Vos agradarà benlèu de consultar nòstras paginas de FAQ per veire se pòdon vos ajudar : <studentFaqLink>FAQ dels escolans</studentFaqLink> | <teacherFaqLink>FAQs del professor</teacherFaqLink>"
+    },
+    "form": {
+      "errorMessage": "{{errorMessage}} Nos podètz contactar a <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>",
+      "heading": "Mandatz-nos un messatge",
+      "maxLengthWarning": "Vòstre messatge a atench la longor maximala.",
+      "messageLabel": "Messatge",
+      "subjectLabel": "Subjècte del messatge",
+      "successMessage": "Mercé per vòstre messatge."
+    },
+    "formErrorTitle": "Error al moment del mandadís del formulari Contactatz-nos",
+    "preset": {
+      "accountDeletionMessage": "Bonjorn,\n\nPodètz suprimir mon compte {{siteTitle}}.\n\nMercés, \n\n",
+      "accountDeletionSubject": "Demanda de supression del compte",
+      "contentProblemPlaceholder": "Descrivètz lo problèma aicí.",
+      "contentProblemSection": ", seccion \"{{sectionName}}\"",
+      "contentProblemSubject": "Problèma de contengut",
+      "pageNotFoundMessage": "Pagina: \"{{pageName}}\"\n\n[Apondètz tot detalh sus cossí avètz trobat aquesta pagina mancanta aicí.]",
+      "pageNotFoundSubject": "Pagina pas trobada",
+      "teacherAccountMessage": "Bonjorn,\n\nPodètz convertir mon compte {{siteTitle}} en un compte de professor.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n"
+    },
+    "problems": {
+      "heading": "De problèmas amb lo sit?",
+      "text": "Volèm totjorn melhorar doncas mercés de raportar los problèmas a <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>"
+    },
+    "social": {
+      "text": "Seguissètz-nos sus:"
+    }
+  },
+  "content": {
+    "codeSnippet": {
+      "viewOnGithub": "Afichatge sus GitHub"
+    },
+    "expandImageLabel": "Espandir l'imatge",
+    "imagePreviewTitle": "Apercebut de l'imatge"
+  },
+  "contentPropertyTags": {
+    "deprecatedLabel": "DEPRECAT",
+    "noFilterLabel": "SENSE FILTRE",
+    "supersededLabel": "REMPLATAT"
+  },
+  "context": {
+    "mathsAndFurtherMaths": "Matematicas e matematicas suplementàrias"
+  },
+  "contextPicker": {
+    "resetButton": "Reïnicializar lo contèxte de visualizacion"
+  },
+  "cookieConsent": {
+    "accept": "Acceptar",
+    "anvil": {
+      "title": "Autorizar lo contengut d'Anvil ?"
+    },
+    "desmos": {
+      "title": "Autorizar lo contengut de Desmos?"
+    },
+    "geogebra": {
+      "title": "Autorizar lo contengut de GeoGebra ?"
+    },
+    "youtube": {
+      "title": "Autorizar lo contengut YouTube?"
+    }
+  },
+  "csOverview": {
+    "description": "Ada Computer Science es una plataforma d'aprendissatge gratuita pels ensenhaires e escolans d'informatica. Desvolopat per la Fondacion Raspberry Pi en partenariat amb l'equipa Isaac Science a l'Universitat de Cambridge, es adaptat per ajudar los aprenents d'edats 11 e 19 ans. Ada Computer Science ofrís de ressorsas estructuradas per sosténer los ensenhaires e los escolans. Aquestes incluson de paginas de concèpte, de questions interactivas, e d'aisinas pels ensenhaires, demest una granda varietat d'autras ressorsas concebudas per melhorar l'educacion en informatica.",
+    "overviewTitle": "Informatica",
+    "students": {
+      "featureChallenges": "Inscrivètz-vos als desfís de tèrme per testar vòstras coneissenças e competéncias.",
+      "featureLearn": "Aprene a travèrs un plan d'estudis complet de tèmas explicats dins de paginas de concèpte.",
+      "featurePractise": "Practicatz e testatz vòstra compreneson amb de questions interactivas.",
+      "featureTrack": "Seguissètz vòstre progrès e identificatz los domenis a melhorar.",
+      "intro": "Exploratz de ressorsas interactivas concebudas per vos ajudar a estudiar l'informatica:",
+      "title": "Pels escolans"
+    },
+    "teachers": {
+      "featureAssignments": "Fixatz de prètzfaches d'automarcatge per estalviar de temps e sosténer l'aprendissatge independent.",
+      "featureMarkbook": "Seguir lo progrès dels escolans amb un quasernet personal per identificar los domenis de melhorament.",
+      "featureTeach": "Ensenhar amb mai de 50 tèmas alinhats al plan d'estudis que cobrisson tota l'amplor de l'informatica.",
+      "intro": "Accedissètz a de ressorsas estructuradas per vos ajudar a ofrir una educacion informatica de nauta qualitat:",
+      "title": "Pels ensenhaires"
+    },
+    "visitButton": "Anar a Ada CS"
+  },
+  "cyberExplorers": {
+    "about": {
+      "classroomTools": "Aisinas de classa per agropar los escolans dins de classas, assignar d'activitats e seguir lo progrès dels aprenents",
+      "discoverButton": "Descobrissètz mai d'Ada CS",
+      "expertContent": "Contengut d'expèrts desvolopat per la Fondacion Raspberry Pi en collaboracion amb de partenaris dont l'Universitat de Cambridge",
+      "freeResources": "Ressorsas d'informatica gratuitas, d'activitats practicas per las edats de 11 a 14 ans a l'aprendissatge estructurat d'informatica per las edats de 14 a 19 ans",
+      "subtitle": "Un luòc per aprene l'informatica, dels 11 a 19 ans.",
+      "title": "Qu es Ada Informatica?"
+    },
+    "header": {
+      "description": "Activitats practicas qu'ajudan los aprenents a comprene la tecnologia, a bastir la confiéncia e a se preparar per çò que ven.",
+      "exploreButton": "Explorar los tèmas d'aprendissatge",
+      "freeNote": "Totjorn disponible a gratis.",
+      "imageAlt": "Un professor assistent dos escolans.",
+      "title": "<slash>/</slash><br/>Vòstre futur en tecnologia comença aicí"
+    },
+    "metaDescription": "Ressorsas pels escolans e ensenhaires per las edats 11-14.",
+    "partners": {
+      "description": "TechFirst connecta las escòlas amb d'activitats e d'eveniments presencials liurats per de partenaris de liurason regionals dins lo Reialme Unit. Aquestes partenaris amassan d'escòlas, de collègis, d'emplegaires, d'autoritats localas e d'organizacions comunitàrias per provesir d'oportunitats d'enriquiment inspirantas e mostrar de vias de tecnologia e d'informatica localas.",
+      "imageAlt": "Mapa estilizada del Reialme Unit mostrant d'exemples d'emplaçaments de partenaris regionals.",
+      "recognition": "Las escòlas pòdon tanben trabalhar cap a la reconeissença de l'escòla TechFirst, amb de prèmis de bronze, d'argent e d'aur disponibles. A partir de setembre de 2026, TechFirst operarà dins cada region e nacion d'origina del Reialme Unit.",
+      "title": "Partenaris de liurason regionals"
+    },
+    "topics": {
+      "comingSoon": "Començatz per la cibersecuritat, amb mai de subjèctes a venir lèu.",
+      "cyberSecurityTitle": "Ciberseguretat",
+      "cyberattacks": {
+        "body": "Comprene qual realiza de ciberatacas, perqué e cossí utilizan de logicials malvolents per o far.",
+        "title": "Ciberatacas"
+      },
+      "defendMalware": {
+        "body": "Explora las aisinas e las tecnicas utilizadas per detectar, arrestar e suprimir de logicials malvolents.",
+        "title": "Se defendre contra los logicials malvolents"
+      },
+      "description": "Bastir vòstras competéncias a travèrs d'activitats practicas que vos ajudan a comprene cossí fonciona la tecnologia e cossí es utilizada per resòlvre de problèmas del mond real.",
+      "exploreButton": "Explorar",
+      "networkSecurity": {
+        "body": "Descobrissètz cossí las rets son protegidas de las atacas e mantengudas seguras.",
+        "title": "Seguretat de la ret"
+      },
+      "socialEngineering": {
+        "body": "Mantenètz-vos segurs en linha e aprenètz cossí los sistèmas son atacats e defenduts.",
+        "title": "Engenharia sociala"
+      },
+      "title": "Causissètz un tèma d'explorar"
+    },
+    "welcome": {
+      "description": "Exploratz de ressorsas de seguretat cibernetica familiaras amb de novèls contenguts informatics e tecnologics pels aprenents.",
+      "exploreMoreText": "A costat de la cibersecuritat, Ada CS creis amb de tèmas novèls e d'experiéncias d'aprendissatge per las edats de 11 a 14 ans.",
+      "exploreMoreTitle": "Mai d'explorar",
+      "familiarText": "Las ressorsas de cibersecuritat que coneissètz fan ara partida d'Ada CS, sostengudas per nòstre partenariat amb lo Govèrn del Reialme Unit.",
+      "familiarTitle": "Ressorsas conegudas",
+      "teachingText": "Crear de classas, assignar d'activitats, e seguir lo progrès dels aprenents, tot en un sol luòc.",
+      "teachingTitle": "Aisinas d'ensenhament",
+      "title": "Los ciberexplorators planvenguts"
+    }
+  },
+  "dashboard": {
+    "assignments": {
+      "emptyState": "Avètz pas de prètzfaches amb de datas d'escasença venentas.",
+      "title": "Veire lo trabalh programat",
+      "viewAllLink": "Veire totes los trabalhs"
+    },
+    "books": {
+      "title": "Explora nòstres libres",
+      "viewAllLink": "Veire totes los libres"
+    },
+    "currentWork": {
+      "activeIntro": "Avètz de prètzfaches que son actius o que son a mand lèu :",
+      "allAssignmentsLink": "Veire totas las missions",
+      "allTestsLink": "Veire totes los tèsts",
+      "dueDate": "Degut {{dueLabel}}",
+      "emptyState": "Avètz pas de missions activas.",
+      "title": "Completar lo trabalh actual",
+      "viewOlderLink": "Veire las missions mai ancianas."
+    },
+    "greeting": "Benvenguda de retorn, {{studentName}}!",
+    "groupJoin": {
+      "existingGroupsLink": "Veire mos grops existents",
+      "placeholder": "Picatz lo còde"
+    },
+    "groups": {
+      "emptyState": "Avètz pas de grops actius.",
+      "viewAllLink": "Veire lo progrès de totes los grops"
+    },
+    "myIsaac": {
+      "title": "Mai dins Mon Isaac"
+    },
+    "streak": {
+      "festiveFreeze": "Gauditz de vòstra congelacion de doas setmanas festivas del 22 de decembre al 4 de genièr!",
+      "infoLink": "Qu'es aquò?",
+      "maintained": "Avètz mantengut vòstra seguida per aquesta setmana!",
+      "remaining": "Sonque {{remainingParts}} mai de partidas de question per respondre corrèctament aquesta setmana!",
+      "title": "Bastir vòstra seguida setmanièra",
+      "tooltip": "La seguida setmanièra indica lo nombre de setmanas consecutivas que sètz estat actiu sus Isaac.<br1/><br2/>Respondètz al mens dètz partidas de questions corrèctament per setmana per emplenar vòstra barra de progrès setmanièra e aumentar vòstra rasca!"
+    },
+    "viewToggleLabel": "Vista del tablèu de bòrd",
+    "welcomeHeader": "Benvenguda de retorn, {{teacherName}}!"
+  },
+  "dateInput": {
+    "clearButtonLabel": "Data de netejament",
+    "clearButtonLabel_birth": "Data de naissença clara",
+    "dayLabel": "Jorn",
+    "dayLabel_birth": "Jorn de naissença",
+    "monthLabel": "Mes",
+    "monthLabel_birth": "Mes de naissença",
+    "yearLabel": "Annada",
+    "yearLabel_birth": "Annada de naissença"
+  },
+  "dateString": {
+    "daysAgo": "{{days}} fa jorns",
+    "inDays": "en {{days}} jorns"
+  },
+  "desmos": {
+    "embedTitle": "Calculatritz Desmos"
+  },
+  "dnd": {
+    "clozeFallbackText": "element cloze sens descripcion",
+    "draggableRoleDescription": "element arrossegable"
+  },
+  "dragAndDrop": {
+    "cancelled": "L'arrossegament es estat anullat. L'element arrossegable {{itemText}} es estat retornat a sa posicion precedenta.",
+    "dropped": "L'element arrossegable {{itemText}} es estat daissat tombar.",
+    "droppedIntoItemsSection": "L'element arrossegable es estat daissat tombar dins la seccion d'elements",
+    "itemSectionLabel": "Articles:",
+    "keyboardInstructions": "Per cuélher un element, quichatz sus l'espaci o l'entrada. Utilizatz las tòcas de sageta cap amont e cap aval per navegar entre las zònas de desplaçament e los elements de la question. Picatz sus l'espaci o l'entrada de nòu per daissar tombar l'element dins una posicion novèla, o per l'escambiar amb un autre element en passant lo cursor.",
+    "offTarget": "L'element arrossegable {{itemText}} es pas pus sus una zòna depausable.",
+    "overItemsSection": "L'element arrossegable es sus la seccion d'elements",
+    "overPreviousPosition": "L'element arrossegable {{itemText}} es al dessús de sa posicion precedenta.",
+    "pickup": "Recuperat l'element arrossegable {{itemText}}.",
+    "returnedPreviousPosition": "L'element arrossegable {{itemText}} es estat retornat a sa posicion precedenta.",
+    "unselectedItems": "Elements non seleccionats"
+  },
+  "editorRenderer": {
+    "waitingContent": "En espèra del contengut {{siteTitle}}..."
+  },
+  "error": {
+    "emailRequestFailed": "La demanda de verificacion per corrièl a fracassat.",
+    "eventBookingFailed": "La reservacion de l'eveniment a fracassat",
+    "fetchGroups": "Error al moment de la recuperacion dels grops",
+    "invalidCharacters": "Qualques caractèrs qu'utilizatz son pas autorizats : {{badCharacters}}",
+    "invalidEmailAddress": "Picatz una adreça de corrièl valida",
+    "loadConcept": "Impossible de cargar lo concèpte",
+    "loadPage": "Impossible de cargar la pagina",
+    "loadQuestion": "Impossible de cargar la question",
+    "loadTopic": "Impossible de cargar lo tèma",
+    "noEmailToVerify": "Sètz pas connectat o avètz pas d'adreça electronica a verificar.",
+    "selectGroup": "Seleccionatz un grop",
+    "tooManyAttempts": "Tròp d'ensags",
+    "updateAccount": "Impossible de metre a jorn vòstre compte",
+    "validName": "Picatz un nom valid."
+  },
+  "events": {
+    "addUsers": {
+      "bookingExists": "La reservacion existís",
+      "disabledMessage": "Podètz pas apondre d'utilizaires a un eveniment anullat",
+      "noResults": "Cap d'utilizaire pas tornat dempuèi la requèsta",
+      "roleAny": "Tot ròtle",
+      "schoolSetNone": "Cap Set",
+      "schoolSetOther": "Òc (Autre)",
+      "searchButton": "Trobar l'utilizaire",
+      "searchEmailPlaceholder": "Picatz lo corrièl de l'utilizaire",
+      "searchFamilyNamePlaceholder": "Picatz lo nom de familha de l'utilizaire",
+      "tableHeaderSchoolSet": "Ensemble escolar",
+      "title": "Apondre d'utilizaires a la reservacion"
+    },
+    "admin": {
+      "title": "Administrator de reservacion d'eveniments"
+    },
+    "adminBooking": {
+      "bookUser": {
+        "errorTitle": "L'accion al nom de l'utilizaire a pas capitat",
+        "successMessage": "L'accion al nom de l'utilizaire a capitat.",
+        "successTitle": "L'accion capitada"
+      },
+      "cancel": {
+        "errorTitle": "Fracàs a l'anullacion de la reservacion d'eveniments"
+      },
+      "cancelReservations": {
+        "errorTitle": "Impossible d'anullar qualques unas de las reservacions",
+        "successMessage": "Avètz anullat amb succès las reservacions dels escolans per aqueste eveniment.",
+        "successTitle": "Reservacions anulladas"
+      },
+      "delete": {
+        "errorTitle": "Fracàs al moment de desreservar l'utilizaire de l'eveniment"
+      },
+      "promote": {
+        "errorTitle": "Fracàs a promòure la reservacion d'eveniments"
+      },
+      "recordAttendance": {
+        "errorTitle": "Fracàs a l'enregistrament de l'assisténcia a l'eveniment"
+      },
+      "resendEmail": {
+        "errorTitle": "Fracàs al tornant mandar lo corrièl per la reservacion d'eveniments",
+        "successMessage": "Corrièl mandat a {{userId}}",
+        "successTitle": "Corrièl de l'eveniment mandat"
+      },
+      "reserveUsers": {
+        "errorTitle": "La reservacion a fracassat",
+        "successMessage": "Avètz capitat a reservar d'escolans per aqueste eveniment.",
+        "successTitle": "Reservacions confirmadas"
+      }
+    },
+    "adminOverviews": {
+      "errorTitle": "Fracàs al moment de cargar las vistas generalas dels eveniments"
+    },
+    "attendance": {
+      "cancelledEventNotice": "Podètz pas enregistrar l'assisténcia a un eveniment anullat",
+      "markAbsentButton": "Marcar coma absent",
+      "markAttendedButton": "Marcar coma assistit",
+      "table": {
+        "attendanceHeader": "Frequentacion",
+        "medicalRequirementsHeader": "Requisits medicals",
+        "surnameFilterPlaceholder": "Filtre de nom de familha"
+      },
+      "title": "Enregistrar l'assisténcia a l'eveniment"
+    },
+    "availability": {
+      "requestAvailable": "Reservacions disponiblas per demanda!",
+      "waitingListAvailable": "La reservacion de lista d'espèra es disponibla!"
+    },
+    "book": {
+      "confirmReservation": "Confirmatz vòstra reservacion",
+      "joinWaitingList": "Inscriure-se a la lista d'espèra",
+      "requestPlace": "Demandatz una plaça"
+    },
+    "booking": {
+      "accessibilityHelp": "Per exemple, mercés de nos dire se avètz besonh d'accès en cadièra de ròdas, de bucle auditiu o se podèm ajudar amb d'ajustaments especials.",
+      "accountSection": "Las informacions de vòstre compte (<accountLink>mesa a jorn</accountLink>)",
+      "cancelConfirmMessage": "Sètz segur que volètz anullar vòstra reservacion per aqueste eveniment? Benlèu que poiretz pas tornar reservar, mai que mai se i a una lista d'espèra.",
+      "cancelledMessage": "Podètz pas vos inscriure a un eveniment de professor coma escolans.",
+      "cancelledTitle": "Reservacion d'eveniments anullada",
+      "detailsTitle": "Detalhs de la reservacion de l'eveniment",
+      "dietary": "Requisits alimentaris o condicions medicalas pertinentas",
+      "dietaryHelp": "Per exemple, es important per nosautres de saber s'avètz una alergia grèva e/o portatz un EpiPen, sètz propens a s'esvanir, patissètz d'epilepsia...",
+      "emailSent": "Avèm mandat un corrièl a {{email}}. Mercés de seguir las instruccions dins lo corrièl abans la reservacion.",
+      "emailVerifyOther": "ATENCION : Aqueste corrièl es pas verificat. Los detalhs a prepaus de l'eveniment pòdon pas aténher l'utilizaire.",
+      "emailVerifySelf": "Vos cal verificar vòstra adreça de corrièl per reservar los eveniments. Aquò es per que vos poscam mandar de detalhs sus l'eveniment.",
+      "emergency": "Detalhs de contacte d'urgéncia",
+      "emergencyPhone": "Numèro de telefòn de contacte",
+      "formTitle": "Formulari de reservacion d'eveniments",
+      "jobTitle": "Títol del pòste",
+      "loginToApply": "Connectatz-vos per demandar",
+      "loginToBook": "Connectatz-vos per reservar",
+      "manageReservations": "Gerir las reservacions",
+      "naOther": "N/A - Autre",
+      "naTeacher": "N/A - Professor",
+      "teacherReservationWarning": "Las plaças sus aquel eveniment pòdon èsser reservadas sonque pels ensenhaires. Mercés de demandar a vòstre professor de vos reservar una plaça. Vos caldrà èsser acompanhat d'un professor a l'eveniment.",
+      "teachingExperience": "Nivèl d'experiéncia pedagogica",
+      "terms": "En demandant de reservar sus aqueste eveniment, donatz als organizaires de l'eveniment l'accès a l'informacion provesida dins lo formulari çai-sus. Lor donatz tanben la permission de configurar vòstre trabalh pre-eveniment e de visualizar vòstre progrès. Podètz gerir l'accès a vòstras donadas de progrès dins vòstre <teacherConnectionsLink>paramètres de compte</teacherConnectionsLink>.<br1/>xxxxxxYour data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>Se vos sètz desabonat a las notificacions per corrièl de l'assignacion, podètz mancar lo pre-trabalh fixat per l'eveniment. Podètz activar aquò dins vòstres paramètres de compte <emailPreferencesLink></emailPreferencesLink>.",
+      "updateInfo": "Se aquesta informacion es incorrècta, las metètz a jorn dempuèi vòstra pagina de compte <accountLink></accountLink>.",
+      "upgradeLink": "<teacherAccountLink>Clicatz per metre a jorn cap a un compte professor</teacherAccountLink> gratuitament !",
+      "verifyEmailBtn": "Verificatz vòstre corrièl abans de reservar",
+      "year10": "An 10",
+      "year11": "An 11",
+      "year12": "An 12",
+      "year13": "An 13",
+      "year9": "An 9",
+      "yearGroup": "Grop d'annada escolara"
+    },
+    "bookingValidation": {
+      "emergencyContactRequiredBody": "Vos cal picar de detalhs de contacte d'urgéncia per vos reservar a aqueste eveniment.",
+      "emergencyContactRequiredTitle": "Detalhs de contacte d'urgéncia requerits",
+      "jobTitleRequiredBody": "Vos cal picar un títol de pòste per contunhar.",
+      "jobTitleRequiredTitle": "Títol de pòste obligatòri",
+      "schoolRequiredBody": "Vos cal dintrar dins una escòla per vos reservar a aquel eveniment.",
+      "schoolRequiredTitle": "Informacion escolara requerida",
+      "yearGroupRequiredBody": "Vos cal picar un grop d'annadas per contunhar.",
+      "yearGroupRequiredTitle": "Grop d'annada obligatòri"
+    },
+    "bookings": {
+      "fetch": {
+        "errorTitle": "Fracàs al moment de cargar las reservacions d'eveniments"
+      }
+    },
+    "bookingsTable": {
+      "accountType": "Tipe de compte",
+      "bookingCreated": "Reservacion creada",
+      "bookingUpdated": "Reservacion mesa a jorn",
+      "emergencyName": "Nom d'urgéncia",
+      "emergencyPhone": "Telefòn d'urgéncia",
+      "jobYearGroup": "Trabalh / grop d'annadas"
+    },
+    "cancel": {
+      "booking": "Anullar vòstra reservacion",
+      "request": "Anullar la demanda de reservacion",
+      "reservation": "Anullar vòstra reservacion",
+      "waitingList": "Daissar la lista d'espèra"
+    },
+    "card": {
+      "availableToBook": "Disponible per reservar",
+      "bookedBadge": "Reservat",
+      "bookedStatus": "Sètz reservat per aqueste eveniment.",
+      "bookingClosed": "Reservacion barrada",
+      "cancelledBadge": "Anullat",
+      "expired": "L'eveniment es expirat",
+      "fullBadge": "Plen",
+      "onlineBadge": "EN LINHA",
+      "readMoreAriaLabel": "{{eventTitle}} legir mai",
+      "reservedBadge": "Reservat",
+      "reservedStatus": "Avètz una reservacion per aqueste eveniment.",
+      "studentEvent": "EVENIMENT D'ESTUDIANT",
+      "studentEventIconAlt": "icòna d'eveniment estudiant",
+      "teacherEvent": "Eveniment d'ensenhaire",
+      "teacherEventIconAlt": "icòna d'eveniment del professor",
+      "untitled": "Eveniment sens títol",
+      "viewDetailsAriaLabel": "Veire los detalhs de l'eveniment : {{eventTitle}} - {{eventDate}}",
+      "viewDetailsButton": "Veire los detalhs",
+      "waitingListBadge": "En lista d'espèra"
+    },
+    "confirmation": {
+      "body": "Aquò's un eveniment pels ensenhaires <emphasis>solament</emphasis>. Mercés de confirmar que sètz un professor (o un ensenhaire estagiari), e pas un escolans, un tutor privat o un parent.",
+      "declineButton": "Soi pas professor",
+      "title": "Mercés de confirmar l'estatut de professor"
+    },
+    "date": {
+      "from": "De",
+      "seriesStarts": "La seria comença",
+      "to": "a"
+    },
+    "details": {
+      "bookedConfirmation": "Sètz reservat per aquel eveniment!",
+      "completeRegistration": "Completatz vòstra inscripcion çai-jos",
+      "deadlinePassed": "(La data limita de reservacion per aqueste eveniment es passada.)",
+      "full": "PLEN",
+      "fullStudentOnly": "per las reservacions d'estudiants",
+      "pastNotice": "(Aquel eveniment es dins lo passat.)",
+      "reservedConfirmation": "Vos an reservat una plaça sus aquel eveniment!",
+      "spacesAvailable": "{{spacesAvailable}} espacis",
+      "studentBadge": "Eveniment estudiantil",
+      "teacherBadge": "Eveniment pels ensenhaires"
+    },
+    "emptyState": "Cap d'eveniment d'afichar amb aqueste paramètre de filtre",
+    "fetch": {
+      "errorTitle": "La demanda d'eveniments a fracassat"
+    },
+    "label": {
+      "when": "Quora:"
+    },
+    "leaderRestriction": "Coma cap d'eveniments, podètz pas que veire los detalhs dels eveniments que geritz.",
+    "loadErrorTitle": "Error al moment de cargament de las vistas generalas dels eveniments",
+    "loadMoreButton": "Cargar mai d'eveniments",
+    "manage": {
+      "addToWaitingList": "Apondre a la lista d'espèra",
+      "bookingRequest": "Fasètz una demanda de reservacion",
+      "confirmReservation": "Confirmatz la reservacion"
+    },
+    "manageBookings": {
+      "actions": {
+        "promote": "Promòure",
+        "resendEmail": "Tornatz mandar lo corrièl"
+      },
+      "confirmCancel": "Sètz segur que volètz anullar aquesta reservacion?",
+      "confirmDelete": "Sètz segur que volètz suprimir aquesta reservacion definitivament ?",
+      "confirmPromote": "Sètz segur que volètz convertir aquò en una reservacion confirmada ?",
+      "confirmResendEmail": "Sètz segur que volètz tornar mandar lo corrièl de confirmacion per aquesta reservacion ?",
+      "emailDropdown": {
+        "item": "Enviar un corrièl als utilizaires {{bookingStatus}}"
+      },
+      "emptyState": "I a pas actualament cap de reservacion per aqueste eveniment.",
+      "exportCsv": "Exportar coma CSV",
+      "table": {
+        "medicalDietary": "Medical / dietetic",
+        "reservedById": "Reservat per ID"
+      },
+      "title": "Gerir las reservacions actualas"
+    },
+    "modal": {
+      "applyPastDeadline": "Demandar - data limita passada",
+      "bookNow": "Reservatz ara"
+    },
+    "notFound": "Eveniment pas trobat",
+    "overview": {
+      "title": "Apercebut dels eveniments"
+    },
+    "page": {
+      "errorLoading": "Error al moment de cargar la lista dels eveniments",
+      "help": "Seguissètz los ligams çai-jos per ne saber mai sus nòstres eveniments GRATUITS.",
+      "listHeading": "Lista dels eveniments",
+      "noResults": "O planhèm, podèm pas trobar cap d'eveniment que corresponda als paramètres de vòstre filtre.",
+      "showingCount": "Mostrant {{loadedCount}} de {{total}}"
+    },
+    "reservations": {
+      "additionalInfoDescription": "Apondètz d'informacions suplementàrias a prepaus de la reservacion del grop, per exemple de detalhs de contacte d'autres supervisors del grop. Avisatz-vos que los escolans demoraràn la responsabilitat dels ensenhaires qu'acompanhan. Mercés de vos assegurar qu'avètz pro de personal pel nombre d'escolans que menatz. Recomandam al mens 2 membres del personal per grop.",
+      "additionalInfoTitle": "Informacion suplementària de reservacion",
+      "cancelButton": "Anullar las reservacions",
+      "contactEmail": "Corrièl de contacte",
+      "createGroupsPrompt": "Creatz un grops a partir de la pagina <groupsPageLink>Gerir los grops</groupsPageLink> per reservar vòstres escolans dins un eveniment",
+      "currentReservations": "Totas las reservacions actualas",
+      "emailNotVerified": "Corrièl pas verificat",
+      "limitWarning": "Podètz solament reservar un maximum de {{maxReservations}} membres del grop sus aqueste eveniment.",
+      "loadingMembers": "En cargament dels membres del grop...",
+      "noBookings": "Cap dels membres d'aqueste grop es pas reservat per aqueste eveniment.",
+      "noGroupReservations": "Aqueste eveniment permet pas de reservacions de grop.",
+      "noMembers": "Aqueste grop a pas cap de membre. Seleccionatz un autre grop.",
+      "otherStudents": "D'autres escolans d'aqueste grop",
+      "reserveButton": "Reservar de plaças",
+      "reservedBy": "Reservat per",
+      "reservedByYou": "Tu",
+      "selectGroup": "Seleccionar lo grop",
+      "selectGroupHint": "Seleccionatz un de vòstres grops dins lo menú desenrotlant per veire sos membres.",
+      "supervisorContactDescription": "Cambiatz-los se un professor autre que vos va supervisar los escolans a aqueste eveniment.",
+      "supervisorContactTitle": "Detalhs de contacte pel supervisor del grop principal",
+      "title": "Reservacions de grop"
+    },
+    "selectedDetails": {
+      "eventLabel": "Eveniment:",
+      "placesAvailableLabel": "Nombre de plaças disponiblas:",
+      "prepWorkDeadlineLabel": "Data limita de preparacion:",
+      "startDateLabel": "Començament de l'eveniment:",
+      "statusLabel": "Estat de l'eveniment :",
+      "title": "Detalhs de l'eveniment seleccionats"
+    },
+    "selfBooking": {
+      "book": {
+        "successMessage": "Sètz estat reservat amb succès per aqueste eveniment.",
+        "successTitle": "Reservacion d'eveniments confirmada"
+      },
+      "cancel": {
+        "errorTitle": "L'anullacion de la reservacion d'eveniment a fracassat",
+        "successMessage": "Vòstra reservacion es estada anullada amb succès.",
+        "successTitle": "Vòstra reservacion es estada anullada"
+      },
+      "waitingList": {
+        "confirmedMessage": "Sètz estat apondut amb succès a la lista d'espèra per aqueste eveniment.",
+        "confirmedTitle": "La lista d'espèra de reservacion confirmada",
+        "requestReceivedTitle": "Demanda de reservacion recebuda"
+      }
+    },
+    "showingCount": "(mostrant {{shownCount}} de {{totalCount}})",
+    "sidebar": {
+      "eventTypeLabel": "Tipe d'eveniment",
+      "filterButtonTitle": "Filtre los eveniments",
+      "stagesLabel": "Etapas"
+    },
+    "status": {
+      "bookingDeadlineSoon": "Data limita de reservacion lèu!",
+      "expired": "EXPIRAT",
+      "onWaitingList": "Sètz sus la lista d'espèra per aqueste eveniment."
+    },
+    "studentOnly": {
+      "contact": "Aqueste eveniment es destinat als escolans. xxxxxxIf you are not a student but still wish to attend, please <contactLink>contact us</contactLink>."
+    },
+    "tableAttendedHeader": "Nombre d'assistits",
+    "tableConfirmedHeader": "Nombre confirmat",
+    "tableDateHeader": "Data",
+    "tableWaitingHeader": "Numèro en espèra",
+    "userBooking": {
+      "authorisationLabel": "Reservacion/partatge de donadas personalas autorizat per",
+      "bookingTitle": "Creatz una reservacion per {{givenName}} {{familyName}}",
+      "dataWarning": "Warning, by booking a user on this event, it may eventually lead to their personal information being shared with a third party. You must therefore confirm how this booking has been authorised. Lo proprietari de las donadas es totjorn l'utilizaire {{siteTitle}} reservat per l'eveniment.",
+      "errorMessage": "Vos cal provesir un motiu d'autorizacion per completar aquesta requèsta.",
+      "optionEmailOwner": "Corrièl verificat - Proprietari de donadas",
+      "optionOther": "Autre - Especificatz",
+      "optionTelephoneOwner": "Telefòn - Proprietari de donadas",
+      "waitingListTitle": "Ajustar {{givenName}} {{familyName}} a la lista d'espèra"
+    }
+  },
+  "examSpecifications": {
+    "directory": {
+      "ada": {
+        "advanced": "Avançat",
+        "core": "Còr"
+      },
+      "metaDescription": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica de nivèl A.",
+      "scotland": {
+        "advancedHigher": "Avançat mai naut",
+        "higher": "Mai naut",
+        "national5": "Nacional 5"
+      },
+      "showButton": "Mòstra-me"
+    },
+    "pageTitle": "Especificacion de l'examen"
+  },
+  "experiments": {
+    "cardSubtitle": "Desvolopar de competéncias experimentalas amb d'experiéncias interessantas."
+  },
+  "featureFlags": {
+    "modal": {
+      "applyButton": "Aplicar e recargar",
+      "description": "Los senhals de foncionalitats son de commutadors d'execucion sonque pels personals qu'activan o desactivan las foncionalitats en cors de desvolopament. Apareisseràn pas que sus la mesa en scèna e lo desvolopament (pas lo tèst).",
+      "emptyState": "Cap de senhal de foncionalitat pas trobat.",
+      "howItWorks": "Los senhals pertinents seràn tipicament activats per defaut sus una branca donada. Pasmens, se volètz veire cossí divèrses paramètres interagisson, podètz substituir quines indicadors son activats çai-jos.",
+      "overrideNote": "Notatz que las substitucions seràn mantengudas entre las visitas del sit e deurián probablament èsser daissadas coma automaticas quand son pas utilizadas.",
+      "overridesLabel": "Substitucions manualas :",
+      "toggleAuto": "Automatic"
+    }
+  },
+  "figure": {
+    "expandButton": "Espandir la figura",
+    "label": "Figura{{figureNumber}}"
+  },
+  "form": {
+    "elements": {
+      "requiredError": "exigit",
+      "trueFalseAccessibilityLabel": "per {{fieldName}}"
+    },
+    "requiredField": "Camp obligatòri"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "remaining": "{{count}} ensags que demòran uèi"
+    },
+    "infoAlert": {
+      "consentButton": "Consentir",
+      "consentDescription": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure coma aquesta. Lo modèl torna tipicament una nòta prevista en mens de 10 segondas; pasmens las nòtas que recebètz pòdon pas èsser precisas.",
+      "consentPrivacy": "Mandam pas que vòstra responsa a OpenAI, mandam pas cap de donadas personalas. OpenAI entrenarà pas sos modèls en utilizant de donadas que mandatz; podètz legir <privacyPolicyLink>politica de confidencialitat</privacyPolicyLink> d'OpenAI abans d'acceptar.",
+      "consentTitle": "Consentissètz a mandar vòstras responsas a OpenAI per marcar?",
+      "consentWithdraw": "Podètz retirar vòstre consentiment a quin moment que siá dins vòstre <accountSettingsLink>paramètres de compte</accountSettingsLink>.",
+      "generalAccuracy": "Dins nòstre estudi de 2024, trobèrem que las nòtas LLM èran d'acòrdi amb las nòtas que los ensenhaires d'informatica donèron 66% del temps. Aquò vòl dire que las nòtas que recebretz seràn pas totjorn precisas.",
+      "generalDataPrivacy": "Inclutz pas de donadas personalas dins vòstra responsa del temps que mandam vòstra responsa a OpenAI. Mandam pas que vòstra responsa, mandam pas cap de donadas personalas amb ela. Podètz retirar vòstre consentiment a quin moment que siá dins vòstre <accountSettingsLink>paramètres de compte</accountSettingsLink>.",
+      "generalTitle": "Las questions de tèxte liure son marcadas per un grand modèl de lenga (LLM)",
+      "loggedOutDataPrivacy": "La sola donada qu'enviam al LLM es vòstra responsa; mandam pas cap de donadas personalas.",
+      "loggedOutDescription": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure coma aquesta. Lo modèl torna tipicament una nòta prevista en mens de 10 segondas, amb l'esquèma de nòtas. Aquò vos dona un biais de bas enjòc de practicar de questions d'estil d'examen e tanben una vision de cossí foncionan los LLM, e lor precision.",
+      "loggedOutTitle": "Vos cal èsser connectat per respondre a aquesta question",
+      "skipQuestion": "Sautar la question",
+      "under13Consequence": "Podètz encara legir la question, mas poirem pas marcar vòstra responsa.",
+      "under13Description": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure coma aquesta. Aquò demanda vòstre consentiment per mandar vòstra responsa a OpenAI per èsser marcada. Perque avètz mens de 13 ans, podèm pas obténer vòstre consentiment per aquò segon la lei RGPD.",
+      "under13Title": "Podèm pas reculhir vòstre consentiment"
+    },
+    "llmFeedback": {
+      "accuracyNote": "1 sus 3 còps la nòta prevista serà erronèa.",
+      "agree": "Èsser d'acòrdi",
+      "disagree": "En desacòrdi",
+      "feedbackPrompt": "Abans de mandar una autra responsa, mercés de dire se sètz d'acòrdi amb la nòta prevista.",
+      "markScheme": "Esquèma de marca",
+      "partlyAgree": "En partida d'acòrdi",
+      "predictedAwarded": "Previst coma premiat",
+      "predictedCorrect": "Previst corrècte",
+      "prediction": "Prediccion: {{predictedMarks}} sus las marcas {{maxMarks}}",
+      "submitButton": "Mandar un comentari",
+      "submitted": "Retroaccion somesa",
+      "title": "Sètz d'acòrdi amb las nòtas previstas del LLM?"
+    },
+    "matchingRules": {
+      "json": {
+        "description": "JSON per las <strong>causidas</strong> partida de vòstra question de tèxteliure isaac"
+      },
+      "table": {
+        "anyOrder": "Qualque comanda {{checkmark}}",
+        "extraWords": "Mots suplementaris {{checkmark}}",
+        "feedbackLabel": "Retorn:",
+        "ignoreCase": "Ignorar lo cas {{checkmark}}",
+        "misspelling": "Mal d'ortografia {{checkmark}}",
+        "responseColumn": "Responsa",
+        "ruleColumn": "Règla"
+      },
+      "title": "Règlas de correspondéncia",
+      "tooltip": {
+        "multiChar": "Correspondre a zèro o mai de caractèrs.",
+        "orList": "Separar una lista OR de causidas de mots.",
+        "singleChar": "Correspondre sonque un caractèr.",
+        "wildcardsTitle": "Jokers dins los mots:"
+      }
+    },
+    "submitButton": "Question de tèst",
+    "testCases": {
+      "csv": {
+        "description": "Picatz los cases de tèst coma CSV amb los entèstas: esperat(verai/faus), valor"
+      },
+      "table": {
+        "actualColumn": "Vertadièr",
+        "expectedColumn": "Esperat",
+        "feedbackColumn": "Retorn",
+        "matchColumn": "Partida"
+      },
+      "title": "Responsas de tèst ({{matchCount}}/{{totalCount}})"
+    },
+    "title": "Constructor de questions de tèxte liure"
+  },
+  "gameboard": {
+    "assign": {
+      "noGroupsErrorTitle": "Error : causissètz un o mantun grop."
+    },
+    "assignment": {
+      "assignedTo": "xxxxxxAssigned to <emphasis>{{groupName}}</emphasis> by <emphasis2>{{assigner}}</emphasis2>",
+      "dueLabel": "Degut: <b>{{dueDate}}</b>",
+      "setLabel": "Ensemble: <b>{{setDate}}</b>"
+    },
+    "assignments": {
+      "assignUnassignButton": "Assignar / Dessignar",
+      "assignedTo": "Quiz assignat a: {{groupNames}}",
+      "groupCount_one": "grop",
+      "groupCount_other": "grops",
+      "noGroupsQuizAssigned": "Cap de grop es pas estat assignat a aqueste quiz."
+    },
+    "builder": {
+      "addQuestionsButton": "Ajustar de questions",
+      "createErrorDetail": "Mercés de corregir los problèmas çai-jos.",
+      "deselect": "Deseleccionar la question",
+      "idError": "L'ID pòt pas conténer que de letras minusculas, de chifras, de tirets e de soslinhats.",
+      "idPlaceholder": "Opcional",
+      "leaveConfirm": "Avètz de modificacions pas enregistradas - sètz segur que volètz daissar aquesta pagina ?",
+      "previewTooltip": "Apercebut la question '{{questionId}}' dins un novèl onglet",
+      "questionsLimit": "Podètz apondre de questions {{maxQuestions}}.",
+      "redoLabel": "Tornatz far la darrièra accion",
+      "select": "Seleccionar la question",
+      "tagLabel": "Etiquetar coma",
+      "titleError": "Donatz un títol.",
+      "titleHelp": "Aquò serà visible per vòstres escolans.",
+      "undoLabel": "Desfar la darrièra accion",
+      "wildcardLabel": "Joker",
+      "wildcardNone": "Pas de joker"
+    },
+    "card": {
+      "byLabel": "Per",
+      "createdBy": "Creat per <owner>{{ownerName}}</owner>",
+      "createdDate": "Creat <strong>{{creationDate}}</strong>",
+      "groupsAssigned": "Nombre de grops assignats",
+      "hideDetailsButton": "Amagar los detalhs",
+      "lastVisited": "Darrièra visita <strong>{{lastVisitedDate}}</strong>",
+      "lastVisitedLabel": "Darrièra visita",
+      "questionsLabel": "De questions:",
+      "showDetailsButton": "Mostrar los detalhs",
+      "stagesDifficulties": "Etapas e dificultats",
+      "stagesHeader_one": "Scèna:",
+      "stagesHeader_other": "Etapas:"
+    },
+    "cards": {
+      "showingAll": "xxxxxxShowing <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> of <totalCountEmphasis>{{totalCount}}</totalCountEmphasis> results.",
+      "showingFiltered": "xxxxxxShowing <matchedCountEmphasis>{{matchedCount}}</matchedCountEmphasis> match from <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> results."
+    },
+    "clone": {
+      "copiedTitle": "{{gameboardTitle}} (Còpia)"
+    },
+    "fastTrack": {
+      "conceptTitleSuffix": "{{conceptTitle}} Practicar",
+      "connectionTopTenToUpperMessage": "Practicatz lo concèpte abans de tornar completar lo tablèu",
+      "connectionUpperToLowerMessage": "Practicatz lo concèpte amb de questions mai aisidas abans de tornar completar lo tablèu"
+    },
+    "save": {
+      "unsaveConfirm": "Sètz segur que volètz desregistrar «{{boardTitle}}» de vòstre compte ?"
+    },
+    "sidebar": {
+      "externalLink": "Ligam extèrne (<em>{{externalUrl}}</em>)"
+    },
+    "table": {
+      "unsaveCountButton": "Desregistrar ({{selectedCount}})"
+    },
+    "usageInfo": {
+      "beginsIn": "Comença<bold>{{daysUntil}}</bold>"
+    },
+    "wildcards": {
+      "errorTitle": "Error al moment del cargament dels caractèrs joker"
+    }
+  },
+  "gameboards": {
+    "filters": {
+      "name": "Los tablèus de filtratge per nom",
+      "status": "Filtre per estatut"
+    },
+    "sidebar": {
+      "filterCompletionTitle": "Filtrar per acabament"
+    }
+  },
+  "geogebra": {
+    "openContent": "Clicatz per dobrir lo contengut de GeoGebra"
+  },
+  "getStarted": {
+    "intro": "Seguissetz aquestas etapas per començar amb vòstre compte professor :",
+    "tasks": {
+      "assignQuiz": "Assignar un quiz als escolans",
+      "createAccount": "Creatz vòstre compte",
+      "createGroup": "Crear un grop d'escolans",
+      "personaliseContentHint": "Causissètz un nivèl d'ensenhament e un tablèu d'examen, o causissètz de veire tot lo contengut.",
+      "personaliseContentTitle": "Personalizatz vòstre contengut"
+    },
+    "title": "Començatz amb Ada CS",
+    "videoCta": "Preferissètz una vista generala vidèo? Ensajatz nòstra <strong><youtubeLink>lista de lectura YouTube</youtubeLink></strong>!"
+  },
+  "glossary": {
+    "cardSubtitle": "Utilizatz lo glossari per comprene lo vocabulari que vos cal per {{subjectContext}}.",
+    "contextualTitle": "{{context}} Glossari",
+    "empty": {
+      "noResults": "Avèm pas pogut trobar de tèrmes de glossari per correspondre a vòstres critèris de recèrca.",
+      "noTerms": "I a pas encara de tèrmes de glossari dins lo glossari! Ensajatz tornar mai tard.",
+      "selectSubject": "Seleccionatz un subjècte."
+    },
+    "filters": {
+      "topicPlaceholder": "Totes los subjèctes"
+    },
+    "print": {
+      "searchTerm": "Recèrca : <strong>{{searchText}}</strong>",
+      "topicName": "Tèma: <strong>{{topicTitle}}</strong>"
+    },
+    "search": {
+      "label": "Cercar per tèrme"
+    },
+    "sidebar": {
+      "selectSubjectTitle": "Seleccionar subjècte",
+      "switchStageTitle": "Cambiar l'estadi d'aprendissatge"
+    }
+  },
+  "graphSketcher": {
+    "controls": {
+      "bezierButton": "Corba polinomiala",
+      "bezierTooltip": "Traçar la corba polinomiala",
+      "colorLabel": "Color de la linha",
+      "linearButton": "Linha drecha",
+      "linearTooltip": "Traçatz la linha drecha",
+      "redoButton": "Tornatz far",
+      "redoTooltip": "Tornar far la darrièra modificacion",
+      "undoButton": "Desfar",
+      "undoTooltip": "Desfar la darrièra modificacion"
+    },
+    "editInstruction": "Clicatz sus la grasilha per modificar vòstre esbòç.",
+    "startInstruction": "Clicatz sus la grasilha per començar vòstre esbòç."
+  },
+  "groups": {
+    "archive": {
+      "confirmButton": "Archiu",
+      "title": "Grop d'archius",
+      "unarchiveHint": "Un grop pòt èsser desarchivat a quin moment que siá en navegant cap al grop dins la seccion « Archivat » d'aquesta pagina e en clicant sus « Desarchivar lo grop »."
+    },
+    "authorisations": {
+      "connectionErrorMessage": "Lo còde pòt èsser invalid o lo grop pòt pas mai existir. Los còdes son generalament en majusculas e de 6-8 caractèrs de longor.",
+      "connectionErrorTitle": "La connexion del professor a fracassat",
+      "grantSuccessMessage": "Avètz concedit l'accès a vòstras donadas.",
+      "grantSuccessTitle": "Accès concedit",
+      "loadStudentsErrorTitle": "Lo cargament dels escolans autorizats a fracassat",
+      "loadTeachersErrorTitle": "Lo cargament dels ensenhaires autorizats a fracassat",
+      "rateLimitMessage": "Avètz picat tròp de còdes de grop. Verificatz vòstre còde amb vòstre professor e ensajatz tornarmai mai tard!",
+      "releaseAllSuccessMessage": "Avètz acabat vòstre accès a totas las donadas de vòstres escolans.",
+      "releaseErrorTitle": "La fin de l'accès a fracassat",
+      "releaseSuccessMessage": "Avètz metut fin a vòstre accès a las donadas de vòstre escolans.",
+      "releaseSuccessTitle": "Accès suprimit",
+      "revokeErrorTitle": "La revocacion de l'accès a fracassat",
+      "revokeSuccessMessage": "Avètz revocat l'accès a vòstras donadas.",
+      "revokeSuccessTitle": "Accès revocat"
+    },
+    "create": {
+      "errorTitle": "La creacion del grop a fracassat",
+      "nameLabel": "Picatz lo nom de vòstre grop",
+      "submitButton": "Crear lo grop"
+    },
+    "delete": {
+      "errorTitle": "La supression del grop a fracassat",
+      "nonOwnerConfirm": "Podètz pas suprimir aqueste grop, perque sètz pas lo proprietari del grop.  Volètz vos suprimir coma gestionari de '{{groupName}} ' ?",
+      "ownerConfirm": "Sètz segur que volètz suprimir definitivament lo grop « {{groupName}} » e suprimir totas las assignacions associadas ?\n\nAquesta accion pòt pas èsser anullada !"
+    },
+    "demo": {
+      "name": "Grop de demostracion {{groupId}}"
+    },
+    "editor": {
+      "emailButton": "Utilizaires de corrièl",
+      "managersTitle": "Los responsables de grops",
+      "memberCount_one": "Aqueste grop a {{count}} membre.",
+      "memberCount_other": "Aqueste grop a {{count}} membres.",
+      "membersTitle": "Membres del grop",
+      "moreInfoButton": "Mai d'informacions",
+      "nameAriaLabel": "Nom del grop",
+      "nameEmpty": "Lo nom del grop pòt pas èsser void.",
+      "ownerLabel": "(proprietari del grop)",
+      "renameErrorDetail": "Lo nom del grop deu èsser especificat.",
+      "renameErrorTitle": "Pòt pas renomenar lo grop",
+      "renameLabel": "Renomenar lo grop",
+      "selfRemovalLabel": "Permetre als escolans de se suprimir d'aqueste grop",
+      "youLabel": "(tu)"
+    },
+    "email": {
+      "infoText": "Un utilizaire administrator pòt utilizar los ID d'utilizaire çai-jos per mandar un corrièl a aquestes utilizaires :"
+    },
+    "fetch": {
+      "errorTitle": "Lo cargament dels grops a fracassat"
+    },
+    "invite": {
+      "addManagers": "Apondre de gestionaris de grops",
+      "codeDescription": "Los escolans pòdon picar aqueste còde dins lor compte {{siteTitle}}. Caldrà anar sus <accountPage>Mon compte</accountPage>, puèi <teacherConnections>Connexions pels ensenhaires</teacherConnections>.",
+      "codeHeading": "O utilizatz aqueste còde",
+      "createdTitle": "Grop creat",
+      "errorTitle": "Error al moment de la recuperacion del geton de jonccion de grop",
+      "linkDescription": "Partejatz aqueste ligam amb los escolans per que pòscan rejónher vòstre grop:",
+      "linkHeading": "Partejatz aqueste ligam",
+      "membersHeading": "Convidar los membres a s'i inscriure",
+      "nextSteps": "Qué far en seguida",
+      "qrButton": "Generar un còde QR",
+      "qrDescription": "Los escolans pòdon escanejar un còde QR sus lor periferic per rejónher vòstre grop :",
+      "qrHeading": "Generar un còde QR",
+      "shareIntro": "Partejatz lo ligam o lo còde per convidar de personas a vòstre grop.",
+      "studentInfo": "Los escolans veiràn lo nom e l'adreça electronica sus vòstre compte quand s'inscriuràn."
+    },
+    "managers": {
+      "add": {
+        "errorTitle": "L'addicion del gestionari de grop a fracassat"
+      },
+      "addButton": "Apondre lo gestionari de grop",
+      "addInstructions": "Picatz lo corrièr electronic d'un autre compte professor {{siteTitle}} çai-jos per los apondre coma gestionari de grop. Notatz qu'aquò partejarà lor adreça de corrièl amb los escolans.",
+      "addSectionTitle": "Apondre de gestionaris suplementaris",
+      "cautionHeader": "<strong>Atencion</strong>: Totes los autres gestionaris de grop son autorizats a :",
+      "currentHeading": "Los gestionaris de grop actuals",
+      "emailPlaceholder": "Picatz l'adreça de corrièl aicí",
+      "emptyState": "I a pas cap de gestionari de grop suplementari per aqueste grop.",
+      "enableIntro": "L'activacion d'aquesta opcion permet als gestionaris suplementaris de :",
+      "extraPrivilegesLabel": "Donar de privilègis suplementaris als gestionaris suplementaris",
+      "listIntro": "Los utilizaires çai-jos an l'autorizacion de gerir aqueste grop.",
+      "makeOwner": "Fasètz proprietari",
+      "onlySelf": "Sètz lo sol gestionari suplementari d'aqueste grop.",
+      "ownerHeading": "Proprietari del grop:",
+      "permissions": {
+        "heading": "Permissions de partatge",
+        "intro": "Quand partejatz aqueste grop, d'autres ensenhaires pòdon:",
+        "progress": "Veire lo progrès dels escolans",
+        "students": "Apondre e suprimir d'escolans"
+      },
+      "privilegeArchiveRename": "Archivar e renomenar lo grop",
+      "privilegeManageManagers": "Apondre o suprimir d'autres gestionaris",
+      "privilegeModifyAssignments": "Modificatz o suprimissètz <b>totas las assignacions</b>, inclusent aquelas definidas pel proprietari",
+      "privilegeRemoveMembers": "Suprimir los membres del grop",
+      "promote": {
+        "confirmWithPrivileges": "\nSètz segur que volètz promòure aqueste gestionari a proprietari del grop ?\n\n• Eiretaràn la possibilitat d'apondre de gestionaris suplementaris a, d'archivar e de suprimir aqueste grop.\n\n• Seretz degradat a un gestionari de grop suplementari.\n\n• Poiretz pas pus apondre o suprimir d'autres gestionaris, mas poiretz encara modificar o suprimir d'assignacions, archivar o renomenar lo grop o suprimir de membres del grop.\n            ",
+        "confirmWithoutPrivileges": "\nSètz segur que volètz promòure aqueste gestionari a proprietari del grop ?\n\n• Eiretaràn la possibilitat d'apondre de gestionaris suplementaris a, d'archivar e de suprimir aqueste grop.\n\n• Seretz degradat a un gestionari de grop suplementari, e seretz pas capable de modificar o suprimir de missions, archivar o renomenar lo grop o suprimir de membres del grop.\n\n• Se volètz conservar aqueles privilègis, mas transferir la proprietat, clicatz sus 'anullar' aicí e puèi marcatz la bóstia per donar als gestionaris suplementaris de privilègis suplementaris abans de transferir la proprietat.\n            ",
+        "errorTitle": "La promocion del gestionari de grop a fracassat",
+        "successMessage": "Sètz estat degradat a un gestionari suplementari d'aqueste grop",
+        "successTitle": "Responsable de grop promogut a proprietari"
+      },
+      "removeManager": {
+        "errorTitle": "La supression del gestionari de grop a fracassat"
+      },
+      "removeSelf": {
+        "title": "Suprimissètz-vos coma gestionari de grop"
+      },
+      "selectedGroup": "Grop seleccionat : {{groupName}}",
+      "uncheckInstruction": "Desmarcatz la bóstia çai-sus se volètz suprimir aquestes privilègis suplementaris."
+    },
+    "member": {
+      "emailDeliveryFailedTooltip": "L'adreça de corrièl del compte d'aqueste utilizaire es pas valida o accepta pas de corrièr electronic.<br/>Poiràn pas reïnicializar lor senhal o recebre de corrièls de mesa a jorn. Demandatz-los de se connectar e de lo metre a jorn, o contactatz-nos per ajudar a resòlvre lo problèma.",
+      "emailUnverifiedTooltip": "Aqueste utilizaire a pas encara verificat son corrièr electronic.",
+      "inactiveLabel": "(inactiu dins lo grop)",
+      "inactiveTooltip": "Aqueste utilizaire a definit son estatut a inactiu per aqueste grop. Aquò significa que veiràn pas pus de novèlas missions.",
+      "nameNotSharing": "<struckOut>{{givenName}} {{familyName}}</struckOut> (Pas partejar)",
+      "passwordReset": {
+        "cannotSend": "Impossible de mandar un corrièl de demanda de reïnicializacion de senhal.",
+        "deliveryFailedTooltip": "La demanda de reïnicializacion del senhal pòt pas èsser mandada perque l'adreça electronica del compte d'aqueste utilizaire es siá pas valida siá accepta pas lo corrièl electronic.",
+        "sendTooltip": "Mandatz una demanda de reïnicializacion de senhal a l'adreça electronica d'aqueste utilizaire.",
+        "sentLabel": "Reïnicializar lo corrièl mandat",
+        "sentTooltip": "Demanda de reïnicializacion de senhal mandada."
+      },
+      "removeAriaLabel": "Suprimir lo membre",
+      "removeConfirm": "Sètz segur que volètz levar aqueste utilizaire del grop « {{groupName}} ?",
+      "removeTooltip": "Suprimir aqueste utilizaire del grop."
+    },
+    "members": {
+      "fetch": {
+        "errorTitle": "Lo cargament dels membres del grop a fracassat"
+      },
+      "remove": {
+        "errorMessage": "Utilizaire pas suprimit del grop, ensajatz tornarmai.",
+        "errorTitle": "Fracàs al suprimir",
+        "successMessage": "Utilizaire suprimit del grop.",
+        "successTitle": "Supression capitada"
+      }
+    },
+    "memberships": {
+      "fetch": {
+        "errorTitle": "Lo cargament de las adesions al grop a fracassat"
+      },
+      "updateStatus": {
+        "errorTitle": "La mesa a jorn de l'estatut de l'adesion a fracassat",
+        "successMessage": "Avètz mes a jorn vòstre estatut d'adesion.",
+        "successTitle": "Estat mes a jorn"
+      }
+    },
+    "page": {
+      "addTeachersInfo": "Podètz apondre d'autres ensenhaires per vos ajudar a gerir un grop. Podètz pas apondre dirèctament d'escolans, mas los podètz convidar a rejónher.",
+      "emptyState": "Organizatz vòstres escolans en grops e fixatz de trabalhs apropriats per cada grop.<br/>Avètz besonh d'un grop d'escolans abans de poder assignar de quiz e de tèsts dins {{siteTitle}}.",
+      "helpText": "Utilizatz aquesta pagina per gerir los grops. Podètz apondre d'utilizaires a un grop en lor donant lo còde del grop e en lor demandant de lo pegar dins lor pagina de paramètres de compte.<br/>Podètz trobar lo còde d'un grop existent en seleccionant lo grop e en clicant sus <inviteUsersText>Convidar los utilizaires</inviteUsersText>."
+    },
+    "progress": {
+      "fallbackTitle": "Quiz desconegut",
+      "scheduledBadge": "(programat)",
+      "searchLabel": "Cercar:",
+      "sectionDescription": "Veire lo progrès d'aqueste grop sus las missions e los tèsts.",
+      "sectionTitle": "Devers e tèsts",
+      "sortLabel": "Ordenar per:",
+      "startDate": "Comença: {{startDate}}",
+      "studentCount_one": "{{count}} escolans",
+      "studentCount_other": "{{count}} escolans",
+      "title": "Progrès del grop",
+      "unknownCount": "Desconegut"
+    },
+    "qr": {
+      "loadError": "Fracàs al cargament del panèl de còde QR."
+    },
+    "qrCode": {
+      "altText": "Seguissètz aquesta URL per rejónher lo grop : {{url}}"
+    },
+    "selector": {
+      "createButton": "Crear un grop novèl",
+      "groupIdTitle": "Id del grop: {{groupId}}"
+    },
+    "share": {
+      "title": "Partejatz vòstre grop"
+    },
+    "shared": {
+      "title": "Grop partejat"
+    },
+    "token": {
+      "fetch": {
+        "errorTitle": "Lo cargament del geton de grop a fracassat"
+      }
+    },
+    "unknown": {
+      "label": "Grop desconegut"
+    },
+    "update": {
+      "errorTitle": "L'enregistrament de grop a fracassat",
+      "successTitle": "Lo grop mes a jorn amb succès"
+    }
+  },
+  "help": {
+    "buttonLabel": "Dobrir la vidèo d'ajuda"
+  },
+  "homepage": {
+    "video": {
+      "altText": "Vidèo d'introduccion de Isaac Fisica",
+      "copyLink": "Copiar lo ligam",
+      "linkCopied": "Copiat!",
+      "thumbnailAlt": "Un grop d'escolans que resòlvon de problèmas a un eveniment Isaac en persona.",
+      "title": "Perqué utilizar Isaac Physics?"
+    }
+  },
+  "inequality": {
+    "centreButton": "Centre",
+    "chemistry": {
+      "placeholder": "Picatz los elements quimics aicí",
+      "uppercaseWarning": "Atencion: los noms d'elements quimics començan per una letra majuscula."
+    },
+    "helpTooltip": {
+      "examples": "Vaquí qualques exemples d'expressions que podètz picar :<br1/><br2/>{{example}}<br3/>A mesura que picatz, la bóstia çai-jos previsualizarà lo resultat."
+    },
+    "input": {
+      "placeholder": "Picatz vòstra formula aicí",
+      "placeholderOrType": "o picatz vòstra formula aicí",
+      "resetButton": "Reïnicializar a la valor iniciala",
+      "symbolsHeading": "Los simbòls seguents pòdon èsser utils:"
+    },
+    "orientationWarning": "Nòstre editor d'equacions fonciona melhor en mòde païsatge.",
+    "trashButton": "Bassacar",
+    "validation": {
+      "decimalsToFractions": "Mercés de convertir los nombres decimals en fraccions.",
+      "doubleInequality": "Sèm pas capables d'acceptar d'inegalitats doblas, e las responsas las demandaràn pas jamai.",
+      "functionSpacing": "Asseguratz-vos d'utilizar d'espacis o de signes * abans los noms de foncions coma 'sin' o 'sqrt'!",
+      "inverseTrig": "Per crear la foncion {{trigFunction}} invèrsa, utilizatz 'arc{{functionName}}'.",
+      "inverseTrigHyperbolic": "Per crear la foncion {{trigFunction}} invèrsa, utilizatz 'ar{{functionName}}'.",
+      "latexNotSupported": "La sintaxi LaTeX es pas presa en carga.",
+      "missingBrackets": "Vos mancan qualques parentèsis.",
+      "stateSymbolsNotRequired": "Aquesta question demanda pas de simbòls d'estat.",
+      "syntaxError": "Error de sintaxi : geton inesperat \"{{tokenValue}}\""
+    }
+  },
+  "intendedAudience": {
+    "warning": {
+      "changePreferences": "Podètz cambiar vòstras preferéncias <strong>en mesa a jorn vòstre perfil <accountLink>aicí</accountLink>.</strong>",
+      "noContentFor": "I a pas de contengut sus aquesta pagina per {{examBoard}} {{stage}}. ",
+      "reportTaggingIssue": "xxxxxxIf you think that the page is incorrectly tagged, please <strong><contactLink>contact us</contactLink></strong>."
+    }
+  },
+  "katexA11y": {
+    "a11y": {
+      "clickableDropZone": "zòna de desplaçament clicable",
+      "cubeRootEnd": "raïtz cubica de fin",
+      "cubeRootStart": "raïtz cubica de",
+      "endColor": "color de fin {{color}}",
+      "endFormattedText": "fin {{modifier}} tèxte",
+      "squareRootEnd": "raïtz carrada finala",
+      "squareRootStart": "raïtz carrada de",
+      "startColor": "color de començament {{color}}",
+      "startFormattedText": "començar {{modifier}} tèxte",
+      "toThePower": "a la poténcia {{power}} "
+    }
+  },
+  "label": {
+    "aLevel": "Nivèl A",
+    "accessibilityRequirements": "Requisits d'accessibilitat",
+    "accountVerificationNote": "Serem en contacte dins pauc de temps. Notatz que la verificacion del compte es un procès manual e pòt prene qualques jorns.",
+    "all": "Tot",
+    "any": "Quin que siá",
+    "assignments": "Devers",
+    "bookingDeadline": "Data limita de reservacion",
+    "bookingDeadlineLabel": "Data limita de reservacion:",
+    "cambridgeUniversity": "Site web de l'Universitat de Cambridge",
+    "contactName": "Nom de contacte",
+    "created": "Creat",
+    "difficultiesTooltip": "Practica: {{practiceLevels}}<br/>Desfís: {{challengeLevels}}",
+    "difficulty": "Dificultat",
+    "displayIn": "Afichar dins",
+    "dragToReorder": "Arrossegatz per reordenar",
+    "due": "Degut:",
+    "dueDate": "Degut <strong>{{dueDate}}</strong>",
+    "dueDateLabel": "Data de venciment:",
+    "emailAddress": "Adreça de corrièl",
+    "emailOptOutNote": "Los utilizaires qu'an desactivat aqueste tipe de corrièl recebràn pas res. Los corrièls administratius pòdon pas èsser desactivats e deurián èsser evitats.",
+    "emailPreferencesDescription": "Obtenètz d'informacions importantas sul programa {{siteTitle}} remesa dins vòstra bóstia d'entrada. Aquestes paramètres pòdon èsser modificats a tot moment.",
+    "emailPreviewNote": "L'apercebut çai-jos utiliza de camps preses de vòstre compte (per exemple givenName e familyName).",
+    "emailSubject": "Subjècte del corrièl",
+    "emailType": "Tipe de corrièl",
+    "emailTypeAdminUrgent": "Corrièl administratiu urgent",
+    "emailTypeDescription": "Lo tipe de corrièl qu'enviatz.",
+    "emailTypeNewsUpdates": "Actualitats e mesas a jorn",
+    "eventLeaderRestriction": "Coma cap d'eveniment, podètz pas que veire las reservacions dels utilizaires que vos an concedit l'accès a lors donadas.",
+    "eventLocation": "Endrech:",
+    "feedbackMode": "Mòde de retroaccion dels escolans:",
+    "filterBy": "Filtrar per",
+    "filterByAssigner": "Filtre per assignaire",
+    "filterByCreator": "Filtre per Creator",
+    "filterByGroup": "Filtre per grop",
+    "filterByStage": "Filtre per estapa",
+    "filterByStatus": "Filtrar per estatut",
+    "filterBySubjectAndTopic": "Filtrar per subjècte e subjècte",
+    "filterByTitle": "Filtrar per títol",
+    "filterByTopic": "Filtrar per tèma",
+    "filters": "Filtres",
+    "findByUserRole": "Trobar per ròtle d'utilizaire :",
+    "findUserByEmail": "Trobar un utilizaire per corrièl :",
+    "findUserByFamilyName": "Trobar un utilizaire per nom de familha :",
+    "firstName": "Prenom",
+    "followUs": "Seguissètz-nos",
+    "gender": "Sexe",
+    "groupName": "Nom del grop",
+    "groups": "Grops:",
+    "key": "Clau",
+    "lastName": "Nom d'ostal",
+    "level1": "Nivèl 1",
+    "location": "Endrech",
+    "makeSelection": "--- Fasètz una seleccion ---",
+    "maths": "Matematicas",
+    "mentalMaths": "Matematicas mentalas globalas",
+    "newPassword": "Novèl senhal",
+    "none": "Cap",
+    "notes": "Nòtas:",
+    "password": "Senhal",
+    "passwordMinLength": "Los senhals devon aver al mens {{minLength}} caractèrs de long.",
+    "passwordStrength": "Fòrça del senhal :",
+    "questionNumber": "Question {{questionNumber}}",
+    "questions": "questions",
+    "raspberryPi": "Raspberry Pi",
+    "rememberMe": "Remembratz-vos de ieu",
+    "role": "Ròtle",
+    "school": "Escòla",
+    "searchByTitle": "Cercar per títol",
+    "selectOrCreateGroup": "Seleccionatz o creatz un grop",
+    "selectStage": "Seleccionar l'estadi",
+    "setBy": "Fixat per",
+    "sidebar": "Barra lateral",
+    "skipToContent": "Sautar al contengut principal",
+    "someoneElse": "Qualqu'un d'autre",
+    "sortBy": "Ordenar per",
+    "stage": "Scèna",
+    "startDate": "Data de començament",
+    "startDateLabel": "Data de començament:",
+    "status": "Estatut",
+    "subjects": "Subjèctes",
+    "teacherAccountRequestSubject": "Demanda de compte de professor",
+    "teacherConnectionCode": "Còde de connexion del professor",
+    "topic": "Subjècte",
+    "unit": "Unitat",
+    "university": "Universitat",
+    "userAgent": "Agent d'utilizaire",
+    "userId": "ID d'utilizaire",
+    "userSelectionDescription": "Lista separada per virgula dels identificants d'utilizaire per corrièl.",
+    "value": "Valor",
+    "verificationCode": "Còde de verificacion"
+  },
+  "latex": {
+    "dropZone": "zòna de desplaçament clicable",
+    "figureReference": "Figura&nbsp;{{number}}",
+    "unknownReference": "referéncia desconeguda {{refKey}}"
+  },
+  "listViews": {
+    "action": {
+      "takeTest": "Fasètz l'espròva",
+      "viewTest": "Afichar lo tèst"
+    },
+    "hiddenFromTeachers": "Amagat als ensenhaires",
+    "moveDown": "Desplaçar la question cap aval",
+    "moveUp": "Desplaçatz la question cap amont",
+    "noTitle": "pas de títol",
+    "question": {
+      "label": "Question"
+    },
+    "visibleToStudents": "Visible pels escolans"
+  },
+  "markdownBuilder": {
+    "guideLinkText": "Guida de marcatge",
+    "rawInputLabel": "Entrada bruta",
+    "renderedLabel": "Marcament rendut"
+  },
+  "markup": {
+    "inlineDropZone": {
+      "ariaLabel": "zòna de gota",
+      "clearButton": "Clar"
+    },
+    "tables": {
+      "expandButton": {
+        "ariaLabel": "Espandir lo contengut"
+      }
+    }
+  },
+  "mathsUni": {
+    "cardSubtitle": "Actualizatz vòstras competéncias en matematicas en preparacion per {{subject}} a l'universitat.",
+    "cardTitle": "Revision de matematicas per {{subject}}"
+  },
+  "modal": {
+    "help": {
+      "title": "Ajuda rapida"
+    },
+    "nextPageAriaLabel": "Anar a la pagina seguenta sus modal",
+    "pageIndicatorAriaLabel": "Indicador de pagina modala",
+    "questionReminder": {
+      "hideButton": "Amagar la question",
+      "showButton": "Mostrar la question"
+    }
+  },
+  "navigation": {
+    "scrollToTop": "Desplaçatz-vos cap a la cima de la pagina",
+    "search": {
+      "closeLabel": "Barrar lo menú de recèrca",
+      "openLabel": "Dobrir lo menú de recèrca"
+    },
+    "sidebar": {
+      "homepageLink": "Anar a la pagina d'acuèlh"
+    },
+    "supersededDeprecated": {
+      "bookBoardTip": "Se volètz tornar configurar aqueste foncionament, deuriatz utilizar la version mai a jorn de nòstra pagina de libre.",
+      "deprecatedTitle": "Contengut obsolet",
+      "deprecatedUnsupported": "Coma aqueste {{contentType}} es pas pres en carga, vos recomandam pas de l'utilizar amb vòstres escolans.",
+      "deprecatedWarning": "Aqueste {{contentType}} es pas mai pres en carga, e pòt conténer d'errors.",
+      "supersededEditPrompt": "Vos recomandam de <editLink>duplicar e modificar</editLink> aqueste assignacion per las remplaçar per lor version mai recenta.",
+      "supersededTitle": "Contengut remplaçat",
+      "teacherNote": "Nòta del professor:"
+    }
+  },
+  "news": {
+    "displayErrorTitle": "Impossible d'afichar las novèlas",
+    "emptyState": "Pas de novèlas a afichar...",
+    "errorTitle": "Error al moment de la recuperacion d'informacions",
+    "newsletterBody": "Obtenètz d'idèas d'ensenhament novèlas, de conselhs d'estudi dels escolans, e de novèlas de desvolopament a prepaus de nòstras aisinas e ressorsas mandadas dirèctament a vòstra boita d'entrada.",
+    "newsletterTitle": "Mantenètz-vos a jorn",
+    "sectionTitle": "Conselhs, aisinas e supòrt",
+    "sidebar": {
+      "seeAllNews": "Veire totas las novèlas"
+    },
+    "subscribeButton": "Obtenètz de conselhs e de mesas a jorn"
+  },
+  "notifications": {
+    "assignmentTitle": "Tasca a far : {{gameboardTitle}}",
+    "dueDateMessage": "Venciment lo {{dueDate}}",
+    "goToAssignmentButton": "Anar a l'assignacion",
+    "goToTestButton": "Anar a la pròva",
+    "survey": {
+      "acceptButton": "Òc, veire lo questionari",
+      "declineButton": "Non mercés",
+      "postponeButton": "Me demandatz mai tard",
+      "prompt": "Volètz completar una enquèsta?"
+    },
+    "testTitle": "Pròva de far : {{quizTitle}}",
+    "toggle": {
+      "collapseButton": "Afichar mens de notificacions",
+      "expandButton": "Afichar totas las notificacions {{count}}"
+    }
+  },
+  "onlineCourses": {
+    "emptyState": "Pas de cors a afichar...",
+    "errorTitle": "Error al moment de prene de corses en linha",
+    "loadMoreButton": "Cargar mai de corses",
+    "metaDescription": "Consultatz los corses en linha gratuits de la Raspberry Pi Foundation pels educators e causissètz d'una gama de tèmas d'informatica."
+  },
+  "overview": {
+    "aLevel": {
+      "subtitle": "Nòstras ressorsas de nivèl A {{subject}} afortisson mai la compreneson de {{subjectName}}, del temps que desvolopan de competéncias de resolucion de problèmas. Nòstras ressorsas incluson de questions, de concèptes e de libres."
+    },
+    "assigned": {
+      "buttonLabel": "Trabalhar per tu",
+      "title": "Assignat a ieu"
+    },
+    "browse": {
+      "sectionTitle": "Consultar Ada CS"
+    },
+    "difficulty": {
+      "challengeDesc": "Las questions de desfís son aquelas que demandan un o mai de concèptes, o demandan mai de creativitat per resòlvre lo problèma, ajudant a desvolopar de competéncias importantas de resolucion de problèmas.",
+      "intro": "Totas las questions d'Isaac Science son classadas coma \"Practica\" o \"Desfís\" – indicat pels simbòls çai-jos.",
+      "practiceDesc": "Las questions de practica son aquelas que demandan un concèpte o una equacion per resòlvre."
+    },
+    "examIndependent": "Nòstres materials son independents del conselh d'examens. Son concebuts per ajudar los escolans a desvolopar e aplicar lor compreneson dels concèptes fondamentals dins {{subject}}, del temps que desvolopan de competéncias de resolucion de problèmas.",
+    "exampleQuestions": {
+      "errorTitle": "Impossible de cargar de questions d'exemple"
+    },
+    "freeAccount": "Podètz utilizar nòstras ressorsas GRATUITAMENT. En creant un compte gratuit aurètz un accès complet a totas las ressorsas disponiblas pels estudiants jos Isaac Science e poiretz aprofichar al maximum nòstra plataforma en seguissent vòstre progrès. Los ensenhaires pòdon demandar un compte ensenhaire gratuit per accedir a <teacherFeaturesLink>foncionalitats suplementàrias</teacherFeaturesLink>.",
+    "gcse": {
+      "subtitle": "Nòstras ressorsas GCSE {{subject}} desvolopan la coneissença {{subjectName}} necessària al GCSE a travèrs l'utilizacion de questions, de concèptes e de libres."
+    },
+    "notFound": "Pas cap de subjècte trobat.",
+    "pageTitle": "Presentant Isaac {{subject}}",
+    "sampleQuestions": {
+      "biology": "Mostra de questions de biologia",
+      "chemistry": "Preguntas de quimia de mòstra",
+      "maths": "Exemple de questions de matematicas",
+      "physics": "Exemple de questions de fisica"
+    },
+    "stage1114": {
+      "subtitle": "Nòstras ressorsas 11–14 {{subject}} introduson de concèptes segondaris {{subjectName}} als escolans e bastisson lors competéncias de numeracion a travèrs de questions e una seleccion d'experiéncias."
+    },
+    "student": {
+      "assigned": {
+        "description": "Aquí trobaretz de prètzfaches que vos son estats assignats."
+      },
+      "progress": {
+        "buttonLabel": "Veire lo progrès",
+        "description": "Seguissètz vòstre progrès dins lo temps e identificatz los domenis a trabalhar."
+      },
+      "projects": {
+        "buttonLabel": "Navegar pels projèctes",
+        "description": "Prenètz de projèctes a mai granda escala per desvolopar vòstras competéncias dins un contèxte practic."
+      },
+      "questions": {
+        "buttonLabel": "Trobar de questions",
+        "description": "Exploratz nòstre banc de questions per trobar de questions per practicar sus quin subjècte que siá."
+      },
+      "support": {
+        "description": "Nòstra pagina d'ajuda als estudiants a d'informacions utilas per de questions e de problèmas comuns."
+      },
+      "tests": {
+        "description": "Es aquí ont trobaretz de tèsts que son estats definits per vos."
+      },
+      "topics": {
+        "buttonLabel": "Navegar pels subjèctes",
+        "description": "Navega por todas las temas en Ada CS."
+      }
+    },
+    "teacher": {
+      "account": {
+        "description": "Gerir totes los aspèctes de vòstre compte, dels paramètres de contengut a las preferéncias de notificacion.",
+        "title": "Compte"
+      },
+      "assigned": {
+        "description": "Se vos inscrivètz a un grop per vòstre desvolopament, es aquí ont trobaretz de quiz que vos son assignats."
+      },
+      "groups": {
+        "description": "Organizatz vòstres escolans en grops per que poscatz definir lo trabalh apropriat.",
+        "title": "Grops d'escolans"
+      },
+      "markbook": {
+        "description": "Seguir lo progrès dels escolans e identificar los domenis a trabalhar."
+      },
+      "mentoring": {
+        "description": "Participatz a de sesilhas en dirècte amb un mentor Ada CS experimentat per obténer de conselhs sus l'ensenhament dels tèmas de basa."
+      },
+      "quizzes": {
+        "buttonLabel": "Assignar un quiz",
+        "description": "Creatz de quizs d'automarcatge e assignatz-los a vòstres escolans.",
+        "title": "Quizs"
+      },
+      "support": {
+        "description": "Nòstra pagina d'ajuda als ensenhaires a d'informacions utilas per de questions e de problèmas comuns."
+      },
+      "tests": {
+        "buttonLabel": "Definir un tèst",
+        "description": "Fixatz un tèst preparat per l'equipa d'Informatica d'Ada."
+      }
+    },
+    "university": {
+      "subtitle": "Nòstras ressorsas de l'Universitat {{subject}} vos ajudan a vos preparar per vòstre diplòma STEM universitari."
+    },
+    "welcome": {
+      "subjectLink": "Isaac {{subjectName}}"
+    }
+  },
+  "pageMetadata": {
+    "visuallyHiddenTitle": "Pagina principala"
+  },
+  "policy": {
+    "sidebar": {
+      "accessibilityStatement": "Declaracion d'accessibilitat",
+      "cookiePolicy": "Politica de cookies",
+      "privacyPolicy": "Politica de confidencialitat",
+      "selectPage": "Seleccionatz una pagina",
+      "termsOfUse": "Condicions d'utilizacion"
+    }
+  },
+  "printButton": {
+    "withHints": {
+      "label": "<visuallyHidden>Imprimir </visuallyHidden>Amb d'entresenhas",
+      "title": "Imprimir amb d'entresenhas"
+    },
+    "withoutHints": {
+      "label": "<visuallyHidden>Imprimir </visuallyHidden>Sens indicis",
+      "title": "Imprimir sens indicis"
+    }
+  },
+  "profiles": {
+    "featured": {
+      "emailLinkLabel": "Corrièl {{name}}"
+    }
+  },
+  "programmes": {
+    "cardSubtitle": "Exploratz los programas desvolopats per sosténer vòstra compreneson de la fisica e menatz vòstras competéncias de resolucion de problèmas al nivèl seguent.",
+    "list": {
+      "heading": "Lista dels programas"
+    },
+    "sidebar": {
+      "title": "Nòstres programas",
+      "toggleLabel": "Explorar los programas"
+    }
+  },
+  "progress": {
+    "attemptsOverTime": "Ensags dins lo temps",
+    "charts": {
+      "bySubjectTitle": "Per {{subject}}",
+      "byTopicTitle": "Per tèma"
+    },
+    "correctOfAttempts": "{{correct}} de {{attempts}}",
+    "legend": {
+      "failedAttempted": "<{{failThresholdPercentage}}% ensajat",
+      "failedCorrect": "<{{failThresholdPercentage}}% corrècte",
+      "fullAttempted": "100% ensajat",
+      "fullCorrect": "100% corrècte",
+      "fullyAttempted": "Entièrament ensajat",
+      "inProgressAttempted": "≥{{failThresholdPercentage}}% ensajat",
+      "inProgressCorrect": "≥{{failThresholdPercentage}}% corrècte",
+      "partiallyAttempted": "Parcialament ensajat",
+      "partiallyCorrect": "Parcialament corrècte",
+      "passedAttempted": "≥{{passPercentage}}% ensajat",
+      "passedCorrect": "≥{{passPercentage}}% corrècte",
+      "title": "Clau de seccion:"
+    },
+    "marking": {
+      "accountSettings": "vòstres paramètres de compte",
+      "notMarkedFor": "pas estat marcat per {{context}}"
+    },
+    "mentalMathsEmptyState": "<mentalMathsLink>Clicatz aicí</mentalMathsLink> per ensajar nòstra practica de competéncias mentalas de matematicas.",
+    "mostRecentTitle": "De questions mai recentament respondudas",
+    "noneAttempted": "Cap ensajat",
+    "oldestUnsolvedTitle": "Las questions non resoludas mai ancianas",
+    "otherUserTitle": "Progrès per {{userName}}",
+    "partBreakdown": {
+      "partColumn": "Partida {{partNumber}}"
+    },
+    "questionPartsTitle": "De partidas de question corrèctas per tipe",
+    "questionTypeLabel": "{{questionType}} preguntas",
+    "returnAttempt": {
+      "action": "Autorizar un autre ensag",
+      "body": "Aquò permetrà a l'escolan d'ensajar tornarmai l'espròva.",
+      "title": "Autorizar un autre ensag?"
+    },
+    "settings": {
+      "displayModeLabel": "Mòde d'afichatge de la taula",
+      "fractionsOption": "Fraccions",
+      "hideButton": "Amagar los paramètres",
+      "percentagesOption": "Percentatges",
+      "showButton": "Afichar los paramètres"
+    },
+    "skillsAttemptsError": "Fracàs al moment de cargar los ensags de competéncias.",
+    "streak": {
+      "title": "Setmanièra"
+    },
+    "table": {
+      "emptyState": "Aqueste grop es void, doncas a pas de donadas de progrès disponiblas. Podètz convidar los utilizaires a travèrs la pagina <manageGroupsLink>Gerir los grops</manageGroupsLink>.",
+      "notSharing": "Partejant pas",
+      "totalAttemptedPartsLabel": "Total de pèças ensajadas",
+      "totalAttemptedQuestionsLabel": "Total de questions ensajadas",
+      "totalCorrectPartsLabel": "Total de pèças corrèctas",
+      "totalCorrectQuestionsLabel": "Total de questions corrèctas",
+      "viewAnswers": "Veire las responsas"
+    }
+  },
+  "projects": {
+    "emptyState": "Pas de projècte a afichar...",
+    "errorTitle": "Error al moment de la recuperacion de projèctes",
+    "loadMoreButton": "Cargar mai de projèctes"
+  },
+  "quantumMechanicsPrimer": {
+    "title": "Primer de mecanica quantica"
+  },
+  "questionDecks": {
+    "cardSubtitle": "Practicatz de tèmas especifics en utilizant nòstres jòcs de questions prèstes.",
+    "cardTitle": "Decks de questions per tèma",
+    "chemUni": {
+      "subtitle": "Consolidatz vòstra compreneson de quimia amb aquelas questions per tèma."
+    },
+    "mathsALevel": {
+      "subtitle": "Practicatz de tèmas especifics de Matematicas e de Matematicas Suplementàrias en utilizant nòstres jòcs de questions prèstes."
+    }
+  },
+  "questionFinder": {
+    "cardSubtitle": "Trobatz las questions {{subjectContext}} per ensajar per tèma e nivèl de dificultat.",
+    "errorTitle": "Error al moment de cargament de las questions",
+    "filter": {
+      "bookmarked": "Marcat",
+      "clearAll": "Escafar totes los filtres",
+      "excludeBooks": "Exclure las questions dels libres de competéncias"
+    },
+    "filters": {
+      "excludeSkillsBook": "Exclure las questions del libre de competéncias",
+      "togglePanel": "Bascular lo panèl de filtre"
+    },
+    "noResults": "Pas de resultats.",
+    "results": {
+      "loadError": "Fracàs al cargament de las questions.",
+      "titleColumn": "Títol de la question"
+    },
+    "resultsCount": "Afichar <b>{{count}}</b>",
+    "selection": {
+      "selectedCount_one": "{{count}} question seleccionada",
+      "selectedCount_other": "{{count}} questions seleccionadas"
+    },
+    "shuffleButton": "Barrejar las questions <responsiveWord></responsiveWord>",
+    "sidebar": {
+      "stageHeading": "Decks per estadi",
+      "subjectHeading": "Decks per subjècte",
+      "switchContextButton": "Cambiar d'estadi/subjècte"
+    },
+    "totalCount": "de <b>{{total}}</b>"
+  },
+  "questionMetadata": {
+    "accessibilityWarningsTitle": "Avertiments d'accessibilitat",
+    "printStageDifficultyLabel": "Estadi e dificultat:",
+    "printSubjectTopicsLabel": "Subjècte e subjèctes:",
+    "stageDifficultyTitle": "Estadi e dificultat",
+    "subjectTopicsTitle": "Subjècte e subjèctes"
+  },
+  "questionStats": {
+    "aggregate": {
+      "correctCountOfAttempted": "{{correctCount}} de {{attemptedCount}}",
+      "correctPartsTitle": "Parts de questions corrèctas",
+      "correctQuestionsTitle": "De questions corrèctas",
+      "sinceAccountCreation": "Dempuèi la creacion del compte:",
+      "thisAcademicYear": "Aquesta annada academica:"
+    }
+  },
+  "questions": {
+    "answerPlaceholder": "Picatz vòstra responsa aicí.",
+    "attemptFailure": {
+      "body": "Vòstra responsa a pas pogut èsser verificada. Ensajatz tornarmai.",
+      "title": "L'ensag de question a fracassat"
+    },
+    "attempts": {
+      "warningBody": "Avètz picat divèrsas devinalhas per aquesta question ; lèu serà verrolhat temporàriament.",
+      "warningTitle": "L'apròcha del limit dels ensags"
+    },
+    "chemistry": {
+      "editPromptSingleBox": "Clicatz dins la bóstia çai-jos per modificar vòstra responsa.",
+      "editPromptTextEntry": "Clicatz dins quina que siá bóstia çai-jos per modificar vòstra responsa."
+    },
+    "coordinate": {
+      "addButton": "Apondre de coordenadas",
+      "invalidCharsError": "Qualques caractèrs qu'utilizatz son pas autorizats : {{invalidChars}}",
+      "noCommaError": "Vòstra responsa deuriá pas conténer de virgulas. Picatz cada partida de vòstra responsa dins una bóstia separada.",
+      "simplifyError": "Simplificatz cada partida de vòstra responsa en un sol nombre decimal."
+    },
+    "crossTopicIndicator": "Question entre tèmas",
+    "dragAndDrop": {
+      "announceDroppedIntoDropZone": "L'element arrossegable {{itemText}} foguèt daissat tombar dins lo numèro de zòna de daissament {{dropZoneNumber}}",
+      "announceOverDropZone": "L'element arrossegable es al dessús del numèro de zòna de desplaçament {{dropZoneNumber}}",
+      "announceSwapWithItem": "Escambiar l'element arrossegable {{activeItemText}} amb l'element {{overItemText}}.",
+      "announceSwappedWithItem": "L'element arrossegable {{activeItemText}} foguèt escambiat per {{overItemText}}."
+    },
+    "fastTrack": {
+      "relatedConceptTitle": "Legir la pagina de concèpte ligat suggerida"
+    },
+    "feedback": {
+      "correct": "Corrècte!",
+      "partlyCorrect": "En partida corrècte...",
+      "tooFewSigFigs": "Right or wrong...",
+      "tooManySigFigs": "Sembla plan, mas..."
+    },
+    "freeText": {
+      "answerLabel": "Camp de tèxte de responsa",
+      "validationWarningLabel": "Avertiment:"
+    },
+    "generateAnswerSpec": {
+      "errorTitle": "I aguèt un problèma al moment de la generacion d'una especificacion de responsa"
+    },
+    "hints": {
+      "defaultTitle": "Indici{{index}}",
+      "heading": "Avètz besonh d'ajuda?",
+      "preamble": "Oblidetz pas d'utilizar los conselhs se avètz besonh d'ajuda."
+    },
+    "inlineFeedback": {
+      "boxCounter": "Bóstia {{boxIndex}} de {{boxCount}}",
+      "selectBox": "Veire lo retorn per una bóstia especifica en la seleccionant çai-sus o en utilizant las sagetas çai-jos."
+    },
+    "inlineInput": {
+      "ariaLabel": "Camp d'entrada per la partida {{partName}}"
+    },
+    "inlineRegion": {
+      "feedback": {
+        "incorrect": "Verificatz vòstra responsa.",
+        "missingUnit": "A aquesta responsa manca una unitat.",
+        "notAnswered": "Avètz pas provesit de responsa."
+      }
+    },
+    "inputValidation": {
+      "warningLabel": "Prudent!"
+    },
+    "itemsArea": {
+      "available": "Articles disponibles",
+      "dragHint": "Arrossegatz los elements per bastir vòstra responsa",
+      "empty": "Cap de responsa introducha",
+      "yourAnswer": "Vòstra responsa"
+    },
+    "llmIndicator": {
+      "label": "LLM marcada question"
+    },
+    "maxMarks_one": "[{{count}} marca]",
+    "maxMarks_other": "[{{count}} marcas]",
+    "multiChoice": {
+      "clearOption": "(clar)"
+    },
+    "numeric": {
+      "decimalSeparator": "Utilizatz de punts al luòc de virgulas coma de separators decimals.",
+      "exponentSymbol": "Utilizatz un simbòl d'exponent corrècte, per exemple 10^-3 o 10**-3.",
+      "helpPrompt": "Qué pòdi picar dins aquesta bóstia?",
+      "inputHelp": "Vaquí qualques exemples de nombres que podètz escriure:<br1/><br2/>3.7<br3/>-3x10^14<br4/>28-2.<br5/><br6/>Utilizatz pas de virgulas o d'espacis.",
+      "inputLabel": "Camp d'entrada per la partida {{partTitle}}",
+      "noSpaces": "Utilizatz pas d'espacis al moment de picar vòstra responsa.",
+      "noThousandSeparators": "Utilizatz pas de virgulas o d'espacis coma de separators de mila al moment de picar vòstra responsa.",
+      "simplifyToDecimal": "Simplificatz vòstra responsa en un sol nombre decimal."
+    },
+    "parsons": {
+      "moveBackToItems": "Desplaçatz {{itemName}} enrè dins la lista dels elements",
+      "moveDown": "Desplaçatz {{itemName}} cap aval",
+      "moveToAnswer": "Desplaçatz {{itemName}} dins vòstra responsa",
+      "moveUp": "Desplaçatz {{itemName}} cap amont"
+    },
+    "preview": {
+      "ariaLabel": "Question d'apercebut",
+      "title": "Apercebut de la question"
+    },
+    "quickQuestion": {
+      "hideAnswerButton": "Amagar la responsa",
+      "showAnswerButton": "Mostrar la responsa"
+    },
+    "reorder": {
+      "dragInstruction": "Arrossegatz aquestes elements per los metre dins l'òrdre corrècte"
+    },
+    "search": {
+      "errorTitle": "Impossible de recercar las questions"
+    },
+    "submit": {
+      "check": "Verificatz ma responsa",
+      "marking": "Marcant vòstra responsa…"
+    },
+    "symbolicLogic": {
+      "emptyPreview": "Clicatz per picar vòstra expression"
+    },
+    "validation": {
+      "charLimitExceeded": "Limit de caractèrs despassat ({{currentCount}}/{{limit}})",
+      "invalidFormat": "Vòstra responsa es pas dins un format que reconeissèm, picatz vòstra responsa coma un nombre decimal.",
+      "notAnswered": "Pas respondut",
+      "piiDetected": "<strong>PII possibla detectada :</strong><br/>Sembla que vòstra responsa conten d'informacions personalas, coma un nom, un corrièl o una adreça de carrièra. Enviar aquestas donadas a OpenAI es contra lor politica d'utilizacion.",
+      "sigFigs": "Chifras significativas",
+      "stdFormSyntax": "Al moment d'escriure la forma estandard, cal inclure <caretCode>^</caretCode> o <doubleAsteriskCode>**</doubleAsteriskCode> entre lo 10 e l'exponent.",
+      "tooManySigFigs": "xxxxxxyour answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "wordLimitExceeded": "Limit de mots despassat ({{currentCount}}/{{limit}})"
+    }
+  },
+  "quickQuizzes": {
+    "title": "Quiz rapids"
+  },
+  "relatedContent": {
+    "questions": {
+      "outsideSpecificationHeader": "En defòra de vòstra especificacion:",
+      "specificationHeader": "Segon vòstra especificacion:"
+    }
+  },
+  "reportButton": {
+    "label": "Senhalar un problèma (se dobrís dins un onglet novèl)"
+  },
+  "revision": {
+    "alert": {
+      "correctAnswerTimespan": "Avètz respondut corrèctament a aquesta question {{timespan}}.",
+      "lastMonth": "dins lo darrièr mes",
+      "lastTwelveMonths": "dins los darrièrs 12 meses",
+      "lastWeek": "dins la darrièra setmana",
+      "modeNotice": "Sètz actualament en <revisionModeLink>mòde de revision</revisionModeLink> çò qu'amaga vòstres ensags precedents.",
+      "overOneYear": "fa mai d'1 an"
+    },
+    "cardSubtitle": "Revisatz amb nòstres vidèos de resumit, tèsts de tèmas e questions.",
+    "errorTitle": "Impossible de recuperar la pagina de revision.",
+    "mathsALevel": {
+      "subtitle": "Revisatz amb nòstres jòcs de revision personalizats sus lo còr pur, lo pure e la mecanica."
+    },
+    "page": {
+      "loadError": "Impossible de cargar la pagina de revision."
+    },
+    "sections": {
+      "introDescription": "D'en primièr, ensajatz aquelas questions de basa per avalorar vòstra compreneson e identificar quines aspèctes d'aqueste tèma deuriátz centrar vòstra revision:",
+      "introTitle": "Presentacion",
+      "testsDescription": "Per demostrar vòstre progrès un còp qu'avètz revisat aquesta seccion, ensajatz un tèst d'entraïnament :"
+    }
+  },
+  "role": {
+    "admin": "Admin",
+    "contentEditor": "Editor de contengut",
+    "student": "Estudiant",
+    "teacher": "Professor",
+    "tutor": "Tutor"
+  },
+  "search": {
+    "error": {
+      "failed": "Fracàs al moment de la recèrca. Ensajatz tornar mai tard."
+    },
+    "errorTitle": "Impossible d'efectuar la recèrca",
+    "filter": {
+      "placeholder": "Seleccionatz lo filtre de tipe de pagina..."
+    },
+    "results": {
+      "heading": "Resultats de recèrca"
+    },
+    "shortcuts": {
+      "teacherConnect": {
+        "summary": "Clicatz aicí per vos connectar a un professor en utilizant lo còde qu'avètz picat.",
+        "title": "Connexions pels ensenhaires"
+      }
+    }
+  },
+  "serverError": {
+    "heading": "O planhèm, mas una error s'es producha sul servidor {{siteTitle}} !",
+    "suggestions": "xxxxxxxYou may want to <refresh>refresh this page and try again</refresh>, <homepage>return to our homepage</homepage>, or <contact>contact</contact> or <email>email</email> us if this keeps happening."
+  },
+  "shareLink": {
+    "buttonTitle": "Partejar la pagina",
+    "hideButtonLabel": "Amagar lo ligam de partatge",
+    "inputAriaLabel": "URL de partatge",
+    "showButtonLabel": "Obténer lo ligam de partatge"
+  },
+  "sidebar": {
+    "backToBook": {
+      "button": "Tornar a la seccion del libre"
+    },
+    "completionKey": {
+      "allCorrect": "Tot corrècte",
+      "title": "Clau de question"
+    },
+    "display": {
+      "limit": "Limit:",
+      "limitLabel": "Definir lo limit d'afichatge",
+      "modeLabel": "Definir lo mòde d'afichatge",
+      "title": "Exposicion"
+    },
+    "filter": {
+      "creator": "Filtre per creator"
+    },
+    "optionsButton": "Opcions",
+    "relatedContent": {
+      "conceptsTitle": "Concèptes ligats",
+      "noConcepts": "I a pas de concèptes ligats per aqueste {{pageType}}.",
+      "noQuestions": "I a pas de questions ligadas a aqueste {{pageType}}.",
+      "otherStagesTitle": "Questions ligadas per d'autras estapas d'aprendissatge",
+      "stageQuestionsTitle": "Preguntas {{stageName}} relacionadas",
+      "viewAllConcepts": "Veire totes los concèptes per {{contextName}}",
+      "viewAllQuestions": "Ver todas las preguntas para {{contextName}}"
+    },
+    "search": {
+      "decks": "Cercar de jòcs de questions"
+    },
+    "toggleButton": {
+      "label": "Cercar e filtrar"
+    }
+  },
+  "skillsPractice": {
+    "bioGcse": {
+      "subtitle": "Practicar las competéncias de matematicas de basa que son utilizadas dins la Biologia del GCSE."
+    },
+    "chemALevel": {
+      "subtitle": "Practicar las competéncias de basa requeridas en quimia de nivèl A."
+    },
+    "chemGcse": {
+      "subtitle": "Practicar las competéncias de basa requeridas dins la quimia del GCSE."
+    },
+    "chemUni": {
+      "subtitle": "Consolidatz vòstras competéncias en quimia amb aqueles esturments"
+    },
+    "fallback": {
+      "subtitle": "Consolidatz vòstras competéncias {{subject}} amb aquestas aisinas."
+    },
+    "mathsALevel": {
+      "subtitle": "Practicatz aquelas competéncias de basa, coma reorganizar las equacions, vitalas per las matematicas."
+    },
+    "mathsGcse": {
+      "subtitle": "Practicatz aquelas competéncias de basa, coma lo reorganizacion d'equacions, vitalas per las matematicas del GCSE."
+    },
+    "physics1114": {
+      "subtitle": "Contunhatz d'entraïnar aquelas competéncias de matematicas amb nòstres esturments d'algèbra."
+    },
+    "physicsGcse": {
+      "subtitle": "Practicatz las equacions importantas en GCSE Fisica amb aquelas aisinas."
+    }
+  },
+  "status": {
+    "accountUpdated": "Los paramètres de vòstre compte son estats meses a jorn amb succès.",
+    "allAttemptedWithErrors": "Tot ensag (qualques errors)",
+    "attempted": "Ensajat",
+    "checkInbox": "Mercés de verificar vòstra bóstia d'entrada.",
+    "comingSoon": "A venir lèu",
+    "completed": "Completat",
+    "correct": "Corrècte",
+    "emailRequestMade": "Demanda facha, per mandar un autre refresc.",
+    "inProgress": "En cors",
+    "incorrect": "Incorrècte",
+    "loading": "En cargament...",
+    "no": "Non",
+    "noData": "Pas de donadas",
+    "noFeedback": "Cap de retroaccion disponibla",
+    "noGroupsAssigned": "Cap de grop es pas estat assignat.",
+    "noResults": "Cap de resultat trobat",
+    "notAttempted": "Pas ensajat",
+    "notLoggedIn": "Pas actualament connectat",
+    "notStarted": "Pas començat",
+    "off": "Desactivat",
+    "on": "Sus",
+    "online": "En linha",
+    "overdue": "En retard",
+    "requestedPlace": "Avètz demandat una plaça sus aqueste eveniment.",
+    "sortDisabled": "Lo triatge es desactivat fins que totes los jòcs de questions sián estats cargats. Aumentar lo limit d'afichatge per cargar totes los jòcs de questions.",
+    "testSubmitted": "Pròva somesa amb succès",
+    "yes": "Òc"
+  },
+  "studentResources": {
+    "careers": {
+      "description": "Legissètz d'istòrias de diplòmats a las primièras estapas de lor carrièra dins lo desvolopament de logicials, lo dessenh de jòcs, la recèrca, e fòrça mai.",
+      "lellaHalloumBody": "Coneissètz Lella, una jove cambiaira numerica qu'utiliza la tecnologia per inspirar, engatjar e melhorar la generacion seguenta de talent.",
+      "lellaHalloumTitle": "Lella Halloum",
+      "maxFordhamBody": "Explora cossí la passion de Max per l'informatica lo menèt a venir un engenhaire de logicials a travèrs un aprendissatge de solucions de tecnologia numerica.",
+      "maxFordhamTitle": "Max Fordham",
+      "meghnaAsthanaBody": "Descobrissètz cossí Meghna transformèt sa passion pel codatge en una carrièra dins la vision informatica, ont trabalha ara sus de projèctes innovadors que s'ocupan dels desfís environamentals.",
+      "meghnaAsthanaTitle": "Meghna Asthana",
+      "title": "Explora una carrièra en informatica",
+      "viewMoreButton": "Veire mai d'istòrias"
+    },
+    "challenges": {
+      "description": "Inscrivètz-vos a un de nòstres desfís de trimèstre. Testatz vòstras coneissenças e competéncias, e siátz dins l'escasença de ganhar de grands prèmis.",
+      "title": "Ganhatz de prèmis amb nòstres desfís estudiants"
+    },
+    "curriculum": {
+      "description": "Avèm mai de 65 tèmas d'aprendissatge que cobrisson tot çò que cal aprene en informatica. De sistèmas e rets d'informatica, a l'IA, a l'aprendissatge automatic, e fòrça mai.",
+      "note": "Son creats per d'educators experts e son regularament mesas a jorn."
+    },
+    "furtherLearning": {
+      "astroPiBody": "Lo Desfís Europèu Astro Pi fa que los aprenents escrivon de còde que fonciona sus l'Estacion Espaciala Internacionala.",
+      "astroPiButton": "Anar a Astro Pi",
+      "astroPiTitle": "Vòstre còde dins l'espaci",
+      "codeEditorBody": "Nòstre editor de còde en linha vos permet de codar çò que volètz: un jòc, un art, o vòstre pròpri site web en utilizant Python o HTML e CSS.",
+      "codeEditorButton": "Dobrir l'editor de còde",
+      "codeEditorTitle": "Editor de còde liure",
+      "description": "Mai de projèctes, desfís e aisinas de la gama de ressorsas informaticas de classa mondiala de la Fondacion Raspberry Pi.",
+      "projectsBody": "I a de centenats de projèctes de codificacion e d'informatica gratuits, totes amb d'instruccions pas a pas.",
+      "projectsButton": "Anar a Projèctes",
+      "projectsTitle": "Projèctes de codificacion en linha",
+      "title": "Aprendissatge suplementari"
+    },
+    "header": {
+      "description": "Avèm tot per vos ajudar a estudiar l'informatica – inclusent los trabalhs de classa, los devers e la preparacion a l'examen. E es tot disponible gratuitament.",
+      "title": "<decorativeSlash>/</decorativeSlash><br/>Ada CS pels escolans"
+    },
+    "isaacScience": {
+      "description": "Consultatz Isaac Science, nòstra plataforma partenari plena d'aisinas e de ressorsas gratuitas per vos ajudar a aprene la fisica, la quimia, la biologia e las matematicas.",
+      "title": "Estudiatz de sciéncias o de matematicas?"
+    },
+    "pageTitle": "Escolans – {{siteTitle}}",
+    "practiceQuestions": {
+      "description": "Nòstras questions d'automarcatge vos donan d'entresenhas e de retroaccions immediatas a mesura que passatz. Podètz filtrar per nivèl d'examen, tèma o concèpte per trobar exactament çò que ne cal.",
+      "title": "Mai de 1000 questions d'entraïnament",
+      "tryButton": "Ensajatz nòstras questions d'entraïnament"
+    },
+    "progress": {
+      "description": "Amb un compte Ada CS, totas vòstras responsas son enregistradas per que poscatz veire sus qué trabalhar e cossí progressatz. E podètz seguir totas las missions fixadas per vòstre professor.",
+      "title": "Seguissètz vòstre progrès",
+      "viewButton": "Veire mon progrès"
+    },
+    "support": {
+      "description": "Nòstra pagina d'ajuda als estudiants a fòrça informacions per de questions e de problèmas comuns."
+    },
+    "testimonial": {
+      "quote": "\"Aimi Ada! Lo contengut presentat es fòrça complet e detalhat, e los guidas visuals a travèrs de tèmas coma de menas son particularament utils per ajudar ma compreneson.”"
+    }
+  },
+  "subjectInterests": {
+    "aLevelHeader": "Nivèl A<br/><small>16-18 ans</small>",
+    "chemistryShort": "Quimia",
+    "engineering": "Engenharia",
+    "engineeringShort": "Ing",
+    "gcseHeader": "GCSE<br/><small>14-16 ans</small>",
+    "physicsShort": "Fisicas",
+    "title": "Interèsses del subjècte",
+    "universityHeader": "Universitat<br/><small>18+ ans</small>"
+  },
+  "subjectLanding": {
+    "books": {
+      "title": "Livres interactius en ligne <emphasis>({{bookCount}})</emphasis>",
+      "viewMore": "Veire mai de libres"
+    },
+    "events": {
+      "heading": "Eveniments <theme>({{eventCount}})</theme>",
+      "title": "Eveniments <emphasis>({{eventCount}})</emphasis>"
+    },
+    "footer": {
+      "emptyState": "Cap de libre o novèla disponibla per aqueste subjècte. Tornatz lèu!"
+    },
+    "news": {
+      "title": "Actualitats e caracteristicas"
+    },
+    "randomQuestion": {
+      "differentButton": "Prenètz una question diferenta",
+      "emptyState": "Cap de question trobada.",
+      "title": "Ensajatz una question aleatòria!"
+    },
+    "title": {
+      "aLevelMaths": "Matematicas de nivèl A e matematicas suplementàrias"
+    }
+  },
+  "svgFilter": {
+    "comingSoon": "A venir lèu!",
+    "count": "{{count}} filtres seleccionats",
+    "title": "Selector de filtre de dificultats"
+  },
+  "table": {
+    "actions": "Accions",
+    "bookingStatus": "Estat de reservacion",
+    "creator": "Creator",
+    "dueDate": "Data de venciment",
+    "email": "Corrièl",
+    "groups": "Grops",
+    "lastSeen": "Darrièr còp vist",
+    "memberSince": "Membre dempuèi",
+    "name": "Nom",
+    "role": "Ròtle d'utilizaire",
+    "share": "Partejar",
+    "stagesAndDifficulties": "Etapas e dificultats",
+    "title": "Títol"
+  },
+  "tabs": {
+    "fallbackTitle": "Onglet {{tabNumber}}"
+  },
+  "teacherFeatures": {
+    "request": {
+      "alreadyTutor": "Avètz ja un compte de tutor",
+      "moreInfo": "xxxxxxMore information about <tutorLink>tutor</tutorLink> and <teacherLink>teacher</teacherLink> accounts.",
+      "teacherRequirement": "Un \"ensenhaire\" deu èsser dirèctament associat a una escòla",
+      "title": "Demandar la mesa a jorn del compte",
+      "tutorButton": "Soi tutor",
+      "tutorRequirement": "Un \"tutor\" deu pas èsser associat a una escòla (los tutors e parents privats s'inscrivon dins aquesta categoria)",
+      "upgradeIntro": "La mesa a jorn de vòstre compte {{siteTitle}} vos dona accès a de ressorsas pedagogicas, la possibilitat d'assignar de trabalh a de grops d'escolans, e mai ! Per contunhar, mercés de nos dire se sètz professor o tutor :"
+    },
+    "resources": {
+      "title": "Ressorsas pels ensenhaires"
+    },
+    "support": {
+      "cpdTitle": "Professor CPD",
+      "emailsSubtitle": "Corrièls recents de començament de trimèstre mandats als ensenhaires.",
+      "emailsTitle": "Corrièls dels ensenhaires"
+    },
+    "tutor": {
+      "assignmentsSubtitle": "Definissètz de prètzfaches dempuèi nòstres libres de competéncias, de tablèus prefabricats o creatz vòstres pròpris.",
+      "assignmentsTitle": "2. Definir las assignacions",
+      "booksTitle": "Los libres d'Isaac",
+      "decksTitle": "Decks per tèma",
+      "description": "Isaac Science vos provesís una gama enòrma de ressorsas per sosténer vòstra tutoria de matèrias de sciéncias.",
+      "getButton": "Obténer un compte de tutor",
+      "progressSubtitle": "Veire lo progrès de vòstres escolans a travèrs lors devers.",
+      "progressTitle": "3. Progrès de l'assignacion",
+      "resourcesTitle": "Supòrt e ressorsas del tutor",
+      "workflowTitle": "Flux de trabalh del tutor"
+    },
+    "workflow": {
+      "title": "Flux de trabalh del professor"
+    }
+  },
+  "teacherMentoring": {
+    "join": {
+      "freeNote": "Totas nòstras ressorsas son completament gratuitas. Podètz jónher (o daissar) lo programa a tot moment.",
+      "loggedIn": "<strong><joinLink>Inscrivitz-vos al {{groupName}} grop</joinLink></strong> per participar al programa per que poscam signar rapidament la setmana.",
+      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the teacher mentoring group and participate in the programme."
+    },
+    "page": {
+      "teacherNotice": "Vos cal èsser connectat amb un compte de professor per veire las ressorsas setmanièras.",
+      "title": "Programa de mentoratge dels ensenhaires"
+    }
+  },
+  "teacherNotes": {
+    "label": "Nòtas del professor"
+  },
+  "teacherResources": {
+    "challenges": {
+      "description": "Encoratjar e recompensar lo succès dels escolans amb nòstre programa de desfís dels escolans, concebut per inspirar la realizacion a cada estapa de lors estudis."
+    },
+    "cpd": {
+      "coursesCard": {
+        "description": "Inscrivètz-vos a un de nòstres corses autoguidats pels ensenhaires que cobrís una granda varietat de tèmas d'informatica.",
+        "title": "Corses en linha gratuits"
+      },
+      "description": "Aprene de novèlas competéncias e bastir de confiéncia amb nòstres corses gratuits per lo desvolopament professional contunhat (CPD). Son concebuts per vos ajudar, quin que siá vòstre nivèl d'experiéncia.",
+      "mentoringCard": {
+        "description": "Obtenètz de sosten a travèrs nòstre programa en linha pels ensenhaires d'informatica recentament qualificats e non especializats."
+      },
+      "title": "Desvolopament professional"
+    },
+    "curriculum": {
+      "description": "Avèm mai de 50 tèmas d'aprendissatge que cobrisson tot çò que cal per ensenhar l'informatica. De sistèmas e rets d'informatica, a l'IA, a l'aprendissatge automatic, e fòrça mai.",
+      "descriptionTwo": "Son creats per d'educators experts e son regularament mesas a jorn. Podètz quitament filtrar de contengut per de grops d'edat e d'examens diferents."
+    },
+    "header": {
+      "dashboardButton": "Anar a Mon Apercebut d'Ada",
+      "description": "Devers d'automarcatge, seguiment del progrès dels escolans e supòrt a la preparacion dels examens. Ada CS es plen d'aisinas e de ressorsas gratuitas per sosténer los trabalhs de classa, los devers e la preparacion a l'examen.",
+      "signupButton": "Inscrivètz-vos a Ada CS",
+      "title": "<decorativeSlash>/</decorativeSlash><br/>Ada CS pels ensenhaires"
+    },
+    "help": {
+      "description": "Nòstra pagina d'ajuda als ensenhaires a fòrça informacions per de questions e de problèmas comuns."
+    },
+    "meta": {
+      "title": "Ensenhaires – {{siteTitle}}"
+    },
+    "moreResources": {
+      "codeClassroomCard": {
+        "description": "Code Classroom es una plataforma gratuita e segura per l'ensenhament e l'aprendissatge de l'informatica dins las escòlas. Inclutz un editor de còde simple d'utilizar amb diferents lengatges de programacion, e fòrça autras foncionalitats per prene en carga vòstre ensenhament.",
+        "title": "Aula de còde"
+      },
+      "description": "Supòrt, plans de leiçon, idèas e aisinas de la gama de ressorsas informaticas de classa mondiala de la Fondacion Raspberry Pi.",
+      "helloWorldCard": {
+        "description": "Obtenètz una perspectiva globala sus l'educacion informatica amb Hello World – nòstra revista e podcast pels ensenhaires. Partejatz vòstra expertisa e escrivètz per nosautres!",
+        "title": "La revista Hello World"
+      },
+      "researchCard": {
+        "description": "Descobrissètz de recèrcas innovatriças qu'avançan la compreneson de cossí las personas aprenon sus l'informatica. Aquestes projèctes son una collaboracion entre la Fondacion Raspberry Pi e l'Universitat de Cambridge.",
+        "title": "Projèctes de recèrca"
+      },
+      "title": "Mai de ressorsas pedagogicas"
+    },
+    "testimonial": {
+      "attribution": "– Matt Arnmor, professor d'informatica",
+      "quote": "“Ada Computer Science a eliminat lo besonh de libres de tèxte per l'informatica de nivèl A. I a rarament besonh d'autras fonts d'informacion al moment de planificar de leiçons e es gratuit!”"
+    },
+    "tools": {
+      "assignmentsCard": {
+        "button": "Definir una mission",
+        "description": "Creatz de prètzfaches d'automarcatge per vòstres escolans. I a mai de 1000 questions per vos causir.",
+        "title": "Definir las assignacions"
+      },
+      "dashboardButton": "Anar a Mon Ada",
+      "description": "Un compte Ada CS facilita l'avaloracion de vòstres escolans. Fixatz de prètzfaches per refortir l'aprendissatge de las leiçons e utilizatz nòstres tèsts prefabricats per verificar la coneissença dels escolans.",
+      "groupsCard": {
+        "description": "Organizatz vòstres escolans en grops e fixatz de trabalhs apropriats per cada grop.",
+        "title": "Crear de grops d'escolans"
+      },
+      "markbookCard": {
+        "description": "Seguir lo progrès dels escolans amb un quasèrn de nòtas personal per ajudar a identificar los domenis a trabalhar."
+      },
+      "preferencesCard": {
+        "description": "Definissètz vòstre emplaçament, vòstre nivèl e vòstre tablèu d'examen, e vos mostrarem lo contengut mai pertinent per vos.",
+        "title": "Veire lo contengut especific a vos"
+      },
+      "title": "Aisinas per vos ajudar a ensenhar"
+    },
+    "tryIsaac": {
+      "description": "Consultatz Isaac Science, nòstra plataforma partenari plena d'aisinas e de ressorsas gratuitas per vos ajudar a ensenhar la fisica, la quimia, la biologia e las matematicas.",
+      "title": "Ensenhar las sciéncias o las matematicas?"
+    }
+  },
+  "teachingOrders": {
+    "metaDescription": {
+      "advanced": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica Avançada. Aprenètz o revisatz per vòstres examens amb nosautres uèi.",
+      "core": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica Core. Aprenètz o revisatz per vòstres examens amb nosautres uèi."
+    }
+  },
+  "tests": {
+    "admissions": {
+      "title": "Espròvas d'admission de practica"
+    },
+    "alreadySubmitted": {
+      "body": "Una somission es ja estada enregistrada per aqueste tèst per vòstre compte.",
+      "title": "Pròva ja somesa"
+    },
+    "api": {
+      "loadAssignedToMeFailed": "Lo cargament dels tèsts assignats a vos a fracassat",
+      "loadAssignmentFeedbackFailed": "Lo cargament de retroaccion de l'assignacion de tèst a fracassat",
+      "loadAssignmentsSetByMeFailed": "Lo cargament de las assignacions de tèst a fracassat",
+      "loadAvailableFailed": "Los tèsts de cargament an fracassat",
+      "loadFreelyAttemptedFailed": "Lo cargament dels tèsts ensagats liurament a fracassat",
+      "loadMyFeedbackFailed": "Lo cargament de la retroaccion del tèst a fracassat",
+      "loadPreviewFailed": "Lo cargament de l'apercebut de tèst a fracassat",
+      "loadRubricFailed": "Lo cargament de la rubrica de tèst a fracassat",
+      "loadStudentFeedbackFailed": "Lo cargament de las retroaccions dels tèsts dels escolans a fracassat",
+      "returnWorkFailed": "Fracàs a tornar lo trabalh a l'escolan",
+      "startAttemptFailed": "L'ensag de tèst de començament a fracassat",
+      "startFreeAttemptFailed": "L'aviada de l'ensag de tèst gratuit a fracassat",
+      "submitAnswersFailed": "Fracàs a mandar vòstras responsas al tèst",
+      "updateAssignmentFailed": "Fracàs de metre a jorn l'assignacion de tèst",
+      "updateDueDateFailed": "Fracàs de metre a jorn la data d'escasença del tèst",
+      "updateFeedbackModeFailed": "Fracàs de mesa a jorn lo mòde de retroaccion de tèst"
+    },
+    "assign": {
+      "errorTitle": "Fracàs a l'assignacion del tèst"
+    },
+    "assignedEmpty": {
+      "none": "Avètz pas cap de tèst en cors."
+    },
+    "assignedLoadError": "Vòstras prètzfaches de tèst an pas capitat de se cargar, ensajatz d'actualizar la pagina.",
+    "assignedTable": {
+      "dueDate": "Data de venciment",
+      "setDate": "Fixar la data"
+    },
+    "assignment": {
+      "assignedTooltip": "Pròva assignada a : {{groupNames}}",
+      "cancelTest": "Anullar lo tèst",
+      "cancelling": "En anullant...",
+      "extendDueDate": "Prolongar la data de venciment",
+      "header": {
+        "creationDate": "Data de creacion"
+      },
+      "more": "Mai"
+    },
+    "attempt": {
+      "allComplete": "Totas las seccions completadas",
+      "assignedErrorBody": "Vòstre professor vos a fixat aqueste tèst. Podètz pas lo practicar a l'avança.<br/>Se sètz prèst a far l'espròva, clicatz dessús sus vòstra pagina <assignedTestsLink>tèsts</assignedTestsLink> assignats.",
+      "assignedErrorTitle": "Avètz definit aqueste tèst",
+      "finish": "Acabar",
+      "loadErrorTitle": "Error de cargament de tèst!",
+      "reviewAnswers": "Repassar las responsas",
+      "sectionsComplete": "{{completedCount}} / {{totalCount}} seccions completadas",
+      "submitAnyway": "Sometre de tot biais",
+      "submitConfirmIncomplete": "N'ètz segur? Avètz pas respondut a totas las questions",
+      "submitToastBody": "Vòstras responsas son estadas mandadas amb succès."
+    },
+    "button": {
+      "continue": "Contunhar lo tèst",
+      "noFeedback": "Pas de retroaccion",
+      "start": "Començar lo tèst",
+      "viewFeedback": "Veire los comentaris"
+    },
+    "cancelAssignment": {
+      "errorTitle": "L'anullacion de l'assignacion de tèst a fracassat"
+    },
+    "card": {
+      "manage": {
+        "changeFeedbackType": "Cambiar lo tipe de retroaccion"
+      },
+      "shareLink": {
+        "tooltip": "(ligam sonque pels estudiants)"
+      },
+      "untitledTitle": "Pròva sens títol",
+      "usage": {
+        "begins": "Comença<strong>{{startDate}}</strong>",
+        "viewResults": "Veire los resultats del grop"
+      }
+    },
+    "details": {
+      "overallMark": "Vòstra marca es {{correct}} / {{total}}",
+      "overallMarkLabel": "Nota globala",
+      "sectionBreakdown": "Desglose de las marcas de seccion"
+    },
+    "displayMode": {
+      "cards": "Cartas",
+      "table": "Taula"
+    },
+    "feedback": {
+      "error": {
+        "heading": "Error al moment de cargar vòstre repòrt!"
+      },
+      "errorTitle": "Error al moment de cargament de retroaccion de tèst",
+      "footer": {
+        "finalLabel": "Tornar a l'apercebut"
+      },
+      "helpText": "Vejatz lo retorn de vòstres escolans per aqueste dever d'espròva.",
+      "notStartedHeading": "Aqueste tèst es pas encara començat.",
+      "releaseDate": "Serà publicat a vòstre grop sus {{startDate}}.",
+      "title": "Retroaccion de tèst"
+    },
+    "filters": {
+      "dateSectionTitle": "Filtrar per data",
+      "hide": "Amagar los filtres",
+      "searchGroupLabel": "Recèrca per grop",
+      "show": "Afichar los filtres",
+      "title": "Filtrar per títol del quiz"
+    },
+    "header": {
+      "completedDate": "Complet:{{date}}",
+      "freeAttempt": "Ensajatz liurament aqueste tèst.",
+      "preview": "Apercebètz aqueste tèst.",
+      "setBy": "Definit per : {{teacherName}}",
+      "wasDue": "Èra degut:"
+    },
+    "info": {
+      "assigner": "per {{teacherName}}",
+      "completed": "Complet: {{completedDate}}",
+      "dueDate": "Data de venciment: {{dueDate}}",
+      "set": "Ensemble: {{setDate}}",
+      "started": "Començat: {{startDate}}"
+    },
+    "pageHelp": "Utilizatz aquesta pagina per veire los tèsts que vos cal far e los resultats de vòstre tèst.<br/>Podètz tanben prene qualques tèsts liurament cada còp que volètz testar vòstras coneissenças.",
+    "pagination": {
+      "position": "Seccion {{page}} / {{sectionCount}}"
+    },
+    "pastTests": {
+      "hidden": "Amagat",
+      "label": "Los tèsts passats",
+      "shown": "Mostrat"
+    },
+    "practiceEmpty": {
+      "noMatch": "Cap de tèst de practica correspond pas a vòstres filtres.",
+      "none": "Avètz pas d'espròvas de practica. Fasètz qualques tèsts novèls <viewTestsLink>aicí</viewTestsLink>!"
+    },
+    "practiceLoadError": "Vòstres ensags de tèst d'entraïnament an fracassat a se cargar, ensajatz d'actualizar la pagina.",
+    "practiceTable": {
+      "startDate": "Data de començament"
+    },
+    "preview": {
+      "backToContents": "Tornar al contengut",
+      "previewQuestions": "Questions d'apercebut"
+    },
+    "rubric": {
+      "buttonTooltip": "Mostrar las instruccions dins un modal",
+      "modalTitle": "Instruccions de tèst",
+      "showButton": "Mostrar las instruccions"
+    },
+    "search": {
+      "placeholder": "p. ex. Practica"
+    },
+    "section": {
+      "fallbackTitle": "Seccion {{page}}",
+      "notFound": "La seccion de tèst {{page}} pas trobada"
+    },
+    "set": {
+      "available": {
+        "empty": "I a pas de tèsts que podètz definir que correspondon a vòstre tèrme de recèrca.",
+        "intro": "Los tèsts seguents son disponibles per definir a vòstres grops."
+      },
+      "emptyState": "Avètz pas encara definit cap de tèst a vòstres grops.",
+      "help": "Utilizatz aquesta pagina per gerir e definir de tèsts a vòstres grops. Podètz assignar quin tèst que siá que l'equipa {{siteName}} a bastit.<br/>Los escolans del grop seràn enviats per corrièl quand configuraretz un novèl tèst.",
+      "loadError": "Los tèsts qu'avètz assignats an pas capitat de se cargar, ensajatz d'actualizar la pagina."
+    },
+    "setQuiz": {
+      "completionEmail": "Mandatz-me un corrièl quand un escolans completarà aqueste tèst",
+      "dueDateAfterStart": "La data de venciment deu èsser la data de començament o après.",
+      "dueDateAfterToday": "La data de venciment deu èsser après uèi.",
+      "dueDateSelect": "Seleccionatz una data d'escasença per l'assignacion.",
+      "feedbackLabel": "Quin nivèl de retroaccion deurián obténer los escolans:",
+      "feedbackRequired": "Seleccionatz un mòde de retroaccion",
+      "groupPlaceholder": "Seleccionar de grops",
+      "startDateError": "La data de començament deu èsser uèi o dins l'avenir.",
+      "startDateHelp": "Podètz programar un tèst per aparéisser dins l'avenir en definissent una data de començament. L'espròva serà visibla pels escolans a partir d'aquesta data.<br/>Se fixatz pas una data de començament, lo tèst serà visible immediatament.",
+      "title": "Tròva de paramètre '{{testTitle}}'"
+    },
+    "sidebar": {
+      "displayCardOption": "Vista de la carta",
+      "displayTableOption": "Vista de la taula",
+      "fallbackTitle": "Seccion {{id}}",
+      "sectionsButton": "Seccions",
+      "statusCompleted": "Seccion completada",
+      "statusInProgress": "Seccion en cors",
+      "statusNotStarted": "Seccion pas aviada"
+    },
+    "status": {
+      "completed": "Complet ·",
+      "feedbackAvailable": "Retroaccion disponibla",
+      "started": "Començat"
+    },
+    "submission": {
+      "failureMessage": "Error al moment del mandadís del tèst",
+      "successTitle": "Pròva somesa"
+    },
+    "title": {
+      "studentSuffix": " per {{givenName}} {{familyName}}"
+    },
+    "view": {
+      "emptyState": "I a pas de tèsts de practica actualament disponibles.",
+      "loginRequired": "Vos cal èsser connectat per veire los tèsts d'entraïnament.",
+      "searchPlaceholder": "p. ex. Admissions",
+      "searchTitle": "Recèrca de tèsts de practica",
+      "takeTest": "Prene l'espròva"
+    },
+    "viewingAs": {
+      "notification": "Vos visualizatz aqueste tèst coma <strong>{{givenName}} {{familyName}}</strong>.",
+      "returnLink": "<feedbackLink>Clicatz aicí</feedbackLink> per tornar a la pagina de retroaccion de l'espròva del professor."
+    }
+  },
+  "title": {
+    "accountDetails": "Detalhs del compte",
+    "accountSettings": "Paramètres del compte",
+    "adaComputerScience": "Ada Informatica",
+    "admin": "Admin",
+    "adminEmails": "Corrièls d'administrator",
+    "adminTools": "Aisinas d'administracion",
+    "authenticationError": "Error d'autentificacion",
+    "concepts": "Concèptes",
+    "contactUs": "Contactatz-nos",
+    "contentErrors": "D'errors de contengut",
+    "coreSkillsPractice": "Practica de las competéncias de basa",
+    "emailPreferences": "Definissètz vòstras preferéncias de notificacion per corrièl",
+    "error": "Error",
+    "eventDetails": "Detalhs de l'eveniment",
+    "events": "Eveniments",
+    "featureFlags": "Bannièras de caracteristicas",
+    "glossary": "Glossari",
+    "markdownBuilder": "Constructor de Markdown",
+    "myAda": "Mon Ada",
+    "myProgress": "Mon progrès",
+    "myTests": "Mos tèsts",
+    "news": "Nòvas",
+    "overview": "Apercebut",
+    "preferences": "Definissètz vòstras preferéncias",
+    "questionFinder": "Cercaire de questions",
+    "questions": "Questions",
+    "relatedQuestions": "Questions ligadas",
+    "research": "Recerca",
+    "resources": "Ressorgas",
+    "revision": "Revision",
+    "search": "Cercar",
+    "searchGlossary": "Glossari de recèrca",
+    "searchQuestions": "De questions de recèrca",
+    "searchTests": "Recèrca de tèsts",
+    "sessionExpired": "Sesilha expirada",
+    "skillsPractice": "Practica de competéncias",
+    "staging": "Mesa en scèna",
+    "teacherSupport": "Supòrt dels ensenhaires",
+    "test": "Espròva",
+    "tests": "Pròvas",
+    "userManager": "Gestionari d'utilizaires",
+    "userSelection": "Seleccion d'utilizaire"
+  },
+  "tools": {
+    "listing": {
+      "seeAllButton": "Veire totas las aisinas"
+    }
+  },
+  "topics": {
+    "badge": {
+      "comingSoon": "Venent {{date}}",
+      "new": "Novèl"
+    },
+    "gameboards": {
+      "description": "Podètz trabalhar sus de questions individualas o ensajar un grop de questions en clicant suls tablèus de jòcs de tèmas çai-jos.",
+      "title": "Tablèus de jòc"
+    },
+    "listing": {
+      "ageHeading": "{{ageGroup}} tèmas"
+    },
+    "meta": {
+      "description": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica. Aprenètz o revisatz per vòstres examens amb nosautres uèi."
+    },
+    "metaDescription": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica. Aprenètz o revisatz per vòstres examens amb nosautres uèi.",
+    "page": {
+      "backButton": "<responsivePrefix>Back to</responsivePrefix> All topics"
+    },
+    "questionFinder": {
+      "description": "En utilizant lo cercaire de questions podètz seleccionar de tèmas e de concèptes e generarem una seleccion aleatòria de questions per vos utilizar. Podètz tanben especificar vòstre nivèl e vòstre tablèu d'examen.",
+      "heading": "Verificatz vòstra compreneson",
+      "students": "<bold>Los escolans</bold> poirián voler ensajar nòstre cercaire de questions per revisar e obténer de retroaccion sus las errors.",
+      "studentsInfo": "<b>Los escolans</b> poirián voler ensajar nòstre cercaire de questions per revisar e obténer de retroaccion sus las errors.",
+      "teachers": "<bold>Los ensenhaires</bold> poirián voler ensajar nòstre cercaire de questions per crear de quiz e los assignar als escolans.",
+      "teachersInfo": "<b>Los ensenhaires</b> poirián voler ensajar nòstre cercaire de questions per crear de quiz e los assignar als escolans.",
+      "title": "Verificatz vòstra compreneson",
+      "tryButton": "Ensajatz nòstre cercaire de questions"
+    },
+    "title": "Tèmas"
+  },
+  "video": {
+    "embed": {
+      "accessibilityLabel": "Vidèo YouTube encastrat: {{videoDescription}}."
+    }
+  }
+}
