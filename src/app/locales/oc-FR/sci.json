@@ -105,7 +105,6 @@
   },
   "auth": {
     "ageCheckFailed": {
-      "ageRestriction": "Malastrosament, sèm pas capables d'ofrir de comptes als escolans de mens de 10 ans.",
       "freeAccessNote": "<b>Mas podètz totjorn accedir al sit entièr gratuitament !</b> Podràs pas seguir ton progrès.",
       "returnButton": "Prenètz-me enrè"
     },
@@ -125,18 +124,7 @@
     "register": {
       "greetingDescription": "Aicí, podètz crear un compte {{siteTitle}} , o vos connectar a un compte existent.",
       "greetingTitle": "Adieu!",
-      "heading": "Adieu!",
       "homeButton": "Prenètz-me enrè"
-    },
-    "registration": {
-      "ageCheck": {
-        "ageRequirement": "Podèm crear de comptes que pels utilizaires de 10 ans o mai.",
-        "middleLabel": "10 - 12 ans",
-        "underLabel": "Mens de 10 ans"
-      }
-    },
-    "registrationSuccess": {
-      "nextButton": "Preferéncias"
     },
     "sso": {
       "ariaLabel": "Ligam cap a la documentacion de la connexion unica"
