@@ -37,7 +37,7 @@
     }
 
     /* Sizes, colours and container */
-    .festive {
+    .festive-tree-controls {
         --w: clamp(34px, 11vw, 54px);
         --h: calc(var(--w) * 1.3);
         --door-clearance: 13px;
@@ -60,6 +60,13 @@
         align-items: center;
         gap: 2rem;
         padding-bottom: 1rem;
+
+        // Only display the tree once the doors have loaded to fill it
+        &:not(:has(.doors)) {
+            .tree-shapes, .bauble, .snow-toggle, .lights-toggle, .tag {
+                display: none;
+            }
+        }
     }
 
     /* Tree layout */
@@ -71,8 +78,6 @@
         > .not-mobile {
             position: absolute;
             left: -40%;
-            margin-bottom: 0.5rem;
-            z-index: 3;
         }
     }
 
