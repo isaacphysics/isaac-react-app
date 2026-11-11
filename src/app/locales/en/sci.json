@@ -105,7 +105,6 @@
   },
   "auth": {
     "ageCheckFailed": {
-      "ageRestriction": "Unfortunately, we aren't able to offer accounts to students under 10 years old.",
       "freeAccessNote": "<b>But you can still access the whole site for free!</b> You just won't be able to track your progress.",
       "returnButton": "Take me back"
     },
@@ -125,18 +124,7 @@
     "register": {
       "greetingDescription": "Here, you can create an {{siteTitle}} account, or log in to an existing one.",
       "greetingTitle": "Hello!",
-      "heading": "Hello!",
       "homeButton": "Take me back"
-    },
-    "registration": {
-      "ageCheck": {
-        "ageRequirement": "We can only create accounts for users 10 years old or over.",
-        "middleLabel": "10 - 12 years old",
-        "underLabel": "Under 10 years old"
-      }
-    },
-    "registrationSuccess": {
-      "nextButton": "Preferences"
     },
     "sso": {
       "ariaLabel": "Link to Single Sign-On documentation"

@@ -5,6 +5,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { Link } from "react-router-dom";
 import { selectors, useAppSelector, useGetGroupMembershipsQuery } from "../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { Trans, useTranslation } from "react-i18next";
 import { Callout } from "../content/IsaacCallout";
 
 // these will change each year – everything else now ought to be the same
@@ -13,6 +14,7 @@ const ADVANCERS_GROUP_AUTH_TOKEN = "J9MJTZ";
 const ADVANCERS_GROUP_NAME = "Ada Advancers Jan 2027 - May 2028";
 
 export const AdaAdvancers = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const userId = (user && user.loggedIn) ? user.id : skipToken;
     const {data: groupMemberships} = useGetGroupMembershipsQuery(userId);
@@ -21,16 +23,15 @@ export const AdaAdvancers = () => {
     const groupJoinPrompt = <Callout className="pb-4" style="regular">
         {user?.loggedIn
             ? <span>
-                <strong><Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`}>Join the {ADVANCERS_GROUP_NAME} group</Link></strong>
-                {" "}to participate in the programme so that we can assign you the quizzes weekly.
+                <Trans i18nKey="ada:advancers.join.loggedIn" components={{ strong: <strong />, joinLink: <Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`} /> }} values={{ groupName: ADVANCERS_GROUP_NAME }} />
             </span>
-            : <><strong><Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`}>Log in or sign up</Link></strong> to join the Ada advancers group and participate in the programme.</>
+            : <><Trans i18nKey="ada:advancers.join.notLoggedIn" components={{ strong: <strong/>, authLink: <Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`} /> }} /></>
         }
-        <p className="mt-2 mb-0">All of our resources are completely free. You can leave the programme at any time.</p>
+        <p className="mt-2 mb-0">{t("ada:advancers.join.freeNote")}</p>
     </Callout>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Ada advancers programme"} />
+        <TitleAndBreadcrumb currentPageTitle={t("ada:advancers.page.title")} />
         <Row className="mb-3">
             <Col lg={{size: 8, offset: 2}}>
                 <PageFragment fragmentId={"ada_advancers_intro"} />
