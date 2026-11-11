@@ -1,0 +1,525 @@
+{
+  "account": {
+    "betaFeatures": {
+      "hideAttemptsHelp": "crwdns2407432:0crwdne2407432:0 crwdns2407434:0crwdne2407434:0"
+    },
+    "context": {
+      "showContentLabel": "crwdns2407436:0crwdne2407436:0",
+      "tooltipStudent": "crwdns2407438:0crwdne2407438:0",
+      "tooltipTutor": "crwdns2407440:0crwdne2407440:0crwdns2407442:0crwdne2407442:0"
+    },
+    "country": {
+      "description": "crwdns2407444:0crwdne2407444:0 crwdns2407446:0crwdne2407446:0"
+    },
+    "deletion": {
+      "title": "crwdns2407448:0crwdne2407448:0"
+    },
+    "emailPreferences": {
+      "assignmentsDescription": "crwdns2407450:0crwdne2407450:0 crwdns2407452:0crwdne2407452:0",
+      "eventsDescription": "crwdns2407454:0crwdne2407454:0",
+      "frequencyNote": "crwdns2407456:0crwdne2407456:0 crwdns2407458:0crwdne2407458:0",
+      "newsDescription": "crwdns2407460:0crwdne2407460:0 crwdns2407462:0crwdne2407462:0"
+    },
+    "linkedAccounts": {
+      "title": "crwdns2407464:0crwdne2407464:0"
+    },
+    "mobileHint": "crwdns2407466:0crwdne2407466:0",
+    "preferences": {
+      "emailFrequency": "crwdns2407468:0crwdne2407468:0 crwdns2407470:0crwdne2407470:0"
+    },
+    "requiredInfo": {
+      "emailFrequencyNote": "crwdns2407472:0crwdne2407472:0 crwdns2407474:0crwdne2407474:0"
+    },
+    "review": {
+      "intro": "crwdns2407476:0crwdne2407476:0 crwdns2407478:0crwdne2407478:0",
+      "privacyPolicy": "crwdns2407480:0crwdne2407480:0 crwdns2407482:0crwdne2407482:0"
+    },
+    "school": {
+      "description": "crwdns2407484:0crwdne2407484:0",
+      "notAssociated": "crwdns2407486:0crwdne2407486:0"
+    },
+    "title": "crwdns2407488:0crwdne2407488:0"
+  },
+  "assignment": {
+    "fallbackTitle": "crwdns2407490:0crwdne2407490:0",
+    "fetchError": {
+      "title": "crwdns2407492:0{{gameboardId}}crwdne2407492:0"
+    },
+    "notFound": {
+      "breadcrumbTitle": "crwdns2407494:0crwdne2407494:0",
+      "title": "crwdns2407496:0crwdne2407496:0"
+    }
+  },
+  "assignments": {
+    "add": {
+      "fromTitle": "crwdns2407498:0crwdne2407498:0"
+    },
+    "createQuizButton": "crwdns2407500:0crwdne2407500:0",
+    "delete": {
+      "errorTitle": "crwdns2407502:0crwdne2407502:0",
+      "successMessage": "crwdns2407504:0crwdne2407504:0",
+      "successTitle": "crwdns2407506:0crwdne2407506:0"
+    },
+    "display": {
+      "currentlyAssigned": "crwdns2407508:0crwdne2407508:0",
+      "pendingDescription": "crwdns2407510:0crwdne2407510:0 crwdns2407512:0crwdne2407512:0",
+      "pendingTitle": "crwdns2407514:0crwdne2407514:0"
+    },
+    "emptyBoardsAlert": "crwdns2407516:0crwdne2407516:0 crwdns2407518:0crwdne2407518:0",
+    "emptyGroupsTitle": "crwdns2407520:0crwdne2407520:0",
+    "emptyState": "crwdns2407522:0crwdne2407522:0",
+    "filter": {
+      "byName": "crwdns2407524:0crwdne2407524:0"
+    },
+    "modal": {
+      "unknownDeck": "crwdns2407526:0crwdne2407526:0",
+      "unknownGameboard": "crwdns2407528:0crwdne2407528:0"
+    },
+    "pageHelp": "crwdns2407530:0crwdne2407530:0 crwdns2407532:0crwdne2407532:0crwdns2407534:0crwdne2407534:0",
+    "pageTitle": "crwdns2407536:0crwdne2407536:0",
+    "pagination": {
+      "showingInfo": "crwdns2407538:0{{shownCount}}crwdnd2407538:0{{totalCount}}crwdne2407538:0"
+    },
+    "progress": {
+      "groupTab": {
+        "overview": "crwdns2407540:0crwdne2407540:0"
+      },
+      "pageTitle": "crwdns2407542:0crwdne2407542:0"
+    },
+    "schedule": {
+      "preview": {
+        "hideButton": "crwdns2407544:0crwdne2407544:0"
+      },
+      "unknownDeck": "crwdns2407546:0crwdne2407546:0"
+    },
+    "title": "crwdns2407548:0crwdne2407548:0",
+    "viewPremadeQuizzes": "crwdns2407550:0crwdne2407550:0",
+    "yourQuizzes": "crwdns2407552:0crwdne2407552:0"
+  },
+  "auth": {
+    "ageCheckFailed": {
+      "ageRestriction": "crwdns2407554:0crwdne2407554:0",
+      "freeAccessNote": "crwdns2407556:0crwdne2407556:0 crwdns2407558:0crwdne2407558:0",
+      "returnButton": "crwdns2407560:0crwdne2407560:0"
+    },
+    "closeButton": "crwdns2407562:0crwdne2407562:0",
+    "dob": {
+      "helpText": "crwdns2407564:0crwdne2407564:0 crwdns2407566:0crwdne2407566:0"
+    },
+    "emailInput": {
+      "studentHint": "crwdns2407568:0crwdne2407568:0",
+      "teacherHint": "crwdns2407570:0crwdne2407570:0 crwdns2407572:0crwdne2407572:0"
+    },
+    "logoAlt": "crwdns2407574:0crwdne2407574:0",
+    "metaDescription": "crwdns2407576:0crwdne2407576:0",
+    "notLinked": {
+      "enableSignIn": "crwdns2407578:0{{provider}}crwdne2407578:0 crwdns2407580:0{{providerSetting}}crwdne2407580:0"
+    },
+    "register": {
+      "heading": "crwdns2407582:0crwdne2407582:0",
+      "homeButton": "crwdns2407584:0crwdne2407584:0",
+      "signupChoiceDescription": "crwdns2407586:0crwdne2407586:0",
+      "signupChoiceTitle": "crwdns2407588:0crwdne2407588:0"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageRequirement": "crwdns2407590:0crwdne2407590:0",
+        "underLabel": "crwdns2407592:0crwdne2407592:0"
+      }
+    },
+    "registrationSuccess": {
+      "nextButton": "crwdns2407594:0crwdne2407594:0"
+    },
+    "teacherConnect": {
+      "codeHelp": "crwdns2407596:0crwdne2407596:0",
+      "groupInfo": "crwdns2407598:0crwdne2407598:0 crwdns2407600:0crwdne2407600:0 crwdns2407602:0crwdne2407602:0",
+      "skipNote": "crwdns2407604:0crwdne2407604:0"
+    }
+  },
+  "banners": {
+    "research": {
+      "body": "crwdns2407606:0crwdne2407606:0 crwdns2407608:0crwdne2407608:0"
+    }
+  },
+  "button": {
+    "deleteQuiz": "crwdns2407610:0crwdne2407610:0",
+    "exploreAllTopics": "crwdns2407612:0crwdne2407612:0",
+    "goToIsaacScience": "crwdns2407614:0crwdne2407614:0",
+    "upgradeToTeacherAccount": "crwdns2407616:0crwdne2407616:0",
+    "viewMarkbook": "crwdns2407618:0crwdne2407618:0"
+  },
+  "clientError": {
+    "notFound": {
+      "breadcrumbTitle": "crwdns2407620:0crwdne2407620:0"
+    }
+  },
+  "connections": {
+    "groups": {
+      "activeInfo": "crwdns2407622:0crwdne2407622:0",
+      "inactiveInfo": "crwdns2407624:0crwdne2407624:0 crwdns2407626:0crwdne2407626:0"
+    },
+    "students": {
+      "inviteText": "crwdns2407628:0{{siteTitle}}crwdne2407628:0"
+    }
+  },
+  "contact": {
+    "metaDescription": "crwdns2407630:0crwdne2407630:0 crwdns2407632:0crwdne2407632:0"
+  },
+  "contextPicker": {
+    "differentSourceExplanation": "crwdns2407634:0{{stageSource}}crwdnd2407634:0{{examBoardSource}}crwdne2407634:0",
+    "sameSourceExplanation": "crwdns2407636:0{{stageSource}}crwdne2407636:0"
+  },
+  "cyberExplorers": {
+    "welcome": {
+      "imageAlt": "crwdns2407638:0crwdne2407638:0"
+    }
+  },
+  "events": {
+    "details": {
+      "availability": "crwdns2407640:0crwdne2407640:0",
+      "when": "crwdns2407642:0crwdne2407642:0"
+    }
+  },
+  "examSpecifications": {
+    "gcses": "crwdns2407644:0crwdne2407644:0"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "explanation": "crwdns2407646:0crwdne2407646:0 crwdns2407648:0crwdne2407648:0 crwdns2407650:0crwdne2407650:0"
+    },
+    "infoAlert": {
+      "consentFaq": "crwdns2407652:0crwdne2407652:0",
+      "loggedOutFaq": "crwdns2407654:0crwdne2407654:0"
+    },
+    "llmFeedback": {
+      "faqInfo": "crwdns2407656:0crwdne2407656:0"
+    }
+  },
+  "gameboard": {
+    "actions": {
+      "save": "crwdns2407658:0crwdne2407658:0",
+      "saveLogin": "crwdns2407660:0crwdne2407660:0"
+    },
+    "add": {
+      "loading": "crwdns2407662:0crwdne2407662:0"
+    },
+    "assign": {
+      "failedTitle": "crwdns2407664:0crwdne2407664:0",
+      "groupFailed": "crwdns2407666:0{{groupName}}crwdne2407666:0",
+      "savedMessage": "crwdns2407668:0crwdne2407668:0",
+      "savedTitle": "crwdns2407670:0crwdne2407670:0",
+      "someGroupsSaved": "crwdns2407672:0crwdne2407672:0"
+    },
+    "builder": {
+      "createError": "crwdns2407674:0crwdne2407674:0",
+      "helpText": "crwdns2407676:0crwdne2407676:0 crwdns2407678:0crwdne2407678:0crwdns2407680:0crwdne2407680:0 crwdns2407682:0crwdne2407682:0",
+      "idLabel": "crwdns2407684:0crwdne2407684:0",
+      "pageTitle": "crwdns2407686:0crwdne2407686:0",
+      "saveButton": "crwdns2407688:0crwdne2407688:0",
+      "tagConfidenceResearch": "crwdns2407690:0crwdne2407690:0",
+      "tagCreatedAda": "crwdns2407692:0crwdne2407692:0",
+      "titlePlaceholder": "crwdns2407694:0crwdne2407694:0"
+    },
+    "create": {
+      "errorTitle": "crwdns2407696:0crwdne2407696:0"
+    },
+    "created": {
+      "createAnother": "crwdns2407698:0crwdne2407698:0",
+      "failed": "crwdns2407700:0crwdne2407700:0crwdns2407702:0{{errorMessage}}crwdne2407702:0",
+      "success": "crwdns2407704:0crwdne2407704:0 crwdns2407706:0crwdne2407706:0",
+      "viewAll": "crwdns2407708:0crwdne2407708:0"
+    },
+    "delete": {
+      "failedTitle": "crwdns2407710:0crwdne2407710:0",
+      "fetchFailed": "crwdns2407712:0crwdne2407712:0",
+      "idMissing": "crwdns2407714:0crwdne2407714:0"
+    },
+    "error": {
+      "fetchError": "crwdns2407716:0{{boardId}}crwdne2407716:0"
+    },
+    "link": {
+      "errorTitle": "crwdns2407718:0crwdne2407718:0"
+    },
+    "load": {
+      "errorTitle": "crwdns2407720:0crwdne2407720:0"
+    },
+    "notFound": {
+      "breadcrumb": "crwdns2407722:0crwdne2407722:0",
+      "error": "crwdns2407724:0crwdne2407724:0",
+      "title": "crwdns2407726:0crwdne2407726:0"
+    },
+    "save": {
+      "error": "crwdns2407728:0crwdne2407728:0",
+      "saveLabel": "crwdns2407730:0crwdne2407730:0",
+      "unsaveLabel": "crwdns2407732:0crwdne2407732:0",
+      "unsaveOwnerConfirm": "crwdns2407734:0{{boardTitle}}crwdne2407734:0 crwdns2407736:0crwdne2407736:0"
+    },
+    "table": {
+      "nameHeader": "crwdns2407738:0crwdne2407738:0"
+    },
+    "title": {
+      "fallback": "crwdns2407740:0crwdne2407740:0"
+    },
+    "unlink": {
+      "errorTitle": "crwdns2407742:0crwdne2407742:0",
+      "successMessage": "crwdns2407744:0crwdne2407744:0",
+      "successTitle": "crwdns2407746:0crwdne2407746:0"
+    }
+  },
+  "gameboards": {
+    "page": {
+      "emptyState": "crwdns2407748:0crwdne2407748:0",
+      "help": "crwdns2407750:0crwdne2407750:0",
+      "summary": "crwdns2407752:0{{totalCount}}crwdnd2407752:0{{inProgressCount}}crwdnd2407752:0{{notStartedCount}}crwdne2407752:0",
+      "title": "crwdns2407754:0crwdne2407754:0"
+    }
+  },
+  "glossary": {
+    "metaDescription": "crwdns2407756:0crwdne2407756:0 crwdns2407758:0crwdne2407758:0 crwdns2407760:0crwdne2407760:0"
+  },
+  "groups": {
+    "create": {
+      "nameDescription": "crwdns2407762:0crwdne2407762:0"
+    },
+    "editor": {
+      "title": "crwdns2407764:0crwdne2407764:0"
+    },
+    "managers": {
+      "permissions": {
+        "note": "crwdns2407766:0crwdne2407766:0"
+      },
+      "remove": {
+        "confirm": "crwdns2407768:0crwdne2407768:0\n\ncrwdns2407770:0crwdne2407770:0"
+      }
+    },
+    "progress": {
+      "breadcrumbTitle": "crwdns2407772:0crwdne2407772:0",
+      "manageAssignmentsLink": "crwdns2407774:0crwdne2407774:0",
+      "manageTestsLink": "crwdns2407776:0crwdne2407776:0"
+    }
+  },
+  "homepage": {
+    "account": {
+      "benefits": "crwdns2407778:0crwdne2407778:0 crwdns2407780:0crwdne2407780:0",
+      "free": "crwdns2407782:0crwdne2407782:0",
+      "noAccount": "crwdns2407784:0crwdne2407784:0",
+      "title": "crwdns2407786:0crwdne2407786:0"
+    },
+    "examBoards": {
+      "description": "crwdns2407788:0crwdne2407788:0",
+      "internationalAdvanced": "crwdns2407790:0crwdne2407790:0",
+      "internationalCore": "crwdns2407792:0crwdne2407792:0",
+      "internationalDescription": "crwdns2407794:0crwdne2407794:0",
+      "internationalTitle": "crwdns2407796:0crwdne2407796:0",
+      "seeCurriculum": "crwdns2407798:0crwdne2407798:0",
+      "seeMore": "crwdns2407800:0crwdne2407800:0",
+      "seeUkSpecifications": "crwdns2407802:0crwdne2407802:0",
+      "title": "crwdns2407804:0crwdne2407804:0",
+      "ukDescription": "crwdns2407806:0crwdne2407806:0",
+      "ukEngland": "crwdns2407808:0crwdne2407808:0",
+      "ukScotland": "crwdns2407810:0crwdne2407810:0",
+      "ukTitle": "crwdns2407812:0crwdne2407812:0",
+      "ukWales": "crwdns2407814:0crwdne2407814:0"
+    },
+    "explore": {
+      "studentsButton": "crwdns2407816:0crwdne2407816:0",
+      "teachersButton": "crwdns2407818:0crwdne2407818:0"
+    },
+    "features": {
+      "examAlignment": "crwdns2407820:0crwdne2407820:0",
+      "feedback": "crwdns2407822:0crwdne2407822:0",
+      "freeResources": "crwdns2407824:0crwdne2407824:0",
+      "instantFeedback": "crwdns2407826:0crwdne2407826:0",
+      "markbook": "crwdns2407828:0crwdne2407828:0",
+      "resources": "crwdns2407830:0crwdne2407830:0"
+    },
+    "hero": {
+      "collaborationLabel": "crwdns2407832:0crwdne2407832:0",
+      "dashboardButton": "crwdns2407834:0crwdne2407834:0",
+      "title": "crwdns2407836:0crwdne2407836:0"
+    },
+    "metaDescription": "crwdns2407838:0crwdne2407838:0 crwdns2407840:0crwdne2407840:0",
+    "resources": {
+      "challenges": "crwdns2407842:0crwdne2407842:0",
+      "collaboration": "crwdns2407844:0crwdne2407844:0",
+      "conceptPages": "crwdns2407846:0crwdne2407846:0",
+      "title": "crwdns2407848:0crwdne2407848:0",
+      "topics": "crwdns2407850:0crwdne2407850:0"
+    },
+    "teachLearn": {
+      "title": "crwdns2407852:0crwdne2407852:0"
+    },
+    "techfirst": {
+      "contentDescription": "crwdns2407854:0crwdne2407854:0",
+      "exploreTopicsButton": "crwdns2407856:0crwdne2407856:0",
+      "partnershipDescription": "crwdns2407858:0crwdne2407858:0",
+      "title": "crwdns2407860:0crwdne2407860:0"
+    },
+    "testimonials": {
+      "studentQuote": "crwdns2407862:0crwdne2407862:0 crwdns2407864:0crwdne2407864:0 crwdns2407866:0crwdne2407866:0",
+      "teacherAttribution": "crwdns2407868:0crwdne2407868:0",
+      "teacherQuote": "crwdns2407870:0crwdne2407870:0 crwdns2407872:0crwdne2407872:0"
+    },
+    "tools": {
+      "insights": "crwdns2407874:0crwdne2407874:0",
+      "questions": "crwdns2407876:0crwdne2407876:0",
+      "selfMarking": "crwdns2407878:0crwdne2407878:0",
+      "studentProgress": "crwdns2407880:0crwdne2407880:0",
+      "title": "crwdns2407882:0crwdne2407882:0"
+    }
+  },
+  "label": {
+    "computerScienceStudentTestimonial": "crwdns2407884:0crwdne2407884:0",
+    "examBoard": "crwdns2407886:0crwdne2407886:0",
+    "faqMoreInfo": "crwdns2407888:0crwdne2407888:0",
+    "fundedByUkGovernment": "crwdns2407890:0crwdne2407890:0",
+    "raspberryPiWebsite": "crwdns2407892:0crwdne2407892:0",
+    "techFirstLogo": "crwdns2407894:0crwdne2407894:0"
+  },
+  "listViews": {
+    "footer": {
+      "socialLinks": "crwdns2407896:0crwdne2407896:0"
+    },
+    "shortcut": {
+      "label": "crwdns2407898:0crwdne2407898:0"
+    }
+  },
+  "markbook": {
+    "title": "crwdns2407900:0crwdne2407900:0"
+  },
+  "meta": {
+    "description": "crwdns2407902:0crwdne2407902:0 crwdns2407904:0crwdne2407904:0",
+    "footer": {
+      "licenseText": "crwdns2407906:0crwdne2407906:0",
+      "logoAlt": "crwdns2407908:0crwdne2407908:0"
+    },
+    "title": "crwdns2407910:0crwdne2407910:0"
+  },
+  "navigation": {
+    "admin": {
+      "events": "crwdns2407912:0crwdne2407912:0",
+      "siteStatistics": "crwdns2407914:0crwdne2407914:0"
+    },
+    "resources": {
+      "specifications": "crwdns2407916:0crwdne2407916:0"
+    },
+    "students": {
+      "challenges": "crwdns2407918:0crwdne2407918:0",
+      "landingPage": "crwdns2407920:0crwdne2407920:0",
+      "stemSmart": "crwdns2407922:0crwdne2407922:0",
+      "title": "crwdns2407924:0crwdne2407924:0"
+    },
+    "teachers": {
+      "landingPage": "crwdns2407926:0crwdne2407926:0",
+      "mentoring": "crwdns2407928:0crwdne2407928:0",
+      "title": "crwdns2407930:0crwdne2407930:0"
+    },
+    "toggleSearch": "crwdns2407932:0crwdne2407932:0"
+  },
+  "news": {
+    "loadMoreButton": "crwdns2407934:0crwdne2407934:0",
+    "metaDescription": "crwdns2407936:0crwdne2407936:0",
+    "title": "crwdns2407938:0crwdne2407938:0"
+  },
+  "progress": {
+    "pageTitle": "crwdns2407940:0crwdne2407940:0",
+    "questionAttemptsCaption": "crwdns2407942:0crwdne2407942:0",
+    "questionAttemptsOverTime": "crwdns2407944:0crwdne2407944:0",
+    "settings": {
+      "showPercentagesLabel": "crwdns2407946:0crwdne2407946:0"
+    }
+  },
+  "questionFinder": {
+    "difficulty": {
+      "categoriesIntro": "crwdns2407948:0crwdne2407948:0",
+      "challengeCategory": "crwdns2407950:0crwdne2407950:0",
+      "practiceCategory": "crwdns2407952:0crwdne2407952:0",
+      "title": "crwdns2407954:0crwdne2407954:0"
+    },
+    "emptyState": "crwdns2407956:0crwdne2407956:0",
+    "filterNoResults": "crwdns2407958:0crwdne2407958:0",
+    "filters": {
+      "applyButton": "crwdns2407960:0crwdne2407960:0",
+      "clearAll": "crwdns2407962:0crwdne2407962:0",
+      "difficultyHelp": "crwdns2407964:0crwdne2407964:0",
+      "filterIconAlt": "crwdns2407966:0crwdne2407966:0",
+      "statusAllIncorrect": "crwdns2407968:0crwdne2407968:0",
+      "statusTryAgain": "crwdns2407970:0crwdne2407970:0"
+    },
+    "metaDescription": "crwdns2407972:0crwdne2407972:0 crwdns2407974:0crwdne2407974:0 crwdns2407976:0crwdne2407976:0 crwdns2407978:0crwdne2407978:0",
+    "noMatchingResults": "crwdns2407980:0crwdne2407980:0",
+    "results": {
+      "examBoardColumn": "crwdns2407982:0crwdne2407982:0"
+    },
+    "search": {
+      "addSelectionsButton": "crwdns2407984:0crwdne2407984:0",
+      "placeholder": "crwdns2407986:0crwdne2407986:0"
+    },
+    "searchLabel": "crwdns2407988:0crwdne2407988:0",
+    "searchPlaceholder": "crwdns2407990:0crwdne2407990:0",
+    "title": "crwdns2407992:0crwdne2407992:0"
+  },
+  "questions": {
+    "quickQuestion": {
+      "title": "crwdns2407994:0crwdne2407994:0"
+    }
+  },
+  "revision": {
+    "challenge": {
+      "complete": "crwdns2407996:0crwdne2407996:0",
+      "ended": "crwdns2407998:0crwdne2407998:0",
+      "progress": "crwdns2408000:0{{correctCount}}crwdnd2408000:0{{remainingCount}}crwdne2408000:0"
+    }
+  },
+  "status": {
+    "checkBackSoon": "crwdns2408002:0crwdne2408002:0",
+    "noActiveChallenges": "crwdns2408004:0crwdne2408004:0"
+  },
+  "support": {
+    "student": {
+      "metaDescription": "crwdns2408006:0crwdne2408006:0 crwdns2408008:0crwdne2408008:0 crwdns2408010:0crwdne2408010:0"
+    },
+    "teacher": {
+      "metaDescription": "crwdns2408012:0crwdne2408012:0 crwdns2408014:0crwdne2408014:0 crwdns2408016:0crwdne2408016:0"
+    }
+  },
+  "table": {
+    "examBoard": "crwdns2408018:0crwdne2408018:0"
+  },
+  "tests": {
+    "feedback": {
+      "groupResultsTitle": "crwdns2408020:0crwdne2408020:0"
+    },
+    "filters": {
+      "after": "crwdns2408022:0crwdne2408022:0",
+      "before": "crwdns2408024:0crwdne2408024:0",
+      "dueDateLabel": "crwdns2408026:0crwdne2408026:0",
+      "filterByDueDate": "crwdns2408028:0crwdne2408028:0",
+      "filterBySetDate": "crwdns2408030:0crwdne2408030:0",
+      "on": "crwdns2408032:0crwdne2408032:0",
+      "startDateLabel": "crwdns2408034:0crwdne2408034:0"
+    },
+    "pageTitle": "crwdns2408036:0crwdne2408036:0",
+    "set": {
+      "title": "crwdns2408038:0crwdne2408038:0"
+    },
+    "view": {
+      "filterPlaceholder": "crwdns2408040:0crwdne2408040:0"
+    }
+  },
+  "title": {
+    "curriculum": "crwdns2408042:0crwdne2408042:0",
+    "examSpecifications": "crwdns2408044:0crwdne2408044:0",
+    "needHelp": "crwdns2408046:0crwdne2408046:0",
+    "nextChallenge": "crwdns2408048:0crwdne2408048:0",
+    "onlineCourses": "crwdns2408050:0crwdne2408050:0",
+    "projects": "crwdns2408052:0crwdne2408052:0",
+    "reviewYourMarkbook": "crwdns2408054:0crwdne2408054:0",
+    "studentChallenges": "crwdns2408056:0crwdne2408056:0",
+    "studentSupport": "crwdns2408058:0crwdne2408058:0",
+    "support": "crwdns2408060:0crwdne2408060:0",
+    "teacherMentoring": "crwdns2408062:0crwdne2408062:0",
+    "teachingOrder": "crwdns2408064:0crwdne2408064:0",
+    "topics": "crwdns2408066:0crwdne2408066:0"
+  }
+}
