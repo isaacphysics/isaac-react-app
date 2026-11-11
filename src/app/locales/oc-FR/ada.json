@@ -1,0 +1,525 @@
+{
+  "account": {
+    "betaFeatures": {
+      "hideAttemptsHelp": "Aquesta foncionalitat vos permet de tornar respondre a las questions, quitament se las avètz respondudas abans. Es util se revisatz un tèma abans un tèst o un examen."
+    },
+    "context": {
+      "showContentLabel": "Mostratz-me de contengut per...",
+      "tooltipStudent": "Seleccionatz un estadi e un tablèu d'examen aicí per filtrar lo contengut per que veiretz pas que de material pertinent per la qualificacion qu'avètz causida.",
+      "tooltipTutor": "Apondètz un estadi e un tablèu d'examen per cada qualificacion qu'ensenhatz.<br/>Sus las paginas de contengut, aquò vos permetrà de bascular rapidament entre vòstras vistas personalizadas del contengut, segon la classa qu'ensenhatz actualament."
+    },
+    "country": {
+      "description": "Lo país ont vas a l'escòla. Aquò nos ajuda a personalizar la plataforma per vos."
+    },
+    "deletion": {
+      "title": "Suprimir lo compte"
+    },
+    "emailPreferences": {
+      "assignmentsDescription": "Recebètz de notificacions quand vòstre professor vos met a trabalhar. Aquestes son mandats segon lo besonh per vòstre professor.",
+      "eventsDescription": "Descobrissètz los eveniments a venir concebuts per sosténer vòstre aprendissatge e vòstre desvolopament professional.",
+      "frequencyNote": "<strong>Frequéncia</strong>: esperatz un corrièl per trimèstre per las novèlas. Las notificacions de dever seràn mandadas segon lo besonh per vòstre professor.",
+      "newsDescription": "Siáu lo primièr a ausir parlar de novèlas foncionalitats, desfís, tèmas e melhoraments sus la plataforma. De mai, obtenètz de conselhs utils per tirar lo maximum de las aisinas novèlas."
+    },
+    "linkedAccounts": {
+      "title": "Comptes ligats"
+    },
+    "mobileHint": "Metètz a jorn vòstre compte Ada Computer Science, o",
+    "preferences": {
+      "emailFrequency": "<b>Frequéncia</b>: esperatz un corrièl per trimèstre per las novèlas. Las notificacions de dever seràn mandadas segon lo besonh per vòstre professor."
+    },
+    "requiredInfo": {
+      "emailFrequencyNote": "<strong>Frequéncia</strong>: esperatz un corrièl per trimèstre per las novèlas. Las notificacions de dever seràn mandadas segon lo besonh per vòstre professor."
+    },
+    "review": {
+      "intro": "Utilizam aquesta informacion per vos mostrar de contengut pertinent. Vos recomandam de verificar vòstres detalhs de temps en temps e de los metre a jorn se quicòm a cambiat.",
+      "privacyPolicy": "La mesa a jorn d'aquesta informacion nos ajuda a contunhar de vos mostrar de contengut pertinent. Los detalhs complets sus cossí utilizam vòstras informacions personalas se pòdon trobar dins nòstra <privacyPolicyLink>politica de confidencialitat</privacyPolicyLink>."
+    },
+    "school": {
+      "description": "Aquò nos ajuda a mesurar nòstra portada e nòstre impacte.",
+      "notAssociated": "Pas associat a una escòla del Reialme Unit"
+    },
+    "title": "Compte"
+  },
+  "assignment": {
+    "fallbackTitle": "Quiz generat pel filtre",
+    "fetchError": {
+      "title": "Error al moment de la recuperacion del quiz amb id : {{gameboardId}}"
+    },
+    "notFound": {
+      "breadcrumbTitle": "Questionari",
+      "title": "Quiz pas trobat"
+    }
+  },
+  "assignments": {
+    "add": {
+      "fromTitle": "Ajustar un quiz dempuèi ..."
+    },
+    "createQuizButton": "Crear un quiz",
+    "delete": {
+      "errorTitle": "La desasignacion del quiz a fracassat",
+      "successMessage": "Avètz desasignat amb succès lo quiz",
+      "successTitle": "Quiz non assignat"
+    },
+    "display": {
+      "currentlyAssigned": "Quiz actualament assignat a :",
+      "pendingDescription": "Aquestes quiz son programats per començar a una data futura. Lo matin de la data prevista, los escolans poiràn veire lo quiz, e recebràn un corrièl de notificacion.",
+      "pendingTitle": "Devers de quiz en espèra:"
+    },
+    "emptyBoardsAlert": "Avètz pas de quiz a assignar. Utilizatz una de las opcions çai-sus per ne trobar una.",
+    "emptyGroupsTitle": "Avètz besonh d'un grop d'escolans abans de poder assignar un quiz als escolans.",
+    "emptyState": "I a pas de quiz a afichar pels filtres seleccionats.",
+    "filter": {
+      "byName": "Filtrar los quizs per nom"
+    },
+    "modal": {
+      "unknownDeck": "Quiz desconegut",
+      "unknownGameboard": "Quiz desconegut (pòt aparténer a un autre utilizaire)"
+    },
+    "pageHelp": "Utilizatz aquesta pagina per definir de quiz dins vòstres grops. Podètz definir quin quiz que siá qu'avètz enregistrat sus vòstre compte.<br/>Los escolans del grop seràn mandats per corrièl quand configuraretz un quiz novèl.",
+    "pageTitle": "Assignat a ieu",
+    "pagination": {
+      "showingInfo": "xxxxxShowing <boldShown>{{shownCount}}</boldShown> of <boldTotal>{{totalCount}}</boldTotal> filtered quizzes."
+    },
+    "progress": {
+      "groupTab": {
+        "overview": "Apercebut de l'assignacion de grop"
+      },
+      "pageTitle": "Carnet de nòtas"
+    },
+    "schedule": {
+      "preview": {
+        "hideButton": "Amagar l'apercebut del quiz"
+      },
+      "unknownDeck": "Quiz desconegut (pòt aparténer a un autre utilizaire)"
+    },
+    "title": "Quizs",
+    "viewPremadeQuizzes": "Veire los quizs prefabricats",
+    "yourQuizzes": "Vòstres quiz"
+  },
+  "auth": {
+    "ageCheckFailed": {
+      "ageRestriction": "Malastrosament, sèm pas capables d'ofrir de comptes als escolans de mens de 13 ans.",
+      "freeAccessNote": "<b>Pasmens, podètz totjorn accedir al sit entièr gratuitament !</b> Pasmens, poiretz pas seguir vòstre progrès.",
+      "returnButton": "Anatz a l'ostal"
+    },
+    "closeButton": "Barrar",
+    "dob": {
+      "helpText": "Demandam vòstre mes e annada de naissença per que vos poscam donar l'experiéncia justa per vòstra edat. Qualques foncionalitats foncionan diferentament pels utilizaires mai joves."
+    },
+    "emailInput": {
+      "studentHint": "Aquò serà l'adreça electronica qu'utilizatz per vos connectar.",
+      "teacherHint": "Aquò serà visible per vòstres escolans. Vos recomandam d'utilizar vòstra adreça de corrièl escolar."
+    },
+    "logoAlt": "Logotip d'Informatica d'Ada",
+    "metaDescription": "Connectatz-vos a vòstre compte Ada Computer Science per accedir a de centenats de tèmas e de questions d'informatica.",
+    "notLinked": {
+      "enableSignIn": "S'avètz pas encara activat la connexion amb {{provider}}, connectatz-vos d'en primièr amb un autre metòde (per exemple corrièl e senhal). Puèi, sus <accountLink>vòstra pagina de compte</accountLink>, sus « Seguretat », a costat de «{{providerSetting}}», clicatz sus « Ligam »."
+    },
+    "register": {
+      "heading": "Cossí voldriás t'inscriure?",
+      "homeButton": "Anatz a l'ostal",
+      "signupChoiceDescription": "Aurètz accès al meteis contengut quina que siá la manièra que vos inscrivètz.",
+      "signupChoiceTitle": "Cossí voldriás t'inscriure?"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageRequirement": "Podèm crear de comptes que per de personas de mai de 13 ans.",
+        "underLabel": "Mens de 13 ans"
+      }
+    },
+    "registrationSuccess": {
+      "nextButton": "Contunhar"
+    },
+    "teacherConnect": {
+      "codeHelp": "Picatz lo còde donat per vòstre professor per rejónher un grop",
+      "groupInfo": "Aquò vos permet de veire lo trabalh que vòstre professor vos fixa, e permet a vòstre professor de veire vòstre progrès. Podètz rejónher mai d'un grop e avètz totjorn lo contraròtle sus quins grops sètz. <learnMoreLink>Ne saber mai</learnMoreLink>",
+      "skipNote": "Podètz totjorn sautar aquò ara e vos connectar a vòstre professor mai tard."
+    }
+  },
+  "banners": {
+    "research": {
+      "body": "Enregistram vòstre usatge d'aqueste sit e las informacions qu'introdusissètz per sosténer la recerca sus l'aprendissatge en linha a l'Universitat de Cambridge e a la Fondacion Raspberry Pi. Los detalhs complets son dins la <privacyLink>politica de confidencialitat</privacyLink>."
+    }
+  },
+  "button": {
+    "deleteQuiz": "Suprimir quiz",
+    "exploreAllTopics": "Explorar totes los tèmas",
+    "goToIsaacScience": "Anar a Isaac Science",
+    "upgradeToTeacherAccount": "Mesa a jorn cap a un compte professor",
+    "viewMarkbook": "Veire lo quasèrn de nòtas"
+  },
+  "clientError": {
+    "notFound": {
+      "breadcrumbTitle": "404"
+    }
+  },
+  "connections": {
+    "groups": {
+      "activeInfo": "Las adesions activas al grop significan que podètz recebre de prètzfaches dels ensenhaires d'aquel grop.",
+      "inactiveInfo": "Definir vòstra adesion inactiva significa que recebretz pas cap de prètzfach dels ensenhaires d'aquel grop. Podètz vos tornar definir coma actiu a quin moment que siá."
+    },
+    "students": {
+      "inviteText": "You can invite students to share their {{siteTitle}} data with you through the <groupsLink>Manage groups</groupsLink> page."
+    }
+  },
+  "contact": {
+    "metaDescription": "Pausatz-nos una question sus Ada Computer Science, lo programa gratuit en linha d'informatica pels escolans e ensenhaires. Sèm aquí per ajudar!"
+  },
+  "contextPicker": {
+    "differentSourceExplanation": "The stage was specified by {{stageSource}} and the exam board by {{examBoardSource}}.",
+    "sameSourceExplanation": "L'estadi e lo tablèu d'examen foguèron especificats per {{stageSource}}."
+  },
+  "cyberExplorers": {
+    "welcome": {
+      "imageAlt": "Un esbòç de caricatura de Cyber City"
+    }
+  },
+  "events": {
+    "details": {
+      "availability": "Disponibilitat",
+      "when": "Quora"
+    }
+  },
+  "examSpecifications": {
+    "gcses": "GCSE"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "explanation": "Utilizar un grand modèl de lenga (LLM) per marcar de questions de tèxte liure còsta d'argent, e avèm un budgèt mensual fix. Per gardar las causas justas, fixam un limit jornalièr per utilizaire per que cadun qu'utiliza la plataforma aja una escasença egala d'utilizar aqueste esturment. Aquò es en linha amb nòstra mission de rendre l'informatica accessibla a totes."
+    },
+    "infoAlert": {
+      "consentFaq": "Vejatz nòstras <faqLink>FAQs</faqLink> per mai d'informacions.",
+      "loggedOutFaq": "Podètz ne legir mai dins nòstras <faqLink>FAQs</faqLink>."
+    },
+    "llmFeedback": {
+      "faqInfo": "Ne saber mai dins nòstras <faqLink>FAQs</faqLink>."
+    }
+  },
+  "gameboard": {
+    "actions": {
+      "save": "Enregistrar dins Mos quiz",
+      "saveLogin": "Connectatz-vos per enregistrar dins Mos quiz"
+    },
+    "add": {
+      "loading": "Apondent lo quiz..."
+    },
+    "assign": {
+      "failedTitle": "L'assignacion del quiz a fracassat",
+      "groupFailed": "L'assignacion del quiz a {{groupName}} a fracassat",
+      "savedMessage": "Quiz assignat amb succès.",
+      "savedTitle": "Quiz assignat",
+      "someGroupsSaved": "Lo quiz foguèt assignat a qualques grops amb succès."
+    },
+    "builder": {
+      "createError": "Impossible de crear un quiz",
+      "helpText": "Podètz crear d'ensembles de questions personalizats per los assignar a vòstres grops. Cercatz per títol de question o tèma e apondètz fins a dètz questions a un quiz.<br/>Podètz pas modificar un quiz après qu'es estat creat. Trobaretz un ligam jos quin quiz que siá existent per lo duplicar e lo modificar.",
+      "idLabel": "ID del quiz",
+      "pageTitle": "Constructor de quiz",
+      "saveButton": "Enregistrar lo quiz",
+      "tagConfidenceResearch": "Conselh de recèrca de confiéncia",
+      "tagCreatedAda": "Creat per Ada",
+      "titlePlaceholder": "per ex. Components de la ret de l'annada 12"
+    },
+    "create": {
+      "errorTitle": "Error al moment de la creacion del quiz"
+    },
+    "created": {
+      "createAnother": "Crear un autre quiz",
+      "failed": "Vòstre quiz es pas estat creat amb succès.<br/>{{errorMessage}}",
+      "success": "Vòstre quiz es estat creat. Podètz ara lo definir coma una mission, crear un autre quiz o visualizar totes vòstres quiz.",
+      "viewAll": "Veire totes vòstres quiz"
+    },
+    "delete": {
+      "failedTitle": "La supression del quiz a fracassat",
+      "fetchFailed": "Impossible de recuperar de prètzfaches per determinar se la supression del quiz es segura.",
+      "idMissing": "L'identificant del quiz manca : contactatz-nos a prepaus d'aquesta error."
+    },
+    "error": {
+      "fetchError": "Error al moment de la recuperacion del quiz amb id : {{boardId}}"
+    },
+    "link": {
+      "errorTitle": "Lo ligam del quiz a vòstre compte a fracassat"
+    },
+    "load": {
+      "errorTitle": "Lo cargament dels quiz a fracassat"
+    },
+    "notFound": {
+      "breadcrumb": "Questionari",
+      "error": "O planhèm, foguèrem pas capables de trobar un quiz amb l'id",
+      "title": "Quiz pas trobat"
+    },
+    "save": {
+      "error": "Error al moment de l'enregistrament del quiz",
+      "saveLabel": "Enregistrar lo quiz",
+      "unsaveLabel": "Desenregistrar lo quiz",
+      "unsaveOwnerConfirm": "Sètz segur que volètz desregistrar vòstre quiz '{{boardTitle}}' de vòstre compte ? Lo poiretz tornar trobar sonque se l'avètz definit coma mission."
+    },
+    "table": {
+      "nameHeader": "Nom del quiz"
+    },
+    "title": {
+      "fallback": "Quiz generat pel filtre"
+    },
+    "unlink": {
+      "errorTitle": "La supression del quiz a fracassat",
+      "successMessage": "Avètz capitat a desligar vòstre compte d'aqueste quiz.",
+      "successTitle": "Quiz suprimit"
+    }
+  },
+  "gameboards": {
+    "page": {
+      "emptyState": "Avètz pas de quiz a veire.",
+      "help": "Un resumit de vòstres quiz",
+      "summary": "xxxxxxShowing <strongTotal>{{totalCount}}</strongTotal> quizzes, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
+      "title": "Mos quiz"
+    }
+  },
+  "glossary": {
+    "metaDescription": "Confus sus un tèrme d'informatica? Cercatz-lo dins nòstre glossari. Obtenètz un supòrt de GCSE e de nivèl A uèi!"
+  },
+  "groups": {
+    "create": {
+      "nameDescription": "Los escolans veiràn aqueste nom de grop quand seràn convidats a jónher."
+    },
+    "editor": {
+      "title": "Detalhs del grop"
+    },
+    "managers": {
+      "permissions": {
+        "note": "Los ensenhaires suplementaris veiràn pas automaticament de donadas de nòtas detalhadas levat se los escolans lor donan accès."
+      },
+      "remove": {
+        "confirm": "Sètz segur que volètz suprimir aqueste professor del grop ?\n\nPòdon encara aver accès a las donadas dels escolans fins que los escolans revoquen la connexion dempuèi lor pagina \"Mon compte\"."
+      }
+    },
+    "progress": {
+      "breadcrumbTitle": "Carnet de nòtas",
+      "manageAssignmentsLink": "Quizs",
+      "manageTestsLink": "Pròvas"
+    }
+  },
+  "homepage": {
+    "account": {
+      "benefits": "Un compte Ada CS vos dona accès a fòrça aisinas utilas. Organizatz los escolans en grops, fixatz de prètzfaches d'automarcatge, e seguitz lo progrès per identificar d'escasenças d'aprendissatge.",
+      "free": "Es totalament gratuit d'utilizar Ada CS, amb o sens compte.",
+      "noAccount": "Podètz utilizar quina que siá de nòstras ressorsas d'aprendissatge ont que siátz, sens un compte Ada CS.",
+      "title": "Gerir la carga de trabalh e seguir lo progrès amb un compte Ada CS"
+    },
+    "examBoards": {
+      "description": "Avèm organizat nòstras ressorsas d'aprendissatge per que pòscan èsser utilizadas aisidament, ont que siás.",
+      "internationalAdvanced": "<b>Avançat:</b> Dirigida als escolans d'edats de 16 a 19 ans, espandís los concèptes apreses dins lo plan d'estudis Core.",
+      "internationalCore": "<b>Core:</b> Dirigida als escolans d'edats de 14 a 16 ans, sens coneissença prealabla necessària.",
+      "internationalDescription": "Ressorsas d'aprendissatge adaptadas a de coneissenças prealablas e de grops d'edat d'aprendissatge:",
+      "internationalTitle": "Ensenhar en defòra del Reialme Unit",
+      "seeCurriculum": "Veire lo plan d'estudis Ada CS",
+      "seeMore": "Veire mai",
+      "seeUkSpecifications": "Veire las especificacions del Reialme Unit",
+      "title": "Alinhament del tablèu d'examen",
+      "ukDescription": "Trobatz de ressorsas adaptadas als nivèls d'aprendissatge e als conselhs d'examens especifics al Reialme Unit:",
+      "ukEngland": "<b>Anglatèrra:</b> GCSE e A Level",
+      "ukScotland": "<b>Escòcia:</b> Nacional 5, Superior, e Superior Avançat",
+      "ukTitle": "Al Reialme Unit",
+      "ukWales": "<b>País de Galas:</b> GCSE e A Level"
+    },
+    "explore": {
+      "studentsButton": "Explora Ada CS pels escolans",
+      "teachersButton": "Explora Ada CS pels ensenhaires"
+    },
+    "features": {
+      "examAlignment": "Alinhament d'examen especific pel Reialme Unit e adaptable a l'utilizacion dins lo mond entièr",
+      "feedback": "Retroaccion instantanèa amb de quizs d'automarcatge",
+      "freeResources": "Ressorsas gratuitas d'informatica pels escolans d'edats de 14 a 19 ans",
+      "instantFeedback": "Retroaccion instantanèa amb de quizs d'automarcatge",
+      "markbook": "Seguissètz lo progrès dins vòstre quasèrn personal",
+      "resources": "Ressorsas gratuitas d'informatica pels escolans d'edats de 11 a 19 ans"
+    },
+    "hero": {
+      "collaborationLabel": "en collaboracion amb",
+      "dashboardButton": "Anar a Mon Apercebut d'Ada",
+      "title": "La plataforma d'aprendissatge gratuita pels ensenhaires e escolans d'informatica"
+    },
+    "metaDescription": "Ada Computer Science es un programa gratuit en linha d'informatica pels escolans e ensenhaires. Aprene en utilizant nòstres subjèctes e questions d'informatica!",
+    "resources": {
+      "challenges": "Los desfís dels escolans de trimèstre per testar las competéncias e ganhar de prèmis",
+      "collaboration": "Creat en collaboracion amb l'Universitat de Cambridge",
+      "conceptPages": "Escafar las paginas de concèpte per cada tèma clau",
+      "title": "Ressorsas que podètz confiar",
+      "topics": "Mai de 50 tèmas alinhats al curriculum que cobrisson l'amplor de l'informatica"
+    },
+    "teachLearn": {
+      "title": "Ensenhar e aprene sus l'informatica amb confiéncia"
+    },
+    "techfirst": {
+      "contentDescription": "Aquò inclutz de contengut novèl sus l'intelligéncia artificiala, la cibersecuritat, l'informatica quantica, la biologia de l'engenharia, los semiconductors, e las tecnologias de connectivitat avançadas, concebuts especificament pels aprenents d'edats 11 e 14 ans.",
+      "exploreTopicsButton": "Exploratz los tèmas novèls",
+      "partnershipDescription": "Ada Computer Science a partenariat amb lo Departament del Digital, de la Cultura, dels Mèdias e de l'Espòrt per espandir nòstre contengut e foncionalitats.",
+      "title": "Ada CS es la novèla plataforma d'aprendissatge TechFirst"
+    },
+    "testimonials": {
+      "studentQuote": "“ M'aima Ada CS! Lo contengut presentat es fòrça complet e detalhat, e los guidas visuals a travèrs de tèmas coma de sòrtas son particularament utils per ajudar ma compreneson. ”",
+      "teacherAttribution": "– Professor d’informatica",
+      "teacherQuote": "”Ada Computer Science a eliminat lo besonh de libres de tèxte per l'informatica de nivèl A. I a rarament besonh d'autras fonts d'informacion al moment de planificar de leiçons e es gratuit!”"
+    },
+    "tools": {
+      "insights": "Identificar las lacunas de coneissença e adaptar l'ensenhament amb las coneissenças del progrès de la classa e dels escolans",
+      "questions": "Mai de 1000 questions que provesisson de retroaccion instantanèa als escolans",
+      "selfMarking": "D'avaloracions d'automarcatge qu'estalvian de temps e sostenon l'aprendissatge e la revision independents",
+      "studentProgress": "Los escolans veson lor pròpri progrès dins lo temps e descobrisson ont melhorar",
+      "title": "Aisinas per ajudar a l'aprendissatge"
+    }
+  },
+  "label": {
+    "computerScienceStudentTestimonial": "– Estudiant d’informatica",
+    "examBoard": "Junta d'examens",
+    "faqMoreInfo": "Per mai d'informacions, legissètz nòstras <faqLink>FAQs</faqLink>.",
+    "fundedByUkGovernment": "Finançat pel govèrn del Reialme Unit",
+    "raspberryPiWebsite": "Site web de Raspberry Pi",
+    "techFirstLogo": "Lo lògo TechFirst"
+  },
+  "listViews": {
+    "footer": {
+      "socialLinks": "Venètz social"
+    },
+    "shortcut": {
+      "label": "Acorchi"
+    }
+  },
+  "markbook": {
+    "title": "Carnet de nòtas"
+  },
+  "meta": {
+    "description": "Inscrivètz-vos a Ada Computer Science, lo programa gratuit e en linha d'informatica pels escolans e ensenhaires. Aprene amb nòstras ressorsas e questions d'informatica.",
+    "footer": {
+      "licenseText": "Totes los materials pedagogics sus aqueste sit son disponibles jos una licéncia <licenseLink>CC BY-NC-SA 4.0</licenseLink> , levat ont es indicat lo contrari.",
+      "logoAlt": "Pagina d'acuèlh d'Informatica d'Ada"
+    },
+    "title": "Ada Informatica"
+  },
+  "navigation": {
+    "admin": {
+      "events": "Administrator de l'eveniment",
+      "siteStatistics": "Estatisticas del sit"
+    },
+    "resources": {
+      "specifications": "Especificacions"
+    },
+    "students": {
+      "challenges": "Desfís",
+      "landingPage": "Ada CS pels escolans",
+      "stemSmart": "STEM SMART",
+      "title": "Escolans"
+    },
+    "teachers": {
+      "landingPage": "Ada CS pels ensenhaires",
+      "mentoring": "Programa de mentoratge",
+      "title": "Ensenhaires"
+    },
+    "toggleSearch": "Bascular la barra de recèrca"
+  },
+  "news": {
+    "loadMoreButton": "Cargar mai",
+    "metaDescription": "Obtenètz totas las darrièras novèlas sus Ada Computer Science, e legissètz las istòrias de recents diplòmats qu'an ara de carrièras passionantas en informatica.",
+    "title": "Conselhs, aisinas e supòrt"
+  },
+  "progress": {
+    "pageTitle": "Progressar",
+    "questionAttemptsCaption": "activitat",
+    "questionAttemptsOverTime": "Ensags de questions dins lo temps",
+    "settings": {
+      "showPercentagesLabel": "Mostrar la marca coma percentatges"
+    }
+  },
+  "questionFinder": {
+    "difficulty": {
+      "categoriesIntro": "Divisam nòstras questions en doas categorias:",
+      "challengeCategory": "Las questions de desfís combinan de concèptes multiples",
+      "practiceCategory": "Las questions de practica se centran sus un concèpte",
+      "title": "Qué vòlon dire los nivèls de dificultat?"
+    },
+    "emptyState": "Seleccionatz e aplicatz de filtres.",
+    "filterNoResults": "Impossible de cargar cap de resultat correspondent als filtres demandats.",
+    "filters": {
+      "applyButton": "Aplicar de filtres",
+      "clearAll": "Escafar tot",
+      "difficultyHelp": "Qué vòlon dire los nivèls de dificultat?",
+      "filterIconAlt": "Filtre",
+      "statusAllIncorrect": "Tot incorrècte",
+      "statusTryAgain": "Ensajatz tornarmai"
+    },
+    "metaDescription": "Cercatz las questions d'informatica perfièchas per estudiar. Per la revision. Per los devers. Per la classa.",
+    "noMatchingResults": "Cap de resultat correspond pas als filtres demandats.",
+    "results": {
+      "examBoardColumn": "Tablèus d'examens"
+    },
+    "search": {
+      "addSelectionsButton": "Apondre de seleccions al quiz",
+      "placeholder": "p. ex. Crear un AST"
+    },
+    "searchLabel": "Cercar una question",
+    "searchPlaceholder": "p. ex. Crear un AST",
+    "title": "Questions"
+  },
+  "questions": {
+    "quickQuestion": {
+      "title": "Ensajatz-lo vos-meteis!"
+    }
+  },
+  "revision": {
+    "challenge": {
+      "complete": "Lo desfís complet!",
+      "ended": "Lo desfís acabat!",
+      "progress": "{{correctCount}} corrècte, {{remainingCount}} per anar!"
+    }
+  },
+  "status": {
+    "checkBackSoon": "Tornatz lèu!",
+    "noActiveChallenges": "I a pas de desfís actius pel moment."
+  },
+  "support": {
+    "student": {
+      "metaDescription": "Avètz una question sus Ada Informatica? Legissètz nòstras FAQs dels escolans. Obtenètz un supòrt de GCSE e de nivèl A uèi!"
+    },
+    "teacher": {
+      "metaDescription": "Avètz una question sus Ada Informatica? Legissètz las FAQ de nòstres ensenhaires. Obtenètz un supòrt de GCSE e de nivèl A uèi!"
+    }
+  },
+  "table": {
+    "examBoard": "Tablèu d'examens"
+  },
+  "tests": {
+    "feedback": {
+      "groupResultsTitle": "Resultats del grop"
+    },
+    "filters": {
+      "after": "aprèp",
+      "before": "abans",
+      "dueDateLabel": "Degut",
+      "filterByDueDate": "Filtrar per data d'escasença",
+      "filterBySetDate": "Filtrar per data fixada",
+      "on": "sus",
+      "startDateLabel": "Començant"
+    },
+    "pageTitle": "Pròvas",
+    "set": {
+      "title": "Pròvas"
+    },
+    "view": {
+      "filterPlaceholder": "Los tèsts de filtratge per nom..."
+    }
+  },
+  "title": {
+    "curriculum": "Un plan d'estudis complet de tèmas",
+    "examSpecifications": "Especificacions de l'examen",
+    "needHelp": "Avètz besonh d'ajuda?",
+    "nextChallenge": "Lo desfís seguent",
+    "onlineCourses": "Corses en linha",
+    "projects": "Projèctes",
+    "reviewYourMarkbook": "Revisatz vòstre quasèrn de nòtas",
+    "studentChallenges": "Desfís dels escolans",
+    "studentSupport": "Supòrt als estudiants",
+    "support": "Sosten",
+    "teacherMentoring": "Mentoratge dels ensenhaires",
+    "teachingOrder": "Òrdre d'ensenhament suggerit",
+    "topics": "Tèmas"
+  }
+}
