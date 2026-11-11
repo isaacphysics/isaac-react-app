@@ -1,5 +1,3 @@
-@use "../phy/isaac-primitives" as primitives;
-
 @property --cap {
     syntax: "<length>";
     inherits: true;
@@ -70,7 +68,7 @@
         flex: 0 0 auto;
         transition: --cap 4s ease;
 
-        > .not-mobile.no-print {
+        > .not-mobile {
             position: absolute;
             left: -40%;
             margin-bottom: 0.5rem;
@@ -325,10 +323,10 @@
 
         // Keep the light palette for doors in both colour modes.
         @each $subject, $color in (
-            physics: primitives.$color-physics-500,
-            maths: primitives.$color-maths-500,
-            chemistry: primitives.$color-chemistry-500,
-            biology: primitives.$color-biology-500
+            physics: $color-physics-500,
+            maths: $color-maths-500,
+            chemistry: $color-chemistry-500,
+            biology: $color-biology-500
         ) {
             &.door-#{$subject} {
                 --day-color: #{$color};

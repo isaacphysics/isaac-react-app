@@ -5,7 +5,6 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageFragment } from "../elements/PageFragment";
-import "../../../scss/common/festive.scss";
 import { PageMetadata } from "../elements/PageMetadata";
 import { AccessibilityTags } from "../elements/ContentPropertyTags";
 
