@@ -30,70 +30,47 @@ export const FestiveTree = () => {
     const [selectedDoor, setSelectedDoor] = useState<DoorLabel | null>(null);
     const treeRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    useEffect(function updateDoorLabel() {
         const container = treeRef.current;
         if (!container) {
             return;
         }
 
-        let hoveredDoor: HTMLAnchorElement | null = null;
-        let focusedDoor: HTMLAnchorElement | null = null;
-        let selectedDoor: HTMLAnchorElement | null = null;
-
-        const findDoor = (target: EventTarget | null) => {
+        let previouslySelectedDoor: HTMLAnchorElement | null = null;
+        const findDoorAndUpdateLabel = (target: EventTarget | null) => {
             const door = target instanceof Element ? target.closest<HTMLAnchorElement>("a.day") : null;
-            return door && container.contains(door) ? door : null;
-        };
 
-        const updateDoorLabel = () => {
-            const door = focusedDoor || hoveredDoor;
-            // Retain the last title for copying, without rerendering between children of a door.
-            if (door && door !== selectedDoor) {
-                selectedDoor = door;
-                setSelectedDoor({title: door.dataset.hover || "", classes: Array.from(door.classList)});
+            if (door && container.contains(door) && door !== previouslySelectedDoor) {
+                previouslySelectedDoor = door;
+                setSelectedDoor({title: door.dataset.title || "", classes: Array.from(door.classList)});
             }
         };
 
-        const onPointerOver = (event: PointerEvent) => {
-            hoveredDoor = findDoor(event.target);
-            updateDoorLabel();
+        const onHover = (event: PointerEvent) => {
+            findDoorAndUpdateLabel(event.target);
         };
-        const onPointerOut = (event: PointerEvent) => {
-            hoveredDoor = findDoor(event.relatedTarget);
-            updateDoorLabel();
-        };
-        const onFocusIn = (event: FocusEvent) => {
-            focusedDoor = findDoor(event.target);
-            updateDoorLabel();
-        };
-        const onFocusOut = (event: FocusEvent) => {
-            focusedDoor = findDoor(event.relatedTarget);
-            updateDoorLabel();
+        const onFocus = (event: FocusEvent) => {
+            findDoorAndUpdateLabel(event.target);
         };
 
-        // Delegate to the container so imported door markup needs no event props.
-        container.addEventListener("pointerover", onPointerOver);
-        container.addEventListener("pointerout", onPointerOut);
-        container.addEventListener("focusin", onFocusIn);
-        container.addEventListener("focusout", onFocusOut);
+        container.addEventListener("pointerover", onHover);
+        container.addEventListener("focusin", onFocus);
         return () => {
-            container.removeEventListener("pointerover", onPointerOver);
-            container.removeEventListener("pointerout", onPointerOut);
-            container.removeEventListener("focusin", onFocusIn);
-            container.removeEventListener("focusout", onFocusOut);
+            container.removeEventListener("pointerover", onHover);
+            container.removeEventListener("focusin", onFocus);
         };
     }, []);
 
-    useEffect(() => {
+    useEffect(function updateActiveDays() {
         const container = treeRef.current;
         if (!container) {
             return;
         }
 
-        const updateActiveDays = () => {
-            const today = new Date(); //"2026-12-25");
+        const setPassedDaysActive = () => {
+            const today = new Date(); // "2026-11-25");
             // November for testing purposes. Will update to December later
-            const unlockedDay = today.getMonth() < 10 ? 0 : today.getMonth() > 10 ? 25 : today.getDate();
+            const todaysDay = today.getMonth() < 10 ? 0 : today.getMonth() > 10 ? 25 : today.getDate();
 
             const questions: TextDoor[] = [];
             container.querySelectorAll<HTMLAnchorElement>("a.day").forEach(door => {
@@ -102,16 +79,17 @@ export const FestiveTree = () => {
                     return;
                 }
 
-                const active = Number(dayClass.slice(4)) <= unlockedDay;
+                const active = Number(dayClass.slice(4)) <= todaysDay;
                 door.classList.toggle("active", active);
                 door.tabIndex = active ? 0 : -1;
                 questions.push({
                     day: Number(dayClass.slice(4)),
-                    title: door.dataset.hover || door.getAttribute("aria-label") || "",
+                    title: door.dataset.title || "",
                     href: door.getAttribute("href") || "",
                     classes: Array.from(door.classList),
                     active,
                 });
+
                 if (active) {
                     door.removeAttribute("aria-disabled");
                 } else {
@@ -123,9 +101,9 @@ export const FestiveTree = () => {
         };
 
         // The fragment arrives asynchronously, so also update newly inserted doors.
-        const observer = new MutationObserver(updateActiveDays);
+        const observer = new MutationObserver(setPassedDaysActive);
         observer.observe(container, {childList: true, subtree: true});
-        updateActiveDays();
+        setPassedDaysActive();
 
         return () => {
             observer.disconnect();
