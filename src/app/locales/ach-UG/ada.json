@@ -40,6 +40,16 @@
     },
     "title": "crwdns2407488:0crwdne2407488:0"
   },
+  "advancers": {
+    "join": {
+      "freeNote": "crwdns2413808:0crwdne2413808:0 crwdns2413810:0crwdne2413810:0",
+      "notLoggedIn": "crwdns2413812:0crwdne2413812:0",
+      "loggedIn": "crwdns2413814:0{{groupName}}crwdne2413814:0"
+    },
+    "page": {
+      "title": "crwdns2413816:0crwdne2413816:0"
+    }
+  },
   "assignment": {
     "fallbackTitle": "crwdns2407490:0crwdne2407490:0",
     "fetchError": {
@@ -98,7 +108,6 @@
   },
   "auth": {
     "ageCheckFailed": {
-      "ageRestriction": "crwdns2407554:0crwdne2407554:0",
       "freeAccessNote": "crwdns2407556:0crwdne2407556:0 crwdns2407558:0crwdne2407558:0",
       "returnButton": "crwdns2407560:0crwdne2407560:0"
     },
@@ -116,19 +125,9 @@
       "enableSignIn": "crwdns2407578:0{{provider}}crwdne2407578:0 crwdns2407580:0{{providerSetting}}crwdne2407580:0"
     },
     "register": {
-      "heading": "crwdns2407582:0crwdne2407582:0",
       "homeButton": "crwdns2407584:0crwdne2407584:0",
       "signupChoiceDescription": "crwdns2407586:0crwdne2407586:0",
       "signupChoiceTitle": "crwdns2407588:0crwdne2407588:0"
-    },
-    "registration": {
-      "ageCheck": {
-        "ageRequirement": "crwdns2407590:0crwdne2407590:0",
-        "underLabel": "crwdns2407592:0crwdne2407592:0"
-      }
-    },
-    "registrationSuccess": {
-      "nextButton": "crwdns2407594:0crwdne2407594:0"
     },
     "teacherConnect": {
       "codeHelp": "crwdns2407596:0crwdne2407596:0",
@@ -312,7 +311,6 @@
       "internationalDescription": "crwdns2407794:0crwdne2407794:0",
       "internationalTitle": "crwdns2407796:0crwdne2407796:0",
       "seeCurriculum": "crwdns2407798:0crwdne2407798:0",
-      "seeMore": "crwdns2407800:0crwdne2407800:0",
       "seeUkSpecifications": "crwdns2407802:0crwdne2407802:0",
       "title": "crwdns2407804:0crwdne2407804:0",
       "ukDescription": "crwdns2407806:0crwdne2407806:0",
@@ -328,8 +326,6 @@
     "features": {
       "examAlignment": "crwdns2407820:0crwdne2407820:0",
       "feedback": "crwdns2407822:0crwdne2407822:0",
-      "freeResources": "crwdns2407824:0crwdne2407824:0",
-      "instantFeedback": "crwdns2407826:0crwdne2407826:0",
       "markbook": "crwdns2407828:0crwdne2407828:0",
       "resources": "crwdns2407830:0crwdne2407830:0"
     },
