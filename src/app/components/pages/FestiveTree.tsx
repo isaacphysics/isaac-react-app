@@ -1,4 +1,4 @@
-import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import {Link} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -8,7 +8,6 @@ import { PageFragment } from "../elements/PageFragment";
 import { PageMetadata } from "../elements/PageMetadata";
 import { AccessibilityTags } from "../elements/ContentPropertyTags";
 
-type FestiveStyle = CSSProperties & {[key: `--${string}`]: string};
 interface DoorLabel {
     title: string;
     classes: string[];
@@ -23,7 +22,7 @@ interface TextDoor extends DoorLabel {
 export const FestiveTree = () => {
     const [textOnly, setTextOnly] = useState(false);
     const [textDoors, setTextDoors] = useState<TextDoor[]>([]);
-    const [snowflakes] = useState<FestiveStyle[]>(() => Array.from({length: 22}, (_, i) => ({
+    const [snowflakes] = useState<{[key: `--${string}`]: string}[]>(() => Array.from({length: 22}, (_, i) => ({
         "--x": `${(i + Math.random()) * 100 / 22}%`, "--s": `${5 + Math.random() * 9}px`,
         "--o": String(0.45 + Math.random() * 0.5), "--d": `${6 + Math.random() * 6}s`,
         "--delay": `${Math.random() * 6}s`,
@@ -133,6 +132,12 @@ export const FestiveTree = () => {
         };
     }, []);
 
+    const scrollStyledCheckboxIntoView = (event: React.FocusEvent<HTMLInputElement>) => {
+        if (event.currentTarget.matches(":focus-visible")) {
+            event.currentTarget.labels?.item(0)?.scrollIntoView({behavior: "smooth"});
+        }
+    };
+
     return <PageContainer className="festive-page"
         pageTitle={<TitleAndBreadcrumb
             currentPageTitle="Tree" 
@@ -142,46 +147,47 @@ export const FestiveTree = () => {
     >
         <PageMetadata/>
         <div className="d-flex justify-content-end mb-3">
-            <StyledToggle falseLabel="Tree" trueLabel="Text only" aria-label="Text-only mode"
-                checked={textOnly} onChange={event => setTextOnly(event.currentTarget.checked)} />
+            <StyledToggle 
+                falseLabel="Tree" trueLabel="Text only" aria-label="Text-only mode"
+                checked={textOnly} onChange={event => setTextOnly(event.currentTarget.checked)} 
+            />
         </div>
-        {textOnly && <ol className="festive-text-list">
-            {textDoors.map(door => <li key={door.day} className={door.active ? undefined : "text-muted"}>
-                <span>Day {door.day}: </span>
-                {door.active
-                    ? <Link to={door.href}>{door.title}</Link>
-                    : <span aria-disabled="true">{door.title}</span>}
-                <AccessibilityTags tags={door.classes} tagClassName="ms-1 mb-n1" />
-            </li>)}
-        </ol>}
-        <div className="festive mt-2" style={{display: textOnly ? "none" : undefined}}>
-            <input type="checkbox" id="festive-snow" className="snow-toggle"
-                onFocus={event => event.currentTarget.labels?.item(0)?.scrollIntoView({block: "center", inline: "nearest"})} />
-            <input type="checkbox" id="festive-lights" className="lights-toggle"
-                onFocus={event => event.currentTarget.labels?.item(0)?.scrollIntoView({block: "center", inline: "nearest"})} />
-            <div className="tree" ref={treeRef}>
-                <div className="tree-shapes">
-                    {Array.from({length: 6}, (_, i) => <>
-                        <span className={`branch branch-${i+1}`} aria-hidden="true" />
-                        <span className={`lights branch-${i+1}`} aria-hidden="true" />
-                    </>)}
-                    <label htmlFor="festive-snow" className="trunk">
-                        <span className="visually-hidden">Toggle snow</span>
+        {textOnly ? 
+            <ol className="festive-text-list">
+                {textDoors.map(door => <li key={door.day} className={door.active ? undefined : "text-muted"}>
+                    <span>Day {door.day}: </span>
+                    {door.active
+                        ? <Link to={door.href}>{door.title}</Link>
+                        : <span aria-disabled="true">{door.title}</span>}
+                    <AccessibilityTags tags={door.classes} tagClassName="ms-1 mb-n1" />
+                </li>)}
+            </ol> : 
+            <div className="festive mt-2">
+                <input type="checkbox" id="festive-snow" className="snow-toggle" onFocus={scrollStyledCheckboxIntoView} />
+                <input type="checkbox" id="festive-lights" className="lights-toggle" onFocus={scrollStyledCheckboxIntoView} />
+                <div className="tree" ref={treeRef}>
+                    <div className="tree-shapes">
+                        {Array.from({length: 6}, (_, i) => <>
+                            <span className={`branch branch-${i+1}`} aria-hidden="true" />
+                            <span className={`lights branch-${i+1}`} aria-hidden="true" />
+                        </>)}
+                        <label htmlFor="festive-snow" className="trunk">
+                            <span className="visually-hidden">Toggle snow</span>
+                        </label>
+                        <span className="pot" aria-hidden="true" />
+                    </div>
+                    <PageFragment fragmentId={"tree_days"}/>
+                    <label htmlFor="festive-lights" className="bauble">
+                        <span className="visually-hidden">Toggle fairy lights</span>
                     </label>
-                    <span className="pot" aria-hidden="true" />
                 </div>
-                <PageFragment fragmentId={"tree_days"}/>
-                <label htmlFor="festive-lights" className="bauble">
-                    <span className="visually-hidden">Toggle fairy lights</span>
-                </label>
-            </div>
-            <div className="tag">
-                {selectedDoor?.title || "Pick a door"}
-                <AccessibilityTags tags={selectedDoor?.classes} tagClassName="ms-1 mb-n2" />
-            </div>
-            <div className="snowfall" aria-hidden="true">
-                {snowflakes.map((style, index) => <div key={index} className="flake" style={style} />)}
-            </div>
-        </div>
+                <div className="tag">
+                    {selectedDoor?.title || "Pick a door"}
+                    <AccessibilityTags tags={selectedDoor?.classes} tagClassName="ms-1 mb-n2" />
+                </div>
+                <div className="snowfall" aria-hidden="true">
+                    {snowflakes.map((style, index) => <div key={index} className="flake" style={style} />)}
+                </div>
+            </div>}
     </PageContainer>;
 };
