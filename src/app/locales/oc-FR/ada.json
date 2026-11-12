@@ -43,11 +43,11 @@
   "advancers": {
     "join": {
       "freeNote": "Totas nòstras ressorsas son completament gratuitas. You can leave the programme at any time.",
-      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the Ada advancers group and participate in the programme.",
+      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the Ada Advancers group and participate in the programme.",
       "loggedIn": "<strong><joinLink>Inscrivitz-vos al {{groupName}} grop</joinLink></strong> per participar al programa per que poscam signar rapidament la setmana."
     },
     "page": {
-      "title": "Ada advancers programme"
+      "title": "Ada Advancers programme"
     }
   },
   "assignment": {
