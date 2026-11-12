@@ -26,7 +26,7 @@ export const HomepageCS = () => {
                 <Container id={"cta-container"} fluid>
                     <div className="d-flex flex-column align-items-center gap-5">
                         <div className={""}>
-                            <h1 className={"backslash-left-small text-center font-size-2 font-size-md-2-5 mb-0"}>The free learning platform for visual regressions</h1>
+                            <h1 className={"backslash-left-small text-center font-size-2 font-size-md-2-5 mb-0"}>The free learning platform for computing teachers and students</h1>
                         </div>
 
                         <div className="logo-grid mx-3">
