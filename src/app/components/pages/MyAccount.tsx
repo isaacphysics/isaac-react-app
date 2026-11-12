@@ -65,6 +65,9 @@ import { PageContainer } from '../elements/layout/PageContainer';
 import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { UserTheme } from '../elements/panels/UserTheme';
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -90,31 +93,48 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
         closeAction: () => {
             dispatch(closeActiveModal());
         },
-        title: "Changing schools?",
+        title: i18next.t("common:account.changeSchools.title"),
         body: <>
             <p className="px-1">
-                If you are changing schools, we recommend you take the following steps:
+                {i18next.t("common:account.changeSchools.intro")}
             </p>
             <ol type='1'>
                 <li>
-                    Check your <strong><a target="_blank" href="/groups">groups</a>
-                    </strong>. Delete any groups that you will no longer teach.
+                    <Trans
+                        i18nKey="common:account.changeSchools.checkGroups"
+                        components={{
+                            strong: <strong />,
+                            groupsLink: <TransAnchor target="_blank" href="/groups" />,
+                        }}
+                    />
                 </li>
                 <li>
-                    Check your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Remove any connections with old colleagues and students.
+                    <Trans
+                        i18nKey="common:account.changeSchools.checkConnections"
+                        components={{
+                            strong: <strong />,
+                            connectionsLink: <TransAnchor target="_blank" href="/account#teacherconnections" />,
+                        }}
+                    />
                 </li>
             </ol>
-            <p><strong>This information can be found in the <a target="_blank" href="/support/teacher/general#moving_schools">Teacher FAQ</a> for future reference.</strong></p>
+            <p><strong><Trans
+                i18nKey="common:account.changeSchools.faqReference"
+                components={{
+                    faqLink: <TransAnchor target="_blank" href="/support/teacher/general#moving_schools" />,
+                }}
+            /></strong></p>
         </>,
         buttons: [
             <Button key={1} color="solid" onClick={() => dispatch(closeActiveModal())}>
-                Continue
+                {i18next.t("common:button.continue")}
             </Button>
         ]
     }));
 };
 
 export const MyAccount = ({user}: AccountPageProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const location = useLocation();
 
@@ -179,7 +199,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     }, [userToUpdate?.registeredContexts]);
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
-    const pageTitle = editingOtherUser ? "Edit user" : siteSpecific("My account", "Account");
+    const pageTitle = editingOtherUser ? t("common:account.editUser.title") : t("site:account.title");
 
     const formSpecificTabs = [ACCOUNT_TAB.passwordreset, ACCOUNT_TAB.teacherconnections];
 
@@ -214,7 +234,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     useEffect(() => {
         // the blocker is triggered by page navigations, but not hash changes
         if (blocker.state === "blocked") {
-            if (window.confirm("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?")) {
+            if (window.confirm(i18next.t("common:account.unsavedChanges.leaveConfirm"))) {
                 blocker.proceed?.();
             } else {
                 blocker.reset?.();
@@ -225,7 +245,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const safelyChangeTab = useCallback((newTab: ACCOUNT_TAB) => {
         // use this in place of setActiveTab to prevent losing unsaved changes when switching tabs
         if (isBlocked) {
-            if (window.confirm("You have unsaved changes on this page. Are you sure you want to leave without saving?")) {
+            if (window.confirm(i18next.t("common:account.unsavedChanges.tabSwitchConfirm"))) {
                 resetState();
                 setActiveTab(newTab);
             }
@@ -377,9 +397,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
             setSaving(false);
             return;
         } else if (activeTab !== ACCOUNT_TAB.account) {
-            dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
+            dispatch(showErrorToast(t("common:account.updateError.toastTitle"), t("common:account.updateError.toastMessage")));
         } else {
-            dispatch(showErrorToast("Account update failed", "Something went wrong. Please make sure all required fields have been filled in and try again."));
+            dispatch(showErrorToast(i18next.t("common:account.updateError.toastTitle"), i18next.t("common:account.updateError.genericToastMessage")));
         }
         setSaving(false);
     }
@@ -399,14 +419,14 @@ export const MyAccount = ({user}: AccountPageProps) => {
     >
         {isAda && <p className="d-md-none text-center m-3">
             <small>
-                <span className='text-muted'>Update your Ada Computer Science account, or </span>
-                <Link to="/logout" className="text-theme">Log out</Link>
+                <span className='text-muted'>{t("ada:account.mobileHint")} </span>
+                <Link to="/logout" className="text-theme">{t("common:button.logOut")}</Link>
             </small>
         </p>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <div className={siteSpecific("w-lg-75", "card")}>
-                    {isAda && <Nav tabs role="tablist" aria-label="Account settings" className="my-4 flex-wrap mx-4" data-testid="account-nav">
+                    {isAda && <Nav tabs role="tablist" aria-label={i18next.t("common:title.accountSettings")} className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS
                             .filter(tab => !tab.isHidden?.(user, editingOtherUser))
                             .map(({tab, title, titleShort}) =>
@@ -433,7 +453,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                     <Form id="my-account" name="my-account" onSubmit={updateAccount}>
                         {updateCurrentUserError &&
                                 <ExigentAlert color="warning">
-                                    <p className="alert-heading fw-bold">Unable to update your account</p>
+                                    <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
                                     <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                                 </ExigentAlert>
                         }
@@ -553,7 +573,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                         {isPhy && <div className="section-divider-bold"/>}
                         <div className={classNames("d-flex justify-content-center", {"col-12 col-md-6 offset-md-3": isAda})}>
                             <Input
-                                form="my-account" type="submit" value="Save" className={classNames("btn btn-solid border-0", {"w-100": isAda})}
+                                form="my-account" type="submit" value={i18next.t("common:account.saveButton")} className={classNames("btn btn-solid border-0", {"w-100": isAda})}
                                 disabled={!accountInfoChanged}
                             />
                         </div>

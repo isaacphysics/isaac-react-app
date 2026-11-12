@@ -1,0 +1,3564 @@
+{
+  "AssignmentProgressGroupsListing": {
+    "no-groups-match-your-criteria": "No groups match your criteria.",
+    "search-for-a-group": "Search for a group:",
+    "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
+  },
+  "accessibility": {
+    "dragAndDropLabel": "Drag and drop",
+    "dropdownLabel": "Dropdown",
+    "inputModeTitle": "Question input mode"
+  },
+  "accordion": {
+    "additionalStagesDescription": "You may also be interested in exploring additional material relevant to other learning stages:",
+    "additionalStagesTitle": "Additional learning stages",
+    "completion": {
+      "allCorrect": "All questions in this part are answered correctly.",
+      "allIncorrect": "All questions in this part are answered incorrectly.",
+      "notAttempted": "No questions in this part have been answered.",
+      "someIncorrect": "Some questions in this part are answered incorrectly."
+    },
+    "partLabel": "Part {{partLetter}}"
+  },
+  "account": {
+    "accessibility": {
+      "description": "Here you can manage various accessibility features across the site.",
+      "inaccessibleWarning": {
+        "helpText": "Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.",
+        "label": "Warn about inaccessible content"
+      },
+      "mathml": {
+        "helpText": "With this setting you can toggle between using alternative text or MathML for mathematical equations.",
+        "label": "Use MathML for accessible maths"
+      },
+      "nonDraggingInputs": {
+        "helpText": "Enabling this will allow you to use alternative input methods that don't require dragging for certain question types (e.g. drag-and-drop).",
+        "label": "Enable non-dragging alternative inputs"
+      },
+      "reducedMotion": {
+        "helpText": "Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.",
+        "label": "Prefer reduced motion"
+      },
+      "title": "Accessibility settings"
+    },
+    "betaFeatures": {
+      "chemEntryHelp": "This feature allows you to enter text-based answers for chemistry questions, as an alternative to the graphical editor. See our <guidanceLink>guidance on using this feature</guidanceLink>.",
+      "chemEntryLabel": "Enable text entry for chemistry questions",
+      "description": "Here you can opt-in to beta features of the {{siteTitle}} platform.",
+      "hideAttemptsLabel": "Hide previous question attempts",
+      "openAiConsentLabel": "Consent to sending free-text answers to OpenAI for marking",
+      "openAiHelp": "We use a large language model (LLM) to mark free-text questions on the site. We only send your answer to OpenAI, we do not send any personal data.",
+      "title": "Beta Features"
+    },
+    "changeSchools": {
+      "checkConnections": "Check your <strong><connectionsLink>connections</connectionsLink></strong>. Remove any connections with old colleagues and students.",
+      "checkGroups": "Check your <strong><groupsLink>groups</groupsLink></strong>. Delete any groups that you will no longer teach.",
+      "faqReference": "This information can be found in the <faqLink>Teacher FAQ</faqLink> for future reference.",
+      "intro": "If you are changing schools, we recommend you take the following steps:",
+      "title": "Changing schools?"
+    },
+    "context": {
+      "addContentButton": "Add more content",
+      "addStageLabel": "Add stage",
+      "removeRow": "clear stage row"
+    },
+    "country": {
+      "label": "Country",
+      "validationError": "Please select your country."
+    },
+    "customise": {
+      "description": "Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time.",
+      "title": "Customise what content you see"
+    },
+    "deletion": {
+      "confirmButton": "Confirm via email",
+      "confirmWarning": "I understand that deleting my account is permanent and cannot be undone.",
+      "deleteButton": "Delete Account",
+      "errorTitle": "Account deletion request failed.",
+      "failedTitle": "Account deletion failed.",
+      "noToken": "You must have a valid token to delete your account. Visit your <accountLink>account page</accountLink> to generate a new email with a token.",
+      "notLoggedIn": "You must be logged in to delete your account.",
+      "reasonAccidental": "I made an account by mistake.",
+      "reasonMultiple": "I have multiple accounts and only require one.",
+      "reasonNewAccount": "I want to create a new account with this email address.",
+      "reasonNoLongerNeed": "I no longer need my account.",
+      "reasonOther": "Another reason / prefer not to say.",
+      "selectReason": "Please select the reason you wish to delete your account:",
+      "successMessage": "An email has been sent to you with instructions on how to confirm your account deletion.",
+      "successTitle": "Account deletion request sent.",
+      "title": "Account deletion",
+      "tutorRestriction": "Only student accounts can be deleted automatically. Please <contactLink>contact us</contactLink> to request account deletion."
+    },
+    "deletionSuccess": {
+      "title": "Account deleted!"
+    },
+    "editUser": {
+      "title": "Edit user"
+    },
+    "emailChange": {
+      "confirmQuestion": "Would you like to continue?",
+      "explanation": "You have changed your account email address. This new email address won't be used until you click the verification link sent to it. Until then, we will use the old email address and you will still need to use that when logging in by email and password.",
+      "title": "Editing your email address"
+    },
+    "emailPreferences": {
+      "descriptionHeader": "Description",
+      "preferenceHeader": "Preference",
+      "tipsLabel": "Tips and updates",
+      "newsLabel": "News and updates",
+      "validationError": "Please specify all email preferences"
+    },
+    "gender": {
+      "options": {
+        "female": "Female",
+        "male": "Male",
+        "other": "Other gender identity",
+        "preferNotToSay": "Prefer not to say"
+      }
+    },
+    "linkedAccounts": {
+      "link": "Link",
+      "otherTitle": "Link other accounts",
+      "unlink": "Unlink"
+    },
+    "logOut": {
+      "description": "This button will log you out on all devices, including this one. You might want to do this if you forgot to log out on a shared device like a school computer.",
+      "title": "Log Out"
+    },
+    "mfa": {
+      "changeDeviceButton": "Change 2FA Device",
+      "configureTitle": "Configure Two-factor Authentication (2FA)",
+      "disableForUserButton": "Disable 2FA for user",
+      "enableButton": "Enable 2FA",
+      "qrAltText": "Follow this URL to setup 2FA: {{authenticatorUrl}}",
+      "statusDisabled": "Disabled",
+      "statusEnabled": "Enabled",
+      "statusLabel": "2FA Status:",
+      "stepOne": "<strong>Step 1:</strong> Scan the QRcode below on your phone",
+      "stepTwo": "<strong>Step 2:</strong> Enter the code provided by your app",
+      "title": "Two-factor Authentication (2FA)"
+    },
+    "preferences": {
+      "booleanNotationLabel": "Preferred logic notation",
+      "description": "Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time under My Account.",
+      "preferredLanguageLabel": "Preferred programming language",
+      "saveButton": "Save preferences",
+      "skipButton": "I'll do this later",
+      "title": "Customise your account"
+    },
+    "profile": {
+      "description": "Here you can see and manage your account details for {{siteTitle}}.",
+      "disableWarnings": "Disable warnings",
+      "disableWarningsWarning": "If your IT department is unable to assist, you can disable banner warnings on the site for this browser. We strongly recommend against this. Unverified email addresses may lead to issues with account recovery and you may miss important security notifications from {{siteTitle}}.",
+      "emailBlockedInfo": "In some situations, schools or departments block email from external sites like ours, which may prevent you from receiving verification emails. If this is the case, please contact your IT department to see if they can allow emails from {{siteTitle}}. We have a <emailHelpLink>help page</emailHelpLink> regarding our email setup that may be of use.",
+      "emailSent": "Verification email sent!",
+      "emailUnverified": "Your email address is unverified. This may affect your ability to receive important notifications, and you will not be eligible to enter events and competitions.",
+      "optionReversible": "You can change this option at any time.",
+      "otherOptions": "Other options",
+      "requestVerification": "Click here to request a new verification email.",
+      "restoreWarnings": "Restore warnings",
+      "success": "Success!",
+      "warningsDisabledMessage": "Email verification warnings have been disabled for this browser.",
+      "warningsDisabledTitle": "Warnings disabled",
+      "warningsRestoredMessage": "Email verification warnings have been restored.",
+      "warningsRestoredTitle": "Warnings restored"
+    },
+    "releaseAccess": {
+      "confirmBody": "Are you sure you want to end your access to <strong>{{firstName}} {{lastName}}</strong>'s data?<br/>You will need to ask them to grant access again in the future if you change your mind.",
+      "title": "Remove access to students' data"
+    },
+    "releaseAll": {
+      "confirmBody": "Are you sure you want to end your access to all students' data?<br/>You will need to ask them to grant access again in the future if you change your mind.",
+      "title": "Remove access to all students' data"
+    },
+    "requiredInfo": {
+      "privacyNote": "Providing a few extra pieces of information helps us understand the usage of {{siteTitle}} across the UK and beyond. Full details on how we use your personal information can be found in our <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
+      "updateButtonDesktop": "Update account"
+    },
+    "revokeAccess": {
+      "confirmBody": "The user <strong>{{teacherName}}</strong> will no longer be able to access your data.<br/>Are you sure you want to revoke access for this user?",
+      "title": "Revoke access to your data"
+    },
+    "roleMessage": "You have {{article}} <strong>{{role}}</strong> account.",
+    "saveButton": "Save",
+    "school": {
+      "placeholder": "Type your school name",
+      "useAsName": "Use \"{{schoolName}}\" as your school name",
+      "validationError": "Please specify your school association."
+    },
+    "security": {
+      "addPasswordButton": "Click here to add a password",
+      "currentPasswordLabel": "Current password",
+      "description": "Here you can change your password, link or unlink a third party account you use to sign in, and log out of all devices.",
+      "resetProcessing": "Your password reset request is being processed.",
+      "title": "Account security"
+    },
+    "sharingData": {
+      "confirmBody": "Are you sure you would like to give the following {{siteName}} users access to your data?",
+      "privacyNote": "For more details about what information is shared, see our <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
+      "rememberNote": "<strong>Remember</strong>: you can always revoke access to your data from the Teacher Connections tab of My Account.",
+      "title": "Sharing your data"
+    },
+    "theme": {
+      "darkModeWarning": "Please note that dark mode is a new and extensive feature and, as such, certain areas of the site may not yet be fully optimised for this theme. We also cannot guarantee e.g. AA accessibility compliance for dark mode at this time.<lineBreak1/><lineBreak2/>If you encounter any issues, particularly regarding legibility, please report them to us via the <contactLink>contact form</contactLink> for further investigation. Please include a link to the page containing the issue if possible.",
+      "description": "Here you can select your preferred site theme.",
+      "title": "Theme"
+    },
+    "tutorRequest": {
+      "alreadyTutor": "You already have a tutor or teacher account",
+      "errorContact": "{{errorMessage}} You can contact us at <emailLink>{{emailAddress}}</emailLink>",
+      "formInstruction": "To request a tutor account on {{siteTitle}}, please fill in this form. ",
+      "formIntro": "{{siteTitle}}You must have verified your account email address. If any of the information is incorrect or missing, you can amend it on your <accountLink>My account</accountLink> page.",
+      "reasonLabel": "Please tell us why you would like to apply for a tutor account",
+      "submittedThanks": "Thank you for submitting a tutor account request.",
+      "title": "Tutor Account request"
+    },
+    "unsavedChanges": {
+      "leaveConfirm": "If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?",
+      "tabSwitchConfirm": "You have unsaved changes on this page. Are you sure you want to leave without saving?"
+    },
+    "update": {
+      "fillAllFields": "Please fill in all required fields.",
+      "incompleteFields": "Not all required fields have been correctly filled.",
+      "notUpdatedTitle": "Account settings not updated",
+      "otherSuccessMessage": "The user's account settings were updated successfully.",
+      "submitButton": "Update details",
+      "successTitle": "Account settings updated"
+    },
+    "updateError": {
+      "genericToastMessage": "Something went wrong. Please make sure all required fields have been filled in and try again.",
+      "toastMessage": "Please make sure that all required fields in the \"Profile\" tab have been filled in.",
+      "toastTitle": "Account update failed"
+    },
+    "upgrade": {
+      "errorTitle": "Failed to upgrade account",
+      "successMessage": "You have upgraded to a teacher account!",
+      "successTitle": "Account upgraded"
+    }
+  },
+  "admin": {
+    "anonymisation": {
+      "groupsLabel": "Disguise both user and group details in teacher tools",
+      "usersOnlyLabel": "Disguise only user names and emails in teacher tools"
+    },
+    "console": {
+      "apiVersionLabel": "API Version:",
+      "title": "Admin Console"
+    },
+    "content": {
+      "errorLoading": "Error loading content version",
+      "errorMessage": "Error: Content version could not be changed.",
+      "inputAriaLabel": "Live content commit SHA",
+      "inputPlaceholder": "Enter commit SHA",
+      "liveVersionLabel": "Live Content Version",
+      "previewButton": "Preview Changes",
+      "setVersionButton": "Set Version",
+      "successMessage": "Content version changed successfully.",
+      "title": "Manage site content",
+      "updatingMessage": "Replacing version {{currentVersion}} with {{newVersion}}",
+      "updatingTitle": "Updating..."
+    },
+    "contentEmails": {
+      "recipientWarning": "<warningLabel>Warning:</warningLabel> There are currently <countEmphasis>{{recipientCount}}</countEmphasis> selected recipients.",
+      "sendConfirm_one": "Are you sure you want to send a {{emailType}} email to {{count}} user?",
+      "sendConfirm_other": "Are you sure you want to send a {{emailType}} email to {{count}} users?",
+      "sendVia": {
+        "isaac": "Isaac",
+        "label": "The method of sending the email",
+        "mailgun": "Mailgun",
+        "title": "Send via"
+      },
+      "template": {
+        "htmlLabel": "Email HTML",
+        "iframeTitle": "html preview",
+        "plaintextLabel": "Email Plaintext",
+        "previewLabel": "HTML Preview (unformatted)",
+        "title": "Email Template"
+      },
+      "title": "Content email sending"
+    },
+    "contentErrors": {
+      "errorTitle": "Loading Content Errors Failed",
+      "filters": {
+        "errorMessageLabel": "Filter by error message",
+        "errorMessagePlaceholder": "Filter errors by error message",
+        "filePathLabel": "Filter by file path",
+        "filePathPlaceholder": "Filter errors by file path",
+        "publishedStatusLabel": "Filter by published status",
+        "severityLabel": "Filter by severity"
+      },
+      "loadingError": "Error loading content errors",
+      "row": {
+        "tooltipContentId": "Content ID: {{contentId}}"
+      },
+      "stats": {
+        "contentVersionLabel": "Content Version:",
+        "criticalErrorsLabel": "Critical errors:",
+        "filesWithErrorsLabel": "Files with errors:",
+        "totalErrorsLabel": "Total errors:"
+      },
+      "table": {
+        "criticalErrorHeader": "Critical Error",
+        "errorMessagesHeader": "List of Error Messages",
+        "fileHeader": "File",
+        "publishedHeader": "Published",
+        "publishedTooltip": "Is this file published?"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration Mode"
+    },
+    "email": {
+      "sendErrorTitle": "Sending email failed",
+      "sendSuccessMessage": "Email sent to users successfully",
+      "sendSuccessTitle": "Email sent",
+      "sendWithIdsErrorTitle": "Sending email with ids failed",
+      "templateErrorTitle": "Failed to get email template"
+    },
+    "emails": {
+      "contentObject": {
+        "loadButton": "Load template",
+        "placeholder": "Enter email content object ID",
+        "title": "Content object"
+      },
+      "details": {
+        "fromLabel": "From:",
+        "noSubject": "no subject",
+        "replyToLabel": "Reply-To:",
+        "sentViaLabel": "Sent via:",
+        "subjectLabel": "Subject:"
+      },
+      "htmlPreview": {
+        "frameTitle": "Email content preview",
+        "title": "HTML preview"
+      },
+      "plainTextPreview": {
+        "title": "Plain text preview"
+      },
+      "send": {
+        "confirm_one": "Are you sure you want to send a {{emailType}} email ({{contentObjectId}}) to {{count}} user?",
+        "confirm_other": "Are you sure you want to send a {{emailType}} email ({{contentObjectId}}) to {{count}} users?",
+        "recipientsWarning": "<warning>Warning:</warning> There are currently <count>{{recipientCount}}</count> selected recipients."
+      }
+    },
+    "greeting": "Hi, {{givenName}}!",
+    "groups": {
+      "resetPassword": {
+        "failureMessage": "Failed to send password reset"
+      }
+    },
+    "misuse": {
+      "emptyState": "No misuse statistics for this event type! 🎉",
+      "selectEventLabel": "Select a misuse event type:",
+      "statusAlmost": "Almost",
+      "tableHeader": {
+        "agentIdentifier": "Agent identifier",
+        "currentCounter": "Current event counter",
+        "lastEvent": "Last recorded event",
+        "status": "Misused?"
+      },
+      "title": "Misuse statistics"
+    },
+    "misuseMonitor": {
+      "resetErrorTitle": "Failed to reset misuse monitor for user",
+      "resetSuccessMessage": "{{eventLabel}} misuse event count reset for user",
+      "resetSuccessTitle": "Reset successfully"
+    },
+    "misuseStatistics": {
+      "errorTitle": "Failed to get misuse statistics for user"
+    },
+    "siteStatistics": {
+      "errorTitle": "Loading Site Statistics Failed"
+    },
+    "stats": {
+      "answering": {
+        "heading": "Answering Questions"
+      },
+      "breadcrumb": "Admin statistics",
+      "content": {
+        "conceptPageViews": "Concept Page Views: {{count}}",
+        "heading": "Content Statistics",
+        "questionAttempts": "Total Question Attempts: {{count}}",
+        "questionPageViews": "Question Page Views: {{count}}"
+      },
+      "counts": {
+        "all": "All: {{count}}",
+        "students": "Students: {{count}}",
+        "teachers": "Teachers: {{count}}"
+      },
+      "lastSeen": {
+        "heading": "Last Seen"
+      },
+      "overview": "A high-level overview of the users and activity on the platform:",
+      "period": {
+        "ninetyDays": "Previous 90 days:",
+        "sevenDays": "Previous 7 days:",
+        "thirtyDays": "Previous 30 days:"
+      },
+      "title": "{{siteTitle}} statistics",
+      "users": {
+        "gender": {
+          "female": "Female: {{count}} ({{percentage}}%)",
+          "male": "Male: {{count}} ({{percentage}}%)",
+          "missing": "Missing data: {{count}} ({{percentage}}%)",
+          "other": "Other: {{count}} ({{percentage}}%)",
+          "preferNotToSay": "Prefer not to say: {{count}} ({{percentage}}%)"
+        },
+        "heading": "Users:",
+        "profileCompletion": {
+          "noSchool": "No school provided: {{count}}",
+          "otherSchool": "Other school provided: {{count}}",
+          "ukIeSchool": "UK/IE school provided: {{count}}"
+        },
+        "profileCompletionTitle": "Profile Completion",
+        "role": {
+          "admin": "Admin: {{count}}",
+          "contentEditor": "Content Editor: {{count}}",
+          "eventLeader": "Event Leader: {{count}}",
+          "eventManager": "Event Manager: {{count}}",
+          "student": "Student: {{count}}",
+          "teacher": "Teacher: {{count}}",
+          "tutor": "Tutor: {{count}}"
+        },
+        "sixMonths": "Last 6 months: <strong>{{activeUsersSixMonths}}</strong>",
+        "total": "Total (excl. archived): <strong>{{totalUsers}}</strong>",
+        "twoYears": "Last 2 years: <strong>{{activeUsersTwoYears}}</strong>"
+      }
+    },
+    "title": "{{siteTitle}} administration",
+    "tools": {
+      "title": "Administrative tools"
+    },
+    "usefulLinks": {
+      "equationBuilder": "Equation builder",
+      "freeTextBuilder": "Free-text builder",
+      "title": "Useful links",
+      "userManager": "User Manager"
+    },
+    "userManager": {
+      "actions": {
+        "email": "Email",
+        "emailStatus": "Email Status",
+        "emailStatusHeader": "Change email verification status for users to:",
+        "modifyRole": "Modify Role",
+        "promoteDemoteHeader": "Promote or demote selected users to:"
+      },
+      "delete": {
+        "confirm": "Are you sure you want to delete this user?"
+      },
+      "merge": {
+        "button": "Merge",
+        "confirm": "Are you sure you want to merge user {{sourceId}} into user {{targetId}}? This will delete user {{deletedId}}.",
+        "deletePlaceholder": "User ID to delete",
+        "keepPlaceholder": "User ID to keep",
+        "title": "Merge user accounts"
+      },
+      "results": {
+        "table": {
+          "edit": "Edit",
+          "select": "Select",
+          "verificationStatus": "Verification status",
+          "view": "View"
+        },
+        "title": "Manage users ({{resultCount}})<br/>Selected ({{selectedCount}})"
+      },
+      "search": {
+        "button": "Search",
+        "emailPlaceholder": "e.g. teacher@school.org",
+        "familyNamePlaceholder": "e.g. Wilkes",
+        "roleAny": "Any role",
+        "roleEventLeader": "Event leader",
+        "roleEventManager": "Event manager",
+        "schoolOtherLabel": "Find by manually entered school:",
+        "schoolUrnLabel": "Find a user with school URN:",
+        "validation": "At least one search filter must be set.",
+        "verificationStatusAny": "Any verification status",
+        "verificationStatusDeliveryFailed": "Delivery failed",
+        "verificationStatusLabel": "Find by email verification status:",
+        "verificationStatusNotVerified": "Not verified",
+        "verificationStatusVerified": "Verified"
+      }
+    },
+    "users": {
+      "deleteErrorTitle": "User deletion failed",
+      "deleteSuccessMessage": "Selected user was deleted successfully",
+      "deleteSuccessTitle": "User deleted",
+      "getSchoolLookupErrorTitle": "Failed to load user school lookup details",
+      "getUserErrorTitle": "Failed to get user",
+      "mergeErrorTitle": "Merging users failed",
+      "mergeSuccessMessage": "User with id: {{sourceId}} was merged into user with id: {{targetId}}",
+      "mergeSuccessTitle": "Users merged",
+      "modifyEmailVerificationErrorTitle": "Email verification status modification failed",
+      "modifyRoleErrorTitle": "User role modification failed",
+      "searchErrorTitle": "User search failed"
+    }
+  },
+  "anvilApps": {
+    "emptyMessage": "Tools are not available for {{context}}.",
+    "emptyTitle": "Tools"
+  },
+  "assignments": {
+    "add": {
+      "createDeckButton": "create a question deck",
+      "topicDecksButton": "our topic question decks"
+    },
+    "assign": {
+      "errorTitle": "Test assignment to {{groupName}} failed",
+      "savedTitle_one": "Test saved",
+      "savedTitle_other": "Tests saved",
+      "successTitle_one": "Test assigned",
+      "successTitle_other": "Tests assigned"
+    },
+    "cancel": {
+      "confirmMessage": "Are you sure you want to cancel \"{{quizTitle}}\"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all student attempts at this test will be lost."
+    },
+    "card": {
+      "assigned": "Assigned <strong>{{startDate}}</strong>",
+      "assignedLabel": "Assigned:",
+      "assignerLabel": "By:",
+      "dueDate": "(due {{dueDate}})",
+      "groupLabel": "Group:",
+      "overdueLabel": "Overdue:"
+    },
+    "counts": {
+      "assignments_one": "{{count}} assignment",
+      "assignments_other": "{{count}} assignments",
+      "tests_one": "{{count}} test",
+      "tests_other": "{{count}} tests"
+    },
+    "downloadPrivacyTitle": "Privacy Notice",
+    "dueDatePlaceholder": "Select your due date...",
+    "error": {
+      "fetchError": "Error fetching your assignments",
+      "loadAttemptFailed": "Loading assigned quiz attempt failed",
+      "loadQuizFailed": "Loading quiz failed",
+      "saveFailed": "Failed to save"
+    },
+    "extendDueDate": {
+      "confirmationText": "Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.",
+      "inputLabel": "Extend the due date:",
+      "successToastMessage": "This test is now due by {{dueDate}}.",
+      "successToastTitle": "Due date extended successfully",
+      "validationError": "You cannot set the due date to be earlier than the current due date or today."
+    },
+    "feedbackMode": {
+      "description": "You can adjust the type of feedback given to students after they complete this test. Changes to this setting are applied immediately and will affect all students, regardless of completion status.",
+      "title": "Set feedback mode",
+      "updateSuccess": "Feedback mode updated successfully."
+    },
+    "filter": {
+      "groupLabel": "Group",
+      "nameLabel": "Filter quizzes by name"
+    },
+    "help": {
+      "overdueExplanation": "Any quizzes you have been set will appear here.<br/>Overdue quizzes which have not been fully attempted will be treated as quizzes <statusTodo>To do</statusTodo> until they are due, after which they are considered <statusOlder>Older</statusOlder> quizzes."
+    },
+    "manage": {
+      "findDeckFrom": "Find a deck from...",
+      "findNewDeck": "a new question deck",
+      "findSavedDecks": "your saved decks",
+      "findTopicDecks": "our topic questions decks",
+      "noMatchingWork": "There is no work matching your filters.",
+      "noWorkSet": "You have not set any work yet. Use the buttons above to set a new assignment or test.",
+      "noWorkSetTutor": "You have not set any work yet. Use the button above to set a new assignment.",
+      "pageHelp": "Use this page to set and manage assigned work for your groups, and view set work as a timeline. You can unassign work, and assign existing work to other groups.",
+      "setGroup": "Set to <strong>{{groupName}}</strong>",
+      "setNewTestButton": "Set a new test",
+      "showEarlierWork": "Show work before {{date}}",
+      "timeline": {
+        "listForGroup": " list for group {{groupName}}",
+        "unknownGroup": "Unknown group"
+      }
+    },
+    "manageSidebar": {
+      "dateShownLabel": "Date shown",
+      "filterByWorkTypeLabel": "Filter by work type",
+      "title": "Filter & sort"
+    },
+    "modal": {
+      "assignButton_one": "Assign to group",
+      "assignButton_other": "Assign to groups",
+      "backToSchedule": "Back to schedule",
+      "belongsToOther": " (belongs to another user)",
+      "dueDateAfterStartError": "Due date must be on or after start date.",
+      "dueDateLabel": "Due date reminder",
+      "dueDateRequiredNotice": "Since January 2025, due dates are required for assignments.",
+      "gameboardLabel": "Gameboard:",
+      "notesCharCount": "{{charCount}}/500 characters",
+      "notesLabel": "Notes (optional):",
+      "startDateLabel": "Schedule an assignment start date <muted> (optional)</muted>"
+    },
+    "notesMaxLengthError": "You have exceeded the maximum length.",
+    "pagination": {
+      "showMore": "Show more",
+      "showingCount": "Showing <strongShown>{{shownCount}}</strongShown> of <strongTotal>{{totalCount}}</strongTotal>"
+    },
+    "progress": {
+      "detailedTab": {
+        "title": "Performance on questions"
+      },
+      "dueDate": "Due: {{dueDate}}",
+      "errorFetching": "Error fetching assignment progress",
+      "fullMarks": "{{completedCount}} of {{totalCount}} got full marks",
+      "groupTab": {
+        "description": "See who attempted the assignment and which questions they struggled with."
+      },
+      "loadErrorTitle": "Loading assignment progress failed",
+      "questionCard": {
+        "attemptedBadge": "{{attemptedCount}} of {{totalCount}} attempted"
+      },
+      "questionLink": {
+        "ariaLabel": "Open question in new tab"
+      }
+    },
+    "schedule": {
+      "assignedBy": "Assigned by: <strong>{{assigner}}</strong>",
+      "assignedTo": "Assigned to: <strong>{{groupName}}</strong>",
+      "byDueDate": "By due date",
+      "byStartDate": "By start date",
+      "dueDate": "Due date: <strong>{{date}}</strong>",
+      "emptyState": "You have no assignments",
+      "filterByGroup": "Filter by group:",
+      "noAssignmentsForGroups_one": "There are no assignments set to group: {{groupNames}}",
+      "noAssignmentsForGroups_other": "There are no assignments set to groups: {{groupNames}}",
+      "notStarted": "(not started)",
+      "notes": "Notes",
+      "pageHelp": "Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.",
+      "setAssignmentsLink": "Use the <setAssignmentsLink>set assignments</setAssignmentsLink> page to schedule new assignments to your groups.",
+      "showEarlierAssignments": "Show assignments before {{date}}",
+      "stage_one": "Stage",
+      "stage_other": "Stages",
+      "startDate": "Start date: <strong>{{date}}</strong>",
+      "title": "Assignment schedule",
+      "unassignConfirm": "Are you sure you want to unassign {{deckName}} from {{groupLabel}}?"
+    },
+    "setModal": {
+      "dueDateAfterStart": "Due date must be on or after start date and in the future.",
+      "dueDateRequired": "Due dates are required for assignments.",
+      "noGroups": "No groups.",
+      "notesCharacterCount": "{{characterCount}}/500 characters",
+      "schedulingInfo": "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. Assignments are due by the end of the day indicated.",
+      "startDateFuture": "Start date must be in the future.",
+      "title": "Assign \"{{boardTitle}}\"",
+      "unassignGroup": "Unassign group"
+    },
+    "sidebar": {
+      "searchTitle": "Search assignments",
+      "sortAttemptedHighest": "Attempted (highest first)",
+      "sortAttemptedLowest": "Attempted (lowest first)",
+      "sortCorrectnessHighest": "Correctness (highest first)",
+      "sortCorrectnessLowest": "Correctness (lowest first)",
+      "sortDueDateLatest": "Due date (latest first)",
+      "sortDueDateSoonest": "Due date (soonest first)",
+      "sortOrderLabel": "Set sort order",
+      "sortStartDateNewest": "Start date (recent first)",
+      "sortStartDateOldest": "Start date (oldest first)",
+      "sortTitle": "Sort",
+      "subjectFilterTitle": "Filter by subject"
+    },
+    "startDatePlaceholder": "Select your scheduled start date...",
+    "table": {
+      "deckName": "Deck name",
+      "lastViewed": "Last viewed",
+      "quizName": "Quiz name"
+    },
+    "timeline": {
+      "collapse": "Collapse",
+      "listForDay": " list for day {{date}}",
+      "listForMonth": " list for {{monthName}}"
+    },
+    "warning": {
+      "assignmentDetail": "<assignmentLink><strong>{{assignmentTitle}}</strong></assignmentLink> (set to <bold>{{groupName}}</bold> by {{teacherName}})",
+      "outsideAssignment": "This question has been set to you as part of an active assignment. Answering it here will <strong>not</strong> count towards the assignment."
+    }
+  },
+  "attempt": {
+    "assignmentError": "Error loading assignment!"
+  },
+  "auth": {
+    "accountLink": {
+      "ariaLabel": "My Account link"
+    },
+    "ageCheckFailed": {
+      "heading": "Unable to create account",
+      "restrictionMessage": "Unfortunately, we aren't able to offer accounts to students under {{minAge}} years old."
+    },
+    "callback": {
+      "signingIn": "Signing in..."
+    },
+    "consent": {
+      "explanation": "If you'd like to use your Microsoft account for signing in to {{siteTitle}}, you need to let us read your name and email address from your Microsoft account.",
+      "readMore": "Read more about signing in with Microsoft.",
+      "schoolNote": "If you're using a school account and you're the first person using {{siteName}} from your school, your IT department may need to pre-approve {{approvedSiteName}} before you can consent.",
+      "title": "We need your consent"
+    },
+    "contact": {
+      "ariaLabel": "Link to contact form",
+      "link": "contact us"
+    },
+    "continueGuest": "Continue without an account",
+    "dob": {
+      "invalidDate": "Please enter a valid date of birth.",
+      "label": "Date of birth"
+    },
+    "emailInput": {
+      "validationError": "Please enter a valid email address."
+    },
+    "emailVerification": {
+      "badParamsMessage": "This page received bad parameters. Please ensure you are using the link as provided in the email.",
+      "loginToResend": "Please login to your <accountLink>account</accountLink> to resend the verification email.",
+      "requestSuccessMessage": "Please follow the verification link given in the email sent to your address.",
+      "requestSuccessTitle": "Email verification request succeeded.",
+      "sentTo": "Verification email sent to {{email}}",
+      "successMessage": "The email address has been verified",
+      "successTitle": "Email address verified",
+      "title": "Email verification",
+      "userMismatch": "You are signed in as a different user to the user with the email you have just verified.",
+      "verified": "Email address verified."
+    },
+    "formIntro": "To <emphasis>continue with an account</emphasis>, please do so below",
+    "google": {
+      "logoAlt": "Google logo"
+    },
+    "linkAccount": {
+      "failureMessage": "Failed to link account"
+    },
+    "login": {
+      "heading": "Log in or sign up:",
+      "passwordLength": "Passwords must be at least {{minLength}} characters long"
+    },
+    "loginFailure": {
+      "toastMessage": "Login Failed"
+    },
+    "loginRedirect": {
+      "failureMessage": "Login redirect failed"
+    },
+    "logout": {
+      "failureMessage": "Logout failed",
+      "loggingOut": "Logging out..."
+    },
+    "logoutEverywhere": {
+      "failureMessage": "Logout everywhere failed"
+    },
+    "mfa": {
+      "disableErrorTitle": "Failed to disable 2FA on account.",
+      "disableSuccessMessage": "You have disabled 2FA on this account!",
+      "disableSuccessTitle": "2FA Disabled",
+      "errorWithVerificationCode": "Error with verification code.",
+      "secretErrorTitle": "Failed to get 2FA secret",
+      "setupErrorTitle": "Failed to setup 2FA on account.",
+      "setupSuccessMessage": "You have enabled 2FA on your account!",
+      "setupSuccessTitle": "2FA Configured"
+    },
+    "microsoft": {
+      "buttonLabel": "Microsoft",
+      "logoAlt": "Microsoft logo"
+    },
+    "modalBody": "You need to be logged in to your account to <saveProgress>save your answers and progress</saveProgress>. If you don't have an account, you can <signUpFree>sign up today for free</signUpFree>.",
+    "modalTitle": "Log in or sign up",
+    "notLinked": {
+      "explanation": "We've found an {{siteName}} account with the email address from this {{provider}} account. However, the {{siteAccountName}} account isn't configured to allow access to this {{providerAccount}} account. You've either not enabled sign-in with {{signInProvider}} on your {{siteAccount}} account, or you used a different {{alternateProvider}} account to log in.",
+      "readMore": "Read more about signing in with {{provider}}.",
+      "switchAccount": "If you'd like to switch which {{provider}} account you log in with, follow the same instructions, but on the <accountLink>My Account</accountLink> page, click \"Unlink\" on any old {{linkedProvider}} account first.",
+      "title": "You don't use this {{provider}} account to log in"
+    },
+    "orSection": "Alternatively, you can",
+    "page": {
+      "ariaLabel": "Authentication Error",
+      "ssoHeading": "Log in with:"
+    },
+    "pageTitle": "Login – {{siteName}}",
+    "parentalConsent": {
+      "checkboxLabel": "Please check the box to confirm that you have read and understood this message.",
+      "permissionIntro": "Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.",
+      "privacyNote": "Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service <privacyLink>here</privacyLink>.",
+      "title": "Additional information"
+    },
+    "password": {
+      "forgotten": "Forgotten your password?",
+      "minLengthHint": "Your password must be at least {{minLength}} characters long."
+    },
+    "passwordInput": {
+      "hideButton": "Hide",
+      "invalidFeedback": "Please enter a valid password."
+    },
+    "passwordReset": {
+      "breadcrumbTitle": "Password reset",
+      "completedTitle": "Password reset successful",
+      "errorTitle": "Unable to reset your password",
+      "failedTitle": "Failed to reset password",
+      "failureMessage": "Password reset failed",
+      "noTokenMessage": "Please ensure you have clicked the link provided in your password reset email.",
+      "noTokenTitle": "No reset token provided",
+      "successBody": "If an account exists with the email address {{email}}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.",
+      "successMessage": "Your password has been updated successfully.",
+      "successTitle": "Password reset email sent",
+      "title": "Reset your password",
+      "verifyingToken": "Verifying reset token..."
+    },
+    "passwordStrength": {
+      "breachedFeedback": "Useless"
+    },
+    "raspberryPi": {
+      "fullLabelDesktop": "Raspberry Pi Foundation",
+      "logoAlt": "Raspberry Pi logo"
+    },
+    "register": {
+      "existingAccount": "Already have an account?",
+      "pageTitle": "Create an {{siteName}} account"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageQuestion": "How old are you?",
+        "heading": "Unable to use email",
+        "message": "As you are between {{minAge}}-{{maxAge}} years old, we need you to <strong>sign up using a third-party provider</strong>.",
+        "optionBetween": "{{minAge}} - {{maxAgeWithConsent}} years old",
+        "optionOver": "{{minAgeWithConsent}} and over",
+        "optionUnder": "{{maxAge}} or under",
+        "selectionRequired": "Please make a selection.",
+        "terms": "We can only create accounts for users {{minAge}} years old or over.",
+        "tryOtherProvider": "Please try again, using either {{authProviders}}."
+      },
+      "emailSection": {
+        "button": "Sign up with email",
+        "title": "Or use an email:"
+      },
+      "errorHeading": "Unable to create your account",
+      "goBackConfirm": "Are you sure you want go back? Any information you have entered will be lost.",
+      "pageTitle": "Create an {{siteTitle}} account",
+      "socialSignIn": {
+        "title": "Continue with:"
+      },
+      "ssoVerified": "Your age has already been verified by your SSO provider.",
+      "success": {
+        "continue": "Let's go!",
+        "viewAccount": "Check my account",
+        "welcome": "You're all set up. Welcome!"
+      },
+      "termsAccept": "I accept the <termsLink>terms of use</termsLink>.",
+      "termsRequired": "You must accept the terms to continue."
+    },
+    "registrationSuccess": {
+      "title": "Account created!"
+    },
+    "roleSelect": {
+      "description": "Knowing if you are a student or a teacher means we can make sure you have access to the right features.",
+      "heading": "Are you a student or a teacher?",
+      "student": {
+        "button": "I am a student",
+        "featurePreferences": "Set your preferences so that you see content relevant to you",
+        "featureProgress": "Track your progress, including how many questions you have answered by topic",
+        "intro": "With a student account you can:"
+      },
+      "teacher": {
+        "featureGroups": "Create groups and invite students to join them",
+        "featureProgress": "View the progress of the students in your groups",
+        "featureQuizzes": "Create quizzes from the questions available, and assign them to your groups",
+        "intro": "With a teacher account you can:",
+        "noAccessNote": "Teacher accounts do not give you access to the answers. <learnMoreLink>Learn more</learnMoreLink>"
+      }
+    },
+    "sessionError": {
+      "breadcrumbTitle": "User consistency error",
+      "message": "You have logged out in another tab or browser window, so we've logged you out here. Use the button below to continue where you left off.",
+      "tip": "<strong>Tip:</strong> If you want to be logged in to two accounts at the same time, you can use your browser's <privacyLink>private browsing</privacyLink> feature.",
+      "title": "Your {{siteTitle}} session has changed"
+    },
+    "sessionExpired": {
+      "message": "Your {{siteTitle}} session has expired, so we've logged you out. Use the button below to continue where you left off.",
+      "title": "Your session has expired"
+    },
+    "sidebar": {
+      "tabAge": "Age verification",
+      "tabMethod": "Sign-up method",
+      "tabPreferences": "Preferences"
+    },
+    "sso": {
+      "learnMore": "Learn more about Single Sign-On"
+    },
+    "teacherConnect": {
+      "codeError": "Please enter a valid code.",
+      "connectedTeachers": "Connected teachers:",
+      "heading": "Connect your account to your teacher",
+      "skipButton": "Skip"
+    },
+    "teacherRequest": {
+      "emailBody": "Hello,\n\n{{requestLine}}\n\nMy school is: {{school}}\n{{verificationMessage}}\n\n\nAny other information: {{otherInformation}}\n\nThanks, \n\n{{firstName}} {{lastName}}",
+      "noSchool": "If you don't have an associated school please fill out our <contactFormLink>Contact us</contactFormLink> form. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
+      "noSchoolError": "You have not provided your school – please add your school on your <accountLink>My Account</accountLink> page. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
+      "otherInfo": "Any other information",
+      "submitError": "{{errorMessage}} You can contact us at <webmasterContact>{{webmasterEmail}}</webmasterContact>",
+      "submitted": "Thank you for submitting a teacher account request.",
+      "teacherFaq": "Go to the <faqLink>Teacher FAQ page</faqLink> to learn about your new account features.",
+      "title": "Teacher Account request",
+      "wrongEmailError": "You have not used your school email address – please change your email address on your <accountLink>My Account</accountLink> page."
+    },
+    "tfa": {
+      "codeInvalid": "Please enter a valid verification code",
+      "codePlaceholder": "Verification code",
+      "description": "Two-factor authentication has been enabled for this account.",
+      "title": "Two-Factor Authentication",
+      "verifyButton": "Verify"
+    },
+    "unauthorised": {
+      "breadcrumbTitle": "Unauthorised",
+      "message": "You do not have authorisation to access the page:",
+      "title": "Access denied"
+    },
+    "unlinkAccount": {
+      "failureMessage": "Failed to unlink account",
+      "successTitle": "Account unlinked"
+    },
+    "verifyEmail": {
+      "continueLoginMessage": "Please <loginLink>log in</loginLink> to continue.",
+      "failedTitle": "Unable to verify your email address",
+      "loginFirstMessage": "If you need a new verification email, please <loginLink>log in</loginLink> first.",
+      "resendPrompt": "Didn't get the email?",
+      "sentMessage": "Verification email sent to {{emailAddress}}",
+      "title": "Verify your email address",
+      "unverifiedMessage": "Click the link in the email we've sent to finish setting up your account.",
+      "verifiedMessage": "You've verified your email address and finished creating your account."
+    }
+  },
+  "banners": {
+    "downtime": {
+      "dismissButton": "Dismiss<screenReaderText> downtime notification</screenReaderText>",
+      "message": "{{siteTitle}} will be unavailable on Saturday 24 October from 8pm BST for a few hours for essential server maintenance."
+    },
+    "emailVerification": {
+      "dismissButton": "Snooze",
+      "heading": "Email Verification"
+    },
+    "research": {
+      "dismissButton": "Got it"
+    }
+  },
+  "biologyExtension": {
+    "cardSubtitle": "Stretch your understanding of biology with our extension questions that make you think outside the box.",
+    "cardTitle": "Biology extension"
+  },
+  "birthdayStats": {
+    "community": {
+      "assignments": "total assignments set",
+      "schools": "schools using Isaac",
+      "teachers": "teachers setting assignments"
+    },
+    "hard": {
+      "heading": "Most <emphasis>difficult</emphasis> question"
+    },
+    "highlights": {
+      "hintViews": "total hint views",
+      "longestStreak": "longest student streak",
+      "streakUnit": "weeks"
+    },
+    "overview": {
+      "accounts": "Accounts",
+      "conceptsViewed": "Concepts viewed",
+      "questionAttempts": "Question attempts"
+    },
+    "page": {
+      "closing": "Thank you for being a part of Isaac!",
+      "intro": "The 1st September 2025 marked the 11th anniversary of the first question attempts on the Isaac Physics platform. To celebrate, we're taking a look back at Isaac's statistics over this time.",
+      "metaTitle": "Happy <emphasis>11th</emphasis> birthday to Isaac Science!",
+      "title": "Isaac 11th birthday stats"
+    },
+    "popular": {
+      "conceptHeading": "Most popular concept",
+      "questionHeading": "Most popular question"
+    }
+  },
+  "bookmarks": {
+    "emptyState": {
+      "message": "You have no bookmarks yet."
+    },
+    "loadError": {
+      "message": "Could not load your bookmarks. Please try again later."
+    },
+    "saveConfirmation": "Saved!",
+    "sidebar": {
+      "filterTitle": "Filter bookmarks by...",
+      "searchTitle": "Search bookmarks",
+      "sortTitle": "Sort bookmarks by...",
+      "stageFilter": "Learning stage"
+    }
+  },
+  "books": {
+    "detail": {
+      "loadError": "Unable to load book page"
+    },
+    "error": {
+      "fetchContents": "Unable to fetch book contents.",
+      "fetchPage": "Unable to fetch book page."
+    },
+    "index": {
+      "loadError": "Unable to load book contents"
+    },
+    "overview": {
+      "exploreDescription": "Click on a book image below to go to the homepage of each book and explore further.",
+      "exploreTitle": "Explore our books online",
+      "title": "Our books"
+    },
+    "page": {
+      "emptyState": "There are no materials for this page.",
+      "extensionIntroText": "Expand your boundaries by having a go at these additional extension questions.",
+      "extensionTitle": "Extension work"
+    },
+    "preUniMaths": {
+      "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book",
+      "level2Title": "Level 2",
+      "level3Title": "Level 3",
+      "level4Title": "Level 4",
+      "level5Title": "Level 5",
+      "level6Title": "Level 6",
+      "level7Title": "Level 7"
+    },
+    "solvingPhysProblems": {
+      "title": "How To Solve Physics Problems"
+    },
+    "yr9": {
+      "chapter5Subheading": "(Sections 35-38)",
+      "chapter6Subheading": "(Sections 39-48)",
+      "helpText": "The Isaac Physics Step up to GCSE Physics book",
+      "title": "Step up to GCSE Physics"
+    }
+  },
+  "button": {
+    "addBookmark": "Add bookmark",
+    "addMatchingRule": "Add matching rule",
+    "assign": "Assign",
+    "back": "Back",
+    "bookPlace": "Book a place",
+    "cancel": "Cancel",
+    "changePassword": "Change password",
+    "close": "Close",
+    "closeModal": "Close modal",
+    "confirm": "Confirm",
+    "connect": "Connect",
+    "continue": "Continue",
+    "createAccount": "Create an account",
+    "createGroup": "Create a group",
+    "createNewGroup": "Create new group",
+    "delete": "Delete",
+    "deleteAllCurves": "Delete all curves",
+    "deleteGroup": "Delete group",
+    "deleteMatchingRule": "Delete matching rule",
+    "deleteSelectedCurve": "Delete selected curve",
+    "details": "Details",
+    "downloadAssignmentsCsv": "Download assignments CSV",
+    "downloadCsv": "Download CSV",
+    "downloadTestsCsv": "Download tests CSV",
+    "duplicateAndEdit": "Duplicate and edit",
+    "emailUsers": "Email Users",
+    "expand": "Expand",
+    "extendDueDate": "Extend due date",
+    "findOutMore": "Find out more",
+    "getTeacherAccount": "Get a teacher account",
+    "help": "Help",
+    "home": "Home",
+    "iAmATeacher": "I am a teacher",
+    "inviteUsers": "Invite users",
+    "joinGroup": "Join a group",
+    "learnMore": "Learn more",
+    "leaveGroup": "Leave group",
+    "loadMore": "Load more",
+    "logIn": "Log in",
+    "logOut": "Log out",
+    "manage": "Manage",
+    "manageGroups": "Manage groups",
+    "menu": "Menu",
+    "next": "Next",
+    "ok": "OK",
+    "ourBooks": "our books",
+    "preview": "Preview",
+    "previous": "Previous",
+    "printPage": "Print page",
+    "readMore": "Read more",
+    "remove": "Remove",
+    "removeBookmark": "Remove bookmark",
+    "resendVerificationEmail": "Resend verification email",
+    "reset": "Reset",
+    "resetPassword": "Reset password",
+    "searchAndFilter": "Search & Filter",
+    "seeMore": "See more",
+    "seeMoreEvents": "More events",
+    "selectTopic": "Select a topic",
+    "sendEmails": "Send emails",
+    "setAgain": "Set again",
+    "setAsAssignment": "Set as assignment",
+    "setTest": "Set test",
+    "show": "Show",
+    "signUp": "Sign up",
+    "submit": "Submit",
+    "unassign": "Unassign",
+    "unsave": "Unsave",
+    "update": "Update",
+    "viewGroupProgress": "View group progress",
+    "viewMore": "View more",
+    "viewTests": "View tests"
+  },
+  "cards": {
+    "imageAlt": "Illustration for {{title}}",
+    "opensNewTab": "(opens in new tab)",
+    "readMoreAria": "{{title}} read more"
+  },
+  "challenges": {
+    "emptyState": {
+      "notifyButton": "Notify me",
+      "subscribedMessage": "There are no challenges running at the moment, but you're subscribed to our mailing list and will be the first to know about the next one!",
+      "unsubscribedMessage": "There are no challenges running at the moment. Update your communication preferences to be the first to know about the next challenge."
+    }
+  },
+  "clientError": {
+    "concepts": {
+      "loadError": "Unable to load concepts"
+    },
+    "contentNotFound": "Content not found",
+    "defaultTitle": "Error fetching data from server",
+    "fragmentNotFound": "We're sorry, page fragment not found:<code>{{fragmentId}}</code>",
+    "heading": "We're sorry, but an error has occurred in the {{siteName}} app!",
+    "notFound": {
+      "message": "We're sorry, page not found: <code>{{pathname}}</code>",
+      "offlineMessage": "It looks like you're offline. You may want to check your internet connection, and then refresh this page to try again.<br/>If you are still having issues, please <webmasterEmail>let us know</webmasterEmail>.",
+      "offlineTitle": "No internet",
+      "reportPrompt": "Expecting to find something here?<contactAction>Let us know<srOnly> about this missing page</srOnly></contactAction>.",
+      "title": "Page not found"
+    },
+    "offlineMessage": "It looks like you're offline. You may want to check your internet connection, and then refresh this page to try again.<br/>If you are still having issues, please <contactLink>let us know</contactLink>.",
+    "offlineWarning": "You appear to be offline.",
+    "recoveryOptions": "You may want to <refreshLink>refresh this page and try again</refreshLink>, <homeLink>return to our homepage</homeLink>, or <contactLink>contact</contactLink> or <emailLink>email</emailLink> us if this keeps happening.",
+    "sessionExpired": {
+      "breadcrumbTitle": "Session expired error",
+      "contactSupport": "Please email <mailtoLink>{{webmasterEmail}}</mailtoLink> if this keeps happening.",
+      "heading": "We're sorry, but your session has expired!",
+      "retryInstructions": "You should <refresh>refresh this page and try again</refresh>, or try refreshing whilst <bypassCache>bypassing your browser's cache</bypassCache>, which may have saved an outdated version of Isaac."
+    },
+    "skills": {
+      "loadError": "Unable to load skills questions",
+      "saveError": "Couldn't save answer."
+    },
+    "statusCode": "Status code: {{statusCode}}",
+    "userInfo": {
+      "errorDetails": "Error Details",
+      "sectionTitle": "Useful information to include in your email"
+    }
+  },
+  "clipboard": {
+    "copiedTooltip": "Copied to clipboard!",
+    "copyAriaLabel": "Copy to clipboard",
+    "copyButton": "Copy"
+  },
+  "clozeQuestion": {
+    "accessibility": {
+      "dragEndDropZone": "Draggable item {{itemText}} was dropped into drop zone number {{dropZoneIndex}}",
+      "dragEndSwapped": "Draggable item {{activeItemText}} was swapped with {{hoveredItemText}}.",
+      "dragOverDropZone": "Draggable item is over drop zone number {{dropZoneIndex}}",
+      "dragOverSwap": "Swap draggable item {{activeItemText}} with item {{hoveredItemText}}."
+    }
+  },
+  "codeEditor": {
+    "feedback": {
+      "correct": "Your code is correct!",
+      "incorrect": "Your code is incorrect!",
+      "ranCorrectly": "Your code ran correctly!"
+    },
+    "iframeTitle": "Code Sandbox",
+    "timeout": {
+      "infoHeading": "Useful information to include in your email:"
+    }
+  },
+  "concepts": {
+    "cardSubtitle": "Review the key concepts for {{subjectContext}}.",
+    "errorFetching": "Error fetching concepts",
+    "filteredIntro": "The concepts shown on this page have been filtered to only show those that are relevant to {{contextDescription}}. You can browse all concepts <allConceptsLink>here</allConceptsLink>.",
+    "genericIntro": "Use our concept finder to explore all concepts on the Isaac platform.",
+    "resultsCount": "Showing <b>{{count}}</b> results",
+    "sidebar": {
+      "searchTitle": "Search concepts"
+    }
+  },
+  "confidence": {
+    "infoModal": {
+      "body": "We regularly review and update the {{siteName}} platform’s content and would like your input in order to prioritise content and assess the impact of updates. Data captured with these buttons will help us identify priority areas.",
+      "title": "Information"
+    },
+    "options": {
+      "high": "High",
+      "low": "Low",
+      "medium": "Medium",
+      "partly": "Partly"
+    },
+    "question": {
+      "followUp": {
+        "question": "Having read the feedback, what is your level of confidence in answering this question correctly now?"
+      },
+      "initial": {
+        "question": "What is your level of confidence that your answer is correct?"
+      },
+      "title": "Click a button to check your answer"
+    },
+    "quickQuestion": {
+      "followUp": {
+        "question": "Is your own answer correct?"
+      },
+      "initial": {
+        "question": "What is your level of confidence that your own answer is correct?"
+      },
+      "title": "Click a button to show the answer"
+    }
+  },
+  "connections": {
+    "connect": {
+      "codeInstruction": "Enter the code given by your teacher to create a teacher connection and join a group.",
+      "codePlaceholder": "Enter your code in here",
+      "codeTooltip": "The teachers that you are connected to can view your {{siteTitle}} assignment progress.",
+      "invalidCodeMessage": "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers.",
+      "invalidCodeTitle": "Invalid group code",
+      "noCodeMessage": "You have to enter a group code!",
+      "noCodeTitle": "No group code provided",
+      "title": "Connect to your teacher"
+    },
+    "groups": {
+      "emptyState": "You are not a member of any groups.",
+      "fallbackName": "Group {{groupId}}",
+      "heading": "Your group memberships",
+      "headingTooltip": "These are the groups you are currently a member of. Groups on {{siteTitle}} let teachers set assignments to multiple students in one go.",
+      "inactiveLabel": "inactive",
+      "leaveButton": "Leave",
+      "leaveInfo": "If you want to permanently leave a group, ask your teacher to remove you.",
+      "listTitle": "Group memberships",
+      "rejoinButton": "Rejoin",
+      "searchPlaceholder": "Search groups"
+    },
+    "students": {
+      "emptyState": "You have no active student connections.",
+      "heading": "Your student connections",
+      "headingTooltip": "These are the students who have shared their {{siteTitle}} data with you. These students are also able to view your name and email address on their Teacher connections page.",
+      "listTitle": "Student connections",
+      "removeAllButton": "Remove all",
+      "searchPlaceholder": "Search students",
+      "studentTooltip": "You have access to this user's data and they can see your name and email address. To remove this access, click 'Remove'."
+    },
+    "teachers": {
+      "emptyState": "You have no active teacher connections.",
+      "heading": "Teacher connections",
+      "revokeButton": "Revoke",
+      "searchPlaceholder": "Search teachers",
+      "tooltip": "This user ({{teacherEmail}}) has access to your data. To remove this access, click 'Revoke'."
+    }
+  },
+  "contact": {
+    "faq": {
+      "heading": "Frequently Asked Question?",
+      "text": "You might like to check our FAQs pages to see if they can help you: <studentFaqLink>student FAQs</studentFaqLink> | <teacherFaqLink>teacher FAQs</teacherFaqLink>"
+    },
+    "form": {
+      "errorMessage": "{{errorMessage}} You can contact us at <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>",
+      "heading": "Send us a message",
+      "maxLengthWarning": "Your message has reached the maximum length.",
+      "messageLabel": "Message",
+      "subjectLabel": "Message subject",
+      "successMessage": "Thank you for your message."
+    },
+    "formErrorTitle": "Error sending Contact Us form",
+    "preset": {
+      "accountDeletionMessage": "Hello,\n\nPlease could you delete my {{siteTitle}} account.\n\nThanks, \n\n",
+      "accountDeletionSubject": "Account Deletion Request",
+      "contentProblemPlaceholder": "Please describe the problem here.",
+      "contentProblemSection": ", section \"{{sectionName}}\"",
+      "contentProblemSubject": "Content problem",
+      "pageNotFoundMessage": "Page: \"{{pageName}}\"\n\n[Add any details about how you found this missing page here.]",
+      "pageNotFoundSubject": "Page not found",
+      "teacherAccountMessage": "Hello,\n\nPlease could you convert my {{siteTitle}} account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n"
+    },
+    "problems": {
+      "heading": "Problems with the site?",
+      "text": "We always want to improve so please report any issues to <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>"
+    },
+    "social": {
+      "text": "Follow us on:"
+    }
+  },
+  "content": {
+    "codeSnippet": {
+      "viewOnGithub": "View on GitHub"
+    },
+    "expandImageLabel": "Expand image",
+    "imagePreviewTitle": "Image preview"
+  },
+  "contentPropertyTags": {
+    "deprecatedLabel": "DEPRECATED",
+    "noFilterLabel": "NO-FILTER",
+    "supersededLabel": "SUPERSEDED"
+  },
+  "context": {
+    "mathsAndFurtherMaths": "Maths and Further Maths"
+  },
+  "contextPicker": {
+    "resetButton": "Reset viewing context"
+  },
+  "cookieConsent": {
+    "accept": "Accept",
+    "anvil": {
+      "title": "Allow Anvil content?"
+    },
+    "desmos": {
+      "title": "Allow Desmos content?"
+    },
+    "geogebra": {
+      "title": "Allow GeoGebra content?"
+    },
+    "youtube": {
+      "title": "Allow YouTube content?"
+    }
+  },
+  "csOverview": {
+    "description": "Ada Computer Science is a free learning platform for computing teachers and students. Developed by the Raspberry Pi Foundation in partnership with the Isaac Science team at the University of Cambridge, it is tailored to support learners aged 11-19. Ada Computer Science offers structured resources to support both teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a wide range of other resources designed to enhance computer science education.",
+    "overviewTitle": "Computer Science",
+    "students": {
+      "featureChallenges": "Join termly challenges to test your knowledge and skills.",
+      "featureLearn": "Learn through a full curriculum of topics explained in concept pages.",
+      "featurePractise": "Practise and test your understanding with interactive questions.",
+      "featureTrack": "Track your progress and identify areas to improve.",
+      "intro": "Explore interactive resources designed to help you study computer science:",
+      "title": "For students"
+    },
+    "teachers": {
+      "featureAssignments": "Set self-marking assignments to save time and support independent learning.",
+      "featureMarkbook": "Track student progress with a personal markbook to identify areas for improvement.",
+      "featureTeach": "Teach with over 50 curriculum-aligned topics covering the full breadth of computer science.",
+      "intro": "Access structured resources to help you deliver high-quality computer science education:",
+      "title": "For teachers"
+    },
+    "visitButton": "Go to Ada CS"
+  },
+  "cyberExplorers": {
+    "about": {
+      "classroomTools": "Classroom tools to group students into classes, assign activities, and track learners' progress",
+      "discoverButton": "Discover more of Ada CS",
+      "expertContent": "Expert content developed by the Raspberry Pi Foundation in collaboration with partners including the University of Cambridge",
+      "freeResources": "Free computing resources, from practical activities for ages 11 to 14 to structured computer science learning for ages 14 to 19",
+      "subtitle": "One place to learn computing, from ages 11 to 19.",
+      "title": "What is Ada Computer Science?"
+    },
+    "header": {
+      "description": "Practical activities that help learners understand technology, build confidence, and prepare for what's next.",
+      "exploreButton": "Explore learning topics",
+      "freeNote": "Always available for free.",
+      "imageAlt": "A teacher assisting two students.",
+      "title": "<slash>/</slash><br/>Your future in tech starts here"
+    },
+    "metaDescription": "Resources for students and teachers for ages 11-14.",
+    "partners": {
+      "description": "TechFirst connects schools with in-person activities and events delivered by Regional Delivery Partners across the UK. These partners bring together schools, colleges, employers, local authorities and community organisations to provide inspiring enrichment opportunities and showcase local technology and computing pathways.",
+      "imageAlt": "Stylised map of the UK showing example regional partner locations.",
+      "recognition": "Schools can also work towards TechFirst School recognition, with Bronze, Silver and Gold awards available. From September 2026, TechFirst will operate in every region and home nation of the UK.",
+      "title": "Regional delivery partners"
+    },
+    "topics": {
+      "comingSoon": "Start with cyber security, with more topics coming soon.",
+      "cyberSecurityTitle": "Cyber security",
+      "cyberattacks": {
+        "body": "Understand who carries out cyberattacks, why and how they use malware to do so.",
+        "title": "Cyberattacks"
+      },
+      "defendMalware": {
+        "body": "Explore the tools and techniques used to detect, stop, and remove malware.",
+        "title": "Defending against malware"
+      },
+      "description": "Build your skills through practical activities that help you understand how technology works and how it's used to solve real-world problems.",
+      "exploreButton": "Explore",
+      "networkSecurity": {
+        "body": "Discover how networks are protected from attacks and kept secure.",
+        "title": "Network security"
+      },
+      "socialEngineering": {
+        "body": "Stay safe online and learn how systems are attacked and defended.",
+        "title": "Social engineering"
+      },
+      "title": "Choose a topic to explore"
+    },
+    "welcome": {
+      "description": "Explore familiar cyber security resources alongside new computing and technology content for learners.",
+      "exploreMoreText": "Alongside cyber security, Ada CS is growing with new topics and learning experiences for ages 11 to 14.",
+      "exploreMoreTitle": "More to explore",
+      "familiarText": "The cyber security resources you know are now part of Ada CS, supported through our partnership with the UK Government.",
+      "familiarTitle": "Familiar resources",
+      "teachingText": "Create classes, assign activities, and track learners' progress, all in one place.",
+      "teachingTitle": "Teaching tools",
+      "title": "Cyber Explorers welcome"
+    }
+  },
+  "dashboard": {
+    "assignments": {
+      "emptyState": "You have no assignments with upcoming due dates.",
+      "title": "View scheduled work",
+      "viewAllLink": "See all set work"
+    },
+    "books": {
+      "title": "Explore our books",
+      "viewAllLink": "See all books"
+    },
+    "currentWork": {
+      "activeIntro": "You have assignments that are active or due soon:",
+      "allAssignmentsLink": "See all assignments",
+      "allTestsLink": "See all tests",
+      "dueDate": "Due {{dueLabel}}",
+      "emptyState": "You have no active assignments.",
+      "title": "Complete current work",
+      "viewOlderLink": "View older assignments."
+    },
+    "greeting": "Welcome back, {{studentName}}!",
+    "groupJoin": {
+      "existingGroupsLink": "See my existing groups",
+      "placeholder": "Enter code"
+    },
+    "groups": {
+      "emptyState": "You have no active groups.",
+      "viewAllLink": "See all groups' progress"
+    },
+    "myIsaac": {
+      "title": "More in My Isaac"
+    },
+    "streak": {
+      "festiveFreeze": "Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!",
+      "infoLink": "What is this?",
+      "maintained": "You've maintained your streak for this week!",
+      "remaining": "Only {{remainingParts}} more question parts to answer correctly this week!",
+      "title": "Build your weekly streak",
+      "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br1/><br2/>Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!"
+    },
+    "viewToggleLabel": "Dashboard view",
+    "welcomeHeader": "Welcome back, {{teacherName}}!"
+  },
+  "dateInput": {
+    "clearButtonLabel": "Clear date",
+    "clearButtonLabel_birth": "Clear date of birth",
+    "dayLabel": "Day",
+    "dayLabel_birth": "Day of birth",
+    "monthLabel": "Month",
+    "monthLabel_birth": "Month of birth",
+    "yearLabel": "Year",
+    "yearLabel_birth": "Year of birth"
+  },
+  "dateString": {
+    "daysAgo": "{{days}} days ago",
+    "inDays": "in {{days}} days"
+  },
+  "desmos": {
+    "embedTitle": "Desmos Calculator"
+  },
+  "dnd": {
+    "clozeFallbackText": "cloze item without a description",
+    "draggableRoleDescription": "draggable item"
+  },
+  "dragAndDrop": {
+    "cancelled": "Dragging was cancelled. Draggable item {{itemText}} was returned to it's previous position.",
+    "dropped": "Draggable item {{itemText}} was dropped.",
+    "droppedIntoItemsSection": "Draggable item was dropped into the items section",
+    "itemSectionLabel": "Items:",
+    "keyboardInstructions": "To pick up an item, press space or enter. Use the up and down arrow keys to navigate between drop zones and items in the question. Press space or enter again to drop the item into a new position, or to swap it with another item being hovered over.",
+    "offTarget": "Draggable item {{itemText}} is no longer over a droppable area.",
+    "overItemsSection": "Draggable item is over the items section",
+    "overPreviousPosition": "Draggable item {{itemText}} is over it's previous position.",
+    "pickup": "Picked up draggable item {{itemText}}.",
+    "returnedPreviousPosition": "Draggable item {{itemText}} was returned to it's previous position.",
+    "unselectedItems": "Non-selected items"
+  },
+  "editorRenderer": {
+    "waitingContent": "Waiting for {{siteTitle}} content..."
+  },
+  "error": {
+    "emailRequestFailed": "Email verification request failed.",
+    "eventBookingFailed": "Event booking failed",
+    "fetchGroups": "Error fetching groups",
+    "invalidCharacters": "Some of the characters you are using are not allowed: {{badCharacters}}",
+    "invalidEmailAddress": "Please enter a valid email address",
+    "loadConcept": "Unable to load concept",
+    "loadPage": "Unable to load page",
+    "loadQuestion": "Unable to load question",
+    "loadTopic": "Unable to load topic",
+    "noEmailToVerify": "You are not logged in or don't have an e-mail address to verify.",
+    "selectGroup": "Please select a group",
+    "tooManyAttempts": "Too many attempts",
+    "updateAccount": "Unable to update your account",
+    "validName": "Please enter a valid name."
+  },
+  "events": {
+    "addUsers": {
+      "bookingExists": "Booking exists",
+      "disabledMessage": "You cannot add users to a cancelled event",
+      "noResults": "No users returned from query",
+      "roleAny": "Any Role",
+      "schoolSetNone": "None Set",
+      "schoolSetOther": "Yes (Other)",
+      "searchButton": "Find user",
+      "searchEmailPlaceholder": "Enter user email",
+      "searchFamilyNamePlaceholder": "Enter user family name",
+      "tableHeaderSchoolSet": "School set",
+      "title": "Add users to booking"
+    },
+    "admin": {
+      "title": "Event booking admin"
+    },
+    "adminBooking": {
+      "bookUser": {
+        "errorTitle": "The action on behalf of the user was unsuccessful",
+        "successMessage": "The action on behalf of the user was successful.",
+        "successTitle": "Action successful"
+      },
+      "cancel": {
+        "errorTitle": "Failed to cancel event booking"
+      },
+      "cancelReservations": {
+        "errorTitle": "Unable to cancel some of the reservations",
+        "successMessage": "You have successfully cancelled students reservations for this event.",
+        "successTitle": "Reservations cancelled"
+      },
+      "delete": {
+        "errorTitle": "Failed to un-book user from event"
+      },
+      "promote": {
+        "errorTitle": "Failed to promote event booking"
+      },
+      "recordAttendance": {
+        "errorTitle": "Failed to record event attendance"
+      },
+      "resendEmail": {
+        "errorTitle": "Failed to resend email for event booking",
+        "successMessage": "Email sent to {{userId}}",
+        "successTitle": "Event email sent"
+      },
+      "reserveUsers": {
+        "errorTitle": "Reservation failed",
+        "successMessage": "You have successfully reserved students onto this event.",
+        "successTitle": "Reservations confirmed"
+      }
+    },
+    "adminOverviews": {
+      "errorTitle": "Failed to load event overviews"
+    },
+    "attendance": {
+      "cancelledEventNotice": "You cannot record attendance for a cancelled event",
+      "markAbsentButton": "Mark as Absent",
+      "markAttendedButton": "Mark as Attended",
+      "table": {
+        "attendanceHeader": "Attendance",
+        "medicalRequirementsHeader": "Medical requirements",
+        "surnameFilterPlaceholder": "Surname filter"
+      },
+      "title": "Record event attendance"
+    },
+    "availability": {
+      "requestAvailable": "Bookings available by request!",
+      "waitingListAvailable": "Waiting list booking is available!"
+    },
+    "book": {
+      "confirmReservation": "Confirm your reservation",
+      "joinWaitingList": "Join waiting list",
+      "requestPlace": "Request a place"
+    },
+    "booking": {
+      "accessibilityHelp": "For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.",
+      "accountSection": "Your account information (<accountLink>update</accountLink>)",
+      "cancelConfirmMessage": "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
+      "cancelledMessage": "You cannot sign up to a teacher event as a student.",
+      "cancelledTitle": "Event booking cancelled",
+      "detailsTitle": "Event booking details",
+      "dietary": "Dietary requirements or relevant medical conditions",
+      "dietaryHelp": "For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...",
+      "emailSent": "We have sent an email to {{email}}. Please follow the instructions in the email prior to booking.",
+      "emailVerifyOther": "WARNING: This email is not verified. The details about the event might not reach the user.",
+      "emailVerifySelf": "You must verify your email address to book on events. This is so we can send you details about the event.",
+      "emergency": "Emergency contact details",
+      "emergencyPhone": "Contact telephone number",
+      "formTitle": "Event booking form",
+      "jobTitle": "Job title",
+      "loginToApply": "Login to apply",
+      "loginToBook": "Login to book",
+      "manageReservations": "Manage reservations",
+      "naOther": "N/A - Other",
+      "naTeacher": "N/A - Teacher",
+      "teacherReservationWarning": "Places on this event can only be reserved by teachers. Please ask your teacher to reserve a place for you. You will need to be accompanied by a teacher to the event.",
+      "teachingExperience": "Level of teaching experience",
+      "terms": "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your <teacherConnectionsLink>account settings</teacherConnectionsLink>.<br1/>Your data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your <emailPreferencesLink>account settings</emailPreferencesLink>.",
+      "updateInfo": "If this information is incorrect, please update it from your <accountLink>account page</accountLink>.",
+      "upgradeLink": "<teacherAccountLink>Click to upgrade to a teacher account</teacherAccountLink> for free!",
+      "verifyEmailBtn": "Verify your email before booking",
+      "year10": "Year 10",
+      "year11": "Year 11",
+      "year12": "Year 12",
+      "year13": "Year 13",
+      "year9": "Year 9",
+      "yearGroup": "School year group"
+    },
+    "bookingValidation": {
+      "emergencyContactRequiredBody": "You must enter a emergency contact details in order to book on to this event.",
+      "emergencyContactRequiredTitle": "Emergency contact details required",
+      "jobTitleRequiredBody": "You must enter a job title to proceed.",
+      "jobTitleRequiredTitle": "Job title required",
+      "schoolRequiredBody": "You must enter a school in order to book on to this event.",
+      "schoolRequiredTitle": "School information required",
+      "yearGroupRequiredBody": "You must enter a year group to proceed.",
+      "yearGroupRequiredTitle": "Year group required"
+    },
+    "bookings": {
+      "fetch": {
+        "errorTitle": "Failed to load event bookings"
+      }
+    },
+    "bookingsTable": {
+      "accountType": "Account type",
+      "bookingCreated": "Booking created",
+      "bookingUpdated": "Booking updated",
+      "emergencyName": "Emergency name",
+      "emergencyPhone": "Emergency telephone",
+      "jobYearGroup": "Job / year group"
+    },
+    "cancel": {
+      "booking": "Cancel your booking",
+      "request": "Cancel booking request",
+      "reservation": "Cancel your reservation",
+      "waitingList": "Leave waiting list"
+    },
+    "card": {
+      "availableToBook": "Available to book",
+      "bookedBadge": "Booked",
+      "bookedStatus": "You are booked on this event.",
+      "bookingClosed": "Booking closed",
+      "cancelledBadge": "Cancelled",
+      "expired": "Event has expired",
+      "fullBadge": "Full",
+      "onlineBadge": "ONLINE",
+      "readMoreAriaLabel": "{{eventTitle}} read more",
+      "reservedBadge": "Reserved",
+      "reservedStatus": "You have a reservation for this event.",
+      "studentEvent": "STUDENT EVENT",
+      "studentEventIconAlt": "student event icon",
+      "teacherEvent": "TEACHER EVENT",
+      "teacherEventIconAlt": "teacher event icon",
+      "untitled": "Untitled event",
+      "viewDetailsAriaLabel": "View details of the event: {{eventTitle}} - {{eventDate}}",
+      "viewDetailsButton": "View details",
+      "waitingListBadge": "On waiting list"
+    },
+    "confirmation": {
+      "body": "This is an event for <emphasis>teachers only</emphasis>. Please confirm that you are a teacher (or a teacher trainee), and not a student, private tutor or parent.",
+      "declineButton": "I am not a teacher",
+      "title": "Please confirm teacher status"
+    },
+    "date": {
+      "from": "From",
+      "seriesStarts": "Series starts",
+      "to": "to"
+    },
+    "details": {
+      "bookedConfirmation": "You are booked on this event!",
+      "completeRegistration": "Complete your registration below",
+      "deadlinePassed": "(The booking deadline for this event has passed.)",
+      "full": "FULL",
+      "fullStudentOnly": "for student bookings",
+      "pastNotice": "(This event is in the past.)",
+      "reservedConfirmation": "You have been reserved a place on this event!",
+      "spacesAvailable": "{{spacesAvailable}} spaces",
+      "studentBadge": "Student event",
+      "teacherBadge": "Teacher event"
+    },
+    "emptyState": "No events to display with this filter setting",
+    "fetch": {
+      "errorTitle": "Events request failed"
+    },
+    "label": {
+      "when": "When:"
+    },
+    "leaderRestriction": "As an event leader, you are only able to see the details of events which you manage.",
+    "loadErrorTitle": "Error loading event overviews",
+    "loadMoreButton": "Load more events",
+    "manage": {
+      "addToWaitingList": "Add to waiting list",
+      "bookingRequest": "Make booking request",
+      "confirmReservation": "Confirm reservation"
+    },
+    "manageBookings": {
+      "actions": {
+        "promote": "Promote",
+        "resendEmail": "Resend email"
+      },
+      "confirmCancel": "Are you sure you want to cancel this booking?",
+      "confirmDelete": "Are you sure you want to delete this booking permanently?",
+      "confirmPromote": "Are you sure you want to convert this to a confirmed booking?",
+      "confirmResendEmail": "Are you sure you want to resend the confirmation email for this booking?",
+      "emailDropdown": {
+        "item": "Email {{bookingStatus}} users"
+      },
+      "emptyState": "There aren't currently any bookings for this event.",
+      "exportCsv": "Export as CSV",
+      "table": {
+        "medicalDietary": "Medical / dietary",
+        "reservedById": "Reserved by ID"
+      },
+      "title": "Manage current bookings"
+    },
+    "modal": {
+      "applyPastDeadline": "Apply - deadline past",
+      "bookNow": "Book now"
+    },
+    "notFound": "Event not found",
+    "overview": {
+      "title": "Events overview"
+    },
+    "page": {
+      "errorLoading": "Error loading events list",
+      "help": "Follow the links below to find out more about our FREE events.",
+      "listHeading": "Events list",
+      "noResults": "Sorry, we cannot find any events that match your filter settings.",
+      "showingCount": "Showing {{loadedCount}} of {{total}}"
+    },
+    "reservations": {
+      "additionalInfoDescription": "Add additional information about the group booking, for example contact details of other group supervisors. Please be aware that the students will remain the responsibility of the accompanying teachers. Please make sure that you have enough staff for the number of students you are bringing. We recommend at least 2 members of staff per group.",
+      "additionalInfoTitle": "Additional booking information",
+      "cancelButton": "Cancel reservations",
+      "contactEmail": "Contact email",
+      "createGroupsPrompt": "Create a groups from the <groupsPageLink>Manage groups</groupsPageLink> page to book your students onto an event",
+      "currentReservations": "All current reservations",
+      "emailNotVerified": "E-mail not verified",
+      "limitWarning": "You can only reserve a maximum of {{maxReservations}} group members onto this event.",
+      "loadingMembers": "Loading group members...",
+      "noBookings": "None of the members of this group are booked in for this event.",
+      "noGroupReservations": "This event does not allow group reservations.",
+      "noMembers": "This group has no members. Please select another group.",
+      "otherStudents": "Other students in this group",
+      "reserveButton": "Reserve places",
+      "reservedBy": "Reserved by",
+      "reservedByYou": "You",
+      "selectGroup": "Select group",
+      "selectGroupHint": "Select one of your groups from the dropdown menu to see its members.",
+      "supervisorContactDescription": "Change these if a teacher other than yourself is going to be supervising the students at this event.",
+      "supervisorContactTitle": "Contact details for main group supervisor",
+      "title": "Group reservations"
+    },
+    "selectedDetails": {
+      "eventLabel": "Event:",
+      "placesAvailableLabel": "Number of places available:",
+      "prepWorkDeadlineLabel": "Prepwork deadline:",
+      "startDateLabel": "Event start:",
+      "statusLabel": "Event status:",
+      "title": "Selected event details"
+    },
+    "selfBooking": {
+      "book": {
+        "successMessage": "You have been successfully booked onto this event.",
+        "successTitle": "Event booking confirmed"
+      },
+      "cancel": {
+        "errorTitle": "Event booking cancellation failed",
+        "successMessage": "Your booking has successfully been cancelled.",
+        "successTitle": "Your booking has been cancelled"
+      },
+      "waitingList": {
+        "confirmedMessage": "You have been successfully added to the waiting list for this event.",
+        "confirmedTitle": "Waiting list booking confirmed",
+        "requestReceivedTitle": "Booking request received"
+      }
+    },
+    "showingCount": "(showing {{shownCount}} of {{totalCount}})",
+    "sidebar": {
+      "eventTypeLabel": "Event type",
+      "filterButtonTitle": "Filter events",
+      "stagesLabel": "Stages"
+    },
+    "status": {
+      "bookingDeadlineSoon": "Booking deadline soon!",
+      "expired": "EXPIRED",
+      "onWaitingList": "You are on the waiting list for this event."
+    },
+    "studentOnly": {
+      "contact": "This event is aimed at students. If you are not a student but still wish to attend, please <contactLink>contact us</contactLink>."
+    },
+    "tableAttendedHeader": "Number attended",
+    "tableConfirmedHeader": "Number confirmed",
+    "tableDateHeader": "Date",
+    "tableWaitingHeader": "Number waiting",
+    "userBooking": {
+      "authorisationLabel": "Booking/personal data sharing authorised by",
+      "bookingTitle": "Create a booking for {{givenName}} {{familyName}}",
+      "dataWarning": "Warning, by booking a user on this event, it may eventually lead to their personal information being shared with a third party. You must therefore confirm how this booking has been authorised. The data owner is always the {{siteTitle}} user being booked on to the event.",
+      "errorMessage": "You must provide an authorisation reason to complete this request.",
+      "optionEmailOwner": "Verified email - Data Owner",
+      "optionOther": "Other - Please specify",
+      "optionTelephoneOwner": "Telephone - Data Owner",
+      "waitingListTitle": "Add {{givenName}} {{familyName}} to waiting list"
+    }
+  },
+  "examSpecifications": {
+    "directory": {
+      "ada": {
+        "advanced": "Advanced",
+        "core": "Core"
+      },
+      "metaDescription": "Discover our free A level computer science topics and questions.",
+      "scotland": {
+        "advancedHigher": "Advanced Higher",
+        "higher": "Higher",
+        "national5": "National 5"
+      },
+      "showButton": "Show me"
+    },
+    "pageTitle": "Exam specification"
+  },
+  "experiments": {
+    "cardSubtitle": "Develop experimental skills with interesting experiments."
+  },
+  "featureFlags": {
+    "modal": {
+      "applyButton": "Apply and reload",
+      "description": "Feature flags are staff-only runtime switches that enable or disable features that are under development. They will only appear on staging and dev (not test).",
+      "emptyState": "No feature flags found.",
+      "howItWorks": "Relevant flags will typically be enabled by default on a given branch. However, if you wish to see how multiple settings interact, you can override which flags are enabled below.",
+      "overrideNote": "Note that overrides will be maintained between site visits and should probably be left as automatic when not in use.",
+      "overridesLabel": "Manual overrides:",
+      "toggleAuto": "Automatic"
+    }
+  },
+  "figure": {
+    "expandButton": "Expand figure",
+    "label": "Figure {{figureNumber}}"
+  },
+  "form": {
+    "elements": {
+      "requiredError": "required",
+      "trueFalseAccessibilityLabel": "for {{fieldName}}"
+    },
+    "requiredField": "Required field"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "remaining": "{{count}} attempts remaining today"
+    },
+    "infoAlert": {
+      "consentButton": "Consent",
+      "consentDescription": "We use a large language model (LLM) to mark free-text questions like this one. The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.",
+      "consentPrivacy": "We only send your answer to OpenAI, we do not send any personal data. OpenAI will not train their models using data you submit; you may wish to read OpenAI’s <privacyPolicyLink>privacy policy</privacyPolicyLink> before accepting.",
+      "consentTitle": "Do you consent to sending your answers to OpenAI for marking?",
+      "consentWithdraw": "You can withdraw your consent at any time in your <accountSettingsLink>account settings</accountSettingsLink>.",
+      "generalAccuracy": "In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time. This means that the marks you receive will not always be accurate.",
+      "generalDataPrivacy": "Do not include personal data in your answer as we send your answer to OpenAI. We only send your answer, we do not send any personal data with it. You can withdraw your consent at any time in your <accountSettingsLink>account settings</accountSettingsLink>.",
+      "generalTitle": "Free text questions are marked by a large language model (LLM)",
+      "loggedOutDataPrivacy": "The only data we send to the LLM is your answer; we do not send any personal data.",
+      "loggedOutDescription": "We use a large language model (LLM) to mark free-text questions like this one. The model typically returns a predicted mark in under 10 seconds, along with the mark scheme. This gives you a low-stakes way to practise exam-style questions as well as an insight into how LLMs work, and their accuracy.",
+      "loggedOutTitle": "You must be logged in to answer this question",
+      "skipQuestion": "Skip question",
+      "under13Consequence": "You can still read the question, but we will not be able to mark your answer.",
+      "under13Description": "We use a large language model (LLM) to mark free-text questions like this one. This requires your consent to send your answer to OpenAI for marking. Because you are under 13, we cannot collect your consent for this under the GDPR law.",
+      "under13Title": "We cannot collect your consent"
+    },
+    "llmFeedback": {
+      "accuracyNote": "1 in 3 times the predicted mark will be wrong.",
+      "agree": "Agree",
+      "disagree": "Disagree",
+      "feedbackPrompt": "Before submitting another response, please say whether you agree with the predicted mark.",
+      "markScheme": "Mark scheme",
+      "partlyAgree": "Partly agree",
+      "predictedAwarded": "Predicted as awarded",
+      "predictedCorrect": "Predicted correct",
+      "prediction": "Prediction: {{predictedMarks}} out of {{maxMarks}} marks",
+      "submitButton": "Send feedback",
+      "submitted": "Feedback submitted",
+      "title": "Do you agree with the LLM’s predicted marks?"
+    },
+    "matchingRules": {
+      "json": {
+        "description": "JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion"
+      },
+      "table": {
+        "anyOrder": "Any order {{checkmark}}",
+        "extraWords": "Extra words {{checkmark}}",
+        "feedbackLabel": "Feedback:",
+        "ignoreCase": "Ignore case {{checkmark}}",
+        "misspelling": "Misspelling {{checkmark}}",
+        "responseColumn": "Response",
+        "ruleColumn": "Rule"
+      },
+      "title": "Matching rules",
+      "tooltip": {
+        "multiChar": "Match zero or more characters.",
+        "orList": "Separate an OR list of word choices.",
+        "singleChar": "Match only one character.",
+        "wildcardsTitle": "In-word wildcards:"
+      }
+    },
+    "submitButton": "Test question",
+    "testCases": {
+      "csv": {
+        "description": "Enter test cases as CSV with the headers: expected(true/false), value"
+      },
+      "table": {
+        "actualColumn": "Actual",
+        "expectedColumn": "Expected",
+        "feedbackColumn": "Feedback",
+        "matchColumn": "Match"
+      },
+      "title": "Test answers ({{matchCount}}/{{totalCount}})"
+    },
+    "title": "Free-text question builder"
+  },
+  "gameboard": {
+    "assign": {
+      "noGroupsErrorTitle": "Error: Please choose one or more groups."
+    },
+    "assignment": {
+      "assignedTo": "Assigned to <emphasis>{{groupName}}</emphasis> by <emphasis2>{{assigner}}</emphasis2>",
+      "dueLabel": "Due: <b>{{dueDate}}</b>",
+      "setLabel": "Set: <b>{{setDate}}</b>"
+    },
+    "assignments": {
+      "assignUnassignButton": "Assign / Unassign",
+      "assignedTo": "Quiz assigned to: {{groupNames}}",
+      "groupCount_one": "group",
+      "groupCount_other": "groups",
+      "noGroupsQuizAssigned": "No groups have been assigned to this quiz."
+    },
+    "builder": {
+      "addQuestionsButton": "Add questions",
+      "createErrorDetail": "Please correct the problems below.",
+      "deselect": "Deselect question",
+      "idError": "The ID may only contain lowercase letters, numbers, dashes and underscores.",
+      "idPlaceholder": "Optional",
+      "leaveConfirm": "You have unsaved changes - are you sure you want to leave this page?",
+      "previewTooltip": "Preview question '{{questionId}}' in new tab",
+      "questionsLimit": "You can add up to {{maxQuestions}} questions.",
+      "redoLabel": "Redo last action",
+      "select": "Select question",
+      "tagLabel": "Tag as",
+      "titleError": "Please provide a title.",
+      "titleHelp": "This will be visible to your students.",
+      "undoLabel": "Undo last action",
+      "wildcardLabel": "Wildcard",
+      "wildcardNone": "No wildcard"
+    },
+    "card": {
+      "byLabel": "By",
+      "createdBy": "Created by <owner>{{ownerName}}</owner>",
+      "createdDate": "Created <strong>{{creationDate}}</strong>",
+      "groupsAssigned": "Number of groups assigned",
+      "hideDetailsButton": "Hide details",
+      "lastVisited": "Last visited <strong>{{lastVisitedDate}}</strong>",
+      "lastVisitedLabel": "Last visited",
+      "questionsLabel": "Questions:",
+      "showDetailsButton": "Show details",
+      "stagesDifficulties": "Stages and difficulties",
+      "stagesHeader_one": "Stage:",
+      "stagesHeader_other": "Stages:"
+    },
+    "cards": {
+      "showingAll": "Showing <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> of <totalCountEmphasis>{{totalCount}}</totalCountEmphasis> results.",
+      "showingFiltered": "Showing <matchedCountEmphasis>{{matchedCount}}</matchedCountEmphasis> match from <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> results."
+    },
+    "clone": {
+      "copiedTitle": "{{gameboardTitle}} (Copy)"
+    },
+    "fastTrack": {
+      "conceptTitleSuffix": "{{conceptTitle}} Practice",
+      "connectionTopTenToUpperMessage": "Practise the concept before returning to complete the board",
+      "connectionUpperToLowerMessage": "Practise the concept with easier questions before returning to complete the board"
+    },
+    "save": {
+      "unsaveConfirm": "Are you sure you want to unsave '{{boardTitle}}' from your account?"
+    },
+    "sidebar": {
+      "externalLink": "External link (<em>{{externalUrl}}</em>)"
+    },
+    "table": {
+      "unsaveCountButton": "Unsave ({{selectedCount}})"
+    },
+    "usageInfo": {
+      "beginsIn": "Begins <bold>{{daysUntil}}</bold>"
+    },
+    "wildcards": {
+      "errorTitle": "Error loading wildcards"
+    }
+  },
+  "gameboards": {
+    "filters": {
+      "name": "Filter boards by name",
+      "status": "Filter by Status"
+    },
+    "sidebar": {
+      "filterCompletionTitle": "Filter by completion"
+    }
+  },
+  "geogebra": {
+    "openContent": "Click to open GeoGebra content"
+  },
+  "getStarted": {
+    "intro": "Follow these steps to get started with your teacher account:",
+    "tasks": {
+      "assignQuiz": "Assign a quiz to students",
+      "createAccount": "Create your account",
+      "createGroup": "Create a student group",
+      "personaliseContentHint": "Pick a teaching level and exam board, or choose to see all content.",
+      "personaliseContentTitle": "Personalise your content"
+    },
+    "title": "Get started with Ada CS",
+    "videoCta": "Prefer a video overview? Try our <strong><youtubeLink>YouTube playlist</youtubeLink></strong>!"
+  },
+  "glossary": {
+    "cardSubtitle": "Use the glossary to understand the vocabulary you need for {{subjectContext}}.",
+    "contextualTitle": "{{context}} Glossary",
+    "empty": {
+      "noResults": "We could not find glossary terms to match your search criteria.",
+      "noTerms": "There are no glossary terms in the glossary yet! Please try again later.",
+      "selectSubject": "Please select a subject."
+    },
+    "filters": {
+      "topicPlaceholder": "All topics"
+    },
+    "print": {
+      "searchTerm": "Search: <strong>{{searchText}}</strong>",
+      "topicName": "Topic: <strong>{{topicTitle}}</strong>"
+    },
+    "search": {
+      "label": "Search by term"
+    },
+    "sidebar": {
+      "selectSubjectTitle": "Select subject",
+      "switchStageTitle": "Switch learning stage"
+    }
+  },
+  "graphSketcher": {
+    "controls": {
+      "bezierButton": "Polynomial curve",
+      "bezierTooltip": "Draw polynomial curve",
+      "colorLabel": "Line colour",
+      "linearButton": "Straight line",
+      "linearTooltip": "Draw straight line",
+      "redoButton": "Redo",
+      "redoTooltip": "Redo last change",
+      "undoButton": "Undo",
+      "undoTooltip": "Undo last change"
+    },
+    "editInstruction": "Click on the grid to edit your sketch.",
+    "startInstruction": "Click on the grid to start your sketch."
+  },
+  "groups": {
+    "archive": {
+      "confirmButton": "Archive",
+      "title": "Archive group",
+      "unarchiveHint": "A group can be unarchived at any time by navigating to the group in the \"Archived\" section of this page and clicking \"Unarchive group\"."
+    },
+    "authorisations": {
+      "connectionErrorMessage": "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length.",
+      "connectionErrorTitle": "Teacher connection failed",
+      "grantSuccessMessage": "You have granted access to your data.",
+      "grantSuccessTitle": "Granted access",
+      "loadStudentsErrorTitle": "Loading authorised students failed",
+      "loadTeachersErrorTitle": "Loading authorised teachers failed",
+      "rateLimitMessage": "You have entered too many group codes. Please check your code with your teacher and try again later!",
+      "releaseAllSuccessMessage": "You have ended your access to all of your students' data.",
+      "releaseErrorTitle": "Ending access failed",
+      "releaseSuccessMessage": "You have ended your access to your student's data.",
+      "releaseSuccessTitle": "Access removed",
+      "revokeErrorTitle": "Revoking access failed",
+      "revokeSuccessMessage": "You have revoked access to your data.",
+      "revokeSuccessTitle": "Access revoked"
+    },
+    "create": {
+      "errorTitle": "Group creation failed",
+      "nameLabel": "Enter your group name",
+      "submitButton": "Create group"
+    },
+    "delete": {
+      "errorTitle": "Group deletion failed",
+      "nonOwnerConfirm": "You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '{{groupName}}'?",
+      "ownerConfirm": "Are you sure you want to permanently delete the group '{{groupName}}' and remove all associated assignments?\n\nThis action cannot be undone!"
+    },
+    "demo": {
+      "name": "Demo Group {{groupId}}"
+    },
+    "editor": {
+      "emailButton": "Email users",
+      "managersTitle": "Group managers",
+      "memberCount_one": "This group has {{count}} member.",
+      "memberCount_other": "This group has {{count}} members.",
+      "membersTitle": "Group members",
+      "moreInfoButton": "More information",
+      "nameAriaLabel": "Group Name",
+      "nameEmpty": "Group name cannot be empty.",
+      "ownerLabel": "(group owner)",
+      "renameErrorDetail": "The group name must be specified.",
+      "renameErrorTitle": "Cannot rename group",
+      "renameLabel": "Rename group",
+      "selfRemovalLabel": "Allow students to remove themselves from this group",
+      "youLabel": "(you)"
+    },
+    "email": {
+      "infoText": "An admin user can use the user IDs below to email these users:"
+    },
+    "fetch": {
+      "errorTitle": "Loading groups failed"
+    },
+    "invite": {
+      "addManagers": "Add group managers",
+      "codeDescription": "Students can enter this code in their {{siteTitle}} account. They’ll need to go to <accountPage>My account</accountPage>, then <teacherConnections>Teacher Connections</teacherConnections>.",
+      "codeHeading": "Or use this code",
+      "createdTitle": "Group created",
+      "errorTitle": "Error fetching group joining token",
+      "linkDescription": "Share this link with students so they can join your group:",
+      "linkHeading": "Share this link",
+      "membersHeading": "Invite members to join",
+      "nextSteps": "What to do next",
+      "qrButton": "Generate QR Code",
+      "qrDescription": "Students can scan a QR code on their device to join your group:",
+      "qrHeading": "Generate a QR Code",
+      "shareIntro": "Share the link or code to invite people to your group.",
+      "studentInfo": "Students will see the name and email address on your account when they join."
+    },
+    "managers": {
+      "add": {
+        "errorTitle": "Group manager addition failed"
+      },
+      "addButton": "Add group manager",
+      "addInstructions": "Enter the email of another {{siteTitle}} teacher account below to add them as a group manager. Note that this will share their email address with the students.",
+      "addSectionTitle": "Add additional managers",
+      "cautionHeader": "<strong>Caution</strong>: All other group managers are allowed to:",
+      "currentHeading": "Current group managers",
+      "emailPlaceholder": "Enter email address here",
+      "emptyState": "There are no additional group managers for this group.",
+      "enableIntro": "Enabling this option allows additional managers to:",
+      "extraPrivilegesLabel": "Give additional managers extra privileges",
+      "listIntro": "The users below have permission to manage this group.",
+      "makeOwner": "Make owner",
+      "onlySelf": "You are the only additional manager for this group.",
+      "ownerHeading": "Group owner:",
+      "permissions": {
+        "heading": "Sharing permissions",
+        "intro": "When you share this group, other teachers can:",
+        "progress": "View student progress",
+        "students": "Add and remove students"
+      },
+      "privilegeArchiveRename": "Archive and rename the group",
+      "privilegeManageManagers": "Add or remove other managers",
+      "privilegeModifyAssignments": "Modify or delete <b>all assignments</b>, including those set by the owner",
+      "privilegeRemoveMembers": "Remove group members",
+      "promote": {
+        "confirmWithPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager.\n\n• You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.\n            ",
+        "confirmWithoutPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.\n\n• If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.\n            ",
+        "errorTitle": "Group manager promotion failed",
+        "successMessage": "You have been demoted to an additional manager of this group",
+        "successTitle": "Group manager promoted to owner"
+      },
+      "removeManager": {
+        "errorTitle": "Group manager removal failed"
+      },
+      "removeSelf": {
+        "title": "Remove yourself as a group manager"
+      },
+      "selectedGroup": "Selected group: {{groupName}}",
+      "uncheckInstruction": "Un-tick the above box if you would like to remove these additional privileges."
+    },
+    "member": {
+      "emailDeliveryFailedTooltip": "This user's account email address is invalid or not accepting email.<br/>They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.",
+      "emailUnverifiedTooltip": "This user has not yet verified their email.",
+      "inactiveLabel": "(inactive in group)",
+      "inactiveTooltip": "This user has set their status to inactive for this group. This means they will no longer see new assignments.",
+      "nameNotSharing": "<struckOut>{{givenName}} {{familyName}}</struckOut> (Not Sharing)",
+      "passwordReset": {
+        "cannotSend": "Cannot send password reset request email.",
+        "deliveryFailedTooltip": "Password reset request cannot be sent because this user's account email address is either invalid or not accepting email.",
+        "sendTooltip": "Send a password reset request to this user's email address.",
+        "sentLabel": "Reset email sent",
+        "sentTooltip": "Password reset request sent."
+      },
+      "removeAriaLabel": "Remove member",
+      "removeConfirm": "Are you sure you want to remove this user from the group '{{groupName}}'?",
+      "removeTooltip": "Remove this user from the group."
+    },
+    "members": {
+      "fetch": {
+        "errorTitle": "Loading group members failed"
+      },
+      "remove": {
+        "errorMessage": "User not removed from the group, please try again.",
+        "errorTitle": "Failed to delete",
+        "successMessage": "User removed from the group.",
+        "successTitle": "Removal successful"
+      }
+    },
+    "memberships": {
+      "fetch": {
+        "errorTitle": "Loading group memberships failed"
+      },
+      "updateStatus": {
+        "errorTitle": "Membership status update failed",
+        "successMessage": "You have updated your membership status.",
+        "successTitle": "Status Updated"
+      }
+    },
+    "page": {
+      "addTeachersInfo": "You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.",
+      "emptyState": "Organise your students into groups and set work appropriate for each group.<br/>You need a student group before you can assign quizzes and tests in {{siteTitle}}.",
+      "helpText": "Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.<br/>You can find the code for an existing group by selecting the group and clicking <inviteUsersText>Invite Users</inviteUsersText>."
+    },
+    "progress": {
+      "fallbackTitle": "Unknown quiz",
+      "scheduledBadge": "(scheduled)",
+      "searchLabel": "Search:",
+      "sectionDescription": "View this group's progress on assignment and tests.",
+      "sectionTitle": "Assignments and tests",
+      "sortLabel": "Sort by:",
+      "startDate": "Starts: {{startDate}}",
+      "studentCount_one": "{{count}} student",
+      "studentCount_other": "{{count}} students",
+      "title": "Group progress",
+      "unknownCount": "Unknown"
+    },
+    "qr": {
+      "loadError": "Failed to load QR code panel."
+    },
+    "qrCode": {
+      "altText": "Follow this URL to join the group: {{url}}"
+    },
+    "selector": {
+      "createButton": "Create a new group",
+      "groupIdTitle": "Group id: {{groupId}}"
+    },
+    "share": {
+      "title": "Share your group"
+    },
+    "shared": {
+      "title": "Shared group"
+    },
+    "token": {
+      "fetch": {
+        "errorTitle": "Loading group token failed"
+      }
+    },
+    "unknown": {
+      "label": "Unknown Group"
+    },
+    "update": {
+      "errorTitle": "Group saving failed",
+      "successTitle": "Group updated successfully"
+    }
+  },
+  "help": {
+    "buttonLabel": "Open help video"
+  },
+  "homepage": {
+    "video": {
+      "altText": "Isaac Physics introduction video",
+      "copyLink": "Copy Link",
+      "linkCopied": "Copied!",
+      "thumbnailAlt": "A group of students solving problems at an in-person Isaac event.",
+      "title": "Why use Isaac Physics?"
+    }
+  },
+  "inequality": {
+    "centreButton": "Centre",
+    "chemistry": {
+      "placeholder": "Type chemical elements here",
+      "uppercaseWarning": "Careful: chemical element names start with an upper-case letter."
+    },
+    "helpTooltip": {
+      "examples": "Here are some examples of expressions you can type:<br1/><br2/>{{example}}<br3/>As you type, the box below will preview the result."
+    },
+    "input": {
+      "placeholder": "Type your formula here",
+      "placeholderOrType": "or type your formula here",
+      "resetButton": "Reset to initial value",
+      "symbolsHeading": "The following symbols may be useful:"
+    },
+    "orientationWarning": "Our equation editor works best in landscape mode.",
+    "trashButton": "Trash",
+    "validation": {
+      "decimalsToFractions": "Please convert decimal numbers to fractions.",
+      "doubleInequality": "We are not able to accept double inequalities, and answers will never require them.",
+      "functionSpacing": "Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!",
+      "inverseTrig": "To create the inverse {{trigFunction}} function, use 'arc{{functionName}}'.",
+      "inverseTrigHyperbolic": "To create the inverse {{trigFunction}} function, use 'ar{{functionName}}'.",
+      "latexNotSupported": "LaTeX syntax is not supported.",
+      "missingBrackets": "You are missing some brackets.",
+      "stateSymbolsNotRequired": "This question does not require state symbols.",
+      "syntaxError": "Syntax error: unexpected token \"{{tokenValue}}\""
+    }
+  },
+  "intendedAudience": {
+    "warning": {
+      "changePreferences": "You can change your preferences <strong>by updating your profile <accountLink>here</accountLink>.</strong>",
+      "noContentFor": "There is no content on this page for {{examBoard}} {{stage}}. ",
+      "reportTaggingIssue": "If you think that the page is incorrectly tagged, please <strong><contactLink>contact us</contactLink></strong>."
+    }
+  },
+  "label": {
+    "aLevel": "A Level",
+    "accessibilityRequirements": "Accessibility requirements",
+    "accountVerificationNote": "We will be in touch shortly. Please note that account verification is a manual process and may take a few days.",
+    "all": "All",
+    "any": "Any",
+    "assignments": "Assignments",
+    "bookingDeadline": "Booking deadline",
+    "bookingDeadlineLabel": "Booking deadline:",
+    "cambridgeUniversity": "University of Cambridge website",
+    "contactName": "Contact name",
+    "created": "Created",
+    "difficultiesTooltip": "Practice: {{practiceLevels}}<br/>Challenge: {{challengeLevels}}",
+    "difficulty": "Difficulty",
+    "displayIn": "Display in",
+    "dragToReorder": "Drag to reorder",
+    "due": "Due:",
+    "dueDate": "Due <strong>{{dueDate}}</strong>",
+    "dueDateLabel": "Due date:",
+    "emailAddress": "Email address",
+    "emailOptOutNote": "Users who have opted out of this type of email will not receive anything. Administrative emails cannot be opted out of and should be avoided.",
+    "emailPreferencesDescription": "Get important information about the {{siteTitle}} programme delivered to your inbox. These settings can be changed at any time.",
+    "emailPreviewNote": "The preview below uses fields taken from your account (e.g. givenName and familyName).",
+    "emailSubject": "Email subject",
+    "emailType": "Email type",
+    "emailTypeAdminUrgent": "Urgent administrative email",
+    "emailTypeDescription": "The type of email you are sending.",
+    "emailTypeNewsUpdates": "News and updates",
+    "eventLeaderRestriction": "As an event leader, you are only able to see the bookings of users who have granted you access to their data.",
+    "eventLocation": "Location:",
+    "feedbackMode": "Student feedback mode:",
+    "filterBy": "Filter by",
+    "filterByAssigner": "Filter by assigner",
+    "filterByCreator": "Filter by Creator",
+    "filterByGroup": "Filter by group",
+    "filterByStage": "Filter by stage",
+    "filterByStatus": "Filter by status",
+    "filterBySubjectAndTopic": "Filter by subject and topic",
+    "filterByTitle": "Filter by title",
+    "filterByTopic": "Filter by topic",
+    "filters": "Filters",
+    "findByUserRole": "Find by user role:",
+    "findUserByEmail": "Find a user by email:",
+    "findUserByFamilyName": "Find a user by family name:",
+    "firstName": "First name",
+    "followUs": "Follow us",
+    "gender": "Gender",
+    "groupName": "Group name",
+    "groups": "Groups:",
+    "key": "Key",
+    "lastName": "Last name",
+    "level1": "Level 1",
+    "location": "Location",
+    "makeSelection": "--- Make a selection ---",
+    "maths": "Maths",
+    "mentalMaths": "Overall Mental Maths",
+    "newPassword": "New password",
+    "none": "None",
+    "notes": "Notes:",
+    "password": "Password",
+    "passwordMinLength": "Passwords must be at least {{minLength}} characters long.",
+    "passwordStrength": "Password strength:",
+    "questionNumber": "Question {{questionNumber}}",
+    "questions": "questions",
+    "raspberryPi": "Raspberry Pi",
+    "rememberMe": "Remember me",
+    "role": "Role",
+    "school": "School",
+    "searchByTitle": "Search by title",
+    "selectOrCreateGroup": "Select or create a group",
+    "selectStage": "Select stage",
+    "setBy": "Set by",
+    "sidebar": "Sidebar",
+    "skipToContent": "Skip to main content",
+    "someoneElse": "Someone else",
+    "sortBy": "Sort by",
+    "stage": "Stage",
+    "startDate": "Start date",
+    "startDateLabel": "Start date:",
+    "status": "Status",
+    "subjects": "Subjects",
+    "teacherAccountRequestSubject": "Teacher Account Request",
+    "teacherConnectionCode": "Teacher connection code",
+    "topic": "Topic",
+    "unit": "Unit",
+    "university": "University",
+    "userAgent": "User Agent",
+    "userId": "User ID",
+    "userSelectionDescription": "Comma separated list of user IDs to email.",
+    "value": "Value",
+    "verificationCode": "Verification Code"
+  },
+  "latex": {
+    "dropZone": "clickable drop zone",
+    "figureReference": "Figure&nbsp;{{number}}",
+    "unknownReference": "unknown reference {{refKey}}"
+  },
+  "listViews": {
+    "action": {
+      "takeTest": "Take the test",
+      "viewTest": "View test"
+    },
+    "hiddenFromTeachers": "Hidden from teachers",
+    "moveDown": "Move question down",
+    "moveUp": "Move question up",
+    "noTitle": "no title",
+    "question": {
+      "label": "Question"
+    },
+    "visibleToStudents": "Visible to students"
+  },
+  "markdownBuilder": {
+    "guideLinkText": "Markdown guide",
+    "rawInputLabel": "Raw input",
+    "renderedLabel": "Rendered markdown"
+  },
+  "markup": {
+    "inlineDropZone": {
+      "ariaLabel": "drop zone",
+      "clearButton": "Clear"
+    },
+    "tables": {
+      "expandButton": {
+        "ariaLabel": "Expand content"
+      }
+    }
+  },
+  "mathsUni": {
+    "cardSubtitle": "Refresh your maths skills in preparation for {{subject}} at university.",
+    "cardTitle": "Maths revision for {{subject}}"
+  },
+  "modal": {
+    "help": {
+      "title": "Quick Help"
+    },
+    "nextPageAriaLabel": "Go to next page on modal",
+    "pageIndicatorAriaLabel": "Modal page indicator",
+    "questionReminder": {
+      "hideButton": "Hide Question",
+      "showButton": "Show Question"
+    }
+  },
+  "navigation": {
+    "scrollToTop": "Scroll to top of page",
+    "search": {
+      "closeLabel": "Close search menu",
+      "openLabel": "Open search menu"
+    },
+    "sidebar": {
+      "homepageLink": "Go to homepage"
+    },
+    "supersededDeprecated": {
+      "bookBoardTip": "If you want to set this work again, you should use the most up-to-date version from our book page.",
+      "deprecatedTitle": "Deprecated content",
+      "deprecatedUnsupported": "As this {{contentType}} is unsupported, we do not recommend using it with your students.",
+      "deprecatedWarning": "This {{contentType}} is no longer supported, and may contain errors.",
+      "supersededEditPrompt": "We recommend that you <editLink>duplicate and edit</editLink> this assignment to replace them with their newer version.",
+      "supersededTitle": "Superseded content",
+      "teacherNote": "Teacher note:"
+    }
+  },
+  "news": {
+    "displayErrorTitle": "Unable to display news",
+    "emptyState": "No news to display...",
+    "errorTitle": "Error fetching news stories",
+    "newsletterBody": "Get fresh teaching ideas, student study tips, and development news about our tools and resources delivered straight to your inbox.",
+    "newsletterTitle": "Stay updated",
+    "sectionTitle": "Tips, tools & support",
+    "sidebar": {
+      "seeAllNews": "See all news"
+    },
+    "subscribeButton": "Get tips and updates"
+  },
+  "notifications": {
+    "assignmentTitle": "Assignment to do: {{gameboardTitle}}",
+    "dueDateMessage": "Due on {{dueDate}}",
+    "goToAssignmentButton": "Go to assignment",
+    "goToTestButton": "Go to test",
+    "survey": {
+      "acceptButton": "Yes, view questionnaire",
+      "declineButton": "No thanks",
+      "postponeButton": "Ask me later",
+      "prompt": "Would you like to complete a survey?"
+    },
+    "testTitle": "Test to do: {{quizTitle}}",
+    "toggle": {
+      "collapseButton": "Show fewer notifications",
+      "expandButton": "Show all {{count}} notifications"
+    }
+  },
+  "onlineCourses": {
+    "emptyState": "No courses to display...",
+    "errorTitle": "Error fetching online courses",
+    "loadMoreButton": "Load more courses",
+    "metaDescription": "Browse the Raspberry Pi Foundation’s free online courses for educators and choose from a range of computing topics."
+  },
+  "overview": {
+    "aLevel": {
+      "subtitle": "Our A Level {{subject}} resources further strengthen the understanding of {{subjectName}}, while developing problem solving skills. Our resources include questions, concepts and books."
+    },
+    "assigned": {
+      "buttonLabel": "Work for you",
+      "title": "Assigned to me"
+    },
+    "browse": {
+      "sectionTitle": "Browse Ada CS"
+    },
+    "difficulty": {
+      "challengeDesc": "Challenge questions are those that require one or more concepts, or require more creativity to solve the problem, helping to develop important problem solving skills.",
+      "intro": "All Isaac Science questions are classed as either \"Practice\" or \"Challenge\" – indicated by the symbols below.",
+      "practiceDesc": "Practice questions are those that require one concept or equation to solve."
+    },
+    "examIndependent": "Our materials are exam board independent. They are designed to help students develop and apply their understanding of fundamental concepts in {{subject}}, while developing problem solving skills.",
+    "exampleQuestions": {
+      "errorTitle": "Unable to load example questions"
+    },
+    "freeAccount": "You can use our resources for FREE. By creating a free account you will have complete access to all the resources available to students under Isaac Science and you can make the most of our platform by tracking your progress. Teachers can request a free teacher account to access <teacherFeaturesLink>additional features</teacherFeaturesLink>.",
+    "gcse": {
+      "subtitle": "Our GCSE {{subject}} resources develop the {{subjectName}} knowledge needed at GCSE through the use of questions, concepts and books."
+    },
+    "notFound": "No subject found.",
+    "pageTitle": "Introducing Isaac {{subject}}",
+    "stage1114": {
+      "subtitle": "Our 11–14 {{subject}} resources introduce secondary {{subjectName}} concepts to students and build their numeracy skills through questions and a selection of experiments."
+    },
+    "student": {
+      "assigned": {
+        "description": "This is where you’ll find assignments that have been assigned to you."
+      },
+      "progress": {
+        "buttonLabel": "View progress",
+        "description": "Track your progress over time and pinpoint areas to work on."
+      },
+      "projects": {
+        "buttonLabel": "Browse projects",
+        "description": "Take on larger-scale projects to develop your skills in a practical context."
+      },
+      "questions": {
+        "buttonLabel": "Find questions",
+        "description": "Explore our question bank to find questions to practice on any topic."
+      },
+      "support": {
+        "description": "Our student support page has useful information for common questions and issues."
+      },
+      "tests": {
+        "description": "This is where you’ll find tests that have been set for you."
+      },
+      "topics": {
+        "buttonLabel": "Browse topics",
+        "description": "Browse all the topics in Ada CS."
+      }
+    },
+    "teacher": {
+      "account": {
+        "description": "Manage all aspects of your account, from content settings to notification preferences.",
+        "title": "Account"
+      },
+      "assigned": {
+        "description": "If you join a group for your development, this is where you’ll find quizzes assigned to you."
+      },
+      "groups": {
+        "description": "Organise your students into groups so you can set appropriate work.",
+        "title": "Student groups"
+      },
+      "markbook": {
+        "description": "Track student progress and pinpoint areas to work on."
+      },
+      "mentoring": {
+        "description": "Participate in live sessions with an experienced Ada CS mentor to get advice on teaching core topics."
+      },
+      "quizzes": {
+        "buttonLabel": "Assign a quiz",
+        "description": "Create self-marking quizzes and assign them to your students.",
+        "title": "Quizzes"
+      },
+      "support": {
+        "description": "Our teacher support page has useful information for common questions and issues."
+      },
+      "tests": {
+        "buttonLabel": "Set a test",
+        "description": "Set a test curated by the Ada Computer Science team."
+      }
+    },
+    "university": {
+      "subtitle": "Our University {{subject}} resources help you prepare for your university STEM degree."
+    },
+    "welcome": {
+      "subjectLink": "Isaac {{subjectName}}"
+    }
+  },
+  "pageMetadata": {
+    "visuallyHiddenTitle": "Main page"
+  },
+  "policy": {
+    "sidebar": {
+      "accessibilityStatement": "Accessibility Statement",
+      "cookiePolicy": "Cookie Policy",
+      "privacyPolicy": "Privacy Policy",
+      "selectPage": "Select a page",
+      "termsOfUse": "Terms of Use"
+    }
+  },
+  "printButton": {
+    "withHints": {
+      "label": "<visuallyHidden>Print </visuallyHidden>With hints",
+      "title": "Print with hints"
+    },
+    "withoutHints": {
+      "label": "<visuallyHidden>Print </visuallyHidden>Without hints",
+      "title": "Print without hints"
+    }
+  },
+  "profiles": {
+    "featured": {
+      "emailLinkLabel": "Email {{name}}"
+    }
+  },
+  "programmes": {
+    "cardSubtitle": "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level.",
+    "list": {
+      "heading": "Programmes list"
+    },
+    "sidebar": {
+      "title": "Our programmes",
+      "toggleLabel": "Explore programmes"
+    }
+  },
+  "progress": {
+    "attemptsOverTime": "Attempts over time",
+    "charts": {
+      "bySubjectTitle": "By {{subject}}",
+      "byTopicTitle": "By topic"
+    },
+    "correctOfAttempts": "{{correct}} of {{attempts}}",
+    "legend": {
+      "failedAttempted": "<{{failThresholdPercentage}}% attempted",
+      "failedCorrect": "<{{failThresholdPercentage}}% correct",
+      "fullAttempted": "100% attempted",
+      "fullCorrect": "100% correct",
+      "fullyAttempted": "Fully attempted",
+      "inProgressAttempted": "≥{{failThresholdPercentage}}% attempted",
+      "inProgressCorrect": "≥{{failThresholdPercentage}}% correct",
+      "partiallyAttempted": "Partially attempted",
+      "partiallyCorrect": "Partially correct",
+      "passedAttempted": "≥{{passPercentage}}% attempted",
+      "passedCorrect": "≥{{passPercentage}}% correct",
+      "title": "Section key:"
+    },
+    "marking": {
+      "accountSettings": "your account settings",
+      "notMarkedFor": "not been marked for {{context}}"
+    },
+    "mentalMathsEmptyState": "<mentalMathsLink>Click here</mentalMathsLink> to try our mental maths skills practice.",
+    "mostRecentTitle": "Most recently answered questions",
+    "noneAttempted": "None attempted",
+    "oldestUnsolvedTitle": "Oldest unsolved questions",
+    "otherUserTitle": "Progress for {{userName}}",
+    "partBreakdown": {
+      "partColumn": "Part {{partNumber}}"
+    },
+    "questionPartsTitle": "Question parts correct by type",
+    "questionTypeLabel": "{{questionType}} questions",
+    "returnAttempt": {
+      "action": "Allow another attempt",
+      "body": "This will allow the student to attempt the test again.",
+      "title": "Allow another attempt?"
+    },
+    "settings": {
+      "displayModeLabel": "Table display mode",
+      "fractionsOption": "Fractions",
+      "hideButton": "Hide settings",
+      "percentagesOption": "Percentages",
+      "showButton": "Show settings"
+    },
+    "skillsAttemptsError": "Failed to load skills attempts.",
+    "streak": {
+      "title": "Weekly Streak"
+    },
+    "table": {
+      "emptyState": "This group is empty, so has no progress data available. You can invite users through the <manageGroupsLink>Manage groups</manageGroupsLink> page.",
+      "notSharing": "Not Sharing",
+      "totalAttemptedPartsLabel": "Total attempted parts",
+      "totalAttemptedQuestionsLabel": "Total attempted questions",
+      "totalCorrectPartsLabel": "Total correct parts",
+      "totalCorrectQuestionsLabel": "Total correct questions",
+      "viewAnswers": "View answers"
+    }
+  },
+  "projects": {
+    "emptyState": "No projects to display...",
+    "errorTitle": "Error fetching projects",
+    "loadMoreButton": "Load more projects"
+  },
+  "quantumMechanicsPrimer": {
+    "title": "Quantum Mechanics Primer"
+  },
+  "questionDecks": {
+    "cardSubtitle": "Practise specific topics by using our ready-made question decks.",
+    "cardTitle": "Question decks by topic",
+    "chemUni": {
+      "subtitle": "Consolidate your chemistry understanding with these questions by topic."
+    },
+    "mathsALevel": {
+      "subtitle": "Practise specific topics from Maths and Further Maths by using our ready-made question decks."
+    }
+  },
+  "questionFinder": {
+    "cardSubtitle": "Find {{subjectContext}} questions to try by topic and difficulty level.",
+    "errorTitle": "Error loading questions",
+    "filter": {
+      "bookmarked": "Bookmarked",
+      "clearAll": "Clear all filters",
+      "excludeBooks": "Exclude skills books questions"
+    },
+    "filters": {
+      "excludeSkillsBook": "Exclude skills book questions",
+      "togglePanel": "Toggle filter panel"
+    },
+    "noResults": "No results.",
+    "results": {
+      "loadError": "Failed to load questions.",
+      "titleColumn": "Question title"
+    },
+    "resultsCount": "Showing <b>{{count}}</b>",
+    "selection": {
+      "selectedCount_one": "{{count}} question selected",
+      "selectedCount_other": "{{count}} questions selected"
+    },
+    "shuffleButton": "Shuffle <responsiveWord>questions</responsiveWord>",
+    "sidebar": {
+      "stageHeading": "Decks by stage",
+      "subjectHeading": "Decks by subject",
+      "switchContextButton": "Switch stage/subject"
+    },
+    "totalCount": "of <b>{{total}}</b>"
+  },
+  "questionMetadata": {
+    "accessibilityWarningsTitle": "Accessibility warnings",
+    "printStageDifficultyLabel": "Stage & difficulty:",
+    "printSubjectTopicsLabel": "Subject & topics:",
+    "stageDifficultyTitle": "Stage & difficulty",
+    "subjectTopicsTitle": "Subject & topics"
+  },
+  "questionStats": {
+    "aggregate": {
+      "correctCountOfAttempted": "{{correctCount}} of {{attemptedCount}}",
+      "correctPartsTitle": "Correct question parts",
+      "correctQuestionsTitle": "Correct questions",
+      "sinceAccountCreation": "Since account creation:",
+      "thisAcademicYear": "This academic year:"
+    }
+  },
+  "questions": {
+    "answerPlaceholder": "Type your answer here.",
+    "attemptFailure": {
+      "body": "Your answer could not be checked. Please try again.",
+      "title": "Question attempt failed"
+    },
+    "attempts": {
+      "warningBody": "You have entered several guesses for this question; soon it will be temporarily locked.",
+      "warningTitle": "Approaching attempts limit"
+    },
+    "chemistry": {
+      "editPromptSingleBox": "Click in the box below to edit your answer.",
+      "editPromptTextEntry": "Click in either box below to edit your answer."
+    },
+    "coordinate": {
+      "addButton": "Add coordinate",
+      "invalidCharsError": "Some of the characters you are using are not allowed: {{invalidChars}}",
+      "noCommaError": "Your answer should not contain commas. Enter each part of your answer in a separate box.",
+      "simplifyError": "Simplify each part of your answer into a single decimal number."
+    },
+    "crossTopicIndicator": "Cross-topic question",
+    "dragAndDrop": {
+      "announceDroppedIntoDropZone": "Draggable item {{itemText}} was dropped into drop zone number {{dropZoneNumber}}",
+      "announceOverDropZone": "Draggable item is over drop zone number {{dropZoneNumber}}",
+      "announceSwapWithItem": "Swap draggable item {{activeItemText}} with item {{overItemText}}.",
+      "announceSwappedWithItem": "Draggable item {{activeItemText}} was swapped with {{overItemText}}."
+    },
+    "fastTrack": {
+      "relatedConceptTitle": "Read suggested related concept page"
+    },
+    "feedback": {
+      "correct": "Correct!",
+      "partlyCorrect": "Partly correct...",
+      "tooFewSigFigs": "Right or wrong...",
+      "tooManySigFigs": "Looks right, but..."
+    },
+    "freeText": {
+      "answerLabel": "Answer text field",
+      "validationWarningLabel": "Warning:"
+    },
+    "generateAnswerSpec": {
+      "errorTitle": "There was a problem generating an answer specification"
+    },
+    "hints": {
+      "defaultTitle": "Hint {{index}}",
+      "heading": "Need some help?",
+      "preamble": "Don't forget to use the hints if you need help."
+    },
+    "inlineFeedback": {
+      "boxCounter": "Box {{boxIndex}} of {{boxCount}}",
+      "selectBox": "View feedback for a specific box by selecting it above or using the arrows below."
+    },
+    "inlineInput": {
+      "ariaLabel": "Input field for part {{partName}}"
+    },
+    "inlineRegion": {
+      "feedback": {
+        "incorrect": "Check your answer.",
+        "missingUnit": "This answer is missing a unit.",
+        "notAnswered": "You did not provide an answer."
+      }
+    },
+    "inputValidation": {
+      "warningLabel": "Careful!"
+    },
+    "itemsArea": {
+      "available": "Available items",
+      "dragHint": "Drag items across to build your answer",
+      "empty": "No answer entered",
+      "yourAnswer": "Your answer"
+    },
+    "llmIndicator": {
+      "label": "LLM marked question"
+    },
+    "maxMarks_one": "[{{count}} mark]",
+    "maxMarks_other": "[{{count}} marks]",
+    "multiChoice": {
+      "clearOption": "(clear)"
+    },
+    "numeric": {
+      "decimalSeparator": "Use points instead of commas as decimal separators.",
+      "exponentSymbol": "Use a correct exponent symbol, e.g. 10^-3 or 10**-3.",
+      "helpPrompt": "What can I type in this box?",
+      "inputHelp": "Here are some examples of numbers you can write:<br1/><br2/>3.7<br3/>-3x10^14<br4/>2.8e-12<br5/><br6/>Do not use commas or spaces.",
+      "inputLabel": "Input field for part {{partTitle}}",
+      "noSpaces": "Do not use spaces when entering your answer.",
+      "noThousandSeparators": "Do not use commas or spaces as thousand separators when entering your answer.",
+      "simplifyToDecimal": "Simplify your answer into a single decimal number."
+    },
+    "parsons": {
+      "moveBackToItems": "Move {{itemName}} back to the items list",
+      "moveDown": "Move {{itemName}} down",
+      "moveToAnswer": "Move {{itemName}} into your answer",
+      "moveUp": "Move {{itemName}} up"
+    },
+    "preview": {
+      "ariaLabel": "Preview question",
+      "title": "Question preview"
+    },
+    "quickQuestion": {
+      "hideAnswerButton": "Hide answer",
+      "showAnswerButton": "Show answer"
+    },
+    "reorder": {
+      "dragInstruction": "Drag these items to put them in the correct order"
+    },
+    "search": {
+      "errorTitle": "Unable to search for questions"
+    },
+    "submit": {
+      "check": "Check my answer",
+      "marking": "Marking your answer…"
+    },
+    "symbolicLogic": {
+      "emptyPreview": "Click to enter your expression"
+    },
+    "validation": {
+      "charLimitExceeded": "Character limit exceeded ({{currentCount}}/{{limit}})",
+      "invalidFormat": "Your answer is not in a format we recognise, please enter your answer as a decimal number.",
+      "notAnswered": "Not answered",
+      "piiDetected": "<strong>Possible PII detected:</strong><br/>It looks like your answer contains personal information, like a name, email or street address. Sending this data to OpenAI is against their Usage policy.",
+      "sigFigs": "Significant Figures",
+      "stdFormSyntax": "When writing standard form, you must include <caretCode>^</caretCode> or <doubleAsteriskCode>**</doubleAsteriskCode> between the 10 and the exponent.",
+      "tooFewSigFigs": "your answer needs <b>more</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "tooManySigFigs": "your answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "wordLimitExceeded": "Word limit exceeded ({{currentCount}}/{{limit}})"
+    }
+  },
+  "quickQuizzes": {
+    "title": "Quick quizzes"
+  },
+  "relatedContent": {
+    "questions": {
+      "outsideSpecificationHeader": "Outside your specification:",
+      "specificationHeader": "On your specification:"
+    }
+  },
+  "reportButton": {
+    "label": "Report a problem (opens in new tab)"
+  },
+  "revision": {
+    "alert": {
+      "correctAnswerTimespan": "You answered this question correctly {{timespan}}.",
+      "lastMonth": "in the last month",
+      "lastTwelveMonths": "in the last 12 months",
+      "lastWeek": "in the last week",
+      "modeNotice": "You are currently in <revisionModeLink>revision mode</revisionModeLink> which hides your previous attempts.",
+      "overOneYear": "more than 1 year ago"
+    },
+    "cardSubtitle": "Revise with our summary videos, topic tests and question decks.",
+    "errorTitle": "Unable to fetch revision page.",
+    "mathsALevel": {
+      "subtitle": "Revise with our tailored revision decks on core pure, further pure, and mechanics."
+    },
+    "page": {
+      "loadError": "Unable to load revision page."
+    },
+    "sections": {
+      "introDescription": "First, have a go at these baseline questions to assess your understanding and identify which aspects of this topic you should focus your revision on:",
+      "introTitle": "Introduction",
+      "testsDescription": "To demonstrate your progress once you've revised this section, have a go at a practice test:"
+    }
+  },
+  "role": {
+    "admin": "Admin",
+    "contentEditor": "Content editor",
+    "student": "Student",
+    "teacher": "Teacher",
+    "tutor": "Tutor"
+  },
+  "search": {
+    "error": {
+      "failed": "Failed to search. Please try again later."
+    },
+    "errorTitle": "Unable to perform search",
+    "filter": {
+      "placeholder": "Select page type filter..."
+    },
+    "results": {
+      "heading": "Search Results"
+    },
+    "shortcuts": {
+      "teacherConnect": {
+        "summary": "Click here to connect to a teacher using the code you entered.",
+        "title": "Teacher Connections"
+      }
+    }
+  },
+  "serverError": {
+    "heading": "We're sorry, but an error has occurred on the {{siteTitle}} server!",
+    "suggestions": "You may want to <refresh>refresh this page and try again</refresh>, <homepage>return to our homepage</homepage>, or <contact>contact</contact> or <email>email</email> us if this keeps happening."
+  },
+  "shareLink": {
+    "buttonTitle": "Share page",
+    "hideButtonLabel": "Hide share link",
+    "inputAriaLabel": "Share URL",
+    "showButtonLabel": "Get share link"
+  },
+  "sidebar": {
+    "backToBook": {
+      "button": "Back to book section"
+    },
+    "completionKey": {
+      "allCorrect": "All correct",
+      "title": "Question key"
+    },
+    "display": {
+      "limit": "Limit:",
+      "limitLabel": "Set display limit",
+      "modeLabel": "Set display mode",
+      "title": "Display"
+    },
+    "filter": {
+      "creator": "Filter by creator"
+    },
+    "optionsButton": "Options",
+    "relatedContent": {
+      "conceptsTitle": "Related concepts",
+      "noConcepts": "There are no related concepts for this {{pageType}}.",
+      "noQuestions": "There are no related questions for this {{pageType}}.",
+      "otherStagesTitle": "Related questions for other learning stages",
+      "stageQuestionsTitle": "Related {{stageName}} questions",
+      "viewAllConcepts": "See all concepts for {{contextName}}",
+      "viewAllQuestions": "See all questions for {{contextName}}"
+    },
+    "search": {
+      "decks": "Search question decks"
+    },
+    "toggleButton": {
+      "label": "Search and filter"
+    }
+  },
+  "skillsPractice": {
+    "bioGcse": {
+      "subtitle": "Practise core maths skills that are used in GCSE Biology."
+    },
+    "chemALevel": {
+      "subtitle": "Practise core skills required in A Level Chemistry."
+    },
+    "chemGcse": {
+      "subtitle": "Practise core skills required in GCSE Chemistry."
+    },
+    "chemUni": {
+      "subtitle": "Consolidate your chemistry skills with these tools"
+    },
+    "fallback": {
+      "subtitle": "Consolidate your {{subject}} skills with these tools."
+    },
+    "mathsALevel": {
+      "subtitle": "Practise those core skills, such as rearranging equations, vital for maths."
+    },
+    "mathsGcse": {
+      "subtitle": "Practise those core skills, such as rearranging equations, vital for GCSE Maths."
+    },
+    "physics1114": {
+      "subtitle": "Keep training those maths skills with our algebra tools."
+    },
+    "physicsGcse": {
+      "subtitle": "Practise the important equations in GCSE Physics with these tools."
+    }
+  },
+  "status": {
+    "accountUpdated": "Your account settings were updated successfully.",
+    "allAttemptedWithErrors": "All attempted (some errors)",
+    "attempted": "Attempted",
+    "checkInbox": "Please check your inbox.",
+    "comingSoon": "Coming soon",
+    "completed": "Completed",
+    "correct": "Correct",
+    "emailRequestMade": "Request made, to send another refresh.",
+    "inProgress": "In progress",
+    "incorrect": "Incorrect",
+    "loading": "Loading...",
+    "no": "No",
+    "noData": "No data",
+    "noFeedback": "No feedback available",
+    "noGroupsAssigned": "No groups have been assigned.",
+    "noResults": "No results found",
+    "notAttempted": "Not attempted",
+    "notLoggedIn": "Not currently logged in",
+    "notStarted": "Not started",
+    "off": "Off",
+    "on": "On",
+    "online": "Online",
+    "overdue": "Overdue",
+    "requestedPlace": "You have requested a place on this event.",
+    "sortDisabled": "Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.",
+    "testSubmitted": "Test submitted successfully",
+    "yes": "Yes"
+  },
+  "studentResources": {
+    "careers": {
+      "description": "Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.",
+      "title": "Explore a career in computer science",
+      "viewMoreButton": "View more stories"
+    },
+    "challenges": {
+      "description": "Join one of our termly challenges. Test your knowledge and skills, and be in with the chance to win some great prizes.",
+      "title": "Win prizes with our student challenges"
+    },
+    "curriculum": {
+      "description": "We have over 65 learning topics that cover everything you need to learn in computer science. From computing systems and networks, to AI, machine learning, and much more.",
+      "note": "They're created by expert educators and are regularly updated."
+    },
+    "furtherLearning": {
+      "astroPiBody": "The European Astro Pi Challenge gets learners writing code that runs on the International Space Station.",
+      "astroPiButton": "Go to Astro Pi",
+      "astroPiTitle": "Your code in space",
+      "codeEditorBody": "Our online code editor lets you code whatever you like: a game, some art, or your very own website using Python or HTML and CSS.",
+      "codeEditorButton": "Open the code editor",
+      "codeEditorTitle": "Free code editor",
+      "description": "More projects, challenges, and tools from the Raspberry Pi Foundation’s world class range of computer science resources.",
+      "projectsBody": "There are hundreds of free coding and computing projects, all with step-by-step instructions.",
+      "projectsButton": "Go to Projects",
+      "projectsTitle": "Online coding projects",
+      "title": "Further learning"
+    },
+    "header": {
+      "description": "We've got everything to help you study computer science – including classwork, homework, and exam prep. And it's all available for free.",
+      "title": "<decorativeSlash>/</decorativeSlash><br/>Ada CS for students"
+    },
+    "isaacScience": {
+      "description": "Check out Isaac Science, our partner platform packed with free tools and resources to help you learn physics, chemistry, biology and maths.",
+      "title": "Studying science or maths?"
+    },
+    "pageTitle": "Students – {{siteTitle}}",
+    "practiceQuestions": {
+      "description": "Our self-marking questions give you hints and instant feedback as you go. You can filter by exam level, topic, or concept to find exactly what you need.",
+      "title": "Over 1000 practice questions",
+      "tryButton": "Try our practise questions"
+    },
+    "progress": {
+      "description": "With an Ada CS account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.",
+      "title": "Track your progress",
+      "viewButton": "View my progress"
+    },
+    "support": {
+      "description": "Our student support page has lots of information for common questions and issues."
+    },
+    "testimonial": {
+      "quote": "“I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.”"
+    }
+  },
+  "subjectInterests": {
+    "aLevelHeader": "A Level<br/><small>16-18 yrs</small>",
+    "chemistryShort": "Chem",
+    "engineering": "Engineering",
+    "engineeringShort": "Eng",
+    "gcseHeader": "GCSE<br/><small>14-16 yrs</small>",
+    "physicsShort": "Phys",
+    "title": "Subject Interests",
+    "universityHeader": "University<br/><small>18+ yrs</small>"
+  },
+  "subjectLanding": {
+    "books": {
+      "title": "Interactive online books <emphasis>({{bookCount}})</emphasis>",
+      "viewMore": "View more books"
+    },
+    "events": {
+      "heading": "Events <theme>({{eventCount}})</theme>"
+    },
+    "footer": {
+      "emptyState": "No books or news available for this subject. Check back soon!"
+    },
+    "news": {
+      "title": "News & Features"
+    },
+    "randomQuestion": {
+      "differentButton": "Get a different question",
+      "emptyState": "No questions found.",
+      "title": "Try a random question!"
+    },
+    "title": {
+      "aLevelMaths": "A Level Maths and Further Maths"
+    }
+  },
+  "svgFilter": {
+    "comingSoon": "Coming soon!",
+    "count": "{{count}} filters selected",
+    "title": "Difficulties filter selector"
+  },
+  "table": {
+    "actions": "Actions",
+    "bookingStatus": "Booking status",
+    "creator": "Creator",
+    "dueDate": "Due date",
+    "email": "Email",
+    "groups": "Groups",
+    "lastSeen": "Last seen",
+    "memberSince": "Member since",
+    "name": "Name",
+    "role": "User role",
+    "share": "Share",
+    "stagesAndDifficulties": "Stages and Difficulties",
+    "title": "Title"
+  },
+  "tabs": {
+    "fallbackTitle": "Tab {{tabNumber}}"
+  },
+  "teacherFeatures": {
+    "request": {
+      "alreadyTutor": "You already have a tutor account",
+      "moreInfo": "More information about <tutorLink>tutor</tutorLink> and <teacherLink>teacher</teacherLink> accounts.",
+      "teacherRequirement": "A \"teacher\" must be directly associated with a school",
+      "title": "Request Account Upgrade",
+      "tutorButton": "I am a tutor",
+      "tutorRequirement": "A \"tutor\" does not have to be associated with a school (private tutors and parents fall under this category)",
+      "upgradeIntro": "Upgrading your {{siteTitle}} account gives you access to teaching resources, the ability to assign work to groups of students, and more! To continue, please tell us whether you are a teacher or a tutor:"
+    },
+    "resources": {
+      "title": "Teacher resources"
+    },
+    "support": {
+      "cpdTitle": "Teacher CPD",
+      "emailsSubtitle": "Recent start-of-term emails sent to teachers.",
+      "emailsTitle": "Teacher emails"
+    },
+    "tutor": {
+      "assignmentsSubtitle": "Set assignments from our skills books, pre-made boards or create your own.",
+      "assignmentsTitle": "2. Set assignments",
+      "booksTitle": "Isaac books",
+      "decksTitle": "Decks by topic",
+      "description": "Isaac Science provides you with a huge range of resources to support your tutoring of science subjects.",
+      "getButton": "Get a tutor account",
+      "progressSubtitle": "View your students’ progress through their assignments.",
+      "progressTitle": "3. Assignment progress",
+      "resourcesTitle": "Tutor support and resources",
+      "workflowTitle": "Tutor workflow"
+    },
+    "workflow": {
+      "title": "Teacher workflow"
+    }
+  },
+  "teacherMentoring": {
+    "join": {
+      "freeNote": "All of our resources are completely free. You can join (or leave) the programme at any time.",
+      "loggedIn": "<strong><joinLink>Join the {{groupName}} group</joinLink></strong> to participate in the programme so that we can assign you the quizzes weekly.",
+      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the teacher mentoring group and participate in the programme."
+    },
+    "page": {
+      "teacherNotice": "You must be signed in with a teacher account to view the weekly resources.",
+      "title": "Teacher mentoring programme"
+    }
+  },
+  "teacherNotes": {
+    "label": "Teacher notes"
+  },
+  "teacherResources": {
+    "challenges": {
+      "description": "Encourage and reward student success with our student challenge programme, designed to inspire achievement at every stage of their studies."
+    },
+    "cpd": {
+      "coursesCard": {
+        "description": "Join one of our self-guided courses for teachers covering a wide range of computing topics.",
+        "title": "Free online courses"
+      },
+      "description": "Learn new skills and build confidence with our free courses for continuing professional development (CPD). They're designed to support you, whatever your level of experience.",
+      "mentoringCard": {
+        "description": "Get support through our online programme for newly qualified and non-specialist computer science teachers."
+      },
+      "title": "Professional development"
+    },
+    "curriculum": {
+      "description": "We have over 50 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.",
+      "descriptionTwo": "They're created by expert educators and are regularly updated. You can even filter content for different age groups and exams."
+    },
+    "header": {
+      "dashboardButton": "Go to My Ada Overview",
+      "description": "Self-marking assignments, student progress tracking and exam prep support. Ada CS is full of free tools and resources to support classwork, homework and exam prep.",
+      "signupButton": "Sign up to Ada CS",
+      "title": "<decorativeSlash>/</decorativeSlash><br/>Ada CS for teachers"
+    },
+    "help": {
+      "description": "Our teacher support page has lots of information for common questions and issues."
+    },
+    "meta": {
+      "title": "Teachers – {{siteTitle}}"
+    },
+    "moreResources": {
+      "codeClassroomCard": {
+        "description": "Code Classroom is a free, safe platform for teaching and learning computing in schools. It includes a simple-to-use code editor with different programming languages, and lots of other features to support your teaching.",
+        "title": "Code Classroom"
+      },
+      "description": "Support, lesson plans, ideas, and tools from the Raspberry Pi Foundation's world-class range of computer science resources.",
+      "helloWorldCard": {
+        "description": "Get a global perspective on computing education with Hello World – our magazine and podcast for educators. Share your expertise and write for us!",
+        "title": "Hello World magazine"
+      },
+      "researchCard": {
+        "description": "Discover groundbreaking research that advances the understanding of how people learn about computing. These projects are a collaboration between the Raspberry Pi Foundation and the University of Cambridge.",
+        "title": "Research projects"
+      },
+      "title": "More teaching resources"
+    },
+    "testimonial": {
+      "attribution": "– Matt Arnmor, computer science teacher",
+      "quote": "“Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it's free!”"
+    },
+    "tools": {
+      "assignmentsCard": {
+        "button": "Set an assignment",
+        "description": "Create self-marking assignments for your students. There are over 1000 questions for you to choose from.",
+        "title": "Set assignments"
+      },
+      "dashboardButton": "Go to My Ada",
+      "description": "An Ada CS account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.",
+      "groupsCard": {
+        "description": "Organise your students into groups and set work appropriate for each group.",
+        "title": "Create student groups"
+      },
+      "markbookCard": {
+        "description": "Track student progress with a personal markbook to help pinpoint areas to work on."
+      },
+      "preferencesCard": {
+        "description": "Set your location, level, and exam board, and we'll show you the content most relevant to you.",
+        "title": "See content specific to you"
+      },
+      "title": "Tools to help you teach"
+    },
+    "tryIsaac": {
+      "description": "Check out Isaac Science, our partner platform packed with free tools and resources to help you teach physics, chemistry, biology and maths.",
+      "title": "Teaching science or maths?"
+    }
+  },
+  "teachingOrders": {
+    "metaDescription": {
+      "advanced": "Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.",
+      "core": "Discover our free Core computer science topics and questions. Learn or revise for your exams with us today."
+    }
+  },
+  "tests": {
+    "admissions": {
+      "title": "Practice admissions tests"
+    },
+    "alreadySubmitted": {
+      "body": "A submission has already been recorded for this test by your account.",
+      "title": "Test already submitted"
+    },
+    "api": {
+      "loadAssignedToMeFailed": "Loading tests assigned to you failed",
+      "loadAssignmentFeedbackFailed": "Loading test assignment feedback failed",
+      "loadAssignmentsSetByMeFailed": "Loading test assignments failed",
+      "loadAvailableFailed": "Loading tests failed",
+      "loadFreelyAttemptedFailed": "Loading attempted freely tests failed",
+      "loadMyFeedbackFailed": "Loading test feedback failed",
+      "loadPreviewFailed": "Loading test preview failed",
+      "loadRubricFailed": "Loading test rubric failed",
+      "loadStudentFeedbackFailed": "Loading student test feedback failed",
+      "returnWorkFailed": "Failed to return work to the student",
+      "startAttemptFailed": "Starting test attempt failed",
+      "startFreeAttemptFailed": "Starting free test attempt failed",
+      "submitAnswersFailed": "Failed to submit your test answers",
+      "updateAssignmentFailed": "Failed to update test assignment",
+      "updateDueDateFailed": "Failed to update test due date",
+      "updateFeedbackModeFailed": "Failed to update test feedback mode"
+    },
+    "assign": {
+      "errorTitle": "Failed to assign test"
+    },
+    "assignedEmpty": {
+      "none": "You have no tests in progress."
+    },
+    "assignedLoadError": "Your test assignments failed to load, please try refreshing the page.",
+    "assignedTable": {
+      "dueDate": "Due Date",
+      "setDate": "Set Date"
+    },
+    "assignment": {
+      "assignedTooltip": "Test assigned to: {{groupNames}}",
+      "cancelTest": "Cancel test",
+      "cancelling": "Cancelling...",
+      "extendDueDate": "Extend Due Date",
+      "header": {
+        "creationDate": "Creation date"
+      },
+      "more": "More"
+    },
+    "attempt": {
+      "allComplete": "All sections complete",
+      "assignedErrorBody": "Your teacher has set this test to you. You may not practise it in advance.<br/>If you are ready to take the test, click on it in your <assignedTestsLink>assigned tests</assignedTestsLink> page.",
+      "assignedErrorTitle": "You have been set this test",
+      "finish": "Finish",
+      "loadErrorTitle": "Error loading test!",
+      "reviewAnswers": "Review answers",
+      "sectionsComplete": "{{completedCount}} / {{totalCount}} sections complete",
+      "submitAnyway": "Submit anyway",
+      "submitConfirmIncomplete": "Are you sure? You haven't answered all of the questions",
+      "submitToastBody": "Your answers have been submitted successfully."
+    },
+    "button": {
+      "continue": "Continue test",
+      "noFeedback": "No feedback",
+      "start": "Start test",
+      "viewFeedback": "View feedback"
+    },
+    "cancelAssignment": {
+      "errorTitle": "Cancelling test assignment failed"
+    },
+    "card": {
+      "manage": {
+        "changeFeedbackType": "Change feedback type"
+      },
+      "shareLink": {
+        "tooltip": "(student-only link)"
+      },
+      "untitledTitle": "Untitled Test",
+      "usage": {
+        "begins": "Begins <strong>{{startDate}}</strong>",
+        "viewResults": "View group results"
+      }
+    },
+    "details": {
+      "overallMark": "Your mark is {{correct}} / {{total}}",
+      "overallMarkLabel": "Overall mark",
+      "sectionBreakdown": "Section mark breakdown"
+    },
+    "displayMode": {
+      "cards": "Cards",
+      "table": "Table"
+    },
+    "feedback": {
+      "error": {
+        "heading": "Error loading your feedback!"
+      },
+      "errorTitle": "Error loading test feedback",
+      "footer": {
+        "finalLabel": "Back to Overview"
+      },
+      "helpText": "See the feedback for your students for this test assignment.",
+      "notStartedHeading": "This test has not yet started.",
+      "releaseDate": "It will be released to your group on {{startDate}}.",
+      "title": "Test Feedback"
+    },
+    "filters": {
+      "dateSectionTitle": "Filter by date",
+      "hide": "Hide filters",
+      "searchGroupLabel": "Search by group",
+      "show": "Show filters",
+      "title": "Filter by quiz title"
+    },
+    "header": {
+      "completedDate": "Completed: {{date}}",
+      "freeAttempt": "You are freely attempting this test.",
+      "preview": "You are previewing this test.",
+      "setBy": "Set by: {{teacherName}}",
+      "wasDue": "Was due:"
+    },
+    "info": {
+      "assigner": "by {{teacherName}}",
+      "completed": "Completed: {{completedDate}}",
+      "dueDate": "Due date: {{dueDate}}",
+      "set": "Set: {{setDate}}",
+      "started": "Started: {{startDate}}"
+    },
+    "pageHelp": "Use this page to see tests you need to take and your test results.<br/>You can also take some tests freely whenever you want to test your knowledge.",
+    "pagination": {
+      "position": "Section {{page}} / {{sectionCount}}"
+    },
+    "pastTests": {
+      "hidden": "Hidden",
+      "label": "Past tests",
+      "shown": "Shown"
+    },
+    "practiceEmpty": {
+      "noMatch": "No practice tests match your filters.",
+      "none": "You have no practice tests. Take some new tests <viewTestsLink>here</viewTestsLink>!"
+    },
+    "practiceLoadError": "Your practice test attempts failed to load, please try refreshing the page.",
+    "practiceTable": {
+      "startDate": "Start Date"
+    },
+    "preview": {
+      "attemptYourself": "Attempt test yourself",
+      "backToContents": "Back to Contents",
+      "previewQuestions": "Preview questions"
+    },
+    "rubric": {
+      "buttonTooltip": "Show instructions in a modal",
+      "modalTitle": "Test Instructions",
+      "showButton": "Show instructions"
+    },
+    "search": {
+      "placeholder": "e.g. Practice"
+    },
+    "section": {
+      "fallbackTitle": "Section {{page}}",
+      "notFound": "Test section {{page}} not found"
+    },
+    "set": {
+      "available": {
+        "empty": "There are no tests you can set which match your search term.",
+        "intro": "The following tests are available to set to your groups."
+      },
+      "emptyState": "You have not set any tests to your groups yet.",
+      "help": "Use this page to manage and set tests to your groups. You can assign any test the {{siteName}} team have built.<br/>Students in the group will be emailed when you set a new test.",
+      "loadError": "Tests you have assigned have failed to load, please try refreshing the page."
+    },
+    "setQuiz": {
+      "completionEmail": "Email me when a student completes this test",
+      "dueDateAfterStart": "Due date must be on or after the start date.",
+      "dueDateAfterToday": "Due date must be after today.",
+      "dueDateSelect": "Select a due date for the assignment.",
+      "feedbackLabel": "What level of feedback should students get:",
+      "feedbackRequired": "Please select a feedback mode",
+      "groupPlaceholder": "Select groups",
+      "startDateError": "Start date must be today or in the future.",
+      "startDateHelp": "You can schedule a test to appear in the future by setting a start date. The test will be visible to students from this date onwards.<br/>If you do not set a start date, the test will be visible immediately.",
+      "title": "Setting test '{{testTitle}}'"
+    },
+    "sidebar": {
+      "displayCardOption": "Card View",
+      "displayTableOption": "Table View",
+      "fallbackTitle": "Section {{id}}",
+      "sectionsButton": "Sections",
+      "statusCompleted": "Section completed",
+      "statusInProgress": "Section in progress",
+      "statusNotStarted": "Section not started"
+    },
+    "status": {
+      "completed": "Completed ·",
+      "feedbackAvailable": "Feedback available",
+      "started": "Started"
+    },
+    "submission": {
+      "failureMessage": "Error submitting test",
+      "successTitle": "Test submitted"
+    },
+    "title": {
+      "studentSuffix": " for {{givenName}} {{familyName}}"
+    },
+    "view": {
+      "emptyState": "There are no practice tests currently available.",
+      "loginRequired": "You must be logged in to view practice tests.",
+      "searchPlaceholder": "e.g. Admissions",
+      "searchTitle": "Search practice tests",
+      "takeTest": "Take Test"
+    },
+    "viewingAs": {
+      "notification": "You are viewing this test as <strong>{{givenName}} {{familyName}}</strong>.",
+      "returnLink": "<feedbackLink>Click here</feedbackLink> to return to the teacher test feedback page."
+    }
+  },
+  "title": {
+    "accountDetails": "Account details",
+    "accountSettings": "Account settings",
+    "adaComputerScience": "Ada Computer Science",
+    "admin": "Admin",
+    "adminEmails": "Admin emails",
+    "adminTools": "Admin tools",
+    "authenticationError": "Authentication error",
+    "concepts": "Concepts",
+    "contactUs": "Contact us",
+    "contentErrors": "Content errors",
+    "coreSkillsPractice": "Core skills practice",
+    "emailPreferences": "Set your email notification preferences",
+    "error": "Error",
+    "eventDetails": "Event details",
+    "events": "Events",
+    "featureFlags": "Feature flags",
+    "glossary": "Glossary",
+    "markdownBuilder": "Markdown builder",
+    "myAda": "My Ada",
+    "myProgress": "My progress",
+    "myTests": "My tests",
+    "news": "News",
+    "overview": "Overview",
+    "preferences": "Set your preferences",
+    "questionFinder": "Question finder",
+    "questions": "Questions",
+    "relatedQuestions": "Related questions",
+    "research": "Research",
+    "resources": "Resources",
+    "revision": "Revision",
+    "search": "Search",
+    "searchGlossary": "Search glossary",
+    "searchQuestions": "Search questions",
+    "searchTests": "Search tests",
+    "sessionExpired": "Session expired",
+    "skillsPractice": "Skills practice",
+    "staging": "Staging",
+    "teacherSupport": "Teacher support",
+    "test": "Test",
+    "tests": "Tests",
+    "userManager": "User manager",
+    "userSelection": "User selection"
+  },
+  "tools": {
+    "listing": {
+      "seeAllButton": "See all tools"
+    }
+  },
+  "topics": {
+    "badge": {
+      "comingSoon": "Coming {{date}}",
+      "new": "New"
+    },
+    "gameboards": {
+      "description": "You can work through individual questions or try a group of questions by clicking on the topic gameboards below.",
+      "title": "Gameboards"
+    },
+    "listing": {
+      "ageHeading": "{{ageGroup}} topics"
+    },
+    "meta": {
+      "description": "Discover our free computer science topics and questions. Learn or revise for your exams with us today."
+    },
+    "page": {
+      "backButton": "<responsivePrefix>Back to</responsivePrefix> All topics"
+    },
+    "questionFinder": {
+      "description": "Using the question finder you can select topics and concepts and we’ll generate a random selection of questions for you to use. You can also specify your level and exam board.",
+      "students": "<bold>Students</bold> might want to try our question finder to revise and get feedback on any mistakes.",
+      "teachers": "<bold>Teachers</bold> might want to try our question finder to create quizzes and assign them to students.",
+      "title": "Check your understanding",
+      "tryButton": "Try our question finder"
+    }
+  },
+  "video": {
+    "embed": {
+      "accessibilityLabel": "Embedded YouTube video: {{videoDescription}}."
+    }
+  }
+}

@@ -12,8 +12,11 @@ import { RaspberryPiSignInButton } from "../elements/RaspberryPiSignInButton";
 import { Loading } from "../handlers/IsaacSpinner";
 import { TFAInput, EmailPasswordInputs, PasswordResetButton, SsoHelpLink } from "../elements/LogInInputs";
 import { useLoginLogic } from "../../services/login";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export const LogIn = () => {
+    const { t } = useTranslation();
 
     const user = useAppSelector(selectors.user.orNull);
 
@@ -26,7 +29,7 @@ export const LogIn = () => {
     const subHeadingRef = useRef<HTMLHeadingElement>(null);
 
     useEffect( () => {
-        document.title = "Login – " + SITE_TITLE;
+        document.title = i18next.t("common:auth.pageTitle", { siteName: SITE_TITLE });
         if (!(window as any).followedAtLeastOneSoftLink) {
             return;
         }
@@ -43,9 +46,7 @@ export const LogIn = () => {
         return logInAttempted ? <Loading/> : <Navigate to="/"/>;
     }
 
-    const metaDescription = siteSpecific(
-        "Log in to Isaac to learn and track your progress.",
-        "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.");
+    const metaDescription = t("site:auth.metaDescription");
 
     return <Container id="login-page" className="my-4 mb-7">
         <MetaDescription description={metaDescription} />
@@ -55,7 +56,7 @@ export const LogIn = () => {
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
                             <h1 className={classNames("h-title", {"h2 mb-4": isAda})} ref={headingRef} tabIndex={-1}>
-                                Log&nbsp;in or sign&nbsp;up:
+                                {t("common:auth.login.heading")}
                             </h1>
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
@@ -76,7 +77,7 @@ export const LogIn = () => {
                                                 id="rememberMe"
                                                 checked={rememberMe}
                                                 onChange={e => setRememberMe(e.target.checked)}
-                                                label={<p>Remember me</p>} className='mb-4'
+                                                label={<p>{t("common:label.rememberMe")}</p>} className='mb-4'
                                             />
                                         </div>
                                         <PasswordResetButton email={email} isValidEmail={isValidEmail}
@@ -87,7 +88,7 @@ export const LogIn = () => {
                                         <Col sm={6}>
                                             <Button
                                                 id="log-in"
-                                                tag="input" value="Log in"
+                                                tag="input" value={t("common:button.logIn")}
                                                 color="solid"
                                                 type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
@@ -96,13 +97,13 @@ export const LogIn = () => {
                                         </Col>
                                         <Col sm={6}>
                                             <Button id="sign-up" color="keyline" className="mb-2" onClick={signUp} block>
-                                                Sign up
+                                                {t("common:button.signUp")}
                                             </Button>
                                         </Col>
                                     </Row>
 
                                     {siteSpecific(<div className="section-divider"/>, <hr className="text-center mb-4"/>)}
-                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>Log in with:</div>
+                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>{t("common:auth.page.ssoHeading")}</div>
                                     <div className="d-flex flex-column gap-2">
                                         {isAda && <RaspberryPiSignInButton/>}
                                         <GoogleSignInButton/>

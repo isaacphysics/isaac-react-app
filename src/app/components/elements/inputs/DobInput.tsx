@@ -5,6 +5,7 @@ import {currentYear, DateInput} from "./DateInput";
 import {Immutable} from "immer";
 import range from "lodash/range";
 import { FormGroup, Label, FormFeedback } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 interface DobInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -13,15 +14,15 @@ interface DobInputProps {
     editingOtherUser?: boolean;
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
+    const { t } = useTranslation();
     const isInvalid = submissionAttempted && !(isPhy && !isDefined(userToUpdate.dateOfBirth)) && (
         !isDobOldEnoughForSite(userToUpdate.dateOfBirth) || (isAda && !isDefined(userToUpdate.dateOfBirth))
     );
 
     return <FormGroup className="form-group">
-        <Label className="fw-bold" htmlFor="dob-input">Date of birth</Label>
+        <Label className="fw-bold" htmlFor="dob-input">{t("common:auth.dob.label")}</Label>
         {isAda && <p className="d-block input-description mb-2">
-            {"We ask for your month and year of birth so we can give you the right experience for your age." +
-                " Some features work differently for younger users."}
+            {t("ada:auth.dob.helpText")}
         </p>}
         <DateInput
             invalid={isInvalid}
@@ -35,13 +36,13 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
             }}
             disableDefaults
             aria-describedby="age-validation-message"
-            labelSuffix=" of birth"
+            labelContext="birth"
             hideDay={isAda}
         />
         <FormFeedback id="age-validation-message">
             {isDefined(userToUpdate.dateOfBirth)
                 ? `${editingOtherUser ? "The user" : "You"} must be over ${SITE_LOWER_AGE_LIMIT} years old to create an account.`
-                : "Please enter a valid date of birth."
+                : t("common:auth.dob.invalidDate")
             }
         </FormFeedback>
     </FormGroup>;

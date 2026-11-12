@@ -9,6 +9,7 @@ import {
 } from "../index";
 import debounce from "lodash/debounce";
 import { isAxiosError } from "axios";
+import i18next from "i18next";
 
 export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST, quizAssignmentId});
@@ -16,7 +17,7 @@ export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (di
         const attempt = await api.quizzes.loadQuizAssignmentAttempt(quizAssignmentId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading assigned quiz attempt failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:assignments.error.loadAttemptFailed"), e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -36,7 +37,7 @@ const debouncedDispatch = debounce(async (dispatch: Dispatch<Action>, quizAttemp
                 e.response.data.errorMessage += " We recommend reloading the page and trying again, after carefully saving your answer elsewhere."; 
             }
         }
-        dispatch(showAxiosErrorToastIfNeeded("Failed to save", e, 20000)); // longer timeout than most, as test errors are likely serious
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:assignments.error.saveFailed"), e, 20000)); // longer timeout than most, as test errors are likely serious
     }
 }, 500);
 
@@ -61,7 +62,7 @@ export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch
         const attempt = await api.quizzes.loadFreeQuizAttempt(quizId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading quiz failed", e));
+        dispatch(showAxiosErrorToastIfNeeded(i18next.t("common:assignments.error.loadQuizFailed"), e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };

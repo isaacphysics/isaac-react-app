@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { IconProps } from "../svg/HexIcon";
 import { ExternalLink } from "../ExternalLink";
 import { v4 as uuid_v4 } from "uuid";
+import { useTranslation } from "react-i18next";
 
 export interface IconCardContentProps {
     title: string;
@@ -26,6 +27,7 @@ export interface IconCardProps extends ContainerProps {
 }
 
 export const IconCard = ({card, children, ...props}: IconCardProps) => {
+    const { t } = useTranslation();
     const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, includeTitleInAriaLabel, disabled, buttonStyle} = card;
     const {name, size, color, raw} = typeof icon === "string" ? {name: icon} : icon;
     const uuid = uuid_v4();
@@ -46,10 +48,10 @@ export const IconCard = ({card, children, ...props}: IconCardProps) => {
                 {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4 pt-3"}>
                     {isAppLink(clickUrl) ? 
                         <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center": buttonStyle === "link"})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl} aria-describedby={includeTitleInAriaLabel ? `card-title-${uuid}` : undefined}>
-                            {buttonText || "See more"}
+                            {buttonText || t("common:button.seeMore")}
                         </Button> :
                         <ExternalLink asButton href={clickUrl} aria-describedby={includeTitleInAriaLabel ? `card-title-${uuid}` : undefined}>
-                            {buttonText || "See more"}
+                            {buttonText || t("common:button.seeMore")}
                         </ExternalLink>
                     }
                 </CardFooter>}

@@ -5,6 +5,7 @@ import {NOT_FOUND, trackEvent, useUserConsent} from "../../services";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import { YoutubeCookieHandler } from '../handlers/InterstitialCookieHandler';
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
@@ -71,6 +72,7 @@ function trackYoutubeError(videoSrc: string, errorMessage: string) {
 }
 
 export function IsaacVideo(props: IsaacVideoProps) {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const userConsent = useUserConsent();
     const {doc: {src, altText}} = props;
@@ -78,7 +80,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const embedSrc = src && rewrite(src);
     const errorSrc = src || altText || "Unknown embedded video.";
-    const altTextToUse = `Embedded YouTube video: ${altText || src}.`;
+    const altTextToUse = t("common:video.embed.accessibilityLabel", { videoDescription: altText || src });
     const printSummary = 'Embedded YouTube video' + (altText ? `: ${altText}` : '') + ` (${src}).`;
 
     const videoRef = useCallback( (node: any) => { // This isn't great but I couldn't figure out the actual type

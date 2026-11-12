@@ -12,8 +12,10 @@ import {
 import {Link} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useQueryParams} from "../../services";
+import { Trans, useTranslation } from "react-i18next";
 
 export const EmailAlterHandler = () => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const {userid, token} = useQueryParams(true);
@@ -25,8 +27,8 @@ export const EmailAlterHandler = () => {
     const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
 
     const successMessage = idsMatch
-        ? "Email address verified."
-        : "You are signed in as a different user to the user with the email you have just verified.";
+        ? t("common:auth.emailVerification.verified")
+        : t("common:auth.emailVerification.userMismatch");
 
     useEffect(() => {
         if (userid && token) {
@@ -36,7 +38,7 @@ export const EmailAlterHandler = () => {
 
     return <Container id="email-verification">
         <TitleAndBreadcrumb 
-            currentPageTitle="Email verification"
+            currentPageTitle={t("common:auth.emailVerification.title")}
             icon={{type: "icon", icon: "icon-mail"}}
         />
         <Row>
@@ -47,12 +49,12 @@ export const EmailAlterHandler = () => {
                             <>
                                 <div className="mb-4 h3">{successMessage}</div>
                                 <Button tag={Link} to="/" color="secondary" block>
-                                    Continue
+                                    {t("common:button.continue")}
                                 </Button>
                             </>}
                         {emailVerificationFailed &&
                             <>
-                                <div className="mb-4 h3">Couldn&apos;t verify email address</div>
+                                <div className="mb-4 h3">{t("sci:error.verifyEmail")}</div>
                                 <p>{getRTKQueryErrorMessage(emailVerificationError).message}</p>
                                 {idsMatch
                                     ? <p>
@@ -60,26 +62,31 @@ export const EmailAlterHandler = () => {
                                             <Button onClick={() => {
                                                 if (!user.email) {
                                                     dispatch(showErrorToast(
-                                                        "Email verification request failed.",
-                                                        "You are not logged in or don't have an e-mail address to verify."
+                                                        t("common:error.emailRequestFailed"),
+                                                        t("common:error.noEmailToVerify")
                                                     ));
                                                 } else {
                                                     void sendVerificationEmail({email: user.email});
                                                 }
                                             }}>
-                                                Resend verification email
+                                                {t("common:button.resendVerificationEmail")}
                                             </Button>
                                             :
-                                            "Verification email sent to " + (user && user.loggedIn && user.email)
+                                            t("common:auth.emailVerification.sentTo", { email: (user && user.loggedIn && user.email) })
                                         }
                                     </p>
-                                    : <p>Please login to your <Link to="/account">account</Link> to resend the verification email.</p>
+                                    : <p><Trans
+                                        i18nKey="common:auth.emailVerification.loginToResend"
+                                        components={{
+                                            accountLink: <Link to="/account" />,
+                                        }}
+                                    /></p>
                                 }
                             </>
                         }
                         {emailVerificationNotInitiated && <>
-                            <div className="mb-4 h3">Couldn&apos;t verify email address</div>
-                            <p>This page received bad parameters. Please ensure you are using the link as provided in the email.</p>
+                            <div className="mb-4 h3">{t("sci:error.verifyEmail")}</div>
+                            <p>{t("common:auth.emailVerification.badParamsMessage")}</p>
                         </>}
                     </CardBody>
                 </Card>

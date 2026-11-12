@@ -10,8 +10,10 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import {v4 as uuid_v4} from "uuid";
 import { handleParsonsItemDrag, onParsonsCurrentAttemptUpdate, ParsonsDraggableItem, swapItemList } from "../elements/ParsonsDraggableItem";
+import { useTranslation } from "react-i18next";
 
 const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     const useSingleList = useMemo(() => doc.useSingleList, [doc.useSingleList]);
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
@@ -63,7 +65,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     Press space or enter again to move the item to a new position.
                 </Label>
                 {!useSingleList && <Col md={{size: 6}} className="parsons-available-items" aria-describedby={itemSectionInfoId}>
-                    <div className="h4">Available items</div>
+                    <div className="h4">{t("common:questions.itemsArea.available")}</div>
                     <Droppable droppableId="availableItems">
                         {(provided, snapshot) =>
                             <div ref={provided.innerRef}
@@ -84,8 +86,8 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                 </Col>}
                 <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})} aria-describedby={itemSectionInfoId}>
                     {useSingleList 
-                        ? <i className="text-muted d-print-none">Drag these items to put them in the correct order</i>
-                        : <div className="mt-sm-4 mt-md-0 h4">Your answer</div>}
+                        ? <i className="text-muted d-print-none">{t("common:questions.reorder.dragInstruction")}</i>
+                        : <div className="mt-sm-4 mt-md-0 h4">{t("common:questions.itemsArea.yourAnswer")}</div>}
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>
                             <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef}
@@ -99,7 +101,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                                 )}
                                 {attemptItems.length === 0
                                     ? <div className="text-muted text-center">
-                                        {readonly ? "No answer entered" : "Drag items across to build your answer"}
+                                        {readonly ? t("common:questions.itemsArea.empty") : t("common:questions.itemsArea.dragHint")}
                                     </div>
                                     : provided.placeholder}
                             </div>

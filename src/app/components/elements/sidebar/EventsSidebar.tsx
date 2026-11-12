@@ -7,18 +7,20 @@ import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
 import queryString from "query-string";
+import { useTranslation } from "react-i18next";
 
 export const EventsSidebar = (props: SidebarProps) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     const navigate = useNavigate();
     const location = useLocation();
     const query: EventsPageQueryParams = queryString.parse(location.search);
     const user = useAppSelector(selectors.user.orNull);
 
-    return <ContentSidebar buttonTitle="Filter events" {...props}>
+    return <ContentSidebar buttonTitle={t("common:events.sidebar.filterButtonTitle")} {...props}>
         <Form tag={"search"}>
             {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
-            <h3 className="mb-3 h5">Event type</h3>
+            <h3 className="mb-3 h5">{t("common:events.sidebar.eventTypeLabel")}</h3>
             <ul>
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
@@ -47,7 +49,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">Groups</h3>
+            <h3 className="mb-3 h5">{t("common:table.groups")}</h3>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li key={typeValue}>
@@ -65,7 +67,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">Stages</h3>
+            <h3 className="mb-3 h5">{t("common:events.sidebar.stagesLabel")}</h3>
             <ul>
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li key={value}>

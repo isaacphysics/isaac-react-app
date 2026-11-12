@@ -4,16 +4,18 @@ import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
 import {zeroOrLess} from "../../../services";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
+import { useTranslation } from "react-i18next";
 
 interface SelectedEventDetailsProps {
     event: AugmentedEvent;
 }
 export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
+    const { t } = useTranslation();
     return <Card>
         <CardBody>
-            <div className="h-subtitle mb-1 h3">Selected event details</div>
+            <div className="h-subtitle mb-1 h3">{t("common:events.selectedDetails.title")}</div>
             <p className="m-0">
-                <strong>Event: </strong>
+                <strong>{t("common:events.selectedDetails.eventLabel")} </strong>
                 <Link to={`/events/${event.id}`} target="_blank">
                     {event.title} {event.subtitle}
                 </Link>
@@ -21,7 +23,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
 
                 {event.location && event.location.address && event.location.address.addressLine1 &&
                     <>
-                        <strong>Location: </strong>
+                        <strong>{t("common:label.eventLocation")} </strong>
                         {event.location.address.addressLine1}{", "}
                         {event.location.address.town}{", "}
                         {event.location.address.postalCode}
@@ -29,19 +31,19 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                     </>
                 }
 
-                <strong>Event status: </strong>
+                <strong>{t("common:events.selectedDetails.statusLabel")} </strong>
                 <span className={event.isCancelled ? "text-danger fw-bold" : ""}>{event.eventStatus}</span>
                 <br />
 
-                <strong>Event start: </strong>
+                <strong>{t("common:events.selectedDetails.startDateLabel")} </strong>
                 <DateString>{event.date}</DateString> - <DateString>{event.endDate}</DateString>
                 <br />
 
-                <strong>Booking deadline: </strong>
+                <strong>{t("common:label.bookingDeadlineLabel")} </strong>
                 <DateString>{event.bookingDeadline}</DateString>
                 <br />
 
-                <strong>Prepwork deadline: </strong>
+                <strong>{t("common:events.selectedDetails.prepWorkDeadlineLabel")} </strong>
                 <DateString>{event.prepWorkDeadline}</DateString>
                 <br />
 
@@ -51,7 +53,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                 {/*<br />*/}
 
                 <span className={zeroOrLess(event.placesAvailable) ? "text-danger" : ""}>
-                    <strong>Number of places available: </strong>
+                    <strong>{t("common:events.selectedDetails.placesAvailableLabel")} </strong>
                     {event.placesAvailable} / {event.numberOfPlaces}
                 </span>
             </p>

@@ -2,20 +2,22 @@ import React from "react";
 import {handleProviderLoginRedirect, useAppDispatch} from "../../state";
 import { Spacer } from "./Spacer";
 import { UserRole } from "../../../IsaacApiTypes";
+import { useTranslation } from "react-i18next";
 
 export const RaspberryPiSignInButton = ({isSignup, knownRole, concise}: {isSignup?: boolean, knownRole?: UserRole, concise?: boolean}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const logInWithRaspberryPi = () => dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup, knownRole));
 
     return <button className="d-flex w-100 align-items-center linked-account-button-outer bg-white mb-1 p-3" onClick={logInWithRaspberryPi}>
-        <img className="authenticator-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>
+        <img className="authenticator-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={t("common:auth.raspberryPi.logoAlt")}/>
         {
             concise ?
-                <div className={"d-inline"}>Raspberry Pi</div> :
+                <div className={"d-inline"}>{t("common:label.raspberryPi")}</div> :
                 <div className={"d-inline"}>
-                    <div className={"d-inline d-md-none"}>Raspberry Pi</div>
-                    <div className={"d-none d-md-inline"}>Raspberry Pi Foundation</div>
+                    <div className={"d-inline d-md-none"}>{t("common:label.raspberryPi")}</div>
+                    <div className={"d-none d-md-inline"}>{t("common:auth.raspberryPi.fullLabelDesktop")}</div>
                 </div>
         }
         <Spacer />

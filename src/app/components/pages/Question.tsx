@@ -40,6 +40,7 @@ import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSid
 import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { AccessingAssignedQuestionOutsideAssignmentWarning } from "../elements/alerts/AssignedQuestionWarningAlert";
+import { useTranslation } from "react-i18next";
 
 interface QuestionPageProps{
     questionIdOverride?: string;
@@ -47,6 +48,7 @@ interface QuestionPageProps{
 }
 
 export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
+    const { t } = useTranslation();
     const location = useLocation();
     const params = useParams();
     const questionId = questionIdOverride || params.questionId || "";
@@ -83,7 +85,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
 
     return <ShowLoadingQuery
         query={questionQuery}
-        defaultErrorTitle="Unable to load question"
+        defaultErrorTitle={t("common:error.loadQuestion")}
         ifNotFound={<NotFound />}
         thenRender={doc => {
             const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;

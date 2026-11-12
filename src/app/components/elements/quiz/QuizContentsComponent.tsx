@@ -38,6 +38,8 @@ import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { QuizSidebar, QuizSidebarProps } from "../sidebar/QuizSidebar";
 import { InaccessibleContentWarningAlert } from "../alerts/InaccessibleContentWarningAlert";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../../services/accessibility";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type QuizContents = {
     questions: QuestionDTO[];
@@ -75,20 +77,21 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
 }
 
 function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: FullQuizInfo) {
+    const { t } = useTranslation();
     if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
-            <div className="h4">No feedback available</div>
+            <div className="h4">{t("common:status.noFeedback")}</div>
             : attempt.feedbackMode === "OVERALL_MARK" ?
-                <div className="h4">Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</div>
+                <div className="h4">{t("common:tests.details.overallMark", { correct: attempt.quiz?.individualFeedback?.overallMark?.correct, total: attempt.quiz?.total })}</div>
                 :
                 <table className="quiz-marks-table">
                     <tbody>
                         <tr>
-                            <th>Overall mark</th>
+                            <th>{t("common:tests.details.overallMarkLabel")}</th>
                             <td>{attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</td>
                         </tr>
                         <tr>
-                            <th colSpan={2}>Section mark breakdown</th>
+                            <th colSpan={2}>{t("common:tests.details.sectionBreakdown")}</th>
                         </tr>
                         {Object.keys(sections).map((k, index) => {
                             const section = sections[k];
@@ -119,7 +122,7 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
                     return <li key={k}>
                         <Link to={pageLink(index + 1)}>{section.title}</Link>
                         {" "}
-                        <small className="text-muted">{completed ? "Completed" : anyStarted ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
+                        <small className="text-muted">{completed ? t("common:status.completed") : anyStarted ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
                     </li>;
                 })}
             </ul>
@@ -128,9 +131,10 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
 }
 
 function QuizHeader(quizProps: QuizProps) {
+    const { t } = useTranslation();
 
     if (!isFullQuizProps(quizProps) && !quizProps.preview) {
-        return <p data-testid="quiz-action">You are freely attempting this test.</p>;
+        return <p data-testid="quiz-action">{t("common:tests.header.freeAttempt")}</p>;
     }
 
     const {quiz, preview, attempt} = quizProps as QuizProps & FullQuizInfo;
@@ -139,7 +143,7 @@ function QuizHeader(quizProps: QuizProps) {
         return <>
             <EditContentButton doc={quiz} />
             <div data-testid="quiz-action">
-                <p>You are previewing this test.</p>
+                <p>{t("common:tests.header.preview")}</p>
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
@@ -147,10 +151,10 @@ function QuizHeader(quizProps: QuizProps) {
         return <>
             <p className="d-flex">
                 <span>
-                    Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
-                    {isDefined(attempt.completedDate) && <><br />Completed:&nbsp;{formatDate(attempt.completedDate)}</>}
+                    {t("common:tests.header.setBy", { teacherName: extractTeacherName(assignment.assignerSummary ?? null) })}
+                    {isDefined(attempt.completedDate) && <><br />{t("common:tests.header.completedDate", { date: formatDate(attempt.completedDate) })}</>}
                 </span>
-                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
+                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? t("common:tests.header.wasDue") : t("common:label.due")}&nbsp;{formatDate(assignment.dueDate)}</>}
             </p>
             {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && !isDefined(attempt.completedDate) && <Alert color={siteSpecific("info", "warning")}>
                 {siteSpecific(<>
@@ -180,25 +184,27 @@ function QuizRubric({rubric}: {rubric?: ContentDTO}) {
 }
 
 export function QuizRubricButton({rubric}: {rubric?: ContentDTO}) {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const openQuestionModal = () => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal());}, size: "lg",
-            title: "Test Instructions", body: <QuizRubric rubric={rubric} />
+            title: t("common:tests.rubric.modalTitle"), body: <QuizRubric rubric={rubric} />
         }));
     };
 
     if (rubric) {
         return <Button color={"keyline"} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
-            title="Show instructions in a modal" onClick={openQuestionModal}
+            title={t("common:tests.rubric.buttonTooltip")} onClick={openQuestionModal}
         >
-            Show instructions
+            {t("common:tests.rubric.showButton")}
         </Button>;
     }
 }
 
 function QuizSection(quizProps: QuizProps & FullQuizInfo) {
+    const { t } = useTranslation();
     const {attempt, page, studentUser, user, quizAssignmentId} = quizProps;
     const deviceSize = useDeviceSize();
     const sections = attempt.quiz?.children;
@@ -211,7 +217,18 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
         <Row className="question-content-container">
             <Col className={classNames("py-lg-4 question-panel", {"mw-760": isAda})}>
                 {viewingAsSomeoneElse && <div className="mb-2">
-                    You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
+                    <Trans
+                        i18nKey="common:tests.viewingAs.notification"
+                        components={{
+                            strong: <b />,
+                        }}
+                        values={{ givenName: studentUser?.givenName, familyName: studentUser?.familyName }}
+                    />{quizAssignmentId && <> <Trans
+                        i18nKey="common:tests.viewingAs.returnLink"
+                        components={{
+                            feedbackLink: <Link to={`/test/assignment/${quizAssignmentId}/feedback`} />,
+                        }}
+                    /></>}
                 </div>}
 
                 <div className="mb-lg-3">
@@ -233,7 +250,7 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
             </Col>
         </Row>
         :
-        <Alert color="danger">Test section {page} not found</Alert>
+        <Alert color="danger">{t("common:tests.section.notFound", { page })}</Alert>
     ;
 }
 
@@ -260,13 +277,14 @@ const generateQuizTitle = (quiz: IsaacQuizDTO | DetailedQuizSummaryDTO | undefin
         quizTitle += " Feedback";
     }
     if (isDefined(studentUser)) {
-        quizTitle += ` for ${studentUser.givenName} ${studentUser.familyName}`;
+        quizTitle += i18next.t("common:tests.title.studentSuffix", { givenName: studentUser.givenName, familyName: studentUser.familyName });
     }
 
     return quizTitle;
 };
 
 const QuizTitle = (quizProps: QuizProps) => {
+    const { t } = useTranslation();
     const {page, pageHelp, preview, studentUser, user, quiz} = quizProps as QuizProps;
 
     const location = useLocation();
@@ -284,7 +302,7 @@ const QuizTitle = (quizProps: QuizProps) => {
 
         const sections = attempt.quiz?.children;
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
-        const sectionTitle = section?.title ?? "Section " + page;
+        const sectionTitle = section?.title ?? t("common:tests.section.fallbackTitle", { page });
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
             intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}
             icon={{"type": "icon", "icon": "icon-tests"}}
@@ -297,6 +315,7 @@ interface QuizPaginationProps {
 }
 
 export function QuizPagination({page, quizContents: {sections, pageLink}, finalLabel}: QuizProps & FullQuizInfo & QuizPaginationProps) {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     if (!page) return;
     
@@ -306,9 +325,9 @@ export function QuizPagination({page, quizContents: {sections, pageLink}, finalL
     const nextLink = pageLink(!finalSection ? page + 1 : undefined);
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
-        <Button color="keyline" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>Back</Button>
-        <div className="d-none d-md-block">Section {page} / {sectionCount}</div>
-        <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : "Next"}</Button>
+        <Button color="keyline" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>{t("common:button.back")}</Button>
+        <div className="d-none d-md-block">{t("common:tests.pagination.position", { page, sectionCount })}</div>
+        <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : t("common:button.next")}</Button>
     </div>;
 }
 
@@ -323,7 +342,18 @@ function QuizOverview(props: QuizProps & { viewingAsSomeoneElse: boolean }) {
     return <div className="mt-4">
         {!isDefined(studentUser?.id) && <QuizHeader {...props as QuizProps & FullQuizInfo} />}
         {viewingAsSomeoneElse && <div className="mb-2">
-            You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
+            <Trans
+                i18nKey="common:tests.viewingAs.notification"
+                components={{
+                    strong: <b />,
+                }}
+                values={{ givenName: studentUser?.givenName, familyName: studentUser?.familyName }}
+            />{quizAssignmentId && <> <Trans
+                i18nKey="common:tests.viewingAs.returnLink"
+                components={{
+                    feedbackLink: <Link to={`/test/assignment/${quizAssignmentId}/feedback`} />,
+                }}
+            /></>}
         </div>}
         <QuizRubric rubric={quiz.rubric}/>
         {isFullQuizProps(props) && <QuizDetails {...props} />}
@@ -341,6 +371,7 @@ function QuizQuestions(props: QuizProps & FullQuizInfo) {
 }
 
 export function QuizContentsComponent(props: QuizProps) {
+    const { t } = useTranslation();
     const {quiz, studentUser, user} = props;
 
     const questions = isFullQuizProps(props) ? props.quizContents.questions : [];
@@ -360,7 +391,7 @@ export function QuizContentsComponent(props: QuizProps) {
         totalSections: Object.keys(sections).length,
         currentSection: props.page ? props.page : undefined,
         sectionStates: Object.values(sections).map(section => sectionState(section)),
-        sectionTitles: Object.keys(sections).map(k => sections[k].title || "Section " + k),
+        sectionTitles: Object.keys(sections).map(k => sections[k].title || t("common:tests.sidebar.fallbackTitle", { id: k })),
     };
 
     return <>

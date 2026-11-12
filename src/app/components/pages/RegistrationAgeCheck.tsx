@@ -17,10 +17,12 @@ import classNames from "classnames";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { useTranslation } from "react-i18next";
 
 type AgePermission = "denied" | "additional_info" | "sso_only" | "allowed";
 
 export const RegistrationAgeCheck = () => {
+    const { t } = useTranslation();
 
     const navigate = useNavigate();
 
@@ -49,7 +51,7 @@ export const RegistrationAgeCheck = () => {
 
     const goBack = () => {
         confirmThen(
-            "Are you sure you want go back? Any information you have entered will be lost.",
+            t("common:auth.registration.goBackConfirm"),
             () => navigate("/register"));
     };
 
@@ -57,7 +59,7 @@ export const RegistrationAgeCheck = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -66,8 +68,8 @@ export const RegistrationAgeCheck = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h2 className={siteSpecific("h4", "h3")}>How old are you?</h2>
-                <p>We can only create accounts for users {SITE_LOWER_AGE_LIMIT} years old or over.</p>
+                <h2 className={siteSpecific("h4", "h3")}>{t("common:auth.registration.ageCheck.ageQuestion")}</h2>
+                <p>{t("common:auth.registration.ageCheck.terms", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
                 <Form onSubmit={submit}>
                     <fieldset>
                         <FormGroup check className="d-flex align-items-center my-2">
@@ -80,7 +82,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-over" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT} and over</Label>
+                            <Label for="registration-age-check-over" className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionOver", { minAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT })}</Label>
                         </FormGroup>
                         <FormGroup check className="d-flex align-items-center my-2">
                             <Input
@@ -92,7 +94,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT} - {SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old</Label>
+                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionBetween", { minAge: SITE_LOWER_AGE_LIMIT, maxAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1 })}</Label>
                         </FormGroup>
                         <FormGroup check className="my-2">
                             <Input
@@ -104,19 +106,19 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-under" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT - 1} or under</Label>
+                            <Label for="registration-age-check-under" className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionUnder", { maxAge: SITE_LOWER_AGE_LIMIT - 1 })}</Label>
                         </FormGroup>
                         <FormFeedback className={classNames({"d-block": isInvalid})}>
-                            Please make a selection.
+                            {t("common:auth.registration.ageCheck.selectionRequired")}
                         </FormFeedback>
                     </fieldset>
                     {isAda && <hr/>}
                     <Row className="justify-content-end">
                         <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
-                            <Button className="w-100 h-100" color="keyline" onClick={goBack}>Back</Button>
+                            <Button className="w-100 h-100" color="keyline" onClick={goBack}>{t("common:button.back")}</Button>
                         </Col>
                         <Col sm={siteSpecific(4,5)} lg={3}>
-                            <Button type="submit" color="solid" className="w-100 h-100">Continue</Button>
+                            <Button type="submit" color="solid" className="w-100 h-100">{t("common:button.continue")}</Button>
                         </Col>
                     </Row>
                 </Form>

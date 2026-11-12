@@ -1,6 +1,7 @@
 import {PasswordFeedback, ZxcvbnResult} from "../../IsaacAppTypes";
 import {siteSpecific} from "./";
 import axios from "axios";
+import i18next from "i18next";
 
 export const passwordStrengthText: {[score: number]: string} = {
     0: "Very Weak",
@@ -92,7 +93,7 @@ export async function checkPwnedPasswords(password: string, callback: (feedback:
         const useCount = breachedPasswordUseCount(pwnedPasswordResponse.data, sha1Suffix);
         let feedback: PasswordFeedback | null = null;
         if (useCount > 10000) {
-            feedback = {feedbackText: "Useless", pwnedPasswordCount: useCount};
+            feedback = {feedbackText: i18next.t("common:auth.passwordStrength.breachedFeedback"), pwnedPasswordCount: useCount};
         } else if (useCount >= 100) {
             feedback = {feedbackText: passwordStrengthText[0], pwnedPasswordCount: useCount};
         } else if (useCount > 0) {

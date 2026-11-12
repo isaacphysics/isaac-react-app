@@ -7,6 +7,7 @@ import queryString from "query-string";
 import {Location} from "history";
 import {PotentialUser} from "../../IsaacAppTypes";
 import {Immutable} from "immer";
+import i18next from "i18next";
 
 export function makeUrl(url: string, queryParams?: { [p: string]: string | undefined }) {
     function valueIsNotUndefined(v: [string, string | undefined]): v is [string, string] {
@@ -51,7 +52,7 @@ function backToBoard(board: string) {
 function showRelatedConceptPage(conceptPage: ApiTypes.ContentSummaryDTO) {
     return {
         type: "button",
-        title: "Read suggested related concept page",
+        title: i18next.t("common:questions.fastTrack.relatedConceptTitle"),
         value: "Read related concept page",
         onClick: function() {
             goToUrl(`/concepts/${conceptPage.id}`);

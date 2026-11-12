@@ -8,6 +8,7 @@ import { StyledDropdown } from "../inputs/DropdownInput";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { StyledTabPicker, StyledTabPickerProps } from "../inputs/StyledTabPicker";
 import { SearchInputWithIcon } from "../SearchInputs";
+import { useTranslation } from "react-i18next";
 
 type QuizStatusCheckboxProps = Partial<StyledTabPickerProps> & {
     status: QuizStatus;
@@ -29,12 +30,13 @@ const QuizStatusCheckbox = (props: QuizStatusCheckboxProps) => {
 };
 
 const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status" | "checkboxTitle">) => {
+    const { t } = useTranslation();
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<QuizStatus[]>([]);
     return <StyledTabPicker
         {...rest}
         type="checkbox" to={undefined}
-        id="all" checkboxTitle="All"
+        id="all" checkboxTitle={t("common:label.all")}
         onChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(statusFilter);
@@ -59,6 +61,7 @@ interface MyQuizzesSidebarProps extends ContentSidebarProps {
 };
 
 export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
+    const { t } = useTranslation();
     const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode, ...rest } = props;
     const deviceSize = useDeviceSize();
     const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
@@ -66,20 +69,20 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
     const statusOptions = activeTab === 1 ? Object.values(QuizStatus).filter(s => s !== QuizStatus.All)
         : [QuizStatus.Started, QuizStatus.Complete];
 
-    return <ContentSidebar buttonTitle="Search & Filter" {...rest}>
+    return <ContentSidebar buttonTitle={t("common:button.searchAndFilter")} {...rest}>
         <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
             return <>
                 {above["lg"](deviceSize) && <div className="section-divider"/>}
                 <search>
-                    <h3 className="h5">Search tests</h3>
+                    <h3 className="h5">{t("common:title.searchTests")}</h3>
                     <SearchInputWithIcon 
                         outerClassName="my-3" 
                         type="search" 
                         onChange={(e) => setQuizTitleFilter(e.target.value)}
-                        placeholder="e.g. Practice" aria-label="Search by title"
+                        placeholder={t("common:tests.search.placeholder")} aria-label={t("common:label.searchByTitle")}
                     />
                     <div className="section-divider"/>
-                    <h3 className="mb-3 h5">Filter by status</h3>
+                    <h3 className="mb-3 h5">{t("common:label.filterByStatus")}</h3>
                     <ul>
                         <li><QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/></li>
                         <div className="section-divider-small"/>
@@ -88,16 +91,16 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         </li>)}
                     </ul>
                     {activeTab === 1 && <>
-                        <h3 className="my-3 h5">Filter by assigner</h3>
+                        <h3 className="my-3 h5">{t("common:label.filterByAssigner")}</h3>
                         <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
                             {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                         </Input>
                     </>}
                     <div className="section-divider mt-4"/>
-                    <h3 className="mb-3 h5">Display</h3>
+                    <h3 className="mb-3 h5">{t("common:sidebar.display.title")}</h3>
                     <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
-                        <option value="table">Table View</option>
-                        <option value="cards">Card View</option>
+                        <option value="table">{t("common:tests.sidebar.displayTableOption")}</option>
+                        <option value="cards">{t("common:tests.sidebar.displayCardOption")}</option>
                     </StyledDropdown>
                 </search>
             </>;

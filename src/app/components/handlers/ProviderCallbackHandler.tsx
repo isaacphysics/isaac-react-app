@@ -3,8 +3,10 @@ import {handleProviderCallback, useAppDispatch} from "../../state";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "./IsaacSpinner";
 import { useLocation, useNavigate, useParams } from 'react-router';
+import { useTranslation } from "react-i18next";
 
 export const ProviderCallbackHandler = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const {provider} = useParams<{provider: AuthenticationProvider}>();
@@ -29,7 +31,7 @@ export const ProviderCallbackHandler = () => {
 
     return <React.Fragment>
         <div className="w-100 text-center">
-            <div className="pt-7 pb-2 h2">Signing in...</div>
+            <div className="pt-7 pb-2 h2">{t("common:auth.callback.signingIn")}</div>
             <IsaacSpinner />
         </div>
     </React.Fragment>;

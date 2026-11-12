@@ -8,6 +8,7 @@ import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../Isaac
 import {DateString} from "../DateString";
 import {AugmentedEvent, PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
 import { Table, Button, Input } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
@@ -25,6 +26,7 @@ interface EventAttendanceProps {
     userIdToSchoolMapping: UserSchoolLookup;
 }
 export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSchoolMapping}: EventAttendanceProps) => {
+    const { t } = useTranslation();
 
     const [recordEventAttendance] = useRecordUserEventAttendanceMutation();
 
@@ -45,55 +47,55 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
     }
 
     return <>
-        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle="Record event attendance" disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
+        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle={t("common:events.attendance.title")} disabled={event.isCancelled && t("common:events.attendance.cancelledEventNotice")}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
-                As an event leader, you are only able to see the bookings of users who have granted you access to their data.
+                {t("common:label.eventLeaderRestriction")}
             </div>}
             <div className="overflow-auto">
                 <Table bordered className="mb-0 bg-white">
                     <thead>
                         <tr>
                             <th className="align-middle">
-                                Actions
+                                {t("common:table.actions")}
                             </th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingStatus'); setReverse(!reverse);}}>
-                                Attendance
+                                {t("common:events.attendance.table.attendanceHeader")}
                             </Button></th>
                             <th className="align-middle">
                                 <Button color="link" onClick={() => {setSortPredicate('userBooked.familyName'); setReverse(!reverse);}}>
-                                    Name
+                                    {t("common:table.name")}
                                 </Button>
-                                <Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder="Surname filter" />
+                                <Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder={t("common:events.attendance.table.surnameFilterPlaceholder")} />
                             </th>
                             <th className="align-middle">
-                                Job / year group
+                                {t("common:events.bookingsTable.jobYearGroup")}
                             </th>
                             <th className="align-middle">
-                                School
+                                {t("common:label.school")}
                             </th>
                             <th className="align-middle">
-                                Account type
+                                {t("common:events.bookingsTable.accountType")}
                             </th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('userBooked.email'); setReverse(!reverse);}}>
-                                Email
+                                {t("common:table.email")}
                             </Button></th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDate'); setReverse(!reverse);}}>
-                                Booking created
+                                {t("common:events.bookingsTable.bookingCreated")}
                             </Button></th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('updated'); setReverse(!reverse);}}>
-                                Booking updated
+                                {t("common:events.bookingsTable.bookingUpdated")}
                             </Button></th>
                             <th className="align-middle">
-                                Accessibility requirements
+                                {t("common:label.accessibilityRequirements")}
                             </th>
                             <th className="align-middle">
-                                Medical requirements
+                                {t("common:events.attendance.table.medicalRequirementsHeader")}
                             </th>
                             <th className="align-middle">
-                                Emergency name
+                                {t("common:events.bookingsTable.emergencyName")}
                             </th>
                             <th className="align-middle">
-                                Emergency telephone
+                                {t("common:events.bookingsTable.emergencyPhone")}
                             </th>
                         </tr>
                     </thead>
@@ -110,12 +112,12 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                         {booking.bookingStatus != 'ATTENDED' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: true})}
                                         >
-                                            Mark&nbsp;as Attended
+                                            {t("common:events.attendance.markAttendedButton")}
                                         </Button>}
                                         {booking.bookingStatus != 'ABSENT' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: false})}
                                         >
-                                            Mark&nbsp;as Absent
+                                            {t("common:events.attendance.markAbsentButton")}
                                         </Button>}
                                     </td>
                                     <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>

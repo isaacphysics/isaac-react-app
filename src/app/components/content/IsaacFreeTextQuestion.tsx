@@ -4,6 +4,7 @@ import {IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes"
 import {Alert, FormGroup, Input} from "reactstrap";
 import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
+import { useTranslation } from "react-i18next";
 
 interface Limit {
     exceeded: boolean;
@@ -51,17 +52,19 @@ function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>)
 }
 
 const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
+    const { t } = useTranslation();
     return validValue ? null
         : <Alert color="warning" className={"no-print"}>
-            <strong>Warning:</strong>
+            <strong>{t("common:questions.freeText.validationWarningLabel")}</strong>
             <ul>
-                {charLimit.exceeded && <li>Character limit exceeded ({charLimit.current}/{charLimit.limit})</li>}
-                {wordLimit.exceeded && <li>Word limit exceeded ({wordLimit.current}/{wordLimit.limit})</li>}
+                {charLimit.exceeded && <li>{t("common:questions.validation.charLimitExceeded", { currentCount: charLimit.current, limit: charLimit.limit })}</li>}
+                {wordLimit.exceeded && <li>{t("common:questions.validation.wordLimitExceeded", { currentCount: wordLimit.current, limit: wordLimit.limit })}</li>}
             </ul>
         </Alert>;
 };
 
 const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacFreeTextQuestionDTO>) => {
+    const { t } = useTranslation();
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
@@ -77,7 +80,7 @@ const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </div>
             <FormGroup className="form-group">
                 <Input type="textarea"
-                    placeholder="Type your answer here."
+                    placeholder={t("common:questions.answerPlaceholder")}
                     spellCheck={true}
                     rows={3}
                     value={currentAttemptValue}

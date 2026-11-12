@@ -4,6 +4,7 @@ import { AppQuestionDTO, InlineQuestionDTO, InlineContext, QuestionCorrectness }
 import { ContentDTO, GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
 import { selectors, useAppSelector } from "../../state";
 import { isDefined, submitCurrentAttempt } from "../../services";
+import { useTranslation } from "react-i18next";
 
 // TODO: generify this (IsaacContentProps?), reuse also for IsaacCardDeck
 interface IsaacInlineRegionProps {
@@ -13,6 +14,7 @@ interface IsaacInlineRegionProps {
 
 // return a "question part" representing the inline region; the validation response is a combination of the validation responses of each of the inline questions
 export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined) : InlineQuestionDTO => {
+    const { t } = useTranslation();
     const inlineContext = useContext(InlineContext);
     const currentFeedbackPart = inlineContext?.feedbackIndex;
     const inlineQuestions = pageQuestions?.filter(q => inlineContext?.docId && q.id?.startsWith(inlineContext?.docId) && q.id.includes("|inline-question:"));
@@ -30,9 +32,9 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const defaultFeedback = (correctness: QuestionCorrectness) : ContentDTO => {
         const feedbackMap : {[key in QuestionCorrectness]: string} = {
             "CORRECT" : "Correct!",
-            "INCORRECT" : "Check your answer.",
-            "NOT_ANSWERED" : "You did not provide an answer.",
-            "NOT_SUBMITTED" : "This answer is missing a unit.", // this is a special case for numeric questions, may need to be updated if we add more inline q types
+            "INCORRECT" : t("common:questions.inlineRegion.feedback.incorrect"),
+            "NOT_ANSWERED" : t("common:questions.inlineRegion.feedback.notAnswered"),
+            "NOT_SUBMITTED" : t("common:questions.inlineRegion.feedback.missingUnit"), // this is a special case for numeric questions, may need to be updated if we add more inline q types
         };
 
         return {

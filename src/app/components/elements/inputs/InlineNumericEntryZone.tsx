@@ -8,8 +8,10 @@ import { isDefined, isLoggedIn, isPhy, useCurrentQuestionAttempt } from "../../.
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
+import { useTranslation } from "react-i18next";
 
 export const InlineNumericEntryZone = ({questionDTO, setModified, index, correctness, focusRef, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
+    const { t } = useTranslation();
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
@@ -72,7 +74,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, index, correct
                     correctnessClass((correctness === "INCORRECT" && valueCorrectness === "CORRECT") ? "NOT_SUBMITTED" : valueCorrectness)
                 )}
                 name={`Input field for part ${questionDTO?.title ?? (index+1)}`}
-                aria-label={`Input field for part ${questionDTO?.title ?? (index+1)}`}
+                aria-label={t("common:questions.numeric.inputLabel", { partTitle: questionDTO?.title ?? (index+1) })}
                 style={contentStyle}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
@@ -100,7 +102,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, index, correct
                 <div className="feedback-wrapper d-flex">
                     <div className={classNames("d-flex align-items-center align-self-center", {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                         <Markup encoding={"latex"}>
-                            {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit"}
+                            {isDefined(unit) ? wrapUnitForSelect(unit) : t("common:label.unit")}
                         </Markup>
                     </div>
                 </div>

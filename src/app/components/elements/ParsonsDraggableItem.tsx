@@ -14,6 +14,7 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import { Markup } from "../elements/markup";
 import { Spacer } from "../elements/Spacer";
+import { useTranslation } from "react-i18next";
 
 export const moveParsonsItem = (
     src: Immutable<ParsonsItemDTO>[] | undefined,
@@ -133,11 +134,12 @@ interface ReorderButtonsProps {
 }
 
 const ReorderButtons = ({index, items, setItems, isParsons, currentIndent, inAvailableItems}: ReorderButtonsProps) => {
+    const { t } = useTranslation();
     const canReorderUp = index !== 0 && !inAvailableItems;
     const canReorderDown = index !== items.length - 1 && !inAvailableItems;
     return <div className="reorder-buttons">
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderUp})}
-            disabled={!canReorderUp} title={`Move ${getAccessibleItemName(items[index])} up`} onClick={() => {
+            disabled={!canReorderUp} title={t("common:questions.parsons.moveUp", { itemName: getAccessibleItemName(items[index]) })} onClick={() => {
                 const newItems = [...items];
                 moveParsonsItem(newItems, index, newItems, index-1, isParsons ? currentIndent || 0 : undefined);
                 setItems(newItems);
@@ -146,7 +148,7 @@ const ReorderButtons = ({index, items, setItems, isParsons, currentIndent, inAva
             <i className={classNames("icon icon-chevron-up", canReorderUp ? "icon-color-muted-hoverable icon-color-theme-on-hover" : "icon-color-disabled")} />
         </button>
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderDown})}
-            disabled={!canReorderDown} title={`Move ${getAccessibleItemName(items[index])} down`} onClick={() => {
+            disabled={!canReorderDown} title={t("common:questions.parsons.moveDown", { itemName: getAccessibleItemName(items[index]) })} onClick={() => {
                 const newItems = [...items];
                 moveParsonsItem(newItems, index, newItems, index+1, isParsons ? currentIndent || 0 : undefined);
                 setItems(newItems);
@@ -244,6 +246,7 @@ type AttemptItemsProps = {
 export type ParsonsDraggableItemProps = BaseDraggableProps & (AvailableItemsProps | AttemptItemsProps);
 
 export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapItemList, questionId, useSingleList, readonly, inAvailableItems, isParsons, canIndent}: ParsonsDraggableItemProps) => {
+    const { t } = useTranslation();
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
         if (!snapshot.isDropAnimating || !isParsons) return style;
         
@@ -287,8 +290,8 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapI
                     type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
                     title={
                         inAvailableItems
-                            ? `Move ${getAccessibleItemName(currentItem)} into your answer`
-                            : `Move ${getAccessibleItemName(currentItem)} back to the items list`
+                            ? t("common:questions.parsons.moveToAnswer", { itemName: getAccessibleItemName(currentItem) })
+                            : t("common:questions.parsons.moveBackToItems", { itemName: getAccessibleItemName(currentItem) })
                     }
                     onClick={swapItemList}
                 >

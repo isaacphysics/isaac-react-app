@@ -2,6 +2,7 @@ import {siteSpecific, TEACHER_REQUEST_ROUTE} from "../../services";
 import {Link} from "react-router-dom";
 import React from "react";
 import {UserRole} from "../../../IsaacApiTypes";
+import { Trans } from "react-i18next";
 
 const UserFacingRoleWithArticle: {[role in UserRole]: string} = {
     ADMIN: "an admin",
@@ -20,7 +21,13 @@ export const AccountTypeMessage = ({role, hideUpgradeMessage}: { role?: UserRole
     const userFacingRole = roleSplit.join(" ");
 
     return <div>
-        You have {indefiniteArticle} <strong>{userFacingRole}</strong> account.
+        <Trans
+            i18nKey="common:account.roleMessage"
+            components={{
+                strong: <strong />,
+            }}
+            values={{ article: indefiniteArticle, role: userFacingRole }}
+        />
         {role === "STUDENT" && !hideUpgradeMessage &&
         <span> If you are a teacher{siteSpecific(" or tutor", "")}, you can {" "}
             {siteSpecific(

@@ -19,6 +19,7 @@ export enum KEY {
     ASSIGNMENT_SORT_ORDER = "assignmentSortOrder",
     GROUP_SORT_ORDER = "groupSortOrder",
     TOPICS_TAB = "topicsTab",
+    LANGUAGE = "i18nextLng",
 }
 
 export const LOADING_FAILURE_VALUE = null;

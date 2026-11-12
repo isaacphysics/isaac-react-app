@@ -46,6 +46,8 @@ import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
 import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -143,10 +145,10 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     const subject = determineQuizSubject(assignment.quizSummary) || "physics";
 
     const innerTableHeaders : InnerTableHeader[] = [
-        {title: "Group name", sort: compareGroupNames},
-        above["md"](deviceSize) ? {title: "Creation date", sort: compareCreationDates} : undefined,
-        above["sm"](deviceSize) ? {title: "Start date", sort: compareStartDates} : undefined,
-        {title: "Due date", sort: compareDueDates}
+        {title: i18next.t("common:label.groupName"), sort: compareGroupNames},
+        above["md"](deviceSize) ? {title: i18next.t("common:tests.assignment.header.creationDate"), sort: compareCreationDates} : undefined,
+        above["sm"](deviceSize) ? {title: i18next.t("common:label.startDate"), sort: compareStartDates} : undefined,
+        {title: i18next.t("common:table.dueDate"), sort: compareDueDates}
     ].filter(isDefined);
 
     return <>
@@ -167,7 +169,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                     assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
                                     e.stopPropagation();}}>
-                                Set test
+                                {i18next.t("common:button.setTest")}
                             </AffixButton>
                             <div className="d-none d-md-block w-max-content text-center text-nowrap me-3">
                                 Assigned to
@@ -185,8 +187,8 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
                         <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
                         <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
-                            "No groups have been assigned."
-                            : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
+                            i18next.t("common:status.noGroupsAssigned")
+                            : (i18next.t("common:tests.assignment.assignedTooltip", { groupNames: assignedGroups.map(g => g.group).join(", ") }))}
                         </UncontrolledTooltip>
                     </td>
                     <td className={classNames("set-quiz-table-title align-middle ps-4")}>{quizTitle}</td>
@@ -197,7 +199,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                 e.stopPropagation();
                             }}
                         >
-                            Set test
+                            {i18next.t("common:button.setTest")}
                         </Button>
                     </td>
                     <td className="text-center align-middle">
@@ -225,7 +227,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     <ReverseSortButtons active={(selectedCol ?? "Creation date") === header.title && currentSort.name === header.sort.name} />
                                 </div>
                             </th>)}
-                            <th className={`px-1 py-1 text-center ${below["md"](deviceSize) ? "actions-header-sm" : ""}`} colSpan={2}>Actions</th>
+                            <th className={`px-1 py-1 text-center ${below["md"](deviceSize) ? "actions-header-sm" : ""}`} colSpan={2}>{i18next.t("common:table.actions")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -252,17 +254,17 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                 <td className={isPhy ? "text-start" : "text-center"}>
                                     <UncontrolledButtonDropdown>
                                         <DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
-                                            More
+                                            {i18next.t("common:tests.assignment.more")}
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             {assignedGroup.assignment.dueDate && <DropdownItem 
                                                 color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} 
                                                 onClick={() => openExtendDueDateModal(assignedGroup.assignment)}
                                             >
-                                                Extend Due Date
+                                                {i18next.t("common:tests.assignment.extendDueDate")}
                                             </DropdownItem>}
                                             <DropdownItem color="tertiary" size="sm" onClick={() => cancel(assignedGroup.assignment)} disabled={isCancelling}>
-                                                {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : "Cancel test"}
+                                                {isCancelling ? <><IsaacSpinner size="sm" /> {i18next.t("common:tests.assignment.cancelling")}</> : i18next.t("common:tests.assignment.cancelTest")}
                                             </DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledButtonDropdown>
@@ -278,6 +280,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
 
 // 06/26 now deprecated for Isaac, still used on Ada for now
 export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useHistoryState("currentTab", MANAGE_QUIZ_TAB.set);
@@ -307,11 +310,9 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
 
-    const pageTitle= siteSpecific("Set / manage tests", "Tests");
+    const pageTitle= t("site:tests.set.title");
     const pageHelp = <span>
-        Use this page to manage and set tests to your groups. You can assign any test the {SITE_TITLE_SHORT} team have built.
-        <br />
-        Students in the group will be emailed when you set a new test.
+        <Trans i18nKey="common:tests.set.help" components={{ br: <br /> }} values={{ siteName: SITE_TITLE_SHORT }} />
     </span>;
 
     const rowFiltersView = above["md"](deviceSize);
@@ -320,7 +321,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <Input
             id="manage-quizzes-title-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-            placeholder="Filter by title" aria-label="Filter by title"
+            placeholder={t("common:label.filterByTitle")} aria-label={t("common:label.filterByTitle")}
         />
     </Row>;
 
@@ -328,7 +329,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <Input
             id="manage-quizzes-group-name-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-            placeholder="Filter by group" aria-label="Filter by group"
+            placeholder={t("common:label.filterByGroup")} aria-label={t("common:label.filterByGroup")}
         />
     </Row>;
 
@@ -336,34 +337,34 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
         <DropdownToggle className="p-0 m-1 bg-transparent" color="tertiary" caret>{dateFilterType}</DropdownToggle>
         <DropdownMenu>
             <DropdownItem onClick={() => setDateFilterType('after')}>
-                after
+                {t("ada:tests.filters.after")}
             </DropdownItem>
             <DropdownItem onClick={() => setDateFilterType('before')}>
-                before
+                {t("ada:tests.filters.before")}
             </DropdownItem>
             <DropdownItem onClick={() => setDateFilterType('on')}>
-                on
+                {t("ada:tests.filters.on")}
             </DropdownItem>
         </DropdownMenu>
     </UncontrolledDropdown>;
 
     const setDateFilterInput = <div className="d-flex align-items-baseline">
-        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Starting</span>
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t("ada:tests.filters.startDateLabel")}</span>
         {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
         <Input
             id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
-            placeholder="Filter by set date" aria-label="Filter by set date"
+            placeholder={t("ada:tests.filters.filterBySetDate")} aria-label={t("ada:tests.filters.filterBySetDate")}
         />
     </div>;
 
     const dueDateFilterInput = <div className="d-flex align-items-baseline">
-        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Due</span>
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>{t("ada:tests.filters.dueDateLabel")}</span>
         {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         <Input
             id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
-            placeholder="Filter by due date" aria-label="Filter by due date"
+            placeholder={t("ada:tests.filters.filterByDueDate")} aria-label={t("ada:tests.filters.filterByDueDate")}
         />
     </div>;
 
@@ -383,7 +384,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
             <MyAdaSidebar />        
         )}
     >
-        <PageMetadata noTitle showSidebarButton sidebarButtonText="Search tests" helpModalId="help_modal_set_tests">
+        <PageMetadata noTitle showSidebarButton sidebarButtonText={t("common:title.searchTests")} helpModalId="help_modal_set_tests">
             <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         </PageMetadata>
         <Tabs style="tabs" className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
@@ -391,9 +392,9 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                 [siteSpecific("Set tests", "Available tests")]:
                 <ShowLoading until={undeprecatedQuizzes}>
                     {undeprecatedQuizzes && <>
-                        <p>The following tests are available to set to your groups.</p>
+                        <p>{t("common:tests.set.available.intro")}</p>
 
-                        {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
+                        {undeprecatedQuizzes.length === 0 && <p><em>{t("common:tests.set.available.empty")}</em></p>}
 
                         <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>
                     </>}
@@ -403,7 +404,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                 <>
                     {isAda && <div className="d-flex justify-content-center mb-4">
                         <Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
-                            {showFilters ? "Hide filters" : "Show filters"}
+                            {showFilters ? t("common:tests.filters.hide") : t("common:tests.filters.show")}
                         </Button>
                     </div>}
 
@@ -429,12 +430,12 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
                     <ShowLoadingQuery
                         query={quizAssignmentsQuery}
-                        ifError={() => <Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</Alert>}
+                        ifError={() => <Alert color="warning">{t("common:tests.set.loadError")}</Alert>}
                         thenRender={quizAssignments => {
                             let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
                                 const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
-                                    ? `Demo Group ${assignment.groupId}`
-                                    : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
+                                    ? t("common:groups.demo.name", { groupId: assignment.groupId })
+                                    : groupIdToName[assignment.groupId as number] ?? t("common:groups.unknown.label");
                                 return {...assignment, groupName};
                             }).reverse();
 
@@ -474,7 +475,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                             quizAssignment.sort((a, b) => a.assignedGroups[0].assignment.quizSummary?.title?.localeCompare(b.assignedGroups[0].assignment.quizSummary?.title ?? "") ?? 0);
 
                             return <>
-                                {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
+                                {quizAssignments.length === 0 && <p>{t("common:tests.set.emptyState")}</p>}
                                 {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
                                     {isAda && <colgroup>
                                         <col width={"120px"}/>

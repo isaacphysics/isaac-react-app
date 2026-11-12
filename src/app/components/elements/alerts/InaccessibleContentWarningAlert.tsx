@@ -5,17 +5,19 @@ import { Spacer } from '../Spacer';
 import { selectors, useAppSelector } from '../../../state';
 import StyledToggle from '../inputs/StyledToggle';
 import { isAda, isLoggedIn } from '../../../services';
+import { useTranslation } from "react-i18next";
 
 export const DragAndDropInputModeToggle = () => {
+    const { t } = useTranslation();
     const { dragAndDropEnabled, toggleDragAndDropEnabled } = useDragAndDropAccessibility();
 
     return <div className="input-mode-toggle">
-        <span>Question input mode</span>
+        <span>{t("common:accessibility.inputModeTitle")}</span>
         <Spacer />
         <StyledToggle
             checked={dragAndDropEnabled}
-            falseLabel="Dropdown"
-            trueLabel="Drag and drop"
+            falseLabel={t("common:accessibility.dropdownLabel")}
+            trueLabel={t("common:accessibility.dragAndDropLabel")}
             onChange={(e) => {toggleDragAndDropEnabled(); e.stopPropagation();}}
         />
     </div>;

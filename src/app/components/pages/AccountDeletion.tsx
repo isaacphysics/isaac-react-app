@@ -6,6 +6,7 @@ import { selectors, useAppSelector, useDeleteAccountMutation } from "../../state
 import { Link } from "react-router-dom";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import { PageFragment } from "../elements/PageFragment";
+import { Trans, useTranslation } from "react-i18next";
 
 enum DELETION_REASON {
     NO_LONGER_NEED = "no_longer_need",
@@ -21,6 +22,7 @@ interface DeletionReasonFormProps extends FormProps {
 }
 
 const DeletionReasonForm = ({deletionReason, setDeletionReason, ...props}: DeletionReasonFormProps) => {
+    const { t } = useTranslation();
     const DeletionFormCheckbox = ({reason, label, id}: {reason: DELETION_REASON, label: string, id: string}) => {
         return <FormGroup check className="d-flex align-items-center mb-2">
             <Input type="radio" name={reason} id={id} className="me-2" value={reason} checked={deletionReason === reason} onChange={(e) => setDeletionReason(e.target.value as DELETION_REASON)} />
@@ -29,15 +31,16 @@ const DeletionReasonForm = ({deletionReason, setDeletionReason, ...props}: Delet
     };
 
     return <Form {...props}>
-        <DeletionFormCheckbox reason={DELETION_REASON.NO_LONGER_NEED} label="I no longer need my account." id="noLongerNeed" />
-        <DeletionFormCheckbox reason={DELETION_REASON.MAKE_NEW_ACCOUNT} label="I want to create a new account with this email address." id="makeNewAccount" />
-        <DeletionFormCheckbox reason={DELETION_REASON.ACCIDENTAL_CREATION} label="I made an account by mistake." id="accidentalCreation" />
-        <DeletionFormCheckbox reason={DELETION_REASON.MULTIPLE_ACCOUNTS} label="I have multiple accounts and only require one." id="multipleAccounts" />
-        <DeletionFormCheckbox reason={DELETION_REASON.UNKNOWN} label="Another reason / prefer not to say." id="unknown" />
+        <DeletionFormCheckbox reason={DELETION_REASON.NO_LONGER_NEED} label={t("common:account.deletion.reasonNoLongerNeed")} id="noLongerNeed" />
+        <DeletionFormCheckbox reason={DELETION_REASON.MAKE_NEW_ACCOUNT} label={t("common:account.deletion.reasonNewAccount")} id="makeNewAccount" />
+        <DeletionFormCheckbox reason={DELETION_REASON.ACCIDENTAL_CREATION} label={t("common:account.deletion.reasonAccidental")} id="accidentalCreation" />
+        <DeletionFormCheckbox reason={DELETION_REASON.MULTIPLE_ACCOUNTS} label={t("common:account.deletion.reasonMultiple")} id="multipleAccounts" />
+        <DeletionFormCheckbox reason={DELETION_REASON.UNKNOWN} label={t("common:account.deletion.reasonOther")} id="unknown" />
     </Form>;
 };
 
 export const AccountDeletion = () => {
+    const { t } = useTranslation();
     const queryParams = useQueryParams();
     const token = queryParams.token as string | undefined;
     const user = useAppSelector(selectors.user.orNull);
@@ -47,25 +50,25 @@ export const AccountDeletion = () => {
 
     return <Container className="pb-7">
         <TitleAndBreadcrumb 
-            currentPageTitle={"Account deletion"} className="mb-4"
+            currentPageTitle={t("common:account.deletion.title")} className="mb-4"
             icon={{"type": "icon", "icon": "icon-account"}}
         />
-        {!user ? <p>You must be logged in to delete your account.</p> :
-            isTutorOrAbove(user) ? <p>Only student accounts can be deleted automatically. Please <Link to="/contact?preset=accountDeletion">contact us</Link> to request account deletion.</p> : 
-                !token ? <p>You must have a valid token to delete your account. Visit your <Link to="/account">account page</Link> to generate a new email with a token.</p> : 
+        {!user ? <p>{t("common:account.deletion.notLoggedIn")}</p> :
+            isTutorOrAbove(user) ? <p><Trans i18nKey="common:account.deletion.tutorRestriction" components={{ contactLink: <Link to="/contact?preset=accountDeletion" /> }} /></p> : 
+                !token ? <p><Trans i18nKey="common:account.deletion.noToken" components={{ accountLink: <Link to="/account" /> }} /></p> : 
                     <>
                         <PageFragment fragmentId="account_deletion_final_warning" />
-                        <p>Please select the reason you wish to delete your account:</p>
+                        <p>{t("common:account.deletion.selectReason")}</p>
                         <DeletionReasonForm className="ms-2" deletionReason={deletionReason} setDeletionReason={setDeletionReason} />
                         <FormGroup check className="mt-4 ps-0">
                             <StyledCheckbox
                                 id="confirmDeletion"
                                 color="danger"
                                 onChange={(e) => setConfirmDeletion(e.target.checked)}
-                                label={<span>I understand that deleting my account is permanent and cannot be undone.</span>}
+                                label={<span>{t("common:account.deletion.confirmWarning")}</span>}
                             />
                         </FormGroup>
-                        <Button color="danger" className="mt-3" onClick={() => deleteAccount({token, deletionReason: deletionReason.valueOf()})} disabled={isDeletingAccount || !confirmDeletion}>Delete Account</Button>
+                        <Button color="danger" className="mt-3" onClick={() => deleteAccount({token, deletionReason: deletionReason.valueOf()})} disabled={isDeletingAccount || !confirmDeletion}>{t("common:account.deletion.deleteButton")}</Button>
                     </>
         }
     </Container>;

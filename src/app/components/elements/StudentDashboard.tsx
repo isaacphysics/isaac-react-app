@@ -11,8 +11,10 @@ import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
 import { getFriendlyDaysUntil } from './DateString';
 import { FeatureFlag, useFeatureFlag } from '../../services/featureFlag';
+import { Trans, useTranslation } from "react-i18next";
 
 const GroupJoinPanel = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const dispatch = useAppDispatch();
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
@@ -26,23 +28,23 @@ const GroupJoinPanel = () => {
     }
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">Join a group</h2>
-        Enter the code given by your teacher to create a teacher connection and join a group.
+        <h2 className="panel-title">{t("common:button.joinGroup")}</h2>
+        {t("common:connections.connect.codeInstruction")}
         <InputGroup className="my-4 separate-input-group">
             <Input
-                type="text" placeholder="Enter code"
+                type="text" placeholder={t("common:dashboard.groupJoin.placeholder")}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                 onKeyDown={(e) => {if (e.key === 'Enter') {
                     e.preventDefault();
                 }}}
             />
             <Button onClick={processToken} color="solid">
-                Connect
+                {t("common:button.connect")}
             </Button>
         </InputGroup>
         <Spacer/>
         <Link to="/account#teacherconnections" className="panel-link">
-            See my existing groups
+            {t("common:dashboard.groupJoin.existingGroupsLink")}
         </Link>
     </div>;
 };
@@ -52,11 +54,11 @@ interface DashboardStreakPanelProps {
 }
 
 const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
+    const { t } = useTranslation();
 
     const streaksTooltip = useRef(null);
     const tooltip = <UncontrolledTooltip placement="bottom" autohide={false} target={streaksTooltip}>
-        The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/><br/>
-        Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!
+        <Trans i18nKey="common:dashboard.streak.tooltip" components={{ br1: <br />, br2: <br /> }} />
     </UncontrolledTooltip>;
 
     const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
@@ -64,22 +66,22 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
     const inStreakFreezeRange = new Date(1766361600000) <= new Date() && new Date() <= new Date(1767571200000);
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">Build your weekly streak</h2>
+        <h2 className="panel-title">{t("common:dashboard.streak.title")}</h2>
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
         <div className="streak-text mb-2">
             {streakLength >= 1 && inStreakFreezeRange
-                ? "Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!"
+                ? t("common:dashboard.streak.festiveFreeze")
                 : remainingToAnswer <= 0
-                    ? `You've maintained your streak for this week!`
-                    : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+                    ? t("common:dashboard.streak.maintained")
+                    : t("common:dashboard.streak.remaining", { remainingParts: remainingToAnswer })
 
             }
         </div>
         <Spacer/>
         <Button className="d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
-            <i className="icon icon-info icon-color-grey"/> What is this?
+            <i className="icon icon-info icon-color-grey"/> {t("common:dashboard.streak.infoLink")}
         </Button>
         {tooltip}
     </div>;
@@ -92,6 +94,7 @@ interface AssignmentCardProps {
 }
 
 export const AssignmentCard = (props: AssignmentCardProps) => {
+    const { t } = useTranslation();
     const { assignment, isTeacherDashboard, groups } = props;
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
 
@@ -137,7 +140,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             </div>
             <Spacer/>
             <div className="d-flex text-nowrap">
-                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due {getFriendlyDaysUntil(dueDate)}</span>)}
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">{t("common:status.overdue")}</span> : <span className="me-3">{t("common:dashboard.currentWork.dueDate", { dueLabel: getFriendlyDaysUntil(dueDate) })}</span>)}
                 <span className="group-name">{groupName}</span>
             </div>
         </Card>
@@ -151,6 +154,7 @@ interface CurrentWorkPanelProps {
 }
 
 const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPanelProps) => {
+    const { t } = useTranslation();
     if (!isDefined(assignments) || !isDefined(quizAssignments)) {
         return <div className="dashboard-panel"/>;
     }
@@ -158,16 +162,16 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
     const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">Complete current work</h2>
+        <h2 className="panel-title">{t("common:dashboard.currentWork.title")}</h2>
         {toDo.length === 0 
             ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">
-                <span className="mb-2 row d-flex justify-content-center">You have no active assignments.</span>
+                <span className="mb-2 row d-flex justify-content-center">{t("common:dashboard.currentWork.emptyState")}</span>
                 <Link to="/assignments" className="d-inline panel-link">
-                    View older assignments.
+                    {t("common:dashboard.currentWork.viewOlderLink")}
                 </Link>
             </div> 
             : <>
-                <span className="mb-2">You have assignments that are active or due soon:</span>
+                <span className="mb-2">{t("common:dashboard.currentWork.activeIntro")}</span>
                 <div className="row overflow-y-auto pt-1 mt-n1">
                     {toDo.map((assignment: IAssignmentLike) => <div key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3">
                         <AssignmentCard assignment={assignment} groups={groups}/>
@@ -176,10 +180,10 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
                 <Spacer/>
                 <div className="d-flex align-items-center">
                     <Link to="/assignments" className="d-inline panel-link">
-                        See all assignments
+                        {t("common:dashboard.currentWork.allAssignmentsLink")}
                     </Link>
                     <Link to="/tests" className="d-inline panel-link ms-auto ms-lg-7 ms-xl-auto">
-                        See all tests
+                        {t("common:dashboard.currentWork.allTestsLink")}
                     </Link>
                 </div>
             </>}
@@ -192,26 +196,27 @@ interface MyIsaacPanelProps {
 };
 
 const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
+    const { t } = useTranslation();
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">More in My Isaac</h2>
+        <h2 className="panel-title">{t("common:dashboard.myIsaac.title")}</h2>
         <div className="d-flex flex-column">
             <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
-                My saved decks
+                {t("sci:title.mySavedDecks")}
             </Link>
             <Link to="/assignments" className="panel-my-isaac-link">
-                My assignments
+                {t("sci:title.myAssignments")}
                 {assignmentsCount > 0 && <Badge className="rounded-pill ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</Badge>}
             </Link>
             <Link to="/progress" className="panel-my-isaac-link">
-                My progress
+                {t("common:title.myProgress")}
             </Link>
             <Link to="/tests" className="panel-my-isaac-link">
-                My tests
+                {t("common:title.myTests")}
                 {quizzesCount > 0 && <Badge className="rounded-pill ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</Badge>}
             </Link>
             <div className="section-divider"/>
             <Link to="/account" className="panel-my-isaac-link">
-                My account
+                {t("sci:title.myAccount")}
             </Link>
         </div>
     </div>; 
@@ -225,6 +230,7 @@ interface StudentDashboardProps {
 }
 
 export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
@@ -232,7 +238,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
+        {nameToDisplay && <h1 className="text-wrap h3">{t("common:dashboard.greeting", { studentName: nameToDisplay })}</h1>}
         {deviceSize === "lg"
             ? <>
                 <Row>

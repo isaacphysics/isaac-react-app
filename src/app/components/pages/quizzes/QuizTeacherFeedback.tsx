@@ -56,6 +56,7 @@ import {AssignmentSummaryCard} from "../assignment_progress/AssignmentProgressIn
 import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
 import { ResultsTableHeader } from "../../elements/ResultsTableHeader";
+import { useTranslation } from "react-i18next";
 
 interface QuizQuestion extends ContentBaseDTO {
     questionPartsTotal?: number | undefined;
@@ -131,6 +132,7 @@ const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
 };
 
 export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation();
     const {quizAssignmentId} = useParams();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
@@ -151,12 +153,12 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const pageTitle = `${quizTitle} ${(assignmentNotYetStarted ? `(starts ${formatDate(assignmentStartDate)})` : "results")}`;
 
     const pageHelp = <span>
-        See the feedback for your students for this test assignment.
+        {t("common:tests.feedback.helpText")}
     </span>;
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
-            <div className="alert-heading h4">Error loading test feedback</div>
+            <div className="alert-heading h4">{t("common:tests.feedback.errorTitle")}</div>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
         </Alert>
     </>;
@@ -173,19 +175,19 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
                 {assignmentNotYetStarted && <div className="mb-4 alert alert-info px-3 py-2 mt-4">
-                    <span className="alert-heading fw-bold">This test has not yet started. </span>
-                    <span>It will be released to your group on {formatDate(assignmentStartDate)}.</span>
+                    <span className="alert-heading fw-bold">{t("common:tests.feedback.notStartedHeading")} </span>
+                    <span>{t("common:tests.feedback.releaseDate", { startDate: formatDate(assignmentStartDate) })}</span>
                 </div>}
 
                 <div className={classNames("d-flex align-items-center flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
                     {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${quizAssignment.groupId}#tests`} className="d-flex align-items-center">
                         <i className="icon icon-arrow-left me-2"/>
-                        Back to group assignments and tests
+                        {t("sci:button.backToGroup")}
                     </Link>}
                     {isPhy && <Spacer/>}
                     <div className="d-flex flex-column px-3 py-3 py-md-0 text-md-center justify-content-center">
                         <Label for="feedbackMode" className="pe-1 mb-0 small">
-                            Student feedback mode:
+                            {t("common:label.feedbackMode")}
                         </Label>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={"sm"} disabled={isUpdatingQuiz}>
@@ -208,7 +210,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                         target="_blank"
                     >
-                        Download CSV
+                        {t("common:button.downloadCsv")}
                         <i className="icon icon-download ms-2" color={siteSpecific("white", "primary")}/>
                     </Button>
                 </div>
@@ -220,7 +222,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <Card className="p-4 my-3">
                             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} showLegend
-                                headerText={siteSpecific(<h2 className="h4">Overview: {quizTitle}</h2>, <h2 className="h3">Group results</h2>)} 
+                                headerText={siteSpecific(<h2 className="h4">{t("sci:tests.feedback.overviewTitle", { quizTitle })}</h2>, <h2 className="h3">{t("ada:tests.feedback.groupResultsTitle")}</h2>)} 
                             />
                             <QuizProgressDetails assignment={quizAssignment} />
                         </Card>

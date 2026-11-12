@@ -8,8 +8,11 @@ import { PageMetadata } from "./PageMetadata";
 import { useLocation } from "react-router";
 import { DOCUMENT_TYPE, isTeacherOrAbove, scrollVerticallyIntoView } from "../../services";
 import { selectors, useAppSelector } from "../../state";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
+    const { t } = useTranslation();
 
     const user = useAppSelector(selectors.user.loggedInOrNull);
     const tests = (page.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.QUIZ) || []) as QuizSummaryDTO[];
@@ -50,15 +53,15 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         />
 
         <MetadataContainer className="d-flex flex-column gap-2">
-            {hasQuestions && <MetadataContainerLink id="questions" title="Questions" />}
-            {hasResources && <MetadataContainerLink id="resources" title="Resources" />}
-            {hasRelevantTests && <MetadataContainerLink id="tests" title="Practice tests" />}
-            {hasExtension && <MetadataContainerLink id="extension" title="Extension work" />}
-            {!hasQuestions && !hasResources && !hasRelevantTests && !hasExtension && <span className="ms-2">There are no materials for this page.</span>}
+            {hasQuestions && <MetadataContainerLink id="questions" title={t("common:title.questions")} />}
+            {hasResources && <MetadataContainerLink id="resources" title={t("common:title.resources")} />}
+            {hasRelevantTests && <MetadataContainerLink id="tests" title={t("sci:title.practiceTests")} />}
+            {hasExtension && <MetadataContainerLink id="extension" title={t("common:books.page.extensionTitle")} />}
+            {!hasQuestions && !hasResources && !hasRelevantTests && !hasExtension && <span className="ms-2">{t("common:books.page.emptyState")}</span>}
         </MetadataContainer>
 
         {hasQuestions && <>
-            <h3 className="mb-3 h4" id="questions">Questions</h3>
+            <h3 className="mb-3 h4" id="questions">{t("common:title.questions")}</h3>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
@@ -69,7 +72,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasResources && <>
-            <h3 className="mb-3 h4" id="resources">Resources</h3>
+            <h3 className="mb-3 h4" id="resources">{t("common:title.resources")}</h3>
             {!!resources?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
@@ -85,7 +88,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasRelevantTests && <>
-            <h3 className="mt-4 mb-3 h4" id="tests">Practice tests</h3>
+            <h3 className="mt-4 mb-3 h4" id="tests">{i18next.t("sci:title.practiceTests")}</h3>
             <span>Set a test to check your {isTeacherOrAbove(user) ? <>students&apos; </> : <></>}understanding of this topic:</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
@@ -97,8 +100,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasExtension && <>
-            <h3 className="mt-4 mb-3 h4" id="extension">Extension work</h3>
-            <span>Expand your boundaries by having a go at these additional extension questions.</span>
+            <h3 className="mt-4 mb-3 h4" id="extension">{t("common:books.page.extensionTitle")}</h3>
+            <span>{t("common:books.page.extensionIntroText")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"

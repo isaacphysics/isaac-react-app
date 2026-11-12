@@ -21,8 +21,10 @@ import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
 import { useNavigate } from "react-router";
 import { FeatureFlagModal, hasActiveFeatureFlagOverrides } from "../../../services/featureFlag";
+import { useTranslation } from "react-i18next";
 
 export const HeaderCS = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const { notifications } = useUserNotifications();
     const dispatch = useAppDispatch();
@@ -45,12 +47,12 @@ export const HeaderCS = () => {
     return <header className="light" data-testid={"header"}>
         <Navbar expand="nav" className={"px-0 px-nav-3 pb-0 pb-nav-2"}>
             <NavbarBrand href="/" className="header-logo ms-3 mb-2 mb-nav-0 link-light">
-                <img src="/assets/common/logos/ada_logo_3-stack_aqua_white_text.svg" alt="Ada Computer Science" />
+                <img src="/assets/common/logos/ada_logo_3-stack_aqua_white_text.svg" alt={t("common:title.adaComputerScience")} />
             </NavbarBrand>
 
-            <a href={`#${mainContentId}`} className="skip-main position-absolute">Skip to main content</a>
+            <a href={`#${mainContentId}`} className="skip-main position-absolute">{t("common:label.skipToContent")}</a>
 
-            <button aria-label="Toggle search bar" className={"ms-auto me-4 search-toggler d-nav-none"} onClick={() => setIsSearchOpen(!isSearchOpen)}>
+            <button aria-label={t("ada:navigation.toggleSearch")} className={"ms-auto me-4 search-toggler d-nav-none"} onClick={() => setIsSearchOpen(!isSearchOpen)}>
                 <i className="icon icon-sm icon-search icon-color-white"/>
             </button>
             <NavbarToggler className={classNames("me-4", {"open": isOpen})} onClick={() => setIsOpen(!isOpen)} />
@@ -64,45 +66,45 @@ export const HeaderCS = () => {
                 </Collapse>
                 <Collapse isOpen={isOpen} navbar>
                     <Nav navbar className={"w-100"}>
-                        <NavigationSection topLevelLink to="/" title={"Home"}/>
+                        <NavigationSection topLevelLink to="/" title={t("common:button.home")}/>
 
-                        <NavigationSection title="Resources">
-                            <LinkItem to="/topics">Topics</LinkItem>
-                            <LinkItem to={PATHS.QUESTION_FINDER}>Questions</LinkItem>
-                            <LinkItem to="/projects">Projects</LinkItem>
-                            <LinkItem to="/glossary">Glossary</LinkItem>
-                            <LinkItem to={"/exam_specifications"}>Specifications</LinkItem>
+                        <NavigationSection title={t("common:title.resources")}>
+                            <LinkItem to="/topics">{t("ada:title.topics")}</LinkItem>
+                            <LinkItem to={PATHS.QUESTION_FINDER}>{t("common:title.questions")}</LinkItem>
+                            <LinkItem to="/projects">{t("ada:title.projects")}</LinkItem>
+                            <LinkItem to="/glossary">{t("common:title.glossary")}</LinkItem>
+                            <LinkItem to={"/exam_specifications"}>{t("ada:navigation.resources.specifications")}</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection title="Students">
-                            <LinkItem to="/students">Ada CS for students</LinkItem>
-                            <LinkItem to="/pages/stem_smart_programme">STEM SMART</LinkItem>
-                            <LinkItem to="/pages/student_challenges">Challenges</LinkItem>
-                            <LinkItem to="/support/student">Support</LinkItem>
+                        <NavigationSection title={t("ada:navigation.students.title")}>
+                            <LinkItem to="/students">{t("ada:navigation.students.landingPage")}</LinkItem>
+                            <LinkItem to="/pages/stem_smart_programme">{t("ada:navigation.students.stemSmart")}</LinkItem>
+                            <LinkItem to="/pages/student_challenges">{t("ada:navigation.students.challenges")}</LinkItem>
+                            <LinkItem to="/support/student">{t("ada:title.support")}</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection title="Teachers">
-                            <LinkItem to="/teachers">Ada CS for teachers</LinkItem>
-                            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
-                            <LinkItem to="/pages/online_courses">Online courses</LinkItem>
-                            <LinkItem to="/teacher_mentoring">Mentoring programme</LinkItem>
-                            <LinkItem to="/support/teacher">Support</LinkItem>
+                        <NavigationSection title={t("ada:navigation.teachers.title")}>
+                            <LinkItem to="/teachers">{t("ada:navigation.teachers.landingPage")}</LinkItem>
+                            <LinkItem to="/teaching_order">{t("ada:title.teachingOrder")}</LinkItem>
+                            <LinkItem to="/pages/online_courses">{t("ada:title.onlineCourses")}</LinkItem>
+                            <LinkItem to="/teacher_mentoring">{t("ada:navigation.teachers.mentoring")}</LinkItem>
+                            <LinkItem to="/support/teacher">{t("ada:title.support")}</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection className={"text-start-nav me-nav-auto navbar-separator"} topLevelLink to="/contact" title={"Contact us"}/>
+                        <NavigationSection className={"text-start-nav me-nav-auto navbar-separator"} topLevelLink to="/contact" title={t("common:title.contactUs")}/>
 
-                        {(isStaff(user) || isEventLeader(user) || isNonProd) && <NavigationSection title={isStaff(user) || isEventLeader(user) ? "Admin" : "Staging"}>
-                            {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
-                            {isAdmin(user) && <LinkItem to="/admin/usermanager">User manager</LinkItem>}
-                            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
-                            {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
-                            {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
+                        {(isStaff(user) || isEventLeader(user) || isNonProd) && <NavigationSection title={isStaff(user) || isEventLeader(user) ? t("common:title.admin") : t("common:title.staging")}>
+                            {isStaff(user) && <LinkItem to="/admin">{t("common:title.adminTools")}</LinkItem>}
+                            {isAdmin(user) && <LinkItem to="/admin/usermanager">{t("common:title.userManager")}</LinkItem>}
+                            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">{t("ada:navigation.admin.events")}</LinkItem>}
+                            {isStaff(user) && <LinkItem to="/admin/stats">{t("ada:navigation.admin.siteStatistics")}</LinkItem>}
+                            {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">{t("common:title.contentErrors")}</LinkItem>}
                             {isNonProd && <>
                                 <hr />
                                 <LinkItemButton onClick={() => {
                                     dispatch(openActiveModal(FeatureFlagModal));
                                 }}>
-                                    Feature flags
+                                    {t("common:title.featureFlags")}
                                     {hasActiveFeatureFlagOverrides() && <span className="ms-3 bg-turquoise-blue active-dot" />}
                                 </LinkItemButton>
                             </>}
@@ -111,13 +113,13 @@ export const HeaderCS = () => {
                         {isLoggedIn(user)
                             ? <>
                                 <NavigationSection className={"navbar-separator"} topLevelLink to="/dashboard" title={
-                                    <> My Ada {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />} </>
+                                    <> {t("common:title.myAda")} {<MenuBadge count={notifications.length} message="notifications" data-testid="my-notifications-badge" />} </>
                                 } />
-                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/logout" title={"Log out"}/>
+                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/logout" title={t("common:button.logOut")}/>
                             </>
                             : <>
-                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/register" title={"Sign up"}/>
-                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/login" title={"Log in"}/>
+                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/register" title={t("common:button.signUp")}/>
+                                <NavigationSection className={"text-center text-start-nav navbar-separator"} topLevelLink to="/login" title={t("common:button.logIn")}/>
                             </>
                         }
                     </Nav>

@@ -2,8 +2,11 @@ import React from "react";
 import {AppState, selectors, useAppSelector} from "../../../state";
 import {RenderNothing} from "../RenderNothing";
 import { Alert } from "reactstrap";
+import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../TransAnchor";
 
 export function RevisionWarningAlert() {
+    const { t } = useTranslation();
 
     const hideAttempts: boolean = useAppSelector(
         (state: AppState) => state?.userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
@@ -15,17 +18,22 @@ export function RevisionWarningAlert() {
         const timespan = !mostRecentAttemptDate 
             ? undefined 
             : mostRecentAttemptDate < new Date(new Date().setFullYear(new Date().getFullYear() - 1)) 
-                ? "more than 1 year ago" 
+                ? t("common:revision.alert.overOneYear") 
                 : mostRecentAttemptDate < new Date(new Date().setMonth(new Date().getMonth() - 1)) 
-                    ? "in the last 12 months" 
+                    ? t("common:revision.alert.lastTwelveMonths") 
                     : mostRecentAttemptDate < new Date(new Date().setDate(new Date().getDate() - 7)) 
-                        ? "in the last month" 
-                        : "in the last week";
+                        ? t("common:revision.alert.lastMonth") 
+                        : t("common:revision.alert.lastWeek");
 
         return <Alert color="warning" className={"no-print"}>
-            <span>You are currently in <a href="\account#betafeatures">revision mode</a> which hides your previous attempts.</span>
+            <span><Trans
+                i18nKey="common:revision.alert.modeNotice"
+                components={{
+                    revisionModeLink: <TransAnchor href="\account#betafeatures" />,
+                }}
+            /></span>
             {timespan && <>
-                <br/><br/><span>You answered this question correctly {timespan}.</span>
+                <br/><br/><span>{t("common:revision.alert.correctAnswerTimespan", { timespan })}</span>
             </>}
         </Alert>;
     } else {

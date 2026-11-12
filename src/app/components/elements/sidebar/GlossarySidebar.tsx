@@ -7,6 +7,7 @@ import { GlossarySearch } from "../../pages/Glossary";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Tag } from "../../../../IsaacAppTypes";
+import { useTranslation } from "react-i18next";
 
 interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
@@ -22,6 +23,7 @@ interface GlossarySidebarProps extends ContentSidebarProps {
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
+    const { t } = useTranslation();
     const { searchText, setSearchText, filterSubject, setFilterSubject, filterStages, setFilterStages,
         subjects, stages, subjectCounts, stageCounts, optionBar, ...rest } = props;
 
@@ -49,15 +51,15 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         }
     }, [filterSubject, searchText, setFilterStages, stageCounts]);
 
-    return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
+    return <ContentSidebar buttonTitle={t("common:title.searchGlossary")} optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">Search glossary</h3>
+            <h3 className="h5">{t("common:title.searchGlossary")}</h3>
             <GlossarySearch searchText={searchText} setSearchText={setSearchText} />
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>
-                <h3 className="h5">Select subject</h3>
+                <h3 className="h5">{t("common:glossary.sidebar.selectSubjectTitle")}</h3>
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
@@ -70,10 +72,10 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             {!pageContext?.subject && !pageContext?.stage?.length && <div className="section-divider"/>}
 
             {!pageContext?.stage?.length && <>
-                <h3 className="mt-4 h5">Select stage</h3>
+                <h3 className="mt-4 h5">{t("common:label.selectStage")}</h3>
                 <ul>
                     <li>
-                        <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id}
+                        <StyledTabPicker checkboxTitle={t("common:label.all")} data-bs-theme={filterSubject?.id}
                             checked={!filterStages} count={stageCounts["all"]} onChange={() => setFilterStages(undefined)}/>
                     </li>
                     <div className="section-divider-small"/>
@@ -86,7 +88,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             </>}
 
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
-                <h3 className="h5">Switch learning stage</h3>
+                <h3 className="h5">{t("common:glossary.sidebar.switchStageTitle")}</h3>
                 <ul>
                     {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) =>
                         <li key={index}>

@@ -7,6 +7,7 @@ import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { siteSpecific } from "../../services";
 import { Col } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
     new Promise((resolve) =>
@@ -72,6 +73,7 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
 
 
 export const Programmes = () => {
+    const { t } = useTranslation();
     const [programmes, setProgrammes] = useState<IsaacProgrammeDTO[]>([]);
 
     useEffect(() => {
@@ -91,7 +93,7 @@ export const Programmes = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("sci:title.programmes")} icon={{type: "icon", icon: "icon-events"}} />
         }
         sidebar={siteSpecific(
             <ProgrammesSidebar programmes={programmes} />,
@@ -100,7 +102,7 @@ export const Programmes = () => {
     >
         <ShowLoading until={programmes} thenRender={(programmes) => {
             return <>
-                <h2 className="visually-hidden">Programmes list</h2>
+                <h2 className="visually-hidden">{t("common:programmes.list.heading")}</h2>
                 <ul className="list-unstyled mt-4 d-flex row flex-wrap row-cols-1 row-cols-md-2 g-3">
                     {programmes.map((programme) => <Col key={programme.id}>
                         <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} className="mb-4" programme={programme} />

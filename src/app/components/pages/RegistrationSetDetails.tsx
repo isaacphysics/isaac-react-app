@@ -39,12 +39,15 @@ import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/mo
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 interface RegistrationSetDetailsProps {
     userRole: UserRole
 }
 
 export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) => {
+    const { t } = useTranslation();
 
     const user = useAppSelector(selectors.user.orNull);
     const isSSO = user?.loggedIn && user.role === "STUDENT";
@@ -145,19 +148,19 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const goBack = () => {
         if (isPhy || userRole === "STUDENT") {
             confirmThen(
-                "Are you sure you want go back? Any information you have entered will be lost.",
+                t("common:auth.registration.goBackConfirm"),
                 () => navigate("/register/student/age"));
         }
         else { // teachers skip age check on Ada
             confirmThen(
-                "Are you sure you want go back? Any information you have entered will be lost.",
+                t("common:auth.registration.goBackConfirm"),
                 () => navigate("/register"));
         }
     };
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={2} sso={isSSO} />,
@@ -168,7 +171,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             <CardBody>
                 {(createNewUserError || updateCurrentUserError) &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading fw-bold">Unable to create your account</p>
+                        <p className="alert-heading fw-bold">{t("common:auth.registration.errorHeading")}</p>
                         {createNewUserError && <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>}
                         {updateCurrentUserError && <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>}
                     </ExigentAlert>
@@ -248,19 +251,24 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                                 color={siteSpecific("primary", "")}
                                 onChange={(e) => setTosAccepted(e?.target.checked)}
                                 invalid={attemptedSignUp && !tosAccepted}
-                                label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
+                                label={<span className={classNames({"form-required": isPhy})}><Trans
+                                    i18nKey="common:auth.registration.termsAccept"
+                                    components={{
+                                        termsLink: <TransAnchor href="/terms" target="_blank" />,
+                                    }}
+                                /></span>}
                             />
                             <FormFeedback className="mt-0">
-                                You must accept the terms to continue.
+                                {t("common:auth.registration.termsRequired")}
                             </FormFeedback>
                         </FormGroup>
                         {isAda && <hr className="text-center"/>}
                         <Row className="justify-content-end">
                             <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                <Button className="mt-2 w-100" color="keyline" onClick={goBack}>Back</Button>
+                                <Button className="mt-2 w-100" color="keyline" onClick={goBack}>{t("common:button.back")}</Button>
                             </Col>
                             <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
-                                <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">Continue</Button>
+                                <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">{t("common:button.continue")}</Button>
                             </Col>
                         </Row>
                     </Form>}

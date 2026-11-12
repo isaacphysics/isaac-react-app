@@ -2,19 +2,19 @@ import React from "react";
 import { PageFragment } from "../PageFragment";
 import { Button } from "reactstrap";
 import { closeActiveModal, store } from "../../../state";
-import { siteSpecific } from "../../../services";
+import i18next from "i18next";
 
 export const ConfirmAccountDeletionRequestModal = (confirmAccountDeletionRequest: () => void) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: siteSpecific("Delete Account", "Delete account"),
+        title: i18next.t("site:account.deletion.title"),
         body: <PageFragment fragmentId="account_deletion_email_confirmation_notice" />,
         buttons: [
             <Button key={1} block color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
-                Cancel
+                {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} block color="solid" onClick={() => {confirmAccountDeletionRequest();}}>
-                Confirm via email
+                {i18next.t("common:account.deletion.confirmButton")}
             </Button>,
         ]
     };

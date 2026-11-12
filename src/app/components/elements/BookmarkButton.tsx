@@ -6,8 +6,10 @@ import { ContentDTO } from "../../../IsaacApiTypes";
 import { Tooltip } from "reactstrap";
 import { selectors, useAppSelector } from "../../state";
 import { isLoggedIn } from "../../services";
+import { useTranslation } from "react-i18next";
 
 export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
+    const { t } = useTranslation();
     const { isBookmarked, bookmarkItem } = useBookmarks();
     const [showBookmarkTooltip, setShowBookmarkTooltip] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
@@ -19,7 +21,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
     return <>
         <IconButton 
             id="bookmark-button"
-            aria-label={isBookmarked(doc.id) ? "Remove bookmark" : "Add bookmark"}
+            aria-label={isBookmarked(doc.id) ? t("common:button.removeBookmark") : t("common:button.addBookmark")}
             icon={classNames("icon-bookmark", "icon-color-black-hoverable", {"fill": isQuestionBookmarked})} 
             color="tint"
             data-bs-theme="neutral"
@@ -39,7 +41,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
             toggle={() => setShowBookmarkTooltip(!showBookmarkTooltip)}
             trigger="manual"
         >
-            <div className="popover-header">Saved!</div>
+            <div className="popover-header">{t("common:bookmarks.saveConfirmation")}</div>
         </Tooltip>
     </>;
 };

@@ -3,6 +3,7 @@ import {RegisteredUserDTO} from "../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery } from "../state";
 import {getAllSortedWorkToDo, isAssignment, isQuiz, isTeacherPending, KEY, PATHS, persistence} from "./";
 import {Immutable} from "immer";
+import { useTranslation } from "react-i18next";
 
 export function canShowPopupNotification(user: Immutable<RegisteredUserDTO> | null): boolean {
     const dateNow = new Date();
@@ -35,6 +36,7 @@ interface UserNotificationsResult {
 }
 
 export const useUserNotifications = () : UserNotificationsResult => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     
@@ -51,20 +53,20 @@ export const useUserNotifications = () : UserNotificationsResult => {
     const workToDoNotifications = toDo.map((assignmentLike, i) => isAssignment(assignmentLike)
         ? {
             id: assignmentLike.id ?? `assignment-${i}`,
-            title: `Assignment to do: ${assignmentLike.gameboard?.title}`,
-            message: `Due on ${new Date(assignmentLike.dueDate ?? 0).toLocaleDateString()}`,
+            title: t("common:notifications.assignmentTitle", { gameboardTitle: assignmentLike.gameboard?.title }),
+            message: t("common:notifications.dueDateMessage", { dueDate: new Date(assignmentLike.dueDate ?? 0).toLocaleDateString() }),
             button: {
-                text: "Go to assignment",
+                text: t("common:notifications.goToAssignmentButton"),
                 link: `${PATHS.GAMEBOARD}#${assignmentLike.gameboardId}`
             }
         } 
         : isQuiz(assignmentLike)
             ? {
                 id: assignmentLike.id ?? `quiz-${i}`,
-                title: `Test to do: ${assignmentLike.quizSummary?.title}`,
-                message: `Due on ${new Date(assignmentLike.dueDate ?? 0).toLocaleDateString()}`,
+                title: t("common:notifications.testTitle", { quizTitle: assignmentLike.quizSummary?.title }),
+                message: t("common:notifications.dueDateMessage", { dueDate: new Date(assignmentLike.dueDate ?? 0).toLocaleDateString() }),
                 button: {
-                    text: "Go to test",
+                    text: t("common:notifications.goToTestButton"),
                     link: `${PATHS.TEST}/${assignmentLike.id}`
                 }
             } 

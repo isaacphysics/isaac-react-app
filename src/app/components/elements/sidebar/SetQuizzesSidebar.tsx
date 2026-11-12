@@ -2,6 +2,7 @@ import React from "react";
 import { useDeviceSize, above } from "../../../services";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { SearchInputWithIcon } from "../SearchInputs";
+import { useTranslation } from "react-i18next";
 
 interface SetQuizzesSidebarProps extends ContentSidebarProps {
     titleFilter?: string;
@@ -9,18 +10,19 @@ interface SetQuizzesSidebarProps extends ContentSidebarProps {
 };
 
 export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
+    const { t } = useTranslation();
     const { titleFilter, setTitleFilter, ...rest } = props;
     const deviceSize = useDeviceSize();
 
-    return <ContentSidebar buttonTitle="Search tests" {...rest}>
+    return <ContentSidebar buttonTitle={t("common:title.searchTests")} {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h3 className="h5">Search tests</h3>
+            <h3 className="h5">{t("common:title.searchTests")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 id="available-quizzes-title-filter" type="search"
                 value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
-                placeholder="e.g. Practice"
+                placeholder={t("common:tests.search.placeholder")}
             />
         </search>
     </ContentSidebar>;

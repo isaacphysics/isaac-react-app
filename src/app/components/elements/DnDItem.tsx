@@ -10,13 +10,15 @@ import classNames from "classnames";
 import React from "react";
 import { isDefined } from "../../services";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
+import { useTranslation } from "react-i18next";
 
 function DropZoneItem({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
+    const { t } = useTranslation();
     const {attributes, listeners, setNodeRef, isDragging, isOver, transform, transition} = useSortable({
         id,
         attributes: {
             role: "button",
-            roleDescription: "draggable item",
+            roleDescription: t("common:dnd.draggableRoleDescription"),
         },
         data: { type, text: item.altText ?? item.value }
     });
@@ -41,7 +43,7 @@ function DropZoneItem({item, id, type, overrideOver, isCorrect}: {item: Immutabl
         color="cloze" style={style} innerRef={setNodeRef} {...listeners} {...attributes}
         aria-describedby={undefined} // We manage the aria-describedby attribute once in the ItemSection rather than on each individual item
     >
-        <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
+        <span className={"visually-hidden"}>{item.altText ?? item.value ?? t("common:dnd.clozeFallbackText")}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
                 {item.children as ContentDTO[]}

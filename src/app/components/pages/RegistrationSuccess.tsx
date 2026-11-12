@@ -4,9 +4,11 @@ import {siteSpecific} from "../../services";
 import { useNavigate } from "react-router";
 import { Spacer } from "../elements/Spacer";
 import { continueToAfterAuthPath, selectors, useAppSelector } from "../../state";
+import { useTranslation } from "react-i18next";
 
 
 export const RegistrationSuccess = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const user = useAppSelector(selectors.user.orNull);
 
@@ -19,8 +21,8 @@ export const RegistrationSuccess = () => {
         <Card className="my-7">
             <CardBody className="text-center">
                 <div className="py-3 d-flex flex-column align-items-start px-5">
-                    <h1 className="h3">Account created!</h1>
-                    <p>You&apos;re all set up. Welcome!</p>
+                    <h1 className="h3">{t("common:auth.registrationSuccess.title")}</h1>
+                    <p>{t("common:auth.registration.success.welcome")}</p>
                     <Spacer />
                     {siteSpecific(
                         <div className="rounded-4 w-100 mt-3 mb-7 login-flow-bg d-flex justify-content-center align-items-center">
@@ -29,8 +31,8 @@ export const RegistrationSuccess = () => {
                         <img className="img-fluid mx-auto mt-3 mb-7 w-sm-50" src="/assets/cs/decor/verify_done.png" alt="" />
                     )}
                     <div className="d-flex w-100 gap-3 mx-3">
-                        <Button color="solid" className="flex-grow-1" onClick={() => continueToAfterAuthPath(user)} aria-label="Continue to the site">Let&apos;s go!</Button>
-                        <Button color="keyline" onClick={continueToMyAccount}>Check my account</Button>
+                        <Button color="solid" className="flex-grow-1" onClick={() => continueToAfterAuthPath(user)} aria-label="Continue to the site">{t("common:auth.registration.success.continue")}</Button>
+                        <Button color="keyline" onClick={continueToMyAccount}>{t("common:auth.registration.success.viewAccount")}</Button>
                     </div>
                 </div>
             </CardBody>

@@ -9,6 +9,7 @@ import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
 import { Spacer } from "../../elements/Spacer";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { useTranslation } from "react-i18next";
 
 const pageHelp = <span>
     View information about a test without adding it to {'"My tests"'}. This page does not show any questions.
@@ -17,9 +18,10 @@ const pageHelp = <span>
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", viewQuizzesCrumbs);
 
 const QuizFooter = ({quizId}: {quizId: string}) => {
+    const { t } = useTranslation();
     return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
         <Spacer />
-        <Button tag={Link} to={`/test/attempt/${quizId}`}>Take Test</Button>
+        <Button tag={Link} to={`/test/attempt/${quizId}`}>{t("common:tests.view.takeTest")}</Button>
     </div>;
 };
 

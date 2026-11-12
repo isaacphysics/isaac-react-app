@@ -4,6 +4,7 @@ import {apiHelper, isDefined} from "../../services";
 import {IsaacContent} from "./IsaacContent";
 import {Col, Row} from "reactstrap";
 import { Spacer } from "../elements/Spacer";
+import { useTranslation } from "react-i18next";
 
 interface IsaacFeaturedProfileProps {
     doc: IsaacFeaturedProfileDTO;
@@ -11,6 +12,7 @@ interface IsaacFeaturedProfileProps {
 }
 
 export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfileProps) => {
+    const { t } = useTranslation();
     const path = doc.image && doc.image.src && apiHelper.determineImageUrl(doc.image.src);
     const summary = doc.children && doc.children[0];
 
@@ -36,7 +38,7 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
         <Spacer/>
         {doc.emailAddress && <a href={"mailto:" + doc.emailAddress} className="mb-4">
             <img src='/assets/phy/icons/icon-mailto.png' alt=""/>
-            <span className="visually-hidden">{"Email " + doc.title}</span>
+            <span className="visually-hidden">{t("common:profiles.featured.emailLinkLabel", { name: doc.title })}</span>
         </a>}
     </div>;
 };

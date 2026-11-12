@@ -5,6 +5,7 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { isTeacherOrAbove, siteSpecific } from "../../../services";
 import { useAppSelector } from "../../../state";
 import { WithLinkableSetting } from "../WithLinkableSetting";
+import { useTranslation } from "react-i18next";
 
 interface UserAccessibilitySettingsProps {
     accessibilitySettings: AccessibilitySettings;
@@ -12,12 +13,13 @@ interface UserAccessibilitySettingsProps {
 }
 
 export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibilitySettings }: UserAccessibilitySettingsProps) => {
+    const { t } = useTranslation();
     const user = useAppSelector(state => state?.user);
 
     return <MyAccountTab
         leftColumn={<>
-            <h2 className="h3">Accessibility settings</h2>
-            <p>Here you can manage various accessibility features across the site.</p>
+            <h2 className="h3">{t("common:account.accessibility.title")}</h2>
+            <p>{t("common:account.accessibility.description")}</p>
         </>}
         rightColumn={<>
             <div className="pt-2"/>
@@ -27,12 +29,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, REDUCED_MOTION: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Prefer reduced motion</p>}
+                    label={<p>{t("common:account.accessibility.reducedMotion.label")}</p>}
                     id={"reduced-motion"}
                     aria-describedby="reduced-motion-helptext"
                     removeVerticalOffset
                 /></b>
-                <p>{`Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.`}</p>
+                <p>{t("common:account.accessibility.reducedMotion.helpText")}</p>
             </WithLinkableSetting>
             <WithLinkableSetting id={"show-inaccessible-warning-feature"}>
                 <b><StyledCheckbox 
@@ -41,12 +43,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, SHOW_INACCESSIBLE_WARNING: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Warn about inaccessible content</p>}
+                    label={<p>{t("common:account.accessibility.inaccessibleWarning.label")}</p>}
                     id={"show-inaccessible-tag"}
                     aria-describedby="show-inaccessible-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="show-inaccessible-helptext">{`Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.`}</p>
+                <p id="show-inaccessible-helptext">{t("common:account.accessibility.inaccessibleWarning.helpText")}</p>
             </WithLinkableSetting>
             <WithLinkableSetting id={"non-dragging-movement-feature"}>
                 <b><StyledCheckbox checked={accessibilitySettings.NON_DRAGGING_INPUTS ?? false}
@@ -54,12 +56,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, NON_DRAGGING_INPUTS: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Enable non-dragging alternative inputs</p>}
+                    label={<p>{t("common:account.accessibility.nonDraggingInputs.label")}</p>}
                     id={"non-dragging-movement"}
                     aria-describedby="non-dragging-movement-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="non-dragging-helptext">{`Enabling this will allow you to use alternative input methods that don't require dragging for certain question types (e.g. drag-and-drop).`}</p>
+                <p id="non-dragging-helptext">{t("common:account.accessibility.nonDraggingInputs.helpText")}</p>
             </WithLinkableSetting>
             {/* Seperate maths-specific setting from the general site-wide accessibility settings */}
             <div className="section-divider" />
@@ -70,12 +72,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, PREFER_MATHML: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>Use MathML for accessible maths</p>}
+                    label={<p>{t("common:account.accessibility.mathml.label")}</p>}
                     id={"prefer-mathml"}
                     aria-describedby="mathml-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="mathml-helptext">{`With this setting you can toggle between using alternative text or MathML for mathematical equations.`}</p>
+                <p id="mathml-helptext">{t("common:account.accessibility.mathml.helpText")}</p>
             </WithLinkableSetting>
         </>}
     />;

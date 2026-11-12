@@ -18,10 +18,12 @@ import classNames from "classnames";
 import { Loading } from "../handlers/IsaacSpinner";
 import { InequalityState, SeedExpressions, SymbolicTextInput } from "../elements/inputs/SymbolicTextInput";
 import { initialiseInequality, sanitiseInequalityState } from "../../services/inequalityUtils";
+import { useTranslation } from "react-i18next";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
+    const { t } = useTranslation();
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = currentAttempt?.value ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) : undefined;
     const questionAttemptLoaded = useRef(!!currentAttemptValue);
@@ -109,7 +111,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         <div
             role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} tabIndex={readonly ? undefined : 0}
             onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
-            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
+            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : t("common:questions.symbolicLogic.emptyPreview") }}
         />
         {!readonly && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}

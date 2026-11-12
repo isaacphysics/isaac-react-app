@@ -17,6 +17,7 @@ import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
 import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { Trans, useTranslation } from "react-i18next";
 
 const loadingPlaceholder = <ul className="w-100 list-group ">
     <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
@@ -25,6 +26,7 @@ const loadingPlaceholder = <ul className="w-100 list-group ">
 </ul>;
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
+    const { t } = useTranslation();
     const [randomSeed, setRandomSeed] = useState(nextSeed);
 
     const handleGetDifferentQuestion = () => setRandomSeed(nextSeed);
@@ -63,15 +65,15 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
-            <h2 className="m-0 h4">Try a random question!</h2>
+            <h2 className="m-0 h4">{t("common:subjectLanding.randomQuestion.title")}</h2>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
-                Get a different question
+                {t("common:subjectLanding.randomQuestion.differentButton")}
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
         <ShowLoadingQuery
             query={searchQuestionsQuery}
-            defaultErrorTitle="Unable to load question"
+            defaultErrorTitle={t("common:error.loadQuestion")}
             placeholder={loadingPlaceholder}
             thenRender={({ results: questions }) => {
                 const question = questions?.[0];
@@ -85,7 +87,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     } as ContentSummaryDTO]}/>
                     : <ul className="w-100 list-group ">
                         <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
-                            <span>No questions found.</span>
+                            <span>{t("common:subjectLanding.randomQuestion.emptyState")}</span>
                         </li>
                     </ul>;
             }}
@@ -101,24 +103,26 @@ interface FooterRowProps {
 }
 
 const BooksList = ({books, isFullWidth}: {books: BookInfo[], isFullWidth: boolean}) => {
+    const { t } = useTranslation();
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h2 className="h4 m-0">Interactive online books <span className="text-theme">({books.length})</span></h2>
+            <h2 className="h4 m-0"><Trans i18nKey="common:subjectLanding.books.title" components={{ emphasis: <span className="text-theme" /> }} values={{ bookCount: books.length }} /></h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className={classNames("item-list-container row-cols-1", {"row-cols-md-2": isFullWidth})}>
             {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
         </Row>
         {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">
-            View more books
+            {t("common:subjectLanding.books.viewMore")}
         </Button>}
     </div>;
 };
 
 const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
+    const { t } = useTranslation();
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h2 className="h4">News & Features</h2>
+            <h2 className="h4">{t("common:subjectLanding.news.title")}</h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className="h-100 item-list-container">
@@ -132,7 +136,13 @@ const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
 const EventsList = ({events}: {events: AugmentedEvent[]}) => {
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h2 className="h4 m-0">Events <span className="text-theme">({events.length})</span></h2>
+            <h2 className="h4 m-0"><Trans
+                i18nKey="common:subjectLanding.events.heading"
+                components={{
+                    theme: <span className="text-theme" />,
+                }}
+                values={{ eventCount: events.length }}
+            /></h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className="h-100 item-list-container">
@@ -145,6 +155,7 @@ const EventsList = ({events}: {events: AugmentedEvent[]}) => {
 
 // this should be used under the assumption that the above props have been fetched; they may still be undefined, but they will not change
 const FooterRow = ({context, books, news, events}: FooterRowProps) => {
+    const { t } = useTranslation();
     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
     const relevantEvents = events?.filter(event =>
         context?.subject
@@ -160,7 +171,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             ? <BooksList books={books} isFullWidth={noEvents} />
             : news?.length 
                 ? <NewsList news={news} />
-                : <p>No books or news available for this subject. Check back soon!</p>
+                : <p>{t("common:subjectLanding.footer.emptyState")}</p>
         }
         {!noEvents && <EventsList events={relevantEvents} />}
     </Row>;
@@ -191,10 +202,11 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
 };
 
 export const SubjectLandingPage = () => {
+    const { t } = useTranslation();
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
     const title = (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.includes(STAGE.A_LEVEL))
-        ? "A Level Maths and Further Maths" : getHumanContext(pageContext);
+        ? t("common:subjectLanding.title.aLevelMaths") : getHumanContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb

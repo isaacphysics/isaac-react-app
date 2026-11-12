@@ -5,8 +5,10 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 import { useNavigate } from "react-router";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { Trans, useTranslation } from "react-i18next";
 
 export const RegistrationAgeCheckFailed = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const returnToHomepage = (event: React.MouseEvent) => {
@@ -16,7 +18,7 @@ export const RegistrationAgeCheckFailed = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -25,19 +27,19 @@ export const RegistrationAgeCheckFailed = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h2 className="h3">Unable to create account</h2>
-                <p>Unfortunately, we aren&apos;t able to offer accounts to students under {SITE_LOWER_AGE_LIMIT} years old.</p>
+                <h2 className="h3">{t("common:auth.ageCheckFailed.heading")}</h2>
+                <p>{t("common:auth.ageCheckFailed.restrictionMessage", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
                 <p>{siteSpecific(
-                    <><b>But you can still access the whole site for free!</b> You just won&apos;t be able to track your progress.</>,
-                    <><b>However, you can still access the whole site for free!</b> However you will not be able to track your progress.</>
+                    <><Trans i18nKey="sci:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>,
+                    <><Trans i18nKey="ada:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>
                 )}</p>
                 {isAda && <hr/>}
                 <Row className="justify-content-end">
                     {isAda && <Col sm={4} lg={3} className="d-flex justify-content-end">
-                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>Back</Button>
+                        <Button className="mt-2 w-100" color="keyline" onClick={() => navigate(-1)}>{t("common:button.back")}</Button>
                     </Col>}
                     <Col sm={6} lg={4}>
-                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{siteSpecific("Take me back", "Go home")}</Button>
+                        <Button className="mt-2 w-100" color="solid" onClick={returnToHomepage}>{t("site:auth.ageCheckFailed.returnButton")}</Button>
                     </Col>
                 </Row>
             </CardBody>

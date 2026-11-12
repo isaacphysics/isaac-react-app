@@ -3,33 +3,35 @@ import { useNavigate } from "react-router";
 import { confirmThen } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar } from "../layout/SidebarLayout";
+import { useTranslation } from "react-i18next";
 
 export const SignupSidebar = ({activeTab, sso} : {activeTab: number, sso?: boolean}) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const goBack = (path: string) => {
         confirmThen(
-            "Are you sure you want go back? Any information you have entered will be lost.",
+            t("common:auth.registration.goBackConfirm"),
             () => navigate(path)
         );
     };
 
     const handleSSOBack = (path: string) => {
         if (sso) {
-            window.alert("Your age has already been verified by your SSO provider.");
+            window.alert(t("common:auth.registration.ssoVerified"));
         } else {
             goBack(path);
         }
     };
 
-    return <ContentSidebar buttonTitle="Create an account">
+    return <ContentSidebar buttonTitle={t("common:button.createAccount")}>
         <div className="section-divider mt-4"/>
-        <h3 className="mt-1 h5">Create an account</h3>
+        <h3 className="mt-1 h5">{t("common:button.createAccount")}</h3>
         {/* Tabs are clickable iff their page could be reached with a Back button */}
-        <StyledTabPicker checkboxTitle={"Sign-up method"} checked={activeTab === 0} disabled={activeTab > 2} onChange={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
-        <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onChange={() => activeTab === 2 && handleSSOBack("/register/student/age")}/>
-        <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2} disabled={activeTab !== 2} onChange={undefined}/>
-        <StyledTabPicker checkboxTitle={"Join a group"} checked={activeTab === 4} disabled={activeTab !== 4} onChange={undefined}/>
-        <StyledTabPicker checkboxTitle={"Preferences"} checked={activeTab === 3} disabled={activeTab !== 3} onChange={undefined}/>
+        <StyledTabPicker checkboxTitle={t("common:auth.sidebar.tabMethod")} checked={activeTab === 0} disabled={activeTab > 2} onChange={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
+        <StyledTabPicker checkboxTitle={t("common:auth.sidebar.tabAge")} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onChange={() => activeTab === 2 && handleSSOBack("/register/student/age")}/>
+        <StyledTabPicker checkboxTitle={t("common:title.accountDetails")} checked={activeTab === 2} disabled={activeTab !== 2} onChange={undefined}/>
+        <StyledTabPicker checkboxTitle={t("common:button.joinGroup")} checked={activeTab === 4} disabled={activeTab !== 4} onChange={undefined}/>
+        <StyledTabPicker checkboxTitle={t("common:auth.sidebar.tabPreferences")} checked={activeTab === 3} disabled={activeTab !== 3} onChange={undefined}/>
     </ContentSidebar>;
 };

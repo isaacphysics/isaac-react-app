@@ -9,12 +9,14 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
 import {Alert, Container} from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete when you are finished.
 </span>;
 
 export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const {page, quizAssignmentId} = useParams();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
@@ -60,9 +62,9 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
                 </QuizContentsComponent>
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle={t("common:title.test")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <div className="alert-heading h4">Error loading assignment!</div>
+                    <div className="alert-heading h4">{t("common:attempt.assignmentError")}</div>
                     <p>{error}</p>
                 </Alert>
             </>}

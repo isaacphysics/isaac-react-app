@@ -8,8 +8,10 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {QuizAttemptContext} from "../../../IsaacAppTypes";
 import {Loading} from "../handlers/IsaacSpinner";
 import {ContentDTO} from "../../../IsaacApiTypes";
+import { useTranslation } from "react-i18next";
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
     const {quizAttempt, questionNumbers} = useContext(QuizAttemptContext);
@@ -36,7 +38,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             classnames(
                 "question-component", siteSpecific("p-md-2", "p-md-4"),
             )}>
-            {isAda && doc.id && <div className="mb-3 h3">Question {questionNumbers[doc.id]}</div>}
+            {isAda && doc.id && <div className="mb-3 h3">{t("common:label.questionNumber", { questionNumber: questionNumbers[doc.id] })}</div>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             <Suspense fallback={<Loading/>}>
@@ -50,7 +52,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             {/* Validation Response */}
             {validated && <div className={`validation-response-panel p-2 mt-2 ${correct ? "correct" : ""}`}>
                 <div className="pb-1">
-                    <div className={siteSpecific("response-heading", "h1")}>{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</div>
+                    <div className={siteSpecific("response-heading", "h1")}>{noAnswer ? t("common:questions.validation.notAnswered") : sigFigsError ? t("common:questions.validation.sigFigs") : correct ? t("common:questions.feedback.correct") : t("common:status.incorrect")}</div>
                 </div>
                 {validationResponse && validationResponse.explanation && <div className="mb-1">
                     <IsaacContent doc={validationResponse.explanation as ContentDTO} />

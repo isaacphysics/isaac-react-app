@@ -38,6 +38,8 @@ import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 import { RevisionChallengeStats } from '../elements/panels/RevisionChallengeStats';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
+import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -73,6 +75,7 @@ interface MyProgressProps {
 }
 
 const MyProgress = ({user}: MyProgressProps) => {
+    const { t } = useTranslation();
     const { userIdOfInterest = "" } = useParams();
     const viewingOwnData = userIdOfInterest === "" || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
@@ -103,7 +106,7 @@ const MyProgress = ({user}: MyProgressProps) => {
     const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
-    const pageTitle = viewingOwnData ? siteSpecific("My progress", "Progress") : `Progress for ${userName || "user"}`;
+    const pageTitle = viewingOwnData ? t("site:progress.pageTitle") : t("common:progress.otherUserTitle", { userName: userName || "user" });
 
     return <PageContainer id="my-progress"
         pageTitle={
@@ -144,7 +147,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </Card>
 
                     <div className="mt-4">
-                        <h2 className="h4">Question parts correct by type</h2>
+                        <h2 className="h4">{t("common:progress.questionPartsTitle")}</h2>
                         <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
                                 const groupedTypes = PROGRESS_QUESTION_TYPE_MAP[qType] || [qType];
@@ -153,11 +156,11 @@ const MyProgress = ({user}: MyProgressProps) => {
                                 const percentage = safePercentage(correct, attempts);
                                 return <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
-                                        {HUMAN_QUESTION_TYPES[qType]} questions
+                                        {t("common:progress.questionTypeLabel", { questionType: HUMAN_QUESTION_TYPES[qType] })}
                                     </div>
                                     <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
-                                            {percentage == null ? "None attempted" : `${correct} of ${attempts}`}
+                                            {percentage == null ? t("common:progress.noneAttempted") : t("common:progress.correctOfAttempts", { correct, attempts })}
                                         </ProgressBar>
                                     </div>
                                 </Col>;
@@ -166,8 +169,13 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </div>
 
                     {isPhy && <div className="mt-4">
-                        <h2 className="h4">Isaac Books</h2>
-                        Questions completed correctly, against questions attempted for each of our <a href={"/books"}>books</a>.
+                        <h2 className="h4">{t("sci:progress.isaacBooksTitle")}</h2>
+                        <Trans
+                            i18nKey="sci:progress.isaacBooksDescription"
+                            components={{
+                                booksLink: <TransAnchor href={"/books"} />,
+                            }}
+                        />
                         <Row>
                             {Object.entries(siteSpecificStats.questionCountByBookTag).map(([bookTag, total]) => {
                                 const book = ISAAC_BOOKS_BY_TAG[bookTag as keyof typeof ISAAC_BOOKS_BY_TAG];
@@ -178,11 +186,11 @@ const MyProgress = ({user}: MyProgressProps) => {
                                 const showBook = !!book && total > 0 && (attempted > 0 || book.hidden !== BookHiddenState.HIDDEN);
                                 return showBook &&  <Col key={bookTag} lg={12} className="mt-2 type-progress-bar">
                                     <div className={"px-2"}>
-                                        {book.title} questions
+                                        {t("sci:progress.bookQuestionLabel", { bookTitle: book.title })}
                                     </div>
                                     <div className={"px-2"}>
-                                        <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={bookTag}>
-                                            <span aria-hidden>{`${correct} of ${total}`}</span>
+                                        <ProgressBar percentage={correctPercentage} primaryTitle={t("sci:progress.bookCorrectOutOf", { correct, total })} secondaryPercentage={attemptedPercentage} secondaryTitle={t("sci:progress.bookAttemptedOutOf", { attempted, total })} type={bookTag}>
+                                            <span aria-hidden>{t("sci:progress.bookCorrectOfTotal", { correct, total })}</span>
                                         </ProgressBar>
                                     </div>
                                 </Col>;
@@ -193,13 +201,13 @@ const MyProgress = ({user}: MyProgressProps) => {
                     {isPhy
                         ? <QuestionAndSkillsAttemptsOverTime viewingOwnData={viewingOwnData} user={user} userIdOfInterest={userIdOfInterest} />
                         : <div className="mt-4">
-                            <h2 className="h4"> Question attempts over time</h2>
+                            <h2 className="h4"> {t("ada:progress.questionAttemptsOverTime")}</h2>
                             <QuestionAttemptsOverTime viewingOwnData={viewingOwnData} user={user} />
                         </div>}
 
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h2 className="h4">Most recently answered questions</h2>
+                            <h2 className="h4">{t("common:progress.mostRecentTitle")}</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.mostRecentQuestions} 
@@ -208,7 +216,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                             />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h2 className="h4">Oldest unsolved questions</h2>
+                            <h2 className="h4">{t("common:progress.oldestUnsolvedTitle")}</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.oldestIncompleteQuestions}
@@ -224,9 +232,10 @@ const MyProgress = ({user}: MyProgressProps) => {
 };
 
 const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfInterest}: UserProps) => {
+    const { t } = useTranslation();
     return <Card className="mt-4 attempts-min-height">
         <CardBody className='h-100 d-flex flex-column'>
-            <h2 className="h4">Attempts over time</h2>
+            <h2 className="h4">{t("common:progress.attemptsOverTime")}</h2>
             <div className='flex-grow-1 d-flex flex-column'>
                 <Tabs style="tabs" tabContentClass='mt-4' renderHiddenTabs={false}>
                     {{
@@ -240,6 +249,7 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfIntere
 };
 
 const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: UserProps) => {
+    const { t } = useTranslation();
     const deviceSize = useDeviceSize();
     let userId: string | typeof skipToken = skipToken;
     if (viewingOwnData && user.loggedIn && user.id) {
@@ -253,15 +263,20 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
         <Col md={9} className="d-flex align-items-center order-1 order-md-0 graph-min-height">
             <ShowLoadingQuery 
                 query={query}
-                defaultErrorTitle='Failed to load skills attempts.'
+                defaultErrorTitle={t("common:progress.skillsAttemptsError")}
                 thenRender={(data) => {
                     return <ActivityGraph
                         id="skills-attempts"
                         answeredQuestionsByDate={data ? data.mental_maths_overall : {}} 
-                        caption="Overall Mental Maths" 
+                        caption={t("common:label.mentalMaths")} 
                         emptyText={<span>
                             <br/>
-                            <a href='/pages/app_page_mental_maths_overall' target='blank'>Click here</a> to try our mental maths skills practice.
+                            <Trans
+                                i18nKey="common:progress.mentalMathsEmptyState"
+                                components={{
+                                    mentalMathsLink: <TransAnchor href='/pages/app_page_mental_maths_overall' target='blank' />,
+                                }}
+                            />
                         </span>}
                         color="var(--subject-color-300)"
                     />;
@@ -270,16 +285,17 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
         </Col>
         <Col md={3} id="legend" className={above['md'](deviceSize) ? "border-start" : ""}>
             <div className='mb-md-2'>
-                <strong>Subjects</strong> 
+                <strong>{t("common:label.subjects")}</strong> 
                 <i className="icon icon-chevron-right icon-inline icon-color-black" />
-                <strong>Maths</strong>
+                <strong>{t("common:label.maths")}</strong>
             </div>
-            <div className='legend-item'>Overall Mental Maths</div>
+            <div className='legend-item'>{t("common:label.mentalMaths")}</div>
         </Col>
     </Row>;
 };
 
 const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: boolean, user: PotentialUser}) => {
+    const { t } = useTranslation();
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
@@ -287,7 +303,7 @@ const QuestionAttemptsOverTime = ({ viewingOwnData, user }: { viewingOwnData: bo
     return answeredQuestionsByDate && <ActivityGraph
         id="question-attempts"
         answeredQuestionsByDate={answeredQuestionsByDate}
-        caption={siteSpecific("Question attempts", "activity")}
+        caption={t("site:progress.questionAttemptsCaption")}
         color={siteSpecific("#FEA102",  "#FF4DC9")}/>;
 };
 

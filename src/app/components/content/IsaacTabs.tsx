@@ -4,6 +4,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {isAda, isDefined, isPhy} from "../../services";
 import classNames from "classnames";
+import i18next from "i18next";
 
 interface IsaacTabsProps {
     doc: {
@@ -28,7 +29,7 @@ export const IsaacTabs = (props: any) => {
 
         const newTabTitlesToContent: IsaacTabChildren = {};
         tabs.forEach((child, index) => {
-            const tabTitle = child.title || `Tab ${index + 1}`;
+            const tabTitle = child.title || i18next.t("common:tabs.fallbackTitle", { tabNumber: index + 1 });
             newTabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
         });
         setTabTitlesToContent(newTabTitlesToContent);

@@ -6,12 +6,14 @@ import {AffixButton} from "../elements/AffixButton";
 import { ColumnSlice } from "../elements/layout/ColumnSlice";
 import { TextBlock } from "../elements/layout/TextBlock";
 import { ImageBlock } from "../elements/layout/ImageBlock";
+import { useTranslation } from "react-i18next";
 
 
 export const AdaCSOverviewPage = () => {
+    const { t } = useTranslation();
     return <Container data-bs-theme={undefined} className="ada-overview-page">
         <TitleAndBreadcrumb
-            currentPageTitle={"Computer Science"}
+            currentPageTitle={t("common:csOverview.overviewTitle")}
             icon={{
                 type: "img",
                 subject: undefined,
@@ -21,25 +23,21 @@ export const AdaCSOverviewPage = () => {
             }}
         />
         <div>
-            <PageMetadata title="Ada Computer Science" />
+            <PageMetadata title={t("common:title.adaComputerScience")} />
             <p>
-                Ada Computer Science is a free learning platform for computing teachers and students.
-                Developed by the Raspberry Pi Foundation in partnership with the Isaac Science team at the University of Cambridge,
-                it is tailored to support learners aged 11-19. Ada Computer Science offers structured resources to support both
-                teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a
-                wide range of other resources designed to enhance computer science education.
+                {t("common:csOverview.description")}
             </p>
 
             <ColumnSlice>
                 <TextBlock>
-                    <h3 className="h2">For students</h3>
+                    <h3 className="h2">{t("common:csOverview.students.title")}</h3>
                     <div>
-                        Explore interactive resources designed to help you study computer science:
+                        {t("common:csOverview.students.intro")}
                         <ul>
-                            <li>Learn through a full curriculum of topics explained in concept pages.</li>
-                            <li>Practise and test your understanding with interactive questions.</li>
-                            <li>Track your progress and identify areas to improve.</li>
-                            <li>Join termly challenges to test your knowledge and skills.</li>
+                            <li>{t("common:csOverview.students.featureLearn")}</li>
+                            <li>{t("common:csOverview.students.featurePractise")}</li>
+                            <li>{t("common:csOverview.students.featureTrack")}</li>
+                            <li>{t("common:csOverview.students.featureChallenges")}</li>
                         </ul>
                     </div>
                 </TextBlock>
@@ -53,13 +51,13 @@ export const AdaCSOverviewPage = () => {
                     <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
                 </ImageBlock>
                 <TextBlock>
-                    <h3 className="h2">For teachers</h3>
+                    <h3 className="h2">{t("common:csOverview.teachers.title")}</h3>
                     <div>
-                        Access structured resources to help you deliver high-quality computer science education:
+                        {t("common:csOverview.teachers.intro")}
                         <ul>
-                            <li>Teach with over 50 curriculum-aligned topics covering the full breadth of computer science.</li>
-                            <li>Set self-marking assignments to save time and support independent learning.</li>
-                            <li>Track student progress with a personal markbook to identify areas for improvement.</li>
+                            <li>{t("common:csOverview.teachers.featureTeach")}</li>
+                            <li>{t("common:csOverview.teachers.featureAssignments")}</li>
+                            <li>{t("common:csOverview.teachers.featureMarkbook")}</li>
                         </ul>
                     </div>
                 </TextBlock>
@@ -73,7 +71,7 @@ export const AdaCSOverviewPage = () => {
                     affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}
                     className="px-9 py-3 fs-6 position-relative"
                 >
-                    Go to Ada CS
+                    {t("common:csOverview.visitButton")}
                 </AffixButton>
             </div>
 

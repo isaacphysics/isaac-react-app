@@ -7,6 +7,8 @@ import {PotentialUser} from "../../../../IsaacAppTypes";
 import {ContentBaseDTO} from "../../../../IsaacApiTypes";
 import {useLinkableSetting} from "../../../services/linkableSetting";
 import {selectors, useAppSelector, useUpdateCurrentMutation} from "../../../state";
+import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../TransAnchor";
 
 const locationOfFAQEntry = "/support/student/general#llm_questions";
 
@@ -15,6 +17,7 @@ interface InfoBannerProps {
 }
 
 function LoggedOutCopy({doc}: InfoBannerProps) {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigation = useNavigation(doc);
 
@@ -23,54 +26,57 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <div className="h4">{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} You must be logged in to answer this question</div>
+        <div className="h4">{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} {t("common:freeTextBuilder.infoAlert.loggedOutTitle")}</div>
         <p>
-            We use a large language model (LLM) to mark free-text questions like this one.
-            The model typically returns a predicted mark in under 10 seconds, along with the mark scheme.
-            This gives you a low-stakes way to practise exam-style questions as well as an insight into how LLMs work, and their accuracy.
+            {t("common:freeTextBuilder.infoAlert.loggedOutDescription")}
         </p>
         <p>
-            The only data we send to the LLM is your answer; we do not send any personal data.
+            {t("common:freeTextBuilder.infoAlert.loggedOutDataPrivacy")}
         </p>
         {isAda && <p>
-            You can read more in our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
+            <Trans
+                i18nKey="ada:freeTextBuilder.infoAlert.loggedOutFaq"
+                components={{
+                    faqLink: <Link to={locationOfFAQEntry} target="_blank" />,
+                }}
+            />
         </p>}
         <Row className="align-items-center mt-4">
             <Col div className="col-12 col-sm-auto me-auto">
                 <Link to="/login" onClick={setAfterAuthPath} className="btn btn-solid me-2 w-100 w-sm-auto">
-                    Log in
+                    {t("common:button.logIn")}
                 </Link>
                 <Link to="/register" onClick={setAfterAuthPath} className="btn btn-keyline bg-white w-100 w-sm-auto mt-2 mt-sm-0">
-                    Sign up
+                    {t("common:button.signUp")}
                 </Link>
             </Col>
             {navigation.nextItem && <Col className="col-auto mt-4 mt-md-0">
-                <Link to={{pathname: navigation.nextItem.to, search: navigation.search}}>Skip question</Link> <strong>&gt;</strong>
+                <Link to={{pathname: navigation.nextItem.to, search: navigation.search}}>{t("common:freeTextBuilder.infoAlert.skipQuestion")}</Link> <strong>&gt;</strong>
             </Col>}
         </Row>
     </>;
 }
 
 function OpenAIUnder13Copy({doc}: InfoBannerProps) {
+    const { t } = useTranslation();
     const navigation = useNavigation(doc);
 
     return <>
-        <h4>We cannot collect your consent</h4>
+        <h4>{t("common:freeTextBuilder.infoAlert.under13Title")}</h4>
         <p>
-            We use a large language model (LLM) to mark free-text questions like this one.
-            This requires your consent to send your answer to OpenAI for marking.
-            Because you are under 13, we cannot collect your consent for this under the GDPR law.
+            {t("common:freeTextBuilder.infoAlert.under13Description")}
         </p>
         <p>
-            You can still read the question, but we will not be able to mark your answer.
+            {t("common:freeTextBuilder.infoAlert.under13Consequence")}
         </p>
         {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
-            Skip question
+            {t("common:freeTextBuilder.infoAlert.skipQuestion")}
         </Button>}
     </>;
 };
 
 function OpenAIConsentCopy({doc}: InfoBannerProps) {
+    const { t } = useTranslation();
     const navigation = useNavigation(doc);
     const user = useAppSelector(selectors.user.orNull);
 
@@ -88,45 +94,65 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <div className="h4">Do you consent to sending your answers to OpenAI for marking?</div>
+        <div className="h4">{t("common:freeTextBuilder.infoAlert.consentTitle")}</div>
         <p>
-            We use a large language model (LLM) to mark free-text questions like this one.
-            The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.
-            {isAda && <> See our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link> for more information.</>}
+            {t("common:freeTextBuilder.infoAlert.consentDescription")}
+            {isAda && <> <Trans
+                i18nKey="ada:freeTextBuilder.infoAlert.consentFaq"
+                components={{
+                    faqLink: <Link to={locationOfFAQEntry} target="_blank" />,
+                }}
+            /></>}
         </p>
         <p>
-            We only send your answer to OpenAI, we do not send any personal data.
-            OpenAI will not train their models using data you submit;
-            you may wish to read OpenAI’s <a href="https://openai.com/policies/eu-privacy-policy" target="_blank" rel="noopener noreferrer">privacy policy</a> before accepting.
+            <Trans
+                i18nKey="common:freeTextBuilder.infoAlert.consentPrivacy"
+                components={{
+                    privacyPolicyLink: <TransAnchor href="https://openai.com/policies/eu-privacy-policy" target="_blank" rel="noopener noreferrer" />,
+                }}
+            />
         </p>
         <p>
-            You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
+            <Trans
+                i18nKey="common:freeTextBuilder.infoAlert.consentWithdraw"
+                components={{
+                    accountSettingsLink: <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`} />,
+                }}
+            />
         </p>
         <div className="mt-4">
             <Button color="solid" className="me-2 w-100 w-sm-auto" onClick={provideConsent}>
-                Consent
+                {t("common:freeTextBuilder.infoAlert.consentButton")}
             </Button>
             {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
-                Skip question
+                {t("common:freeTextBuilder.infoAlert.skipQuestion")}
             </Button>}
         </div>
     </>;
 }
 
 function GeneralInfoCopy(_props: InfoBannerProps) {
+    const { t } = useTranslation();
     const {setLinkedSetting} = useLinkableSetting();
 
     return <>
-        <div className="h4">Free text questions are marked by a large language model (LLM)</div>
+        <div className="h4">{t("common:freeTextBuilder.infoAlert.generalTitle")}</div>
         <p>
-            In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time.
-            This means that the marks you receive will not always be accurate.
-            {isAda && <>{` `}For more information, read our {<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>}. </>}
+            {t("common:freeTextBuilder.infoAlert.generalAccuracy")}
+            {isAda && <>{" "}<Trans
+                i18nKey="ada:label.faqMoreInfo"
+                components={{
+                    faqLink: <Link to={locationOfFAQEntry} target="_blank" />,
+                }}
+            /> </>}
         </p>
         <p>
-            Do not include personal data in your answer as we send your answer to OpenAI.
-            We only send your answer, we do not send any personal data with it.
-            You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`} onClick={() => setLinkedSetting("consent-to-openai-marking-feature")}>account settings</Link>.
+            <Trans
+                i18nKey="common:freeTextBuilder.infoAlert.generalDataPrivacy"
+                components={{
+                    accountSettingsLink: <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`} onClick={() => setLinkedSetting("consent-to-openai-marking-feature")} />,
+                }}
+            />
         </p>
     </>;
 }

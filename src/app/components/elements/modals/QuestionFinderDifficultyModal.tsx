@@ -3,36 +3,39 @@ import { Col } from "reactstrap";
 import { siteSpecific } from "../../../services";
 import { closeActiveModal, store } from "../../../state";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const QuestionFinderDifficultyModal = () => {
+    const { t } = useTranslation();
     return <Col>
         {siteSpecific(<p>
-            Practice questions let you directly apply one idea.
+            {t("sci:questionFinder.difficulty.practiceIntro")}
             <ul>
                 <li>
-                    P1 covers revision of a previous stage or topics near the beginning of a course
+                    {t("sci:questionFinder.difficulty.practiceP1")}
                 </li>
                 <li>
-                    P3 covers later topics.
+                    {t("sci:questionFinder.difficulty.practiceP3")}
                 </li>
             </ul>
-            Challenge questions are solved by combining multiple concepts and creativity.
+            {t("sci:questionFinder.difficulty.challengeIntro")}
             <ul>
                 <li>
-                    C1 can be attempted near the beginning of your course
+                    {t("sci:questionFinder.difficulty.challengeC1")}
                 </li>
                 <li>
-                    C3 require more creativity and could be attempted later in a course.
+                    {t("sci:questionFinder.difficulty.challengeC3")}
                 </li>
             </ul>
         </p>, <p>
-            We split our questions into two categories:
+            {t("ada:questionFinder.difficulty.categoriesIntro")}
             <ul>
                 <li>
-                    Practice questions focus on one concept
+                    {t("ada:questionFinder.difficulty.practiceCategory")}
                 </li>
                 <li>
-                    Challenge questions combine multiple concepts
+                    {t("ada:questionFinder.difficulty.challengeCategory")}
                 </li>
             </ul>
         </p>)}
@@ -42,7 +45,7 @@ const QuestionFinderDifficultyModal = () => {
 export const questionFinderDifficultyModal = () : ActiveModalProps => {
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
-        title: siteSpecific("Difficulty Levels", "What do the difficulty levels mean?"),
+        title: i18next.t("site:questionFinder.difficulty.title"),
         body: <QuestionFinderDifficultyModal />,
     };
 };

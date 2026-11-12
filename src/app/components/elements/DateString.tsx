@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { HoverableTooltip } from "./HoverableTooltip";
+import i18next from "i18next";
 
 const dateLocale = "en-GB";
 // 13:00
@@ -61,12 +62,12 @@ export function getFriendlyDaysUntil(date: number | Date) : NonNullable<ReactNod
     if (daysUntil < 0) {
         // in the past
         if (daysUntil === -1) result = "yesterday";
-        else if (daysUntil && daysUntil > -7) result = `${-daysUntil} days ago`;
+        else if (daysUntil && daysUntil > -7) result = i18next.t("common:dateString.daysAgo", { days: -daysUntil });
     } else {
         // in the future
         if (daysUntil === 0) result = "today";
         else if (daysUntil === 1) result = "tomorrow";
-        else if (daysUntil && daysUntil < 7) result = `in ${daysUntil} days`;
+        else if (daysUntil && daysUntil < 7) result = i18next.t("common:dateString.inDays", { days: daysUntil });
     }
 
     // if the date has a special result, return it with a tooltip showing the exact date

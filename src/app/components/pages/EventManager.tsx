@@ -10,8 +10,10 @@ import {AddUsersToBooking} from "../elements/panels/AddUsersToBooking";
 import {EventAttendance} from "../elements/panels/EventAttendance";
 import {useAdminGetUserIdsSchoolLookupQuery, useGetEventBookingsQuery, useGetEventQuery} from "../../state";
 import {skipToken} from "@reduxjs/toolkit/query";
+import { useTranslation } from "react-i18next";
 
 export const EventManager = ({user}: {user: PotentialUser}) => {
+    const { t } = useTranslation();
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const selectedEventRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +29,7 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
     const {data: userIdToSchoolMapping} = useAdminGetUserIdsSchoolLookupQuery(eventBookingUserIds?.length ? eventBookingUserIds : skipToken);
 
     return  <Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin" icon={{type: "icon", icon: "icon-events"}}/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle={t("common:events.admin.title")} icon={{type: "icon", icon: "icon-events"}}/>
         <div className="my-7">
             <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
             <div className="mt-3" ref={selectedEventRef}/>

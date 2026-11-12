@@ -49,6 +49,8 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import { extendDueDateModal } from "../components/elements/modals/ExtendDueDateModal";
 import { SetQuizzesModal } from "../components/elements/modals/SetQuizzesModal";
 import { setFeedbackModeModal } from "../components/elements/modals/SetFeedbackModeModal";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export interface QuizSpec {
     quizId: string;
@@ -97,14 +99,14 @@ export const assignMultipleQuiz = createAsyncThunk(
             const failedIds = quizStatuses.filter(q => isDefined(q.errorMessage));
             if (failedIds.length === 0) {
                 appDispatch(showSuccessToast(
-                    `Test${successfulIds.length > 1 ? "s" : ""} assigned`,
+                    i18next.t("common:assignments.assign.successTitle", { count: successfulIds.length }),
                     `${successfulIds.length > 1 ? "All tests have" : "This test has"} been saved successfully`
                 ));
             } else {
                 // Show each group assignment error in a separate toast
                 failedIds.forEach(({groupId, errorMessage}) => {
                     appDispatch(showErrorToast(
-                        `Test assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
+                        i18next.t("common:assignments.assign.errorTitle", { groupName: groupLookUp.get(groupId) ?? "unknown group" }),
                         errorMessage as string
                     ));
                 });
@@ -116,7 +118,7 @@ export const assignMultipleQuiz = createAsyncThunk(
                         ? "Some tests were saved successfully."
                         : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`}`;
                     appDispatch(showSuccessToast(
-                        `Test${successfulIds.length > 1 ? "s" : ""} saved`,
+                        i18next.t("common:assignments.assign.savedTitle", { count: successfulIds.length }),
                         partialSuccessMessage
                     ));
                 }
@@ -376,11 +378,12 @@ export function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmen
 }
 
 export const useManageQuizAssignments = () => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
 
     const cancel = (quiz: QuizAssignmentDTO) => confirmThen(
-        `Are you sure you want to cancel "${quiz.quizSummary?.title}"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all student attempts at this test will be lost.`,
+        t("common:assignments.cancel.confirmMessage", { quizTitle: quiz.quizSummary?.title }),
         () => markQuizAsCancelled(quiz.id as number)
     );
     const openExtendDueDateModal = (quiz: QuizAssignmentDTO) => dispatch(openActiveModal(extendDueDateModal({

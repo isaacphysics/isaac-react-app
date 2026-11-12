@@ -5,6 +5,8 @@ import classNames from "classnames";
 import { ButtonProps } from "reactstrap";
 import { saveGameboard, selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector } from "../../state";
 import { isLoggedIn, siteSpecific } from "../../services";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface SaveBoardButtonProps extends ButtonProps {
     board: GameboardDTO;
@@ -12,6 +14,7 @@ interface SaveBoardButtonProps extends ButtonProps {
 }
 
 export const SaveBoardButton = (props: SaveBoardButtonProps) => {
+    const { t } = useTranslation();
     const { board, size, className, ...rest } = props;
 
     const dispatch = useAppDispatch();
@@ -32,8 +35,8 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
     const unlinkBoard = useCallback(() => {
         if (!user || !board) return;
         const confirmMessage = board.ownerUserId === user.id && !board.tags?.includes("ISAAC_BOARD")
-            ? `Are you sure you want to unsave your ${siteSpecific("deck", "quiz")} '${board.title}' from your account? You'll only be able to find it again if you've set it as an assignment.`
-            : `Are you sure you want to unsave '${board.title}' from your account?`;
+            ? i18next.t("site:gameboard.save.unsaveOwnerConfirm", { boardTitle: board.title })
+            : i18next.t("common:gameboard.save.unsaveConfirm", { boardTitle: board.title });
         if (confirm(confirmMessage)) {
             setJustLinked(false);
             void dispatch(unlinkUserFromGameboard({
@@ -51,7 +54,7 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
             color: siteSpecific(undefined, props.color === "solid" ? "white" : "primary")
         }}
         className={classNames(className, "w-max-content h-max-content action-button", {"icon-button-sm": size === "sm"})}
-        title={isLinked ? `Unsave ${siteSpecific("deck", "quiz")}` : `Save ${siteSpecific("deck", "quiz")}`}
+        title={isLinked ? t("site:gameboard.save.unsaveLabel") : t("site:gameboard.save.saveLabel")}
         onClick={(e) => { 
             e.preventDefault();
             if (isLinked) {

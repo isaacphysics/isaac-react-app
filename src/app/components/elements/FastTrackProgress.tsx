@@ -14,6 +14,7 @@ import {Markup} from "./markup";
 import {GameboardContext} from "../../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import { Row, Col } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -63,6 +64,7 @@ function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeigh
 }
 
 export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; search: string}) {
+    const { t } = useTranslation();
     const pageQuestionParts = useAppSelector(selectors.questions.getQuestions);
 
     const questionHistory = useMemo(() => {
@@ -272,7 +274,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 sourceIndex: mostRecentTopTenIndex,
                 targetIndices: [upperIndex],
                 isMostRecent: true,
-                message: "Practise the concept before returning to complete the board"
+                message: t("common:gameboard.fastTrack.connectionTopTenToUpperMessage")
             });
 
             // Upper to Lower connections
@@ -282,7 +284,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     sourceIndex: upperIndex,
                     targetIndices: [lowerIndex],
                     isMostRecent: true,
-                    message: "Practise the concept with easier questions before returning to complete the board"
+                    message: t("common:gameboard.fastTrack.connectionUpperToLowerMessage")
                 });
             }
         }
@@ -375,7 +377,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     <br className="d-none d-lg-block"/>
                     {currentlyWorkingOn.isConcept && <div className="mt-lg-1 mt-xl-3 h4">
                         <Markup encoding={"latex"}>
-                            {`${currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "")} Practice`}
+                            {t("common:gameboard.fastTrack.conceptTitleSuffix", { conceptTitle: currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "") })}
                         </Markup>
                     </div>}
                 </div>
@@ -403,7 +405,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 <div>
                     {currentlyWorkingOn.isConcept && <div className="mt-2 h4">
                         <Markup encoding={"latex"}>
-                            {`${currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "")} Practice`}
+                            {t("common:gameboard.fastTrack.conceptTitleSuffix", { conceptTitle: currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "") })}
                         </Markup>
                     </div>}
                 </div>

@@ -30,6 +30,7 @@ import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../.
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
 import { initialiseListState, listStateReducer, sublistDelimiter, TopLevelListsState } from "../../../services";
+import { useTranslation } from "react-i18next";
 
 const listTitles: { [field in keyof TopLevelListsState]: string } = {
     stage: siteSpecific("Learning Stage", "Stage"),
@@ -73,6 +74,7 @@ export interface QuestionFinderFilterPanelProps {
     setSearchDisabled: Dispatch<SetStateAction<boolean>>;
 }
 export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps) {
+    const { t } = useTranslation();
     const {
         searchDifficulties, setSearchDifficulties,
         searchTopics, setSearchTopics,
@@ -123,11 +125,11 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
         }}>
             {siteSpecific(
-                <h3 className="filter-question-text h6">Filter questions by</h3>,
+                <h3 className="filter-question-text h6">{t("sci:questionFinder.filters.header")}</h3>,
                 <>
                     <div>
-                        <img src="/assets/common/icons/filter-icon.svg" alt="Filter" style={{width: 18}} className="ms-1 me-2"/>
-                        <b>Filter by</b>
+                        <img src="/assets/common/icons/filter-icon.svg" alt={t("ada:questionFinder.filters.filterIconAlt")} style={{width: 18}} className="ms-1 me-2"/>
+                        <b>{t("common:label.filterBy")}</b>
                     </div>
                     <Spacer/>
                     {validFiltersSelected && <div className="pe-1 pe-lg-0">
@@ -135,7 +137,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             className={classNames("text-black pe-lg-0 py-0 me-2 me-lg-0 bg-opacity-10 btn-link", {"bg-white": isAda})}
                             onClick={(e) => { e.stopPropagation(); clearFilters(); }}
                         >
-                            Clear all
+                            {t("ada:questionFinder.filters.clearAll")}
                         </button>
                     </div>}
                 </>)}
@@ -143,7 +145,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <button
                     className="d-flex bg-opacity-10 p-0 bg-white"
                     onClick={handleFilterPanelExpansion}
-                    aria-label="Toggle filter panel"
+                    aria-label={t("common:questionFinder.filters.togglePanel")}
                     aria-expanded={filtersVisible}
                     aria-controls="question-finder-filters-options"
                 >
@@ -251,7 +253,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             e.preventDefault();
                             dispatch(openActiveModal(questionFinderDifficultyModal()));
                         }}>
-                        <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
+                        <b className="small text-start">{t("site:questionFinder.filters.difficultyHelp")}</b>
                     </button>
                     {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
                         <li key={index}>
@@ -287,7 +289,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     color="primary"
                                     checked={excludeBooks}
                                     onChange={() => setExcludeBooks(p => !p)}
-                                    label={<span className="me-2">Exclude skills book questions</span>}
+                                    label={<span className="me-2">{t("common:questionFinder.filters.excludeSkillsBook")}</span>}
                                 />
                             </CheckboxWrapper>
                         </li>
@@ -332,12 +334,12 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
                                 label={siteSpecific(
                                     <div className="d-flex">
-                                        Not started
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/>
+                                        {t("common:status.notStarted")}
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt={t("common:status.notStarted")}/>
                                     </div>,
                                     <div>
-                                        Not attempted
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-not-started.svg" alt="Not attempted" />
+                                        {t("common:status.notAttempted")}
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-not-started.svg" alt={t("common:status.notAttempted")} />
                                     </div>
                                 )}
                             />
@@ -351,12 +353,12 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
                                 label={siteSpecific(
                                     <div className="d-flex">
-                                        Fully correct
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/> 
+                                        {t("sci:status.fullyCorrect")}
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt={t("sci:status.fullyCorrect")}/> 
                                     </div>,
                                     <div>
-                                        Completed
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-correct.svg" alt="Completed" />
+                                        {t("common:status.completed")}
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-correct.svg" alt={t("common:status.completed")} />
                                     </div>
                                 )}
                             />
@@ -370,8 +372,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 onChange={() => setSearchStatuses(s => {return {...s, allIncorrect: !s.allIncorrect};})}
                                 label={
                                     <div className="d-flex">
-                                        All incorrect
-                                        <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
+                                        {t("ada:questionFinder.filters.statusAllIncorrect")}
+                                        <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt={t("ada:questionFinder.filters.statusAllIncorrect")}/> 
                                     </div>
                                 }
                             />
@@ -385,8 +387,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 onChange={() => setSearchStatuses(s => {return {...s, allAttempted: !s.allAttempted};})}
                                 label={
                                     <div className="d-flex">
-                                        All attempted
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt="All attempted"/> 
+                                        {t("sci:status.allAttempted")}
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt={t("sci:status.allAttempted")}/> 
                                     </div>
                                 }
                             />
@@ -400,12 +402,12 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 onChange={() => setSearchStatuses(s => {return {...s, tryAgain: !s.tryAgain};})}
                                 label={siteSpecific(
                                     <div className="d-flex">
-                                        In progress
-                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt="In Progress"/> 
+                                        {t("common:status.inProgress")}
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt={t("sci:questionFinder.filters.statusInProgressIcon")}/> 
                                     </div>,
                                     <div>
-                                        Try again
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-in-progress.svg" alt="Try again" />
+                                        {t("ada:questionFinder.filters.statusTryAgain")}
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-in-progress.svg" alt={t("ada:questionFinder.filters.statusTryAgain")} />
                                     </div>
                                 )}
                             />
@@ -442,7 +444,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     applyFilters();
                     setSearchDisabled(true);
                 }} disabled={searchDisabled}>
-                    Apply filters
+                    {t("ada:questionFinder.filters.applyButton")}
                 </Button>
             </Col>}
         </div>

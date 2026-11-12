@@ -1,5 +1,6 @@
 import React from "react";
 import { FormGroup, Label, Input } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 interface TrueFalseRadioProps {
     id: string;
@@ -13,14 +14,17 @@ interface TrueFalseRadioProps {
     trueLabel?: string;
     falseLabel?: string;
 }
-export function TrueFalseRadioInput({id, className, stateObject, propertyName, accessibleName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps) {
+export function TrueFalseRadioInput({id, className, stateObject, propertyName, accessibleName, setStateFunction, submissionAttempted, trueLabel, falseLabel}: TrueFalseRadioProps) {
+    const { t } = useTranslation();
+    const yesLabel = trueLabel ?? t("common:status.yes");
+    const noLabel = falseLabel ?? t("common:status.no");
     const invalid = submissionAttempted && (typeof stateObject?.[propertyName] !== "boolean");
 
     return <FormGroup>
         <div className={className}>
             <div className="d-flex flex-nowrap flex-grow-1">
                 <Label htmlFor={`${id}-t`} className="w-50 text-end text-nowrap pe-2">
-                    {trueLabel}<span className='visually-hidden'> for {accessibleName ?? propertyName}</span>
+                    {yesLabel}<span className='visually-hidden'> {t("common:form.elements.trueFalseAccessibilityLabel", { fieldName: accessibleName ?? propertyName })}</span>
                 </Label>
                 <Input
                     id={`${id}-t`} type="radio" name={id} color="primary" className="d-inline"
@@ -33,7 +37,7 @@ export function TrueFalseRadioInput({id, className, stateObject, propertyName, a
             </div>
             <div className="d-flex flex-nowrap flex-grow-1">
                 <Label htmlFor={`${id}-f`} className="w-50 text-end text-nowrap pe-2">
-                    {falseLabel}<span className='visually-hidden'> for {accessibleName ?? propertyName}</span>
+                    {noLabel}<span className='visually-hidden'> {t("common:form.elements.trueFalseAccessibilityLabel", { fieldName: accessibleName ?? propertyName })}</span>
                 </Label>
                 <Input
                     id={`${id}-f`} type="radio" name={id} color="primary" className="d-inline"
@@ -47,7 +51,7 @@ export function TrueFalseRadioInput({id, className, stateObject, propertyName, a
         </div>
 
         {invalid && <div id={`${id}-feedback`} className="required-before d-flex flex-nowrap text-center">
-            required
+            {t("common:form.elements.requiredError")}
         </div>}
     </FormGroup>;
 }

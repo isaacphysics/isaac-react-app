@@ -12,6 +12,7 @@ import {
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import classNames from "classnames";
+import i18next from "i18next";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -66,19 +67,19 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
                         <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/status-not-started.svg"} alt=""/>
-                        <h3 className="d-inline-block mt-2">Related questions</h3>
+                        <h3 className="d-inline-block mt-2">{i18next.t("common:title.relatedQuestions")}</h3>
                     </Col>
                 </Row>
                 <hr/>
                 <div className="d-lg-flex text-start">
                     {audienceQuestions.length > 0 && <div className={classNames({"w-lg-50": remainingQuestions.length > 0})}>
-                        <div className="ps-3 h4">On your specification:</div>
+                        <div className="ps-3 h4">{i18next.t("common:relatedContent.questions.specificationHeader")}</div>
                         <ListGroup>
                             {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>
                     </div>}
                     {remainingQuestions.length > 0 && <div className={classNames("mt-4 mt-lg-0", {"w-lg-50": audienceQuestions.length > 0})}>
-                        <div className="ps-3 h4">Outside your specification:</div>
+                        <div className="ps-3 h4">{i18next.t("common:relatedContent.questions.outsideSpecificationHeader")}</div>
                         <ListGroup>
                             {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>

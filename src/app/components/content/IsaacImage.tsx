@@ -5,6 +5,8 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Markup} from "../elements/markup";
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
 import { ActiveModalProps } from '../../../IsaacAppTypes';
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface FigureModalProps {
     path?: string;
@@ -17,7 +19,7 @@ export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) 
     return {
         closeAction: toggle,
         size: "xxl",
-        title: "Image preview",
+        title: i18next.t("common:content.imagePreviewTitle"),
         body: <div className="figure-panel">
             <figure className="text-center">
                 <img src={path} alt={altText} />
@@ -45,13 +47,14 @@ const IsaacImageCaption = ({doc}: {doc: ImageDTO}) => {
 };
 
 export const IsaacImage = ({doc}: IsaacImageProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const path = doc.src && apiHelper.determineImageUrl(doc.src);
 
     return <div className="figure-panel">
         <figure>
             <div className="text-center position-relative p-3 pb-5">
-                <button className="figure-fullscreen" aria-label="Expand image" onClick={() => {
+                <button className="figure-fullscreen" aria-label={t("common:content.expandImageLabel")} onClick={() => {
                     dispatch(openActiveModal(FigureModal({
                         path, 
                         altText: doc.altText, 

@@ -56,6 +56,8 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { FilterSummary } from "../../pages/QuestionFinder";
 import { pruneTreeNode } from "../../../services/questionHierarchy";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 // Immediately load GameboardBuilderTableRow, but allow splitting
 const importGameboardBuilderTableRow = import("../GameboardBuilderTableRow");
@@ -76,6 +78,7 @@ interface QuestionSearchModalProps {
 }
 export const QuestionSearchModal = (
     {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
     const sublistDelimiter = " >>> ";
@@ -179,13 +182,13 @@ export const QuestionSearchModal = (
     const addSelectionsRow = <div className="d-flex flex-column sticky-bottom align-items-center pt-3 pb-5 bg-white">
         <div className="flex-grow-1 mb-1">
             <strong className={classNames({"text-danger": selectedQuestions.size > QUESTIONS_PER_GAMEBOARD})}>
-                {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
+                {t("common:questionFinder.selection.selectedCount", { count: selectedQuestions.size })}
             </strong>
         </div>
         <div>
             <Input
                 type="button" data-testid="add-selections-button"
-                value={siteSpecific("Add selections to question deck", "Add selections to quiz")}
+                value={t("site:questionFinder.search.addSelectionsButton")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={classNames("btn w-100 h-100", siteSpecific("btn-keyline", "btn-solid border-0"))}
                 onClick={() => {
@@ -219,7 +222,7 @@ export const QuestionSearchModal = (
         searchExamBoards.map(eb => {return {value: eb, label: examBoardLabelMap[eb]};}),
         siteSpecific(selectionList, searchTopics.map(t => tags.getById(t as TAG_ID)).map(tag => {return {value: tag.id, label: tag.title};})),
         searchFastTrack ? [{value: "fasttrack", label: "FastTrack"}] : [],
-        searchBookmarks ? [{value: "bookmarked", label: "Bookmarked"}] : [],
+        searchBookmarks ? [{value: "bookmarked", label: i18next.t("common:questionFinder.filter.bookmarked")}] : [],
     ].flat(), [searchBook, searchBookmarks, searchDifficulties, searchFastTrack, searchStages, searchExamBoards, selectionList, searchTopics]);
 
     const removeFilterTag = (filter: string) => {
@@ -259,10 +262,10 @@ export const QuestionSearchModal = (
     return <>
         <Row>
             <Col xs={siteSpecific(9, 12)}>
-                <Label htmlFor="question-search-title">Search</Label>
+                <Label htmlFor="question-search-title">{t("common:title.search")}</Label>
                 <Input id="question-search-title" className="mb-3"
                     type="text"
-                    placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                    placeholder={t("site:questionFinder.search.placeholder")}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSearchQuestionName(e.target.value);
                     }}
@@ -270,10 +273,10 @@ export const QuestionSearchModal = (
             </Col>
             {isPhy && <Col xs={3}>
                 <div className="mb-2">
-                    <Label htmlFor="question-search-book">Book</Label>
+                    <Label htmlFor="question-search-book">{t("sci:label.book")}</Label>
                     <StyledSelect
                         value={selectedBook ? {value: selectedBook.tag, label: selectedBook.shortTitle} : null}
-                        inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
+                        inputId="question-search-book" isClearable placeholder={t("common:label.none")} {...selectStyle}
                         onChange={selectOnChange(setSearchBook, true)}
                         options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                     />
@@ -283,25 +286,25 @@ export const QuestionSearchModal = (
 
         <Row>
             <Col xs={6} lg={siteSpecific(6, 4)} className={classNames("mb-2")}>
-                <Label htmlFor="question-search-stage">Stage</Label>
+                <Label htmlFor="question-search-stage">{t("common:label.stage")}</Label>
                 <StyledSelect
                     value={searchStages.map(s => itemise(s, stageLabelMap[s]))}
-                    inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
+                    inputId="question-search-stage" isClearable isMulti placeholder={t("common:label.any")} {...selectStyle}
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </Col>
             <Col xs={6} lg={siteSpecific(6, 4)} className={classNames("mb-2")}>
-                <Label htmlFor="question-search-difficulty">Difficulty</Label>
+                <Label htmlFor="question-search-difficulty">{t("common:label.difficulty")}</Label>
                 <StyledSelect
                     value={searchDifficulties.map(d => itemise(d, difficultyLabelMap[d]))}
-                    inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
+                    inputId="question-search-difficulty" isClearable isMulti placeholder={t("common:label.any")} {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </Col>
             {isAda && <Col xs={12} lg={4} className={classNames("mb-2")}>
-                <Label htmlFor="question-search-exam-board">Exam Board</Label>
+                <Label htmlFor="question-search-exam-board">{t("ada:label.examBoard")}</Label>
                 <StyledSelect
-                    inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
+                    inputId="question-search-exam-board" isClearable isMulti placeholder={t("common:label.any")} {...selectStyle}
                     value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
                     onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
@@ -311,14 +314,14 @@ export const QuestionSearchModal = (
         <Row>
             <Col className="d-flex flex-column col-12 col-xl-3 mt-2">
 
-                {isPhy && <StyledCheckbox color="primary" checked={searchBookmarks} label={<span>Show bookmarked only</span>} onChange={e => {
+                {isPhy && <StyledCheckbox color="primary" checked={searchBookmarks} label={<span>{t("sci:questionFinder.search.showBookmarked")}</span>} onChange={e => {
                     startTransition(() => {
                         setSearchBookmarks(e.target.checked);
                     });
                 }} />}
 
                 {isPhy && isStaff(user) && <>
-                    <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>Show FastTrack only</span>} onChange={e => {
+                    <StyledCheckbox color="primary" checked={searchFastTrack} label={<span>{t("sci:questionFinder.search.showFastTrack")}</span>} onChange={e => {
                         startTransition(() => {
                             setSearchFastTrack(e.target.checked);
                         });
@@ -344,7 +347,7 @@ export const QuestionSearchModal = (
                     ))}
                 </ul>}
                 {isPhy && <div className="mb-2">
-                    Topic
+                    {t("common:label.topic")}
                     <HierarchyFilterTreeList root {...{
                         tier: 0, index: TAG_LEVEL.subject,
                         choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
@@ -373,18 +376,18 @@ export const QuestionSearchModal = (
                                     reverseOrder={SortOrder.DESC}
                                     currentOrder={questionsSort['title']}
                                     alignment="start"
-                                >Question title</SortItemHeader>
-                                <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                <th className="w-15">Stage</th>
-                                <th className="w-15">Difficulty</th>
-                                {isAda && <th className="w-15">Exam boards</th>}
+                                >{t("common:questionFinder.results.titleColumn")}</SortItemHeader>
+                                <th className={siteSpecific("w-25", "w-20")}>{t("common:label.topic")}</th>
+                                <th className="w-15">{t("common:label.stage")}</th>
+                                <th className="w-15">{t("common:label.difficulty")}</th>
+                                {isAda && <th className="w-15">{t("ada:questionFinder.results.examBoardColumn")}</th>}
                             </tr>
                         </thead>
                         <tbody>
                             <ShowLoadingQuery
                                 query={searchQuestionsQuery}
                                 placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
-                                defaultErrorTitle="Failed to load questions."
+                                defaultErrorTitle={t("common:questionFinder.results.loadError")}
                                 thenRender={({results: questions}) => {
                                     if (!questions) return <></>;
                                     const sortedQuestions = sortAndFilterBySearch(questions);

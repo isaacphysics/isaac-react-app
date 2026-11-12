@@ -3,40 +3,31 @@ import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE_TITLE_SHORT, trackEvent, WEBMASTER_EMAIL} from "../../services";
+import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 export const ServerError = () => {
+    const { t } = useTranslation();
     useEffect(() => {
         trackEvent("exception", { props: { description: `server_error`, fatal: true } });
     }, []);
 
     return <Container>
         <div>
-            <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "icon", icon: "icon-error"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("common:title.error")} icon={{type: "icon", icon: "icon-error"}} />
 
-            <div className="my-4 h3">{`We're sorry, but an error has occurred on the ${SITE_TITLE_SHORT} server!`}</div>
+            <div className="my-4 h3">{t("common:serverError.heading", { siteTitle: SITE_TITLE_SHORT })}</div>
 
             <p>
-                {"You may want to "}
-                <a
-                    role="button"
-                    tabIndex={0}
-                    href={window.location.href}
-                    onKeyPress={() => window.location.reload()}
-                    onClick={() => window.location.reload()}
-                >
-                    refresh this page and try again
-                </a>
-                {", "}
-                <Link to="/">
-                    return to our homepage
-                </Link>
-                {", or "}
-                <Link to="/contact">
-                    contact
-                </Link>
-                {" or "}
-                <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
-                {" us if this keeps happening."}
+                <Trans
+                    i18nKey="common:serverError.suggestions"
+                    components={{
+                        refresh: <TransAnchor role="button" tabIndex={0} href={window.location.href} onKeyPress={() => window.location.reload()} onClick={() => window.location.reload()} />,
+                        homepage: <Link to="/" />,
+                        contact: <Link to="/contact" />,
+                        email: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
+                    }}
+                />
             </p>
         </div>
     </Container>;

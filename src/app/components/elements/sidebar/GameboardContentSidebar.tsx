@@ -7,6 +7,7 @@ import { ExternalLink } from "../ExternalLink";
 import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
 import { QuestionLink, CompletionKey, BackToBookButton } from "./SidebarElements";
+import { Trans } from "react-i18next";
 
 interface GameboardContentSidebarProps {
     id: string;
@@ -35,7 +36,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
                 <span className="hover-underline link-title"><Markup encoding="latex">{wildCard?.title}</Markup></span>
                 <span className="text-muted small text-overflow-ellipsis">
                     {isExternal
-                        ? <>External link (<em>{externalUrl}</em>)</>
+                        ? <><Trans i18nKey="common:gameboard.sidebar.externalLink" components={{ em: <em /> }} values={{ externalUrl }} /></>
                         : wildCard.description ?? wildCard.subtitle
                     }
                 </span>

@@ -8,6 +8,7 @@ import {Provider} from "react-redux";
 import {fetchGlossaryTerms, store, useAppDispatch} from "../../state";
 import {StaticRouter} from "react-router";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 function getType(doc: any) {
     if (!doc) {
@@ -25,6 +26,7 @@ function getType(doc: any) {
 }
 
 function EditorListener() {
+    const { t } = useTranslation();
     // Wait for messages and then put doc from message into IsaacContent
     const [doc, setDoc] = useState();
     const dispatch = useAppDispatch();
@@ -68,7 +70,7 @@ function EditorListener() {
             </Col>
         </Row>
         : <div>
-            <em>Waiting for {SITE_TITLE} content...</em>
+            <em>{t("common:editorRenderer.waitingContent", { siteTitle: SITE_TITLE })}</em>
         </div>;
 }
 

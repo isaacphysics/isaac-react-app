@@ -3,15 +3,17 @@ import { Container } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { isPhy } from "../../services";
+import { useTranslation } from "react-i18next";
 
 export const QuickQuizzes = () => {
+    const { t } = useTranslation();
     const pageContext = useUrlPageTheme();
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
-            currentPageTitle="Quick quizzes"
+            currentPageTitle={t("common:quickQuizzes.title")}
             intermediateCrumbs={crumb ? [crumb] : undefined}
             icon={pageContext?.subject ? {
                 type: "icon", 

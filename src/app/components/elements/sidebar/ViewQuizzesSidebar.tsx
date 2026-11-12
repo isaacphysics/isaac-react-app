@@ -10,6 +10,7 @@ import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Tag } from "../../../../IsaacAppTypes";
 import { FilterCheckbox, AllFiltersCheckbox } from "./SidebarElements";
 import { SearchInputWithIcon } from "../SearchInputs";
+import { useTranslation } from "react-i18next";
 
 interface ViewQuizzesSidebarProps extends ContentSidebarProps {
     filterText: string;
@@ -23,6 +24,7 @@ interface ViewQuizzesSidebarProps extends ContentSidebarProps {
 }
 
 export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
+    const { t } = useTranslation();
     const { filterText, setFilterText, filterTags, setFilterTags, tagCounts, filterStages, setFilterStages, stageCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
     const subjectTag = tags.getById(pageContext?.subject as TAG_ID);
@@ -45,17 +47,17 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">Search practice tests</h3>
+            <h3 className="h5">{t("common:tests.view.searchTitle")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
-                type="search" placeholder="e.g. Admissions" 
+                type="search" placeholder={t("common:tests.view.searchPlaceholder")} 
                 value={filterText} 
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
             />
 
             {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h3 className="h5">Filter by subject and topic</h3>
+                <h3 className="h5">{t("common:label.filterBySubjectAndTopic")}</h3>
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
@@ -85,7 +87,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h3 className="h5">Filter by topic</h3>
+                <h3 className="h5">{t("common:label.filterByTopic")}</h3>
                 <ul className="ps-2">
                     <li>
                         <AllFiltersCheckbox
@@ -105,7 +107,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
 
             {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
                 <div className="section-divider"/>
-                <h3 className="h5">Filter by stage</h3>
+                <h3 className="h5">{t("common:label.filterByStage")}</h3>
                 <ul className="ps-2">
                     {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
                         <li key={i}>
@@ -126,7 +128,7 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
                 position: "suffix",
                 type: "icon"
             }}>
-                My tests
+                {t("common:title.myTests")}
             </AffixButton>
         </div>
     </ContentSidebar>;
