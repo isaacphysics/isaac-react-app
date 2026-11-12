@@ -124,6 +124,10 @@
   overflow-anchor: none !important;
 }
 
+.bg-inherit {
+  background-color: inherit;
+}
+
 @for $i from 0 through 5 {
   .z-10#{$i}0 {
     z-index: calc(1000 + $i * 10) !important;

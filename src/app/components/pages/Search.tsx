@@ -99,7 +99,7 @@ export const Search = () => {
                 <CardHeader className="search-header p-3">
                     <Col xs={12}>
                         <h2 className="me-2 h3">
-                            Search Results {urlQuery != "" && isDefined(searchResult?.currentData?.results) ? <Badge color="primary">{searchResult?.currentData?.results.length}</Badge> : null}
+                            Search Results {urlQuery != "" && isDefined(searchResult?.currentData?.results) ? <Badge>{searchResult?.currentData?.results.length}</Badge> : null}
                         </h2>
                     </Col>
                     <Col className="d-flex justify-content-end flex-grow-1">

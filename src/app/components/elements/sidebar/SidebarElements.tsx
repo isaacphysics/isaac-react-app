@@ -11,6 +11,7 @@ import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcon
 import { Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { Spacer } from "../Spacer";
+import { Badge } from "reactstrap";
 
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
@@ -156,9 +157,9 @@ export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & Questi
 };
 
 export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
-    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}>
+    <Badge className="rounded-pill me-1" color="theme" data-bs-theme={theme}>
         {title}
-    </span>;
+    </Badge>;
 
 interface BackToBookButtonProps extends React.HTMLAttributes<HTMLElement> {
     linkedBookSection: string[];

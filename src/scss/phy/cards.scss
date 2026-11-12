@@ -132,7 +132,10 @@ div:has(> .pod) {
   }
 
   .expired {
-    > * {
+    > :not(.event-pod-badges) {
+      filter: grayscale(1);
+    }
+    > .event-pod-badges > .badge {
       &:not(.expired-badge) {
         filter: grayscale(1);
       }

@@ -27,7 +27,7 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
     return <li>
         <DropdownItem tag={Link} className={className} {...props}>
             {children}
-            {badgeTitle && <Badge color="light" className="border-theme border bg-white ms-2 me-1">{badgeTitle}</Badge>}
+            {badgeTitle && <Badge color="light" className="border-theme border text-muted ms-2 me-1">{badgeTitle}</Badge>}
         </DropdownItem>
     </li>;
 };
@@ -35,7 +35,7 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     <LinkItem to="/coming_soon" aria-disabled="true">
         <span className="me-2 text-muted">{children}</span>
-        <Badge  color="light" className="border-theme border bg-white ms-auto me-1">Coming soon</Badge>
+        <Badge color="light" className="border-theme border text-muted ms-auto me-1">Coming soon</Badge>
     </LinkItem>
 );
 
@@ -81,7 +81,7 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
         return RenderNothing;
     }
     return <div className={"d-inline"} {...rest}>
-        <span className={classNames("badge rounded-pill ms-2", {"bg-grey text-body": isPhy, "bg-turquoise-blue text-dark": isAda})}>{count}</span>
+        <Badge className={classNames("rounded-pill ms-2", siteSpecific("text-body", "text-dark"))} color={siteSpecific("grey", "turquoise-blue")}>{count}</Badge>
         <span className="visually-hidden"> {message}</span>
     </div>;
 }

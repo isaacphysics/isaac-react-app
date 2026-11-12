@@ -117,6 +117,8 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
 // Theme colours
 $theme-colour-overrides: (
     correct: $color-misc-correct,
+    alert: $color-misc-orange-600,
+    expired: $color-neutral-500,
 
     // these are intended for "action states", e.g. event status, not question feedback
     success: #208838,
@@ -253,7 +255,6 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "tabs";
 @import "../common/cards";
 @import "../common/graph-sketcher-modal";
-@import "../common/carousel";
 @import "../common/toggle";
 @import "tooltip";
 @import "boards";

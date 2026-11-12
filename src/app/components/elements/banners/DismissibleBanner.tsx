@@ -37,7 +37,7 @@ export const DismissibleCookieBanner = (props: DismissibleCookieBannerProps) => 
                         <Col xs={12} md={9}>
                             {children}
                         </Col>
-                        <Col xs={12} md={3} className="text-center">
+                        <Col xs={12} md={3} className="text-center mt-2 mt-md-0">
                             <Button color="keyline" onClick={clickDismiss}>
                                 {dismissText}
                             </Button>
