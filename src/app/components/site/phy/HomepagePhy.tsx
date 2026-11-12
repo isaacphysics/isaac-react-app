@@ -49,7 +49,7 @@ const HomepageHero = () => {
             <Container className="pt-7">
                 <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
                     <h1 className="physics-strapline mb-3">
-                        <span className="text-green">Visual recession</span> by solving problems
+                        <span className="text-green">Visual regression</span> by solving problems
                     </h1>
                     From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
                 </div>
