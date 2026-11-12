@@ -25,7 +25,7 @@ export const AdaAdvancers = () => {
             ? <span>
                 <Trans i18nKey="ada:advancers.join.loggedIn" components={{ strong: <strong />, joinLink: <Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`} /> }} values={{ groupName: ADVANCERS_GROUP_NAME }} />
             </span>
-            : <><Trans i18nKey="ada:advancers.join.notLoggedIn" components={{ strong: <strong/>, authLink: <Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`} /> }} /></>
+            : <><Trans i18nKey="ada:advancers.join.notLoggedIn" components={{ strong: <strong/>, authLink: <Link to={`/account?authToken=${ADVANCERS_GROUP_AUTH_TOKEN}`} /> }} /></> 
         }
         <p className="mt-2 mb-0">{t("ada:advancers.join.freeNote")}</p>
     </Callout>;

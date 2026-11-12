@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import { initPlugin } from "@frsource/cypress-plugin-visual-regression-diff/plugins";
+import { initPlugin } from "@pixsame/cypress-plugin-visual-regression-diff/plugins";
 import { generateCypressCompatibleViteConfig } from "./config/vite.config.common";
 
 const SITE_STRING = process.env.CYPRESS_SITE == 'ada' ? 'ada' : 'sci';
@@ -31,7 +31,7 @@ export default defineConfig({
         // @ts-ignore - https://github.com/cypress-io/cypress/issues/16742#issuecomment-2211082722
         devServerPublicPathRoute: '',
     },
-    env: {
+    expose: {
         pluginVisualRegressionImagesPath : `{spec_path}/__image_snapshots__/${SITE_STRING}`,
         pluginVisualRegressionMaxDiffThreshold: 0,
         pluginVisualRegressionUpdateImages: UPDATE_BASELINE,

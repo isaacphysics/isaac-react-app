@@ -62,6 +62,7 @@ export const AdminContentErrors = () => {
     const params = useQueryParams(true);
 
     const [pathFilter, setPathFilter] = useState<string>(params.path || "");
+    const [excludePathFilter, setExcludePathFilter] = useState<string>(params.exclude || "");
     const [errorFilter, setErrorFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
@@ -110,13 +111,19 @@ export const AdminContentErrors = () => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col lg={4} className="mb-2">
+                        <Col lg={6} className="mb-2">
                             <Label htmlFor="file-path-filter" className="w-100">
                                 {t("common:admin.contentErrors.filters.filePathLabel")}
                             </Label>
                             <Input id="file-path-filter" type="text" defaultValue={pathFilter} onChange={(e) => setPathFilter(e.target.value)} placeholder={t("common:admin.contentErrors.filters.filePathPlaceholder")}/>
                         </Col>
-                        <Col lg={8} className="mb-2">
+                        <Col lg={6} className="mb-2">
+                            <Label htmlFor="exclude-file-path-filter" className="w-100">
+                                Exclude by file path
+                            </Label>
+                            <Input id="exclude-file-path-filter" type="text" defaultValue={excludePathFilter} onChange={(e) => setExcludePathFilter(e.target.value)} placeholder="Exclude errors by file path"/>
+                        </Col>
+                        <Col lg={12} className="mb-2">
                             <Label htmlFor="error-message-filter" className="w-100">
                                 {t("common:admin.contentErrors.filters.errorMessageLabel")}
                             </Label>
@@ -167,6 +174,7 @@ export const AdminContentErrors = () => {
                                         </tr>
                                         {errors.errorsList
                                             .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
+                                            .filter((error) => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
                                             .filter((error) => error.listOfErrors.reduce(errorReducer, false))
                                             .filter(
                                                 (error) =>
