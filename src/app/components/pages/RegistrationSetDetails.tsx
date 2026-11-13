@@ -126,7 +126,9 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                     }
                 }
 
-                void navigate('/register/connect');
+                if (userRole === "STUDENT") {
+                    void navigate('/register/connect');
+                }
             } else {
                 Object.assign(registrationUser, {loggedIn: false});
 
