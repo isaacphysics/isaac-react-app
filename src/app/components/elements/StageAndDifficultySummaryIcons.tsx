@@ -24,7 +24,7 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
     return siteSpecific(
         <div className={classNames(className, "d-flex flex-column")}>
             {audienceViews.map((view) =>
-                <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="d-flex w-100 hierarchy-tags text-center">
+                <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex hierarchy-tags", stageOnly ? "align-self-start text-start" : "text-center w-100")}>
                     {view.stage && view.stage !== STAGE.ALL && stageLabelMap[view.stage] + (stageOnly ? "" : " ")}
                     {!stageOnly && view.difficulty && <>
                         {simpleDifficultyLabelMap[view.difficulty]}

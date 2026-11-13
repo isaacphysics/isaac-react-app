@@ -277,16 +277,16 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                             <Breadcrumb breadcrumb={breadcrumb}/>
                         </span>
                     </div>}
-                    {(isItem || isQuiz || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
+                    {(isItem || isQuiz || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex", isQuiz ? "quiz-stage" : `justify-content-end ${siteSpecific("wf-13", "wf-16")}`, {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
                         <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack stageOnly={isQuiz} className={siteSpecific("w-100", "py-3 pe-3")}/>
                     </div>}
                     {isGameboard && typedProps.board && <div className="d-flex align-items-center justify-content-end gap-3 ms-3">
                         <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
                         {isTeacherOrAbove(user) && <GameboardAssign board={typedProps.board} />}
                     </div>}
-                    {isQuiz && <Col className="d-flex align-items-center justify-content-end ms-5">
+                    {isQuiz && <div className="d-flex align-items-center justify-content-end ms-2">
                         <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
-                    </Col>}
+                    </div>}
                     {(isItem || isBuilder) && isPhy && contentId && typedProps.allowBookmarking && isLoggedIn(user) && <div
                         className="alvi-bookmark-container"
                     >
