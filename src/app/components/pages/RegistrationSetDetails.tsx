@@ -126,7 +126,11 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                     }
                 }
 
-                void navigate('/register/connect');
+                if (userRole === "STUDENT") {
+                    void navigate('/register/connect');
+                } else if (!isTeacherSSO) { // Must be Ada email/password teacher signup
+                    void navigate('/register/preferences');
+                }
             } else {
                 Object.assign(registrationUser, {loggedIn: false});
 
