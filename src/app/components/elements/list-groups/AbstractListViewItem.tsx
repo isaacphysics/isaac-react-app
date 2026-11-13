@@ -246,7 +246,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         <Breadcrumb breadcrumb={breadcrumb}/>
                     </span>}
                     {(isItem || isQuiz || isBuilder) && stackedLayout && typedProps.audienceViews && <div className="d-flex mt-1"> 
-                        <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
+                        <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack stageOnly={isQuiz}/>
                     </div>}
                     {(isCrossTopic || isLLM) && <div className={classNames("d-flex flex-wrap gap-2 mt-1", {"mt-2": isPhy || !stackedLayout})}>
                         {isCrossTopic && <CrossTopicQuestionIndicator small />}
@@ -278,7 +278,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         </span>
                     </div>}
                     {(isItem || isQuiz || isBuilder) && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end", siteSpecific("wf-13", "wf-16"), {"list-view-border": (isPhy || isBuilder) && typedProps.audienceViews.length > 0})}>
-                        <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
+                        <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack stageOnly={isQuiz} className={siteSpecific("w-100", "py-3 pe-3")}/>
                     </div>}
                     {isGameboard && typedProps.board && <div className="d-flex align-items-center justify-content-end gap-3 ms-3">
                         <SaveBoardButton board={typedProps.board} color="keyline" size="sm" />
