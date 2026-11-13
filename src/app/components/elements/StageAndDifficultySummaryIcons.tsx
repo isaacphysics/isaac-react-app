@@ -12,10 +12,11 @@ interface StageAndDifficultySummaryIconsProps {
     iconClassName?: string,
     stack?: boolean,
     spacerWidth?: number,
+    stageOnly?: boolean,
 }
 
 export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryIconsProps) => {
-    const {audienceViews, className, iconClassName, stack, spacerWidth} = props;
+    const {audienceViews, className, iconClassName, stack, spacerWidth, stageOnly} = props;
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
     // Prefer Core over Advanced if both are present
     const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
@@ -23,9 +24,9 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
     return siteSpecific(
         <div className={classNames(className, "d-flex flex-column")}>
             {audienceViews.map((view) =>
-                <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="d-flex w-100 hierarchy-tags text-center">
-                    {view.stage && view.stage !== STAGE.ALL && stageLabelMap[view.stage] + " "}
-                    {view.difficulty && <>
+                <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex hierarchy-tags", stageOnly ? "align-self-start text-start" : "text-center w-100")}>
+                    {view.stage && view.stage !== STAGE.ALL && stageLabelMap[view.stage] + (stageOnly ? "" : " ")}
+                    {!stageOnly && view.difficulty && <>
                         {simpleDifficultyLabelMap[view.difficulty]}
                         <Spacer width={spacerWidth}/>
                         <DifficultyIcons className={classNames("d-inline-block ps-1", iconClassName)} difficulty={view.difficulty} />
@@ -35,15 +36,17 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
         </div>,
         <div className={classNames(className, "d-sm-flex flex-wrap align-items-baseline", {"justify-content-end": !stack})}>
             <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
-                {difficulties.length > 0 && <>
-                    <div className="hierarchy-tags text-center text-nowrap me-2">
-                        {!!adaStage && stageLabelMap[adaStage] + ": "}
-                        {simpleDifficultyLabelMap[difficulties[0]]}
-                    </div>
-                    <div className="hierarchy-tags text-center">
-                        <DifficultyIcons difficulty={difficulties[0]} blank className="mt-n1"/>
-                    </div>
-                </>}
+                {stageOnly
+                    ? !!adaStage && <div className="hierarchy-tags text-center text-nowrap me-2">{stageLabelMap[adaStage]}</div>
+                    : difficulties.length > 0 && <>
+                        <div className="hierarchy-tags text-center text-nowrap me-2">
+                            {!!adaStage && stageLabelMap[adaStage] + ": "}
+                            {simpleDifficultyLabelMap[difficulties[0]]}
+                        </div>
+                        <div className="hierarchy-tags text-center">
+                            <DifficultyIcons difficulty={difficulties[0]} blank className="mt-n1"/>
+                        </div>
+                    </>}
             </div>
         </div>,
     );
