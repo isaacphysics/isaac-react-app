@@ -1,0 +1,687 @@
+{
+  "biologyExtension": {
+    "cardSubtitle": "Estiratz vòstra compreneson de la biologia amb nòstras questions d'extension que vos fan pensar en defòra de la bóstia.",
+    "cardTitle": "Extension de la biologia"
+  },
+  "birthdayStats": {
+    "community": {
+      "assignments": "total de missions ensemble",
+      "schools": "escòlas utilizant Isaac",
+      "teachers": "los ensenhaires que fixan de prètzfaches"
+    },
+    "hard": {
+      "heading": "Most <emphasis>difficult</emphasis> question"
+    },
+    "highlights": {
+      "hintViews": "visualizacions d'entresenhas totalas",
+      "longestStreak": "mai longa tièra d'escolans",
+      "streakUnit": "setmanas"
+    },
+    "overview": {
+      "accounts": "Comptes",
+      "conceptsViewed": "Concèptes vistes",
+      "questionAttempts": "Ensags de questions"
+    },
+    "page": {
+      "closing": "Mercés d'èsser una partida d'Isaac!",
+      "intro": "Lo 1èr de setembre de 2025 marquèt l'11n anniversari dels primièrs ensags de questions sus la plataforma Isaac Physics. Per festejar, tornam agachar las estatisticas d'Isaac pendent aqueste temps.",
+      "metaTitle": "Feliç <emphasis>11è</emphasis> aniversari a Isaac Science!",
+      "title": "Las estatisticas del 11n anniversari d'Isaac"
+    },
+    "popular": {
+      "conceptHeading": "Concèpte mai popular",
+      "questionHeading": "La question mai populara"
+    }
+  },
+  "books": {
+    "detail": {
+      "loadError": "Impossible de cargar la pagina del libre"
+    },
+    "error": {
+      "fetchContents": "Impossible de recuperar lo contengut del libre.",
+      "fetchPage": "Impossible de recuperar la pagina del libre."
+    },
+    "index": {
+      "loadError": "Impossible de cargar lo contengut del libre"
+    },
+    "overview": {
+      "exploreDescription": "Clicatz sus una imatge de libre çai-jos per anar a la pagina d'acuèlh de cada libre e explorar mai luènh.",
+      "exploreTitle": "Exploratz nòstres libres en linha",
+      "title": "Nòstres libres"
+    },
+    "page": {
+      "emptyState": "I a pas de material per aquesta pagina.",
+      "extensionIntroText": "Espandissètz vòstras limitas en ensajar aquelas questions d'extension suplementàrias.",
+      "extensionTitle": "Trabalh d'extension"
+    },
+    "preUniMaths": {
+      "helpText": "Lo libre de Matematicas preuniversitàrias de Fisica Isaac per las Sciéncias",
+      "level2Title": "Nivèl 2",
+      "level3Title": "Nivèl 3",
+      "level4Title": "Nivèl 4",
+      "level5Title": "Nivèl 5",
+      "level6Title": "Nivèl 6",
+      "level7Title": "Nivèl 7"
+    },
+    "solvingPhysProblems": {
+      "title": "Cossí resòlvre de problèmas de fisica"
+    },
+    "yr9": {
+      "chapter5Subheading": "(Seccions 35-38)",
+      "chapter6Subheading": "(Seccions 39-48)",
+      "helpText": "Lo libre de fisica d'Isaac fins al GCSE",
+      "title": "Passatz cap a GCSE de fisica"
+    }
+  },
+  "challenges": {
+    "emptyState": {
+      "notifyButton": "Avisatz-me",
+      "subscribedMessage": "I a pas de desfís en cors pel moment, mas sètz abonat a nòstra lista de difusion e seretz lo primièr a saber lo seguent!",
+      "unsubscribedMessage": "I a pas de desfís en cors pel moment. Actualizatz vòstras preferéncias de comunicacion per èsser lo primièr a saber lo desfís seguent."
+    }
+  },
+  "contact": {
+    "faq": {
+      "heading": "Question frequentament pausada?",
+      "text": "Vos agradarà benlèu de consultar nòstras paginas de FAQ per veire se pòdon vos ajudar : <studentFaqLink>FAQ dels escolans</studentFaqLink> | <teacherFaqLink>FAQs del professor</teacherFaqLink>"
+    },
+    "form": {
+      "errorMessage": "{{errorMessage}} Nos podètz contactar a <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>",
+      "heading": "Mandatz-nos un messatge",
+      "maxLengthWarning": "Vòstre messatge a atench la longor maximala.",
+      "messageLabel": "Messatge",
+      "subjectLabel": "Subjècte del messatge",
+      "successMessage": "Mercé per vòstre messatge."
+    },
+    "formErrorTitle": "Error al moment del mandadís del formulari Contactatz-nos",
+    "preset": {
+      "accountDeletionMessage": "Bonjorn,\n\nPodètz suprimir mon compte {{siteTitle}}.\n\nMercés, \n\n",
+      "accountDeletionSubject": "Demanda de supression del compte",
+      "contentProblemPlaceholder": "Descrivètz lo problèma aicí.",
+      "contentProblemSection": ", seccion \"{{sectionName}}\"",
+      "contentProblemSubject": "Problèma de contengut",
+      "pageNotFoundMessage": "Pagina: \"{{pageName}}\"\n\n[Apondètz tot detalh sus cossí avètz trobat aquesta pagina mancanta aicí.]",
+      "pageNotFoundSubject": "Pagina pas trobada",
+      "teacherAccountMessage": "Bonjorn,\n\nPodètz convertir mon compte {{siteTitle}} en un compte de professor.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n"
+    },
+    "problems": {
+      "heading": "De problèmas amb lo sit?",
+      "text": "Volèm totjorn melhorar doncas mercés de raportar los problèmas a <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>"
+    },
+    "social": {
+      "text": "Seguissètz-nos sus:"
+    }
+  },
+  "context": {
+    "mathsAndFurtherMaths": "Matematicas e matematicas suplementàrias"
+  },
+  "contextPicker": {
+    "resetButton": "Reïnicializar lo contèxte de visualizacion"
+  },
+  "csOverview": {
+    "description": "Ada Computer Science es una plataforma d'aprendissatge gratuita pels ensenhaires e escolans d'informatica. Desvolopat per la Fondacion Raspberry Pi en partenariat amb l'equipa Isaac Science a l'Universitat de Cambridge, es adaptat per ajudar los aprenents d'edats 11 e 19 ans. Ada Computer Science ofrís de ressorsas estructuradas per sosténer los ensenhaires e los escolans. Aquestes incluson de paginas de concèpte, de questions interactivas, e d'aisinas pels ensenhaires, demest una granda varietat d'autras ressorsas concebudas per melhorar l'educacion en informatica.",
+    "overviewTitle": "Informatica",
+    "students": {
+      "featureChallenges": "Inscrivètz-vos als desfís de tèrme per testar vòstras coneissenças e competéncias.",
+      "featureLearn": "Aprene a travèrs un plan d'estudis complet de tèmas explicats dins de paginas de concèpte.",
+      "featurePractise": "Practicatz e testatz vòstra compreneson amb de questions interactivas.",
+      "featureTrack": "Seguissètz vòstre progrès e identificatz los domenis a melhorar.",
+      "intro": "Exploratz de ressorsas interactivas concebudas per vos ajudar a estudiar l'informatica:",
+      "title": "Pels escolans"
+    },
+    "teachers": {
+      "featureAssignments": "Fixatz de prètzfaches d'automarcatge per estalviar de temps e sosténer l'aprendissatge independent.",
+      "featureMarkbook": "Seguir lo progrès dels escolans amb un quasernet personal per identificar los domenis de melhorament.",
+      "featureTeach": "Ensenhar amb mai de 50 tèmas alinhats al plan d'estudis que cobrisson tota l'amplor de l'informatica.",
+      "intro": "Accedissètz a de ressorsas estructuradas per vos ajudar a ofrir una educacion informatica de nauta qualitat:",
+      "title": "Pels ensenhaires"
+    },
+    "visitButton": "Anar a Ada CS"
+  },
+  "cyberExplorers": {
+    "about": {
+      "classroomTools": "Aisinas de classa per agropar los escolans dins de classas, assignar d'activitats e seguir lo progrès dels aprenents",
+      "discoverButton": "Descobrissètz mai d'Ada CS",
+      "expertContent": "Contengut d'expèrts desvolopat per la Fondacion Raspberry Pi en collaboracion amb de partenaris dont l'Universitat de Cambridge",
+      "freeResources": "Ressorsas d'informatica gratuitas, d'activitats practicas per las edats de 11 a 14 ans a l'aprendissatge estructurat d'informatica per las edats de 14 a 19 ans",
+      "subtitle": "Un luòc per aprene l'informatica, dels 11 a 19 ans.",
+      "title": "Qu es Ada Informatica?"
+    },
+    "header": {
+      "description": "Activitats practicas qu'ajudan los aprenents a comprene la tecnologia, a bastir la confiéncia e a se preparar per çò que ven.",
+      "exploreButton": "Explorar los tèmas d'aprendissatge",
+      "freeNote": "Totjorn disponible a gratis.",
+      "imageAlt": "Un professor assistent dos escolans.",
+      "title": "<slash>/</slash><br/>Vòstre futur en tecnologia comença aicí"
+    },
+    "metaDescription": "Ressorsas pels escolans e ensenhaires per las edats 11-14.",
+    "partners": {
+      "description": "TechFirst connecta las escòlas amb d'activitats e d'eveniments presencials liurats per de partenaris de liurason regionals dins lo Reialme Unit. Aquestes partenaris amassan d'escòlas, de collègis, d'emplegaires, d'autoritats localas e d'organizacions comunitàrias per provesir d'oportunitats d'enriquiment inspirantas e mostrar de vias de tecnologia e d'informatica localas.",
+      "imageAlt": "Mapa estilizada del Reialme Unit mostrant d'exemples d'emplaçaments de partenaris regionals.",
+      "recognition": "Las escòlas pòdon tanben trabalhar cap a la reconeissença de l'escòla TechFirst, amb de prèmis de bronze, d'argent e d'aur disponibles. A partir de setembre de 2026, TechFirst operarà dins cada region e nacion d'origina del Reialme Unit.",
+      "title": "Partenaris de liurason regionals"
+    },
+    "topics": {
+      "comingSoon": "Començatz per la cibersecuritat, amb mai de subjèctes a venir lèu.",
+      "cyberSecurityTitle": "Ciberseguretat",
+      "cyberattacks": {
+        "body": "Comprene qual realiza de ciberatacas, perqué e cossí utilizan de logicials malvolents per o far.",
+        "title": "Ciberatacas"
+      },
+      "defendMalware": {
+        "body": "Explora las aisinas e las tecnicas utilizadas per detectar, arrestar e suprimir de logicials malvolents.",
+        "title": "Se defendre contra los logicials malvolents"
+      },
+      "description": "Bastir vòstras competéncias a travèrs d'activitats practicas que vos ajudan a comprene cossí fonciona la tecnologia e cossí es utilizada per resòlvre de problèmas del mond real.",
+      "exploreButton": "Explorar",
+      "networkSecurity": {
+        "body": "Descobrissètz cossí las rets son protegidas de las atacas e mantengudas seguras.",
+        "title": "Seguretat de la ret"
+      },
+      "socialEngineering": {
+        "body": "Mantenètz-vos segurs en linha e aprenètz cossí los sistèmas son atacats e defenduts.",
+        "title": "Engenharia sociala"
+      },
+      "title": "Causissètz un tèma d'explorar"
+    },
+    "welcome": {
+      "description": "Exploratz de ressorsas de seguretat cibernetica familiaras amb de novèls contenguts informatics e tecnologics pels aprenents.",
+      "exploreMoreText": "A costat de la cibersecuritat, Ada CS creis amb de tèmas novèls e d'experiéncias d'aprendissatge per las edats de 11 a 14 ans.",
+      "exploreMoreTitle": "Mai d'explorar",
+      "familiarText": "Las ressorsas de cibersecuritat que coneissètz fan ara partida d'Ada CS, sostengudas per nòstre partenariat amb lo Govèrn del Reialme Unit.",
+      "familiarTitle": "Ressorsas conegudas",
+      "teachingText": "Crear de classas, assignar d'activitats, e seguir lo progrès dels aprenents, tot en un sol luòc.",
+      "teachingTitle": "Aisinas d'ensenhament",
+      "title": "Los ciberexplorators planvenguts"
+    }
+  },
+  "dashboard": {
+    "assignments": {
+      "emptyState": "Avètz pas de prètzfaches amb de datas d'escasença venentas.",
+      "title": "Veire lo trabalh programat",
+      "viewAllLink": "Veire totes los trabalhs"
+    },
+    "books": {
+      "title": "Explora nòstres libres",
+      "viewAllLink": "Veire totes los libres"
+    },
+    "currentWork": {
+      "activeIntro": "Avètz de prètzfaches que son actius o que son a mand lèu :",
+      "allAssignmentsLink": "Veire totas las missions",
+      "allTestsLink": "Veire totes los tèsts",
+      "dueDate": "Degut {{dueLabel}}",
+      "emptyState": "Avètz pas de missions activas.",
+      "title": "Completar lo trabalh actual",
+      "viewOlderLink": "Veire las missions mai ancianas."
+    },
+    "greeting": "Benvenguda de retorn, {{studentName}}!",
+    "groupJoin": {
+      "existingGroupsLink": "Veire mos grops existents",
+      "placeholder": "Picatz lo còde"
+    },
+    "groups": {
+      "emptyState": "Avètz pas de grops actius.",
+      "viewAllLink": "Veire lo progrès de totes los grops"
+    },
+    "myIsaac": {
+      "title": "Mai dins Mon Isaac"
+    },
+    "streak": {
+      "festiveFreeze": "Gauditz de vòstra congelacion de doas setmanas festivas del 22 de decembre al 4 de genièr!",
+      "infoLink": "Qu'es aquò?",
+      "maintained": "Avètz mantengut vòstra seguida per aquesta setmana!",
+      "remaining": "Sonque {{remainingParts}} mai de partidas de question per respondre corrèctament aquesta setmana!",
+      "title": "Bastir vòstra seguida setmanièra",
+      "tooltip": "La seguida setmanièra indica lo nombre de setmanas consecutivas que sètz estat actiu sus Isaac.<br1/><br2/>Respondètz al mens dètz partidas de questions corrèctament per setmana per emplenar vòstra barra de progrès setmanièra e aumentar vòstra rasca!"
+    },
+    "viewToggleLabel": "Vista del tablèu de bòrd",
+    "welcomeHeader": "Benvenguda de retorn, {{teacherName}}!"
+  },
+  "examSpecifications": {
+    "directory": {
+      "ada": {
+        "advanced": "Avançat",
+        "core": "Còr"
+      },
+      "metaDescription": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica de nivèl A.",
+      "scotland": {
+        "advancedHigher": "Avançat mai naut",
+        "higher": "Mai naut",
+        "national5": "Nacional 5"
+      },
+      "showButton": "Mòstra-me"
+    },
+    "pageTitle": "Especificacion de l'examen"
+  },
+  "experiments": {
+    "cardSubtitle": "Desvolopar de competéncias experimentalas amb d'experiéncias interessantas."
+  },
+  "getStarted": {
+    "intro": "Seguissetz aquestas etapas per començar amb vòstre compte professor :",
+    "tasks": {
+      "assignQuiz": "Assignar un quiz als escolans",
+      "createAccount": "Creatz vòstre compte",
+      "createGroup": "Crear un grop d'escolans",
+      "personaliseContentHint": "Causissètz un nivèl d'ensenhament e un tablèu d'examen, o causissètz de veire tot lo contengut.",
+      "personaliseContentTitle": "Personalizatz vòstre contengut"
+    },
+    "title": "Començatz amb Ada CS",
+    "videoCta": "Preferissètz una vista generala vidèo? Ensajatz nòstra <strong><youtubeLink>lista de lectura YouTube</youtubeLink></strong>!"
+  },
+  "homepage": {
+    "video": {
+      "altText": "Vidèo d'introduccion de Isaac Fisica",
+      "copyLink": "Copiar lo ligam",
+      "linkCopied": "Copiat!",
+      "thumbnailAlt": "Un grop d'escolans que resòlvon de problèmas a un eveniment Isaac en persona.",
+      "title": "Perqué utilizar Isaac Physics?"
+    }
+  },
+  "intendedAudience": {
+    "warning": {
+      "changePreferences": "Podètz cambiar vòstras preferéncias <strong>en mesa a jorn vòstre perfil <accountLink>aicí</accountLink>.</strong>",
+      "noContentFor": "I a pas de contengut sus aquesta pagina per {{examBoard}} {{stage}}. ",
+      "reportTaggingIssue": "xxxxxxIf you think that the page is incorrectly tagged, please <strong><contactLink>contact us</contactLink></strong>."
+    }
+  },
+  "mathsUni": {
+    "cardSubtitle": "Actualizatz vòstras competéncias en matematicas en preparacion per {{subject}} a l'universitat.",
+    "cardTitle": "Revision de matematicas per {{subject}}"
+  },
+  "news": {
+    "displayErrorTitle": "Impossible d'afichar las novèlas",
+    "emptyState": "Pas de novèlas a afichar...",
+    "errorTitle": "Error al moment de la recuperacion d'informacions",
+    "newsletterBody": "Obtenètz d'idèas d'ensenhament novèlas, de conselhs d'estudi dels escolans, e de novèlas de desvolopament a prepaus de nòstras aisinas e ressorsas mandadas dirèctament a vòstra boita d'entrada.",
+    "newsletterTitle": "Mantenètz-vos a jorn",
+    "sectionTitle": "Conselhs, aisinas e supòrt",
+    "sidebar": {
+      "seeAllNews": "Veire totas las novèlas"
+    },
+    "subscribeButton": "Obtenètz de conselhs e de mesas a jorn"
+  },
+  "onlineCourses": {
+    "emptyState": "Pas de cors a afichar...",
+    "errorTitle": "Error al moment de prene de corses en linha",
+    "loadMoreButton": "Cargar mai de corses",
+    "metaDescription": "Consultatz los corses en linha gratuits de la Raspberry Pi Foundation pels educators e causissètz d'una gama de tèmas d'informatica."
+  },
+  "overview": {
+    "aLevel": {
+      "subtitle": "Nòstras ressorsas de nivèl A {{subject}} afortisson mai la compreneson de {{subjectName}}, del temps que desvolopan de competéncias de resolucion de problèmas. Nòstras ressorsas incluson de questions, de concèptes e de libres."
+    },
+    "assigned": {
+      "buttonLabel": "Trabalhar per tu",
+      "title": "Assignat a ieu"
+    },
+    "browse": {
+      "sectionTitle": "Consultar Ada CS"
+    },
+    "difficulty": {
+      "challengeDesc": "Las questions de desfís son aquelas que demandan un o mai de concèptes, o demandan mai de creativitat per resòlvre lo problèma, ajudant a desvolopar de competéncias importantas de resolucion de problèmas.",
+      "intro": "Totas las questions d'Isaac Science son classadas coma \"Practica\" o \"Desfís\" – indicat pels simbòls çai-jos.",
+      "practiceDesc": "Las questions de practica son aquelas que demandan un concèpte o una equacion per resòlvre."
+    },
+    "examIndependent": "Nòstres materials son independents del conselh d'examens. Son concebuts per ajudar los escolans a desvolopar e aplicar lor compreneson dels concèptes fondamentals dins {{subject}}, del temps que desvolopan de competéncias de resolucion de problèmas.",
+    "exampleQuestions": {
+      "errorTitle": "Impossible de cargar de questions d'exemple"
+    },
+    "freeAccount": "Podètz utilizar nòstras ressorsas GRATUITAMENT. En creant un compte gratuit aurètz un accès complet a totas las ressorsas disponiblas pels estudiants jos Isaac Science e poiretz aprofichar al maximum nòstra plataforma en seguissent vòstre progrès. Los ensenhaires pòdon demandar un compte ensenhaire gratuit per accedir a <teacherFeaturesLink>foncionalitats suplementàrias</teacherFeaturesLink>.",
+    "gcse": {
+      "subtitle": "Nòstras ressorsas GCSE {{subject}} desvolopan la coneissença {{subjectName}} necessària al GCSE a travèrs l'utilizacion de questions, de concèptes e de libres."
+    },
+    "notFound": "Pas cap de subjècte trobat.",
+    "pageTitle": "Presentant Isaac {{subject}}",
+    "stage1114": {
+      "subtitle": "Nòstras ressorsas 11–14 {{subject}} introduson de concèptes segondaris {{subjectName}} als escolans e bastisson lors competéncias de numeracion a travèrs de questions e una seleccion d'experiéncias."
+    },
+    "student": {
+      "assigned": {
+        "description": "Aquí trobaretz de prètzfaches que vos son estats assignats."
+      },
+      "progress": {
+        "buttonLabel": "Veire lo progrès",
+        "description": "Seguissètz vòstre progrès dins lo temps e identificatz los domenis a trabalhar."
+      },
+      "projects": {
+        "buttonLabel": "Navegar pels projèctes",
+        "description": "Prenètz de projèctes a mai granda escala per desvolopar vòstras competéncias dins un contèxte practic."
+      },
+      "questions": {
+        "buttonLabel": "Trobar de questions",
+        "description": "Exploratz nòstre banc de questions per trobar de questions per practicar sus quin subjècte que siá."
+      },
+      "support": {
+        "description": "Nòstra pagina d'ajuda als estudiants a d'informacions utilas per de questions e de problèmas comuns."
+      },
+      "tests": {
+        "description": "Es aquí ont trobaretz de tèsts que son estats definits per vos."
+      },
+      "topics": {
+        "buttonLabel": "Navegar pels subjèctes",
+        "description": "Navega por todas las temas en Ada CS."
+      }
+    },
+    "teacher": {
+      "account": {
+        "description": "Gerir totes los aspèctes de vòstre compte, dels paramètres de contengut a las preferéncias de notificacion.",
+        "title": "Compte"
+      },
+      "assigned": {
+        "description": "Se vos inscrivètz a un grop per vòstre desvolopament, es aquí ont trobaretz de quiz que vos son assignats."
+      },
+      "groups": {
+        "description": "Organizatz vòstres escolans en grops per que poscatz definir lo trabalh apropriat.",
+        "title": "Grops d'escolans"
+      },
+      "markbook": {
+        "description": "Seguir lo progrès dels escolans e identificar los domenis a trabalhar."
+      },
+      "mentoring": {
+        "description": "Participatz a de sesilhas en dirècte amb un mentor Ada CS experimentat per obténer de conselhs sus l'ensenhament dels tèmas de basa."
+      },
+      "quizzes": {
+        "buttonLabel": "Assignar un quiz",
+        "description": "Creatz de quizs d'automarcatge e assignatz-los a vòstres escolans.",
+        "title": "Quizs"
+      },
+      "support": {
+        "description": "Nòstra pagina d'ajuda als ensenhaires a d'informacions utilas per de questions e de problèmas comuns."
+      },
+      "tests": {
+        "buttonLabel": "Definir un tèst",
+        "description": "Fixatz un tèst preparat per l'equipa d'Informatica d'Ada."
+      }
+    },
+    "university": {
+      "subtitle": "Nòstras ressorsas de l'Universitat {{subject}} vos ajudan a vos preparar per vòstre diplòma STEM universitari."
+    },
+    "welcome": {
+      "subjectLink": "Isaac {{subjectName}}"
+    }
+  },
+  "policy": {
+    "sidebar": {
+      "accessibilityStatement": "Declaracion d'accessibilitat",
+      "cookiePolicy": "Politica de cookies",
+      "privacyPolicy": "Politica de confidencialitat",
+      "selectPage": "Seleccionatz una pagina",
+      "termsOfUse": "Condicions d'utilizacion"
+    }
+  },
+  "profiles": {
+    "featured": {
+      "emailLinkLabel": "Corrièl {{name}}"
+    }
+  },
+  "programmes": {
+    "cardSubtitle": "Exploratz los programas desvolopats per sosténer vòstra compreneson de la fisica e menatz vòstras competéncias de resolucion de problèmas al nivèl seguent.",
+    "list": {
+      "heading": "Lista dels programas"
+    },
+    "sidebar": {
+      "title": "Nòstres programas",
+      "toggleLabel": "Explorar los programas"
+    }
+  },
+  "projects": {
+    "emptyState": "Pas de projècte a afichar...",
+    "errorTitle": "Error al moment de la recuperacion de projèctes",
+    "loadMoreButton": "Cargar mai de projèctes"
+  },
+  "quantumMechanicsPrimer": {
+    "title": "Primer de mecanica quantica"
+  },
+  "questionDecks": {
+    "cardSubtitle": "Practicatz de tèmas especifics en utilizant nòstres jòcs de questions prèstes.",
+    "cardTitle": "Decks de questions per tèma",
+    "chemUni": {
+      "subtitle": "Consolidatz vòstra compreneson de quimia amb aquelas questions per tèma."
+    },
+    "mathsALevel": {
+      "subtitle": "Practicatz de tèmas especifics de Matematicas e de Matematicas Suplementàrias en utilizant nòstres jòcs de questions prèstes."
+    }
+  },
+  "revision": {
+    "alert": {
+      "correctAnswerTimespan": "Avètz respondut corrèctament a aquesta question {{timespan}}.",
+      "lastMonth": "dins lo darrièr mes",
+      "lastTwelveMonths": "dins los darrièrs 12 meses",
+      "lastWeek": "dins la darrièra setmana",
+      "modeNotice": "Sètz actualament en <revisionModeLink>mòde de revision</revisionModeLink> çò qu'amaga vòstres ensags precedents.",
+      "overOneYear": "fa mai d'1 an"
+    },
+    "cardSubtitle": "Revisatz amb nòstres vidèos de resumit, tèsts de tèmas e questions.",
+    "errorTitle": "Impossible de recuperar la pagina de revision.",
+    "mathsALevel": {
+      "subtitle": "Revisatz amb nòstres jòcs de revision personalizats sus lo còr pur, lo pure e la mecanica."
+    },
+    "page": {
+      "loadError": "Impossible de cargar la pagina de revision."
+    },
+    "sections": {
+      "introDescription": "D'en primièr, ensajatz aquelas questions de basa per avalorar vòstra compreneson e identificar quines aspèctes d'aqueste tèma deuriátz centrar vòstra revision:",
+      "introTitle": "Presentacion",
+      "testsDescription": "Per demostrar vòstre progrès un còp qu'avètz revisat aquesta seccion, ensajatz un tèst d'entraïnament :"
+    }
+  },
+  "skillsPractice": {
+    "bioGcse": {
+      "subtitle": "Practicar las competéncias de matematicas de basa que son utilizadas dins la Biologia del GCSE."
+    },
+    "chemALevel": {
+      "subtitle": "Practicar las competéncias de basa requeridas en quimia de nivèl A."
+    },
+    "chemGcse": {
+      "subtitle": "Practicar las competéncias de basa requeridas dins la quimia del GCSE."
+    },
+    "chemUni": {
+      "subtitle": "Consolidatz vòstras competéncias en quimia amb aqueles esturments"
+    },
+    "fallback": {
+      "subtitle": "Consolidatz vòstras competéncias {{subject}} amb aquestas aisinas."
+    },
+    "mathsALevel": {
+      "subtitle": "Practicatz aquelas competéncias de basa, coma reorganizar las equacions, vitalas per las matematicas."
+    },
+    "mathsGcse": {
+      "subtitle": "Practicatz aquelas competéncias de basa, coma lo reorganizacion d'equacions, vitalas per las matematicas del GCSE."
+    },
+    "physics1114": {
+      "subtitle": "Contunhatz d'entraïnar aquelas competéncias de matematicas amb nòstres esturments d'algèbra."
+    },
+    "physicsGcse": {
+      "subtitle": "Practicatz las equacions importantas en GCSE Fisica amb aquelas aisinas."
+    }
+  },
+  "studentResources": {
+    "careers": {
+      "description": "Legissètz d'istòrias de diplòmats a las primièras estapas de lor carrièra dins lo desvolopament de logicials, lo dessenh de jòcs, la recèrca, e fòrça mai.",
+      "title": "Explora una carrièra en informatica",
+      "viewMoreButton": "Veire mai d'istòrias"
+    },
+    "challenges": {
+      "description": "Inscrivètz-vos a un de nòstres desfís de trimèstre. Testatz vòstras coneissenças e competéncias, e siátz dins l'escasença de ganhar de grands prèmis.",
+      "title": "Ganhatz de prèmis amb nòstres desfís estudiants"
+    },
+    "curriculum": {
+      "description": "Avèm mai de 65 tèmas d'aprendissatge que cobrisson tot çò que cal aprene en informatica. De sistèmas e rets d'informatica, a l'IA, a l'aprendissatge automatic, e fòrça mai.",
+      "note": "Son creats per d'educators experts e son regularament mesas a jorn."
+    },
+    "furtherLearning": {
+      "astroPiBody": "Lo Desfís Europèu Astro Pi fa que los aprenents escrivon de còde que fonciona sus l'Estacion Espaciala Internacionala.",
+      "astroPiButton": "Anar a Astro Pi",
+      "astroPiTitle": "Vòstre còde dins l'espaci",
+      "codeEditorBody": "Nòstre editor de còde en linha vos permet de codar çò que volètz: un jòc, un art, o vòstre pròpri site web en utilizant Python o HTML e CSS.",
+      "codeEditorButton": "Dobrir l'editor de còde",
+      "codeEditorTitle": "Editor de còde liure",
+      "description": "Mai de projèctes, desfís e aisinas de la gama de ressorsas informaticas de classa mondiala de la Fondacion Raspberry Pi.",
+      "projectsBody": "I a de centenats de projèctes de codificacion e d'informatica gratuits, totes amb d'instruccions pas a pas.",
+      "projectsButton": "Anar a Projèctes",
+      "projectsTitle": "Projèctes de codificacion en linha",
+      "title": "Aprendissatge suplementari"
+    },
+    "header": {
+      "description": "Avèm tot per vos ajudar a estudiar l'informatica – inclusent los trabalhs de classa, los devers e la preparacion a l'examen. E es tot disponible gratuitament.",
+      "title": "<decorativeSlash>/</decorativeSlash><br/>Ada CS pels escolans"
+    },
+    "isaacScience": {
+      "description": "Consultatz Isaac Science, nòstra plataforma partenari plena d'aisinas e de ressorsas gratuitas per vos ajudar a aprene la fisica, la quimia, la biologia e las matematicas.",
+      "title": "Estudiatz de sciéncias o de matematicas?"
+    },
+    "pageTitle": "Escolans – {{siteTitle}}",
+    "practiceQuestions": {
+      "description": "Nòstras questions d'automarcatge vos donan d'entresenhas e de retroaccions immediatas a mesura que passatz. Podètz filtrar per nivèl d'examen, tèma o concèpte per trobar exactament çò que ne cal.",
+      "title": "Mai de 1000 questions d'entraïnament",
+      "tryButton": "Ensajatz nòstras questions d'entraïnament"
+    },
+    "progress": {
+      "description": "Amb un compte Ada CS, totas vòstras responsas son enregistradas per que poscatz veire sus qué trabalhar e cossí progressatz. E podètz seguir totas las missions fixadas per vòstre professor.",
+      "title": "Seguissètz vòstre progrès",
+      "viewButton": "Veire mon progrès"
+    },
+    "support": {
+      "description": "Nòstra pagina d'ajuda als estudiants a fòrça informacions per de questions e de problèmas comuns."
+    },
+    "testimonial": {
+      "quote": "\"Aimi Ada! Lo contengut presentat es fòrça complet e detalhat, e los guidas visuals a travèrs de tèmas coma de menas son particularament utils per ajudar ma compreneson.”"
+    }
+  },
+  "subjectLanding": {
+    "books": {
+      "title": "Livres interactius en ligne <emphasis>({{bookCount}})</emphasis>",
+      "viewMore": "Veire mai de libres"
+    },
+    "events": {
+      "heading": "Eveniments <theme>({{eventCount}})</theme>"
+    },
+    "footer": {
+      "emptyState": "Cap de libre o novèla disponibla per aqueste subjècte. Tornatz lèu!"
+    },
+    "news": {
+      "title": "Actualitats e caracteristicas"
+    },
+    "randomQuestion": {
+      "differentButton": "Prenètz una question diferenta",
+      "emptyState": "Cap de question trobada.",
+      "title": "Ensajatz una question aleatòria!"
+    },
+    "title": {
+      "aLevelMaths": "Matematicas de nivèl A e matematicas suplementàrias"
+    }
+  },
+  "teacherResources": {
+    "challenges": {
+      "description": "Encoratjar e recompensar lo succès dels escolans amb nòstre programa de desfís dels escolans, concebut per inspirar la realizacion a cada estapa de lors estudis."
+    },
+    "cpd": {
+      "coursesCard": {
+        "description": "Inscrivètz-vos a un de nòstres corses autoguidats pels ensenhaires que cobrís una granda varietat de tèmas d'informatica.",
+        "title": "Corses en linha gratuits"
+      },
+      "description": "Aprene de novèlas competéncias e bastir de confiéncia amb nòstres corses gratuits per lo desvolopament professional contunhat (CPD). Son concebuts per vos ajudar, quin que siá vòstre nivèl d'experiéncia.",
+      "mentoringCard": {
+        "description": "Obtenètz de sosten a travèrs nòstre programa en linha pels ensenhaires d'informatica recentament qualificats e non especializats."
+      },
+      "title": "Desvolopament professional"
+    },
+    "curriculum": {
+      "description": "Avèm mai de 50 tèmas d'aprendissatge que cobrisson tot çò que cal per ensenhar l'informatica. De sistèmas e rets d'informatica, a l'IA, a l'aprendissatge automatic, e fòrça mai.",
+      "descriptionTwo": "Son creats per d'educators experts e son regularament mesas a jorn. Podètz quitament filtrar de contengut per de grops d'edat e d'examens diferents."
+    },
+    "header": {
+      "dashboardButton": "Anar a Mon Apercebut d'Ada",
+      "description": "Devers d'automarcatge, seguiment del progrès dels escolans e supòrt a la preparacion dels examens. Ada CS es plen d'aisinas e de ressorsas gratuitas per sosténer los trabalhs de classa, los devers e la preparacion a l'examen.",
+      "signupButton": "Inscrivètz-vos a Ada CS",
+      "title": "<decorativeSlash>/</decorativeSlash><br/>Ada CS pels ensenhaires"
+    },
+    "help": {
+      "description": "Nòstra pagina d'ajuda als ensenhaires a fòrça informacions per de questions e de problèmas comuns."
+    },
+    "meta": {
+      "title": "Ensenhaires – {{siteTitle}}"
+    },
+    "moreResources": {
+      "codeClassroomCard": {
+        "description": "Code Classroom es una plataforma gratuita e segura per l'ensenhament e l'aprendissatge de l'informatica dins las escòlas. Inclutz un editor de còde simple d'utilizar amb diferents lengatges de programacion, e fòrça autras foncionalitats per prene en carga vòstre ensenhament.",
+        "title": "Aula de còde"
+      },
+      "description": "Supòrt, plans de leiçon, idèas e aisinas de la gama de ressorsas informaticas de classa mondiala de la Fondacion Raspberry Pi.",
+      "helloWorldCard": {
+        "description": "Obtenètz una perspectiva globala sus l'educacion informatica amb Hello World – nòstra revista e podcast pels ensenhaires. Partejatz vòstra expertisa e escrivètz per nosautres!",
+        "title": "La revista Hello World"
+      },
+      "researchCard": {
+        "description": "Descobrissètz de recèrcas innovatriças qu'avançan la compreneson de cossí las personas aprenon sus l'informatica. Aquestes projèctes son una collaboracion entre la Fondacion Raspberry Pi e l'Universitat de Cambridge.",
+        "title": "Projèctes de recèrca"
+      },
+      "title": "Mai de ressorsas pedagogicas"
+    },
+    "testimonial": {
+      "attribution": "– Matt Arnmor, professor d'informatica",
+      "quote": "“Ada Computer Science a eliminat lo besonh de libres de tèxte per l'informatica de nivèl A. I a rarament besonh d'autras fonts d'informacion al moment de planificar de leiçons e es gratuit!”"
+    },
+    "tools": {
+      "assignmentsCard": {
+        "button": "Definir una mission",
+        "description": "Creatz de prètzfaches d'automarcatge per vòstres escolans. I a mai de 1000 questions per vos causir.",
+        "title": "Definir las assignacions"
+      },
+      "dashboardButton": "Anar a Mon Ada",
+      "description": "Un compte Ada CS facilita l'avaloracion de vòstres escolans. Fixatz de prètzfaches per refortir l'aprendissatge de las leiçons e utilizatz nòstres tèsts prefabricats per verificar la coneissença dels escolans.",
+      "groupsCard": {
+        "description": "Organizatz vòstres escolans en grops e fixatz de trabalhs apropriats per cada grop.",
+        "title": "Crear de grops d'escolans"
+      },
+      "markbookCard": {
+        "description": "Seguir lo progrès dels escolans amb un quasèrn de nòtas personal per ajudar a identificar los domenis a trabalhar."
+      },
+      "preferencesCard": {
+        "description": "Definissètz vòstre emplaçament, vòstre nivèl e vòstre tablèu d'examen, e vos mostrarem lo contengut mai pertinent per vos.",
+        "title": "Veire lo contengut especific a vos"
+      },
+      "title": "Aisinas per vos ajudar a ensenhar"
+    },
+    "tryIsaac": {
+      "description": "Consultatz Isaac Science, nòstra plataforma partenari plena d'aisinas e de ressorsas gratuitas per vos ajudar a ensenhar la fisica, la quimia, la biologia e las matematicas.",
+      "title": "Ensenhar las sciéncias o las matematicas?"
+    }
+  },
+  "teachingOrders": {
+    "metaDescription": {
+      "advanced": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica Avançada. Aprenètz o revisatz per vòstres examens amb nosautres uèi.",
+      "core": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica Core. Aprenètz o revisatz per vòstres examens amb nosautres uèi."
+    }
+  },
+  "tools": {
+    "listing": {
+      "seeAllButton": "Veire totas las aisinas"
+    }
+  },
+  "topics": {
+    "badge": {
+      "comingSoon": "Venent {{date}}",
+      "new": "Novèl"
+    },
+    "gameboards": {
+      "description": "Podètz trabalhar sus de questions individualas o ensajar un grop de questions en clicant suls tablèus de jòcs de tèmas çai-jos.",
+      "title": "Tablèus de jòc"
+    },
+    "listing": {
+      "ageHeading": "{{ageGroup}} tèmas"
+    },
+    "meta": {
+      "description": "Descobrissètz nòstres subjèctes e questions gratuitas d'informatica. Aprenètz o revisatz per vòstres examens amb nosautres uèi."
+    },
+    "page": {
+      "backButton": "<responsivePrefix>Back to</responsivePrefix> All topics"
+    },
+    "questionFinder": {
+      "description": "En utilizant lo cercaire de questions podètz seleccionar de tèmas e de concèptes e generarem una seleccion aleatòria de questions per vos utilizar. Podètz tanben especificar vòstre nivèl e vòstre tablèu d'examen.",
+      "students": "<bold>Los escolans</bold> poirián voler ensajar nòstre cercaire de questions per revisar e obténer de retroaccion sus las errors.",
+      "teachers": "<bold>Los ensenhaires</bold> poirián voler ensajar nòstre cercaire de questions per crear de quiz e los assignar als escolans.",
+      "title": "Verificatz vòstra compreneson",
+      "tryButton": "Ensajatz nòstre cercaire de questions"
+    }
+  }
+}
