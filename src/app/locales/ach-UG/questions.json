@@ -1,0 +1,508 @@
+{
+  "anvilApps": {
+    "emptyMessage": "crwdns2424446:0{{context}}crwdne2424446:0",
+    "emptyTitle": "crwdns2424448:0crwdne2424448:0"
+  },
+  "attempt": {
+    "assignmentError": "crwdns2424450:0crwdne2424450:0"
+  },
+  "bookmarks": {
+    "emptyState": {
+      "message": "crwdns2424452:0crwdne2424452:0"
+    },
+    "loadError": {
+      "message": "crwdns2424454:0crwdne2424454:0 crwdns2424456:0crwdne2424456:0"
+    },
+    "saveConfirmation": "crwdns2424458:0crwdne2424458:0",
+    "sidebar": {
+      "filterTitle": "crwdns2424460:0crwdne2424460:0",
+      "searchTitle": "crwdns2424462:0crwdne2424462:0",
+      "sortTitle": "crwdns2424464:0crwdne2424464:0",
+      "stageFilter": "crwdns2424466:0crwdne2424466:0"
+    }
+  },
+  "clozeQuestion": {
+    "accessibility": {
+      "dragEndDropZone": "crwdns2424468:0{{itemText}}crwdnd2424468:0{{dropZoneIndex}}crwdne2424468:0",
+      "dragEndSwapped": "crwdns2424470:0{{activeItemText}}crwdnd2424470:0{{hoveredItemText}}crwdne2424470:0",
+      "dragOverDropZone": "crwdns2424472:0{{dropZoneIndex}}crwdne2424472:0",
+      "dragOverSwap": "crwdns2424474:0{{activeItemText}}crwdnd2424474:0{{hoveredItemText}}crwdne2424474:0"
+    }
+  },
+  "codeEditor": {
+    "feedback": {
+      "correct": "crwdns2424476:0crwdne2424476:0",
+      "incorrect": "crwdns2424478:0crwdne2424478:0",
+      "ranCorrectly": "crwdns2424480:0crwdne2424480:0"
+    },
+    "iframeTitle": "crwdns2424482:0crwdne2424482:0",
+    "timeout": {
+      "infoHeading": "crwdns2424484:0crwdne2424484:0"
+    }
+  },
+  "concepts": {
+    "cardSubtitle": "crwdns2424486:0{{subjectContext}}crwdne2424486:0",
+    "errorFetching": "crwdns2424488:0crwdne2424488:0",
+    "filteredIntro": "crwdns2424490:0{{contextDescription}}crwdne2424490:0 crwdns2424492:0crwdne2424492:0",
+    "genericIntro": "crwdns2424494:0crwdne2424494:0",
+    "resultsCount": "crwdns2424496:0{{count}}crwdne2424496:0",
+    "sidebar": {
+      "searchTitle": "crwdns2424498:0crwdne2424498:0"
+    }
+  },
+  "confidence": {
+    "infoModal": {
+      "body": "crwdns2424500:0{{siteName}}crwdne2424500:0 crwdns2424502:0crwdne2424502:0",
+      "title": "crwdns2424504:0crwdne2424504:0"
+    },
+    "options": {
+      "high": "crwdns2424506:0crwdne2424506:0",
+      "low": "crwdns2424508:0crwdne2424508:0",
+      "medium": "crwdns2424510:0crwdne2424510:0",
+      "partly": "crwdns2424512:0crwdne2424512:0"
+    },
+    "question": {
+      "followUp": {
+        "question": "crwdns2424514:0crwdne2424514:0"
+      },
+      "initial": {
+        "question": "crwdns2424516:0crwdne2424516:0"
+      },
+      "title": "crwdns2424518:0crwdne2424518:0"
+    },
+    "quickQuestion": {
+      "followUp": {
+        "question": "crwdns2424520:0crwdne2424520:0"
+      },
+      "initial": {
+        "question": "crwdns2424522:0crwdne2424522:0"
+      },
+      "title": "crwdns2424524:0crwdne2424524:0"
+    }
+  },
+  "content": {
+    "codeSnippet": {
+      "viewOnGithub": "crwdns2424526:0crwdne2424526:0"
+    },
+    "expandImageLabel": "crwdns2424528:0crwdne2424528:0",
+    "imagePreviewTitle": "crwdns2424530:0crwdne2424530:0"
+  },
+  "contentPropertyTags": {
+    "deprecatedLabel": "crwdns2424532:0crwdne2424532:0",
+    "noFilterLabel": "crwdns2424534:0crwdne2424534:0",
+    "supersededLabel": "crwdns2424536:0crwdne2424536:0"
+  },
+  "desmos": {
+    "embedTitle": "crwdns2424538:0crwdne2424538:0"
+  },
+  "dnd": {
+    "clozeFallbackText": "crwdns2424540:0crwdne2424540:0",
+    "draggableRoleDescription": "crwdns2424542:0crwdne2424542:0"
+  },
+  "dragAndDrop": {
+    "cancelled": "crwdns2424544:0crwdne2424544:0 crwdns2424546:0{{itemText}}crwdne2424546:0",
+    "dropped": "crwdns2424548:0{{itemText}}crwdne2424548:0",
+    "droppedIntoItemsSection": "crwdns2424550:0crwdne2424550:0",
+    "itemSectionLabel": "crwdns2424552:0crwdne2424552:0",
+    "keyboardInstructions": "crwdns2424554:0crwdne2424554:0 crwdns2424556:0crwdne2424556:0 crwdns2424558:0crwdne2424558:0",
+    "offTarget": "crwdns2424560:0{{itemText}}crwdne2424560:0",
+    "overItemsSection": "crwdns2424562:0crwdne2424562:0",
+    "overPreviousPosition": "crwdns2424564:0{{itemText}}crwdne2424564:0",
+    "pickup": "crwdns2424566:0{{itemText}}crwdne2424566:0",
+    "returnedPreviousPosition": "crwdns2424568:0{{itemText}}crwdne2424568:0",
+    "unselectedItems": "crwdns2424570:0crwdne2424570:0"
+  },
+  "editorRenderer": {
+    "waitingContent": "crwdns2424572:0{{siteTitle}}crwdne2424572:0"
+  },
+  "figure": {
+    "expandButton": "crwdns2424574:0crwdne2424574:0",
+    "label": "crwdns2424576:0{{figureNumber}}crwdne2424576:0"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "remaining": "crwdns2424578:0{{count}}crwdne2424578:0"
+    },
+    "infoAlert": {
+      "consentButton": "crwdns2424580:0crwdne2424580:0",
+      "consentDescription": "crwdns2424582:0crwdne2424582:0 crwdns2424584:0crwdne2424584:0",
+      "consentPrivacy": "crwdns2424586:0crwdne2424586:0 crwdns2424588:0crwdne2424588:0",
+      "consentTitle": "crwdns2424590:0crwdne2424590:0",
+      "consentWithdraw": "crwdns2424592:0crwdne2424592:0",
+      "generalAccuracy": "crwdns2424594:0crwdne2424594:0 crwdns2424596:0crwdne2424596:0",
+      "generalDataPrivacy": "crwdns2424598:0crwdne2424598:0 crwdns2424600:0crwdne2424600:0 crwdns2424602:0crwdne2424602:0",
+      "generalTitle": "crwdns2424604:0crwdne2424604:0",
+      "loggedOutDataPrivacy": "crwdns2424606:0crwdne2424606:0",
+      "loggedOutDescription": "crwdns2424608:0crwdne2424608:0 crwdns2424610:0crwdne2424610:0 crwdns2424612:0crwdne2424612:0",
+      "loggedOutTitle": "crwdns2424614:0crwdne2424614:0",
+      "skipQuestion": "crwdns2424616:0crwdne2424616:0",
+      "under13Consequence": "crwdns2424618:0crwdne2424618:0",
+      "under13Description": "crwdns2424620:0crwdne2424620:0 crwdns2424622:0crwdne2424622:0 crwdns2424624:0crwdne2424624:0",
+      "under13Title": "crwdns2424626:0crwdne2424626:0"
+    },
+    "llmFeedback": {
+      "accuracyNote": "crwdns2424628:0crwdne2424628:0",
+      "agree": "crwdns2424630:0crwdne2424630:0",
+      "disagree": "crwdns2424632:0crwdne2424632:0",
+      "feedbackPrompt": "crwdns2424634:0crwdne2424634:0",
+      "markScheme": "crwdns2424636:0crwdne2424636:0",
+      "partlyAgree": "crwdns2424638:0crwdne2424638:0",
+      "predictedAwarded": "crwdns2424640:0crwdne2424640:0",
+      "predictedCorrect": "crwdns2424642:0crwdne2424642:0",
+      "prediction": "crwdns2424644:0{{predictedMarks}}crwdnd2424644:0{{maxMarks}}crwdne2424644:0",
+      "submitButton": "crwdns2424646:0crwdne2424646:0",
+      "submitted": "crwdns2424648:0crwdne2424648:0",
+      "title": "crwdns2424650:0crwdne2424650:0"
+    },
+    "matchingRules": {
+      "json": {
+        "description": "crwdns2424652:0crwdne2424652:0"
+      },
+      "table": {
+        "anyOrder": "crwdns2424654:0{{checkmark}}crwdne2424654:0",
+        "extraWords": "crwdns2424656:0{{checkmark}}crwdne2424656:0",
+        "feedbackLabel": "crwdns2424658:0crwdne2424658:0",
+        "ignoreCase": "crwdns2424660:0{{checkmark}}crwdne2424660:0",
+        "misspelling": "crwdns2424662:0{{checkmark}}crwdne2424662:0",
+        "responseColumn": "crwdns2424664:0crwdne2424664:0",
+        "ruleColumn": "crwdns2424666:0crwdne2424666:0"
+      },
+      "title": "crwdns2424668:0crwdne2424668:0",
+      "tooltip": {
+        "multiChar": "crwdns2424670:0crwdne2424670:0",
+        "orList": "crwdns2424672:0crwdne2424672:0",
+        "singleChar": "crwdns2424674:0crwdne2424674:0",
+        "wildcardsTitle": "crwdns2424676:0crwdne2424676:0"
+      }
+    },
+    "submitButton": "crwdns2424678:0crwdne2424678:0",
+    "testCases": {
+      "csv": {
+        "description": "crwdns2424680:0crwdne2424680:0"
+      },
+      "table": {
+        "actualColumn": "crwdns2424682:0crwdne2424682:0",
+        "expectedColumn": "crwdns2424684:0crwdne2424684:0",
+        "feedbackColumn": "crwdns2424686:0crwdne2424686:0",
+        "matchColumn": "crwdns2424688:0crwdne2424688:0"
+      },
+      "title": "crwdns2424690:0{{matchCount}}crwdnd2424690:0{{totalCount}}crwdne2424690:0"
+    },
+    "title": "crwdns2424692:0crwdne2424692:0"
+  },
+  "geogebra": {
+    "openContent": "crwdns2424694:0crwdne2424694:0"
+  },
+  "glossary": {
+    "cardSubtitle": "crwdns2424696:0{{subjectContext}}crwdne2424696:0",
+    "contextualTitle": "crwdns2424698:0{{context}}crwdne2424698:0",
+    "empty": {
+      "noResults": "crwdns2424700:0crwdne2424700:0",
+      "noTerms": "crwdns2424702:0crwdne2424702:0 crwdns2424704:0crwdne2424704:0",
+      "selectSubject": "crwdns2424706:0crwdne2424706:0"
+    },
+    "filters": {
+      "topicPlaceholder": "crwdns2424708:0crwdne2424708:0"
+    },
+    "print": {
+      "searchTerm": "crwdns2424710:0{{searchText}}crwdne2424710:0",
+      "topicName": "crwdns2424712:0{{topicTitle}}crwdne2424712:0"
+    },
+    "search": {
+      "label": "crwdns2424714:0crwdne2424714:0"
+    },
+    "sidebar": {
+      "selectSubjectTitle": "crwdns2424716:0crwdne2424716:0",
+      "switchStageTitle": "crwdns2424718:0crwdne2424718:0"
+    }
+  },
+  "graphSketcher": {
+    "controls": {
+      "bezierButton": "crwdns2424720:0crwdne2424720:0",
+      "bezierTooltip": "crwdns2424722:0crwdne2424722:0",
+      "colorLabel": "crwdns2424724:0crwdne2424724:0",
+      "linearButton": "crwdns2424726:0crwdne2424726:0",
+      "linearTooltip": "crwdns2424728:0crwdne2424728:0",
+      "redoButton": "crwdns2424730:0crwdne2424730:0",
+      "redoTooltip": "crwdns2424732:0crwdne2424732:0",
+      "undoButton": "crwdns2424734:0crwdne2424734:0",
+      "undoTooltip": "crwdns2424736:0crwdne2424736:0"
+    },
+    "editInstruction": "crwdns2424738:0crwdne2424738:0",
+    "startInstruction": "crwdns2424740:0crwdne2424740:0"
+  },
+  "inequality": {
+    "centreButton": "crwdns2424742:0crwdne2424742:0",
+    "chemistry": {
+      "placeholder": "crwdns2424744:0crwdne2424744:0",
+      "uppercaseWarning": "crwdns2424746:0crwdne2424746:0"
+    },
+    "helpTooltip": {
+      "examples": "crwdns2424748:0{{example}}crwdne2424748:0"
+    },
+    "input": {
+      "placeholder": "crwdns2424750:0crwdne2424750:0",
+      "placeholderOrType": "crwdns2424752:0crwdne2424752:0",
+      "resetButton": "crwdns2424754:0crwdne2424754:0",
+      "symbolsHeading": "crwdns2424756:0crwdne2424756:0"
+    },
+    "orientationWarning": "crwdns2424758:0crwdne2424758:0",
+    "trashButton": "crwdns2424760:0crwdne2424760:0",
+    "validation": {
+      "decimalsToFractions": "crwdns2424762:0crwdne2424762:0",
+      "doubleInequality": "crwdns2424764:0crwdne2424764:0",
+      "functionSpacing": "crwdns2424766:0crwdne2424766:0",
+      "inverseTrig": "crwdns2424768:0{{trigFunction}}crwdnd2424768:0{{functionName}}crwdne2424768:0",
+      "inverseTrigHyperbolic": "crwdns2424770:0{{trigFunction}}crwdnd2424770:0{{functionName}}crwdne2424770:0",
+      "latexNotSupported": "crwdns2424772:0crwdne2424772:0",
+      "missingBrackets": "crwdns2424774:0crwdne2424774:0",
+      "stateSymbolsNotRequired": "crwdns2424776:0crwdne2424776:0",
+      "syntaxError": "crwdns2424778:0{{tokenValue}}crwdne2424778:0"
+    }
+  },
+  "latex": {
+    "dropZone": "crwdns2424780:0crwdne2424780:0",
+    "figureReference": "crwdns2424782:0{{number}}crwdne2424782:0",
+    "unknownReference": "crwdns2424784:0{{refKey}}crwdne2424784:0"
+  },
+  "markdownBuilder": {
+    "guideLinkText": "crwdns2424786:0crwdne2424786:0",
+    "rawInputLabel": "crwdns2424788:0crwdne2424788:0",
+    "renderedLabel": "crwdns2424790:0crwdne2424790:0"
+  },
+  "markup": {
+    "inlineDropZone": {
+      "ariaLabel": "crwdns2424792:0crwdne2424792:0",
+      "clearButton": "crwdns2424794:0crwdne2424794:0"
+    },
+    "tables": {
+      "expandButton": {
+        "ariaLabel": "crwdns2424796:0crwdne2424796:0"
+      }
+    }
+  },
+  "questionFinder": {
+    "cardSubtitle": "crwdns2424798:0{{subjectContext}}crwdne2424798:0",
+    "errorTitle": "crwdns2424800:0crwdne2424800:0",
+    "filter": {
+      "bookmarked": "crwdns2424802:0crwdne2424802:0",
+      "clearAll": "crwdns2424804:0crwdne2424804:0",
+      "excludeBooks": "crwdns2424806:0crwdne2424806:0"
+    },
+    "filters": {
+      "excludeSkillsBook": "crwdns2424808:0crwdne2424808:0",
+      "togglePanel": "crwdns2424810:0crwdne2424810:0"
+    },
+    "noResults": "crwdns2424812:0crwdne2424812:0",
+    "results": {
+      "loadError": "crwdns2424814:0crwdne2424814:0",
+      "titleColumn": "crwdns2424816:0crwdne2424816:0"
+    },
+    "resultsCount": "crwdns2424818:0{{count}}crwdne2424818:0",
+    "selection": {
+      "selectedCount_one": "crwdns2424820:0{{count}}crwdne2424820:0",
+      "selectedCount_other": "crwdns2424822:0{{count}}crwdne2424822:0"
+    },
+    "shuffleButton": "crwdns2424824:0crwdne2424824:0",
+    "sidebar": {
+      "stageHeading": "crwdns2424826:0crwdne2424826:0",
+      "subjectHeading": "crwdns2424828:0crwdne2424828:0",
+      "switchContextButton": "crwdns2424830:0crwdne2424830:0"
+    },
+    "totalCount": "crwdns2424832:0{{total}}crwdne2424832:0"
+  },
+  "questionMetadata": {
+    "accessibilityWarningsTitle": "crwdns2424834:0crwdne2424834:0",
+    "printStageDifficultyLabel": "crwdns2424836:0crwdne2424836:0",
+    "printSubjectTopicsLabel": "crwdns2424838:0crwdne2424838:0",
+    "stageDifficultyTitle": "crwdns2424840:0crwdne2424840:0",
+    "subjectTopicsTitle": "crwdns2424842:0crwdne2424842:0"
+  },
+  "questionStats": {
+    "aggregate": {
+      "correctCountOfAttempted": "crwdns2424844:0{{correctCount}}crwdnd2424844:0{{attemptedCount}}crwdne2424844:0",
+      "correctPartsTitle": "crwdns2424846:0crwdne2424846:0",
+      "correctQuestionsTitle": "crwdns2424848:0crwdne2424848:0",
+      "sinceAccountCreation": "crwdns2424850:0crwdne2424850:0",
+      "thisAcademicYear": "crwdns2424852:0crwdne2424852:0"
+    }
+  },
+  "questions": {
+    "answerPlaceholder": "crwdns2424854:0crwdne2424854:0",
+    "attemptFailure": {
+      "body": "crwdns2424856:0crwdne2424856:0 crwdns2424858:0crwdne2424858:0",
+      "title": "crwdns2424860:0crwdne2424860:0"
+    },
+    "attempts": {
+      "warningBody": "crwdns2424862:0crwdne2424862:0",
+      "warningTitle": "crwdns2424864:0crwdne2424864:0"
+    },
+    "chemistry": {
+      "editPromptSingleBox": "crwdns2424866:0crwdne2424866:0",
+      "editPromptTextEntry": "crwdns2424868:0crwdne2424868:0"
+    },
+    "coordinate": {
+      "addButton": "crwdns2424870:0crwdne2424870:0",
+      "invalidCharsError": "crwdns2424872:0{{invalidChars}}crwdne2424872:0",
+      "noCommaError": "crwdns2424874:0crwdne2424874:0 crwdns2424876:0crwdne2424876:0",
+      "simplifyError": "crwdns2424878:0crwdne2424878:0"
+    },
+    "crossTopicIndicator": "crwdns2424880:0crwdne2424880:0",
+    "dragAndDrop": {
+      "announceDroppedIntoDropZone": "crwdns2424882:0{{itemText}}crwdnd2424882:0{{dropZoneNumber}}crwdne2424882:0",
+      "announceOverDropZone": "crwdns2424884:0{{dropZoneNumber}}crwdne2424884:0",
+      "announceSwapWithItem": "crwdns2424886:0{{activeItemText}}crwdnd2424886:0{{overItemText}}crwdne2424886:0",
+      "announceSwappedWithItem": "crwdns2424888:0{{activeItemText}}crwdnd2424888:0{{overItemText}}crwdne2424888:0"
+    },
+    "fastTrack": {
+      "relatedConceptTitle": "crwdns2424890:0crwdne2424890:0"
+    },
+    "feedback": {
+      "correct": "crwdns2424892:0crwdne2424892:0",
+      "partlyCorrect": "crwdns2424894:0crwdne2424894:0",
+      "tooFewSigFigs": "crwdns2424896:0crwdne2424896:0",
+      "tooManySigFigs": "crwdns2424898:0crwdne2424898:0"
+    },
+    "freeText": {
+      "answerLabel": "crwdns2424900:0crwdne2424900:0",
+      "validationWarningLabel": "crwdns2424902:0crwdne2424902:0"
+    },
+    "generateAnswerSpec": {
+      "errorTitle": "crwdns2424904:0crwdne2424904:0"
+    },
+    "hints": {
+      "defaultTitle": "crwdns2424906:0{{index}}crwdne2424906:0",
+      "heading": "crwdns2424908:0crwdne2424908:0",
+      "preamble": "crwdns2424910:0crwdne2424910:0"
+    },
+    "inlineFeedback": {
+      "boxCounter": "crwdns2424912:0{{boxIndex}}crwdnd2424912:0{{boxCount}}crwdne2424912:0",
+      "selectBox": "crwdns2424914:0crwdne2424914:0"
+    },
+    "inlineInput": {
+      "ariaLabel": "crwdns2424916:0{{partName}}crwdne2424916:0"
+    },
+    "inlineRegion": {
+      "feedback": {
+        "incorrect": "crwdns2424918:0crwdne2424918:0",
+        "missingUnit": "crwdns2424920:0crwdne2424920:0",
+        "notAnswered": "crwdns2424922:0crwdne2424922:0"
+      }
+    },
+    "inputValidation": {
+      "warningLabel": "crwdns2424924:0crwdne2424924:0"
+    },
+    "itemsArea": {
+      "available": "crwdns2424926:0crwdne2424926:0",
+      "dragHint": "crwdns2424928:0crwdne2424928:0",
+      "empty": "crwdns2424930:0crwdne2424930:0",
+      "yourAnswer": "crwdns2424932:0crwdne2424932:0"
+    },
+    "llmIndicator": {
+      "label": "crwdns2424934:0crwdne2424934:0"
+    },
+    "maxMarks_one": "crwdns2424936:0{{count}}crwdne2424936:0",
+    "maxMarks_other": "crwdns2424938:0{{count}}crwdne2424938:0",
+    "multiChoice": {
+      "clearOption": "crwdns2424940:0crwdne2424940:0"
+    },
+    "numeric": {
+      "decimalSeparator": "crwdns2424942:0crwdne2424942:0",
+      "exponentSymbol": "crwdns2424944:0crwdne2424944:0",
+      "helpPrompt": "crwdns2424946:0crwdne2424946:0",
+      "inputHelp": "crwdns2424948:0crwdne2424948:0",
+      "inputLabel": "crwdns2424950:0{{partTitle}}crwdne2424950:0",
+      "noSpaces": "crwdns2424952:0crwdne2424952:0",
+      "noThousandSeparators": "crwdns2424954:0crwdne2424954:0",
+      "simplifyToDecimal": "crwdns2424956:0crwdne2424956:0"
+    },
+    "parsons": {
+      "moveBackToItems": "crwdns2424958:0{{itemName}}crwdne2424958:0",
+      "moveDown": "crwdns2424960:0{{itemName}}crwdne2424960:0",
+      "moveToAnswer": "crwdns2424962:0{{itemName}}crwdne2424962:0",
+      "moveUp": "crwdns2424964:0{{itemName}}crwdne2424964:0"
+    },
+    "preview": {
+      "ariaLabel": "crwdns2424966:0crwdne2424966:0",
+      "title": "crwdns2424968:0crwdne2424968:0"
+    },
+    "quickQuestion": {
+      "hideAnswerButton": "crwdns2424970:0crwdne2424970:0",
+      "showAnswerButton": "crwdns2424972:0crwdne2424972:0"
+    },
+    "reorder": {
+      "dragInstruction": "crwdns2424974:0crwdne2424974:0"
+    },
+    "search": {
+      "errorTitle": "crwdns2424976:0crwdne2424976:0"
+    },
+    "submit": {
+      "check": "crwdns2424978:0crwdne2424978:0",
+      "marking": "crwdns2424980:0crwdne2424980:0"
+    },
+    "symbolicLogic": {
+      "emptyPreview": "crwdns2424982:0crwdne2424982:0"
+    },
+    "validation": {
+      "charLimitExceeded": "crwdns2424984:0{{currentCount}}crwdnd2424984:0{{limit}}crwdne2424984:0",
+      "invalidFormat": "crwdns2424986:0crwdne2424986:0",
+      "notAnswered": "crwdns2424988:0crwdne2424988:0",
+      "piiDetected": "crwdns2424990:0crwdne2424990:0 crwdns2424992:0crwdne2424992:0",
+      "sigFigs": "crwdns2424994:0crwdne2424994:0",
+      "stdFormSyntax": "crwdns2424996:0crwdne2424996:0",
+      "tooFewSigFigs": "crwdns2424998:0crwdne2424998:0",
+      "tooManySigFigs": "crwdns2425000:0crwdne2425000:0",
+      "wordLimitExceeded": "crwdns2425002:0{{currentCount}}crwdnd2425002:0{{limit}}crwdne2425002:0"
+    }
+  },
+  "relatedContent": {
+    "questions": {
+      "outsideSpecificationHeader": "crwdns2425004:0crwdne2425004:0",
+      "specificationHeader": "crwdns2425006:0crwdne2425006:0"
+    }
+  },
+  "sidebar": {
+    "backToBook": {
+      "button": "crwdns2425008:0crwdne2425008:0"
+    },
+    "completionKey": {
+      "allCorrect": "crwdns2425010:0crwdne2425010:0",
+      "title": "crwdns2425012:0crwdne2425012:0"
+    },
+    "display": {
+      "limit": "crwdns2425014:0crwdne2425014:0",
+      "limitLabel": "crwdns2425016:0crwdne2425016:0",
+      "modeLabel": "crwdns2425018:0crwdne2425018:0",
+      "title": "crwdns2425020:0crwdne2425020:0"
+    },
+    "filter": {
+      "creator": "crwdns2425022:0crwdne2425022:0"
+    },
+    "optionsButton": "crwdns2425024:0crwdne2425024:0",
+    "relatedContent": {
+      "conceptsTitle": "crwdns2425026:0crwdne2425026:0",
+      "noConcepts": "crwdns2425028:0{{pageType}}crwdne2425028:0",
+      "noQuestions": "crwdns2425030:0{{pageType}}crwdne2425030:0",
+      "otherStagesTitle": "crwdns2425032:0crwdne2425032:0",
+      "stageQuestionsTitle": "crwdns2425034:0{{stageName}}crwdne2425034:0",
+      "viewAllConcepts": "crwdns2425036:0{{contextName}}crwdne2425036:0",
+      "viewAllQuestions": "crwdns2425038:0{{contextName}}crwdne2425038:0"
+    },
+    "search": {
+      "decks": "crwdns2425040:0crwdne2425040:0"
+    },
+    "toggleButton": {
+      "label": "crwdns2425042:0crwdne2425042:0"
+    }
+  },
+  "svgFilter": {
+    "comingSoon": "crwdns2425044:0crwdne2425044:0",
+    "count": "crwdns2425046:0{{count}}crwdne2425046:0",
+    "title": "crwdns2425048:0crwdne2425048:0"
+  },
+  "video": {
+    "embed": {
+      "accessibilityLabel": "crwdns2425050:0{{videoDescription}}crwdne2425050:0"
+    }
+  }
+}
