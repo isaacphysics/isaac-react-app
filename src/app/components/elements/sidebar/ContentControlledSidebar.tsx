@@ -33,7 +33,7 @@ const SidebarEntries = ({ entry }: { entry: SidebarEntryDTO }) => {
         : <li className="ms-2">
             <StyledTabPicker
                 checkboxTitle={<div className="d-flex">
-                    {entry.label && <span className="text-theme me-2">{entry.label}</span>}
+                    {entry.label && <span className="text-theme me-2 tab-label">{entry.label}</span>}
                     <span className="flex-grow-1"><Markup encoding="latex">{entry.title}</Markup></span>
                 </div>}
                 checked={isActive}
