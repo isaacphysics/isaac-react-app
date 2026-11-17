@@ -1,0 +1,308 @@
+{
+  "events": {
+    "addUsers": {
+      "bookingExists": "La reservacion existís",
+      "disabledMessage": "Podètz pas apondre d'utilizaires a un eveniment anullat",
+      "noResults": "Cap d'utilizaire pas tornat dempuèi la requèsta",
+      "roleAny": "Tot ròtle",
+      "schoolSetNone": "Cap Set",
+      "schoolSetOther": "Òc (Autre)",
+      "searchButton": "Trobar l'utilizaire",
+      "searchEmailPlaceholder": "Picatz lo corrièl de l'utilizaire",
+      "searchFamilyNamePlaceholder": "Picatz lo nom de familha de l'utilizaire",
+      "tableHeaderSchoolSet": "Ensemble escolar",
+      "title": "Apondre d'utilizaires a la reservacion"
+    },
+    "admin": {
+      "title": "Administrator de reservacion d'eveniments"
+    },
+    "adminBooking": {
+      "bookUser": {
+        "errorTitle": "L'accion al nom de l'utilizaire a pas capitat",
+        "successMessage": "L'accion al nom de l'utilizaire a capitat.",
+        "successTitle": "L'accion capitada"
+      },
+      "cancel": {
+        "errorTitle": "Fracàs a l'anullacion de la reservacion d'eveniments"
+      },
+      "cancelReservations": {
+        "errorTitle": "Impossible d'anullar qualques unas de las reservacions",
+        "successMessage": "Avètz anullat amb succès las reservacions dels escolans per aqueste eveniment.",
+        "successTitle": "Reservacions anulladas"
+      },
+      "delete": {
+        "errorTitle": "Fracàs al moment de desreservar l'utilizaire de l'eveniment"
+      },
+      "promote": {
+        "errorTitle": "Fracàs a promòure la reservacion d'eveniments"
+      },
+      "recordAttendance": {
+        "errorTitle": "Fracàs a l'enregistrament de l'assisténcia a l'eveniment"
+      },
+      "resendEmail": {
+        "errorTitle": "Fracàs al tornant mandar lo corrièl per la reservacion d'eveniments",
+        "successMessage": "Corrièl mandat a {{userId}}",
+        "successTitle": "Corrièl de l'eveniment mandat"
+      },
+      "reserveUsers": {
+        "errorTitle": "La reservacion a fracassat",
+        "successMessage": "Avètz capitat a reservar d'escolans per aqueste eveniment.",
+        "successTitle": "Reservacions confirmadas"
+      }
+    },
+    "adminOverviews": {
+      "errorTitle": "Fracàs al moment de cargar las vistas generalas dels eveniments"
+    },
+    "attendance": {
+      "cancelledEventNotice": "Podètz pas enregistrar l'assisténcia a un eveniment anullat",
+      "markAbsentButton": "Marcar coma absent",
+      "markAttendedButton": "Marcar coma assistit",
+      "table": {
+        "attendanceHeader": "Frequentacion",
+        "medicalRequirementsHeader": "Requisits medicals",
+        "surnameFilterPlaceholder": "Filtre de nom de familha"
+      },
+      "title": "Enregistrar l'assisténcia a l'eveniment"
+    },
+    "availability": {
+      "requestAvailable": "Reservacions disponiblas per demanda!",
+      "waitingListAvailable": "La reservacion de lista d'espèra es disponibla!"
+    },
+    "book": {
+      "confirmReservation": "Confirmatz vòstra reservacion",
+      "joinWaitingList": "Inscriure-se a la lista d'espèra",
+      "requestPlace": "Demandatz una plaça"
+    },
+    "booking": {
+      "accessibilityHelp": "Per exemple, mercés de nos dire se avètz besonh d'accès en cadièra de ròdas, de bucle auditiu o se podèm ajudar amb d'ajustaments especials.",
+      "accountSection": "Las informacions de vòstre compte (<accountLink>mesa a jorn</accountLink>)",
+      "cancelConfirmMessage": "Sètz segur que volètz anullar vòstra reservacion per aqueste eveniment? Benlèu que poiretz pas tornar reservar, mai que mai se i a una lista d'espèra.",
+      "cancelledMessage": "Podètz pas vos inscriure a un eveniment de professor coma escolans.",
+      "cancelledTitle": "Reservacion d'eveniments anullada",
+      "detailsTitle": "Detalhs de la reservacion de l'eveniment",
+      "dietary": "Requisits alimentaris o condicions medicalas pertinentas",
+      "dietaryHelp": "Per exemple, es important per nosautres de saber s'avètz una alergia grèva e/o portatz un EpiPen, sètz propens a s'esvanir, patissètz d'epilepsia...",
+      "emailSent": "Avèm mandat un corrièl a {{email}}. Mercés de seguir las instruccions dins lo corrièl abans la reservacion.",
+      "emailVerifyOther": "ATENCION : Aqueste corrièl es pas verificat. Los detalhs a prepaus de l'eveniment pòdon pas aténher l'utilizaire.",
+      "emailVerifySelf": "Vos cal verificar vòstra adreça de corrièl per reservar los eveniments. Aquò es per que vos poscam mandar de detalhs sus l'eveniment.",
+      "emergency": "Detalhs de contacte d'urgéncia",
+      "emergencyPhone": "Numèro de telefòn de contacte",
+      "formTitle": "Formulari de reservacion d'eveniments",
+      "jobTitle": "Títol del pòste",
+      "loginToApply": "Connectatz-vos per demandar",
+      "loginToBook": "Connectatz-vos per reservar",
+      "manageReservations": "Gerir las reservacions",
+      "naOther": "N/A - Autre",
+      "naTeacher": "N/A - Professor",
+      "teacherReservationWarning": "Las plaças sus aquel eveniment pòdon èsser reservadas sonque pels ensenhaires. Mercés de demandar a vòstre professor de vos reservar una plaça. Vos caldrà èsser acompanhat d'un professor a l'eveniment.",
+      "teachingExperience": "Nivèl d'experiéncia pedagogica",
+      "terms": "En demandant de reservar sus aqueste eveniment, donatz als organizaires de l'eveniment l'accès a l'informacion provesida dins lo formulari çai-sus. Lor donatz tanben la permission de configurar vòstre trabalh pre-eveniment e de visualizar vòstre progrès. Podètz gerir l'accès a vòstras donadas de progrès dins vòstre <teacherConnectionsLink>paramètres de compte</teacherConnectionsLink>.<br1/>xxxxxxYour data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>Se vos sètz desabonat a las notificacions per corrièl de l'assignacion, podètz mancar lo pre-trabalh fixat per l'eveniment. Podètz activar aquò dins vòstres paramètres de compte <emailPreferencesLink></emailPreferencesLink>.",
+      "updateInfo": "Se aquesta informacion es incorrècta, las metètz a jorn dempuèi vòstra pagina de compte <accountLink></accountLink>.",
+      "upgradeLink": "<teacherAccountLink>Clicatz per metre a jorn cap a un compte professor</teacherAccountLink> gratuitament !",
+      "verifyEmailBtn": "Verificatz vòstre corrièl abans de reservar",
+      "year10": "An 10",
+      "year11": "An 11",
+      "year12": "An 12",
+      "year13": "An 13",
+      "year9": "An 9",
+      "yearGroup": "Grop d'annada escolara"
+    },
+    "bookingValidation": {
+      "emergencyContactRequiredBody": "Vos cal picar de detalhs de contacte d'urgéncia per vos reservar a aqueste eveniment.",
+      "emergencyContactRequiredTitle": "Detalhs de contacte d'urgéncia requerits",
+      "jobTitleRequiredBody": "Vos cal picar un títol de pòste per contunhar.",
+      "jobTitleRequiredTitle": "Títol de pòste obligatòri",
+      "schoolRequiredBody": "Vos cal dintrar dins una escòla per vos reservar a aquel eveniment.",
+      "schoolRequiredTitle": "Informacion escolara requerida",
+      "yearGroupRequiredBody": "Vos cal picar un grop d'annadas per contunhar.",
+      "yearGroupRequiredTitle": "Grop d'annada obligatòri"
+    },
+    "bookings": {
+      "fetch": {
+        "errorTitle": "Fracàs al moment de cargar las reservacions d'eveniments"
+      }
+    },
+    "bookingsTable": {
+      "accountType": "Tipe de compte",
+      "bookingCreated": "Reservacion creada",
+      "bookingUpdated": "Reservacion mesa a jorn",
+      "emergencyName": "Nom d'urgéncia",
+      "emergencyPhone": "Telefòn d'urgéncia",
+      "jobYearGroup": "Trabalh / grop d'annadas"
+    },
+    "cancel": {
+      "booking": "Anullar vòstra reservacion",
+      "request": "Anullar la demanda de reservacion",
+      "reservation": "Anullar vòstra reservacion",
+      "waitingList": "Daissar la lista d'espèra"
+    },
+    "card": {
+      "availableToBook": "Disponible per reservar",
+      "bookedBadge": "Reservat",
+      "bookedStatus": "Sètz reservat per aqueste eveniment.",
+      "bookingClosed": "Reservacion barrada",
+      "cancelledBadge": "Anullat",
+      "expired": "L'eveniment es expirat",
+      "fullBadge": "Plen",
+      "onlineBadge": "EN LINHA",
+      "readMoreAriaLabel": "{{eventTitle}} legir mai",
+      "reservedBadge": "Reservat",
+      "reservedStatus": "Avètz una reservacion per aqueste eveniment.",
+      "studentEvent": "EVENIMENT D'ESTUDIANT",
+      "studentEventIconAlt": "icòna d'eveniment estudiant",
+      "teacherEvent": "Eveniment d'ensenhaire",
+      "teacherEventIconAlt": "icòna d'eveniment del professor",
+      "untitled": "Eveniment sens títol",
+      "viewDetailsAriaLabel": "Veire los detalhs de l'eveniment : {{eventTitle}} - {{eventDate}}",
+      "viewDetailsButton": "Veire los detalhs",
+      "waitingListBadge": "En lista d'espèra"
+    },
+    "confirmation": {
+      "body": "Aquò's un eveniment pels ensenhaires <emphasis>solament</emphasis>. Mercés de confirmar que sètz un professor (o un ensenhaire estagiari), e pas un escolans, un tutor privat o un parent.",
+      "declineButton": "Soi pas professor",
+      "title": "Mercés de confirmar l'estatut de professor"
+    },
+    "date": {
+      "from": "De",
+      "seriesStarts": "La seria comença",
+      "to": "a"
+    },
+    "details": {
+      "bookedConfirmation": "Sètz reservat per aquel eveniment!",
+      "completeRegistration": "Completatz vòstra inscripcion çai-jos",
+      "deadlinePassed": "(La data limita de reservacion per aqueste eveniment es passada.)",
+      "full": "PLEN",
+      "fullStudentOnly": "per las reservacions d'estudiants",
+      "pastNotice": "(Aquel eveniment es dins lo passat.)",
+      "reservedConfirmation": "Vos an reservat una plaça sus aquel eveniment!",
+      "spacesAvailable": "{{spacesAvailable}} espacis",
+      "studentBadge": "Eveniment estudiantil",
+      "teacherBadge": "Eveniment pels ensenhaires"
+    },
+    "emptyState": "Cap d'eveniment d'afichar amb aqueste paramètre de filtre",
+    "fetch": {
+      "errorTitle": "La demanda d'eveniments a fracassat"
+    },
+    "label": {
+      "when": "Quora:"
+    },
+    "leaderRestriction": "Coma cap d'eveniments, podètz pas que veire los detalhs dels eveniments que geritz.",
+    "loadErrorTitle": "Error al moment de cargament de las vistas generalas dels eveniments",
+    "loadMoreButton": "Cargar mai d'eveniments",
+    "manage": {
+      "addToWaitingList": "Apondre a la lista d'espèra",
+      "bookingRequest": "Fasètz una demanda de reservacion",
+      "confirmReservation": "Confirmatz la reservacion"
+    },
+    "manageBookings": {
+      "actions": {
+        "promote": "Promòure",
+        "resendEmail": "Tornatz mandar lo corrièl"
+      },
+      "confirmCancel": "Sètz segur que volètz anullar aquesta reservacion?",
+      "confirmDelete": "Sètz segur que volètz suprimir aquesta reservacion definitivament ?",
+      "confirmPromote": "Sètz segur que volètz convertir aquò en una reservacion confirmada ?",
+      "confirmResendEmail": "Sètz segur que volètz tornar mandar lo corrièl de confirmacion per aquesta reservacion ?",
+      "emailDropdown": {
+        "item": "Enviar un corrièl als utilizaires {{bookingStatus}}"
+      },
+      "emptyState": "I a pas actualament cap de reservacion per aqueste eveniment.",
+      "exportCsv": "Exportar coma CSV",
+      "table": {
+        "medicalDietary": "Medical / dietetic",
+        "reservedById": "Reservat per ID"
+      },
+      "title": "Gerir las reservacions actualas"
+    },
+    "modal": {
+      "applyPastDeadline": "Demandar - data limita passada",
+      "bookNow": "Reservatz ara"
+    },
+    "notFound": "Eveniment pas trobat",
+    "overview": {
+      "title": "Apercebut dels eveniments"
+    },
+    "page": {
+      "errorLoading": "Error al moment de cargar la lista dels eveniments",
+      "help": "Seguissètz los ligams çai-jos per ne saber mai sus nòstres eveniments GRATUITS.",
+      "listHeading": "Lista dels eveniments",
+      "noResults": "O planhèm, podèm pas trobar cap d'eveniment que corresponda als paramètres de vòstre filtre.",
+      "showingCount": "Mostrant {{loadedCount}} de {{total}}"
+    },
+    "reservations": {
+      "additionalInfoDescription": "Apondètz d'informacions suplementàrias a prepaus de la reservacion del grop, per exemple de detalhs de contacte d'autres supervisors del grop. Avisatz-vos que los escolans demoraràn la responsabilitat dels ensenhaires qu'acompanhan. Mercés de vos assegurar qu'avètz pro de personal pel nombre d'escolans que menatz. Recomandam al mens 2 membres del personal per grop.",
+      "additionalInfoTitle": "Informacion suplementària de reservacion",
+      "cancelButton": "Anullar las reservacions",
+      "contactEmail": "Corrièl de contacte",
+      "createGroupsPrompt": "Creatz un grops a partir de la pagina <groupsPageLink>Gerir los grops</groupsPageLink> per reservar vòstres escolans dins un eveniment",
+      "currentReservations": "Totas las reservacions actualas",
+      "emailNotVerified": "Corrièl pas verificat",
+      "limitWarning": "Podètz solament reservar un maximum de {{maxReservations}} membres del grop sus aqueste eveniment.",
+      "loadingMembers": "En cargament dels membres del grop...",
+      "noBookings": "Cap dels membres d'aqueste grop es pas reservat per aqueste eveniment.",
+      "noGroupReservations": "Aqueste eveniment permet pas de reservacions de grop.",
+      "noMembers": "Aqueste grop a pas cap de membre. Seleccionatz un autre grop.",
+      "otherStudents": "D'autres escolans d'aqueste grop",
+      "reserveButton": "Reservar de plaças",
+      "reservedBy": "Reservat per",
+      "reservedByYou": "Tu",
+      "selectGroup": "Seleccionar lo grop",
+      "selectGroupHint": "Seleccionatz un de vòstres grops dins lo menú desenrotlant per veire sos membres.",
+      "supervisorContactDescription": "Cambiatz-los se un professor autre que vos va supervisar los escolans a aqueste eveniment.",
+      "supervisorContactTitle": "Detalhs de contacte pel supervisor del grop principal",
+      "title": "Reservacions de grop"
+    },
+    "selectedDetails": {
+      "eventLabel": "Eveniment:",
+      "placesAvailableLabel": "Nombre de plaças disponiblas:",
+      "prepWorkDeadlineLabel": "Data limita de preparacion:",
+      "startDateLabel": "Començament de l'eveniment:",
+      "statusLabel": "Estat de l'eveniment :",
+      "title": "Detalhs de l'eveniment seleccionats"
+    },
+    "selfBooking": {
+      "book": {
+        "successMessage": "Sètz estat reservat amb succès per aqueste eveniment.",
+        "successTitle": "Reservacion d'eveniments confirmada"
+      },
+      "cancel": {
+        "errorTitle": "L'anullacion de la reservacion d'eveniment a fracassat",
+        "successMessage": "Vòstra reservacion es estada anullada amb succès.",
+        "successTitle": "Vòstra reservacion es estada anullada"
+      },
+      "waitingList": {
+        "confirmedMessage": "Sètz estat apondut amb succès a la lista d'espèra per aqueste eveniment.",
+        "confirmedTitle": "La lista d'espèra de reservacion confirmada",
+        "requestReceivedTitle": "Demanda de reservacion recebuda"
+      }
+    },
+    "showingCount": "(mostrant {{shownCount}} de {{totalCount}})",
+    "sidebar": {
+      "eventTypeLabel": "Tipe d'eveniment",
+      "filterButtonTitle": "Filtre los eveniments",
+      "stagesLabel": "Etapas"
+    },
+    "status": {
+      "bookingDeadlineSoon": "Data limita de reservacion lèu!",
+      "expired": "EXPIRAT",
+      "onWaitingList": "Sètz sus la lista d'espèra per aqueste eveniment."
+    },
+    "studentOnly": {
+      "contact": "Aqueste eveniment es destinat als escolans. xxxxxxIf you are not a student but still wish to attend, please <contactLink>contact us</contactLink>."
+    },
+    "tableAttendedHeader": "Nombre d'assistits",
+    "tableConfirmedHeader": "Nombre confirmat",
+    "tableDateHeader": "Data",
+    "tableWaitingHeader": "Numèro en espèra",
+    "userBooking": {
+      "authorisationLabel": "Reservacion/partatge de donadas personalas autorizat per",
+      "bookingTitle": "Creatz una reservacion per {{givenName}} {{familyName}}",
+      "dataWarning": "Warning, by booking a user on this event, it may eventually lead to their personal information being shared with a third party. You must therefore confirm how this booking has been authorised. Lo proprietari de las donadas es totjorn l'utilizaire {{siteTitle}} reservat per l'eveniment.",
+      "errorMessage": "Vos cal provesir un motiu d'autorizacion per completar aquesta requèsta.",
+      "optionEmailOwner": "Corrièl verificat - Proprietari de donadas",
+      "optionOther": "Autre - Especificatz",
+      "optionTelephoneOwner": "Telefòn - Proprietari de donadas",
+      "waitingListTitle": "Ajustar {{givenName}} {{familyName}} a la lista d'espèra"
+    }
+  }
+}
