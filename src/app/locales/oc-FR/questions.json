@@ -1,0 +1,508 @@
+{
+  "anvilApps": {
+    "emptyMessage": "Las aisinas son pas disponiblas per {{context}}.",
+    "emptyTitle": "Aisinas"
+  },
+  "attempt": {
+    "assignmentError": "Error al moment de cargament de l'assignacion !"
+  },
+  "bookmarks": {
+    "emptyState": {
+      "message": "Avètz pas encara de marcapaginas."
+    },
+    "loadError": {
+      "message": "Impossible de cargar vòstres marcapaginas. Ensajatz tornar mai tard."
+    },
+    "saveConfirmation": "Enregistrat!",
+    "sidebar": {
+      "filterTitle": "Filtrar los signets per...",
+      "searchTitle": "Cercar los marcapaginas",
+      "sortTitle": "Triar los signets per...",
+      "stageFilter": "Etapa d'aprendissatge"
+    }
+  },
+  "clozeQuestion": {
+    "accessibility": {
+      "dragEndDropZone": "L'element arrossegable {{itemText}} foguèt daissat tombar dins lo numèro de zòna de daissament {{dropZoneIndex}}",
+      "dragEndSwapped": "L'element arrossegable {{activeItemText}} foguèt escambiat per {{hoveredItemText}}.",
+      "dragOverDropZone": "L'element arrossegable es al dessús del numèro de zòna de desplaçament {{dropZoneIndex}}",
+      "dragOverSwap": "Escambiar l'element arrossegable {{activeItemText}} amb l'element {{hoveredItemText}}."
+    }
+  },
+  "codeEditor": {
+    "feedback": {
+      "correct": "Vòstre còde es corrècte!",
+      "incorrect": "Vòstre còde es incorrècte !",
+      "ranCorrectly": "Vòstre còde foncionava corrèctament !"
+    },
+    "iframeTitle": "Sandbox de còde",
+    "timeout": {
+      "infoHeading": "Informacions utilas d'inclure dins vòstre corrièl :"
+    }
+  },
+  "concepts": {
+    "cardSubtitle": "Revisatz los concèptes claus per {{subjectContext}}.",
+    "errorFetching": "Error al moment de la recuperacion de concèptes",
+    "filteredIntro": "Los concèptes mostrats sus aquesta pagina son estats filtrats per afichar sonque los que son pertinents per {{contextDescription}}. Podètz consultar totes los concèptes <allConceptsLink>aicí</allConceptsLink>.",
+    "genericIntro": "Utilizatz nòstre cercaire de concèptes per explorar totes los concèptes sus la plataforma Isaac.",
+    "resultsCount": "Afichar los resultats <b>{{count}}</b>",
+    "sidebar": {
+      "searchTitle": "Cercar de concèptes"
+    }
+  },
+  "confidence": {
+    "infoModal": {
+      "body": "Revisam e metèm a jorn regularament lo contengut de la plataforma {{siteName}} e volèm vòstra contribucion per priorizar lo contengut e avalorar l'impacte de las mesas a jorn. Las donadas capturadas amb aqueles botons nos ajudaràn a identificar las zònas prioritàrias.",
+      "title": "Informacion"
+    },
+    "options": {
+      "high": "Naut",
+      "low": "Bas",
+      "medium": "Mejan",
+      "partly": "En partida"
+    },
+    "question": {
+      "followUp": {
+        "question": "Après aver legit lo retorn, quin es vòstre nivèl de confiéncia per respondre corrèctament a aquela question ara?"
+      },
+      "initial": {
+        "question": "Quin es vòstre nivèl de confiéncia que vòstra responsa siá corrècta?"
+      },
+      "title": "Clicatz sus un boton per verificar vòstra responsa"
+    },
+    "quickQuestion": {
+      "followUp": {
+        "question": "Vòstra pròpria responsa es corrècta?"
+      },
+      "initial": {
+        "question": "Quin es vòstre nivèl de fisança que vòstra pròpria responsa siá corrècta?"
+      },
+      "title": "Clicatz sus un boton per mostrar la responsa"
+    }
+  },
+  "content": {
+    "codeSnippet": {
+      "viewOnGithub": "Afichatge sus GitHub"
+    },
+    "expandImageLabel": "Espandir l'imatge",
+    "imagePreviewTitle": "Apercebut de l'imatge"
+  },
+  "contentPropertyTags": {
+    "deprecatedLabel": "DEPRECAT",
+    "noFilterLabel": "SENSE FILTRE",
+    "supersededLabel": "REMPLATAT"
+  },
+  "desmos": {
+    "embedTitle": "Calculatritz Desmos"
+  },
+  "dnd": {
+    "clozeFallbackText": "element cloze sens descripcion",
+    "draggableRoleDescription": "element arrossegable"
+  },
+  "dragAndDrop": {
+    "cancelled": "L'arrossegament es estat anullat. L'element arrossegable {{itemText}} es estat retornat a sa posicion precedenta.",
+    "dropped": "L'element arrossegable {{itemText}} es estat daissat tombar.",
+    "droppedIntoItemsSection": "L'element arrossegable es estat daissat tombar dins la seccion d'elements",
+    "itemSectionLabel": "Articles:",
+    "keyboardInstructions": "Per cuélher un element, quichatz sus l'espaci o l'entrada. Utilizatz las tòcas de sageta cap amont e cap aval per navegar entre las zònas de desplaçament e los elements de la question. Picatz sus l'espaci o l'entrada de nòu per daissar tombar l'element dins una posicion novèla, o per l'escambiar amb un autre element en passant lo cursor.",
+    "offTarget": "L'element arrossegable {{itemText}} es pas pus sus una zòna depausable.",
+    "overItemsSection": "L'element arrossegable es sus la seccion d'elements",
+    "overPreviousPosition": "L'element arrossegable {{itemText}} es al dessús de sa posicion precedenta.",
+    "pickup": "Recuperat l'element arrossegable {{itemText}}.",
+    "returnedPreviousPosition": "L'element arrossegable {{itemText}} es estat retornat a sa posicion precedenta.",
+    "unselectedItems": "Elements non seleccionats"
+  },
+  "editorRenderer": {
+    "waitingContent": "En espèra del contengut {{siteTitle}}..."
+  },
+  "figure": {
+    "expandButton": "Espandir la figura",
+    "label": "Figura{{figureNumber}}"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "remaining": "{{count}} ensags que demòran uèi"
+    },
+    "infoAlert": {
+      "consentButton": "Consentir",
+      "consentDescription": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure coma aquesta. Lo modèl torna tipicament una nòta prevista en mens de 10 segondas; pasmens las nòtas que recebètz pòdon pas èsser precisas.",
+      "consentPrivacy": "Mandam pas que vòstra responsa a OpenAI, mandam pas cap de donadas personalas. OpenAI entrenarà pas sos modèls en utilizant de donadas que mandatz; podètz legir <privacyPolicyLink>politica de confidencialitat</privacyPolicyLink> d'OpenAI abans d'acceptar.",
+      "consentTitle": "Consentissètz a mandar vòstras responsas a OpenAI per marcar?",
+      "consentWithdraw": "Podètz retirar vòstre consentiment a quin moment que siá dins vòstre <accountSettingsLink>paramètres de compte</accountSettingsLink>.",
+      "generalAccuracy": "Dins nòstre estudi de 2024, trobèrem que las nòtas LLM èran d'acòrdi amb las nòtas que los ensenhaires d'informatica donèron 66% del temps. Aquò vòl dire que las nòtas que recebretz seràn pas totjorn precisas.",
+      "generalDataPrivacy": "Inclutz pas de donadas personalas dins vòstra responsa del temps que mandam vòstra responsa a OpenAI. Mandam pas que vòstra responsa, mandam pas cap de donadas personalas amb ela. Podètz retirar vòstre consentiment a quin moment que siá dins vòstre <accountSettingsLink>paramètres de compte</accountSettingsLink>.",
+      "generalTitle": "Las questions de tèxte liure son marcadas per un grand modèl de lenga (LLM)",
+      "loggedOutDataPrivacy": "La sola donada qu'enviam al LLM es vòstra responsa; mandam pas cap de donadas personalas.",
+      "loggedOutDescription": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure coma aquesta. Lo modèl torna tipicament una nòta prevista en mens de 10 segondas, amb l'esquèma de nòtas. Aquò vos dona un biais de bas enjòc de practicar de questions d'estil d'examen e tanben una vision de cossí foncionan los LLM, e lor precision.",
+      "loggedOutTitle": "Vos cal èsser connectat per respondre a aquesta question",
+      "skipQuestion": "Sautar la question",
+      "under13Consequence": "Podètz encara legir la question, mas poirem pas marcar vòstra responsa.",
+      "under13Description": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure coma aquesta. Aquò demanda vòstre consentiment per mandar vòstra responsa a OpenAI per èsser marcada. Perque avètz mens de 13 ans, podèm pas obténer vòstre consentiment per aquò segon la lei RGPD.",
+      "under13Title": "Podèm pas reculhir vòstre consentiment"
+    },
+    "llmFeedback": {
+      "accuracyNote": "1 sus 3 còps la nòta prevista serà erronèa.",
+      "agree": "Èsser d'acòrdi",
+      "disagree": "En desacòrdi",
+      "feedbackPrompt": "Abans de mandar una autra responsa, mercés de dire se sètz d'acòrdi amb la nòta prevista.",
+      "markScheme": "Esquèma de marca",
+      "partlyAgree": "En partida d'acòrdi",
+      "predictedAwarded": "Previst coma premiat",
+      "predictedCorrect": "Previst corrècte",
+      "prediction": "Prediccion: {{predictedMarks}} sus las marcas {{maxMarks}}",
+      "submitButton": "Mandar un comentari",
+      "submitted": "Retroaccion somesa",
+      "title": "Sètz d'acòrdi amb las nòtas previstas del LLM?"
+    },
+    "matchingRules": {
+      "json": {
+        "description": "JSON per las <strong>causidas</strong> partida de vòstra question de tèxteliure isaac"
+      },
+      "table": {
+        "anyOrder": "Qualque comanda {{checkmark}}",
+        "extraWords": "Mots suplementaris {{checkmark}}",
+        "feedbackLabel": "Retorn:",
+        "ignoreCase": "Ignorar lo cas {{checkmark}}",
+        "misspelling": "Mal d'ortografia {{checkmark}}",
+        "responseColumn": "Responsa",
+        "ruleColumn": "Règla"
+      },
+      "title": "Règlas de correspondéncia",
+      "tooltip": {
+        "multiChar": "Correspondre a zèro o mai de caractèrs.",
+        "orList": "Separar una lista OR de causidas de mots.",
+        "singleChar": "Correspondre sonque un caractèr.",
+        "wildcardsTitle": "Jokers dins los mots:"
+      }
+    },
+    "submitButton": "Question de tèst",
+    "testCases": {
+      "csv": {
+        "description": "Picatz los cases de tèst coma CSV amb los entèstas: esperat(verai/faus), valor"
+      },
+      "table": {
+        "actualColumn": "Vertadièr",
+        "expectedColumn": "Esperat",
+        "feedbackColumn": "Retorn",
+        "matchColumn": "Partida"
+      },
+      "title": "Responsas de tèst ({{matchCount}}/{{totalCount}})"
+    },
+    "title": "Constructor de questions de tèxte liure"
+  },
+  "geogebra": {
+    "openContent": "Clicatz per dobrir lo contengut de GeoGebra"
+  },
+  "glossary": {
+    "cardSubtitle": "Utilizatz lo glossari per comprene lo vocabulari que vos cal per {{subjectContext}}.",
+    "contextualTitle": "{{context}} Glossari",
+    "empty": {
+      "noResults": "Avèm pas pogut trobar de tèrmes de glossari per correspondre a vòstres critèris de recèrca.",
+      "noTerms": "I a pas encara de tèrmes de glossari dins lo glossari! Ensajatz tornar mai tard.",
+      "selectSubject": "Seleccionatz un subjècte."
+    },
+    "filters": {
+      "topicPlaceholder": "Totes los subjèctes"
+    },
+    "print": {
+      "searchTerm": "Recèrca : <strong>{{searchText}}</strong>",
+      "topicName": "Tèma: <strong>{{topicTitle}}</strong>"
+    },
+    "search": {
+      "label": "Cercar per tèrme"
+    },
+    "sidebar": {
+      "selectSubjectTitle": "Seleccionar subjècte",
+      "switchStageTitle": "Cambiar l'estadi d'aprendissatge"
+    }
+  },
+  "graphSketcher": {
+    "controls": {
+      "bezierButton": "Corba polinomiala",
+      "bezierTooltip": "Traçar la corba polinomiala",
+      "colorLabel": "Color de la linha",
+      "linearButton": "Linha drecha",
+      "linearTooltip": "Traçatz la linha drecha",
+      "redoButton": "Tornatz far",
+      "redoTooltip": "Tornar far la darrièra modificacion",
+      "undoButton": "Desfar",
+      "undoTooltip": "Desfar la darrièra modificacion"
+    },
+    "editInstruction": "Clicatz sus la grasilha per modificar vòstre esbòç.",
+    "startInstruction": "Clicatz sus la grasilha per començar vòstre esbòç."
+  },
+  "inequality": {
+    "centreButton": "Centre",
+    "chemistry": {
+      "placeholder": "Picatz los elements quimics aicí",
+      "uppercaseWarning": "Atencion: los noms d'elements quimics començan per una letra majuscula."
+    },
+    "helpTooltip": {
+      "examples": "Vaquí qualques exemples d'expressions que podètz picar :<br1/><br2/>{{example}}<br3/>A mesura que picatz, la bóstia çai-jos previsualizarà lo resultat."
+    },
+    "input": {
+      "placeholder": "Picatz vòstra formula aicí",
+      "placeholderOrType": "o picatz vòstra formula aicí",
+      "resetButton": "Reïnicializar a la valor iniciala",
+      "symbolsHeading": "Los simbòls seguents pòdon èsser utils:"
+    },
+    "orientationWarning": "Nòstre editor d'equacions fonciona melhor en mòde païsatge.",
+    "trashButton": "Bassacar",
+    "validation": {
+      "decimalsToFractions": "Mercés de convertir los nombres decimals en fraccions.",
+      "doubleInequality": "Sèm pas capables d'acceptar d'inegalitats doblas, e las responsas las demandaràn pas jamai.",
+      "functionSpacing": "Asseguratz-vos d'utilizar d'espacis o de signes * abans los noms de foncions coma 'sin' o 'sqrt'!",
+      "inverseTrig": "Per crear la foncion {{trigFunction}} invèrsa, utilizatz 'arc{{functionName}}'.",
+      "inverseTrigHyperbolic": "Per crear la foncion {{trigFunction}} invèrsa, utilizatz 'ar{{functionName}}'.",
+      "latexNotSupported": "La sintaxi LaTeX es pas presa en carga.",
+      "missingBrackets": "Vos mancan qualques parentèsis.",
+      "stateSymbolsNotRequired": "Aquesta question demanda pas de simbòls d'estat.",
+      "syntaxError": "Error de sintaxi : geton inesperat \"{{tokenValue}}\""
+    }
+  },
+  "latex": {
+    "dropZone": "zòna de desplaçament clicable",
+    "figureReference": "Figura&nbsp;{{number}}",
+    "unknownReference": "referéncia desconeguda {{refKey}}"
+  },
+  "markdownBuilder": {
+    "guideLinkText": "Guida de marcatge",
+    "rawInputLabel": "Entrada bruta",
+    "renderedLabel": "Marcament rendut"
+  },
+  "markup": {
+    "inlineDropZone": {
+      "ariaLabel": "zòna de gota",
+      "clearButton": "Clar"
+    },
+    "tables": {
+      "expandButton": {
+        "ariaLabel": "Espandir lo contengut"
+      }
+    }
+  },
+  "questionFinder": {
+    "cardSubtitle": "Trobatz las questions {{subjectContext}} per ensajar per tèma e nivèl de dificultat.",
+    "errorTitle": "Error al moment de cargament de las questions",
+    "filter": {
+      "bookmarked": "Marcat",
+      "clearAll": "Escafar totes los filtres",
+      "excludeBooks": "Exclure las questions dels libres de competéncias"
+    },
+    "filters": {
+      "excludeSkillsBook": "Exclure las questions del libre de competéncias",
+      "togglePanel": "Bascular lo panèl de filtre"
+    },
+    "noResults": "Pas de resultats.",
+    "results": {
+      "loadError": "Fracàs al cargament de las questions.",
+      "titleColumn": "Títol de la question"
+    },
+    "resultsCount": "Afichar <b>{{count}}</b>",
+    "selection": {
+      "selectedCount_one": "{{count}} question seleccionada",
+      "selectedCount_other": "{{count}} questions seleccionadas"
+    },
+    "shuffleButton": "Barrejar las questions <responsiveWord></responsiveWord>",
+    "sidebar": {
+      "stageHeading": "Decks per estadi",
+      "subjectHeading": "Decks per subjècte",
+      "switchContextButton": "Cambiar d'estadi/subjècte"
+    },
+    "totalCount": "de <b>{{total}}</b>"
+  },
+  "questionMetadata": {
+    "accessibilityWarningsTitle": "Avertiments d'accessibilitat",
+    "printStageDifficultyLabel": "Estadi e dificultat:",
+    "printSubjectTopicsLabel": "Subjècte e subjèctes:",
+    "stageDifficultyTitle": "Estadi e dificultat",
+    "subjectTopicsTitle": "Subjècte e subjèctes"
+  },
+  "questionStats": {
+    "aggregate": {
+      "correctCountOfAttempted": "{{correctCount}} de {{attemptedCount}}",
+      "correctPartsTitle": "Parts de questions corrèctas",
+      "correctQuestionsTitle": "De questions corrèctas",
+      "sinceAccountCreation": "Dempuèi la creacion del compte:",
+      "thisAcademicYear": "Aquesta annada academica:"
+    }
+  },
+  "questions": {
+    "answerPlaceholder": "Picatz vòstra responsa aicí.",
+    "attemptFailure": {
+      "body": "Vòstra responsa a pas pogut èsser verificada. Ensajatz tornarmai.",
+      "title": "L'ensag de question a fracassat"
+    },
+    "attempts": {
+      "warningBody": "Avètz picat divèrsas devinalhas per aquesta question ; lèu serà verrolhat temporàriament.",
+      "warningTitle": "L'apròcha del limit dels ensags"
+    },
+    "chemistry": {
+      "editPromptSingleBox": "Clicatz dins la bóstia çai-jos per modificar vòstra responsa.",
+      "editPromptTextEntry": "Clicatz dins quina que siá bóstia çai-jos per modificar vòstra responsa."
+    },
+    "coordinate": {
+      "addButton": "Apondre de coordenadas",
+      "invalidCharsError": "Qualques caractèrs qu'utilizatz son pas autorizats : {{invalidChars}}",
+      "noCommaError": "Vòstra responsa deuriá pas conténer de virgulas. Picatz cada partida de vòstra responsa dins una bóstia separada.",
+      "simplifyError": "Simplificatz cada partida de vòstra responsa en un sol nombre decimal."
+    },
+    "crossTopicIndicator": "Question entre tèmas",
+    "dragAndDrop": {
+      "announceDroppedIntoDropZone": "L'element arrossegable {{itemText}} foguèt daissat tombar dins lo numèro de zòna de daissament {{dropZoneNumber}}",
+      "announceOverDropZone": "L'element arrossegable es al dessús del numèro de zòna de desplaçament {{dropZoneNumber}}",
+      "announceSwapWithItem": "Escambiar l'element arrossegable {{activeItemText}} amb l'element {{overItemText}}.",
+      "announceSwappedWithItem": "L'element arrossegable {{activeItemText}} foguèt escambiat per {{overItemText}}."
+    },
+    "fastTrack": {
+      "relatedConceptTitle": "Legir la pagina de concèpte ligat suggerida"
+    },
+    "feedback": {
+      "correct": "Corrècte!",
+      "partlyCorrect": "En partida corrècte...",
+      "tooFewSigFigs": "Right or wrong...",
+      "tooManySigFigs": "Sembla plan, mas..."
+    },
+    "freeText": {
+      "answerLabel": "Camp de tèxte de responsa",
+      "validationWarningLabel": "Avertiment:"
+    },
+    "generateAnswerSpec": {
+      "errorTitle": "I aguèt un problèma al moment de la generacion d'una especificacion de responsa"
+    },
+    "hints": {
+      "defaultTitle": "Indici{{index}}",
+      "heading": "Avètz besonh d'ajuda?",
+      "preamble": "Oblidetz pas d'utilizar los conselhs se avètz besonh d'ajuda."
+    },
+    "inlineFeedback": {
+      "boxCounter": "Bóstia {{boxIndex}} de {{boxCount}}",
+      "selectBox": "Veire lo retorn per una bóstia especifica en la seleccionant çai-sus o en utilizant las sagetas çai-jos."
+    },
+    "inlineInput": {
+      "ariaLabel": "Camp d'entrada per la partida {{partName}}"
+    },
+    "inlineRegion": {
+      "feedback": {
+        "incorrect": "Verificatz vòstra responsa.",
+        "missingUnit": "A aquesta responsa manca una unitat.",
+        "notAnswered": "Avètz pas provesit de responsa."
+      }
+    },
+    "inputValidation": {
+      "warningLabel": "Prudent!"
+    },
+    "itemsArea": {
+      "available": "Articles disponibles",
+      "dragHint": "Arrossegatz los elements per bastir vòstra responsa",
+      "empty": "Cap de responsa introducha",
+      "yourAnswer": "Vòstra responsa"
+    },
+    "llmIndicator": {
+      "label": "LLM marcada question"
+    },
+    "maxMarks_one": "[{{count}} marca]",
+    "maxMarks_other": "[{{count}} marcas]",
+    "multiChoice": {
+      "clearOption": "(clar)"
+    },
+    "numeric": {
+      "decimalSeparator": "Utilizatz de punts al luòc de virgulas coma de separators decimals.",
+      "exponentSymbol": "Utilizatz un simbòl d'exponent corrècte, per exemple 10^-3 o 10**-3.",
+      "helpPrompt": "Qué pòdi picar dins aquesta bóstia?",
+      "inputHelp": "Vaquí qualques exemples de nombres que podètz escriure:<br1/><br2/>3.7<br3/>-3x10^14<br4/>28-2.<br5/><br6/>Utilizatz pas de virgulas o d'espacis.",
+      "inputLabel": "Camp d'entrada per la partida {{partTitle}}",
+      "noSpaces": "Utilizatz pas d'espacis al moment de picar vòstra responsa.",
+      "noThousandSeparators": "Utilizatz pas de virgulas o d'espacis coma de separators de mila al moment de picar vòstra responsa.",
+      "simplifyToDecimal": "Simplificatz vòstra responsa en un sol nombre decimal."
+    },
+    "parsons": {
+      "moveBackToItems": "Desplaçatz {{itemName}} enrè dins la lista dels elements",
+      "moveDown": "Desplaçatz {{itemName}} cap aval",
+      "moveToAnswer": "Desplaçatz {{itemName}} dins vòstra responsa",
+      "moveUp": "Desplaçatz {{itemName}} cap amont"
+    },
+    "preview": {
+      "ariaLabel": "Question d'apercebut",
+      "title": "Apercebut de la question"
+    },
+    "quickQuestion": {
+      "hideAnswerButton": "Amagar la responsa",
+      "showAnswerButton": "Mostrar la responsa"
+    },
+    "reorder": {
+      "dragInstruction": "Arrossegatz aquestes elements per los metre dins l'òrdre corrècte"
+    },
+    "search": {
+      "errorTitle": "Impossible de recercar las questions"
+    },
+    "submit": {
+      "check": "Verificatz ma responsa",
+      "marking": "Marcant vòstra responsa…"
+    },
+    "symbolicLogic": {
+      "emptyPreview": "Clicatz per picar vòstra expression"
+    },
+    "validation": {
+      "charLimitExceeded": "Limit de caractèrs despassat ({{currentCount}}/{{limit}})",
+      "invalidFormat": "Vòstra responsa es pas dins un format que reconeissèm, picatz vòstra responsa coma un nombre decimal.",
+      "notAnswered": "Pas respondut",
+      "piiDetected": "<strong>PII possibla detectada :</strong><br/>Sembla que vòstra responsa conten d'informacions personalas, coma un nom, un corrièl o una adreça de carrièra. Enviar aquestas donadas a OpenAI es contra lor politica d'utilizacion.",
+      "sigFigs": "Chifras significativas",
+      "stdFormSyntax": "Al moment d'escriure la forma estandard, cal inclure <caretCode>^</caretCode> o <doubleAsteriskCode>**</doubleAsteriskCode> entre lo 10 e l'exponent.",
+      "tooFewSigFigs": "your answer needs <b>more</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "tooManySigFigs": "xxxxxxyour answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "wordLimitExceeded": "Limit de mots despassat ({{currentCount}}/{{limit}})"
+    }
+  },
+  "relatedContent": {
+    "questions": {
+      "outsideSpecificationHeader": "En defòra de vòstra especificacion:",
+      "specificationHeader": "Segon vòstra especificacion:"
+    }
+  },
+  "sidebar": {
+    "backToBook": {
+      "button": "Tornar a la seccion del libre"
+    },
+    "completionKey": {
+      "allCorrect": "Tot corrècte",
+      "title": "Clau de question"
+    },
+    "display": {
+      "limit": "Limit:",
+      "limitLabel": "Definir lo limit d'afichatge",
+      "modeLabel": "Definir lo mòde d'afichatge",
+      "title": "Exposicion"
+    },
+    "filter": {
+      "creator": "Filtre per creator"
+    },
+    "optionsButton": "Opcions",
+    "relatedContent": {
+      "conceptsTitle": "Concèptes ligats",
+      "noConcepts": "I a pas de concèptes ligats per aqueste {{pageType}}.",
+      "noQuestions": "I a pas de questions ligadas a aqueste {{pageType}}.",
+      "otherStagesTitle": "Questions ligadas per d'autras estapas d'aprendissatge",
+      "stageQuestionsTitle": "Preguntas {{stageName}} relacionadas",
+      "viewAllConcepts": "Veire totes los concèptes per {{contextName}}",
+      "viewAllQuestions": "Ver todas las preguntas para {{contextName}}"
+    },
+    "search": {
+      "decks": "Cercar de jòcs de questions"
+    },
+    "toggleButton": {
+      "label": "Cercar e filtrar"
+    }
+  },
+  "svgFilter": {
+    "comingSoon": "A venir lèu!",
+    "count": "{{count}} filtres seleccionats",
+    "title": "Selector de filtre de dificultats"
+  },
+  "video": {
+    "embed": {
+      "accessibilityLabel": "Vidèo YouTube encastrat: {{videoDescription}}."
+    }
+  }
+}
