@@ -145,11 +145,7 @@ describe("User context derivation", () => {
                                 stage: [STAGE.FURTHER_A as Stage],
                                 examBoard: [EXAM_BOARD.AQA as ExamBoard]
                             }
-                        ],
-                        creationContext: {
-                            stage: [STAGE.FURTHER_A as Stage],
-                            examBoard: [EXAM_BOARD.AQA as ExamBoard]
-                        }
+                        ]
                     }
                 ],
                 boardIdFromQueryParams: "some-board-id",
@@ -181,11 +177,7 @@ describe("User context derivation", () => {
                                 stage: [STAGE.SCOTLAND_HIGHER as Stage],
                                 examBoard: [EXAM_BOARD.SQA as ExamBoard]
                             }
-                        ],
-                        creationContext: {
-                            stage: [STAGE.SCOTLAND_HIGHER as Stage],
-                            examBoard: [EXAM_BOARD.SQA as ExamBoard]
-                        }
+                        ]
                     }
                 ],
                 boardIdFromQueryParams: "some-board-id",

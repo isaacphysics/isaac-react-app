@@ -150,7 +150,6 @@ export const mockGameboards = {
                             ]
                         }
                     ],
-                    creationContext: {},
                     level: 0,
                     questionPartStates: []
                 },
@@ -6305,7 +6304,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6348,7 +6346,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6390,7 +6387,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6432,7 +6428,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6474,7 +6469,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6559,7 +6553,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6602,7 +6595,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6644,7 +6636,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6686,7 +6677,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6728,7 +6718,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6805,7 +6794,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6844,7 +6832,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6912,7 +6899,6 @@ const gameboardContents = {
                     "fields",
                     "gravitational"
                 ],
-                creationContext: {},
                 level: 6,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -6956,7 +6942,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7000,7 +6985,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7044,7 +7028,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7084,7 +7067,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7125,7 +7107,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7167,7 +7148,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7208,7 +7188,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 4,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7253,7 +7232,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,
@@ -7295,7 +7273,6 @@ const gameboardContents = {
                         ]
                     }
                 ],
-                creationContext: {},
                 level: 0,
                 questionPartsCorrect: 0,
                 questionPartsIncorrect: 0,

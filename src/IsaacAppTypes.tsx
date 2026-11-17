@@ -644,7 +644,6 @@ export interface QuestionSearchQuery {
 }
 
 export interface ContentSummary extends ContentSummaryDTO {
-    creationContext?: AudienceContext;
 }
 
 export interface AudienceView extends UserContext {

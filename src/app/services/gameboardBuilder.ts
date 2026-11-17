@@ -110,7 +110,6 @@ export interface GameboardBuilderRowInterface {
     currentQuestions: GameboardBuilderQuestions;
     undoStack: GameboardBuilderQuestionsStackProps;
     redoStack: GameboardBuilderQuestionsStackProps;
-    creationContext?: AudienceContext;
 }
 
 export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undoStack, redoStack }: GameboardBuilderRowInterface) => {

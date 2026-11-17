@@ -39,7 +39,6 @@ export interface PageNavigation {
     nextItem?: LinkInfo;
     previousItem?: LinkInfo;
     search?: string;
-    creationContext?: AudienceContext;
     currentGameboard?: GameboardDTO;
 }
 

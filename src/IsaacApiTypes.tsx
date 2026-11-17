@@ -762,7 +762,6 @@ export interface GameboardItem {
     description?: string;
     tags?: string[];
     audience?: AudienceContext[];
-    creationContext?: AudienceContext;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;
