@@ -2,8 +2,8 @@ import classNames from "classnames";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import { ContentSummaryDTO, GameboardItem, CompletionState } from "../../../../IsaacApiTypes";
-import { TAG_LEVEL, tags, SUBJECT_SPECIFIC_CHILDREN_MAP, isDefined, filterAudienceViewsByProperties, determineAudienceViews, AUDIENCE_DISPLAY_FIELDS, getThemeFromContextAndTags } from "../../../services";
-import { useAppSelector, selectors } from "../../../state";
+import { TAG_LEVEL, tags, SUBJECT_SPECIFIC_CHILDREN_MAP, isDefined, filterAudienceViewsByProperties, determineAudienceViews, AUDIENCE_DISPLAY_FIELDS, getThemeFromContextAndTags, DOCUMENT_TYPE } from "../../../services";
+import { useAppSelector, selectors, useAppDispatch, logAction } from "../../../state";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
@@ -119,20 +119,60 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
     />;
 };
 
+export function getEventDetails(contentSummary: ContentSummaryDTO, parentPageType: "concept" | "question" | "page", parentPageId?: string) {
+    const eventDetails: {
+        type?: "VIEW_RELATED_CONCEPT" | "VIEW_RELATED_QUESTION" | "VIEW_RELATED_PAGE";
+        relatedConceptId?: string; conceptId?: string;
+        relatedQuestionId?: string; questionId?: string;
+        relatedPageId?: string; pageId?: string;
+    } = {};
+
+    // Where are we linking to?
+    switch (contentSummary.type as DOCUMENT_TYPE) {
+        case DOCUMENT_TYPE.CONCEPT:
+            eventDetails.type = "VIEW_RELATED_CONCEPT";
+            eventDetails.relatedConceptId = contentSummary.id;
+            break;
+        case DOCUMENT_TYPE.QUESTION:
+        case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
+            eventDetails.type = "VIEW_RELATED_QUESTION";
+            eventDetails.relatedQuestionId = contentSummary.id;
+            break;
+        case DOCUMENT_TYPE.GENERIC:
+            eventDetails.type = "VIEW_RELATED_PAGE";
+            eventDetails.relatedPageId = contentSummary.id;
+    }
+    // Where have we linked from?
+    switch (parentPageType) {
+        case "concept":
+            eventDetails.conceptId = parentPageId;
+            break;
+        case "question":
+            eventDetails.questionId = parentPageId;
+            break;
+        case "page":
+            eventDetails.pageId = parentPageId;
+    }
+    return eventDetails;
+}
+
 interface QuestionLinkProps {
     question: ContentSummaryDTO | GameboardItem;
     gameboardId?: string;
+    parentPageType?: "concept" | "question" | "page";
+    parentPageId?: string;
     linkedBookSection?: string[];
 }
 
 export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
-    const { question, gameboardId, linkedBookSection, ...rest } = props;
+    const { question, gameboardId, linkedBookSection, parentPageType, parentPageId, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
     const boardUrlParams = isDefined(gameboardId) ? `?board=${gameboardId}` : "";
     const hasLinkedBookSection = linkedBookSection && linkedBookSection[0] && linkedBookSection[1];
     const linkedBookUrlParams = hasLinkedBookSection ? `${isDefined(gameboardId) ? "&" : "?"}book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
     const link = `/questions/${question.id}${boardUrlParams}${linkedBookUrlParams}`;
+    const dispatch = useAppDispatch();
 
     const progressIcon = question.state && (question.state === CompletionState.ALL_CORRECT
         ? "icon icon-raw icon-correct"
@@ -143,7 +183,9 @@ export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & Questi
                 : "icon icon-raw icon-not-started");
 
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
-        <Link to={link} className="py-2">
+        <Link to={link} className="py-2" {... !isDefined(gameboardId) && isDefined(parentPageType) && isDefined(parentPageId) ? {onClick:
+            async () => await dispatch(logAction(getEventDetails(question, parentPageType, parentPageId)))
+        } : {}}>
             {(isDefined(gameboardId) || question.state !== CompletionState.NOT_ATTEMPTED) 
                 ? <i className={classNames(progressIcon, {"ms-2": isDefined(gameboardId)})} style={{minWidth: "16px"}}/> 
                 : <i className="icon icon-question-thick"/>
