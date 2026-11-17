@@ -98,7 +98,7 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
     });
 });
 
-import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
+import "@pixsame/cypress-plugin-visual-regression-diff/dist/support";
 
 // Add a delay to all matchImage calls. Shouldn't be required, but is.
 Cypress.Commands.overwrite('matchImage', (matchImage) => {

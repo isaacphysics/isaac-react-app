@@ -10,33 +10,19 @@ import {
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import classNames from "classnames";
-
+import {getEventDetails} from "./sidebar/SidebarElements";
 
 const RelatedQuestion = ({question, parentPage}: {question: ContentSummaryDTO, parentPage: ContentDTO}) => {
     const dispatch = useAppDispatch();
 
-    function getParentPageDetails(parentPage: ContentDTO) {
-        switch (parentPage.type as DOCUMENT_TYPE) {
-            case DOCUMENT_TYPE.CONCEPT:
-                return {conceptId: parentPage.id};
-            case DOCUMENT_TYPE.GENERIC:
-                return {pageId: parentPage.id};
-            case DOCUMENT_TYPE.QUESTION:
-            case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
-            default:
-                return {questionId: parentPage.id};
-        }
-    };
+    const parentPageType = parentPage.type === DOCUMENT_TYPE.CONCEPT ? "concept"
+        : parentPage.type === DOCUMENT_TYPE.GENERIC ? "page" : "question";
 
     return <ListGroupItem className="w-100 me-lg-3">
         <Link
             className="btn-link btn text-start"
             to={`/questions/${question.id}`}
-            onClick={async () => await dispatch(logAction({
-                type: "VIEW_RELATED_QUESTIONS",
-                relatedQuestionId: question.id,
-                ...getParentPageDetails(parentPage)
-            }))}
+            onClick={async () => await dispatch(logAction(getEventDetails(question, parentPageType, parentPage.id)))}
         >
             <span className="font-size-1 fw-regular">
                 {question.title}
