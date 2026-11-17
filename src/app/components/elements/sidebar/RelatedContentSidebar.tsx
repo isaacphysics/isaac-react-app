@@ -10,13 +10,13 @@ import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
 import { QuestionLink, CompletionKey, BackToBookButton, getEventDetails } from "./SidebarElements";
 
-interface RelatedContentSidebarProps {
-    relatedContent: ContentSummaryDTO[] | undefined;
-    linkedBookSection?: string[];
-    pageId: string;
-}
+type ConceptLinkProps = React.HTMLAttributes<HTMLLIElement> & {
+    concept: ContentSummaryDTO;
+    parentPageType: "concept" | "question" | "page";
+    parentPageId: string;
+};
 
-const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: ContentSummaryDTO; parentPageType: "concept" | "question" | "page"; parentPageId: string}) => {
+const ConceptLink = (props: ConceptLinkProps) => {
     const { concept, parentPageType, parentPageId, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const dispatch = useAppDispatch();
@@ -30,6 +30,12 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Cont
         </Link>
     </li>;
 };
+
+interface RelatedContentSidebarProps {
+    relatedContent: ContentSummaryDTO[] | undefined;
+    linkedBookSection?: string[];
+    pageId: string;
+}
 
 const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "concept" | "question" | "page"}) => {
     const relatedConcepts = props.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.CONCEPT).sort(sortByStringValue("title"));

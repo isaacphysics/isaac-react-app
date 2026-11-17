@@ -119,7 +119,7 @@ export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {fo
     />;
 };
 
-export function getEventDetails(contentSummary: ContentSummaryDTO, parentPageType: "concept" | "question" | "page", parentPageId: string) {
+export function getEventDetails(contentSummary: ContentSummaryDTO, parentPageType: "concept" | "question" | "page", parentPageId?: string) {
     const eventDetails: {
         type?: "VIEW_RELATED_CONCEPT" | "VIEW_RELATED_QUESTION" | "VIEW_RELATED_PAGE";
         relatedConceptId?: string; conceptId?: string;
