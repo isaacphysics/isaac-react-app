@@ -91,7 +91,7 @@ const subjectDescriptions: Record<Subject, string> = {
     "physics": "Discover how the universe works using our question decks, quizzes, lessons and revision, and much more.  Click on a learning stage below to explore!",
     "maths": "Unlock the language of science using our question decks, apps, and much more.  Click on a learning stage below to explore!",
     "chemistry": "Grasp the fundamentals of matter using our question decks, glossary, apps, and much more. Click on a learning stage below to explore!",
-    "biology": "Uncover the the science of life using our question decks, glossary, extension materials, and much more. Click on the learning stage below to explore!",
+    "biology": "Uncover the science of life using our question decks, glossary, extension materials, and much more. Click on the learning stage below to explore!",
 };
 
 const getListViewSubjectCard = (sc: subjectCategory) => {
