@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
-import { selectors, useAppSelector, useUpdateCurrentMutation } from '../../state';
-import { Button, Card, Col, Row, UncontrolledTooltip } from 'reactstrap';
+import { selectors, useAppSelector } from '../../state';
+import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { BookInfo, extractTeacherName, ISAAC_BOOKS, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import StyledToggle from './inputs/StyledToggle';
-import { AssignmentCard, StudentDashboard } from './StudentDashboard';
+import { AssignmentCard, RevisionModeToggle, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
@@ -170,45 +170,15 @@ interface TeacherDashboardProps {
 export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignments, myQuizAssignments, groups, streakRecord, dashboardView, setDashboardView }: TeacherDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    const userPreferences = useAppSelector(selectors.user.preferences);
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
-    const [updateCurrentUser] = useUpdateCurrentMutation();
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex flex-wrap">
             {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
             <div className="ms-auto d-flex flex-wrap gap-3">
-                <span className="text-center">
-                    <div className="d-flex align-items-center justify-content-center">
-                        Question attempts
-                        <i id="question-attempts-help" className="icon icon-info icon-inline ms-1" />
-                        <UncontrolledTooltip placement="top" target="question-attempts-help">
-                            This feature lets you answer questions that you have answered before, without seeing your old answer. It&apos;s useful if you are reviewing a topic before a test or exam.
-                        </UncontrolledTooltip>
-                    </div>
-                    <StyledToggle
-                        checked={userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false}
-                        falseLabel="Show previous"
-                        trueLabel="Hide previous"
-                        onChange={event => {
-                            if (!user?.loggedIn) return;
-                            void updateCurrentUser({
-                                currentUser: user,
-                                updatedUser: {...user, password: null},
-                                userPreferences: {
-                                    ...(userPreferences ?? {}),
-                                    DISPLAY_SETTING: {
-                                        ...(userPreferences?.DISPLAY_SETTING ?? {}),
-                                        HIDE_QUESTION_ATTEMPTS: event.currentTarget.checked
-                                    }
-                                },
-                                registeredUserContexts: undefined,
-                                passwordCurrent: null,
-                                redirect: false
-                            });
-                        }}
-                    />
-                </span>
+                {dashboardView !== "student" && <span className="text-center">
+                    <RevisionModeToggle />
+                </span>}
                 <span className="text-center">
                     <div>Dashboard view</div>
                     <StyledToggle

@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
+import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery, useUpdateCurrentMutation } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Badge, Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,45 @@ import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
 import { getFriendlyDaysUntil } from './DateString';
 import { FeatureFlag, useFeatureFlag } from '../../services/featureFlag';
+import StyledToggle from './inputs/StyledToggle';
+
+export const RevisionModeToggle = () => {
+    const user = useAppSelector(selectors.user.orNull);
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const [updateCurrentUser] = useUpdateCurrentMutation();
+
+    return <>
+        <div className="d-flex align-items-center justify-content-center">
+            Question attempts
+            <i id="question-attempts-help" className="icon icon-info icon-inline ms-1" />
+            <UncontrolledTooltip placement="top" target="question-attempts-help">
+                This feature lets you answer questions that you have answered before, without seeing your old answer. It&apos;s useful if you are reviewing a topic before a test or exam.
+            </UncontrolledTooltip>
+        </div>
+        <StyledToggle
+            checked={userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false}
+            falseLabel="Show previous"
+            trueLabel="Hide previous"
+            onChange={event => {
+                if (!user?.loggedIn) return;
+                void updateCurrentUser({
+                    currentUser: user,
+                    updatedUser: {...user, password: null},
+                    userPreferences: {
+                        ...(userPreferences ?? {}),
+                        DISPLAY_SETTING: {
+                            ...(userPreferences?.DISPLAY_SETTING ?? {}),
+                            HIDE_QUESTION_ATTEMPTS: event.currentTarget.checked
+                        }
+                    },
+                    registeredUserContexts: undefined,
+                    passwordCurrent: null,
+                    redirect: false
+                });
+            }}
+        />
+    </>;
+};
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -232,7 +271,14 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
+        <div className="d-flex flex-wrap">
+            {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
+            <div className="ms-auto d-flex flex-wrap gap-3">
+                <span className="text-center">
+                    <RevisionModeToggle />
+                </span>
+            </div>
+        </div>
         {deviceSize === "lg"
             ? <>
                 <Row>
