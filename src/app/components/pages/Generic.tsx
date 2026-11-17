@@ -45,7 +45,7 @@ const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: 
         return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} linkedBookSection={linkedBookSection} {...sidebarProps} />;
     }
     if (relatedContent) {
-        return <GenericSidebarWithRelatedContent relatedContent={relatedContent} {...sidebarProps} />;
+        return <GenericSidebarWithRelatedContent pageId={pageId} relatedContent={relatedContent} {...sidebarProps} />;
     }
     return <GenericPageSidebar {...sidebarProps} />;
 };

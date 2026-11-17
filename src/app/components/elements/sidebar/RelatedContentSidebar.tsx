@@ -2,25 +2,29 @@ import partition from "lodash/partition";
 import React from "react";
 import { Link } from "react-router-dom";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
-import { useAppSelector, selectors } from "../../../state";
 import { sortByStringValue, determineAudienceViews, isFullyDefinedContext, getHumanContext, HUMAN_STAGES, getThemeFromContextAndTags, DOCUMENT_TYPE } from "../../../services";
+import { useAppSelector, selectors, logAction, useAppDispatch } from "../../../state";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { AffixButton } from "../AffixButton";
 import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
-import { QuestionLink, CompletionKey, BackToBookButton } from "./SidebarElements";
+import { QuestionLink, CompletionKey, BackToBookButton, getEventDetails } from "./SidebarElements";
 
 interface RelatedContentSidebarProps {
     relatedContent: ContentSummaryDTO[] | undefined;
     linkedBookSection?: string[];
+    pageId: string;
 }
 
-const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: ContentSummaryDTO}) => {
-    const { concept, ...rest } = props;
+const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: ContentSummaryDTO; parentPageType: "concept" | "question" | "page"; parentPageId: string}) => {
+    const { concept, parentPageType, parentPageId, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
+    const dispatch = useAppDispatch();
 
     return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, concept.tags ?? [])}>
-        <Link to={`/concepts/${concept.id}`} className="py-2">
+        <Link to={`/concepts/${concept.id}`} className="py-2"
+            onClick={async () => await dispatch(logAction(getEventDetails(concept, parentPageType, parentPageId)))}
+        >
             <i className="icon icon-concept-thick"/>
             <span className="hover-underline link-title"><Markup encoding="latex">{concept.title}</Markup></span>
         </Link>
@@ -43,7 +47,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
         <h3 className="h5">Related concepts</h3>
         {relatedConcepts && relatedConcepts.length > 0
             ? <ul className="link-list">
-                {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} />)}
+                {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} parentPageType={props.pageType} parentPageId={props.pageId} />)}
             </ul>
             : <>
                 There are no related concepts for this {props.pageType}.
@@ -59,19 +63,19 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
                 {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
                     ? <>
                         <ul className="link-list">
-                            {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
+                            {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} parentPageType={props.pageType} parentPageId={props.pageId} />)}
                         </ul>
                     </>
                     : <>
                         <div className="section-divider"/>
                         <h3 className="h5">Related {HUMAN_STAGES[pageContextStage[0]]} questions</h3>
                         <ul className="link-list">
-                            {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
+                            {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} parentPageType={props.pageType} parentPageId={props.pageId} />)}
                         </ul>
                         <div className="section-divider"/>
                         <h3 className="h5">Related questions for other learning stages</h3>
                         <ul className="link-list">
-                            {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} />)}
+                            {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} parentPageType={props.pageType} parentPageId={props.pageId} />)}
                         </ul>
                     </>
                 }
