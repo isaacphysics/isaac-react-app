@@ -2,8 +2,8 @@ import partition from "lodash/partition";
 import React from "react";
 import { Link } from "react-router-dom";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
-import { sortByStringValue, determineAudienceViews, isFullyDefinedContext, getHumanContext, HUMAN_STAGES, getThemeFromContextAndTags } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
+import { sortByStringValue, determineAudienceViews, isFullyDefinedContext, getHumanContext, HUMAN_STAGES, getThemeFromContextAndTags, DOCUMENT_TYPE } from "../../../services";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { AffixButton } from "../AffixButton";
 import { NavigationSidebar } from "../layout/SidebarLayout";
@@ -28,8 +28,8 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Cont
 };
 
 const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "concept" | "question" | "page"}) => {
-    const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage").sort(sortByStringValue("title"));
-    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage" || c.type === "isaacFastTrackQuestionPage").sort(sortByStringValue("title"));
+    const relatedConcepts = props.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.CONCEPT).sort(sortByStringValue("title"));
+    const relatedQuestions = props.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.QUESTION || c.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION).sort(sortByStringValue("title"));
 
     const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
