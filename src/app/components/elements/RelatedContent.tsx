@@ -33,7 +33,7 @@ const RelatedQuestion = ({question, parentPage}: {question: ContentSummaryDTO, p
             className="btn-link btn text-start"
             to={`/questions/${question.id}`}
             onClick={async () => await dispatch(logAction({
-                type: "VIEW_RELATED_QUESTIONS",
+                type: "VIEW_RELATED_QUESTION",
                 relatedQuestionId: question.id,
                 ...getParentPageDetails(parentPage)
             }))}
