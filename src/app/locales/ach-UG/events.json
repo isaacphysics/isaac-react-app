@@ -1,0 +1,308 @@
+{
+  "events": {
+    "addUsers": {
+      "bookingExists": "crwdns2423206:0crwdne2423206:0",
+      "disabledMessage": "crwdns2423208:0crwdne2423208:0",
+      "noResults": "crwdns2423210:0crwdne2423210:0",
+      "roleAny": "crwdns2423212:0crwdne2423212:0",
+      "schoolSetNone": "crwdns2423214:0crwdne2423214:0",
+      "schoolSetOther": "crwdns2423216:0crwdne2423216:0",
+      "searchButton": "crwdns2423218:0crwdne2423218:0",
+      "searchEmailPlaceholder": "crwdns2423220:0crwdne2423220:0",
+      "searchFamilyNamePlaceholder": "crwdns2423222:0crwdne2423222:0",
+      "tableHeaderSchoolSet": "crwdns2423224:0crwdne2423224:0",
+      "title": "crwdns2423226:0crwdne2423226:0"
+    },
+    "admin": {
+      "title": "crwdns2423228:0crwdne2423228:0"
+    },
+    "adminBooking": {
+      "bookUser": {
+        "errorTitle": "crwdns2423230:0crwdne2423230:0",
+        "successMessage": "crwdns2423232:0crwdne2423232:0",
+        "successTitle": "crwdns2423234:0crwdne2423234:0"
+      },
+      "cancel": {
+        "errorTitle": "crwdns2423236:0crwdne2423236:0"
+      },
+      "cancelReservations": {
+        "errorTitle": "crwdns2423238:0crwdne2423238:0",
+        "successMessage": "crwdns2423240:0crwdne2423240:0",
+        "successTitle": "crwdns2423242:0crwdne2423242:0"
+      },
+      "delete": {
+        "errorTitle": "crwdns2423244:0crwdne2423244:0"
+      },
+      "promote": {
+        "errorTitle": "crwdns2423246:0crwdne2423246:0"
+      },
+      "recordAttendance": {
+        "errorTitle": "crwdns2423248:0crwdne2423248:0"
+      },
+      "resendEmail": {
+        "errorTitle": "crwdns2423250:0crwdne2423250:0",
+        "successMessage": "crwdns2423252:0{{userId}}crwdne2423252:0",
+        "successTitle": "crwdns2423254:0crwdne2423254:0"
+      },
+      "reserveUsers": {
+        "errorTitle": "crwdns2423256:0crwdne2423256:0",
+        "successMessage": "crwdns2423258:0crwdne2423258:0",
+        "successTitle": "crwdns2423260:0crwdne2423260:0"
+      }
+    },
+    "adminOverviews": {
+      "errorTitle": "crwdns2423262:0crwdne2423262:0"
+    },
+    "attendance": {
+      "cancelledEventNotice": "crwdns2423264:0crwdne2423264:0",
+      "markAbsentButton": "crwdns2423266:0crwdne2423266:0",
+      "markAttendedButton": "crwdns2423268:0crwdne2423268:0",
+      "table": {
+        "attendanceHeader": "crwdns2423270:0crwdne2423270:0",
+        "medicalRequirementsHeader": "crwdns2423272:0crwdne2423272:0",
+        "surnameFilterPlaceholder": "crwdns2423274:0crwdne2423274:0"
+      },
+      "title": "crwdns2423276:0crwdne2423276:0"
+    },
+    "availability": {
+      "requestAvailable": "crwdns2423278:0crwdne2423278:0",
+      "waitingListAvailable": "crwdns2423280:0crwdne2423280:0"
+    },
+    "book": {
+      "confirmReservation": "crwdns2423282:0crwdne2423282:0",
+      "joinWaitingList": "crwdns2423284:0crwdne2423284:0",
+      "requestPlace": "crwdns2423286:0crwdne2423286:0"
+    },
+    "booking": {
+      "accessibilityHelp": "crwdns2423288:0crwdne2423288:0",
+      "accountSection": "crwdns2423290:0crwdne2423290:0",
+      "cancelConfirmMessage": "crwdns2423292:0crwdne2423292:0 crwdns2423294:0crwdne2423294:0",
+      "cancelledMessage": "crwdns2423296:0crwdne2423296:0",
+      "cancelledTitle": "crwdns2423298:0crwdne2423298:0",
+      "detailsTitle": "crwdns2423300:0crwdne2423300:0",
+      "dietary": "crwdns2423302:0crwdne2423302:0",
+      "dietaryHelp": "crwdns2423304:0crwdne2423304:0",
+      "emailSent": "crwdns2423306:0{{email}}crwdne2423306:0 crwdns2423308:0crwdne2423308:0",
+      "emailVerifyOther": "crwdns2423310:0crwdne2423310:0 crwdns2423312:0crwdne2423312:0",
+      "emailVerifySelf": "crwdns2423314:0crwdne2423314:0 crwdns2423316:0crwdne2423316:0",
+      "emergency": "crwdns2423318:0crwdne2423318:0",
+      "emergencyPhone": "crwdns2423320:0crwdne2423320:0",
+      "formTitle": "crwdns2423322:0crwdne2423322:0",
+      "jobTitle": "crwdns2423324:0crwdne2423324:0",
+      "loginToApply": "crwdns2423326:0crwdne2423326:0",
+      "loginToBook": "crwdns2423328:0crwdne2423328:0",
+      "manageReservations": "crwdns2423330:0crwdne2423330:0",
+      "naOther": "crwdns2423332:0crwdne2423332:0",
+      "naTeacher": "crwdns2423334:0crwdne2423334:0",
+      "teacherReservationWarning": "crwdns2423336:0crwdne2423336:0 crwdns2423338:0crwdne2423338:0 crwdns2423340:0crwdne2423340:0",
+      "teachingExperience": "crwdns2423342:0crwdne2423342:0",
+      "terms": "crwdns2423344:0crwdne2423344:0 crwdns2423346:0crwdne2423346:0 crwdns2423348:0crwdne2423348:0crwdns2423350:0{{siteTitle}}crwdne2423350:0crwdns2423352:0crwdne2423352:0 crwdns2423354:0crwdne2423354:0",
+      "updateInfo": "crwdns2423356:0crwdne2423356:0",
+      "upgradeLink": "crwdns2423358:0crwdne2423358:0",
+      "verifyEmailBtn": "crwdns2423360:0crwdne2423360:0",
+      "year10": "crwdns2423362:0crwdne2423362:0",
+      "year11": "crwdns2423364:0crwdne2423364:0",
+      "year12": "crwdns2423366:0crwdne2423366:0",
+      "year13": "crwdns2423368:0crwdne2423368:0",
+      "year9": "crwdns2423370:0crwdne2423370:0",
+      "yearGroup": "crwdns2423372:0crwdne2423372:0"
+    },
+    "bookingValidation": {
+      "emergencyContactRequiredBody": "crwdns2423374:0crwdne2423374:0",
+      "emergencyContactRequiredTitle": "crwdns2423376:0crwdne2423376:0",
+      "jobTitleRequiredBody": "crwdns2423378:0crwdne2423378:0",
+      "jobTitleRequiredTitle": "crwdns2423380:0crwdne2423380:0",
+      "schoolRequiredBody": "crwdns2423382:0crwdne2423382:0",
+      "schoolRequiredTitle": "crwdns2423384:0crwdne2423384:0",
+      "yearGroupRequiredBody": "crwdns2423386:0crwdne2423386:0",
+      "yearGroupRequiredTitle": "crwdns2423388:0crwdne2423388:0"
+    },
+    "bookings": {
+      "fetch": {
+        "errorTitle": "crwdns2423390:0crwdne2423390:0"
+      }
+    },
+    "bookingsTable": {
+      "accountType": "crwdns2423392:0crwdne2423392:0",
+      "bookingCreated": "crwdns2423394:0crwdne2423394:0",
+      "bookingUpdated": "crwdns2423396:0crwdne2423396:0",
+      "emergencyName": "crwdns2423398:0crwdne2423398:0",
+      "emergencyPhone": "crwdns2423400:0crwdne2423400:0",
+      "jobYearGroup": "crwdns2423402:0crwdne2423402:0"
+    },
+    "cancel": {
+      "booking": "crwdns2423404:0crwdne2423404:0",
+      "request": "crwdns2423406:0crwdne2423406:0",
+      "reservation": "crwdns2423408:0crwdne2423408:0",
+      "waitingList": "crwdns2423410:0crwdne2423410:0"
+    },
+    "card": {
+      "availableToBook": "crwdns2423412:0crwdne2423412:0",
+      "bookedBadge": "crwdns2423414:0crwdne2423414:0",
+      "bookedStatus": "crwdns2423416:0crwdne2423416:0",
+      "bookingClosed": "crwdns2423418:0crwdne2423418:0",
+      "cancelledBadge": "crwdns2423420:0crwdne2423420:0",
+      "expired": "crwdns2423422:0crwdne2423422:0",
+      "fullBadge": "crwdns2423424:0crwdne2423424:0",
+      "onlineBadge": "crwdns2423426:0crwdne2423426:0",
+      "readMoreAriaLabel": "crwdns2423428:0{{eventTitle}}crwdne2423428:0",
+      "reservedBadge": "crwdns2423430:0crwdne2423430:0",
+      "reservedStatus": "crwdns2423432:0crwdne2423432:0",
+      "studentEvent": "crwdns2423434:0crwdne2423434:0",
+      "studentEventIconAlt": "crwdns2423436:0crwdne2423436:0",
+      "teacherEvent": "crwdns2423438:0crwdne2423438:0",
+      "teacherEventIconAlt": "crwdns2423440:0crwdne2423440:0",
+      "untitled": "crwdns2423442:0crwdne2423442:0",
+      "viewDetailsAriaLabel": "crwdns2423444:0{{eventTitle}}crwdnd2423444:0{{eventDate}}crwdne2423444:0",
+      "viewDetailsButton": "crwdns2423446:0crwdne2423446:0",
+      "waitingListBadge": "crwdns2423448:0crwdne2423448:0"
+    },
+    "confirmation": {
+      "body": "crwdns2423450:0crwdne2423450:0 crwdns2423452:0crwdne2423452:0",
+      "declineButton": "crwdns2423454:0crwdne2423454:0",
+      "title": "crwdns2423456:0crwdne2423456:0"
+    },
+    "date": {
+      "from": "crwdns2423458:0crwdne2423458:0",
+      "seriesStarts": "crwdns2423460:0crwdne2423460:0",
+      "to": "crwdns2423462:0crwdne2423462:0"
+    },
+    "details": {
+      "bookedConfirmation": "crwdns2423464:0crwdne2423464:0",
+      "completeRegistration": "crwdns2423466:0crwdne2423466:0",
+      "deadlinePassed": "crwdns2423468:0crwdne2423468:0",
+      "full": "crwdns2423470:0crwdne2423470:0",
+      "fullStudentOnly": "crwdns2423472:0crwdne2423472:0",
+      "pastNotice": "crwdns2423474:0crwdne2423474:0",
+      "reservedConfirmation": "crwdns2423476:0crwdne2423476:0",
+      "spacesAvailable": "crwdns2423478:0{{spacesAvailable}}crwdne2423478:0",
+      "studentBadge": "crwdns2423480:0crwdne2423480:0",
+      "teacherBadge": "crwdns2423482:0crwdne2423482:0"
+    },
+    "emptyState": "crwdns2423484:0crwdne2423484:0",
+    "fetch": {
+      "errorTitle": "crwdns2423486:0crwdne2423486:0"
+    },
+    "label": {
+      "when": "crwdns2423488:0crwdne2423488:0"
+    },
+    "leaderRestriction": "crwdns2423490:0crwdne2423490:0",
+    "loadErrorTitle": "crwdns2423492:0crwdne2423492:0",
+    "loadMoreButton": "crwdns2423494:0crwdne2423494:0",
+    "manage": {
+      "addToWaitingList": "crwdns2423496:0crwdne2423496:0",
+      "bookingRequest": "crwdns2423498:0crwdne2423498:0",
+      "confirmReservation": "crwdns2423500:0crwdne2423500:0"
+    },
+    "manageBookings": {
+      "actions": {
+        "promote": "crwdns2423502:0crwdne2423502:0",
+        "resendEmail": "crwdns2423504:0crwdne2423504:0"
+      },
+      "confirmCancel": "crwdns2423506:0crwdne2423506:0",
+      "confirmDelete": "crwdns2423508:0crwdne2423508:0",
+      "confirmPromote": "crwdns2423510:0crwdne2423510:0",
+      "confirmResendEmail": "crwdns2423512:0crwdne2423512:0",
+      "emailDropdown": {
+        "item": "crwdns2423514:0{{bookingStatus}}crwdne2423514:0"
+      },
+      "emptyState": "crwdns2423516:0crwdne2423516:0",
+      "exportCsv": "crwdns2423518:0crwdne2423518:0",
+      "table": {
+        "medicalDietary": "crwdns2423520:0crwdne2423520:0",
+        "reservedById": "crwdns2423522:0crwdne2423522:0"
+      },
+      "title": "crwdns2423524:0crwdne2423524:0"
+    },
+    "modal": {
+      "applyPastDeadline": "crwdns2423526:0crwdne2423526:0",
+      "bookNow": "crwdns2423528:0crwdne2423528:0"
+    },
+    "notFound": "crwdns2423530:0crwdne2423530:0",
+    "overview": {
+      "title": "crwdns2423532:0crwdne2423532:0"
+    },
+    "page": {
+      "errorLoading": "crwdns2423534:0crwdne2423534:0",
+      "help": "crwdns2423536:0crwdne2423536:0",
+      "listHeading": "crwdns2423538:0crwdne2423538:0",
+      "noResults": "crwdns2423540:0crwdne2423540:0",
+      "showingCount": "crwdns2423542:0{{loadedCount}}crwdnd2423542:0{{total}}crwdne2423542:0"
+    },
+    "reservations": {
+      "additionalInfoDescription": "crwdns2423544:0crwdne2423544:0 crwdns2423546:0crwdne2423546:0 crwdns2423548:0crwdne2423548:0 crwdns2423550:0crwdne2423550:0",
+      "additionalInfoTitle": "crwdns2423552:0crwdne2423552:0",
+      "cancelButton": "crwdns2423554:0crwdne2423554:0",
+      "contactEmail": "crwdns2423556:0crwdne2423556:0",
+      "createGroupsPrompt": "crwdns2423558:0crwdne2423558:0",
+      "currentReservations": "crwdns2423560:0crwdne2423560:0",
+      "emailNotVerified": "crwdns2423562:0crwdne2423562:0",
+      "limitWarning": "crwdns2423564:0{{maxReservations}}crwdne2423564:0",
+      "loadingMembers": "crwdns2423566:0crwdne2423566:0",
+      "noBookings": "crwdns2423568:0crwdne2423568:0",
+      "noGroupReservations": "crwdns2423570:0crwdne2423570:0",
+      "noMembers": "crwdns2423572:0crwdne2423572:0 crwdns2423574:0crwdne2423574:0",
+      "otherStudents": "crwdns2423576:0crwdne2423576:0",
+      "reserveButton": "crwdns2423578:0crwdne2423578:0",
+      "reservedBy": "crwdns2423580:0crwdne2423580:0",
+      "reservedByYou": "crwdns2423582:0crwdne2423582:0",
+      "selectGroup": "crwdns2423584:0crwdne2423584:0",
+      "selectGroupHint": "crwdns2423586:0crwdne2423586:0",
+      "supervisorContactDescription": "crwdns2423588:0crwdne2423588:0",
+      "supervisorContactTitle": "crwdns2423590:0crwdne2423590:0",
+      "title": "crwdns2423592:0crwdne2423592:0"
+    },
+    "selectedDetails": {
+      "eventLabel": "crwdns2423594:0crwdne2423594:0",
+      "placesAvailableLabel": "crwdns2423596:0crwdne2423596:0",
+      "prepWorkDeadlineLabel": "crwdns2423598:0crwdne2423598:0",
+      "startDateLabel": "crwdns2423600:0crwdne2423600:0",
+      "statusLabel": "crwdns2423602:0crwdne2423602:0",
+      "title": "crwdns2423604:0crwdne2423604:0"
+    },
+    "selfBooking": {
+      "book": {
+        "successMessage": "crwdns2423606:0crwdne2423606:0",
+        "successTitle": "crwdns2423608:0crwdne2423608:0"
+      },
+      "cancel": {
+        "errorTitle": "crwdns2423610:0crwdne2423610:0",
+        "successMessage": "crwdns2423612:0crwdne2423612:0",
+        "successTitle": "crwdns2423614:0crwdne2423614:0"
+      },
+      "waitingList": {
+        "confirmedMessage": "crwdns2423616:0crwdne2423616:0",
+        "confirmedTitle": "crwdns2423618:0crwdne2423618:0",
+        "requestReceivedTitle": "crwdns2423620:0crwdne2423620:0"
+      }
+    },
+    "showingCount": "crwdns2423622:0{{shownCount}}crwdnd2423622:0{{totalCount}}crwdne2423622:0",
+    "sidebar": {
+      "eventTypeLabel": "crwdns2423624:0crwdne2423624:0",
+      "filterButtonTitle": "crwdns2423626:0crwdne2423626:0",
+      "stagesLabel": "crwdns2423628:0crwdne2423628:0"
+    },
+    "status": {
+      "bookingDeadlineSoon": "crwdns2423630:0crwdne2423630:0",
+      "expired": "crwdns2423632:0crwdne2423632:0",
+      "onWaitingList": "crwdns2423634:0crwdne2423634:0"
+    },
+    "studentOnly": {
+      "contact": "crwdns2423636:0crwdne2423636:0 crwdns2423638:0crwdne2423638:0"
+    },
+    "tableAttendedHeader": "crwdns2423640:0crwdne2423640:0",
+    "tableConfirmedHeader": "crwdns2423642:0crwdne2423642:0",
+    "tableDateHeader": "crwdns2423644:0crwdne2423644:0",
+    "tableWaitingHeader": "crwdns2423646:0crwdne2423646:0",
+    "userBooking": {
+      "authorisationLabel": "crwdns2423648:0crwdne2423648:0",
+      "bookingTitle": "crwdns2423650:0{{givenName}}crwdnd2423650:0{{familyName}}crwdne2423650:0",
+      "dataWarning": "crwdns2423652:0crwdne2423652:0 crwdns2423654:0crwdne2423654:0 crwdns2423656:0{{siteTitle}}crwdne2423656:0",
+      "errorMessage": "crwdns2423658:0crwdne2423658:0",
+      "optionEmailOwner": "crwdns2423660:0crwdne2423660:0",
+      "optionOther": "crwdns2423662:0crwdne2423662:0",
+      "optionTelephoneOwner": "crwdns2423664:0crwdne2423664:0",
+      "waitingListTitle": "crwdns2423666:0{{givenName}}crwdnd2423666:0{{familyName}}crwdne2423666:0"
+    }
+  }
+}
