@@ -232,16 +232,16 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 && isDefined(inlineContext?.feedbackIndex) ? <>
                             <span>View feedback for a specific box by selecting it above or using the arrows below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note">
-                                <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
-                                    <Button color="transparent" onClick={() => {
+                                <div className={`w-100 mt-2 p-2 d-flex gap-2 feedback-panel-header justify-content-around`}>
+                                    <Button color="transparent" aria-label="Previous question part" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
                                         ◀
                                     </Button>
-                                    <div className="text-nowrap align-self-center">
+                                    <div className="text-nowrap align-self-center" aria-live="polite">
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </div>
-                                    <Button color="transparent" onClick={() => {
+                                    <Button color="transparent" aria-label="Next question part" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
                                         ▶
